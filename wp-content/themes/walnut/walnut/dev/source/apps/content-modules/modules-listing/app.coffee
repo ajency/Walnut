@@ -92,8 +92,7 @@ define ['app'
 
             mixinTemplateHelpers : (data)->
                 data = super data
-                data.type = _.capitalize Marionette.getOption @, 'groupType'
-                data.type = 'Training Module' if data.type is 'Module'
+                data.type = _.titleize _.humanize Marionette.getOption @, 'groupType'
                 data
 
             changeTab: (e)->

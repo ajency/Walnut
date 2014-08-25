@@ -144,6 +144,7 @@ define ['app'
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.isQuiz = true if @groupType is 'quiz'
+                data.type = _.titleize _.humanize data.type
                 console.log @groupType
                 data
 

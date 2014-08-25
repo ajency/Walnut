@@ -23,6 +23,11 @@ define ['app'
 
 
             onClose: ->
+                if @model.get('marks') > 0
+                    @model.set 'complete',true                    
+                else                
+                    @model.set 'complete',false
+
                 models = @model.get('elements').models
 
                 elements = _.map models, (m)->

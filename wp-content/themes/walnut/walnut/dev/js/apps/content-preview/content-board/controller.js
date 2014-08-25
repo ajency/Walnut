@@ -93,6 +93,7 @@ define(['app', 'controllers/region-controller', 'apps/content-preview/content-bo
 
       API = {
         addNewElement: function(container, type, modelData) {
+          console.log(type);
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,

@@ -16,7 +16,7 @@ define(['app'], function(App) {
       PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot <i class="fa fa-chevron-right"></i> <span class="semi-bold">Hotspot Question Properties</span> </div> <div class="docket-body"> <div class="checkbox check-success"> <input id="check-individual-marks" type="checkbox" name="check-individual-marks"> <label for="check-individual-marks">Set marks for each hotspot</label> </div> <div class="m-b-10"> Marks <input id="marks" type="text" value="{{marks}}" class="form-control" > </div> <div id="transparency" class="checkbox check-success"> <input id="transparency-checkbox" type="checkbox" value="1"> <label for="transparency-checkbox">Set Transparent</label> </div> </div> </div> </div>';
 
       PropertyView.prototype.events = {
-        'blur @ui.marksTextbox': '_changeMarks',
+        'blur input#marks': '_changeMarks',
         'change @ui.individualMarksCheckbox': '_toggleIndividualMarks',
         'change @ui.transparencyCheckbox': '_toggleTransparency'
       };

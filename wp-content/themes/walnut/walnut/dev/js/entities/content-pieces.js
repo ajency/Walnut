@@ -26,6 +26,16 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.name = 'content-piece';
 
+      ItemModel.prototype.getMarks = function() {
+        var layout, marks;
+        layout = this.get('layout');
+        marks = parseInt(_.compact(_.pluck(layout, 'marks')));
+        if (!marks) {
+          marks = 0;
+        }
+        return marks;
+      };
+
       return ItemModel;
 
     })(Backbone.Model);

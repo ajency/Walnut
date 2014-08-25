@@ -21,6 +21,7 @@ define ['app'
                     marks : 1
                     multiple : false
                     correct_answer : [3]
+                    complete : false
 
                 super(options)
 

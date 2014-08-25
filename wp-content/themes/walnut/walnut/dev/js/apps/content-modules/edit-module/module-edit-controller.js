@@ -11,11 +11,13 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
         this._showContentSelectionApp = __bind(this._showContentSelectionApp, this);
         this._getContentGroupEditLayout = __bind(this._getContentGroupEditLayout, this);
         this.showGroupDetailsApp = __bind(this.showGroupDetailsApp, this);
+        this._getContentGroupCollection = __bind(this._getContentGroupCollection, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
       GroupController.prototype.initialize = function(options) {
         this.group_id = options.group_id, this.groupType = options.groupType;
+        this.contentGroupCollection = null;
         if (this.group_id) {
           if (this.groupType === 'teaching-module') {
             this.contentGroupModel = App.request("get:content:group:by:id", this.group_id);
@@ -33,9 +35,34 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
         }
         return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
           return function() {
+            _this.contentGroupCollection = _this._getContentGroupCollection();
             return _this.showContentGroupView();
           };
         })(this));
+      };
+
+      GroupController.prototype._getContentGroupCollection = function() {
+        if (this.groupType === 'teaching-module') {
+          this.contentGroupCollection = App.request("get:content:pieces:of:group", this.contentGroupModel);
+        }
+        if (this.groupType === 'quiz') {
+          this.contentGroupCollection = new Backbone.Collection;
+          _.each(this.contentGroupModel.get('content_layout'), (function(_this) {
+            return function(content) {
+              var contentModel;
+              if (content.type === 'content-piece') {
+                contentModel = App.request("get:content:piece:by:id", content.id);
+              } else {
+                content.data.lvl1 = parseInt(content.data.lvl1);
+                content.data.lvl2 = parseInt(content.data.lvl2);
+                content.data.lvl3 = parseInt(content.data.lvl3);
+                contentModel = new Backbone.Model(content.data);
+              }
+              return _this.contentGroupCollection.add(contentModel);
+            };
+          })(this));
+        }
+        return this.contentGroupCollection;
       };
 
       GroupController.prototype.showContentGroupView = function() {
@@ -80,7 +107,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       GroupController.prototype.showGroupDetailsApp = function() {
         return App.execute("show:editgroup:content:group:detailsapp", {
           region: this.layout.collectionDetailsRegion,
-          model: this.contentGroupModel
+          model: this.contentGroupModel,
+          contentGroupCollection: this.contentGroupCollection
         });
       };
 
@@ -89,26 +117,6 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/edit-modul
       };
 
       GroupController.prototype._showContentSelectionApp = function(model) {
-        if (this.groupType === 'teaching-module') {
-          this.contentGroupCollection = App.request("get:content:pieces:of:group", model);
-        }
-        if (this.groupType === 'quiz') {
-          this.contentGroupCollection = new Backbone.Collection;
-          _.each(model.get('content_layout'), (function(_this) {
-            return function(content) {
-              var contentModel;
-              if (content.type === 'content-piece') {
-                contentModel = App.request("get:content:piece:by:id", content.id);
-              } else {
-                content.data.lvl1 = parseInt(content.data.lvl1);
-                content.data.lvl2 = parseInt(content.data.lvl2);
-                content.data.lvl3 = parseInt(content.data.lvl3);
-                contentModel = new Backbone.Model(content.data);
-              }
-              return _this.contentGroupCollection.add(contentModel);
-            };
-          })(this));
-        }
         return App.execute("when:fetched", this.contentGroupCollection, (function(_this) {
           return function() {
             if (model.get('post_status') === 'underreview') {

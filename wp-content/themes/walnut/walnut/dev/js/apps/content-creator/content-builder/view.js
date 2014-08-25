@@ -22,6 +22,7 @@ define(['app'], function(App) {
           items: '> .element-wrapper',
           connectWith: '.droppable-column,.column',
           start: function(e, ui) {
+            console.log('moving');
             ui.placeholder.height(ui.item.height());
             window.dragging = true;
           },

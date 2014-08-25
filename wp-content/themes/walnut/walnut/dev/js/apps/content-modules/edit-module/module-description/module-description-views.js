@@ -35,7 +35,7 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
         'change #msgs': function(e) {
           return this._showCustomMessages($(e.target));
         },
-        'click .checkbox.perm': 'checkboxSelected'
+        'click .checkbox.perm': 'permissionSelected'
       };
 
       CollectionDetailsView.prototype.modelEvents = {
@@ -82,8 +82,6 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
 
       CollectionDetailsView.prototype.onShow = function() {
         Backbone.Syphon.deserialize(this, this.model.toJSON());
-        console.log(this.$el.find('#qType').val());
-        console.log(this.model.toJSON());
         if (this.model.get('type') === 'quiz') {
           this.$el.find('#qType').val(this.model.get('quiz_type'));
         }
@@ -174,7 +172,6 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
       };
 
       CollectionDetailsView.prototype._toggleNegativeMarks = function(el) {
-        console.log($(el).val());
         if ($(el).val() === 'true') {
           return this.$el.find("#negPercent").removeClass("none").addClass("inline");
         } else {
@@ -198,7 +195,8 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
       };
 
       CollectionDetailsView.prototype._changeLayout = function() {
-        var totalQuestions;
+        var contentGroupCollection, marks, time, totalQuestions;
+        contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
         totalQuestions = 0;
         _.each(this.model.get('content_layout'), (function(_this) {
           return function(content) {
@@ -211,7 +209,20 @@ define(['app', 'text!apps/content-modules/edit-module/module-description/templat
             }
           };
         })(this));
-        return this.$el.find('#total-question-number').val(totalQuestions);
+        this.$el.find('#total-question-number').val(totalQuestions);
+        marks = 0;
+        time = 0;
+        contentGroupCollection.each(function(m) {
+          if (m.get('post_type') === 'content_set') {
+            marks += parseInt(m.get('avg_marks'));
+            return time += parseInt(m.get('avg_duration'));
+          } else {
+            marks += parseInt(m.getMarks());
+            return time += parseInt(m.get('duration'));
+          }
+        });
+        this.$el.find('#total-marks').val(marks);
+        return this.$el.find('#total-time').val(time);
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {

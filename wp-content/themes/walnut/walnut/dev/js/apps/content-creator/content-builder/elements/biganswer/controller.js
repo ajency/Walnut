@@ -22,7 +22,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           font_size: '12',
           case_sensitive: false,
           marks: 2,
-          style: 'blank'
+          style: 'blank',
+          complete: false
         });
         return Controller.__super__.initialize.call(this, options);
       };
@@ -47,7 +48,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.deleteElement = function(model) {
-        model.destroy();
+        Controller.__super__.deleteElement.call(this, model);
         return App.execute("close:question:properties");
       };
 

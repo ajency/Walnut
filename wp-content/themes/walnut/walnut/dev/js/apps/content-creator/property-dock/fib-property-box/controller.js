@@ -32,6 +32,21 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         this.model.set({
           'blanksArray': elements
         });
+        if (this.model.get('marks') > 0) {
+          _.every(this.model.get('blanksArray'), (function(_this) {
+            return function(blanks) {
+              if (blanks.correct_answers.length && blanks.correct_answers[0] !== '') {
+                _this.model.set('complete', true);
+                return true;
+              } else {
+                _this.model.set('complete', false);
+                return false;
+              }
+            };
+          })(this));
+        } else {
+          this.model.set('complete', false);
+        }
         this.model.save();
         ElementCollection = App.request("create:new:question:element:collection", models);
         return this.model.set('blanksArray', ElementCollection);

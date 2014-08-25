@@ -131,10 +131,7 @@ define ['app'],(App)->
 
 										<div>
 											Marks
-											<select id="marks">
-												<option value="1">1</option>
-												<option value="2">2</option>	
-											</select>
+											<input id="marks" type="text" value="{{marks}}" class="form-control" >
 										</div>	
 									
 									</div>
@@ -147,7 +144,7 @@ define ['app'],(App)->
 				'blur #answer-max-length' : '_changeMaxLength'
 				'change input#check-case-sensitive': '_checkCaseSensitive'
 				'change select#biganswer-font' : '_changeFont'
-				'change select#marks' : '_changeMarks'
+				'blur input#marks' : '_changeMarks'
 				'change select#biganswer-style' : '_changeStyle'
 				# 'change input#correct-answers' : '_changeCorrectAnswers'
 
@@ -176,11 +173,7 @@ define ['app'],(App)->
 					# initialize font dropdown based on model
 					@$el.find('#biganswer-font').select2 'val',@.model.get 'font'
 
-					# initialize the dropdown to use select2 plugin
-					@$el.find('#marks').select2
-							minimumResultsForSearch: -1
-					# initialize font dropdown based on model
-					@$el.find('#marks').select2 'val',@model.get 'marks'
+					
 
 					# initialize the dropdown to use select2 plugin
 					@$el.find('#biganswer-style').select2
