@@ -19,6 +19,7 @@ require_once 'modules/sync-data/sync-data-ajax.php';
 require_once 'modules/communications/ajax.php';
 require_once 'modules/quiz/ajax.php';
 require_once 'custom_configs.php';
+require_once 'modules/school/school_data_import.php';
 
 
 add_theme_support( 'menus' );
