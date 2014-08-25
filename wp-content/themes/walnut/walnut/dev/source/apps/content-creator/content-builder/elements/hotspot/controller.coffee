@@ -21,6 +21,8 @@ define ['app'
                     optionCollection : []
                     textCollection : []
                     imageCollection : []
+                    complete : false
+
 
                 super(options)
 

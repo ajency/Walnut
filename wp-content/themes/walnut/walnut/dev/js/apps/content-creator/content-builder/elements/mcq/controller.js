@@ -40,7 +40,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           elements: [],
           marks: 1,
           multiple: false,
-          correct_answer: [3]
+          correct_answer: [3],
+          complete: false
         });
         Controller.__super__.initialize.call(this, options);
         this.layout.model.on('change:columncount', this._changeColumnCount);

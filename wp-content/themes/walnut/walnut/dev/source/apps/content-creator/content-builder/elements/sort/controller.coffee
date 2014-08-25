@@ -19,6 +19,8 @@ define ['app'
                     bg_color : '#ffffff'
                     bg_opacity : 1
                     height : 40
+                    complete : false
+                    
 
                 super options
 

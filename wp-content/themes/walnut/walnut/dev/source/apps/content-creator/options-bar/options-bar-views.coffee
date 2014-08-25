@@ -134,11 +134,13 @@ define ['app',
                     @trigger 'close:grading:parameter'
 
             saveQuestionSettings:->
-                if @$el.find('form').valid()
-                    data = Backbone.Syphon.serialize (@)
-                    @trigger "save:data:to:model", data
-                    @$el.find '#preview-question'
-                    .show()
+                _.delay =>
+                    if @$el.find('form').valid()
+                        data = Backbone.Syphon.serialize (@)
+                        @trigger "save:data:to:model", data
+                        @$el.find '#preview-question'
+                        .show()
+                ,500
 
             previewQuestion:->
                 if @model.get('content_type') is 'student_question'
