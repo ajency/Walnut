@@ -79,8 +79,22 @@ define(['app'], function(App) {
           _.each(answerArray, (function(_this) {
             return function(ans, index) {
               var optionModel;
-              optionModel = _this.optionCollection.get(ans.id);
-              return _this._setBlinker(null, optionModel.toJSON());
+              if (_.str.include(ans.id, "option")) {
+                optionModel = _.find(_this.optionLayer.getChildren(), function(option) {
+                  if (option.attrs.id === ans.id) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                });
+                if (!_this.model.get('transparent')) {
+                  return _this._setBlinker(optionModel);
+                } else {
+                  return _this._setBlinker(null, ans);
+                }
+              } else {
+                return _this._setBlinker(null, ans);
+              }
             };
           })(this));
           if (Marionette.getOption(this, 'displayAnswer')) {
