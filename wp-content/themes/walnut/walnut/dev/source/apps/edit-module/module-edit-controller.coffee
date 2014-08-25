@@ -1,9 +1,9 @@
 define ['app'
         'controllers/region-controller'
-        'apps/content-modules/edit-module/module-edit-views'
-        'apps/content-modules/edit-module/module-description/module-description-controller'
-        'apps/content-modules/edit-module/content-selection/app'
-        'apps/content-modules/edit-module/content-display/content-display-app'], (App, RegionController)->
+        'apps/edit-module/module-edit-views'
+        'apps/edit-module/module-description/module-description-controller'
+        'apps/edit-module/content-selection/app'
+        'apps/edit-module/content-display/content-display-app'], (App, RegionController)->
     App.module "ContentModulesApp.Edit", (Edit, App)->
         class Edit.GroupController extends RegionController
 

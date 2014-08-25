@@ -1,5 +1,5 @@
 define ['app'
-        'text!apps/content-modules/edit-module/module-description/templates/collection-details.html'
+        'text!apps/edit-module/module-description/templates/collection-details.html'
 ],(App,collectionDetailsTpl)->
 
     App.module 'EditCollecionDetailsApp.Views',(Views,App)->

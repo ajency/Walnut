@@ -1,8 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'apps/content-modules/edit-module/content-selection/all-content-app'
-        'apps/content-modules/edit-module/content-selection/search-results-app'
-        'apps/content-modules/edit-module/content-selection/add-set-app'
+        'apps/edit-module/content-selection/all-content-app'
+        'apps/edit-module/content-selection/search-results-app'
+        'apps/edit-module/content-selection/add-set-app'
         'apps/textbook-filters/textbook-filters-app'
 ], (App, RegionController)->
     App.module "ContentSelectionApp.Controller", (Controller, App)->

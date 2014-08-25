@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-modules/edit-module/content-selection/templates/content-selection.html'
+        'text!apps/edit-module/content-selection/templates/content-selection.html'
 ], (App, RegionController, contentSelectionTpl)->
     App.module "ContentSelectionApp.AllContent", (AllContent, App, Backbone, Marionette, $, _)->
         class AllContent.Controller extends RegionController

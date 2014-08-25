@@ -11,7 +11,7 @@ require.config({
     backbone: 'plugins/backbone',
     marionette: 'plugins/backbone.marionette',
     text: 'plugins/text',
-    app: 'walnut-app',
+    app: 'school-app',
     syphon: 'plugins/backbone.syphon',
     sidr: 'plugins/jquery.sidr.min',
     slimroll: 'plugins/jquery.slimscroll.min',
@@ -96,6 +96,6 @@ require.config({
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/school-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
   return App.start();
 });

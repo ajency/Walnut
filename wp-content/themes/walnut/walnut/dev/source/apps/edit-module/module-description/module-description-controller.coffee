@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/content-modules/edit-module/module-description/module-description-views'
+        'apps/edit-module/module-description/module-description-views'
 ], (App, RegionController)->
     App.module "EditCollecionDetailsApp", (EditCollecionDetailsApp, App)->
 

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-modules/edit-module/module-edit-views', 'apps/content-modules/edit-module/module-description/module-description-controller', 'apps/content-modules/edit-module/content-selection/app', 'apps/content-modules/edit-module/content-display/content-display-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/edit-module/module-edit-views', 'apps/edit-module/module-description/module-description-controller', 'apps/edit-module/content-selection/app', 'apps/edit-module/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentModulesApp.Edit", function(Edit, App) {
     Edit.GroupController = (function(_super) {
       __extends(GroupController, _super);

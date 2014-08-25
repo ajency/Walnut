@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/content-modules/edit-module/content-display/templates/content-display.html'], (App, RegionController, contentDisplayItemTpl)->
+        'text!apps/edit-module/content-display/templates/content-display.html'], (App, RegionController, contentDisplayItemTpl)->
     App.module "CollectionContentDisplayApp.Controller", (Controller, App)->
         class Controller.CollectionEditContentDisplayController extends RegionController
 
