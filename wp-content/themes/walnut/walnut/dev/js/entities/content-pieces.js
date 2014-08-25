@@ -36,6 +36,34 @@ define(["app", 'backbone'], function(App, Backbone) {
         return marks;
       };
 
+      ItemModel.prototype.setMarks = function(multiplicationFactor) {
+        var layout;
+        layout = this.get('layout');
+        _.each(layout, function(ele) {
+          var options;
+          if (ele.marks) {
+            ele.marks = ele.marks * multiplicationFactor;
+          }
+          if (_.has(ele, 'optionCollection')) {
+            options = ele.optionCollection;
+          }
+          if (_.has(ele, 'elements')) {
+            options = ele.elements;
+          }
+          if (_.has(ele, 'blanksArray')) {
+            options = ele.blanksArray;
+          }
+          if (options) {
+            return _.each(options, function(op) {
+              if (op.marks) {
+                return op.marks = op.marks * multiplicationFactor;
+              }
+            });
+          }
+        });
+        return this;
+      };
+
       return ItemModel;
 
     })(Backbone.Model);

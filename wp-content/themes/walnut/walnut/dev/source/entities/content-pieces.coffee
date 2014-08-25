@@ -27,6 +27,23 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 marks
 
+            setMarks:(multiplicationFactor)->
+
+                layout= @.get 'layout'
+                
+                _.each layout, (ele)-> 
+                    ele.marks=ele.marks*multiplicationFactor if ele.marks
+
+                    options= ele.optionCollection if _.has ele, 'optionCollection'
+                    options= ele.elements if _.has ele, 'elements'
+                    options= ele.blanksArray if _.has ele, 'blanksArray'
+
+                    if options
+                        _.each options, (op)-> 
+                            op.marks=op.marks*multiplicationFactor if op.marks
+
+                @
+
         # ContentPiece collection class
         class ContentPiece.ItemCollection extends Backbone.Collection
             model : ContentPiece.ItemModel
