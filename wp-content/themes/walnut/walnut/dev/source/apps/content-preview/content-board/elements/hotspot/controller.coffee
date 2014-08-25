@@ -13,6 +13,8 @@ define ['app'
             initialize : (options)->
                 {answerWreqrObject,@answerModel} = options
 
+                super(options)
+
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
@@ -26,7 +28,7 @@ define ['app'
                         if _.isEmpty answer
                             emptyOrIncomplete = 'empty' 
 
-                        else if _.size(answer)< _.size @layout.model.get 'correct_answer'
+                        else if _.size(answer)< _.size  @layout.model.get('optionCollection').where { correct : 'true' }
                             emptyOrIncomplete = 'incomplete' 
 
                         else emptyOrIncomplete = 'complete'
@@ -41,7 +43,7 @@ define ['app'
                         #default is true
                         @_submitAnswer @displayAnswer 
 
-                super(options)
+                
 
             _getHotspotView : ()->
                 new Hotspot.Views.HotspotView

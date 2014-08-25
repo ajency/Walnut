@@ -88,14 +88,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       Controller.prototype._triggerSubmit = function() {
         this.layout.triggerMethod("submit:question");
-        this.answerWreqrObject.request("submit:answer");
-        answer.set({
-          'status': this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
-        });
-        if (answer.get('status') === 'wrong_answer' && _.toBool(this.quizModel.get('negMarksEnable'))) {
+        if (_.contains(_.pluck(this.model.get('layout'), 'element'), 'BigAnswer')) {
           answer.set({
-            'marks': -answerData.totalMarks * this.quizModel.get('negMarks') / 100
+            'status': 'teacher_check'
           });
+        } else {
+          this.answerWreqrObject.request("submit:answer");
+          answer.set({
+            'status': this._getAnswerStatus(answer.get('marks'), answerData.totalMarks)
+          });
+          if (answer.get('status') === 'wrong_answer' && _.toBool(this.quizModel.get('negMarksEnable'))) {
+            answer.set({
+              'marks': -answerData.totalMarks * this.quizModel.get('negMarks') / 100
+            });
+          }
         }
         return this.region.trigger("submit:question", answer);
       };

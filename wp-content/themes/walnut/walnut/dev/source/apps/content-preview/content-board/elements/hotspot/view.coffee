@@ -72,12 +72,23 @@ define ['app'], (App)->
 
 
             _autoPopulateAnswers:=>
-                answerModel=Marionette.getOption @, 'answerModel'
+                answerModel = Marionette.getOption @, 'answerModel'
                 if answerModel and answerModel.get('status') isnt 'not_attempted'
-                    answerArray= answerModel.get 'answer'
+                    answerArray = answerModel.get 'answer'
                     _.each answerArray, (ans,index)=>
-                        optionModel= @optionCollection.get ans.id
-                        @_setBlinker(null, optionModel.toJSON())
+
+                        if _.str.include(ans.id, "option")
+
+                            optionModel = _.find @optionLayer.getChildren(),(option)=>
+                                    if option.attrs.id is ans.id
+                                        return true
+                                    else return false #@optionCollection.get ans.id
+                            if not @model.get 'transparent'
+                                @_setBlinker(optionModel)
+                            else
+                                @_setBlinker(null, ans)
+                        else
+                            @_setBlinker(null, ans)
 
                     @trigger "submit:answer" if Marionette.getOption @, 'displayAnswer'
 

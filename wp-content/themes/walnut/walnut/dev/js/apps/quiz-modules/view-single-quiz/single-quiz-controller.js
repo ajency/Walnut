@@ -57,6 +57,21 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               if (!questionsCollection) {
                 questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
                 App.execute("when:fetched", questionsCollection, function() {
+                  var actualMarks, multiplicationFactor;
+                  actualMarks = 0;
+                  questionsCollection.each(function(m) {
+                    if (m.getMarks()) {
+                      return actualMarks += m.getMarks();
+                    }
+                  });
+                  if (actualMarks > 0) {
+                    multiplicationFactor = quizModel.get('marks') / actualMarks;
+                  }
+                  if (multiplicationFactor) {
+                    questionsCollection.each(function(m) {
+                      return m.setMarks(multiplicationFactor);
+                    });
+                  }
                   if (quizModel.get('permissions').randomize) {
                     questionsCollection.each(function(e) {
                       return e.unset('order');
