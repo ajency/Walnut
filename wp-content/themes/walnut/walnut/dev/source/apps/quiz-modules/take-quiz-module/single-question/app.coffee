@@ -74,12 +74,16 @@ define ['app'
                     _triggerSubmit:->
                         @layout.triggerMethod "submit:question"
 
-                        @answerWreqrObject.request "submit:answer"
+                        if _.contains _.pluck(this.model.get('layout'),'element'),'BigAnswer'
+                            answer.set 'status' : 'teacher_check'
+                            
+                        else
+                            @answerWreqrObject.request "submit:answer"
 
-                        answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+                            answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
 
-                        if answer.get('status') is 'wrong_answer' and _.toBool @quizModel.get 'negMarksEnable'
-                            answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
+                            if answer.get('status') is 'wrong_answer' and _.toBool @quizModel.get 'negMarksEnable'
+                                answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
 
                         @region.trigger "submit:question", answer
 
