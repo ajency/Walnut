@@ -18,7 +18,7 @@ define ["backbone"], (Backbone) ->
 			opts = options.data
 
 			if collection_name is 'textbook'
-				data = _.getTextbooksByUserId(253)#_.getUserID())
+				data = _.getTextbooksByUserId(_.getUserID())
 				data.done (d)->
 					console.log 'textbook by class id and division data'
 					console.log d

@@ -3,8 +3,14 @@ define(['underscore'], function(_) {
     cordovaLocalStorage: function() {
       return _.localStorage = window.localStorage;
     },
+    setCookiesValue: function(cookiesValue) {
+      return _.localStorage.setItem("CookiesVal", cookiesValue);
+    },
+    getCookiesValue: function() {
+      return _.localStorage.getItem("CookiesVal");
+    },
     setUserID: function(id) {
-      return _.localStorage.setItem("user_id", 253);
+      return _.localStorage.setItem("user_id", id);
     },
     getUserID: function() {
       return _.localStorage.getItem("user_id");

@@ -64,7 +64,7 @@ define ['underscore'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"class_divisions 
-							WHERE id=?", [12341531], onSuccess(d), _.deferredErrorHandler(d))
+							WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
 				(tx, data)->
@@ -105,3 +105,5 @@ define ['underscore'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getStudentsCount transaction completed'
 			.fail _.failureHandler
+
+

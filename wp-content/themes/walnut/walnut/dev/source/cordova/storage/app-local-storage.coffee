@@ -8,10 +8,19 @@ define ['underscore'], ( _)->
 
             _.localStorage = window.localStorage
 
+        #save for trmporary purpose the cookies values
+        setCookiesValue : (cookiesValue)->
+            _.localStorage.setItem("CookiesVal", cookiesValue)
+
+
+        getCookiesValue : ->
+            _.localStorage.getItem("CookiesVal");
+
+
 
         # save/get logged in user ID
         setUserID : (id)->
-            _.localStorage.setItem("user_id", 253)
+            _.localStorage.setItem("user_id", id)
 
         getUserID : ->
             _.localStorage.getItem("user_id")

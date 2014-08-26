@@ -8,8 +8,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		getTblPrefix : ->
 
 			# uncomment this after  server starts working
-			# 'wp_'+_.getBlogID()+'_'
-			'wp_'+15+'_'
+			'wp_'+_.getBlogID()+'_'
+			# 'wp_'+15+'_'
 
 
 		displayConnectionStatusOnMainLoginPage : ->
@@ -119,6 +119,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							password : row['password']
 							role : row['user_role']
 							exists : true
+						console.log "user data"
+						console.log userData
 
 					d.resolve(userData)
 
@@ -305,18 +307,54 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				$('#onOffSwitchToggle').prop "checked" : true
 			else
 				$('#onOffSwitchToggle').prop "checked" : false
+
+
+		#Fetch single division id for student
+		getSingleDivsionByUserId : (id)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? 
+							AND meta_key=?", [id, 'student_division']
+							,onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					id = ''
+					if data.rows.length isnt 0
+						id = data.rows.item(0)['meta_value']
+						console.log id
+
+					d.resolve id
+
+			$.when(runQuery()).done ->
+				console.log 'fetchSingleDivsion transaction completed'
+			.fail _.failureHandler
+
+
 		
 
 		# user model set for back button navigation
 		setUserModel : ->
 			
 			user = App.request "get:user:model"
-			user.set 'ID' : 253#''+_.getUserID()
+			user.set 'ID' :''+_.getUserID()
 
 			if not _.isNull(_.getUserCapabilities())
 				user.set 'allcaps' : {"student":true}#_.getUserCapabilities()
 
-			data = 
-				'division' : 12341534#_.getStudentDivision()
+			singleDivision = @getSingleDivsionByUserId(253)
+			singleDivision.done (division)->
+				
+				data = 
+					'division': division
 
-			user.set 'data' : data
+				user.set 'data' : data
+
+
+		#select the cookies for the logged in user
+		# selectCookieValue : ->
+		# 	run
+
+

@@ -59,6 +59,7 @@ define ['app'
 					@trigger "user:logout"
 
 				'click #user_logout' : 'onAppLogout'
+				'click #syncchk' : 'checkIfServerImportOperationCompleted'
 				'click .dropdown-menu > li > a' :(e)-> e.stopPropagation();
 				'click #user-options' : 'showAudioCuesToggleValue'
 				'click #onOffSwitchToggle' : 'onToggle'
@@ -137,8 +138,38 @@ define ['app'
 				else
 					_.setAudioCues 'false'
 
+			checkIfServerImportOperationCompleted : -> 
+				data = blog_id : _.getBlogID()
+				# data = 
+				# 	data : jsondata
+				
+				jsonurl = AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId()
+				$.ajax 
+					type: 'GET' 
+					url : jsonurl 
+					data: data   
+					dataType: 'JSONP' 
+					xhrFields: 
+						withCredentials: true 
+					beforeSend: (xhr)->
+						if not _.isNull(_.getCookiesValue())
+							if _.getCookiesValue() isnt 'null'
+								console.log _.getCookiesValue()
+								console.log JSON.stringify xhr.setRequestHeader('Set-Cookie', _.getCookiesValue())
+								xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
+					success : (resp, status, jqXHR)->
+						console.log 'Sync completion response'
+						console.log JSON.stringify resp
+						console.log status
 
+					error :(jqXHR, err) =>
+						@onErrorResponse('Could not connect to server')
 
+			onErrorResponse :(msg)->
+
+				response = 
+					error : ''+msg
+				@success response
 
 		# set handlers
 		App.commands.setHandler "show:headerapp", (opt = {})->

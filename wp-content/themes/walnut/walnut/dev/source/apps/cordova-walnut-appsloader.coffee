@@ -2,7 +2,7 @@ define [
     'apps/login/loginapp'
     'apps/header/headerapp'
     'apps/left-nav/leftnavapp'
-    'apps/textbooks/app'
+    # 'apps/textbooks/app'
     #'apps/breadcrumb/app'
     # 'apps/content-modules/content-modules-app'
     'apps/students-dashboard/teachers-dashboard-app'

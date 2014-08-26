@@ -12,7 +12,7 @@ define(["backbone"], function(Backbone) {
       console.log('Collection name: ' + collection_name);
       opts = options.data;
       if (collection_name === 'textbook') {
-        data = _.getTextbooksByUserId(253);
+        data = _.getTextbooksByUserId(_.getUserID());
         data.done(function(d) {
           console.log('textbook by class id and division data');
           console.log(d);

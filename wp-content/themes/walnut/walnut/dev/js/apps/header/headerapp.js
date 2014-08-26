@@ -85,6 +85,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
           return this.trigger("user:logout");
         },
         'click #user_logout': 'onAppLogout',
+        'click #syncchk': 'checkIfServerImportOperationCompleted',
         'click .dropdown-menu > li > a': function(e) {
           return e.stopPropagation();
         },
@@ -142,6 +143,50 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         } else {
           return _.setAudioCues('false');
         }
+      };
+
+      HeaderView.prototype.checkIfServerImportOperationCompleted = function() {
+        var data, jsonurl;
+        data = {
+          blog_id: _.getBlogID()
+        };
+        jsonurl = AJAXURL + '?action=check-app-data-sync-completion&sync_request_id=' + _.getSyncRequestId();
+        return $.ajax({
+          type: 'GET',
+          url: jsonurl,
+          data: data,
+          dataType: 'JSONP',
+          xhrFields: {
+            withCredentials: true
+          },
+          beforeSend: function(xhr) {
+            if (!_.isNull(_.getCookiesValue())) {
+              if (_.getCookiesValue() !== 'null') {
+                console.log(_.getCookiesValue());
+                console.log(JSON.stringify(xhr.setRequestHeader('Set-Cookie', _.getCookiesValue())));
+                return xhr.setRequestHeader('Set-Cookie', _.getCookiesValue());
+              }
+            }
+          },
+          success: function(resp, status, jqXHR) {
+            console.log('Sync completion response');
+            console.log(JSON.stringify(resp));
+            return console.log(status);
+          },
+          error: (function(_this) {
+            return function(jqXHR, err) {
+              return _this.onErrorResponse('Could not connect to server');
+            };
+          })(this)
+        });
+      };
+
+      HeaderView.prototype.onErrorResponse = function(msg) {
+        var response;
+        response = {
+          error: '' + msg
+        };
+        return this.success(response);
       };
 
       return HeaderView;

@@ -1,7 +1,7 @@
 define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
   return _.mixin({
     getTblPrefix: function() {
-      return 'wp_' + 15 + '_';
+      return 'wp_' + _.getBlogID() + '_';
     },
     displayConnectionStatusOnMainLoginPage: function() {
       if (_.isOnline()) {
@@ -100,6 +100,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               role: row['user_role'],
               exists: true
             };
+            console.log("user data");
+            console.log(userData);
           }
           return d.resolve(userData);
         };
@@ -283,11 +285,34 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         });
       }
     },
+    getSingleDivsionByUserId: function(id) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? AND meta_key=?", [id, 'student_division'], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          id = '';
+          if (data.rows.length !== 0) {
+            id = data.rows.item(0)['meta_value'];
+            console.log(id);
+          }
+          return d.resolve(id);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('fetchSingleDivsion transaction completed');
+      }).fail(_.failureHandler);
+    },
     setUserModel: function() {
-      var data, user;
+      var singleDivision, user;
       user = App.request("get:user:model");
       user.set({
-        'ID': 253
+        'ID': '' + _.getUserID()
       });
       if (!_.isNull(_.getUserCapabilities())) {
         user.set({
@@ -296,11 +321,15 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           }
         });
       }
-      data = {
-        'division': 12341534
-      };
-      return user.set({
-        'data': data
+      singleDivision = this.getSingleDivsionByUserId(253);
+      return singleDivision.done(function(division) {
+        var data;
+        data = {
+          'division': division
+        };
+        return user.set({
+          'data': data
+        });
       });
     }
   });

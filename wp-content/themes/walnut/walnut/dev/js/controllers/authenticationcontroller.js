@@ -60,53 +60,71 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.onlineDeviceAuth = function() {
-      _.setUserModel();
-      return this.onSuccessResponse();
-    };
-
-    AuthenticationController.prototype.onDeviceLoginSuccess = function() {
-      var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
-			AJAXURL = _.getSiteUrl() + baseUrl;;
-      console.log(AJAXURL);
-      return $.post(AJAXURL + '?action=get-user-app-profile', {
+      var url;
+      this.data = {
         data: this.data
-      }, (function(_this) {
-        return function(resp) {
-          var userRole;
-          console.log('User Response');
-          console.log(JSON.stringify(resp));
-          if (resp.error) {
-            console.log("error");
-            return _this.onErrorResponse(resp.error);
-          } else {
-            userRole = resp.login_details.roles[0];
-            if (userRole === "teacher") {
-              return _this.onErrorResponse("Your are not allowed to login");
-            } else if (userRole === "student") {
-              _this.setUserDetails(resp.login_details.ID, _this.data.txtusername);
-              _.setUserCapabilities(resp.login_details.allcaps);
-              _.setStudentDivision(resp.login_details.data.division);
-              _.createDataTables(_.db);
-              _this.saveUpdateUserDetails(resp);
-              return _this.onSuccessResponse();
+      };
+      url = AJAXURL + '?action=get-user-app-profile';
+      return $.ajax({
+        type: 'POST',
+        url: url,
+        data: this.data,
+        dataType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        beforeSend: function(xhr) {
+          if (!_.isNull(_.getCookiesValue())) {
+            if (_.getCookiesValue() !== 'null') {
+              console.log(_.getCookiesValue());
+              return xhr.setRequestHeader('Set-Cookie', _.getCookiesValue());
             }
           }
-        };
-      })(this), 'json').fail((function(_this) {
-        return function() {
-          return _this.onErrorResponse('Could not connect to server');
-        };
-      })(this));
+        },
+        success: (function(_this) {
+          return function(resp, status, jqXHR) {
+            var store_cookies, userRole;
+            console.log('Login Response');
+            console.log(JSON.stringify(resp));
+            if (resp.error) {
+              return _this.onErrorResponse(resp.error);
+            } else {
+              userRole = resp.login_details.roles[0];
+              if (userRole === "teacher") {
+                return _this.onErrorResponse("Your are not allowed to login");
+              } else if (userRole === "student") {
+                store_cookies = jqXHR.getResponseHeader('Set-Cookie');
+                console.log(store_cookies);
+                _.setCookiesValue(store_cookies);
+                _.setBlogID(8);
+                _.setSyncRequestId(1);
+                _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername);
+                _.setUserCapabilities(resp.login_details.allcaps);
+                _.setStudentDivision(resp.login_details.data.division);
+                _.createDataTables(_.db);
+                _this.saveUpdateUserDetails(resp);
+                return _this.onSuccessResponse();
+              }
+            }
+          };
+        })(this),
+        error: (function(_this) {
+          return function(jqXHR, err) {
+            return _this.onErrorResponse('Could not connect to server');
+          };
+        })(this)
+      });
     };
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       var offlineUser;
-      offlineUser = _.getUserDetails(this.data.txtusername);
+      console.log(this.data.data.txtusername);
+      offlineUser = _.getUserDetails(this.data.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
-            if (user.password === _this.data.txtpassword) {
-              _this.setUserDetails(user.user_id, _this.data.txtusername);
+            if (user.password === data.data.txtpassword) {
+              _this.setUserDetails(user.user_id, _this.data.data.txtusername);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -126,7 +144,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
       var offlineUser;
-      offlineUser = _.getUserDetails(this.data.txtusername);
+      offlineUser = _.getUserDetails(this.data.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
@@ -143,7 +161,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       resp = response.login_details;
       return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, _this.data.txtusername, _this.data.txtpassword, resp.roles[0]]);
+          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, _this.data.data.txtusername, data.data.txtpassword, resp.roles[0]]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Inserted new user');
@@ -155,7 +173,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       resp = response.login_details;
       return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.txtusername, _this.data.txtpassword, resp.ID]);
+          return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.data.txtusername, data.data.txtpassword, resp.ID]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Updated user details');

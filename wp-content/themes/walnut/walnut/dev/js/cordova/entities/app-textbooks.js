@@ -147,7 +147,7 @@ define(['underscore'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', 253], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['textbooks', _.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

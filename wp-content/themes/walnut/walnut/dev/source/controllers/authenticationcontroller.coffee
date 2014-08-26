@@ -50,49 +50,25 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		
 		
 		onlineDeviceAuth:->
-			_.setUserModel()
-			@onSuccessResponse()
-
-			# if _.isNull(_.getSiteUrl()) or _.getSiteUrl() is 'null'
-			
-			# 	$.post AJAXURL + '?action=get-user-app-profile',
-			# 		data: @data,
-			# 		(resp)=>
-			# 			console.log 'Login Response'
-			# 			console.log JSON.stringify resp
-			# 			if resp.error
-			# 				@onErrorResponse(resp.error)
-			# 			else
-			# 				_.setSiteUrl(resp.blog_details.site_url)
-			# 				@onSuccessResponse()
-			# 				#commented to bypass login 
-			# 				# @onDeviceLoginSuccess()
-
-			# 		,
-			# 		'json'
-
-			# 	.fail =>
-			# 		@onErrorResponse('Could not connect to server')
-
-			# else
-			# 	@onDeviceLoginSuccess()
-
-
-		
-		onDeviceLoginSuccess : ->
-
-			`var baseUrl =  AJAXURL.substr(AJAXURL.indexOf("/wp-admin"));
-			AJAXURL = _.getSiteUrl() + baseUrl;`
-			console.log AJAXURL
-
-			$.post AJAXURL + '?action=get-user-app-profile',
-				data: @data,
-				(resp)=>
-					console.log 'User Response'
+			@data = 
+				data: @data
+			url = AJAXURL + '?action=get-user-app-profile' 
+			$.ajax 
+				type: 'POST' 
+				url : url  
+				data: @data   
+				dataType: 'json' 
+				xhrFields: 
+						withCredentials: true 
+				beforeSend: (xhr)->
+					if not _.isNull(_.getCookiesValue())
+						if _.getCookiesValue() isnt 'null'
+							console.log _.getCookiesValue()
+							xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
+				success : (resp, status, jqXHR)=>
+					console.log 'Login Response'
 					console.log JSON.stringify resp
-					
 					if resp.error
-						console.log "error"
 						@onErrorResponse(resp.error)
 					else
 						userRole = resp.login_details.roles[0]
@@ -100,31 +76,33 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							@onErrorResponse("Your are not allowed to login")
 
 						else if userRole is "student"
-							@setUserDetails(resp.login_details.ID, @data.txtusername)
+							store_cookies = jqXHR.getResponseHeader('Set-Cookie');
+							console.log store_cookies
+							_.setCookiesValue(store_cookies);
+							_.setBlogID 8
+							_.setSyncRequestId 1
+							# @storeUserSessionCookie(resp, store_cookies)
+							@setUserDetails(resp.login_details.ID, @data.data.txtusername)
 							_.setUserCapabilities(resp.login_details.allcaps)
 							_.setStudentDivision(resp.login_details.data.division)
 							_.createDataTables(_.db)
 							@saveUpdateUserDetails(resp)
 							@onSuccessResponse()
 
-				,
-				'json'
-
-			.fail =>
-				@onErrorResponse('Could not connect to server')
-
+				error :(jqXHR, err) =>
+					@onErrorResponse('Could not connect to server')
 
 
 
 		offlineDeviceAuth : ->
-
-			offlineUser = _.getUserDetails(@data.txtusername)
+			console.log @data.data.txtusername
+			offlineUser = _.getUserDetails(@data.data.txtusername)
 
 			offlineUser.done (user)=>
 				if user.exists
-					if user.password is @data.txtpassword
+					if user.password is data.data.txtpassword
 
-						@setUserDetails(user.user_id, @data.txtusername)
+						@setUserDetails(user.user_id, @data.data.txtusername)
 						@onSuccessResponse()
 
 					else @onErrorResponse('Invalid Password')       
@@ -142,17 +120,30 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			_.setUserModel()
 
 
+		#save users session info
+		# storeUserSessionCookie : (response , store_cookies)->
+		# 	resp = response.login_details
+
+		# 	_.db.transaction((tx)=>
+		# 		tx.executeSql('INSERT INTO user_session_value_check (user_id, username, session_id) 
+		# 			VALUES(?,?,?)', 
+		# 			[resp.ID, @data.data.txtusername, store_cookies])
+		# 	,_.transactionErrorhandler 
+		# 	,(tx)->
+		# 		console.log 'success: inserted values in user_session_value_check'
+		# 	)
+
 
 		# save new user or update existing user 
 		saveUpdateUserDetails : (resp)->
 
-			offlineUser = _.getUserDetails(@data.txtusername)
+			offlineUser = _.getUserDetails(@data.data.txtusername)
 			
 			offlineUser.done (user)=>
 				if user.exists then @updateExistingUser(resp)
 				else @inputNewUser(resp)
 		
-		
+
 		inputNewUser : (response)->
  
 			resp = response.login_details
@@ -160,7 +151,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			_.db.transaction((tx)=>
 				tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) 
 					VALUES (?, ?, ?, ?)', 
-					[resp.ID, @data.txtusername, @data.txtpassword, resp.roles[0]])
+					[resp.ID, @data.data.txtusername, data.data.txtpassword, resp.roles[0]])
 
 			,_.transactionErrorhandler 
 			,(tx)->
@@ -174,7 +165,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			_.db.transaction((tx)=>
 				tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", 
-					[@data.txtusername, @data.txtpassword, resp.ID])
+					[@data.data.txtusername, data.data.txtpassword, resp.ID])
 
 			,_.transactionErrorhandler 
 			,(tx)->
