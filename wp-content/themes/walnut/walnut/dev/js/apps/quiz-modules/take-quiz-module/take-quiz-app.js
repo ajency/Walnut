@@ -120,6 +120,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showPopup = function(message_type, alert_type) {
+        var message_content;
         if (alert_type == null) {
           alert_type = 'confirm';
         }
@@ -127,9 +128,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           this._endQuiz();
           return false;
         }
+        if (message_type === 'hint' || message_type === 'comment') {
+          message_content = questionModel.get(message_type);
+        } else {
+          message_content = quizModel.getMessageContent(message_type);
+        }
         return App.execute('show:alert:popup', {
           region: App.dialogRegion,
-          message_content: quizModel.getMessageContent(message_type),
+          message_content: message_content,
           alert_type: alert_type,
           message_type: message_type
         });
