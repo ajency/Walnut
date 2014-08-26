@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
 
       Controller.prototype.initialize = function(opts) {
         var breadcrumb_items;
-        this.contentModulesCollection = opts.contentModulesCollection, this.textbooksCollection = opts.textbooksCollection;
+        this.contentModulesCollection = opts.contentModulesCollection, this.textbooksCollection = opts.textbooksCollection, this.groupType = opts.groupType;
         this.allChaptersCollection = null;
         breadcrumb_items = {
           'items': [
@@ -67,7 +67,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
           collection: this.contentModulesCollection,
           fullCollection: this.fullCollection,
           textbooksCollection: this.textbooksCollection,
-          chaptersCollection: this.allChaptersCollection
+          chaptersCollection: this.allChaptersCollection,
+          groupType: this.groupType
         });
       };
 

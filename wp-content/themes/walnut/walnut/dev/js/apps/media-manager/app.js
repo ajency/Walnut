@@ -51,8 +51,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         this.show(this.layout);
         this.listenTo(this.layout.gridRegion, "media:element:selected", (function(_this) {
           return function(media) {
-            _this.choosedMedia = media;
-            return App.execute("show:edit:media", media, _this.layout.editMediaRegion);
+            return _this.choosedMedia = media;
           };
         })(this));
         return this.listenTo(this.layout, "media:selected", (function(_this) {
@@ -89,8 +88,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
 
       OuterLayout.prototype.regions = {
         uploadRegion: '#upload-region',
-        gridRegion: '#grid-region',
-        editMediaRegion: '#edit-media-region'
+        gridRegion: '#grid-region'
       };
 
       OuterLayout.prototype.dialogOptions = {

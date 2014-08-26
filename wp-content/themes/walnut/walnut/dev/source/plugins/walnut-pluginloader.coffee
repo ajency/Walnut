@@ -32,12 +32,11 @@ define [
     'kineticresize'
     'checkbox'
     'screwbuttons'
-    'videojs'
-    'videojsplaylist'
     'panzer'
     'panzerlist'
     'mmenu'
     'timerplugin'
     'countdowntimer'
     'spinedit'
+    'jPages'
 ], ->

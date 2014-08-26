@@ -14,27 +14,6 @@ define(['app', 'text!apps/quiz-modules/edit-quiz/quiz-description/templates/quiz
 
       DeatailsView.prototype.className = 'tiles white grid simple vertical green animated fadeIn';
 
-      DeatailsView.prototype.events = {
-        'click #save-quiz': '_saveQuiz',
-        'change input[name="negMarksEnable"]': function(e) {
-          e.stopPropagation();
-          return this._toggleNegativeMarks($(e.target));
-        },
-        'change #msgs': function(e) {
-          return this._showCustomMessages($(e.target));
-        },
-        'change #textbooks': function(e) {
-          return this.trigger("fetch:chapters", $(e.target).val());
-        },
-        'change #chapters': function(e) {
-          return this.trigger("fetch:sections", $(e.target).val());
-        },
-        'change #secs': function(e) {
-          return this.trigger("fetch:subsections", $(e.target).val());
-        },
-        'click .customMsgLink': '_openCustomMsgPopup'
-      };
-
       DeatailsView.prototype.mixinTemplateHelpers = function(data) {
         data = DeatailsView.__super__.mixinTemplateHelpers.call(this, data);
         data.heading = this.model.isNew() ? 'Add' : 'Edit';

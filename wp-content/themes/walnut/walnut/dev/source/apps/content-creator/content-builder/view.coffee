@@ -17,6 +17,7 @@ define ['app'],(App)->
 										items 		: '> .element-wrapper'
 										connectWith : '.droppable-column,.column'
 										start 		: (e, ui)->
+														console.log 'moving'
 														ui.placeholder.height ui.item.height()
 														window.dragging = true
 														return

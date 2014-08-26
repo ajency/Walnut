@@ -81,8 +81,13 @@ function change_uploads_directory( $uploads_dir ) {
     // current page is mediafromftp (the plugin)
     // or if requested mediatype is video
 
-    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video' || $_REQUEST['mediaType'] == 'audio')
-        $folder_name= '/media-web';
+    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video' || $_REQUEST['mediaType'] == 'audio'){
+        if(is_multisite())
+            $folder_name= '/media-web';
+        else
+            $folder_name= '';
+    }
+
 
     $uploads_dir['path'] = $uploads_dir['path'] . $folder_name;
     $uploads_dir['url'] = $uploads_dir['url'] . $folder_name;
@@ -101,10 +106,30 @@ function get_media_by_ids(){
     $current_blog_id= get_current_blog_id();
     switch_to_blog(1);
     foreach ($ids as $id){
-//        $media[] = $id;
-        $media[] = wp_prepare_attachment_for_js( $id );
+        
+        $media_file=wp_prepare_attachment_for_js( $id );
+        
+        $file_url= $media_file['url'];
+        
+        $upload_dir=wp_upload_dir();
+        
+        $directory= $upload_dir['basedir'];
+        
+        if($media_file['type'] === 'video')
+            $file_path= $directory.'/videos-web/'.$media_file['filename'];
+        else
+            $file_path= $directory.'/audio-web/'.$media_file['filename'];
+        
+        if(file_exists($file_path))
+            $media[] = $media_file;
+        
+        else 
+            $media[]= array('error'=>'file doesnt exist','url'=>false);
+        
     }
+    
     switch_to_blog($current_blog_id);
+    
     wp_send_json( array(
         'code' => 'OK',
         'data' => $media

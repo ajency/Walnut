@@ -34,6 +34,21 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                       "media:element:unselected",
                       Marionette.getOption(iv, 'model'));
 
+                @listenTo @view, "itemview:delete:media:image", ( iv, model ) =>
+                    @deleteImage model
+
+                @listenTo @view, "itemview:show:image:editor", (iv, model) =>
+                    ratio  = App.currentImageRatio
+                    editView = App.request "get:image:editor:view", model, 
+                                                            aspectRatio : ratio
+                    @view.triggerMethod "show:edit:image", editView
+                    @listenTo editView, "image:editing:cancelled", =>
+                        @view.triggerMethod "image:editing:cancelled"
+
+
+                App.commands.setHandler "new:media:added",(media)=>
+                    @mediaCollection.add media
+
                 @listenTo @view, "search:media", @_searchMedia
 
 
@@ -52,6 +67,12 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
                 new Grid.Views.GridView
                     collection: @mediaCollection
                     mediaType: @mediaType
+
+            #delete a image from the gallery
+            deleteImage : ( imageModel )->
+                imageModel.destroy
+                    allData : false
+                    wait : true
 
 
         App.commands.setHandler 'start:media:grid:app', (options) =>

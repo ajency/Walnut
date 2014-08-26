@@ -22,6 +22,8 @@ define ['app'
 								case_sensitive : false
 								marks: 2
 								style : 'blank'
+								complete : false
+
 								# correct_answers : []
 
 							super options
@@ -48,7 +50,9 @@ define ['app'
 									model : model
 
 					deleteElement:(model)->
-							model.destroy()
+							super model
 							App.execute "close:question:properties"
 							# # on delete enable all question elements in d element box
 							# @eventObj.vent.trigger "question:removed"
+
+

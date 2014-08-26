@@ -52,7 +52,9 @@ function create_content_piece_post_type() {
 add_action('init', 'create_content_piece_post_type');
 
 function get_content_pieces($args = array()) {
-
+    
+    global $wpdb;
+    
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
@@ -61,12 +63,22 @@ function get_content_pieces($args = array()) {
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
     }
-
-
+    
+    if(isset($args['textbook'])){
+        
+        $post_ids= $wpdb->prepare(
+                "SELECT post_id from {$wpdb->base_prefix}postmeta WHERE meta_key LIKE %s
+                    AND meta_value like %s",
+                array('term_ids', '%"'.$args['textbook'].'";%')                
+        );
+        $args['post__in'] = $wpdb->get_col($post_ids);
+        unset($args['textbook']);
+    }
+    
     if(isset($args['content_type'])){
 
         $content_type_meta_array = array('relation' => 'OR');
-//
+        
         foreach($args['content_type'] as $content_type){
             $content_type_meta_array[]= array(
                 'key'     => 'content_type',
@@ -75,32 +87,6 @@ function get_content_pieces($args = array()) {
             );
         }
         $args['meta_query']=$content_type_meta_array;
-//
-//        $content_type_meta= array_values($content_type_meta_array);
-//
-//        print_r($content_type_meta_array); exit;
-
-        //NEED TO CHANGE THIS !!
-
-//        $args['meta_query']=
-//            array(
-//                'relation' => 'OR',
-//
-//                array(
-//                    'key'     => 'content_type',
-//                    'value'   => 'teacher_question',
-//                    'compare' => '='
-//                ),
-//
-//                array(
-//                    'key'     => 'content_type',
-//                    'value'   => 'content_piece',
-//                    'compare' => '='
-//                ),
-//
-//            );
-
-//         print_r($args['meta_query']); exit;
     }
 
     $args['numberposts'] = -1;
@@ -108,9 +94,9 @@ function get_content_pieces($args = array()) {
 
     if(!isset($args['post_status']))
         $args['post_status'] = 'any';
-
+    
     $content_items = get_posts($args);
-
+    
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
 
@@ -140,11 +126,15 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
 
     $content_items= $excerpts= array();
 
+    if (!is_array($content_pieces))
+        return false;
+
     foreach($content_pieces as $id){
 
         $content_layout= get_post_meta($id, 'layout_json', true);
 
         $content_layout = maybe_unserialize($content_layout);
+
         $content_elements = get_json_to_clone($content_layout);
 
         $excerpts = $content_elements['excerpt'];
@@ -303,7 +293,7 @@ function get_modules_containing_content_piece($content_id){
     foreach($result as $module_meta){
 
         $m['id']=$module_meta->collection_id;
-        $m['name']=get_module_name($module_meta->collection_id);
+        $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
 
         $modules[]=$m;
 
@@ -474,6 +464,28 @@ function get_meta_values($element, $create = FALSE)
         $ele['elements'] = $element['elements'];
     }
 
+    if ($element['element'] == 'Video' || $element['element'] == 'Audio' ){
+        $newUrls=array();
+        if (!is_multisite()) {
+            if($element['element'] == 'Video'){
+                $ele['videoUrl'] = replace_media_urls($ele['videoUrl']);
+                foreach($ele['videoUrls'] as $url){
+                    $url = replace_media_urls($url);
+                    $newUrls[]=$url;
+                }
+                $ele['videoUrls']=$newUrls;
+            }
+            if($element['element'] == 'Audio'){
+                $ele['audioUrl'] = replace_media_urls($ele['audioUrl']);
+                foreach($ele['audioUrls'] as $url){
+                    $url = replace_media_urls($url);
+                    $newUrls[]=$url;
+                }
+                $ele['audioUrls']=$newUrls;
+            }
+        }
+    }
+
     $ele['meta_id'] = $create ? create_new_element($ele) : $element['meta_id'];
     validate_element($ele);
 
@@ -506,100 +518,11 @@ function validate_element(&$element)
     return $element;
 }
 
-function save_content_piece($data){
-    global $wpdb;
-
-    // only if post_author is set we will update it. else the current user will be set as post_author
-
-    $post_author=(isset($data['post_author'])) ? $data['post_author'] : get_current_user_id();
-
-    $post_array=array(
-        'post_status'   => $data['post_status'],
-        'post_type'     => 'content-piece',
-        'post_title'    => 'content piece',
-        'post_author'   => $post_author
-    );
-
-    //if ID is set the post will be updated. if not, a new post will be created
-    if(isset($data['ID']))
-        $post_array['ID']= $data['ID'];
-
-    $content_id= wp_insert_post($post_array);
-
-    if(!$content_id)
-        return false;
-
-    $content_layout = maybe_serialize($data['json']);
-
-    update_post_meta ($content_id, 'layout_json',$content_layout);
-
-    update_post_meta ($content_id, 'content_type',$data['content_type']);
-
-    update_post_meta ($content_id, 'question_type',$data['question_type']);
-
-    update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
-
-    update_post_meta ($content_id, 'difficulty_level', $data['difficulty_level']);
-
-//    negative marks for student question
-//    if($data['content_type'] == 'student_question'){
-//        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
-//    }
-
-
-    // get all params for this content piece
-    $allParams = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->base_prefix}postmeta WHERE post_id = $content_id AND meta_key LIKE 'parameter_%'",ARRAY_N);
-    // delete them
-    foreach ($allParams as $params)
-        delete_post_meta ($content_id,$params[0]);
-
-    //add new set of parameters & attributes
-    if (isset($data['grading_params'])){
-        foreach($data['grading_params'] as $grading_parameter){
-
-            if($grading_parameter['parameter'] == '' || sizeOf($grading_parameter['attributes']) == 0)
-                continue;
-            else{
-                $meta_key = "parameter_" . $grading_parameter['parameter'];
-                $meta_value = $grading_parameter['attributes'];
-                add_post_meta ($content_id, $meta_key,$meta_value);
-            }
-        }
-    }
-
-
-
-    $content_piece_additional = array(
-        'term_ids'          => $data['term_ids'],
-        'duration'          => $data['duration'],
-        'post_tags'         => $data['post_tags'],
-        'instructions'         => $data['instructions'],
-        'hint_enable'       => $data['hint_enable'],
-        'hint'              => $data['hint'],
-        'comment_enable'    => $data['comment_enable'],
-        'comment'           => $data['comment'],
-        'last_modified_by'  => $post_author
-    );
-
-    if($data['post_status']=='publish')
-        $content_piece_additional['published_by']=$post_author;
-
-    $content_piece_meta= maybe_serialize($content_piece_additional);
-
-    update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
-
-    if(isset($data['clone_id'])){
-        clone_json_of_content_piece($content_id, $data['clone_id']);
-    }
-
-    return $content_id;
-}
-
 function clone_json_of_content_piece($id, $clone_id){
 
     $layout_json = get_json_to_clone($layout='', $clone_id, true);
 
-    $layout_json = maybe_serialize($layout_json['elements']);
+    $layout_json = $layout_json['elements'];
 
     update_post_meta($id, 'layout_json',$layout_json);
 

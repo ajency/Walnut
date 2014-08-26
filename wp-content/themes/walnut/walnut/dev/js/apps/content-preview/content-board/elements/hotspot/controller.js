@@ -14,28 +14,64 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
-        answerData = {
-          answer: [],
-          marks: 0,
-          comment: 'Not Attempted'
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
-        return Controller.__super__.initialize.call(this, options);
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        Controller.__super__.initialize.call(this, options);
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
+        if (answerWreqrObject) {
+          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              var answer, data, emptyOrIncomplete;
+              answer = _.compact(_this.answerModel.get('answer'));
+              if (_.isEmpty(answer)) {
+                emptyOrIncomplete = 'empty';
+              } else if (_.size(answer) < _.size(_this.layout.model.get('optionCollection').where({
+                correct: 'true'
+              }))) {
+                emptyOrIncomplete = 'incomplete';
+              } else {
+                emptyOrIncomplete = 'complete';
+              }
+              return data = {
+                'emptyOrIncomplete': emptyOrIncomplete,
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
+            };
+          })(this));
+          return answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function(displayAnswer) {
+              return _this._submitAnswer(_this.displayAnswer);
+            };
+          })(this));
+        }
       };
 
       Controller.prototype._getHotspotView = function() {
         return new Hotspot.Views.HotspotView({
           model: this.layout.model,
-          answerModel: this.answerModel
+          answerModel: this.answerModel,
+          displayAnswer: this.displayAnswer
         });
       };
 
       Controller.prototype.renderElement = function() {
         var imageCollectionArray, optionCollectionArray, textCollectionArray;
         optionCollectionArray = this.layout.model.get('optionCollection');
+        if (optionCollectionArray instanceof Backbone.Collection) {
+          optionCollectionArray = optionCollectionArray.models;
+        }
         textCollectionArray = this.layout.model.get('textCollection');
+        if (textCollectionArray instanceof Backbone.Collection) {
+          textCollectionArray = textCollectionArray.models;
+        }
         imageCollectionArray = this.layout.model.get('imageCollection');
+        if (imageCollectionArray instanceof Backbone.Collection) {
+          imageCollectionArray = imageCollectionArray.models;
+        }
         this._parseArray(optionCollectionArray, textCollectionArray, imageCollectionArray);
         this.optionCollection = App.request("create:new:hotspot:element:collection", optionCollectionArray);
         this.textCollection = App.request("create:new:hotspot:element:collection", textCollectionArray);
@@ -87,8 +123,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
         var answerId, answersNotMarked, correctOptions, correctOptionsIds, totalMarks;
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         console.log(this.optionCollection);
         correctOptions = this.optionCollection.where({
           correct: true
@@ -123,8 +162,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             this.answerModel.set('marks', this.layout.model.get('marks'));
           }
         }
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
-        return this.view.triggerMethod('show:feedback');
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
+        if (displayAnswer) {
+          return this.view.triggerMethod('show:feedback');
+        }
       };
 
       return Controller;

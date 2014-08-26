@@ -9,9 +9,11 @@
                 <label for="check_all"></label>
             </div>-->
             <th style="width:30%">Name</th>
+            {{#isQuiz}}<th>Type</th>{{/isQuiz}}
             <th>Textbook</th>
             <th>Chapter</th>
             <th>Duration</th>
+            {{#isQuiz}}<th>Marks</th>{{/isQuiz}}
             <th>Status</th>
             <th>Action</th>
         </tr>

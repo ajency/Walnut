@@ -12,7 +12,7 @@ define ['marionette','mustache', 'text!config/marionette/templates/modal.html'],
 			wrapper = Mustache.to_html modalTpl, options
 			@$el.html(wrapper)
 			@$el.find('.modal-body').append(view.el);
-			@$el.addClass options.modal_size
+			@$el.addClass options.modal_size + ' modal'
 
 		#initiate modal on show
 		onShow :(view)->

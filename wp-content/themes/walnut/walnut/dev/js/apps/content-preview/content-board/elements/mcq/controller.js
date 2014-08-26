@@ -17,19 +17,46 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerData;
-        answerData = {
-          answer: [],
-          marks: 0,
-          comment: 'Not Attempted'
-        };
-        this.answerModel = App.request("create:new:answer", answerData);
+        var answerWreqrObject;
+        answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        if (!this.answerModel) {
+          this.answerModel = App.request("create:new:answer");
+        }
+        if (answerWreqrObject) {
+          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          answerWreqrObject.setHandler("get:question:answer", (function(_this) {
+            return function() {
+              var answer, data, emptyOrIncomplete;
+              answer = _.compact(_this.answerModel.get('answer'));
+              if (_.isEmpty(answer)) {
+                emptyOrIncomplete = 'empty';
+              } else if (_.size(answer) < _.size(_this.layout.model.get('correct_answer'))) {
+                emptyOrIncomplete = 'incomplete';
+              } else {
+                emptyOrIncomplete = 'complete';
+              }
+              return data = {
+                'emptyOrIncomplete': emptyOrIncomplete,
+                'answerModel': _this.answerModel,
+                'totalMarks': _this.layout.model.get('marks')
+              };
+            };
+          })(this));
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
+            return function() {
+              return _this._submitAnswer(_this.displayAnswer);
+            };
+          })(this));
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype.renderElement = function() {
         var optionCollection, optionsObj, shuffleFlag;
         optionsObj = this.layout.model.get('options');
+        if (optionsObj instanceof Backbone.Collection) {
+          optionsObj = optionsObj.models;
+        }
         this._parseOptions(optionsObj);
         shuffleFlag = true;
         _.each(optionsObj, (function(_this) {
@@ -40,7 +67,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
           };
         })(this));
         if (shuffleFlag) {
-          console.log('shuffle');
           optionsObj = _.shuffle(optionsObj);
         }
         optionCollection = App.request("create:new:option:collection", optionsObj);
@@ -53,7 +79,9 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
 
       Controller.prototype._getMcqView = function() {
         return new Mcq.Views.McqView({
-          model: this.layout.model
+          model: this.layout.model,
+          answerModel: this.answerModel,
+          displayAnswer: this.displayAnswer
         });
       };
 
@@ -74,8 +102,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         }));
       };
 
-      Controller.prototype._submitAnswer = function() {
+      Controller.prototype._submitAnswer = function(displayAnswer) {
         var answersNotMarked, totalMarks;
+        if (displayAnswer == null) {
+          displayAnswer = true;
+        }
         this.answerModel.set('marks', 0);
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
@@ -102,8 +133,12 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             }
           }
         }
-        App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
-        return this.view.triggerMethod("add:option:classes", this.answerModel.get('answer'));
+        if (displayAnswer) {
+          App.execute("show:response", this.answerModel.get('marks'), this.layout.model.get('marks'));
+        }
+        if (displayAnswer) {
+          return this.view.triggerMethod("add:option:classes", this.answerModel.get('answer'));
+        }
       };
 
       Controller.prototype.createRowStructure = function(options) {

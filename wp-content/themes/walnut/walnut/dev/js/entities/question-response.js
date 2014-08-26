@@ -38,8 +38,6 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       QuestionResponseCollection.prototype.model = QuestionResponseModel;
 
-      QuestionResponseCollection.prototype.comparator = 'term_order';
-
       QuestionResponseCollection.prototype.url = function() {
         return AJAXURL + '?action=get-question-response';
       };
@@ -69,10 +67,17 @@ define(["app", 'backbone'], function(App, Backbone) {
         var questionResponse;
         questionResponse = new QuestionResponseModel(data);
         return questionResponse;
+      },
+      getEmptyQuestionResponseCollection: function() {
+        var responseCollection;
+        return responseCollection = new QuestionResponseCollection;
       }
     };
     App.reqres.setHandler("get:question:response:collection", function(params) {
       return API.getAllQuestionResponses(params);
+    });
+    App.reqres.setHandler("get:empty:question:response:collection", function() {
+      return API.getEmptyQuestionResponseCollection();
     });
     return App.reqres.setHandler("save:question:response", function(qID) {
       return API.saveQuestionResponse(qID);

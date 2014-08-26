@@ -26,7 +26,9 @@ define(['app'], function(App) {
 
       Layout.prototype.mixinTemplateHelpers = function(data) {
         data = Layout.__super__.mixinTemplateHelpers.call(this, data);
-        data.content_preview = Marionette.getOption(this, 'content_preview');
+        if (data.content_type === 'student_question' && Marionette.getOption(this, 'content_preview')) {
+          data.content_preview = true;
+        }
         data.showHintButton = data.content_type === 'student_question' && data.hint_enable ? true : false;
         data.instructionsLabel = this.model.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
         return data;

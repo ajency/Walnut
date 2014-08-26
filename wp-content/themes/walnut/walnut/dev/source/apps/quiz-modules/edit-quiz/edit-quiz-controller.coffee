@@ -17,7 +17,7 @@ define ['app'
                 else
                     @quizModel = App.request "new:quiz"
 
-                @textbooksCollection = App.request "get:textbooks"
+                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
                 App.execute "when:fetched", [@quizModel,@textbooksCollection], =>
                     @showQuizEditView()
@@ -52,7 +52,7 @@ define ['app'
 
             _showContentSelectionApp : (model)=>
                 @quizContentCollection = new Backbone.Collection
-                _.each model.get('content_pieces'),(content)=>
+                _.each model.get('content_layout'),(content)=>
                     if content.type is 'content-piece'
                         contentModel = App.request "get:content:piece:by:id",content.id
                     else

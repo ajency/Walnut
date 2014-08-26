@@ -5,9 +5,9 @@ define ['app'],(App)->
 
 		class Views.BigAnswerView extends Marionette.ItemView
 
-			template : '<textarea  type="text" maxlength="{{maxlength}}"  style="
+			template : '<textarea  type="text" maxlength="{{maxlength}}" contenteditable="false" style="
 					    font-family: {{font}}; font-size: {{font_size}}px; color: {{color}}; 
-					     max-width:100%; width :100%; height: 100%; line-height : inherit;">'
+					     max-width:100%; width :100%; height: 100%; line-height : inherit;" disabled></textarea>'
 
 			onShow : ->
 

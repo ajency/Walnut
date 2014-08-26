@@ -19,7 +19,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
         } else {
           this.quizModel = App.request("new:quiz");
         }
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         return App.execute("when:fetched", [this.quizModel, this.textbooksCollection], (function(_this) {
           return function() {
             return _this.showQuizEditView();
@@ -62,7 +64,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/edi
 
       Controller.prototype._showContentSelectionApp = function(model) {
         this.quizContentCollection = new Backbone.Collection;
-        _.each(model.get('content_pieces'), (function(_this) {
+        _.each(model.get('content_layout'), (function(_this) {
           return function(content) {
             var contentModel;
             if (content.type === 'content-piece') {

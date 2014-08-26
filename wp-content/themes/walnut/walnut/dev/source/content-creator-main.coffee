@@ -47,7 +47,16 @@ require.config
         panzerlist : 'plugins/panzerlist'
         sidr: 'plugins/jquery.sidr.min'
 
+        # wordpress cropping js
+        imageareaselect : '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min'
+        imageedit : '../../../../../../wp-admin/js/image-edit'
+        json2 : '../../../../../../wp-includes/js/json2'
+        svgpainter : '../../../../../../wp-admin/js/svg-painter'
+
     shim:
+        imageedit : ['jquery','json2','imageareaselect']
+        imageareaselect : ['jquery']
+        svgpainter : ['jquery']
         underscore:
             exports: '_'
         jquery: ['underscore']

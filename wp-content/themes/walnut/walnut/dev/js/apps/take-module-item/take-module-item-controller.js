@@ -176,16 +176,23 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       TeacherTeachingController.prototype._showQuestionDisplayView = function(model) {
-        return App.execute("show:content:preview", {
-          region: this.layout.questionsDetailsRegion,
-          model: model,
-          textbookNames: this.textbookNames,
-          questionResponseModel: questionResponseModel,
-          timerObject: this.timerObject,
-          display_mode: this.display_mode,
-          classID: this.classID,
-          students: studentCollection
-        });
+        if (!questionResponseModel) {
+          this._getOrCreateModel(model.ID);
+        }
+        return App.execute("when:fetched", questionResponseModel, (function(_this) {
+          return function() {
+            return App.execute("show:content:preview", {
+              region: _this.layout.questionsDetailsRegion,
+              model: model,
+              textbookNames: _this.textbookNames,
+              questionResponseModel: questionResponseModel,
+              timerObject: _this.timerObject,
+              display_mode: _this.display_mode,
+              classID: _this.classID,
+              students: studentCollection
+            });
+          };
+        })(this));
       };
 
       TeacherTeachingController.prototype._showStudentsListView = function(questionResponseModel) {

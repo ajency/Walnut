@@ -7,13 +7,15 @@ define ['app'
             initialize : (opts)->
                 {@model,@contentGroupCollection} = opts
 
-                @view = view = @_getCollectionContentDisplayView @model, @contentGroupCollection
+                @view = view = @_getCollectionContentDisplayView()
 
-                @listenTo @contentGroupCollection, 'content:pieces:of:group:added', @contentPiecesChanged
+                @listenTo @contentGroupCollection, 'add remove', @contentPiecesChanged
 
-                @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPiecesChanged
+#                @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPiecesChanged
 
-                @listenTo view, 'changed:order', @saveContentPieces
+                @listenTo view, 'changed:order', @contentOrderChanged
+
+                @listenTo @view, 'remove:model:from:quiz', @removeModelFromQuiz
 
                 if @contentGroupCollection.length > 0
                     App.execute "when:fetched", @contentGroupCollection.models, =>
@@ -25,17 +27,54 @@ define ['app'
 
 
             contentPiecesChanged : =>
-                contentIDs = @contentGroupCollection.pluck 'ID'
-                @saveContentPieces contentIDs
+                if @model.get('type') is 'quiz'
+                    content = @contentGroupCollection.map (quizContent)->
+                        if quizContent.get('post_type') is 'content-piece'
+                            return { type : 'content-piece'
+                            id : quizContent.get('ID') }
+                        else
+                            return { type : 'content_set'
+                            data : quizContent.toJSON() }
 
-            saveContentPieces : (contentIDs)=>
-                @model.set('content_pieces', contentIDs)
+                else
+                    content = @contentGroupCollection.pluck 'ID'
+
+                @saveContentPieces content
+
+            contentOrderChanged:(ids)=>
+                if @model.get('type') is 'quiz'
+                    content = new Array()
+                    _.each ids,(id)=>
+                        if _.str.include(id,'set')
+                            setModel = @contentGroupCollection.findWhere 'id' : id
+                            content.push
+                                type : 'content_set'
+                                data : setModel.toJSON()
+                        else
+                            content.push
+                                type : 'content-piece'
+                                id : parseInt id
+                else
+                    content = ids
+
+                @saveContentPieces content
+
+            saveContentPieces : (content)=>
+                @model.set('content_pieces', content) if @model.get('type') is 'teaching-module'
+                @model.set('content_layout', content) if @model.get('type') is 'quiz'
                 @model.save({ 'changed' : 'content_pieces' }, { wait : true })
 
-            _getCollectionContentDisplayView : (model, collection) ->
+            _getCollectionContentDisplayView : ->
                 new ContentDisplayView
-                    model : model
-                    collection : collection
+                    model : @model
+                    collection : @contentGroupCollection
+
+            removeModelFromQuiz : (id)->
+                if _.str.include(id,'set')
+                    setModel = @contentGroupCollection.findWhere 'id' : id
+                    @contentGroupCollection.remove setModel
+                else
+                    @contentGroupCollection.remove parseInt id
 
 
         class ContentItemView extends Marionette.ItemView
@@ -46,8 +85,34 @@ define ['app'
 
             className : 'sortable'
 
+            mixinTemplateHelpers : (data)->
+                data = super data
+                data.isContentPiece = true if data.post_type is 'content-piece'
+                if data.post_type is 'content_set'
+                    data.isSet = true
+                    data.contentLevels = new Array()
+                    for i in [ 1..3 ]
+                        lvl = parseInt data["lvl#{i}"]
+                        while lvl > 0
+                            data.contentLevels.push "Level #{i}"
+                            lvl--
+
+                data.isQuiz = true if @groupType is 'quiz'
+                data.isModule = true if @groupType is 'teaching-module'
+
+                if @groupType is 'quiz' and data.post_type is  'content-piece'
+                    data.marks = @model.getMarks() 
+
+                data
+
+            initialize :->
+                @groupType = Marionette.getOption @, 'groupType'
+
             onShow : ->
-                @$el.attr 'id', @model.get 'ID'
+                if @model.get('post_type')is 'content_set'
+                    @$el.attr 'id', @model.get 'id'
+                else
+                    @$el.attr 'id', @model.get 'ID'
 
 
         class ContentDisplayView extends Marionette.CompositeView
@@ -61,6 +126,9 @@ define ['app'
             className : 'col-md-10'
 
             id : 'myCanvas-miki'
+
+            itemViewOptions :->
+                groupType : @model.get 'type'
 
             events :
                 'click .remove' : 'removeItem'
@@ -77,6 +145,7 @@ define ['app'
 
 
             onShow : ->
+
                 @$el.find(".cbp_tmtimeline").sortable
 
                     stop : (event, ui)=>
@@ -93,7 +162,7 @@ define ['app'
                 .closest '.contentPiece'
                     .attr 'data-id'
 
-                @collection.remove parseInt id
+                @trigger 'remove:model:from:quiz',id
 
 
         # set handlers

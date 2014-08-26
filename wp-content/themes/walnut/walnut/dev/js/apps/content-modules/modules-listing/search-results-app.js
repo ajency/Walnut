@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.textbooksCollection = opts.textbooksCollection, this.selectedFilterParamsObject = opts.selectedFilterParamsObject;
+        this.textbooksCollection = opts.textbooksCollection, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.groupType = opts.groupType;
         this.layout = layout = this._getSearchResultsLayout();
         this.searchCollection = App.request("empty:content:modules:collection");
         this.show(layout, {
@@ -34,13 +34,30 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       Controller.prototype._searchContent = function(searchStr, useFilters) {
+        var filters;
+        filters = {};
         if (useFilters) {
-          this.selectedFilterParamsObject.request("get:selected:parameters");
+          filters = this.selectedFilterParamsObject.request("get:parameters:for:search");
         }
-        this.newCollection = App.request("get:content:groups", {
-          post_status: 'any',
-          search_str: searchStr
-        });
+        if (!filters.post_status) {
+          filters.post_status = 'any';
+        }
+        if (this.groupType === 'teaching-module') {
+          this.newCollection = App.request("get:content:groups", {
+            post_status: 'any',
+            search_str: searchStr,
+            textbook: filters.term_id != null ? filters.term_id : void 0,
+            post_status: filters.post_status != null ? filters.post_status : void 0
+          });
+        }
+        if (this.groupType === 'quiz') {
+          this.newCollection = App.request("get:quizes", {
+            post_status: 'any',
+            search_str: searchStr,
+            textbook: filters.term_id != null ? filters.term_id : void 0,
+            post_status: filters.post_status != null ? filters.post_status : void 0
+          });
+        }
         return App.execute("when:fetched", this.newCollection, (function(_this) {
           return function() {
             _this.searchCollection.reset(_this.newCollection.models);
@@ -64,7 +81,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SearchResultsLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <!--<input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button>--> <div id="content-selection-region"></div>';
+      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <label id="error-div" style="display:none"><span class="small text-error">Please enter the search keyword</span></label> <div id="content-selection-region"></div>';
 
       SearchResultsLayout.prototype.regions = {
         contentSelectionRegion: '#content-selection-region'
@@ -88,7 +105,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           useFilters = false;
         }
         if (searchStr) {
+          this.$el.find("#error-div").hide();
           return this.trigger("search:content", searchStr, useFilters);
+        } else {
+          return this.$el.find("#error-div").show();
         }
       };
 

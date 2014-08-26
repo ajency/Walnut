@@ -9,8 +9,16 @@
                 </div>
                 </th>
                 <th>Question</th>
+                {{#isModule}}
                 <th>Content Type</th>
                 <th>Present in training module</th>
+                {{/isModule}}
+                {{#isQuiz}}
+                <th>Level</th>
+                <th>Marks</th>
+                <th>Time</th>
+                <th>Present in Quiz</th>
+                {{/isQuiz}}
                 <th>Last Modified</th>
             </tr>
             </thead>

@@ -26,6 +26,13 @@ define ['app'
             # on close of property box save the model
             onClose: ->
                 console.log @model
+
+                if @model.get('marks') > 0
+                    @model.set 'complete',true                    
+                else                
+                    @model.set 'complete',false
+
+
                 @model.save()
         #localStorage.setItem 'ele'+@model.get('meta_id'), JSON.stringify(@model.toJSON())
 
