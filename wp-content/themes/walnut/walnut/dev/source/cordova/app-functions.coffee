@@ -157,13 +157,16 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 								meta_value.content_type = row['meta_value']
 
 							if row['meta_key'] is 'layout_json'
-								meta_value.layout_json = _.unserialize(_.unserialize(row['meta_value']))
+								# meta_value.layout_json = _.unserialize(_.unserialize(row['meta_value']))
+								meta_value.layout_json = _.unserialize(row['meta_value'])
+
 
 							if row['meta_key'] is 'question_type'
 								meta_value.question_type = row['meta_value']	
 
 							if row['meta_key'] is 'content_piece_meta'
-								content_piece_meta = _.unserialize(_.unserialize(row['meta_value']))
+								# content_piece_meta = _.unserialize(_.unserialize(row['meta_value']))
+								content_piece_meta = _.unserialize(row['meta_value'])
 
 								meta_value.post_tags = content_piece_meta.post_tags
 								meta_value.duration = content_piece_meta.duration

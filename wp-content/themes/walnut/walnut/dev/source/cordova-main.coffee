@@ -8,9 +8,7 @@ require.config
 
 	urlArgs: "ver=#{(new Date()).getTime()}"
 
-	# baseUrl: './wp-content/themes/walnut/walnut/dev/js'
-
-	# Url for Synapse App
+	#Url for Synapse App
 	baseUrl: '/dev/js'
 
 	paths:

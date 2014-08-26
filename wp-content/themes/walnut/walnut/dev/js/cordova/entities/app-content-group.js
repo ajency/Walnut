@@ -7,7 +7,7 @@ define(['underscore', 'unserialize'], function(_) {
         pattern = '%"' + textbookId + '"%';
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status IN ('publish', 'archive')", [], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status IN ('publish', 'archive') AND type=?", ['teaching-module'], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

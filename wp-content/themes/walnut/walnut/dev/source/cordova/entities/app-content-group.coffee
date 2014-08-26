@@ -13,8 +13,8 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM wp_content_collection WHERE term_ids 
-							LIKE '"+pattern+"' AND status IN ('publish', 'archive')", []
-							, onSuccess(d), _.deferredErrorHandler(d))
+							LIKE '"+pattern+"' AND status IN ('publish', 'archive') AND 
+							type=?", ['teaching-module'], onSuccess(d), _.deferredErrorHandler(d))
 
 				
 			onSuccess = (d)->
