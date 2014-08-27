@@ -45,6 +45,7 @@ function ajax_sync_app_data() {
     wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_request_id, 'trigger_cron' => $trigger_cron) ) );
 }
 
+add_action( 'wp_ajax_nopriv_sync-app-data', 'ajax_sync_app_data' );
 add_action( 'wp_ajax_sync-app-data', 'ajax_sync_app_data' );
 
 
@@ -80,7 +81,8 @@ function check_app_data_sync_completion() {
     wp_send_json( $status );
 }
 
-add_action( 'wp_ajax_check-app-data-sync-completion', 'check_app_data_sync_completion' );
+add_action( 'wp_ajax_check_app_data_sync_completion', 'check_app_data_sync_completion' );
+add_action( 'wp_ajax_nopriv_check-app-data-sync-completion', 'check_app_data_sync_completion' );
 
 
 function get_site_image_resources_data() {
@@ -92,6 +94,7 @@ function get_site_image_resources_data() {
 
 }
 add_action( 'wp_ajax_get-site-image-resources-data', 'get_site_image_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-image-resources-data', 'get_site_image_resources_data' );
 
 function get_site_video_resources_data() {
 
@@ -107,6 +110,7 @@ function get_site_video_resources_data() {
 }
 
 add_action( 'wp_ajax_get-site-video-resources-data', 'get_site_video_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-video-resources-data', 'get_site_video_resources_data' );
 
 function get_site_audio_resources_data() {
 
@@ -121,6 +125,7 @@ function get_site_audio_resources_data() {
 }
 
 add_action( 'wp_ajax_get-site-audio-resources-data', 'get_site_audio_resources_data' );
+add_action( 'wp_ajax_nopriv_get-site-audio-resources-data', 'get_site_audio_resources_data' );
 
 function ajax_sync_database(){
 
@@ -135,7 +140,7 @@ function ajax_sync_database(){
     wp_send_json($export_details);
 
 }
-add_action( 'wp_ajax_sync-database', 'ajax_sync_database' );
+add_action( 'wp_ajax_nopriv_sync-database', 'ajax_sync_database' );
 
 
 function ajax_check_blog_validity(){
@@ -147,5 +152,6 @@ function ajax_check_blog_validity(){
     $resp['server_time'] = date('Y-m-d H:i:s');
     wp_send_json($resp);
 } 
+add_action( 'wp_ajax_nopriv_check-blog-validity', 'ajax_check_blog_validity' );
 add_action( 'wp_ajax_check-blog-validity', 'ajax_check_blog_validity' );
 
