@@ -35,6 +35,24 @@ add_action( 'wp_ajax_nopriv_get-user-profile', 'authenticate_web_login' );
 add_action( 'wp_ajax_nopriv_get-user-app-profile', 'authenticate_web_login' );
 add_action( 'wp_ajax_get-user-app-profile', 'authenticate_web_login' );
 
+//test functions to check timeout and cookie invalidation for devices
+function my_deletecookie() {
+
+    if(!wp_validate_auth_cookie())
+        wp_clear_auth_cookie();
+}
+add_action( 'init', 'my_deletecookie' );
+add_action( 'admin_init', 'my_deletecookie' );
+
+add_filter( 'auth_cookie_expiration', 'timeout_time' );
+
+function timeout_time ( $expirein ) {
+
+    return 5-HOUR_IN_SECONDS; 
+
+}
+//end temporary functions for cookie management check
+
 function ajax_fetch_users() {
 
     $user_data = get_user_list( $_GET );
