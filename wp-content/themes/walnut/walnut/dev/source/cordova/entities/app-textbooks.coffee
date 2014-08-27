@@ -3,23 +3,26 @@ define ['underscore'], ( _) ->
 	#Functions related to textbooks entity
 
 	_.mixin
-		#Get List of textbook from userid
-		getTextbooksByUserId : (user_id)->
+		#Get List of textbook from class_id
+		getTextbooksByClassId : (class_id)->
 
-			console.log user_id
 			runQuery = ->
 
 				$.Deferred (d)->
-					textbookIds = _.getTextBookIds()
-					textbookIds.done (textbook_ids)->
-
-						_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-								LEFT OUTER JOIN wp_textbook_relationships wtr ON 
-								t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND 
-								tt.taxonomy='textbook' AND tt.parent=0
-								AND wtr.textbook_id IN ("+textbook_ids+")"
-								, [], onSuccess(d) , _.deferredErrorHandler(d));
+					# textbookIds = _.getTextBookIds()
+					# textbookIds.done (textbook_ids)->
+						# console.log JSON.stringify textbook_ids
+						#'%"2";%
+					_.db.transaction (tx)->
+						console.log class_id
+						pattern = '%"'+class_id+'";%'
+						console.log pattern 
+						tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+							LEFT OUTER JOIN wp_textbook_relationships wtr ON 
+							t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND 
+							tt.taxonomy='textbook' AND tt.parent=0
+							AND wtr.class_id LIKE '"+pattern+"' "
+							, [], onSuccess(d) , _.deferredErrorHandler(d));
 							
 
 			onSuccess = (d)->
@@ -29,10 +32,13 @@ define ['underscore'], ( _) ->
 					for i in [0..data.rows.length-1] by 1
 
 						row = data.rows.item(i)
+						console.log "row"
+						console.log row
 
 						do (row ,i)->
 							modulesCount = _.getModulesCount(row['textbook_id'])
 							modulesCount.done (modules_count)->
+								console.log JSON.stringify modules_count
 								
 								do(row, i, modules_count)->
 									textbookOptions = _.getTextbookOptions(row['term_id'])
@@ -71,7 +77,7 @@ define ['underscore'], ( _) ->
 					d.resolve(result)
 			
 			$.when(runQuery()).done (data)->
-				console.log 'getTextbooksByuserId transaction completed'
+				console.log 'getTextbooksByClassId transaction completed'
 			.fail _.failureHandler
 
 		
@@ -116,13 +122,6 @@ define ['underscore'], ( _) ->
 										do(row, i, modules_count, options)->
 											chapterCount = _.getChapterCount(row['term_id'])
 											chapterCount.done (chapter_count)->
-
-												# do(row, i, modules_count, options, chapter_count)->
-												# 	chapterStatusCount = 
-												# 	_.getCountOfChaptersStatuses(row['term_id'], division)
-												# 	chapterStatusCount.done (chapter_status_count)->
-												# 		console.log 'chapterStatusCount'
-												# 		console.log chapter_status_count
 
 												result[i] = 
 													term_id: row["term_id"]

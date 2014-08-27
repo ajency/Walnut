@@ -122,6 +122,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         console.log('Synapse App Logout');
         _.removeCordovaBackbuttonEventListener();
         _.setUserID(null);
+        _.setBlogID(null);
         user = App.request("get:user:model");
         user.clear();
         App.leftNavRegion.close();
@@ -146,39 +147,21 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.checkIfServerImportOperationCompleted = function() {
-        var data, jsonurl;
+        var data, sendit, sessionResponse;
         data = {
           blog_id: _.getBlogID()
         };
-        jsonurl = AJAXURL + '?action=check-app-data-sync-completion&sync_request_id=' + _.getSyncRequestId();
-        return $.ajax({
-          type: 'GET',
-          url: jsonurl,
-          data: data,
-          dataType: 'JSONP',
-          xhrFields: {
-            withCredentials: true
-          },
-          beforeSend: function(xhr) {
-            if (!_.isNull(_.getCookiesValue())) {
-              if (_.getCookiesValue() !== 'null') {
-                console.log(_.getCookiesValue());
-                console.log(JSON.stringify(xhr.setRequestHeader('Set-Cookie', _.getCookiesValue())));
-                return xhr.setRequestHeader('Set-Cookie', _.getCookiesValue());
-              }
-            }
-          },
-          success: function(resp, status, jqXHR) {
-            console.log('Sync completion response');
-            console.log(JSON.stringify(resp));
-            return console.log(status);
-          },
-          error: (function(_this) {
-            return function(jqXHR, err) {
-              return _this.onErrorResponse('Could not connect to server');
-            };
-          })(this)
-        });
+        sendit = new XMLHttpRequest();
+        sendit.open('GET', AJAXURL + '?action=check-app-data-sync-completion&sync_request_id=' + _.getSyncRequestId(), false);
+        sendit.setRequestHeader('Set-Cookie', _.getCookiesValue());
+        sendit.send(data);
+        if (sendit.status === 200) {
+          console.log(JSON.parse(sendit.responseText));
+          sessionResponse = sendit.responseText;
+          if (sessionResponse === 0) {
+            return this.onAppLogout();
+          }
+        }
       };
 
       HeaderView.prototype.onErrorResponse = function(msg) {

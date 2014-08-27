@@ -20,7 +20,7 @@ define ['underscore', 'jquery'], (_, $)->
             db.transaction((tx)->
                 #User table
                 tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY
-                    , user_id UNIQUE, username, password, user_role)')
+                    , user_id UNIQUE, username, password, user_role, session_id, blog_id)')
 
                 tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details
                     (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')

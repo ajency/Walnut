@@ -46,6 +46,7 @@ define(['underscore'], function(_) {
             result[i] = {
               username: data.rows.item(i)['username']
             };
+            console.log(result[i]);
           }
           return d.resolve(result);
         };

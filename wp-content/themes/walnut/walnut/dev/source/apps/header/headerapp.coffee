@@ -117,6 +117,8 @@ define ['app'
 				_.removeCordovaBackbuttonEventListener()
 				
 				_.setUserID(null)
+				#clears the blog id after the student has logged out
+				_.setBlogID(null)
 
 				user = App.request "get:user:model"
 				user.clear()
@@ -138,33 +140,49 @@ define ['app'
 				else
 					_.setAudioCues 'false'
 
-			checkIfServerImportOperationCompleted : -> 
-				data = blog_id : _.getBlogID()
-				# data = 
-				# 	data : jsondata
+			# checkIfServerImportOperationCompleted : -> 
+			# 	data = blog_id : _.getBlogID()
+			# 	# data = 
+			# 	# 	data : jsondata
 				
-				jsonurl = AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId()
-				$.ajax 
-					type: 'GET' 
-					url : jsonurl 
-					data: data   
-					dataType: 'JSONP' 
-					xhrFields: 
-						withCredentials: true 
-					beforeSend: (xhr)->
-						if not _.isNull(_.getCookiesValue())
-							if _.getCookiesValue() isnt 'null'
-								console.log _.getCookiesValue()
-								console.log JSON.stringify xhr.setRequestHeader('Set-Cookie', _.getCookiesValue())
-								xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
-					success : (resp, status, jqXHR)->
-						console.log 'Sync completion response'
-						console.log JSON.stringify resp
-						console.log status
+			# 	jsonurl = AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId()
+			# 	$.ajax 
+			# 		type: 'GET' 
+			# 		url : jsonurl 
+			# 		data: data   
+			# 		dataType: 'json' 
+			# 		xhrFields: 
+			# 			withCredentials: true 
+			# 		beforeSend: (xhr)->
+			# 			if not _.isNull(_.getCookiesValue())
+			# 				if _.getCookiesValue() isnt 'null'
+			# 					console.log _.getCookiesValue()
+			# 					console.log JSON.stringify xhr.setRequestHeader('Set-Cookie', _.getCookiesValue())
+			# 					xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
+			# 		success : (resp, status, jqXHR)->
+			# 			console.log 'Sync completion response'
+			# 			console.log JSON.stringify resp
+			# 			console.log status
 
-					error :(jqXHR, err) =>
-						@onErrorResponse('Could not connect to server')
+			# 		error :(jqXHR, err) =>
+			# 			@onErrorResponse('Could not connect to server')
 
+
+			checkIfServerImportOperationCompleted : ->
+				data = blog_id : _.getBlogID()
+				sendit = new XMLHttpRequest()
+				sendit.open 'GET', AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId() , false
+				sendit.setRequestHeader 'Set-Cookie', _.getCookiesValue() 
+				sendit.send data 
+				if sendit.status is 200
+					console.log JSON.parse sendit.responseText
+					sessionResponse = sendit.responseText
+					if sessionResponse is 0
+						@onAppLogout()
+
+					
+
+				
 			onErrorResponse :(msg)->
 
 				response = 

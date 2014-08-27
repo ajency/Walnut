@@ -1,16 +1,15 @@
 define(['underscore'], function(_) {
   return _.mixin({
-    getTextbooksByUserId: function(user_id) {
+    getTextbooksByClassId: function(class_id) {
       var onSuccess, runQuery;
-      console.log(user_id);
       runQuery = function() {
         return $.Deferred(function(d) {
-          var textbookIds;
-          textbookIds = _.getTextBookIds();
-          return textbookIds.done(function(textbook_ids) {
-            return _.db.transaction(function(tx) {
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.textbook_id IN (" + textbook_ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
-            });
+          return _.db.transaction(function(tx) {
+            var pattern;
+            console.log(class_id);
+            pattern = '%"' + class_id + '";%';
+            console.log(pattern);
+            return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' ", [], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -22,6 +21,7 @@ define(['underscore'], function(_) {
             var modulesCount;
             modulesCount = _.getModulesCount(row['textbook_id']);
             return modulesCount.done(function(modules_count) {
+              console.log(JSON.stringify(modules_count));
               return (function(row, i, modules_count) {
                 var textbookOptions;
                 textbookOptions = _.getTextbookOptions(row['term_id']);
@@ -66,13 +66,15 @@ define(['underscore'], function(_) {
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
             row = data.rows.item(i);
+            console.log("row");
+            console.log(row);
             _fn(row, i);
           }
           return d.resolve(result);
         };
       };
       return $.when(runQuery()).done(function(data) {
-        return console.log('getTextbooksByuserId transaction completed');
+        return console.log('getTextbooksByClassId transaction completed');
       }).fail(_.failureHandler);
     },
     getTextbooksByClassIdAndDivision: function(class_id, division) {

@@ -15,12 +15,16 @@ define ["backbone"], (Backbone) ->
 
 			collection_name = collection.name
 			console.log 'Collection name: '+collection_name
+			console.log JSON.stringify collection
+			console.log collection
 			opts = options.data
+			console.log opts
 
 			if collection_name is 'textbook'
-				data = _.getTextbooksByUserId(_.getUserID())
+				console.log opts.class_id
+				data = _.getTextbooksByClassId(opts.class_id)
 				data.done (d)->
-					console.log 'textbook by class id and division data'
+					console.log 'textbook by class id'
 					console.log d
 					collection.set d
 			

@@ -38,7 +38,7 @@ define ['underscore'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? 
-							AND meta_key=?", [253, 'divisions']
+							AND meta_key=?", [_.getUserID(), 'divisions']
 							,onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
@@ -94,7 +94,7 @@ define ['underscore'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta 
-							WHERE meta_key=? AND meta_value=?", ['student_division', 123456109]
+							WHERE meta_key=? AND meta_value=?", ['student_division', id]
 							,onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->

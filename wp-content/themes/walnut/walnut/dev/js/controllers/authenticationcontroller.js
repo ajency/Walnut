@@ -96,13 +96,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
                 store_cookies = jqXHR.getResponseHeader('Set-Cookie');
                 console.log(store_cookies);
                 _.setCookiesValue(store_cookies);
-                _.setBlogID(8);
-                _.setSyncRequestId(1);
-                _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername);
+                _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername, resp.blog_details.blog_id);
                 _.setUserCapabilities(resp.login_details.allcaps);
                 _.setStudentDivision(resp.login_details.data.division);
                 _.createDataTables(_.db);
-                _this.saveUpdateUserDetails(resp);
+                _this.saveUpdateUserDetails(resp, jqXHR);
                 return _this.onSuccessResponse();
               }
             }
@@ -118,13 +116,15 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       var offlineUser;
-      console.log(this.data.data.txtusername);
-      offlineUser = _.getUserDetails(this.data.data.txtusername);
+      console.log("offline");
+      console.log(this.data.txtusername);
+      offlineUser = _.getUserDetails(this.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
-            if (user.password === data.data.txtpassword) {
-              _this.setUserDetails(user.user_id, _this.data.data.txtusername);
+            console.log(_this.data.txtpassword);
+            if (user.password === _this.data.txtpassword) {
+              _this.setUserDetails(user.user_id, _this.data.txtusername, user.blog_id);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -136,44 +136,48 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
-    AuthenticationController.prototype.setUserDetails = function(id, username) {
+    AuthenticationController.prototype.setUserDetails = function(id, username, blog_id) {
       _.setUserID(id);
       _.setUserName(username);
+      _.setBlogID(blog_id);
       return _.setUserModel();
     };
 
-    AuthenticationController.prototype.saveUpdateUserDetails = function(resp) {
+    AuthenticationController.prototype.saveUpdateUserDetails = function(resp, jqXHR) {
       var offlineUser;
+      console.log("save");
       offlineUser = _.getUserDetails(this.data.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
-            return _this.updateExistingUser(resp);
+            return _this.updateExistingUser(resp, jqXHR);
           } else {
-            return _this.inputNewUser(resp);
+            return _this.inputNewUser(resp, jqXHR);
           }
         };
       })(this));
     };
 
-    AuthenticationController.prototype.inputNewUser = function(response) {
-      var resp;
+    AuthenticationController.prototype.inputNewUser = function(response, jqXHR) {
+      var cookie, resp;
       resp = response.login_details;
+      cookie = jqXHR.getResponseHeader('Set-Cookie');
       return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, _this.data.data.txtusername, data.data.txtpassword, resp.roles[0]]);
+          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, session_id, blog_id) VALUES (?, ?, ?, ?, ?, ?)', [resp.ID, _this.data.data.txtusername, _this.data.data.txtpassword, resp.roles[0], cookie, response.blog_details.blog_id]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Inserted new user');
       });
     };
 
-    AuthenticationController.prototype.updateExistingUser = function(response) {
+    AuthenticationController.prototype.updateExistingUser = function(response, jqXHR) {
       var resp;
       resp = response.login_details;
+      console.log(resp);
       return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.data.txtusername, data.data.txtpassword, resp.ID]);
+          return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.data.txtusername, _this.data.data.txtpassword, resp.ID, response.blog_details.blog_id]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Updated user details');

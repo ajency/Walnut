@@ -1,5 +1,29 @@
 define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
   return _.mixin({
+    getTheBlogId: function(id) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT blog_id FROM USERS WHERE user_id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var blog_id;
+          blog_id = '';
+          if (data.rows.length !== 0) {
+            blog_id = data.rows.items(0)['blog_id'];
+            console.log(blog_id);
+          }
+          return d.resolve(blog_id);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('get blog id from the local users table');
+      }).fail(_.failureHandler);
+    },
     getTblPrefix: function() {
       return 'wp_' + _.getBlogID() + '_';
     },
@@ -98,6 +122,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               user_id: row['user_id'],
               password: row['password'],
               role: row['user_role'],
+              session_id: row['session_id'],
+              blog_id: row['blog_id'],
               exists: true
             };
             console.log("user data");
@@ -316,12 +342,10 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       });
       if (!_.isNull(_.getUserCapabilities())) {
         user.set({
-          'allcaps': {
-            "student": true
-          }
+          'allcaps': _.getUserCapabilities()
         });
       }
-      singleDivision = this.getSingleDivsionByUserId(253);
+      singleDivision = this.getSingleDivsionByUserId(_.getUserID());
       return singleDivision.done(function(division) {
         var data;
         data = {

@@ -71,7 +71,7 @@ define(["app", 'backbone'], function(App, Backbone) {
             'id': id
           });
           division.fetch();
-          console.log(division);
+          console.log(JSON.stringify(division));
         }
         return division;
       }

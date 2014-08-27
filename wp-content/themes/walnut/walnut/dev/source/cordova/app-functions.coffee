@@ -4,12 +4,32 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 	_.mixin
 
+		getTheBlogId : (id)->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT blog_id FROM USERS WHERE user_id=?" 
+							,[id] 
+							onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					blog_id= ''
+					if data.rows.length isnt 0
+						blog_id = data.rows.items(0)['blog_id']
+						console.log blog_id
+					d.resolve blog_id
+
+
+			$.when(runQuery()).done ->
+				console.log 'get blog id from the local users table'
+			.fail _.failureHandler
+
+					
 
 		getTblPrefix : ->
-
-			# uncomment this after  server starts working
 			'wp_'+_.getBlogID()+'_'
-			# 'wp_'+15+'_'
 
 
 		displayConnectionStatusOnMainLoginPage : ->
@@ -118,6 +138,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							user_id : row['user_id']
 							password : row['password']
 							role : row['user_role']
+							session_id:row['session_id']
+							blog_id:row['blog_id']
 							exists : true
 						console.log "user data"
 						console.log userData
@@ -342,19 +364,18 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			user.set 'ID' :''+_.getUserID()
 
 			if not _.isNull(_.getUserCapabilities())
-				user.set 'allcaps' : {"student":true}#_.getUserCapabilities()
+				user.set 'allcaps' : _.getUserCapabilities()
 
-			singleDivision = @getSingleDivsionByUserId(253)
+			singleDivision = @getSingleDivsionByUserId(_.getUserID())
 			singleDivision.done (division)->
 				
 				data = 
 					'division': division
 
+
 				user.set 'data' : data
 
 
-		#select the cookies for the logged in user
-		# selectCookieValue : ->
-		# 	run
+
 
 

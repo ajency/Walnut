@@ -10,11 +10,15 @@ define(["backbone"], function(Backbone) {
       var collection_name, data, opts;
       collection_name = collection.name;
       console.log('Collection name: ' + collection_name);
+      console.log(JSON.stringify(collection));
+      console.log(collection);
       opts = options.data;
+      console.log(opts);
       if (collection_name === 'textbook') {
-        data = _.getTextbooksByUserId(_.getUserID());
+        console.log(opts.class_id);
+        data = _.getTextbooksByClassId(opts.class_id);
         data.done(function(d) {
-          console.log('textbook by class id and division data');
+          console.log('textbook by class id');
           console.log(d);
           return collection.set(d);
         });

@@ -54,6 +54,7 @@ define ['underscore'], ( _) ->
 
 						result[i] = 
 							username: data.rows.item(i)['username']
+						console.log result[i]
 
 					d.resolve(result)
 

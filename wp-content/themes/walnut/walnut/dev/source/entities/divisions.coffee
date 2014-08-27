@@ -49,7 +49,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					if not division 
 						division = new DivisionModel ('id':id)
 						division.fetch()
-						console.log division
+						console.log JSON.stringify division
 					division
 					
 

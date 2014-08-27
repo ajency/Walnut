@@ -79,14 +79,13 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							store_cookies = jqXHR.getResponseHeader('Set-Cookie');
 							console.log store_cookies
 							_.setCookiesValue(store_cookies);
-							_.setBlogID 8
-							_.setSyncRequestId 1
-							# @storeUserSessionCookie(resp, store_cookies)
-							@setUserDetails(resp.login_details.ID, @data.data.txtusername)
+
+
+							@setUserDetails(resp.login_details.ID, @data.data.txtusername, resp.blog_details.blog_id)
 							_.setUserCapabilities(resp.login_details.allcaps)
 							_.setStudentDivision(resp.login_details.data.division)
 							_.createDataTables(_.db)
-							@saveUpdateUserDetails(resp)
+							@saveUpdateUserDetails(resp, jqXHR)
 							@onSuccessResponse()
 
 				error :(jqXHR, err) =>
@@ -95,14 +94,16 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		offlineDeviceAuth : ->
-			console.log @data.data.txtusername
-			offlineUser = _.getUserDetails(@data.data.txtusername)
+			console.log "offline"
+			console.log @data.txtusername
+			offlineUser = _.getUserDetails(@data.txtusername)
 
 			offlineUser.done (user)=>
 				if user.exists
-					if user.password is data.data.txtpassword
+					console.log @data.txtpassword
+					if user.password is @data.txtpassword
 
-						@setUserDetails(user.user_id, @data.data.txtusername)
+						@setUserDetails(user.user_id, @data.txtusername, user.blog_id)
 						@onSuccessResponse()
 
 					else @onErrorResponse('Invalid Password')       
@@ -111,47 +112,38 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		
-		setUserDetails : (id, username)-> 
+		setUserDetails : (id, username,blog_id)-> 
 			# save logged in user id and username
 			_.setUserID(id)
 			_.setUserName(username)
+			_.setBlogID(blog_id)
 
 			# set user model for back button navigation
 			_.setUserModel()
 
 
-		#save users session info
-		# storeUserSessionCookie : (response , store_cookies)->
-		# 	resp = response.login_details
-
-		# 	_.db.transaction((tx)=>
-		# 		tx.executeSql('INSERT INTO user_session_value_check (user_id, username, session_id) 
-		# 			VALUES(?,?,?)', 
-		# 			[resp.ID, @data.data.txtusername, store_cookies])
-		# 	,_.transactionErrorhandler 
-		# 	,(tx)->
-		# 		console.log 'success: inserted values in user_session_value_check'
-		# 	)
-
 
 		# save new user or update existing user 
-		saveUpdateUserDetails : (resp)->
-
+		saveUpdateUserDetails : (resp, jqXHR)->
+			console.log "save"
 			offlineUser = _.getUserDetails(@data.data.txtusername)
 			
 			offlineUser.done (user)=>
-				if user.exists then @updateExistingUser(resp)
-				else @inputNewUser(resp)
+				if user.exists then @updateExistingUser(resp,jqXHR)
+				else @inputNewUser(resp,jqXHR)
 		
 
-		inputNewUser : (response)->
+		inputNewUser : (response, jqXHR)->
  
 			resp = response.login_details
+			cookie = jqXHR.getResponseHeader('Set-Cookie')
 
 			_.db.transaction((tx)=>
-				tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) 
-					VALUES (?, ?, ?, ?)', 
-					[resp.ID, @data.data.txtusername, data.data.txtpassword, resp.roles[0]])
+				tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, 
+					session_id, blog_id) 
+					VALUES (?, ?, ?, ?, ?, ?)', 
+					[resp.ID, @data.data.txtusername, @data.data.txtpassword, resp.roles[0], 
+					cookie, response.blog_details.blog_id])
 
 			,_.transactionErrorhandler 
 			,(tx)->
@@ -159,13 +151,15 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			)
 
 		
-		updateExistingUser : (response)->
+		updateExistingUser : (response, jqXHR)->
 
 			resp = response.login_details
+			console.log resp
 
 			_.db.transaction((tx)=>
 				tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", 
-					[@data.data.txtusername, data.data.txtpassword, resp.ID])
+					[@data.data.txtusername, @data.data.txtpassword, resp.ID
+					, response.blog_details.blog_id])
 
 			,_.transactionErrorhandler 
 			,(tx)->
