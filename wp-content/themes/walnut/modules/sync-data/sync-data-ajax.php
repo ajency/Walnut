@@ -141,6 +141,7 @@ function ajax_sync_database(){
 
 }
 add_action( 'wp_ajax_nopriv_sync-database', 'ajax_sync_database' );
+add_action( 'wp_ajax_sync-database', 'ajax_sync_database' );
 
 
 function ajax_check_blog_validity(){
