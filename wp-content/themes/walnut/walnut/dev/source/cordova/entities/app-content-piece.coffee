@@ -39,7 +39,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 														# 'contentElements' will return empty string for multiple eval
 														# as layout_json is empty.
-														if contentElements is ''
+														if meta_value.question_type is 'multiple_eval'
 															# Add grading params to excerpt for multiple eval
 															if not _.isEmpty grading_params
 																excerpt_array = []
@@ -50,7 +50,9 @@ define ['underscore', 'unserialize'], ( _) ->
 																	_.each attributes, (attr, i)->
 																		excerpt_array.push attr
 
-														else excerpt_array = contentElements.excerpt
+														else
+															# when question_type is individual or chorus  
+															excerpt_array = contentElements.excerpt
 
 														excerpt_array = _.flatten excerpt_array
 														taglessArray = new Array

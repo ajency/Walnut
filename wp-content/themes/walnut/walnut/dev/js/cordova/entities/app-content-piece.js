@@ -30,7 +30,7 @@ define(['underscore', 'unserialize'], function(_) {
                         contentElementsArray = _.getJsonToClone(meta_value.layout_json);
                         return contentElementsArray.done(function(contentElements) {
                           var excerpt, excerpt_array, taglessArray;
-                          if (contentElements === '') {
+                          if (meta_value.question_type === 'multiple_eval') {
                             if (!_.isEmpty(grading_params)) {
                               excerpt_array = [];
                               _.each(grading_params, function(params, i) {

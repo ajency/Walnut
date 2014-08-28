@@ -160,7 +160,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 								# meta_value.layout_json = _.unserialize(_.unserialize(row['meta_value']))
 								meta_value.layout_json = _.unserialize(row['meta_value'])
 
-
 							if row['meta_key'] is 'question_type'
 								meta_value.question_type = row['meta_value']	
 
