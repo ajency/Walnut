@@ -300,6 +300,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							audioCues.release()
 						,2000)
 
+		
 		setAudioCuesToggle : ->
 			if _.getAudioCues() is 'true'
 				$('#onOffSwitchToggle').prop "checked" : true
