@@ -3,7 +3,7 @@ jQuery(document).ready(function() {
         var divisioncount = jQuery('#division_count').val();
         divisioncount++;
         var classselectlist= get_class_dropdown(divisioncount); 
-        var divisionrow ="<tr><td>"+classselectlist+"</td><td><input type='text' \n\
+        var divisionrow ="<tr><td></td><td>"+classselectlist+"</td><td><input type='text' \n\
                         class='regular-text code' name='divisionlabel_"+divisioncount+"' \n\
                         id='divisionlabel_"+divisioncount+"' value=''/><input type='hidden' \n\
                         name='divisionid_"+divisioncount+"' id='divisionid_"+divisioncount+"' \n\
