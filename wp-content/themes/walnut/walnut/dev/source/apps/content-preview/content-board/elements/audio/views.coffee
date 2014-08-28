@@ -9,12 +9,12 @@ define ['app'], (App)->
 
             className: 'audio'
 
-            template: '{{#audioUrl}}
+            template: '{{#audio}}
                         <audio title="{{title}}" class="audio1" controls>
                             <source src="{{audioUrl}}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
-                        {{/audioUrl}}'
+                        {{/audio}}'
 
 
 
@@ -31,6 +31,7 @@ define ['app'], (App)->
                     _.each arrays, (array)->
                         audioArray.push _.object ['title', 'audioUrl'], array
                     data.audio = audioArray
+                    console.log audioArray
 
                 data
 
