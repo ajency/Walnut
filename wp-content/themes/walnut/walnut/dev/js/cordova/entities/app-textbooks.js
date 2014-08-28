@@ -9,8 +9,8 @@ define(['underscore'], function(_) {
             classID = _.getClassIdForUser();
             return classID.done(function(class_id) {
               var pattern;
-              console.log(JSON.stringify(class_id));
-              pattern = '%"' + class_id + '";%';
+              console.log(class_id);
+              pattern = '%"' + class_id + '"\;%';
               console.log(pattern);
               return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' ", [], onSuccess(d), _.deferredErrorHandler(d));
             });

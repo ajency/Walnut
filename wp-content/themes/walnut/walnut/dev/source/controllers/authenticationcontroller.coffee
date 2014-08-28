@@ -89,6 +89,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							@onSuccessResponse()
 
 				error :(jqXHR, err) =>
+					console.log jqXHR
+					console.log err
 					@onErrorResponse('Could not connect to server')
 
 

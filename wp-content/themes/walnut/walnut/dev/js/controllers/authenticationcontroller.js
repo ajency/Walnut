@@ -108,6 +108,8 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         })(this),
         error: (function(_this) {
           return function(jqXHR, err) {
+            console.log(jqXHR);
+            console.log(err);
             return _this.onErrorResponse('Could not connect to server');
           };
         })(this)
