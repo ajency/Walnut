@@ -60,14 +60,21 @@ define ['app'
                 .attr 'id'
 
                 switch permName
-                    when 'attempt'      then @unSelectCheckbox 'resubmit'
-                    when 'resubmit'     then @unSelectCheckbox 'attempt'
-                    when 'check'        then @unSelectCheckbox 'answer'
-                    when 'answer'       then @unSelectCheckbox 'check'
+                    when 'attempt'          then @unSelectCheckbox 'resubmit'
+                    when 'resubmit'         
+                        @unSelectCheckbox 'attempt'
+                        @unSelectCheckbox 'answer'
+
+                    when 'check'            then @unSelectCheckbox 'answer'
+                    when 'answer'           
+                        @unSelectCheckbox 'check'
+                        @unSelectCheckbox 'resubmit'
 
             unSelectCheckbox:(checkboxID)->
                 @$el.find 'input#'+checkboxID
                 .attr 'checked', false
+
+
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
