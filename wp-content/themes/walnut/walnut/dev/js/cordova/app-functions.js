@@ -241,14 +241,14 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
                 filepathForIndividualAudio = filepath + "nextClick.WAV";
                 break;
               case 'Click-Select':
-                navigator.notification.vibrate(1000);
+                navigator.notification.vibrate(50);
                 filepathForIndividualAudio = filepath + "selectClick.WAV";
                 break;
               case 'Click-Start':
                 filepathForIndividualAudio = filepath + "startClick.WAV";
                 break;
               case 'Click-Unselect':
-                navigator.notification.vibrate(1000);
+                navigator.notification.vibrate(50);
                 filepathForIndividualAudio = filepath + "unselectClick.WAV";
                 break;
               case 'Click-Save':
@@ -263,11 +263,9 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               return console.log("error" + error.code);
             });
             audioCues.play();
-            return setTimeout((function(_this) {
-              return function() {
-                return audioCues.release();
-              };
-            })(this), 2000);
+            return setTimeout(function() {
+              return audioCues.release();
+            }, 2000);
           }
         }
       }

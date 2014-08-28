@@ -92,7 +92,7 @@ define ['app'], (App)->
 				# @$el.css "margin-top", "#{stickyHeaderTop}px"
 
 				$('html, body').animate
-					scrollTop: @$el.closest('.studentList').find("#eval-parameters").offset().top - stickyHeaderTop
+					scrollTop: @$el.closest('.studentList').find("#eval-parameters").offset().top# - stickyHeaderTop
 				, 1000
 				@$el.slideDown()
 

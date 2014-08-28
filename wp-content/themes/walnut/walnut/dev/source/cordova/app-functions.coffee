@@ -256,29 +256,28 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 		
 		audioQueuesSelection : (selectedAction)->
+			#TODO: Change if condition
 			if _.platform() is "DEVICE"
 				if not _.isNull(_.getAudioCues())
 					if _.getAudioCues() isnt 'false'
 						audioCues = null
 						filepathForIndividualAudio = null
-						
 						filepath = "/android_asset/www/audioCues/"
+
 						switch selectedAction
+
 							when 'Click-Next'
-							
 								filepathForIndividualAudio = filepath + "nextClick.WAV"
 
 							when 'Click-Select'
-								navigator.notification.vibrate(1000);
+								navigator.notification.vibrate(50);
 								filepathForIndividualAudio = filepath + "selectClick.WAV"
 
-
 							when 'Click-Start'
-
 								filepathForIndividualAudio = filepath + "startClick.WAV"
 
 							when 'Click-Unselect'
-								navigator.notification.vibrate(1000);
+								navigator.notification.vibrate(50);
 								filepathForIndividualAudio = filepath + "unselectClick.WAV"
 
 							when 'Click-Save'
@@ -290,13 +289,13 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 								filepathForIndividualAudio = filepath + "pauseClick.WAV"
 
 						audioCues = new Media filepathForIndividualAudio 
-												,->
-													console.log "media played"
-												,(error)->
-													console.log "error"+error.code
+							, -> 
+								console.log "media played"
+							, (error)->
+								console.log "error"+error.code
 
 						audioCues.play()
-						setTimeout(=>
+						setTimeout(->
 							audioCues.release()
 						,2000)
 
