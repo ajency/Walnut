@@ -81,7 +81,7 @@ function check_app_data_sync_completion() {
     wp_send_json( $status );
 }
 
-add_action( 'wp_ajax_check_app_data_sync_completion', 'check_app_data_sync_completion' );
+add_action( 'wp_ajax_check-app-data-sync-completion', 'check_app_data_sync_completion' );
 add_action( 'wp_ajax_nopriv_check-app-data-sync-completion', 'check_app_data_sync_completion' );
 
 
