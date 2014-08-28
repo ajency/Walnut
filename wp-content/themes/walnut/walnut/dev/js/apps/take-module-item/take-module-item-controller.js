@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+            if (contentPiece.get('content_type') === 'content_piece') {
               return _this._showTeacherTrainingFooter();
             } else {
               return _this._showStudentsListView(questionResponseModel);
@@ -71,7 +71,10 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);
-          if (this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+          if (contentPiece.get('question_type') === 'multiple_eval') {
+            this.layout.studentsListRegion.close();
+          }
+          if (contentPiece.get('content_type') === 'content_piece') {
             return this._showTeacherTrainingFooter();
           } else {
             return this._showStudentsListView(questionResponseModel);

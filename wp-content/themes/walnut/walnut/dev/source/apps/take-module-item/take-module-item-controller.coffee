@@ -49,7 +49,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel
@@ -78,7 +78,10 @@ define ['app'
 
                     @_showQuestionDisplayView contentPiece
 
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('question_type') is 'multiple_eval'
+                        @layout.studentsListRegion.close()
+
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
 
                     else
