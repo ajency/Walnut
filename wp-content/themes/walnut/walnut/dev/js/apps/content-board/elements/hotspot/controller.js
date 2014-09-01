@@ -16,7 +16,6 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       Controller.prototype.initialize = function(options) {
         var answerWreqrObject;
         answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
-        Controller.__super__.initialize.call(this, options);
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
@@ -42,12 +41,13 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               };
             };
           })(this));
-          return answerWreqrObject.setHandler("submit:answer", (function(_this) {
+          answerWreqrObject.setHandler("submit:answer", (function(_this) {
             return function(displayAnswer) {
               return _this._submitAnswer(_this.displayAnswer);
             };
           })(this));
         }
+        return Controller.__super__.initialize.call(this, options);
       };
 
       Controller.prototype._getHotspotView = function() {
@@ -128,6 +128,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (displayAnswer == null) {
           displayAnswer = true;
         }
+        console.log('_submitAnswer');
         console.log(this.optionCollection);
         correctOptions = this.optionCollection.where({
           correct: true

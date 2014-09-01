@@ -21,7 +21,10 @@ define ['app'
                     'division': @division
                     'collection_id': model.get 'id'
 
-                @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
+                if @mode is 'training'
+                    @studentCollection = App.request "get:dummy:students"
+                else
+                    @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", model, =>
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'

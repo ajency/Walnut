@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       AudioView.prototype.className = 'audio';
 
-      AudioView.prototype.template = '{{#audioUrl}} <audio title="{{title}}" class="audio1" controls> <source src="{{audioUrl}}" type="audio/mpeg"> Your browser does not support the audio element. </audio> {{/audioUrl}}';
+      AudioView.prototype.template = '{{#audio}} <audio title="{{title}}" class="audio1" controls> <source src="{{audioUrl}}" type="audio/mpeg"> Your browser does not support the audio element. </audio> {{/audio}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
         var arrays, audioArray;
@@ -24,6 +24,7 @@ define(['app'], function(App) {
             return audioArray.push(_.object(['title', 'audioUrl'], array));
           });
           data.audio = audioArray;
+          console.log(audioArray);
         }
         return data;
       };

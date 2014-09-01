@@ -283,19 +283,34 @@ function get_modules_containing_content_piece($content_id){
 
     $present_in_query=$wpdb->prepare("
         SELECT * from {$wpdb->base_prefix}collection_meta
-            WHERE meta_key like %s
+            WHERE meta_key in ('content_pieces', 'content_layout')
             AND meta_value like %s",
-        array('content_pieces', "%\"$content_id\";%")
+        array('%"'.$content_id.'";%')
     );
 
     $result= $wpdb->get_results($present_in_query);
 
+    $valid = true;
+
     foreach($result as $module_meta){
 
-        $m['id']=$module_meta->collection_id;
-        $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
+        if($module_meta->meta_key === 'content_layout'){
+            $content_layout = maybe_unserialize($module_meta->meta_value);
+            foreach($content_layout as $layout){
+                if($layout['type']=='content-piece')
+                    $content_pieces[]=$layout['id'];
+            }
 
-        $modules[]=$m;
+            if(!in_array($content_id, $content_pieces))
+                $valid = false;
+
+        }
+
+        if($valid){
+            $m['id']=$module_meta->collection_id;
+            $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
+            $modules[]=$m;
+        }
 
     }
 

@@ -68,11 +68,13 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           case 'attempt':
             return this.unSelectCheckbox('resubmit');
           case 'resubmit':
-            return this.unSelectCheckbox('attempt');
+            this.unSelectCheckbox('attempt');
+            return this.unSelectCheckbox('answer');
           case 'check':
             return this.unSelectCheckbox('answer');
           case 'answer':
-            return this.unSelectCheckbox('check');
+            this.unSelectCheckbox('check');
+            return this.unSelectCheckbox('resubmit');
         }
       };
 

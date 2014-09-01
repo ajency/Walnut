@@ -13,8 +13,6 @@ define ['app'
             initialize : (options)->
                 {answerWreqrObject,@answerModel} = options
 
-                super(options)
-
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
@@ -44,8 +42,9 @@ define ['app'
                         @_submitAnswer @displayAnswer 
 
                 
+                super(options)
 
-            _getHotspotView : ()->
+            _getHotspotView : ->
                 new Hotspot.Views.HotspotView
                     model : @layout.model
                     answerModel : @answerModel
@@ -114,6 +113,7 @@ define ['app'
                     object[key] = _.toBoolean value if key in Booleans
 
             _submitAnswer :(displayAnswer=true) ->
+                console.log '_submitAnswer'
                 console.log @optionCollection
                 correctOptions = @optionCollection.where { correct : true }
                 console.log correctOptions
