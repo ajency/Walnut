@@ -13,12 +13,9 @@ define(['underscore', 'jquery'], function(_, $) {
           var fileTobeDownloaded;
           fileTobeDownloaded = _.getFilesToBeDownloaded(localFilesList, remoteFilesList);
           return fileTobeDownloaded.done(function(files_to_be_downloaded) {
-            var downloadFiles;
             if (files_to_be_downloaded.length > 0) {
-              $('#syncMediaSuccess').css("display", "block").text("Downloading " + file_type + " files...");
-              return downloadFiles = _.downloadMediaFiles(files_to_be_downloaded, 0, file_type);
+              return _.downloadMediaFiles(files_to_be_downloaded, 0, file_type);
             } else {
-              $('#syncMediaSuccess').css("display", "block").text(file_type + " files already upto date");
               if (file_type === 'Image') {
                 _.syncFiles('Audio');
               }
@@ -26,6 +23,7 @@ define(['underscore', 'jquery'], function(_, $) {
                 _.syncFiles('Video');
               }
               if (file_type === 'Video') {
+                $('#syncMediaSuccess').css("display", "block").text("All media files updated");
                 return setTimeout((function(_this) {
                   return function() {
                     return App.navigate('teachers/dashboard', {
@@ -40,55 +38,56 @@ define(['underscore', 'jquery'], function(_, $) {
       });
     },
     downloadMediaFiles: function(filesTobeDownloaded, index, file_type) {
-      var directoryPath, directoryStructure, escaped, file, fileName, localPath, uri;
-      file = filesTobeDownloaded[index];
-      directoryPath = file.substr(file.indexOf("uploads/"));
-      fileName = file.substr(file.lastIndexOf('/') + 1);
-      escaped = $('<div>').text("Downloading...\n\n" + fileName).text();
-      $('#syncMediaSuccess').css("display", "block").html(escaped.replace(/\n/g, '<br />'));
-      uri = encodeURI(file);
-      localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
-      directoryStructure = _.createDirectoryStructure(directoryPath);
-      return directoryStructure.done(function() {
-        var fileTransfer;
-        fileTransfer = new FileTransfer();
-        return fileTransfer.download(uri, localPath, function(file) {
-          if (index < filesTobeDownloaded.length - 1) {
-            return _.downloadMediaFiles(filesTobeDownloaded, index + 1, file_type);
-          } else {
-            $('#syncMediaSuccess').css("display", "block").text("Downloaded all " + file_type + " files");
-            if (file_type === 'Image') {
-              _.syncFiles('Audio');
-            }
-            if (file_type === 'Audio') {
-              _.syncFiles('Video');
-            }
-            if (file_type === 'Video') {
-              return setTimeout((function(_this) {
-                return function() {
-                  return App.navigate('teachers/dashboard', {
-                    trigger: true
-                  });
-                };
-              })(this), 2000);
-            }
-          }
-        }, function(error) {
-          return _.onMediaSyncError(error, "An error occurred during file download");
-        }, true);
+      var availableMemory;
+      availableMemory = _.getAvailableDeviceStorageSize();
+      return availableMemory.done(function(deviceSize) {
+        var directoryPath, directoryStructure, esc, file, fileName, fileSize, localPath, uri;
+        fileSize = filesTobeDownloaded[index].size;
+        if (deviceSize < fileSize) {
+          return _.onMediaSyncError('none', "Can't download file. There is not enough free space on the device");
+        } else {
+          file = filesTobeDownloaded[index].link;
+          directoryPath = file.substr(file.indexOf("uploads/"));
+          fileName = file.substr(file.lastIndexOf('/') + 1);
+          esc = $('<div>').text("Downloading " + file_type.toLowerCase() + " files...\n\n" + fileName).text();
+          $('#syncMediaSuccess').css("display", "block").html(esc.replace(/\n/g, '<br />'));
+          uri = encodeURI(file);
+          localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
+          directoryStructure = _.createDirectoryStructure(directoryPath);
+          return directoryStructure.done(function() {
+            var fileTransfer;
+            fileTransfer = new FileTransfer();
+            return fileTransfer.download(uri, localPath, function(file) {
+              if (index < filesTobeDownloaded.length - 1) {
+                return _.downloadMediaFiles(filesTobeDownloaded, index + 1, file_type);
+              } else {
+                if (file_type === 'Image') {
+                  _.syncFiles('Audio');
+                }
+                if (file_type === 'Audio') {
+                  _.syncFiles('Video');
+                }
+                if (file_type === 'Video') {
+                  $('#syncMediaSuccess').css("display", "block").text("Media sync completed");
+                  return setTimeout((function(_this) {
+                    return function() {
+                      return App.navigate('teachers/dashboard', {
+                        trigger: true
+                      });
+                    };
+                  })(this), 2000);
+                }
+              }
+            }, function(error) {
+              return _.onMediaSyncError(error, "An error occurred during file download");
+            }, true);
+          });
+        }
       });
     },
     getListOfFilesFromLocalDirectory: function(file_type) {
       var path, runFunc;
-      if (file_type === 'Image') {
-        path = 'images';
-      }
-      if (file_type === 'Audio') {
-        path = 'audios';
-      }
-      if (file_type === 'Video') {
-        path = 'videos';
-      }
+      path = file_type.toLowerCase() + "s";
       runFunc = function() {
         return $.Deferred(function(d) {
           var localFilesList;
@@ -122,15 +121,7 @@ define(['underscore', 'jquery'], function(_, $) {
       runFunc = function() {
         return $.Deferred(function(d) {
           var action, data;
-          if (file_type === 'Image') {
-            action = 'get-site-image-resources-data';
-          }
-          if (file_type === 'Audio') {
-            action = 'get-site-audio-resources-data';
-          }
-          if (file_type === 'Video') {
-            action = 'get-site-video-resources-data';
-          }
+          action = "get-site-" + file_type.toLowerCase() + "-resources-data";
           data = '';
           return $.get(AJAXURL + '?action=' + action, data, (function(_this) {
             return function(resp) {
@@ -158,7 +149,7 @@ define(['underscore', 'jquery'], function(_, $) {
             filesTobeDownloaded = [];
             _.each(serverEntries, function(serverFile, i) {
               var fileName;
-              fileName = serverFile.substr(serverFile.lastIndexOf('/') + 1);
+              fileName = serverFile.link.substr(serverFile.link.lastIndexOf('/') + 1);
               if (localEntries.indexOf(fileName) === -1) {
                 return filesTobeDownloaded.push(serverFile);
               }

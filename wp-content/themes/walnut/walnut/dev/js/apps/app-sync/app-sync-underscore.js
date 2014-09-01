@@ -114,6 +114,21 @@ define(['underscore', 'unserialize'], function(_) {
           }, _.directoryErrorHandler);
         }, _.directoryErrorHandler);
       }, _.fileSystemErrorHandler);
+    },
+    getAvailableDeviceStorageSize: function() {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          return cordova.exec(function(freeSpace) {
+            return d.resolve(freeSpace);
+          }, function() {
+            return console.log('DeviceStorageSize Failed');
+          }, "File", "getFreeDiskSpace", []);
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('getDeviceAvailableStorageSize done');
+      }).fail(_.failureHandler);
     }
   });
 });

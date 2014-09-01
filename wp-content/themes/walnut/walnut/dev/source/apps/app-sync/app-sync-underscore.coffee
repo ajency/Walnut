@@ -138,3 +138,24 @@ define ['underscore', 'unserialize'], ( _) ->
 							,_.directoryErrorHandler)
 					, _.directoryErrorHandler)
 			, _.fileSystemErrorHandler)
+
+
+		# Get available phone memory space in KB
+		getAvailableDeviceStorageSize : ->
+
+			runFunc = ->
+				$.Deferred (d)->
+
+					cordova.exec((freeSpace)->
+
+							d.resolve(freeSpace)
+
+						,->
+							console.log('DeviceStorageSize Failed')
+
+						,"File", "getFreeDiskSpace", [])
+
+
+			$.when(runFunc()).done ->
+				console.log('getDeviceAvailableStorageSize done')
+			.fail _.failureHandler

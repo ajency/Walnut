@@ -22,21 +22,17 @@ define ['underscore', 'jquery'], ( _ , $) ->
 					fileTobeDownloaded.done (files_to_be_downloaded)->
 
 						if files_to_be_downloaded.length > 0
-
-							$('#syncMediaSuccess').css("display","block")
-							.text("Downloading "+file_type+" files...")
-
-							downloadFiles = _.downloadMediaFiles(files_to_be_downloaded, 0, file_type)
+							
+							_.downloadMediaFiles(files_to_be_downloaded, 0, file_type)
 
 						else
-							$('#syncMediaSuccess').css("display","block")
-							.text(file_type+" files already upto date")
-
 							_.syncFiles 'Audio' if file_type is 'Image'
-
 							_.syncFiles 'Video' if file_type is 'Audio'
 
 							if file_type is 'Video'
+
+								$('#syncMediaSuccess').css("display","block").text("All media files updated")
+
 								setTimeout(=>
 									App.navigate('teachers/dashboard', trigger: true)
 								,2000)
@@ -45,68 +41,67 @@ define ['underscore', 'jquery'], ( _ , $) ->
 
 		downloadMediaFiles : (filesTobeDownloaded, index, file_type)->
 
-			# $('#syncMediaProgress').css("display","none")
-			
-			file = filesTobeDownloaded[index]		 
-			directoryPath = file.substr(file.indexOf("uploads/"))
-			fileName = file.substr(file.lastIndexOf('/') + 1)
-			
+			availableMemory = _.getAvailableDeviceStorageSize()
+			availableMemory.done (deviceSize)->
 
-			
-			escaped = $('<div>').text("Downloading...\n\n"+fileName).text()
-			$('#syncMediaSuccess').css("display","block").html(escaped.replace(/\n/g, '<br />'))
+				fileSize = filesTobeDownloaded[index].size
 
-			# $('#syncMediaProgress').css("display","block")
-			# $('#mediaProgressUpdate').css("width","0%")
-
-			uri = encodeURI file
-			localPath = _.getSynapseMediaDirectoryPath() + directoryPath
-
-			directoryStructure = _.createDirectoryStructure directoryPath
-			directoryStructure.done ->
-
-				fileTransfer = new FileTransfer()
-
-				# fileTransfer.onprogress = (progressEvent)->
-				# 	if progressEvent.lengthComputable
-				# 		percentage = Math.floor(progressEvent.loaded / progressEvent.total * 100)
-				# 		$('#mediaProgressUpdate').css("width",""+percentage+"%")
-				# 	else
-				# 		$('#mediaProgressUpdate').css("width","100%")
-
-
-				fileTransfer.download(uri, localPath 
-					,(file)->
-						if index < filesTobeDownloaded.length-1
-							_.downloadMediaFiles(filesTobeDownloaded, (index + 1), file_type)
-
-						else
-							$('#syncMediaSuccess').css("display","block")
-							.text("Downloaded all "+file_type+" files")
-
-							_.syncFiles 'Audio' if file_type is 'Image'
-
-							_.syncFiles 'Video' if file_type is 'Audio'
-
-							if file_type is 'Video'
-								setTimeout(=>
-									App.navigate('teachers/dashboard', trigger: true)
-								,2000)
-
-
-					,(error)->
-						_.onMediaSyncError(error, "An error occurred during file download")
-
-					, true)
+				if(deviceSize < fileSize)
+					_.onMediaSyncError('none', "Can't download file. There is not enough free space on the device")
 				
+				else
+					file = filesTobeDownloaded[index].link		 
+					directoryPath = file.substr(file.indexOf("uploads/"))
+					fileName = file.substr(file.lastIndexOf('/') + 1)
+
+					esc = $('<div>').text("Downloading "+file_type.toLowerCase()+" files...\n\n"+fileName).text()
+					$('#syncMediaSuccess').css("display","block").html(esc.replace(/\n/g, '<br />'))
+
+					uri = encodeURI file
+					localPath = _.getSynapseMediaDirectoryPath() + directoryPath
+
+					directoryStructure = _.createDirectoryStructure directoryPath
+					directoryStructure.done ->
+
+						fileTransfer = new FileTransfer()
+
+						# fileTransfer.onprogress = (progressEvent)->
+						# 	if progressEvent.lengthComputable
+						# 		percentage = Math.floor(progressEvent.loaded / progressEvent.total * 100)
+						# 		$('#mediaProgressUpdate').css("width",""+percentage+"%")
+						# 	else
+						# 		$('#mediaProgressUpdate').css("width","100%")
+
+
+						fileTransfer.download(uri, localPath 
+							,(file)->
+								if index < filesTobeDownloaded.length-1
+									_.downloadMediaFiles(filesTobeDownloaded, (index + 1), file_type)
+
+								else
+									_.syncFiles 'Audio' if file_type is 'Image'
+
+									_.syncFiles 'Video' if file_type is 'Audio'
+
+									if file_type is 'Video'
+										$('#syncMediaSuccess').css("display","block").text("Media sync completed")
+
+										setTimeout(=>
+											App.navigate('teachers/dashboard', trigger: true)
+										,2000)
+
+
+							,(error)->
+								_.onMediaSyncError(error, "An error occurred during file download")
+
+							, true)
+
 
 
 		
 		getListOfFilesFromLocalDirectory : (file_type)->
 
-			path = 'images' if file_type is 'Image'
-			path = 'audios' if file_type is 'Audio'
-			path = 'videos' if file_type is 'Video'
+			path = file_type.toLowerCase()+"s"
 
 			runFunc = ->
 				$.Deferred (d)->
@@ -144,13 +139,7 @@ define ['underscore', 'jquery'], ( _ , $) ->
 			runFunc = ->
 				$.Deferred (d)->
 
-					if file_type is 'Image'
-						action = 'get-site-image-resources-data'
-					if file_type is 'Audio'
-						action = 'get-site-audio-resources-data'
-					if file_type is 'Video'
-						action = 'get-site-video-resources-data'
-
+					action = "get-site-"+file_type.toLowerCase()+"-resources-data"
 					
 					data = ''
 					$.get AJAXURL + '?action='+action,
@@ -185,7 +174,7 @@ define ['underscore', 'jquery'], ( _ , $) ->
 						filesTobeDownloaded = []
 
 						_.each serverEntries, (serverFile, i)->
-							fileName = serverFile.substr(serverFile.lastIndexOf('/') + 1)
+							fileName = serverFile.link.substr(serverFile.link.lastIndexOf('/') + 1)
 							
 							if localEntries.indexOf(fileName) == -1
 								filesTobeDownloaded.push serverFile

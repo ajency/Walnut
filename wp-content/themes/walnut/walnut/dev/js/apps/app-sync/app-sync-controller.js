@@ -84,7 +84,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
           switch (typeOfOperation) {
             case 'none':
               $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Started sync process...");
+              $('#syncSuccess').css("display", "block").text("Started data sync...");
               return setTimeout((function(_this) {
                 return function() {
                   return _.getZipFileDownloadDetails();
@@ -92,7 +92,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               })(this), 2000);
             case 'file_import':
               $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Started sync process...");
+              $('#syncSuccess').css("display", "block").text("Started data sync...");
               return setTimeout((function(_this) {
                 return function() {
                   return _.generateZipFile();
@@ -100,7 +100,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               })(this), 2000);
             case 'file_download':
               $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Resuming sync process...");
+              $('#syncSuccess').css("display", "block").text("Resuming data sync...");
               return setTimeout((function(_this) {
                 return function() {
                   return _.startFileImport();
@@ -108,7 +108,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               })(this), 2000);
             case 'file_generate':
               $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Resuming sync process...");
+              $('#syncSuccess').css("display", "block").text("Resuming data sync...");
               return setTimeout((function(_this) {
                 return function() {
                   return _.uploadGeneratedZipFile();
@@ -116,7 +116,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               })(this), 2000);
             case 'file_upload':
               $('#syncStartContinue').css("display", "none");
-              $('#syncSuccess').css("display", "block").text("Resuming sync process...");
+              $('#syncSuccess').css("display", "block").text("Resuming data sync...");
               return setTimeout((function(_this) {
                 return function() {
                   return _.checkIfServerImportOperationCompleted();
@@ -131,7 +131,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
       $('#syncStartContinue').prop("disabled", true);
       $('#syncMediaError').css("display", "none");
       $('#syncMediaStart').css("display", "none");
-      $('#syncMediaSuccess').css("display", "block").text("Started media sync process...");
+      $('#syncMediaSuccess').css("display", "block").text("Started media sync...");
       return setTimeout((function(_this) {
         return function() {
           return _.startMediaSync();

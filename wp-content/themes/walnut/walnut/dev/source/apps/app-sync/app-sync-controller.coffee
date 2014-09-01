@@ -99,7 +99,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 						when 'none'
 							$('#syncStartContinue').css("display","none")
 							
-							$('#syncSuccess').css("display","block").text("Started sync process...")
+							$('#syncSuccess').css("display","block").text("Started data sync...")
 							
 							setTimeout(=>
 								_.getZipFileDownloadDetails()
@@ -109,7 +109,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 						when 'file_import'
 							$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block").text("Started sync process...")
+							$('#syncSuccess').css("display","block").text("Started data sync...")
 							
 							setTimeout(=>
 								_.generateZipFile()
@@ -119,7 +119,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 						when 'file_download'
 							$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block").text("Resuming sync process...")
+							$('#syncSuccess').css("display","block").text("Resuming data sync...")
 
 							setTimeout(=>
 								_.startFileImport()
@@ -129,7 +129,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 						when 'file_generate'
 							$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block").text("Resuming sync process...")
+							$('#syncSuccess').css("display","block").text("Resuming data sync...")
 							
 							setTimeout(=>
 								_.uploadGeneratedZipFile()
@@ -139,7 +139,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 						when 'file_upload'
 							$('#syncStartContinue').css("display","none")
 
-							$('#syncSuccess').css("display","block").text("Resuming sync process...")
+							$('#syncSuccess').css("display","block").text("Resuming data sync...")
 
 							setTimeout(=>
 								_.checkIfServerImportOperationCompleted()
@@ -157,7 +157,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			
 			$('#syncMediaStart').css("display","none")
 			
-			$('#syncMediaSuccess').css("display","block").text("Started media sync process...")
+			$('#syncMediaSuccess').css("display","block").text("Started media sync...")
 			
 			setTimeout(=>
 				_.startMediaSync()
