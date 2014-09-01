@@ -26,11 +26,16 @@ define ['app'
 
                     data.display_answer = Marionette.getOption @,'display_answer'
 
-                    data.marks_obtained = responseModel.get('question_response').marks
+                    marks_obtained = responseModel.get('question_response').marks
+
+                    data.marks_obtained= parseFloat marks_obtained.toFixed 2
+
                     all_marks  = _.compact _.pluck @model.get('layout'), 'marks'
-                    data.total_marks= 0
+                    total_marks= 0
                     if all_marks.length>0
-                        data.total_marks= _.reduce all_marks, (memo, num)-> parseInt(memo) + parseInt(num) 
+                        total_marks= _.reduce all_marks, (memo, num)-> parseInt(memo) + parseInt(num) 
+                    
+                    data.total_marks= parseFloat total_marks.toFixed 2
 
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-right', text : 'Correct', icon : 'fa-check'
