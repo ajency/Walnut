@@ -9,53 +9,42 @@ define ['underscore'], ( _) ->
 			runQuery = ->
 
 				$.Deferred (d)->
-					_.db.transaction (tx)->
-
-
-						classID = _.getClassIdForUser()
-						classID.done (class_id)->
-							console.log class_id
-
-							pattern = '%"'+class_id+'"\;%'
-							console.log pattern
-
+					classID = _.getClassIdForUser()
+					classID.done (class_id)->
+						_.db.transaction (tx)-> 
+							pattern = '%"'+class_id+'"%' 
 
 							tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
 								LEFT OUTER JOIN wp_textbook_relationships wtr ON 
-								t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND 
-								tt.taxonomy='textbook' AND tt.parent=0
-								AND wtr.class_id LIKE '"+pattern+"' " 
+								t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id 
+								AND tt.taxonomy='textbook' AND tt.parent=0 
+								AND wtr.class_id LIKE '%"+pattern+"%' " 
 								, [], onSuccess(d) , _.deferredErrorHandler(d));
 							
 
 			onSuccess = (d)->
 				(tx, data)->
-
+					alert "1"
 					result = []
 					for i in [0..data.rows.length-1] by 1
 
 						row = data.rows.item(i)
-						console.log JSON.stringify row
 
 						do (row ,i)->
 							modulesCount = _.getModulesCount(row['textbook_id'])
 							modulesCount.done (modules_count)->
-								console.log JSON.stringify modules_count
 								
 								do(row, i, modules_count)->
 									textbookOptions = _.getTextbookOptions(row['term_id'])
 									textbookOptions.done (options)->
-										console.log JSON.stringify options
 
 										do(row, i, modules_count, options)->
 											chapterCount = _.getChapterCount(row['term_id'])
 											chapterCount.done (chapter_count)->
-												console.log JSON.stringify chapter_count
 
 												do(row, i, modules_count, options,chapter_count)->
 													completedQuizCount = _.getCompletedQuizCount(row['textbook_id'])
-													completedQuizCount.done (quizzes_completed)->
-														console.log JSON.stringify quizzes_completed
+													completedQuizCount.done (quizzes_completed)-> 
 														
 														result[i] = 
 															term_id: row["term_id"]
@@ -76,8 +65,7 @@ define ['underscore'], ( _) ->
 															filter: 'raw'
 															chapter_count : chapter_count
 															quizzes_completed : quizzes_completed
-															quizzes_not_started : modules_count - quizzes_completed
-														console.log JSON.stringify result[i]
+															quizzes_not_started : modules_count - quizzes_completed 
 
 
 					d.resolve(result)
@@ -102,8 +90,7 @@ define ['underscore'], ( _) ->
 
 					class_id = data.rows.item(0)['meta_value']
 					console.log class_id 
-					console.log JSON.stringify class_id
-					console.log class_id.replace(/"([^"]+(?="))"/g, "$1")
+					# console.log class_id.replace(/"([^"]+(?="))"/g, "$1")
 					d.resolve class_id
 
 			$.when(runQuery()).done ->

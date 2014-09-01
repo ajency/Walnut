@@ -4,15 +4,13 @@ define(['underscore'], function(_) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            var classID;
-            classID = _.getClassIdForUser();
-            return classID.done(function(class_id) {
+          var classID;
+          classID = _.getClassIdForUser();
+          return classID.done(function(class_id) {
+            return _.db.transaction(function(tx) {
               var pattern;
-              console.log(class_id);
-              pattern = '%"' + class_id + '"\;%';
-              console.log(pattern);
-              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '" + pattern + "' ", [], onSuccess(d), _.deferredErrorHandler(d));
+              pattern = '%"' + class_id + '"%';
+              return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND wtr.class_id LIKE '%" + pattern + "%' ", [], onSuccess(d), _.deferredErrorHandler(d));
             });
           });
         });
@@ -20,28 +18,25 @@ define(['underscore'], function(_) {
       onSuccess = function(d) {
         return function(tx, data) {
           var i, result, row, _fn, _i, _ref;
+          alert("1");
           result = [];
           _fn = function(row, i) {
             var modulesCount;
             modulesCount = _.getModulesCount(row['textbook_id']);
             return modulesCount.done(function(modules_count) {
-              console.log(JSON.stringify(modules_count));
               return (function(row, i, modules_count) {
                 var textbookOptions;
                 textbookOptions = _.getTextbookOptions(row['term_id']);
                 return textbookOptions.done(function(options) {
-                  console.log(JSON.stringify(options));
                   return (function(row, i, modules_count, options) {
                     var chapterCount;
                     chapterCount = _.getChapterCount(row['term_id']);
                     return chapterCount.done(function(chapter_count) {
-                      console.log(JSON.stringify(chapter_count));
                       return (function(row, i, modules_count, options, chapter_count) {
                         var completedQuizCount;
                         completedQuizCount = _.getCompletedQuizCount(row['textbook_id']);
                         return completedQuizCount.done(function(quizzes_completed) {
-                          console.log(JSON.stringify(quizzes_completed));
-                          result[i] = {
+                          return result[i] = {
                             term_id: row["term_id"],
                             name: row["name"],
                             slug: row["slug"],
@@ -62,7 +57,6 @@ define(['underscore'], function(_) {
                             quizzes_completed: quizzes_completed,
                             quizzes_not_started: modules_count - quizzes_completed
                           };
-                          return console.log(JSON.stringify(result[i]));
                         });
                       })(row, i, modules_count, options, chapter_count);
                     });
@@ -73,7 +67,6 @@ define(['underscore'], function(_) {
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
             row = data.rows.item(i);
-            console.log(JSON.stringify(row));
             _fn(row, i);
           }
           return d.resolve(result);
@@ -97,8 +90,6 @@ define(['underscore'], function(_) {
           var class_id;
           class_id = data.rows.item(0)['meta_value'];
           console.log(class_id);
-          console.log(JSON.stringify(class_id));
-          console.log(class_id.replace(/"([^"]+(?="))"/g, "$1"));
           return d.resolve(class_id);
         };
       };

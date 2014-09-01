@@ -76,8 +76,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							@onErrorResponse("Your are not allowed to login")
 
 						else if userRole is "student"
-							store_cookies = jqXHR.getResponseHeader('Set-Cookie');
-							console.log store_cookies
+							store_cookies = jqXHR.getResponseHeader('Set-Cookie'); 
 							_.setCookiesValue(store_cookies);
 
 
@@ -88,21 +87,16 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							@saveUpdateUserDetails(resp, jqXHR)
 							@onSuccessResponse()
 
-				error :(jqXHR, err) =>
-					console.log jqXHR
-					console.log err
+				error :(jqXHR, err) => 
 					@onErrorResponse('Could not connect to server')
 
 
 
-		offlineDeviceAuth : ->
-			console.log "offline"
-			console.log @data.txtusername
+		offlineDeviceAuth : -> 
 			offlineUser = _.getUserDetails(@data.txtusername)
 
 			offlineUser.done (user)=>
-				if user.exists
-					console.log @data.txtpassword
+				if user.exists 
 					if user.password is @data.txtpassword
 
 						@setUserDetails(user.user_id, @data.txtusername, user.blog_id)
@@ -126,8 +120,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		# save new user or update existing user 
-		saveUpdateUserDetails : (resp, jqXHR)->
-			console.log "save"
+		saveUpdateUserDetails : (resp, jqXHR)-> 
 			offlineUser = _.getUserDetails(@data.data.txtusername)
 			
 			offlineUser.done (user)=>
@@ -156,7 +149,6 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		updateExistingUser : (response, jqXHR)->
 
 			resp = response.login_details
-			console.log resp
 
 			_.db.transaction((tx)=>
 				tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", 

@@ -94,7 +94,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
                 return _this.onErrorResponse("Your are not allowed to login");
               } else if (userRole === "student") {
                 store_cookies = jqXHR.getResponseHeader('Set-Cookie');
-                console.log(store_cookies);
                 _.setCookiesValue(store_cookies);
                 _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername, resp.blog_details.blog_id);
                 _.setUserCapabilities(resp.login_details.allcaps);
@@ -108,8 +107,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         })(this),
         error: (function(_this) {
           return function(jqXHR, err) {
-            console.log(jqXHR);
-            console.log(err);
             return _this.onErrorResponse('Could not connect to server');
           };
         })(this)
@@ -118,13 +115,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       var offlineUser;
-      console.log("offline");
-      console.log(this.data.txtusername);
       offlineUser = _.getUserDetails(this.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
-            console.log(_this.data.txtpassword);
             if (user.password === _this.data.txtpassword) {
               _this.setUserDetails(user.user_id, _this.data.txtusername, user.blog_id);
               return _this.onSuccessResponse();
@@ -147,7 +141,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp, jqXHR) {
       var offlineUser;
-      console.log("save");
       offlineUser = _.getUserDetails(this.data.data.txtusername);
       return offlineUser.done((function(_this) {
         return function(user) {
@@ -176,7 +169,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.updateExistingUser = function(response, jqXHR) {
       var resp;
       resp = response.login_details;
-      console.log(resp);
       return _.db.transaction((function(_this) {
         return function(tx) {
           return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.data.txtusername, _this.data.data.txtpassword, resp.ID, response.blog_details.blog_id]);
