@@ -7,7 +7,7 @@ define [
     # 'entities/schools'
     # 'entities/breadcrumb'
     # 'entities/content-pieces'
-    # 'entities/content-group'
+    'entities/content-group'
     'entities/divisions'
     'entities/quiz'
     'entities/quiz-question-response'
