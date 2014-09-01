@@ -59,7 +59,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         # collection of group of content pieces eg. quizzes, teacher training modules etc.
         class Quiz.ItemCollection extends Backbone.Collection
             model: Quiz.ItemModel
-
+            name: 'quiz'
 
             url: ->
                 AJAXURL + '?action=get-quizes'

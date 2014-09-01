@@ -84,6 +84,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.model = Quiz.ItemModel;
 
+      ItemCollection.prototype.name = 'quiz';
+
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-quizes';
       };

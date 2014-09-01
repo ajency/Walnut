@@ -24,7 +24,6 @@ define ['underscore'], ( _) ->
 
 			onSuccess = (d)->
 				(tx, data)->
-					alert "1"
 					result = []
 					for i in [0..data.rows.length-1] by 1
 
@@ -45,7 +44,7 @@ define ['underscore'], ( _) ->
 												do(row, i, modules_count, options,chapter_count)->
 													completedQuizCount = _.getCompletedQuizCount(row['textbook_id'])
 													completedQuizCount.done (quizzes_completed)-> 
-														
+
 														result[i] = 
 															term_id: row["term_id"]
 															name: row["name"]
@@ -66,7 +65,6 @@ define ['underscore'], ( _) ->
 															chapter_count : chapter_count
 															quizzes_completed : quizzes_completed
 															quizzes_not_started : modules_count - quizzes_completed 
-
 
 					d.resolve(result)
 			

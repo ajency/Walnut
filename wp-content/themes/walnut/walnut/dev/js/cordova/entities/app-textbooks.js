@@ -18,7 +18,6 @@ define(['underscore'], function(_) {
       onSuccess = function(d) {
         return function(tx, data) {
           var i, result, row, _fn, _i, _ref;
-          alert("1");
           result = [];
           _fn = function(row, i) {
             var modulesCount;

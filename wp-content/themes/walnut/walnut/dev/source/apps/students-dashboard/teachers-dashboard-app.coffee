@@ -1,5 +1,6 @@
 define ['app'
         'apps/students-dashboard/textbooks/take-class-controller'
+        'apps/teaching-modules/textbook-modules-controller'
         # 'apps/content-modules/view-single-module/single-module-controller'
 ], (App)->
     App.module "TeachersDashboardApp", (TeachersDashboardApp, App)->

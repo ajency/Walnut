@@ -42,6 +42,11 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d
 
+			if collection_name is 'quiz'
+				data = _.getQuizByTextbookIdAndUserID(opts.textbook, _.getUserID(),opts.division)
+				data.done (d)->
+					collection.set d
+
 			if collection_name is 'content-piece'
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->

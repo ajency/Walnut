@@ -38,12 +38,13 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         } else if (this.mode === 'take-quiz') {
           this.contentGroupsCollection = App.request("get:quizes", {
             'textbook': textbookID,
-            'user_id': App.request("get:user:data", "ID")
+            'user_id': 5
           });
         }
         this.chaptersCollection = App.request("get:chapters", {
           'parent': textbookID
         });
+        console.log(JSON.stringify(this.chaptersCollection));
         return App.execute("when:fetched", [this.chaptersCollection, this.contentGroupsCollection, this.textbook], (function(_this) {
           return function() {
             var view;

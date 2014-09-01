@@ -35,6 +35,12 @@ define(["backbone"], function(Backbone) {
           return collection.set(d);
         });
       }
+      if (collection_name === 'quiz') {
+        data = _.getQuizByTextbookIdAndUserID(opts.textbook, _.getUserID(), opts.division);
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
       if (collection_name === 'content-piece') {
         data = _.getContentPiecesByIDs(opts.ids);
         data.done(function(d) {
