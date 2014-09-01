@@ -1,1 +1,1 @@
-define(['apps/login/loginapp', 'apps/header/headerapp', 'apps/left-nav/leftnavapp', 'apps/students-dashboard/teachers-dashboard-app'], function() {});
+define(['apps/login/loginapp', 'apps/header/headerapp', 'apps/left-nav/leftnavapp', 'apps/content-modules/content-modules-app', 'apps/students-dashboard/teachers-dashboard-app', 'apps/quiz-modules/quiz-module-app', 'apps/teaching-modules/textbook-modules-controller'], function() {});
