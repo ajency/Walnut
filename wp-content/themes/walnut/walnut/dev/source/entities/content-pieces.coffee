@@ -51,6 +51,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             url : ->
                 AJAXURL + '?action=get-content-pieces'
 
+        contentPiecesRepository= new ContentPiece.ItemCollection
 
         # collection of content pieces in a content group. eg. questions in a quiz
         class ContentPiece.GroupItemCollection extends Backbone.Collection
@@ -74,11 +75,17 @@ define ["app", 'backbone'], (App, Backbone) ->
         # get all content pieces
             getContentPieces : (param = {})->
                 contentPieceCollection = new ContentPiece.ItemCollection
+                
+                contentPieceCollection.add contentPiecesRepository.models
+
+                param.exclude = contentPiecesRepository.pluck 'ID'
+
                 contentPieceCollection.fetch
-                    reset : true
                     add : true
                     remove : false
                     data : param
+                    success:(resp)-> contentPiecesRepository.add resp.models
+
                 contentPieceCollection
 
         # get all content pieces belonging to particular group
@@ -99,19 +106,34 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
             getContentPieceByID : (id)->
-                contentPiece = contentPieceCollection.get id if contentPieceCollection?
+                contentPiece = contentPiecesRepository.get id
 
                 if not contentPiece
                     contentPiece = new ContentPiece.ItemModel ID : id
-                    contentPiece.fetch()
+                    contentPiece.fetch
+                        success:(resp)->contentPiecesRepository.add resp
+
                 contentPiece
 
             getContentPiecesByIDs : (ids = [])->
+                
                 contentPieces = new ContentPiece.ItemCollection
+                
+                for id in ids
+                    model= contentPiecesRepository.get id
+                    if model
+                        contentPieces.add model
+                        ids = _.without ids, id
+
                 if _.size(ids) > 0
                     contentPieces.fetch
+                        add : true
+                        remove : false
                         data :
                             ids : ids
+
+                        success:(resp)->contentPiecesRepository.add resp.models
+
                 contentPieces
 
             newContentPiece:->
