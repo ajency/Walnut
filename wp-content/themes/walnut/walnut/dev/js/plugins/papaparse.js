@@ -1178,9 +1178,9 @@
 
 	function getScriptPath()
 	{
-		var id = "worker" + String(Math.random()).substr(2);
-		document.write('<script id="'+id+'"></script>');
-		return document.getElementById(id).previousSibling.src;
+		// var id = "worker" + String(Math.random()).substr(2);
+		// document.write('<script id="'+id+'"></script>');
+		// return document.getElementById(id).previousSibling.src;
 	}
 
 	function newWorker()
