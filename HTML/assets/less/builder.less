@@ -590,7 +590,7 @@
 	}
 	img{
 		position: relative;
-		z-index: 2;
+		z-index: 99;
 		margin-right: 10px;
 		cursor: pointer;
 	}
@@ -606,12 +606,23 @@
 		//border: 3px dashed @preview-grey;
 		cursor: pointer;
 		position: relative;
-		z-index: 2;
+		z-index: 99;
 		color: @dash-grey;
 		.bicon{
 			font-size: 40px;
 			display: block;
 		}
+	}
+}
+
+.image{
+	img{
+		z-index: 99;
+	}
+	.ui-resizable-handle.ui-resizable-s{
+		height: 106%;
+		background-color: lighten(@color-grey, 35%);
+		bottom: -4px;
 	}
 }
 
