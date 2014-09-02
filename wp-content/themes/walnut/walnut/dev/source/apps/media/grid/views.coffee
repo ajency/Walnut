@@ -102,6 +102,10 @@ define ['app'
                     @$el.closest('.tab-content').siblings('.nav-tabs')
                     .find('.all-media-tab').find('a').trigger 'click'
                     #trigger the selectable to point to the newly added image
+                   
+
+                @listenTo @collection,'media:uploaded',(imageModel)->
+                    imageView = @children.findByModel imageModel
                     imageView.$el.find('img').trigger 'click'
                     @$el.find( '#selectable-images' ).selectSelectableElements imageView.$el
 
