@@ -118,7 +118,7 @@ function get_textbooks( $args = array() ) {
     $args = wp_parse_args( $args, $defaults );
     $textbooks_for_blog = get_textbooksids_for_current_blog();
 
-    if($args['parent'] ==0)
+    if($args['parent'] ==0 && current_user_can('administrator')==false)
         $args['include']=$textbooks_for_blog;
 
     extract( $args );
