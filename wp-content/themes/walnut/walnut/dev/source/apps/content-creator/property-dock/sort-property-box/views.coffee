@@ -6,7 +6,7 @@ define ['app'],(App)->
 		class Views.PropertyView extends Marionette.ItemView
 
 			template : '<div class="tile-more-content no-padding">
-								<div class="tiles green">
+								<div class="tiles blue">
 									<div class="tile-footer drag">
 										Sort <i class="fa fa-chevron-right"></i> <span class="semi-bold">Sort Properties</span>
 									</div>
@@ -35,9 +35,9 @@ define ['app'],(App)->
 											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
 										</div>
 
-										<div class="slider success">
+										<div class="textProp slider success">
 												Height 
-												<input type="text" id="sort-height" class="height" data-slider-max="100" data-slider-min="40" data-slider-step="5" data-slider-value="{{height}}" data-slider-orientation="horizontal" data-slider-selection="before">
+												<input type="text" id="sort-height" class="height" data-slider-max="100" data-slider-min="40" data-slider-step="5" data-slider-value="{{height}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
 
 										</div>
 
