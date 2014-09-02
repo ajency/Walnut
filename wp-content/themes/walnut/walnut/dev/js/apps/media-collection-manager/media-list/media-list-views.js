@@ -16,7 +16,7 @@ define(['app'], function(App) {
 
       MediaView.prototype.className = 'panel panel-default moveable';
 
-      MediaView.prototype.template = '<div class="panel-heading"> <a class="accordion-toggle"> <div class="aj-imp-image-item row"> <a class="thumbnail col-sm-8"> <div class="imaTitle"><span>{{title_show}}</span></div> </a> <div class="imgactions col-sm-4"> <a class="remove-media" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete Image</a> </div> </div> </a> </div>';
+      MediaView.prototype.template = '<div class="accordion-toggle"> <div class="aj-imp-image-item row"> <div class="col-sm-8"> <div class="thumbnail m-b-5"> <div class="imaTitle"><span>{{title_show}}</span></div> </div> </div> <div class="col-sm-4"> <div class="imgactions"> <a class="remove-media text-error" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete {{mediaType}}</a> </div> </div> </div> </div>';
 
       MediaView.prototype.events = {
         'click .remove-media': function(e) {
@@ -31,6 +31,7 @@ define(['app'], function(App) {
       MediaView.prototype.mixinTemplateHelpers = function(data) {
         data = MediaView.__super__.mixinTemplateHelpers.call(this, data);
         data.title_show = _.prune(data.title, 50);
+        data.mediaType = Marionette.getOption(this, 'mediaType');
         return data;
       };
 
@@ -48,7 +49,13 @@ define(['app'], function(App) {
         return NoMediaView.__super__.constructor.apply(this, arguments);
       }
 
-      NoMediaView.prototype.template = '<div class="alert">No media found. Please add media.</div>';
+      NoMediaView.prototype.template = '<div class="alert">No {{mediaType}} found. Please add {{mediaType}}.</div>';
+
+      NoMediaView.prototype.mixinTemplateHelpers = function(data) {
+        data = NoMediaView.__super__.mixinTemplateHelpers.call(this, data);
+        data.mediaType = Marionette.getOption(this, 'mediaType');
+        return data;
+      };
 
       return NoMediaView;
 
@@ -61,11 +68,17 @@ define(['app'], function(App) {
         return MediaListView.__super__.constructor.apply(this, arguments);
       }
 
-      MediaListView.prototype.template = '<div class="aj-imp-image-header row"> <div class="col-sm-8"> File Name </div> <div class="col-sm-4"> Actions </div> </div> <div class="panel-group" id="media-accordion"></div>';
+      MediaListView.prototype.template = '<div class="aj-imp-image-header m-b-10 row"> <div class="col-sm-8"> File Name </div> <div class="col-sm-4"> Actions </div> </div> <div class="panel-group" id="media-accordion"></div>';
 
       MediaListView.prototype.itemView = MediaView;
 
       MediaListView.prototype.emptyView = NoMediaView;
+
+      MediaListView.prototype.itemViewOptions = function() {
+        return {
+          mediaType: Marionette.getOption(this, 'mediaType')
+        };
+      };
 
       MediaListView.prototype.itemViewContainer = '#media-accordion';
 

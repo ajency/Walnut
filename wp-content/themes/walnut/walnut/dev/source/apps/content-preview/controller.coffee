@@ -25,7 +25,7 @@ define ['app'
         class ContentPreview.Controller extends RegionController
 
             initialize : (options)->
-                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@students, content_preview} = options
+                {contentID, @model,@questionResponseModel,@timerObject, @display_mode,@students, content_preview,@classID} = options
 
                 if contentID
                     @model = App.request "get:content:piece:by:id", contentID
@@ -56,6 +56,7 @@ define ['app'
                         timerObject : @timerObject
                         display_mode : @display_mode
                         students : @students
+                        classID  : @classID
 
                     if @model.get('question_type') is 'multiple_eval'
                         App.execute "show:single:question:multiple:evaluation:app",

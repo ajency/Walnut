@@ -89,20 +89,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
               return parseInt((numOfQuestionsCompleted / totalNumofQuestions) * 100);
             },
             moduleTime: function() {
-              var display_time, hours, mins, seconds, time;
-              hours = 0;
-              time = totalTimeTakenForModule;
-              mins = parseInt(time / 60);
-              if (mins > 59) {
-                hours = parseInt(mins / 60);
-                mins = parseInt(mins % 60);
-              }
-              seconds = parseInt(time % 60);
-              display_time = '';
-              if (hours > 0) {
-                display_time = hours + 'h ';
-              }
-              return display_time += mins + 'm ' + seconds + 's';
+              var display_time;
+              return display_time = $.timeMinSecs(totalTimeTakenForModule);
             }
           }
         });
@@ -171,8 +159,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         if (_.platform() === 'BROWSER') {
           return this.trigger("goto:previous:route");
         } else {
-          _.audioQueuesSelection('Click-Pause');
           console.log('Invoked onPauseSessionClick');
+          _.audioQueuesSelection('Click-Pause');
           this.trigger("goto:previous:route");
           _.clearMediaDirectory('videos-web');
           _.clearMediaDirectory('audio-web');
@@ -187,18 +175,16 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.questionCompleted = function() {
-        _.audioQueuesSelection('Click-Next');
-        return setTimeout((function(_this) {
-          return function() {
-            if (Marionette.getOption(_this, 'display_mode') === 'class_mode') {
-              if (confirm('This item will be marked as complete. Continue?')) {
-                return _this.trigger("question:completed");
-              }
-            } else {
-              return _this.trigger("question:completed");
-            }
-          };
-        })(this), 400);
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Next');
+        }
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          if (confirm('This item will be marked as complete. Continue?')) {
+            return this.trigger("question:completed");
+          }
+        } else {
+          return this.trigger("question:completed");
+        }
       };
 
       ModuleDescriptionView.prototype.onQuestionChanged = function(nextItemID) {

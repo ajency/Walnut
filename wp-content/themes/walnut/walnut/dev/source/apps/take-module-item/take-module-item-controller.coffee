@@ -49,7 +49,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel
@@ -78,7 +78,10 @@ define ['app'
 
                     @_showQuestionDisplayView contentPiece
 
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('question_type') is 'multiple_eval'
+                        @layout.studentsListRegion.close()
+
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
 
                     else
@@ -177,15 +180,20 @@ define ['app'
 
 
             _showQuestionDisplayView : (model) =>
-                App.execute "show:content:preview",
-                    region : @layout.questionsDetailsRegion
-                    model : model
-                    textbookNames : @textbookNames
-                    questionResponseModel : questionResponseModel
-                    timerObject : @timerObject
-                    display_mode : @display_mode
-                    classID : @classID
-                    students : studentCollection
+
+                if not questionResponseModel
+                    @_getOrCreateModel model.ID
+
+                App.execute "when:fetched", questionResponseModel, =>
+                    App.execute "show:content:preview",
+                        region : @layout.questionsDetailsRegion
+                        model : model
+                        textbookNames : @textbookNames
+                        questionResponseModel : questionResponseModel
+                        timerObject : @timerObject
+                        display_mode : @display_mode
+                        classID : @classID
+                        students : studentCollection
 
             _showStudentsListView : (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>

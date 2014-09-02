@@ -18,7 +18,58 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
+        this.selectedFilterParamsObject.setHandler("get:selected:parameters", (function(_this) {
+          return function() {
+            var ele, term_id, textbook_filters, _i, _len, _results;
+            textbook_filters = $(_this.view.el).find('select.textbook-filter');
+            _results = [];
+            for (_i = 0, _len = textbook_filters.length; _i < _len; _i++) {
+              ele = textbook_filters[_i];
+              if ($(ele).val() != null) {
+                _results.push(term_id = {
+                  id: $(ele).val(),
+                  text: $(ele).find(':selected').text()
+                });
+              } else {
+                _results.push(void 0);
+              }
+            }
+            return _results;
+          };
+        })(this));
+        this.selectedFilterParamsObject.setHandler("get:parameters:for:search", (function(_this) {
+          return function() {
+            var content_type, data, ele, post_status, term_id;
+            ele = $(_this.view.el).find('#textbooks-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#chapters-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#sections-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#subsections-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#content-post-status-filter');
+            post_status = $(ele).val();
+            ele = $(_this.view.el).find('#content-type-filter');
+            content_type = $(ele).val();
+            return data = {
+              'term_id': term_id,
+              'post_status': post_status,
+              'content_type': content_type
+            };
+          };
+        })(this));
         return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
           return function() {
             var view;

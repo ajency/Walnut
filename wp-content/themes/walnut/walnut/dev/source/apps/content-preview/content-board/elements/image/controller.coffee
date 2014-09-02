@@ -11,6 +11,18 @@ define ['app'
 
 					# intializer
 					initialize:(options)->					
+						_.defaults options.modelData,
+							image_id: 0
+							size: 'thumbnail'
+							align: 'left'
+							heightRatio : 'auto'
+							topRatio : 0
+
+						options.modelData.heightRatio = parseFloat options.modelData.heightRatio if options.modelData.heightRatio isnt 'auto'
+
+						options.modelData.topRatio = 0 if _.isNaN options.modelData.topRatio
+							
+
 						super(options)
 
 					# private etmplate helper function
@@ -23,8 +35,10 @@ define ['app'
 
 					_getImageView:(imageModel)->
 						new Image.Views.ImageView
-										model : imageModel
-										templateHelpers : @_getTemplateHelpers()
+								model : imageModel
+								imageHeightRatio : @layout.model.get 'heightRatio'
+								positionTopRatio : parseFloat @layout.model.get 'topRatio'
+								templateHelpers : @_getTemplateHelpers()
 												
 
 					# setup templates for the element

@@ -7,7 +7,7 @@ define ['app'
         class ContentList.ListController extends RegionController
 
             initialize: ->
-                @textbooksCollection = App.request "get:textbooks"
+                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
                 @contentPiecesCollection = App.request "get:content:pieces"
 
                 #wreqr object to get the selected filter parameters so that search can be done using them

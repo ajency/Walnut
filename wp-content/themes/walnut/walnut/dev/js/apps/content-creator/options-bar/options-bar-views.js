@@ -36,6 +36,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
         data = OptionsBarView.__super__.mixinTemplateHelpers.call(this, data);
         data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
+        data.isTeacherQuestion = this.model.get('content_type') === 'teacher_question' ? true : false;
+        data.isContentPiece = this.model.get('content_type') === 'content_piece' ? true : false;
         data.instructionsLabel = this.model.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
         return data;
       };
@@ -129,18 +131,28 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.saveQuestionSettings = function() {
-        var data;
-        if (this.$el.find('form').valid()) {
-          data = Backbone.Syphon.serialize(this);
-          this.trigger("save:data:to:model", data);
-          return this.$el.find('#preview-question').show();
-        }
+        return _.delay((function(_this) {
+          return function() {
+            var data;
+            if (_this.$el.find('form').valid()) {
+              data = Backbone.Syphon.serialize(_this);
+              _this.trigger("save:data:to:model", data);
+              return _this.$el.find('#preview-question').show();
+            }
+          };
+        })(this), 500);
       };
 
       OptionsBarView.prototype.previewQuestion = function() {
-        return window.open(SITEURL + "/#content-piece/" + this.model.id, {
-          'target': 'blank'
-        });
+        if (this.model.get('content_type') === 'student_question') {
+          return window.open(SITEURL + "/#dummy-quiz/" + this.model.id, {
+            'target': 'blank'
+          });
+        } else {
+          return window.open(SITEURL + "/#dummy-module/" + this.model.id, {
+            'target': 'blank'
+          });
+        }
       };
 
       return OptionsBarView;

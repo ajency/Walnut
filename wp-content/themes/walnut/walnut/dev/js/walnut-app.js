@@ -30,7 +30,7 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    var user, xhr;
+    var user;
     App.startHistory();
     if (_.platform() === 'DEVICE') {
       if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
@@ -50,39 +50,29 @@ define(['marionette'], function(Marionette) {
         App.loginRegion.close();
       }
     } else {
-      return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
-        return function(resp) {
-          var school;
-          if (resp.success) {
-            console.log(resp);
-            user = App.request("get:user:model");
-            user.set(resp.data.data);
-            school = App.request("get:current:school");
-            App.execute("show:headerapp", {
-              region: App.headerRegion
-            });
-            App.execute("show:leftnavapp", {
-              region: App.leftNavRegion
-            });
-            App.execute("show:breadcrumbapp", {
-              region: App.breadcrumbRegion
-            });
-            if (_this.getCurrentRoute() === 'login') {
-              App.vent.trigger("show:dashboard");
-            }
-            return App.loginRegion.close();
-          } else {
-            return App.vent.trigger("show:login");
-          }
-        };
-      })(this), 'json');
+      if ((typeof USER !== "undefined" && USER !== null) && USER.ID) {
+        user = App.request("get:user:model");
+        App.execute("show:headerapp", {
+          region: App.headerRegion
+        });
+        App.execute("show:leftnavapp", {
+          region: App.leftNavRegion
+        });
+        App.execute("show:breadcrumbapp", {
+          region: App.breadcrumbRegion
+        });
+        if (this.getCurrentRoute() === 'login') {
+          App.vent.trigger("show:dashboard");
+        }
+        return App.loginRegion.close();
+      } else {
+        return App.vent.trigger("show:login");
+      }
     }
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
       var lastSyncOperation, user;
-      user = App.request("get:user:model");
-      user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
         lastSyncOperation = _.getLastSyncOperation();
         lastSyncOperation.done(function(typeOfOperation) {
@@ -97,12 +87,19 @@ define(['marionette'], function(Marionette) {
           }
         });
       } else {
-        if (user_role[0] === 'administrator') {
+        user = App.request("get:user:model");
+        if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
           App.navigate('textbooks', {
             trigger: true
           });
-        } else {
+        }
+        if (user.current_user_can('teacher')) {
           App.navigate('teachers/dashboard', {
+            trigger: true
+          });
+        }
+        if (user.current_user_can('student')) {
+          App.navigate('students/dashboard', {
             trigger: true
           });
         }
@@ -116,7 +113,7 @@ define(['marionette'], function(Marionette) {
       App.execute("show:leftnavapp", {
         region: App.leftNavRegion
       });
-      if (typeof Pace !== 'undefined') {
+      if (!_.isUndefined(Pace)) {
         return Pace.on('hide', function() {
           return $("#site_main_container").addClass("showAll");
         });

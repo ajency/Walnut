@@ -1,1 +1,1 @@
-define(['components/loading/controller'], function() {});
+define(['components/loading/controller', 'components/image-editor/image-editor'], function() {});

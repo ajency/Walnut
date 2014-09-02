@@ -16,6 +16,9 @@ define ['app'
                 'teachers/start-training/:classID': 'startTraining'
                 'teachers/start-training/:classID/textbook/:tID': 'startTrainingTextbookModules'
 
+                'students/dashboard': 'studentsDashboard'
+                'students/dashboard/textbook/:tID': 'studentsQuizModules'
+
         Controller =
             teachersDashboard: ->
                 new TeachersDashboardApp.View.DashboardController
@@ -30,25 +33,44 @@ define ['app'
 
             startTraining: (classID) ->
                 new TeachersDashboardApp.View.TakeClassController
-                    region: App.mainContentRegion
-                    classID: classID
-                    mode: 'training'
+                    region      : App.mainContentRegion
+                    classID     : classID
+                    mode        : 'training'
 
             takeClassTextbookModules: (classID, div, tID) ->
                 new TeachersDashboardApp.View.textbookModulesController
-                    region: App.mainContentRegion
-                    textbookID: tID
-                    classID: classID
-                    division: div
-                    mode: 'take-class'
+                    region      : App.mainContentRegion
+                    textbookID  : tID
+                    classID     : classID
+                    division    : div
+                    mode        : 'take-class'
 
             startTrainingTextbookModules: (classID, tID) ->
                 new TeachersDashboardApp.View.textbookModulesController
-                    region: App.mainContentRegion
-                    textbookID: tID
-                    classID: classID
-                    mode: 'training'
+                    region      : App.mainContentRegion
+                    textbookID  : tID
+                    classID     : classID
+                    mode        : 'training'
 
+            studentsDashboard: ->
+
+                division = App.request "get:user:data","division"
+
+                App.execute "show:take:class:textbooks:app",
+                    region: App.mainContentRegion,
+                    division: division
+                    mode        : 'take-quiz'
+
+
+            studentsQuizModules: (tID) ->
+
+                division = App.request "get:user:data","division"
+
+                new TeachersDashboardApp.View.textbookModulesController
+                    region      : App.mainContentRegion
+                    textbookID  : tID
+                    division    : division
+                    mode        : 'take-quiz'
 
         TeachersDashboardApp.on "start", ->
             new TeachersDashboardRouter

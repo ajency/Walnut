@@ -47,6 +47,13 @@ Template Name: Content Creator
     <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
     <!-- END CORE CSS FRAMEWORK -->
 
+    <!--wordpress image edit css -->
+    <link href="<?=get_site_url()?>/wp-includes/css/dashicons.min.css" rel="stylesheet" media="screen">
+    <link href="<?=get_site_url()?>/wp-includes/js/imgareaselect/imgareaselect.css" rel="stylesheet"
+          media="screen">
+    <link href="<?=get_site_url()?>/wp-admin/css/media-rtl.css" rel="stylesheet" media="screen">
+    <link href="<?=get_site_url()?>/wp-admin/css/media.css" rel="stylesheet" media="screen">
+
 	<!-- BEGIN CSS TEMPLATE -->
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
@@ -82,17 +89,14 @@ Template Name: Content Creator
 
 var SITEURL = '<?php echo site_url();?>'
 THEMEURL = '<?php echo get_template_directory_uri()?>';
-AJAXURL= '<?php echo admin_url('admin-ajax.php') ?>';
+AJAXURL=ajaxurl = '<?php echo admin_url('admin-ajax.php') ?>';
 var UPLOADURL = '<?php echo admin_url('async-upload.php') ?>';
 var _WPNONCE    = '<?php echo wp_create_nonce('media-form');?>';
 <?php global $chorus_options; ?>
 CHORUS_OPTIONS= {};
 <?php foreach($chorus_options as $key=>$value){ ?>
 CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
-<?php }
- $ver = date('YmdHis');
- $VERSION = 1.0;
- ?>
+<?php } ?>
 
 </script>
 
@@ -104,10 +108,10 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
 </script>
  <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script> 
 <?php if(ENV=='dev') { ?>
-<script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main.js?ver=<?php echo $ver?>" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+<script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main.js?ver=<?php echo DEV_VERSION?>" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
 <?php } else { ?>
 
- <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js?ver=<?php echo $VERSION?>"></script>
+ <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js?ver=<?php echo VERSION?>"></script>
 <?php } ?>
 
 

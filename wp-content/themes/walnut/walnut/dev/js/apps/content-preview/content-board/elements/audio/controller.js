@@ -9,8 +9,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       __extends(Controller, _super);
 
       function Controller() {
-        this.renderElement = __bind(this.renderElement, this);
         this._getAudioLocalPath = __bind(this._getAudioLocalPath, this);
+        this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -28,6 +28,18 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         });
       };
 
+      Controller.prototype._getAudioCollection = function() {
+        if (!this.audioCollection) {
+          if (this.layout.model.get('audio_ids').length) {
+            this.audioCollection = App.request("get:media:collection:by:ids", this.layout.model.get('audio_ids'));
+          } else {
+            this.audioCollection = App.request("get:empty:media:collection");
+          }
+        }
+        this.audioCollection.comparator = 'order';
+        return this.audioCollection;
+      };
+
       Controller.prototype._parseInt = function() {
         var audio_ids;
         audio_ids = new Array();
@@ -41,13 +53,34 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         return this.layout.model.set('audio_ids', audio_ids);
       };
 
+      Controller.prototype.renderElement = function() {
+        var audioCollection;
+        this._parseInt();
+        if (_.platform() === 'BROWSER') {
+          audioCollection = this._getAudioCollection();
+          return App.execute("when:fetched", audioCollection, (function(_this) {
+            return function() {
+              _this.layout.model.set({
+                'audioUrls': _.first(audioCollection.pluck('url'))
+              });
+              _this.layout.model.set({
+                'audioUrls': audioCollection.pluck('url')
+              });
+              _this.view = _this._getAudioView();
+              return _this.layout.elementRegion.show(_this.view);
+            };
+          })(this));
+        } else {
+          return this._getAudioLocalPath();
+        }
+      };
+
       Controller.prototype._getAudioLocalPath = function() {
         var runFunc;
         runFunc = (function(_this) {
           return function() {
             return $.Deferred(function(d) {
               var audioPath, audioPaths, audiosWebDirectory, decryptFile, deferreds, localAudioPath, localAudioPaths;
-              console.log(_this.layout.model.get('audioUrls'));
               localAudioPath = new Array();
               audioPath = new Array();
               localAudioPaths = [];
@@ -58,7 +91,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
               return audiosWebDirectory.done(function() {
                 var allAudioUrls;
                 allAudioUrls = _this.layout.model.get('audioUrls');
-                console.log(allAudioUrls);
                 _.each(allAudioUrls, function(allAudioPaths, index) {
                   var audiosWebUrl, decryptedAudioPath, encryptedAudioPath, url;
                   url = allAudioPaths.replace("media-web/", "");
@@ -90,16 +122,6 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             return _this.layout.elementRegion.show(_this.view);
           };
         })(this)).fail(_.failureHandler);
-      };
-
-      Controller.prototype.renderElement = function() {
-        this._parseInt();
-        this.view = this._getAudioView();
-        if (_.platform() === 'DEVICE') {
-          return this._getAudioLocalPath();
-        } else {
-          return this.layout.elementRegion.show(this.view);
-        }
       };
 
       return Controller;

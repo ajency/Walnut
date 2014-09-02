@@ -299,12 +299,12 @@
 .docket-body {
   background: #f3f3f3;
   padding: 15px 10px;
-  color: #000;
+  color: #003d4f;
   font-size: 14px;
   font-weight: normal;
 }
 .docket-body label {
-  color: #777a80;
+  color: #8d9eab;
 }
 .docket-body select.marks,
 .docket-body select.blanks {
@@ -527,14 +527,14 @@
   display: none;
 }
 .aj-imp-col-sel .tooltip-arrow {
-  border-top-color: #29333F;
+  border-top-color: #29333f;
   left: 2em;
 }
 .aj-imp-col-sel .tooltip-inner {
   width: auto;
   min-width: 250px;
   max-width: 300px;
-  background: #29333F;
+  background: #29333f;
 }
 .aj-imp-col-sel .tooltip-inner label {
   display: inline-block;
@@ -756,7 +756,7 @@
 }
 .aj-imp-upload-media .aj-imp-upload-message {
   cursor: pointer;
-  background: #e4e4e4;
+  background: #e5e9ec;
   border-radius: 5px;
   padding: 10px;
   width: 40%;
@@ -923,6 +923,18 @@
 }
 #all-media-region .ui-selected .ticker:hover .glyphicon-ok {
   display: none;
+}
+.imaTitle {
+  cursor: move;
+  font-size: 18px;
+  margin-left: 5px;
+}
+.remove-media {
+  cursor: pointer;
+  font-size: 14px;
+}
+#slides-info {
+  font-size: 16px;
 }
 /*input[type=checkbox].mcq-option-select {
 	display:none;
@@ -1280,10 +1292,8 @@ p.mcq-option-text {
   clear: both;
   content: " ";
   /* 1 */
-
   display: table;
   /* 2 */
-
 }
 .countdown-row {
   width: 100%;
@@ -1677,31 +1687,23 @@ p.mcq-option-text {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 #textbooks.list .mix:hover {
   background-color: #f3f3f3;
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
-
   -moz-transition: all 0.3s ease-out;
   /* Firefox 4-15 */
-
   -o-transition: all 0.3s ease-out;
   /* Opera 10.50–12.00 */
-
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-
 }
 #textbooks.list .list_header .meta {
   margin-top: 0;
@@ -2000,10 +2002,10 @@ input#duration {
 .panel-default > .panel-heading.collapsed {
   background-color: transparent;
 }
-.cbp_tmtimeline li.setGroup {
+.setGroup {
   margin-bottom: 20px;
 }
-.cbp_tmtimeline li.setGroup .cbp_tmlabel {
+.setGroup .cbp_tmlabel {
   margin-bottom: 2px;
   padding: 10px;
 }
@@ -2088,14 +2090,27 @@ input#duration {
   right: 6px;
 }
 .quizSteps ul li.skip a {
-  background: #0090d9;
+  background: #fdd01c;
   color: #ffffff;
 }
 .quizSteps ul li.skip a:hover {
-  background: #006ea6;
+  background: #e4b702;
 }
 .quizSteps ul li.skip a:before {
-  content: "\f021";
+  content: "\f051";
+  bottom: 6px;
+  right: 8px;
+  font-size: 18px;
+}
+.quizSteps ul li.partiallyCorrect a {
+  background: #0090d9;
+  color: #ffffff;
+}
+.quizSteps ul li.partiallyCorrect a:hover {
+  background: #006ea6;
+}
+.quizSteps ul li.partiallyCorrect a:before {
+  content: "\f046";
   bottom: 6px;
   right: 8px;
   font-size: 18px;
@@ -2274,6 +2289,20 @@ ul.classes .classesWrap {
 .dateInfo {
   padding-top: 4px;
   padding-bottom: 4px;
+}
+#textbooks.list.myClass .meta.name {
+  width: 40%;
+}
+#textbooks.list.myClass .meta.rec {
+  width: 20%;
+}
+#textbooks.list.myClass .txtbook {
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+#textbooks.list.myClass .chapStatus {
+  width: 49%;
 }
 body {
   background-color: #e5e9ec;
@@ -2587,12 +2616,10 @@ ol > li {
 }
 :-moz-placeholder {
   /* Firefox 18- */
-
   color: #cdcdcd;
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
-
   color: #cdcdcd;
 }
 :-ms-input-placeholder {

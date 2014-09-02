@@ -6,12 +6,12 @@ define ['app'
         class QuizContentSelection.Controller extends  RegionController
 
             initialize : (options)->
-                @textbooksCollection = App.request "get:textbooks"
+
                 @contentPiecesCollection = App.request "get:content:pieces",
                     post_status : 'publish'
                     content_type : ['student_question']
 
-                {@model,@quizContentCollection} = options
+                {@model,@quizContentCollection,@textbooksCollection} = options
 
                 App.execute "when:fetched", [@contentPiecesCollection, @quizContentCollection, @textbooksCollection], =>
                     @contentPiecesCollection.remove model for model in @quizContentCollection.models

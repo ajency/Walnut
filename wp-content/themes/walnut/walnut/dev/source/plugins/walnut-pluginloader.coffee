@@ -38,11 +38,5 @@ define [
     'timerplugin'
     'countdowntimer'
     'spinedit'
-    'detect'
-    'unserialize'
-    'serialize'
-    'csvparse'
-    'json2csvparse'
-    'jszip'
-    'fastclick'
+    'jPages'
 ], ->

@@ -19,18 +19,40 @@ define ["app", 'backbone'], (App, Backbone) ->
                 post_status: 'underreview'
                 type: 'quiz'
                 quiz_type : 'practice'
-                marks : ''
+                marks : 0
                 total_minutes: 0
-                duration: ''
+                duration: 0
                 minshours: 'mins'
                 negMarksEnable: 'false'
                 negMarks: ''
-#                term_ids: []
+                term_ids: []
                 content_pieces: []
                 message : {}
-#                training_date: ''
+                content_layout:[]
 
             name: 'quiz'
+
+            hasPermission:(permsission)->
+                all_permissions = @.get 'permissions'
+                if all_permissions[permsission] then return true else return false
+
+            getMessageContent:(message_type)->
+                default_messages =
+                    end_quiz                    : 'You really want to end the quiz?'
+                    submit_without_attempting   : 'You havent answered the question. Are you sure you want to continue?'
+                    incomplete_answer           : 'You havent completed the question. Are you sure you want to continue?'
+                    correct_answer              : 'You are correct!'
+                    incorrect_answer            : 'Sorry, you did not answer correctly'
+                    partial_correct_answers     : 'You are almost correct'
+                    quiz_time_up                : 'Sorry, your time is up'
+
+                message_content = default_messages[message_type]
+
+                if @.hasPermission('customize_messages') and not _.isEmpty @.get 'message'
+                    custom_messages= @.get 'message'
+                    message_content = custom_messages[message_type] if custom_messages[message_type]
+
+                message_content
 
 
 
@@ -74,15 +96,25 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             newQuiz:->
                 new Quiz.ItemModel
-#                quizu
 
-#            scheduleContentGroup:(data)->
-#                questionResponseModel= App.request "save:question:response"
-#
-#                questionResponseModel.set data
-#
-#                questionResponseModel.save()
+            getDummyQuiz:(content_piece_id)->
+                dummyQuiz = new Quiz.ItemModel()
 
+                dummyQuiz.set 
+                    id      : 3423432
+                    name: 'Dummy Module'
+                    description: 'Dummy Module Description'
+                    type: 'quiz'
+                    quiz_type : 'test'
+                    duration: 40
+                    content_pieces: [content_piece_id]
+                    permissions: 
+                        allow_skip: true
+                        display_answer: true
+                        allow_hint: true
+
+                dummyQuiz
+                
         # request handler to get all content groups
         App.reqres.setHandler "get:quizes", (opt) ->
             API.getQuizes(opt)
@@ -96,6 +128,6 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "new:quiz",->
             API.newQuiz()
 
-#        App.reqres.setHandler "schedule:quiz", (data)->
-#            API.scheduleQuiz data
 
+        App.reqres.setHandler "create:dummy:quiz:module", (content_piece_id)->
+            API.getDummyQuiz content_piece_id

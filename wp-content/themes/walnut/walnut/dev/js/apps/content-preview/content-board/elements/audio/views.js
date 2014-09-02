@@ -24,6 +24,7 @@ define(['app'], function(App) {
             return audioArray.push(_.object(['title', 'audioUrl'], array));
           });
           data.audio = audioArray;
+          console.log(audioArray);
         }
         return data;
       };

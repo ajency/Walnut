@@ -230,43 +230,41 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     },
     audioQueuesSelection: function(selectedAction) {
       var audioCues, filepath, filepathForIndividualAudio;
-      if (_.platform() === "DEVICE") {
-        if (!_.isNull(_.getAudioCues())) {
-          if (_.getAudioCues() !== 'false') {
-            audioCues = null;
-            filepathForIndividualAudio = null;
-            filepath = "/android_asset/www/audioCues/";
-            switch (selectedAction) {
-              case 'Click-Next':
-                filepathForIndividualAudio = filepath + "nextClick.WAV";
-                break;
-              case 'Click-Select':
-                navigator.notification.vibrate(50);
-                filepathForIndividualAudio = filepath + "selectClick.WAV";
-                break;
-              case 'Click-Start':
-                filepathForIndividualAudio = filepath + "startClick.WAV";
-                break;
-              case 'Click-Unselect':
-                navigator.notification.vibrate(50);
-                filepathForIndividualAudio = filepath + "unselectClick.WAV";
-                break;
-              case 'Click-Save':
-                filepathForIndividualAudio = filepath + "saveClick.WAV";
-                break;
-              case 'Click-Pause':
-                filepathForIndividualAudio = filepath + "pauseClick.WAV";
-            }
-            audioCues = new Media(filepathForIndividualAudio, function() {
-              return console.log("media played");
-            }, function(error) {
-              return console.log("error" + error.code);
-            });
-            audioCues.play();
-            return setTimeout(function() {
-              return audioCues.release();
-            }, 2000);
+      if (!_.isNull(_.getAudioCues())) {
+        if (_.getAudioCues() !== 'false') {
+          audioCues = null;
+          filepathForIndividualAudio = null;
+          filepath = "/android_asset/www/audioCues/";
+          switch (selectedAction) {
+            case 'Click-Next':
+              filepathForIndividualAudio = filepath + "nextClick.WAV";
+              break;
+            case 'Click-Select':
+              navigator.notification.vibrate(50);
+              filepathForIndividualAudio = filepath + "selectClick.WAV";
+              break;
+            case 'Click-Start':
+              filepathForIndividualAudio = filepath + "startClick.WAV";
+              break;
+            case 'Click-Unselect':
+              navigator.notification.vibrate(50);
+              filepathForIndividualAudio = filepath + "unselectClick.WAV";
+              break;
+            case 'Click-Save':
+              filepathForIndividualAudio = filepath + "saveClick.WAV";
+              break;
+            case 'Click-Pause':
+              filepathForIndividualAudio = filepath + "pauseClick.WAV";
           }
+          audioCues = new Media(filepathForIndividualAudio, function() {
+            return console.log("media played");
+          }, function(error) {
+            return console.log("error" + error.code);
+          });
+          audioCues.play();
+          return setTimeout(function() {
+            return audioCues.release();
+          }, 2000);
         }
       }
     },

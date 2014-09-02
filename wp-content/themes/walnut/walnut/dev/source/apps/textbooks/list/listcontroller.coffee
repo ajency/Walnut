@@ -3,7 +3,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
         class List.ListController extends RegionController
 
             initialize: ->
-                textbooksCollection = App.request "get:textbooks"
+                textbooksCollection = App.request "get:textbooks", "fetch_all":true
                 breadcrumb_items =
                     'items': [
                         {'label': 'Dashboard', 'link': 'javascript://'},

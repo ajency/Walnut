@@ -59,8 +59,7 @@ define(['app'], function(App) {
         })(this));
         this.$el.parent().parent().on('mousedown', (function(_this) {
           return function(evt) {
-            _this.trigger('close:hotspot:element:properties');
-            return evt.stopPropagation();
+            return _this.trigger('close:hotspot:element:properties');
           };
         })(this));
         this._drawExistingElements();
@@ -91,10 +90,12 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._setResizeHandler = function() {
-        this.stage.setSize({
-          width: this.$el.width(),
-          height: this.$el.height() - 5
-        });
+        if (this.$el.height() > 0) {
+          this.stage.setSize({
+            width: this.$el.width(),
+            height: this.$el.height() - 7
+          });
+        }
         this.model.set('height', this.stage.height());
         return this._updateDefaultImageSize();
       };
@@ -125,7 +126,6 @@ define(['app'], function(App) {
           if (i) {
             if (this.stage.getChildren()[i].getChildren().length) {
               this.defaultLayer.removeChildren();
-              console.log('remove default');
               isEmptyFlag = false;
               break;
             }
@@ -258,7 +258,6 @@ define(['app'], function(App) {
           };
           hotspotElement = App.request('create:new:hotspot:element', modelData);
           this.model.get('optionCollection').add(hotspotElement);
-          console.log(this.model.get('optionCollection'));
         }
         self = this;
         this.trigger('show:hotspot:element:properties', hotspotElement);
@@ -339,7 +338,6 @@ define(['app'], function(App) {
           };
           hotspotElement = App.request("create:new:hotspot:element", modelData);
           this.model.get('optionCollection').add(hotspotElement);
-          console.log(this.model.get('optionCollection'));
         }
         self = this;
         this.trigger("show:hotspot:element:properties", hotspotElement);
@@ -365,7 +363,6 @@ define(['app'], function(App) {
         });
         this.model.on("change:transparent", (function(_this) {
           return function(model, transparent) {
-            console.log(rectGrp);
             box.dashEnabled(transparent);
             return _this.optionLayer.draw();
           };
@@ -616,8 +613,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype.updateModel = function() {
-        this.layout.model.set('content', this._getHotspotData());
-        return console.log('updatedmodel             ' + this.layout.model);
+        return this.layout.model.set('content', this._getHotspotData());
       };
 
       HotspotView.prototype._getHotspotData = function() {

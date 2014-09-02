@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       ImageView.prototype.className = 'image';
 
-      ImageView.prototype.template = '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%" onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';"/> <div class="clearfix"></div>';
+      ImageView.prototype.template = '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%" style="position:relative;" onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';"/> <div class="clearfix"></div>';
 
       ImageView.prototype.mixinTemplateHelpers = function(data) {
         data = ImageView.__super__.mixinTemplateHelpers.call(this, data);
@@ -22,7 +22,20 @@ define(['app'], function(App) {
         return data;
       };
 
-      ImageView.prototype.onShow = function() {};
+      ImageView.prototype.initialize = function(options) {
+        this.imageHeightRatio = Marionette.getOption(this, 'imageHeightRatio');
+        return this.positionTopRatio = Marionette.getOption(this, 'positionTopRatio');
+      };
+
+      ImageView.prototype.onShow = function() {
+        this.$el.css('overflow', 'hidden');
+        if (this.imageHeightRatio !== 'auto') {
+          this.$el.height(parseFloat(this.imageHeightRatio) * this.$el.width());
+        }
+        if (this.positionTopRatio) {
+          return this.$el.find('img').css('top', "" + (this.positionTopRatio * this.$el.width()) + "px");
+        }
+      };
 
       return ImageView;
 

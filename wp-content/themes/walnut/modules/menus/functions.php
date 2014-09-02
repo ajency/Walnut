@@ -14,8 +14,11 @@ function get_site_menu($user_role) {
     }
     
     $menu_name = $user_role.'-menu';
+
+    switch_to_blog(1);
     $wp_menu = get_menu_to_array( $menu_name );
-    
+    restore_current_blog();
+
     if($wp_menu['code']=='ERROR')
         $wp_menu= array('error'=>'menu does not exist');
         
@@ -72,8 +75,13 @@ function get_menu_to_array( $mn , $by = 'name') {
 function compose_menu_item($menu_item){
     
     $menu_url = $menu_item->url;
+
+    restore_current_blog();
+    
     if(strpos($menu_url, '#') === 0)
         $menu_url = get_site_url() .'/'.$menu_item->url;
+
+    switch_to_blog(1);
 
     $mn = array(
         'ID'                => $menu_item->ID,

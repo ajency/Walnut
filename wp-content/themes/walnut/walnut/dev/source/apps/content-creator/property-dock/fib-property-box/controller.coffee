@@ -32,6 +32,17 @@ define ['app'
 
 						@model.set 'blanksArray': elements
 
+						if @model.get('marks') > 0
+							_.every @model.get('blanksArray'),(blanks)=>
+								if blanks.correct_answers.length && blanks.correct_answers[0] isnt ''
+									@model.set 'complete',true
+									return true
+								else
+									@model.set 'complete',false
+									return false
+						else				
+							@model.set 'complete',false
+
 						@model.save()
 
 						ElementCollection = App.request "create:new:question:element:collection", models

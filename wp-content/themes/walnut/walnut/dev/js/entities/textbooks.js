@@ -25,6 +25,20 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.name = 'textbook';
 
+      ItemModel.prototype.getClasses = function() {
+        var classLabel, classes, classesArray, _i, _len;
+        classesArray = [];
+        classes = this.get('classes');
+        if (_.isArray(classes)) {
+          for (_i = 0, _len = classes.length; _i < _len; _i++) {
+            classLabel = classes[_i];
+            classesArray.push(CLASS_LABEL[classLabel]);
+          }
+          classesArray.join();
+        }
+        return classesArray;
+      };
+
       return ItemModel;
 
     })(Backbone.Model);
@@ -91,6 +105,57 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       NamesCollection.prototype.url = function() {
         return AJAXURL + '?action=get-textbook-names';
+      };
+
+      NamesCollection.prototype.getTextbookName = function(terms) {
+        var texbookName, textbook;
+        textbook = this.get(terms.textbook);
+        if (textbook != null) {
+          return texbookName = textbook.get('name');
+        }
+      };
+
+      NamesCollection.prototype.getChapterName = function(terms) {
+        var chapter, chapterName;
+        chapter = this.get(terms.chapter);
+        if (chapter != null) {
+          return chapterName = chapter.get('name');
+        }
+      };
+
+      NamesCollection.prototype.getSectionsNames = function(terms) {
+        var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
+        sections = _.flatten(terms.sections);
+        sectionString = '';
+        sectionNames = [];
+        if (sections) {
+          for (_i = 0, _len = sections.length; _i < _len; _i++) {
+            section = sections[_i];
+            term = this.get(section);
+            if (term != null) {
+              sectionName = term.get('name');
+            }
+            sectionNames.push(sectionName);
+          }
+          return sectionString = sectionNames.join();
+        }
+      };
+
+      NamesCollection.prototype.getSubSectionsNames = function(terms) {
+        var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
+        subsections = _.flatten(terms.subsections);
+        subSectionString = '';
+        subsectionNames = [];
+        if (subsections) {
+          for (_i = 0, _len = subsections.length; _i < _len; _i++) {
+            sub = subsections[_i];
+            subsection = this.get(sub);
+            if (subsection != null) {
+              subsectionNames.push(subsection.get('name'));
+            }
+          }
+          return subSectionString = subsectionNames.join();
+        }
       };
 
       return NamesCollection;

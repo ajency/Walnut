@@ -10,26 +10,41 @@ define ['app'
 
 
 
-            events :
-                'click #save-quiz' : '_saveQuiz'
-                'change input[name="negMarksEnable"]' : (e)->
-                    e.stopPropagation()
-                    @_toggleNegativeMarks $(e.target)
-                'change #msgs' : (e)->
-                    @_showCustomMessages $(e.target)
-                'click .customMsgLink' : '_openCustomMsgPopup'
+#            events :
+#                'click #save-quiz' : '_saveQuiz'
+#                'change input[name="negMarksEnable"]' : (e)->
+#                    e.stopPropagation()
+#                    @_toggleNegativeMarks $(e.target)
+#                'change #msgs' : (e)->
+#                    @_showCustomMessages $(e.target)
+
+#                'change #textbooks' : (e)->
+#                    @trigger "fetch:chapters", $(e.target).val()
+#
+#                'change #chapters' : (e)->
+#                    @trigger "fetch:sections", $(e.target).val()
+#
+#                'change #secs' : (e)->
+#                    @trigger "fetch:subsections", $(e.target).val()
+#
+#                'click .customMsgLink' : '_openCustomMsgPopup'
 
 #
 #            modelEvents :
 #                'change:status' : 'statusChanged'
 
-#            mixinTemplateHelpers : (data)->
-#                data = super data
+            mixinTemplateHelpers : (data)->
+                data = super data
+
+                data.heading = if @model.isNew() then 'Add' else 'Edit'
+
+                data.textBookSelected = ->
+                    return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
 #                data.statusSelected = ->
 #                    return 'selected' if @value is data.status
-#
-#                data
+
+                data
 
 #
             onShow : ->
@@ -39,23 +54,75 @@ define ['app'
 
                 @_toggleNegativeMarks @$el.find 'input[name="negMarksEnable"]:checked'
 
-#                $(" #minshours, select").select2()
+                $("select:not(#qType,#status)").select2()
+
+                #Multi Select
+                $("#secs,#subsecs").val([]).select2()
+
+                @statusChanged()
+
+            statusChanged : ->
+                if @model.get('status') in ['publish', 'archive']
+                    @$el.find 'input, textarea, select'
+                    .prop 'disabled', true
+
+                    @$el.find 'select#status'
+                    .prop 'disabled', false
+
+                    @$el.find 'select#status option[value="underreview"]'
+                    .prop 'disabled', true
+
+            onFetchChaptersComplete : (chapters)->
+
+                @$el.find '#chapters, #secs, #subsecs'
+                .select2 'data', null
+
+                @$el.find '#chapters, #secs, #subsecs'
+                .html ''
+
+                chapterElement= @$el.find '#chapters'
+                termIDs= @model.get 'term_ids'
+                currentChapter= termIDs['chapter']
+
+                $.populateChaptersOrSections(chapters,chapterElement, currentChapter);
 
 
+            setChapterValue : ->
+                if @model.get('term_ids')['chapter']
+                    @$el.find('#chapters').val @model.get('term_ids')['chapter']
+                    @$el.find('#chapters').select2()
+                    @$el.find('#chapters').trigger 'change'
 
-#                @statusChanged()
+            onFetchSectionsComplete : (sections)->
 
-#            statusChanged : ->
-#                if @model.get('status') in ['publish', 'archive']
-#                    @$el.find 'input, textarea, select'
-#                    .prop 'disabled', true
-#
-#                    @$el.find 'select#status'
-#                    .prop 'disabled', false
-#
-#                    @$el.find 'select#status option[value="underreview"]'
-#                    .prop 'disabled', true
+                @$el.find '#secs, #subsecs'
+                .select2 'data', null
 
+                @$el.find '#secs, #subsecs'
+                .html ''
+
+                term_ids= @model.get 'term_ids'
+
+                sectionIDs = term_ids['sections'] if term_ids?
+
+                sectionsElement     = @$el.find '#secs'
+
+                $.populateChaptersOrSections(sections,sectionsElement, sectionIDs);
+
+            onFetchSubsectionsComplete : (subsections)->
+
+                @$el.find '#subsecs'
+                .select2 'data', null
+
+                @$el.find '#subsecs'
+                .html ''
+
+                term_ids= @model.get 'term_ids'
+
+                subSectionIDs = term_ids['subsections'] if term_ids?
+
+                subsectionsElemnet  = @$el.find '#subsecs'
+                $.populateChaptersOrSections(subsections,subsectionsElemnet, subSectionIDs);
 
 #
 #            markSelected : (element, sections)->
