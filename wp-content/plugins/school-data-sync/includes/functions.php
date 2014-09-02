@@ -65,9 +65,6 @@ function get_sync_form_html($blog_id){
                          <br/><br/>
                          <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
                                  <span class="status-msg"></span>
-                          <br/><br/>
-                          <label>Test Request</label> -> <input type="button" name="req-test" value="Start" id="req-test"/>
-                                 <span class="status-msg"></span>
                          </fieldset>
                         </form>';
 
@@ -454,11 +451,10 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_AUTOREFERER, true);
             curl_setopt($ch, CURLOPT_BINARYTRANSFER,true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
             curl_setopt($ch, CURLOPT_FILE, $localpath);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 400);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 0);
             $executefiledownload = curl_exec($ch);
             if(!$executefiledownload) {
                 $retarray['error'] = $executefiledownload;

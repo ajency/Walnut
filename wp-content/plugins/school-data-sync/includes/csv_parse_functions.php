@@ -864,7 +864,7 @@ function sds_sync_update_postmeta( $postmeta_data ) {
 
     $wpdb->update( $wpdb->prefix . "postmeta",
         $postmeta_data,
-        array( 'meta_id' => $postmeta_data['meta_id'] ) );
+    array( 'post_id' => $postmeta_data['post_id'] ,$postmeta_data['meta_key']) );
 
 
 
@@ -876,10 +876,12 @@ function sds_postmeta_exists( $postmeta_data ) {
     global $wpdb;
 
     $id= $postmeta_data['meta_id'];
+    $post_id= $postmeta_data['post_id'];
+    $meta_key= $postmeta_data['meta_key'];
 
     $query = $wpdb->prepare( "SELECT meta_id FROM {$wpdb->prefix}postmeta
-        WHERE meta_id like %s",
-        array($id)
+                    WHERE post_id like %s AND meta_key like %s",
+                    array($post_id,$meta_key)
     );
     $record = $wpdb->get_var( $query );
 

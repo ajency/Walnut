@@ -55,6 +55,10 @@ function ajax_sds_data_sync_import() {
 
     $zip->extractTo( $extract_path );
 
+    // save current logged in user's data to set the user's session after re-importing the users and usermeta table
+    $logged_in_user_data = get_userdata(get_current_user_id());
+
+
     for ($i = 0; $i < $zip->numFiles; $i++) {
         $stat = $zip->statIndex( $i );
         if(strpos($stat['name'],'class_divisions.csv') !== false)
@@ -104,6 +108,14 @@ function ajax_sds_data_sync_import() {
         
     }
 
+    wp_cache_flush(); // flush cache to fetch the actual user data after import
+
+    //set back auth cookie after re-importing users and usermeta tables
+    $logged_in_user = get_user_by( 'login', $logged_in_user_data->user_login );
+    wp_set_current_user( $logged_in_user->ID, $logged_in_user->user_login );
+    wp_set_auth_cookie( $logged_in_user->ID );
+    do_action( 'wp_login', $logged_in_user->user_login );
+    
     sds_update_data_imported();
     
     sds_mark_sync_complete( $sync_id );
@@ -262,7 +274,12 @@ function ajax_sds_media_sync(){
     curl_close($ch);
     $resp_decode = json_decode($response,true);
     
-    $serverimages_key_val = sds_get_files_name_path($resp_decode);
+    $response_formated = array();
+    foreach($resp_decode as $fileresp){
+        $response_formated[]= $fileresp["link"];
+    }
+    
+    $serverimages_key_val = sds_get_files_name_path($response_formated);
     
     $files_difference = sds_get_files_difference($localimages_key_val,$serverimages_key_val);
     

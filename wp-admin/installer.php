@@ -288,7 +288,7 @@ jQuery(document).ready(function() {
         data['txtpassword'] = jQuery('#pass1').val();
 
         if(data['txtusername']=='' || data['txtpassword']==''){
-		  var errormsg = '<p class="message">Invalid username or password</p>'
+		  var errormsg = '<p class="message">Only an existing school admin can setup the standalone site. Please enter valid school admin user name and password</p>'
           jQuery('#setup').prepend(errormsg);
           return false
         }
@@ -305,7 +305,7 @@ jQuery(document).ready(function() {
                 var data = jQuery.parseJSON( data );
                 //console.log(data);
               if(data.error){
-                    var errormsg = '<p class="message">Invalid username or password</p>';
+                    var errormsg = '<p class="message">Only an existing school admin can setup the standalone site. Please enter valid school admin user name and password</p>';
                     jQuery('#setup').prepend(errormsg);
               }
               else if(jQuery.inArray('school-admin',data.blog_details.blog_roles) == -1){
