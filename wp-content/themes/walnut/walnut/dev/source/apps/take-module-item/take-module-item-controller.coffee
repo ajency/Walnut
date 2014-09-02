@@ -52,7 +52,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel

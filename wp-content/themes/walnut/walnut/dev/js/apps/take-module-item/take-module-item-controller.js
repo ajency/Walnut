@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+            if (contentPiece.get('content_type') === 'content_piece') {
               return _this._showTeacherTrainingFooter();
             } else {
               return _this._showStudentsListView(questionResponseModel);
