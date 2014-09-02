@@ -113,8 +113,10 @@ define ['app'], (App)->
                 @$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
                 @$el.find('#now-playing-tag').text @model.get('title')[@index]
                 @$el.find('video').attr 'src',@videos[@index]
-                console.log @videos[@index]
-                @$el.find('video').attr 'poster', SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png'
+
+                if not @videos[@index]
+                    @$el.find('video').attr 'poster', SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png'
+                    
                 @$el.find('video')[0].load()
                 @$el.find('video')[0].play()
 

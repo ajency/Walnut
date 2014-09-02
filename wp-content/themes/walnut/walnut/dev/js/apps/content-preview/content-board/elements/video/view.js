@@ -85,8 +85,9 @@ define(['app'], function(App) {
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
         this.$el.find('video').attr('src', this.videos[this.index]);
-        console.log(this.videos[this.index]);
-        this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
+        if (!this.videos[this.index]) {
+          this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
+        }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();
       };
