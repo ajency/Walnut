@@ -49,7 +49,7 @@ define(["marionette", "app"], function(Marionette, App) {
     RegionController.prototype._manageView = function(view, options) {
       if (options.loading) {
         return App.commands.execute("show:loading", view, options);
-      } else {
+      } else if (options.region) {
         return options.region.show(view);
       }
     };
