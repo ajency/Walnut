@@ -283,19 +283,34 @@ function get_modules_containing_content_piece($content_id){
 
     $present_in_query=$wpdb->prepare("
         SELECT * from {$wpdb->base_prefix}collection_meta
-            WHERE meta_key like %s
+            WHERE meta_key in ('content_pieces', 'content_layout')
             AND meta_value like %s",
-        array('content_pieces', "%\"$content_id\";%")
+        array('%"'.$content_id.'";%')
     );
 
     $result= $wpdb->get_results($present_in_query);
 
+    $valid = true;
+
     foreach($result as $module_meta){
 
-        $m['id']=$module_meta->collection_id;
-        $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
+        if($module_meta->meta_key === 'content_layout'){
+            $content_layout = maybe_unserialize($module_meta->meta_value);
+            foreach($content_layout as $layout){
+                if($layout['type']=='content-piece')
+                    $content_pieces[]=$layout['id'];
+            }
 
-        $modules[]=$m;
+            if(!in_array($content_id, $content_pieces))
+                $valid = false;
+
+        }
+
+        if($valid){
+            $m['id']=$module_meta->collection_id;
+            $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
+            $modules[]=$m;
+        }
 
     }
 
@@ -520,93 +535,6 @@ function validate_element(&$element)
     }
 
     return $element;
-}
-
-function save_content_piece($data){
-    global $wpdb;
-
-    // only if post_author is set we will update it. else the current user will be set as post_author
-
-    $post_author=(isset($data['post_author'])) ? $data['post_author'] : get_current_user_id();
-
-    $post_array=array(
-        'post_status'   => $data['post_status'],
-        'post_type'     => 'content-piece',
-        'post_title'    => 'content piece',
-        'post_author'   => $post_author
-    );
-
-    //if ID is set the post will be updated. if not, a new post will be created
-    if(isset($data['ID']))
-        $post_array['ID']= $data['ID'];
-
-    $content_id= wp_insert_post($post_array);
-
-    if(!$content_id)
-        return false;
-
-    $content_layout = $data['json'];
-
-    update_post_meta ($content_id, 'layout_json',$content_layout);
-
-    update_post_meta ($content_id, 'content_type',$data['content_type']);
-
-    update_post_meta ($content_id, 'question_type',$data['question_type']);
-
-    update_post_meta ($content_id, 'textbook',$data['term_ids']['textbook']);
-
-    update_post_meta ($content_id, 'difficulty_level', $data['difficulty_level']);
-
-//    negative marks for student question
-//    if($data['content_type'] == 'student_question'){
-//        update_post_meta ($content_id, 'negative_marks', $data['negative_marks']);
-//    }
-
-
-    // get all params for this content piece
-    $allParams = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->base_prefix}postmeta WHERE post_id = $content_id AND meta_key LIKE 'parameter_%'",ARRAY_N);
-    // delete them
-    foreach ($allParams as $params)
-        delete_post_meta ($content_id,$params[0]);
-
-    //add new set of parameters & attributes
-    if (isset($data['grading_params'])){
-        foreach($data['grading_params'] as $grading_parameter){
-
-            if($grading_parameter['parameter'] == '' || sizeOf($grading_parameter['attributes']) == 0)
-                continue;
-            else{
-                $meta_key = "parameter_" . $grading_parameter['parameter'];
-                $meta_value = $grading_parameter['attributes'];
-                add_post_meta ($content_id, $meta_key,$meta_value);
-            }
-        }
-    }
-
-    $content_piece_additional = array(
-        'term_ids'          => $data['term_ids'],
-        'duration'          => $data['duration'],
-        'post_tags'         => $data['post_tags'],
-        'instructions'      => $data['instructions'],
-        'hint_enable'       => $data['hint_enable'],
-        'hint'              => $data['hint'],
-        'comment_enable'    => $data['comment_enable'],
-        'comment'           => $data['comment'],
-        'last_modified_by'  => $post_author
-    );
-
-    if($data['post_status']=='publish')
-        $content_piece_additional['published_by']=$post_author;
-
-    $content_piece_meta= $content_piece_additional;
-
-    update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
-
-    if(isset($data['clone_id'])){
-        clone_json_of_content_piece($content_id, $data['clone_id']);
-    }
-
-    return $content_id;
 }
 
 function clone_json_of_content_piece($id, $clone_id){

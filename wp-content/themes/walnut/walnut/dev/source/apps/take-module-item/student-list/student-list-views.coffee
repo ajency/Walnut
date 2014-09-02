@@ -38,7 +38,7 @@ define ['app'], (App)->
 
             className: 'studentList m-t-10'
 
-            template: '{{#class_mode}}
+            template: '{{#showButtons}}
                         <div id="select-an-item" class="studentActions p-t-10 p-b-10">
                             <h3 class="no-margin semi-bold muted">Select a student to grade</h3>
                         </div>
@@ -50,7 +50,7 @@ define ['app'], (App)->
             								<i class="fa fa-minus-circle"></i> Unselect Answer
             							</button>
             						</div>
-            						{{/class_mode}}
+            						{{/showButtons}}
             						<div class="clearfix"></div>
             						<div class="row students m-l-0 m-r-0 m-t-20" id="students-list">
 
@@ -69,14 +69,14 @@ define ['app'], (App)->
 
             serializeData: ->
                 data = super()
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    data.class_mode = true
+                if Marionette.getOption(@, 'display_mode') isnt 'readonly'
+                    data.showButtons = true
 
                 data
 
             onShow: ->
 
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                if Marionette.getOption(@, 'display_mode') isnt 'readonly'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
                 else
@@ -124,7 +124,9 @@ define ['app'], (App)->
                     @markAsCorrectAnswer student
 
                 @correctAnswers = _.uniq @correctAnswers
-                @trigger "save:question:response", @correctAnswers
+
+                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                    @trigger "save:question:response", @correctAnswers
 
             markAsCorrectAnswer: (student)->
                 $(student).removeClass 'selected'

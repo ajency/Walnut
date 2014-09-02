@@ -45,7 +45,7 @@ define ['app'
                 data.textbookName = =>
                     if data.term_ids.textbook
                         textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                        textbook.name
+                        textbook.name if textbook
 
                 data.chapterName = =>
                     if data.term_ids.chapter

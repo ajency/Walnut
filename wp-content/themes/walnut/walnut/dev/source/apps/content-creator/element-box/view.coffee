@@ -38,7 +38,8 @@ define ['app'
 
             onQuestionElementAdded :->
 
-                @$el.find('.qstns *[data-element]').draggable 'disable'
+                if Marionette.getOption(@, 'contentType') is 'student_question'
+                    @$el.find('.qstns *[data-element]').draggable 'disable'
 
 
             onQuestionElementRemoved : ->
