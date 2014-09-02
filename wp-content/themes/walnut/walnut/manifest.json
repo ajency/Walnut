@@ -1,11 +1,11 @@
 {
-  // "name": "Synapse Staging",                           // [Synapse Staging Build]
-  "name": "Teacher Training App - Synapse Learning",   // [Synapse Production Build]
+  "name": "Synapse Staging",                           // [Synapse Staging Build]
+  // "name": "Teacher Training App - Synapse Learning",   // [Synapse Production Build]
 
   "description": "Synapse Android App",
 
-  // "version": "Staging-0.5.3.02",                      // [Synapse Staging Version]
-  "version": "Production-0.5.3.02",                   // [Synapse Production Version]
+  "version": "Staging-0.5.3.02",                      // [Synapse Staging Version]
+  // "version": "Production-0.5.3.02",                   // [Synapse Production Version]
 
   "permissions": ["<all_urls>", "storage", "unlimitedStorage"],
 
