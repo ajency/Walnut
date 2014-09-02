@@ -129,6 +129,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           add: true,
           remove: false,
           data: param,
+          type: 'post',
           success: function(resp) {
             return contentPiecesRepository.add(resp.models);
           }

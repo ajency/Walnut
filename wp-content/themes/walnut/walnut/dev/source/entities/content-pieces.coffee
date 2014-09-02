@@ -84,6 +84,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                     add : true
                     remove : false
                     data : param
+                    type : 'post'
                     success:(resp)-> contentPiecesRepository.add resp.models
 
                 contentPieceCollection
