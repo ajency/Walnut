@@ -45,7 +45,7 @@ define(['app'], function(App) {
       };
 
       EvaluationItemView.prototype._buttonClicked = function(e) {
-        if (this.display_mode === 'class_mode') {
+        if (this.display_mode !== 'readonly') {
           if ($(e.target).closest('button').hasClass('btn-primary')) {
             this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
             return delete this.responseObj[this.model.get('id')];
@@ -69,7 +69,7 @@ define(['app'], function(App) {
 
       EvaluationView.prototype.className = 'parameters animated fadeIn';
 
-      EvaluationView.prototype.template = '<div class="tiles grey p-t-10 p-b-10 m-b-10"> <div class="row m-l-0 m-r-0"> <div class="pull-right"> <span id="close-parameters" class="fa fa-times text-grey p-r-15 p-l-15 p-t-15 p-b-15 closeEval"></span> </div> <h3 class="text-center text-grey semi-bold">Evaluation for {{studentName}}</h3> </div> <div id="evaluation-collection"> </div> {{#class_mode}} <div class="row m-r-0 m-l-0 p-t-10"> <button class="btn btn-info h-center block" id="saveEval">Save</button> </div> {{/class_mode}} </div>';
+      EvaluationView.prototype.template = '<div class="tiles grey p-t-10 p-b-10 m-b-10"> <div class="row m-l-0 m-r-0"> <div class="pull-right"> <span id="close-parameters" class="fa fa-times text-grey p-r-15 p-l-15 p-t-15 p-b-15 closeEval"></span> </div> <h3 class="text-center text-grey semi-bold">Evaluation for {{studentName}}</h3> </div> <div id="evaluation-collection"> </div> {{#showButtons}} <div class="row m-r-0 m-l-0 p-t-10"> <button class="btn btn-info h-center block" id="saveEval">Save</button> </div> {{/showButtons}} </div>';
 
       EvaluationView.prototype.itemView = EvaluationItemView;
 
@@ -84,8 +84,8 @@ define(['app'], function(App) {
 
       EvaluationView.prototype.mixinTemplateHelpers = function(data) {
         data = EvaluationView.__super__.mixinTemplateHelpers.call(this, data);
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          data.class_mode = true;
+        if (Marionette.getOption(this, 'display_mode') !== 'readonly') {
+          data.showButtons = true;
         }
         data.studentName = this.studentModel.get('display_name');
         return data;
@@ -109,7 +109,7 @@ define(['app'], function(App) {
       };
 
       EvaluationView.prototype._saveEvalParameters = function() {
-        if (_.size(this.responseObj) > 1) {
+        if (_.size(this.responseObj) > 1 && Marionette.getOption(this, 'display_mode') === 'class_mode') {
           return this.trigger("save:eval:parameters");
         }
       };

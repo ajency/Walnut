@@ -41,7 +41,7 @@ define(['app'], function(App) {
 
       StudentsList.prototype.className = 'studentList m-t-10';
 
-      StudentsList.prototype.template = '{{#class_mode}} <div id="select-an-item" class="studentActions p-t-10 p-b-10"> <h3 class="no-margin semi-bold muted">Select a student to grade</h3> </div> <div style="display:none" class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/class_mode}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"> </div>';
+      StudentsList.prototype.template = '{{#showButtons}} <div id="select-an-item" class="studentActions p-t-10 p-b-10"> <h3 class="no-margin semi-bold muted">Select a student to grade</h3> </div> <div style="display:none" class="studentActions p-t-10 p-b-10"> <button type="button" class="btn btn-info btn-xs btn-sm m-r-10" id="right-answer"> <i class="fa fa-check-circle"></i> Right Answer </button> <button type="button" class="btn btn-white btn-xs btn-sm" id="wrong-answer"> <i class="fa fa-minus-circle"></i> Unselect Answer </button> </div> {{/showButtons}} <div class="clearfix"></div> <div class="row students m-l-0 m-r-0 m-t-20" id="students-list"> </div>';
 
       StudentsList.prototype.itemViewContainer = '#students-list';
 
@@ -58,15 +58,15 @@ define(['app'], function(App) {
       StudentsList.prototype.serializeData = function() {
         var data;
         data = StudentsList.__super__.serializeData.call(this);
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          data.class_mode = true;
+        if (Marionette.getOption(this, 'display_mode') !== 'readonly') {
+          data.showButtons = true;
         }
         return data;
       };
 
       StudentsList.prototype.onShow = function() {
         var ele, eleValue, _i, _j, _len, _len1, _ref, _ref1, _results;
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+        if (Marionette.getOption(this, 'display_mode') !== 'readonly') {
           _ref = this.$el.find('.tiles.single');
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             ele = _ref[_i];
@@ -78,7 +78,7 @@ define(['app'], function(App) {
         if (!Marionette.getOption(this, 'nextItemID')) {
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
-        $(".students").listnav({
+        this.$el.find(".students").listnav({
           includeNums: false
         });
         this.$el.find('.listNav a').removeAttr('href').css('cursor', 'pointer');
@@ -113,7 +113,9 @@ define(['app'], function(App) {
           this.markAsCorrectAnswer(student);
         }
         this.correctAnswers = _.uniq(this.correctAnswers);
-        return this.trigger("save:question:response", this.correctAnswers);
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          return this.trigger("save:question:response", this.correctAnswers);
+        }
       };
 
       StudentsList.prototype.markAsCorrectAnswer = function(student) {

@@ -4,7 +4,7 @@ define ['app'], (App)->
         class Views.PropertyView extends Marionette.ItemView
 
             template: '<div class="tile-more-content no-padding">
-            								<div class="tiles green">
+            								<div class="tiles blue">
             									<div class="tile-footer drag">
             										Hotspot <i class="fa fa-chevron-right"></i> <span class="semi-bold">Hotspot Question Properties</span>
             									</div>
