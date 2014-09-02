@@ -29,18 +29,20 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
         App.execute("show:leftnavapp", {
           region: App.leftNavRegion
         });
-        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division;
+        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.studentCollection = opts.studentCollection;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
           'collection_id': model.get('id')
         });
-        if (this.mode === 'training') {
-          this.studentCollection = App.request("get:dummy:students");
-        } else {
-          this.studentCollection = App.request("get:user:collection", {
-            'role': 'student',
-            'division': this.division
-          });
+        if (!this.studentCollection) {
+          if (this.mode === 'training') {
+            this.studentCollection = App.request("get:dummy:students");
+          } else {
+            this.studentCollection = App.request("get:user:collection", {
+              'role': 'student',
+              'division': this.division
+            });
+          }
         }
         return App.execute("when:fetched", model, (function(_this) {
           return function() {
