@@ -1,4 +1,4 @@
-define ['underscore', 'csvparse'], ( _, parse) ->
+define ['underscore', 'csvparse'], ( _) ->
 
     #File import
 
@@ -26,14 +26,14 @@ define ['underscore', 'csvparse'], ( _, parse) ->
                                     reader = new FileReader()
                                     reader.onloadend = (evt)->
                                         csvString = evt.target.result
-                                        parsedObj = $.parse(csvString, {header : false, dynamicTyping : false})
-                                        parsedData = parsedObj.results
+                                        parsedObj = Papa.parse(csvString, {header : false, dynamicTyping : false})
+                                        parsedData = parsedObj.data
 
                                         do(parsedData)->
                                             _.each parsedData, (outerRow, i)->
                                                 _.each outerRow, (innerRow, j)->
-                                                    # Replace back slash (/) with double quote (")
-                                                    parsedData[i][j] = parsedData[i][j].replace(/\\/g,'"')
+                                                    # Replace back slash (/) with empty quote.
+                                                    parsedData[i][j] = parsedData[i][j].replace(/\\/g,'')
 
                                         d.resolve parsedData
 
@@ -122,7 +122,6 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    # tx.executeSql("DELETE FROM wp_collection_meta")
 
                     _.each data, (row, i)->
                         tx.executeSql("INSERT OR REPLACE INTO wp_collection_meta (id, collection_id
@@ -143,7 +142,6 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_content_collection.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    # tx.executeSql("DELETE FROM wp_content_collection")
 
                     _.each data, (row, i)->
                         tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on
@@ -187,7 +185,6 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    # tx.executeSql("DELETE FROM wp_postmeta")
 
                     _.each data, (row, i)->
                         tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
@@ -208,7 +205,6 @@ define ['underscore', 'csvparse'], ( _, parse) ->
             getParsedData = _.parseCSVToJSON 'wp_posts.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    # tx.executeSql("DELETE FROM wp_posts")
 
                     _.each data, (row, i)->
                         tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date

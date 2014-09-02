@@ -1,4 +1,4 @@
-define(['underscore', 'csvparse'], function(_, parse) {
+define(['underscore', 'csvparse'], function(_) {
   return _.mixin({
     startFileImport: function() {
       $('#syncSuccess').css("display", "block").text("Starting file import...");
@@ -22,15 +22,15 @@ define(['underscore', 'csvparse'], function(_, parse) {
                 reader.onloadend = function(evt) {
                   var csvString, parsedData, parsedObj;
                   csvString = evt.target.result;
-                  parsedObj = $.parse(csvString, {
+                  parsedObj = Papa.parse(csvString, {
                     header: false,
                     dynamicTyping: false
                   });
-                  parsedData = parsedObj.results;
+                  parsedData = parsedObj.data;
                   (function(parsedData) {
                     return _.each(parsedData, function(outerRow, i) {
                       return _.each(outerRow, function(innerRow, j) {
-                        return parsedData[i][j] = parsedData[i][j].replace(/\\/g, '"');
+                        return parsedData[i][j] = parsedData[i][j].replace(/\\/g, '');
                       });
                     });
                   })(parsedData);

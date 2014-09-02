@@ -41,7 +41,7 @@ require.config({
     spinedit: 'plugins/bootstrap-spinedit',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
-    csvparse: 'plugins/jquery.parse',
+    csvparse: 'plugins/papaparse',
     json2csvparse: 'plugins/json2csv',
     jszip: 'plugins/jszip',
     fastclick: 'plugins/fastclick',
@@ -86,7 +86,6 @@ require.config({
     timerplugin: ['jquery'],
     countdowntimer: ['jquery', 'timerplugin'],
     spinedit: ['jquery', 'bootstrap'],
-    csvparse: ['jquery'],
     json2csvparse: ['jquery'],
     app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
   }
