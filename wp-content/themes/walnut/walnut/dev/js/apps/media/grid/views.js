@@ -113,11 +113,15 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
             } else if (_this.$el.find('.single-img:first').hasClass('listView')) {
               _this._changeChildClass('List');
             }
-            _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
-            imageView.$el.find('img').trigger('click');
-            return _this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
+            return _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
           };
         })(this));
+        this.listenTo(this.collection, 'media:uploaded', function(imageModel) {
+          var imageView;
+          imageView = this.children.findByModel(imageModel);
+          imageView.$el.find('img').trigger('click');
+          return this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
+        });
         if (!this.collection.isEmpty() || mediaType === 'image') {
           this.$el.find("#placeholder-video-txt").hide();
         }
