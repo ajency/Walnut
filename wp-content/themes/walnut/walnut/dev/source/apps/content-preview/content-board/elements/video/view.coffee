@@ -54,37 +54,83 @@ define ['app'], (App)->
 					
 
 
+			# _initLocalVideos : ->
+
+			# 	# @videoId = _.uniqueId('video_')
+			# 	# @$el.find('video').attr 'id', @videoId
+
+			# 	widthRatio = 16
+			# 	heightRatio = 9
+			# 	setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+			# 	@$el.find('video').attr 'height', setHeight
+
+			# 	videosWebDirectory = _.createVideosWebDirectory()
+			# 	videosWebDirectory.done =>
+
+			# 		_.each @videos , (videoSource, index)=>
+			# 			do(videoSource, index)=>
+
+			# 				url = videoSource.replace("media-web/","")
+			# 				videosWebUrl = url.substr(url.indexOf("uploads/"))
+			# 				videoUrl = videosWebUrl.replace("videos-web", "videos")
+			# 				encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
+			# 				decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+
+			# 				decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
+			# 				decryptFile.done (videoPath)=>
+
+			# 					@videos[index] = 'file:///mnt/sdcard/'+videoPath
+
+			# 					if index is 0
+			# 						# @$el.find('#'+@videoId)[0].src = @videos[index]
+			# 						# @$el.find('#'+@videoId)[0].load()
+			# 						@$el.find('video')[0].src = @videos[index]
+			# 						@$el.find('video')[0].load()
+
+
 			_initLocalVideos : ->
 
-				@videoId = _.uniqueId('video_')
-				@$el.find('video').attr 'id', @videoId
+				navigator.notification.activityStart("Please wait", "loading content...")
 
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
 				@$el.find('video').attr 'height', setHeight
 
-				videosWebDirectory = _.createVideosWebDirectory()
-				videosWebDirectory.done =>
+				runFunc = =>
+					$.Deferred (d)=>
+						deferreds = []
 
-					_.each @videos , (videoSource, index)=>
-						do(videoSource, index)=>
+						videosWebDirectory = _.createVideosWebDirectory()
+						videosWebDirectory.done =>
 
-							url = videoSource.replace("media-web/","")
-							videosWebUrl = url.substr(url.indexOf("uploads/"))
+							_.each @videos , (videoSource, index)=>
+								do(videoSource, index)=>
 
-							videoUrl = videosWebUrl.replace("videos-web", "videos")
-							encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-							decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+									url = videoSource.replace("media-web/","")
+									videosWebUrl = url.substr(url.indexOf("uploads/"))
+									videoUrl = videosWebUrl.replace("videos-web", "videos")
+									encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
+									decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
 
-							decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
-							decryptFile.done (videoPath)=>
-								@videos[index] = 'file:///mnt/sdcard/'+videoPath
+									decryptFile = _.decryptAudioFile(encryptedVideoPath, decryptedVideoPath)
+									deferreds.push decryptFile
+							
+							$.when(deferreds...).done (videoPaths...)=>
+								_.each videoPaths , (localVideoPath , index)=>
+									do(localVideoPath)=> 
+										
+										@videos[index] = 'file:///mnt/sdcard/'+localVideoPath
 
-								if index is 0
-									@$el.find('#'+@videoId)[0].src = @videos[index]
-									@$el.find('#'+@videoId)[0].load()
+								d.resolve @videos
 
+				$.when(runFunc()).done =>
+					console.log('_initLocalVideos done')
+					navigator.notification.activityStop()
+					@$el.find('video')[0].src = @videos[0]
+					@$el.find('video')[0].load()
+
+				.fail _.failureHandler
 
 
 			_setVideoList : ->

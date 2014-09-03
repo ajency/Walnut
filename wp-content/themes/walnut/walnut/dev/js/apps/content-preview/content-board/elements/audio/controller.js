@@ -80,23 +80,24 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         runFunc = (function(_this) {
           return function() {
             return $.Deferred(function(d) {
-              var audiosWebDirectory, decryptFile, deferreds, localAudioPaths;
+              var audiosWebDirectory, deferreds, localAudioPaths;
               localAudioPaths = [];
-              decryptFile = [];
               deferreds = [];
               audiosWebDirectory = _.createAudiosWebDirectory();
               return audiosWebDirectory.done(function() {
                 var allAudioUrls;
                 allAudioUrls = _this.layout.model.get('audioUrls');
                 _.each(allAudioUrls, function(audioUrl, index) {
-                  var audioWebPath, audiosPath, decryptedAudioPath, encryptedAudioPath, url;
-                  url = audioUrl.replace("media-web/", "");
-                  audioWebPath = url.substr(url.indexOf("uploads/"));
-                  audiosPath = audioWebPath.replace("audio-web", "audios");
-                  encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosPath;
-                  decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
-                  decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath);
-                  return deferreds.push(decryptFile);
+                  return (function(audioUrl) {
+                    var audioWebPath, audiosPath, decryptFile, decryptedAudioPath, encryptedAudioPath, url;
+                    url = audioUrl.replace("media-web/", "");
+                    audioWebPath = url.substr(url.indexOf("uploads/"));
+                    audiosPath = audioWebPath.replace("audio-web", "audios");
+                    encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosPath;
+                    decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
+                    decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath);
+                    return deferreds.push(decryptFile);
+                  })(audioUrl);
                 });
                 return $.when.apply($, deferreds).done(function() {
                   var audioPaths;

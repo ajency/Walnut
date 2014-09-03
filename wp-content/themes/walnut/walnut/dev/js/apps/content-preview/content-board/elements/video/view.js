@@ -1,5 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __slice = [].slice;
 
 define(['app'], function(App) {
   return App.module('ContentPreview.ContentBoard.Element.Video.Views', function(Views, App, Backbone, Marionette, $, _) {
@@ -42,36 +43,53 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._initLocalVideos = function() {
-        var heightRatio, setHeight, videosWebDirectory, widthRatio;
-        this.videoId = _.uniqueId('video_');
-        this.$el.find('video').attr('id', this.videoId);
+        var heightRatio, runFunc, setHeight, widthRatio;
+        navigator.notification.activityStart("Please wait", "loading content...");
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
         this.$el.find('video').attr('height', setHeight);
-        videosWebDirectory = _.createVideosWebDirectory();
-        return videosWebDirectory.done((function(_this) {
+        runFunc = (function(_this) {
           return function() {
-            return _.each(_this.videos, function(videoSource, index) {
-              return (function(videoSource, index) {
-                var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
-                url = videoSource.replace("media-web/", "");
-                videosWebUrl = url.substr(url.indexOf("uploads/"));
-                videoUrl = videosWebUrl.replace("videos-web", "videos");
-                encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-                decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
-                decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
-                return decryptFile.done(function(videoPath) {
-                  _this.videos[index] = 'file:///mnt/sdcard/' + videoPath;
-                  if (index === 0) {
-                    _this.$el.find('#' + _this.videoId)[0].src = _this.videos[index];
-                    return _this.$el.find('#' + _this.videoId)[0].load();
-                  }
+            return $.Deferred(function(d) {
+              var deferreds, videosWebDirectory;
+              deferreds = [];
+              videosWebDirectory = _.createVideosWebDirectory();
+              return videosWebDirectory.done(function() {
+                _.each(_this.videos, function(videoSource, index) {
+                  return (function(videoSource, index) {
+                    var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                    url = videoSource.replace("media-web/", "");
+                    videosWebUrl = url.substr(url.indexOf("uploads/"));
+                    videoUrl = videosWebUrl.replace("videos-web", "videos");
+                    encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                    decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                    decryptFile = _.decryptAudioFile(encryptedVideoPath, decryptedVideoPath);
+                    return deferreds.push(decryptFile);
+                  })(videoSource, index);
                 });
-              })(videoSource, index);
+                return $.when.apply($, deferreds).done(function() {
+                  var videoPaths;
+                  videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+                  _.each(videoPaths, function(localVideoPath, index) {
+                    return (function(localVideoPath) {
+                      return _this.videos[index] = 'file:///mnt/sdcard/' + localVideoPath;
+                    })(localVideoPath);
+                  });
+                  return d.resolve(_this.videos);
+                });
+              });
             });
           };
-        })(this));
+        })(this);
+        return $.when(runFunc()).done((function(_this) {
+          return function() {
+            console.log('_initLocalVideos done');
+            navigator.notification.activityStop();
+            _this.$el.find('video')[0].src = _this.videos[0];
+            return _this.$el.find('video')[0].load();
+          };
+        })(this)).fail(_.failureHandler);
       };
 
       VideoView.prototype._setVideoList = function() {

@@ -70,7 +70,6 @@ define ['app'
 						runFunc = =>
 							$.Deferred (d)=>
 								localAudioPaths = []
-								decryptFile = []
 								deferreds = []
 
 								audiosWebDirectory = _.createAudiosWebDirectory()
@@ -80,14 +79,15 @@ define ['app'
 
 									_.each allAudioUrls , (audioUrl , index)->
 
-										url = audioUrl.replace("media-web/","")
-										audioWebPath = url.substr(url.indexOf("uploads/"))
-										audiosPath = audioWebPath.replace("audio-web", "audios")
-										encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosPath
-										decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioWebPath
+										do(audioUrl)->
+											url = audioUrl.replace("media-web/","")
+											audioWebPath = url.substr(url.indexOf("uploads/"))
+											audiosPath = audioWebPath.replace("audio-web", "audios")
+											encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosPath
+											decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioWebPath
 
-										decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath)
-										deferreds.push decryptFile
+											decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath)
+											deferreds.push decryptFile
 									
 									$.when(deferreds...).done (audioPaths...)=>
 										_.each audioPaths , (localAudioPath , index)=>
