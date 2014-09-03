@@ -57,6 +57,7 @@ require.config
 		fastclick           : 'plugins/fastclick'
 		walnutGlobal        : 'plugins/walnutapp-global'
 
+
 	shim:
 		underscore:
 			exports: '_'
