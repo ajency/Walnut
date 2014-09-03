@@ -113,7 +113,7 @@ define ['marionette'], (Marionette)->
 		App.execute "show:headerapp", region: App.headerRegion
 		App.execute "show:leftnavapp", region: App.leftNavRegion
 
-		if not _.isUndefined(Pace)
+		if typeof Pace isnt 'undefined'
 			Pace.on 'hide', ()->
 				$("#site_main_container").addClass("showAll");
 

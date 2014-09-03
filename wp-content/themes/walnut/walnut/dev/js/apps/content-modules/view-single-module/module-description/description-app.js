@@ -153,7 +153,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       CollectionDetailsView.prototype.startModule = function() {
         var currentRoute;
-        _.audioQueuesSelection('Click-Start');
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Start');
+        }
         currentRoute = App.getCurrentRoute();
         return this.trigger("start:teaching:module");
       };

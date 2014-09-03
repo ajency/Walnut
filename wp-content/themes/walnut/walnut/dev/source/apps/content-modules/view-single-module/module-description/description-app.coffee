@@ -122,7 +122,9 @@ define ['app'
                 @mode = Marionette.getOption @, 'mode'
 
             startModule : =>
-                _.audioQueuesSelection 'Click-Start'
+                
+                _.audioQueuesSelection('Click-Start') if _.platform() is 'DEVICE'
+
                 currentRoute = App.getCurrentRoute()
                 #App.navigate currentRoute + "/question"
 

@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-unavailable.jpg" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-unavailable.png" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -133,7 +133,7 @@ define(['app'], function(App) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         } else {
           this.$el.find('video')[0].src = this.videos[this.index];
-          this.$el.find('video').attr('poster', "/images/video-unavailable.jpg");
+          this.$el.find('video').attr('poster', "/images/video-unavailable.png");
         }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();

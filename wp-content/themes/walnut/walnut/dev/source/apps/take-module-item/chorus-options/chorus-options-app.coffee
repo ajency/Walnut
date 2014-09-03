@@ -52,7 +52,9 @@ define ['app'
                         .addClass 'blue'
 
             selectStudent: (e)->
-                _.audioQueuesSelection 'Click-Select'
+
+                _.audioQueuesSelection('Click-Select') if _.platform() is 'DEVICE'
+
                 @$el.find '#select-an-item'
                 .remove()
 

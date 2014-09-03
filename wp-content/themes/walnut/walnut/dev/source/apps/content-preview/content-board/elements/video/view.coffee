@@ -9,14 +9,14 @@ define ['app'], (App)->
 			className : 'video'
 
 			template : '    {{#videoUrl}}
-							<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-							poster="/images/video-poster.jpg" data-setup="{}">
+								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
+								poster="/images/video-poster.jpg" data-setup="{}">
 
-							</video>
+								</video>
 							{{/videoUrl}}
 							{{^videoUrl}}
 								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-								poster="/images/video-unavailable.jpg" data-setup="{}">
+								poster="/images/video-unavailable.png" data-setup="{}">
 
 								</video>
 							{{/videoUrl}}
@@ -152,7 +152,7 @@ define ['app'], (App)->
 
 				else 
 					@$el.find('video')[0].src = @videos[@index]
-					@$el.find('video').attr 'poster', "/images/video-unavailable.jpg"
+					@$el.find('video').attr 'poster', "/images/video-unavailable.png"
 
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()

@@ -94,7 +94,7 @@ define(['app'], function(App) {
 
       EvaluationView.prototype.onShow = function() {
         $('html, body').animate({
-          scrollTop: this.$el.closest('.studentList').find("#eval-parameters").offset().top - stickyHeaderTop
+          scrollTop: this.$el.closest('.studentList').find("#eval-parameters").offset().top
         }, 1000);
         return this.$el.slideDown();
       };

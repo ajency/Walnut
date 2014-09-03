@@ -201,7 +201,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
-		# Decrypt the encrypted video file
+		# Decrypt the encrypted audio file
 		decryptAudioFile : (source, destination)->
 
 			$.Deferred (d)->

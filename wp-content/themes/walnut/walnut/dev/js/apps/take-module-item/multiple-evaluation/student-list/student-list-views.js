@@ -80,7 +80,9 @@ define(['app'], function(App) {
       };
 
       StudentsListView.prototype.selectStudent = function(e) {
-        _.audioQueuesSelection('Click-Select');
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Select');
+        }
         this.$el.find('.tiles.single').removeClass('selected');
         $(e.target).closest('.tiles.single').addClass("selected");
         this.$el.find(".tiles.single").addClass("light");
