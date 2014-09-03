@@ -45,7 +45,19 @@ define(['app'], function(App) {
       };
 
       EvaluationItemView.prototype._buttonClicked = function(e) {
-        return _.audioQueuesSelection('Click-Select')(_.platform() === 'DEVICE' ? this.display_mode !== 'readonly' ? $(e.target).closest('button').hasClass('btn-primary') ? (this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white'), delete this.responseObj[this.model.get('id')]) : (this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white'), $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary'), this.responseObj[this.model.get('id')] = $(e.target).attr('id')) : void 0 : void 0);
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Select');
+        }
+        if (this.display_mode !== 'readonly') {
+          if ($(e.target).closest('button').hasClass('btn-primary')) {
+            this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
+            return delete this.responseObj[this.model.get('id')];
+          } else {
+            this.$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white');
+            $(e.target).closest('button').removeClass('btn-white').addClass('btn-primary');
+            return this.responseObj[this.model.get('id')] = $(e.target).attr('id');
+          }
+        }
       };
 
       return EvaluationItemView;
@@ -100,7 +112,12 @@ define(['app'], function(App) {
       };
 
       EvaluationView.prototype._saveEvalParameters = function() {
-        return _.audioQueuesSelection('Click-Save')(_.platform() === 'DEVICE' ? _.size(this.responseObj) > 1 && Marionette.getOption(this, 'display_mode') === 'class_mode' ? this.trigger("save:eval:parameters") : void 0 : void 0);
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Save');
+        }
+        if (_.size(this.responseObj) > 1 && Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          return this.trigger("save:eval:parameters");
+        }
       };
 
       EvaluationView.prototype._closeEvalParams = function() {

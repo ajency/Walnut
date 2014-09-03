@@ -32,6 +32,7 @@ define ['app'
 
 
 						@audioCollection
+						
 
 					_parseInt:->
 						audio_ids = new Array()
@@ -58,53 +59,48 @@ define ['app'
 								@layout.model.set 'audioUrls' : audioCollection.pluck 'url'
 								@view = @_getAudioView()
 
-
 								@layout.elementRegion.show @view
 
-						else @_getAudioLocalPath()
+						else @_getLocalAudioCollection()
 
 
 					#Get the encrypted audio and decrypt it and play it from local path 
-					_getAudioLocalPath :=>
+					_getLocalAudioCollection :=>
 
 						runFunc = =>
 							$.Deferred (d)=>
-
-								localAudioPath = new Array()
-								audioPath = new Array()
 								localAudioPaths = []
 								decryptFile = []
 								deferreds = []
-								audioPaths = []
 
 								audiosWebDirectory = _.createAudiosWebDirectory()
 								audiosWebDirectory.done =>
 
 									allAudioUrls = @layout.model.get('audioUrls')
 
-									_.each allAudioUrls , (allAudioPaths , index)->
-										url = allAudioPaths.replace("media-web/","")
+									_.each allAudioUrls , (audioUrl , index)->
 
-										audiosWebUrl = url.substr(url.indexOf("uploads/"))
-										audioPaths = audiosWebUrl.replace("audio-web", "audios")
-
-										encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioPaths
-										decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosWebUrl
+										url = audioUrl.replace("media-web/","")
+										audioWebPath = url.substr(url.indexOf("uploads/"))
+										audiosPath = audioWebPath.replace("audio-web", "audios")
+										encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosPath
+										decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioWebPath
 
 										decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath)
 										deferreds.push decryptFile
 									
 									$.when(deferreds...).done (audioPaths...)=>
 										_.each audioPaths , (localAudioPath , index)=>
-											do(localAudioPath, index)=> 
+											do(localAudioPath)=> 
 												
-												console.log _.getSynapseMediaDirectoryPath()
-												audioPath = 'file:///mnt/sdcard/' + localAudioPath
+												localPath = 'file:///mnt/sdcard/' + localAudioPath
+												localAudioPaths.push localPath
 
-												localAudioPaths.push audioPath
-
-										d.resolve @layout.model.set 'audioUrls',localAudioPaths
+										d.resolve @layout.model.set 'audioUrls', localAudioPaths
 
 						$.when(runFunc()).done =>
+							console.log('_getLocalAudioCollection done')
+							@view = @_getAudioView()
 							@layout.elementRegion.show @view
+
 						.fail _.failureHandler

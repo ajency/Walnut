@@ -25,13 +25,13 @@ define ['app'], (App)->
 										'
 
 
-
-
 			events :
 				'click .show-playlist' : 'togglePlaylist'
 				'click #prev' : '_playPrevVideo'
 				'click #next' : '_playNextVideo'
 				'click .playlist-video' : '_playClickedVideo'
+
+				
 
 			# check if a valid image_id is set for the element
 			# if present ignore else run the Holder.js to show a placeholder
@@ -50,36 +50,41 @@ define ['app'], (App)->
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
-				if _.platform() is 'DEVICE'
+				if _.platform() is 'DEVICE' then @_initLocalVideos()
+					
 
-					@videoId = _.uniqueId('video_')
-					@$el.find('video').attr 'id', @videoId
 
-					widthRatio = 16
-					heightRatio = 9
-					setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
-					@$el.find('video').attr 'height', setHeight
+			_initLocalVideos : ->
 
-					videosWebDirectory = _.createVideosWebDirectory()
-					videosWebDirectory.done =>
+				@videoId = _.uniqueId('video_')
+				@$el.find('video').attr 'id', @videoId
 
-						_.each @videos , (videoSource, index)=>
-							do(videoSource, index)=>
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
 
-								url = videoSource.replace("media-web/","")
-								videosWebUrl = url.substr(url.indexOf("uploads/"))
+				videosWebDirectory = _.createVideosWebDirectory()
+				videosWebDirectory.done =>
 
-								videoUrl = videosWebUrl.replace("videos-web", "videos")
-								encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-								decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+					_.each @videos , (videoSource, index)=>
+						do(videoSource, index)=>
 
-								decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
-								decryptFile.done (videoPath)=>
-									@videos[index] = 'file:///mnt/sdcard/'+videoPath
+							url = videoSource.replace("media-web/","")
+							videosWebUrl = url.substr(url.indexOf("uploads/"))
 
-									if index is 0
-										@$el.find('#'+@videoId)[0].src = @videos[index]
-										@$el.find('#'+@videoId)[0].load()
+							videoUrl = videosWebUrl.replace("videos-web", "videos")
+							encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
+							decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+
+							decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
+							decryptFile.done (videoPath)=>
+								@videos[index] = 'file:///mnt/sdcard/'+videoPath
+
+								if index is 0
+									@$el.find('#'+@videoId)[0].src = @videos[index]
+									@$el.find('#'+@videoId)[0].load()
+
 
 
 			_setVideoList : ->
@@ -120,20 +125,20 @@ define ['app'], (App)->
 
 			_playPrevVideo : (e)->
 				e.stopPropagation()
-				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 				@index-- if @index > 0
 				@_playVideo()
 
 			_playNextVideo : (e)->
 				e.stopPropagation() if e?
-				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 				if @index < @videos.length-1
 					@index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
 				e.stopPropagation()
-				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
 				@_playVideo()
@@ -141,7 +146,9 @@ define ['app'], (App)->
 
 
 			_playVideo:->
+
 				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]

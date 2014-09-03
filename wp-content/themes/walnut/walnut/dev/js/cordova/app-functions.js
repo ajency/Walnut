@@ -182,7 +182,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     decryptAudioFile: function(source, destination) {
       return $.Deferred(function(d) {
         return decrypt.startDecryption(source, destination, function() {
-          console.log(destination);
           return d.resolve(destination);
         }, function(message) {
           return console.log('ERROR: ' + message);

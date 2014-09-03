@@ -208,7 +208,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 				decrypt.startDecryption(source, destination
 					, ->
-						console.log destination
 						d.resolve destination
 
 					, (message) ->

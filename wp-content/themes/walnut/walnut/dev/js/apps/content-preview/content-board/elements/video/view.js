@@ -22,7 +22,6 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
-        var heightRatio, setHeight, videosWebDirectory, widthRatio;
         if (!this.model.get('video_ids').length) {
           return;
         }
@@ -38,36 +37,41 @@ define(['app'], function(App) {
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
         if (_.platform() === 'DEVICE') {
-          this.videoId = _.uniqueId('video_');
-          this.$el.find('video').attr('id', this.videoId);
-          widthRatio = 16;
-          heightRatio = 9;
-          setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
-          this.$el.find('video').attr('height', setHeight);
-          videosWebDirectory = _.createVideosWebDirectory();
-          return videosWebDirectory.done((function(_this) {
-            return function() {
-              return _.each(_this.videos, function(videoSource, index) {
-                return (function(videoSource, index) {
-                  var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
-                  url = videoSource.replace("media-web/", "");
-                  videosWebUrl = url.substr(url.indexOf("uploads/"));
-                  videoUrl = videosWebUrl.replace("videos-web", "videos");
-                  encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-                  decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
-                  decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
-                  return decryptFile.done(function(videoPath) {
-                    _this.videos[index] = 'file:///mnt/sdcard/' + videoPath;
-                    if (index === 0) {
-                      _this.$el.find('#' + _this.videoId)[0].src = _this.videos[index];
-                      return _this.$el.find('#' + _this.videoId)[0].load();
-                    }
-                  });
-                })(videoSource, index);
-              });
-            };
-          })(this));
+          return this._initLocalVideos();
         }
+      };
+
+      VideoView.prototype._initLocalVideos = function() {
+        var heightRatio, setHeight, videosWebDirectory, widthRatio;
+        this.videoId = _.uniqueId('video_');
+        this.$el.find('video').attr('id', this.videoId);
+        widthRatio = 16;
+        heightRatio = 9;
+        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+        this.$el.find('video').attr('height', setHeight);
+        videosWebDirectory = _.createVideosWebDirectory();
+        return videosWebDirectory.done((function(_this) {
+          return function() {
+            return _.each(_this.videos, function(videoSource, index) {
+              return (function(videoSource, index) {
+                var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                url = videoSource.replace("media-web/", "");
+                videosWebUrl = url.substr(url.indexOf("uploads/"));
+                videoUrl = videosWebUrl.replace("videos-web", "videos");
+                encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath);
+                return decryptFile.done(function(videoPath) {
+                  _this.videos[index] = 'file:///mnt/sdcard/' + videoPath;
+                  if (index === 0) {
+                    _this.$el.find('#' + _this.videoId)[0].src = _this.videos[index];
+                    return _this.$el.find('#' + _this.videoId)[0].load();
+                  }
+                });
+              })(videoSource, index);
+            });
+          };
+        })(this));
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -88,9 +92,6 @@ define(['app'], function(App) {
 
       VideoView.prototype._playPrevVideo = function(e) {
         e.stopPropagation();
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
         if (this.index > 0) {
           this.index--;
         }
@@ -101,9 +102,6 @@ define(['app'], function(App) {
         if (e != null) {
           e.stopPropagation();
         }
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
         if (this.index < this.videos.length - 1) {
           this.index++;
           return this._playVideo();
@@ -113,9 +111,6 @@ define(['app'], function(App) {
       VideoView.prototype._playClickedVideo = function(e) {
         var index;
         e.stopPropagation();
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
         index = parseInt($(e.target).attr('data-index'));
         this.index = index;
         return this._playVideo();

@@ -9,7 +9,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
       __extends(Controller, _super);
 
       function Controller() {
-        this._getAudioLocalPath = __bind(this._getAudioLocalPath, this);
+        this._getLocalAudioCollection = __bind(this._getLocalAudioCollection, this);
         this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
@@ -71,33 +71,30 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
             };
           })(this));
         } else {
-          return this._getAudioLocalPath();
+          return this._getLocalAudioCollection();
         }
       };
 
-      Controller.prototype._getAudioLocalPath = function() {
+      Controller.prototype._getLocalAudioCollection = function() {
         var runFunc;
         runFunc = (function(_this) {
           return function() {
             return $.Deferred(function(d) {
-              var audioPath, audioPaths, audiosWebDirectory, decryptFile, deferreds, localAudioPath, localAudioPaths;
-              localAudioPath = new Array();
-              audioPath = new Array();
+              var audiosWebDirectory, decryptFile, deferreds, localAudioPaths;
               localAudioPaths = [];
               decryptFile = [];
               deferreds = [];
-              audioPaths = [];
               audiosWebDirectory = _.createAudiosWebDirectory();
               return audiosWebDirectory.done(function() {
                 var allAudioUrls;
                 allAudioUrls = _this.layout.model.get('audioUrls');
-                _.each(allAudioUrls, function(allAudioPaths, index) {
-                  var audiosWebUrl, decryptedAudioPath, encryptedAudioPath, url;
-                  url = allAudioPaths.replace("media-web/", "");
-                  audiosWebUrl = url.substr(url.indexOf("uploads/"));
-                  audioPaths = audiosWebUrl.replace("audio-web", "audios");
-                  encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioPaths;
-                  decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosWebUrl;
+                _.each(allAudioUrls, function(audioUrl, index) {
+                  var audioWebPath, audiosPath, decryptedAudioPath, encryptedAudioPath, url;
+                  url = audioUrl.replace("media-web/", "");
+                  audioWebPath = url.substr(url.indexOf("uploads/"));
+                  audiosPath = audioWebPath.replace("audio-web", "audios");
+                  encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosPath;
+                  decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
                   decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath);
                   return deferreds.push(decryptFile);
                 });
@@ -105,11 +102,11 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                   var audioPaths;
                   audioPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(audioPaths, function(localAudioPath, index) {
-                    return (function(localAudioPath, index) {
-                      console.log(_.getSynapseMediaDirectoryPath());
-                      audioPath = 'file:///mnt/sdcard/' + localAudioPath;
-                      return localAudioPaths.push(audioPath);
-                    })(localAudioPath, index);
+                    return (function(localAudioPath) {
+                      var localPath;
+                      localPath = 'file:///mnt/sdcard/' + localAudioPath;
+                      return localAudioPaths.push(localPath);
+                    })(localAudioPath);
                   });
                   return d.resolve(_this.layout.model.set('audioUrls', localAudioPaths));
                 });
@@ -119,6 +116,8 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         })(this);
         return $.when(runFunc()).done((function(_this) {
           return function() {
+            console.log('_getLocalAudioCollection done');
+            _this.view = _this._getAudioView();
             return _this.layout.elementRegion.show(_this.view);
           };
         })(this)).fail(_.failureHandler);
