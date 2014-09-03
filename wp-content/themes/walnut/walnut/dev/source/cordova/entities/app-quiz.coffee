@@ -31,10 +31,8 @@ define ['underscore', 'unserialize'], ( _) ->
 
 								quizType = contentLayout = description = ''
 								quizType = metaKeyDescriptionContentLayout.quizType
-								console.log quizType
 								# contentLayout = metaKeyDescriptionContentLayout.responseIds
 								contentLayout = _.unserialize(metaKeyDescriptionContentLayout.contentLayout)
-								# console.log JSON.stringify contentLayout
 								description = _.unserialize(metaKeyDescriptionContentLayout.description)
 
 								do (row, i, quizType, contentLayout, description)->
@@ -42,13 +40,11 @@ define ['underscore', 'unserialize'], ( _) ->
 									dateAndStatus.done (dateStatus)->
 										status = dateStatus.status
 										date = dateStatus.start_date
-									if not (row['post_status'] is 'archive' and status is 'not started')
+
+									if not (row['post_status'] is 'archive')
 										console.log JSON.stringify id: row['id']
-										console.log JSON.stringify name: row['name']
 										console.log JSON.stringify training_date: date
 										console.log JSON.stringify content_layout: contentLayout
-										console.log JSON.stringify description: description
-										console.log JSON.stringify post_status: row['post_status']
 										data = 
 											id: row['id']
 											name: row['name']
@@ -93,15 +89,19 @@ define ['underscore', 'unserialize'], ( _) ->
 
 						if contentLayoutValue.status isnt "started" or contentLayoutValue.status isnt "completed"
 							data.status = 'not started'
+							data.start_date = "null"
 
 						if contentLayoutValue.status is "started"
 							data.status = 'started'
 
-							data.start_date = quiz_responses.taken_on
+							date = quiz_responses.taken_on
+							data.start_date = date.split(" ").shift()
 
 						if contentLayoutValue.status is 'completed'
 							data.status = 'completed'
-							data.start_date = quiz_responses.taken_on
+							date = quiz_responses.taken_on
+							data.start_date = date.split(" ").shift()
+							# data.start_date = quiz_responses.taken_on
 
 
 						# console.log JSON.stringify data

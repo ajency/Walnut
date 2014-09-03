@@ -22,7 +22,6 @@ define(['underscore', 'unserialize'], function(_) {
               var contentLayout, description, quizType;
               quizType = contentLayout = description = '';
               quizType = metaKeyDescriptionContentLayout.quizType;
-              console.log(quizType);
               contentLayout = _.unserialize(metaKeyDescriptionContentLayout.contentLayout);
               description = _.unserialize(metaKeyDescriptionContentLayout.description);
               return (function(row, i, quizType, contentLayout, description) {
@@ -33,24 +32,15 @@ define(['underscore', 'unserialize'], function(_) {
                   status = dateStatus.status;
                   return date = dateStatus.start_date;
                 });
-                if (!(row['post_status'] === 'archive' && status === 'not started')) {
+                if (!(row['post_status'] === 'archive')) {
                   console.log(JSON.stringify({
                     id: row['id']
-                  }));
-                  console.log(JSON.stringify({
-                    name: row['name']
                   }));
                   console.log(JSON.stringify({
                     training_date: date
                   }));
                   console.log(JSON.stringify({
                     content_layout: contentLayout
-                  }));
-                  console.log(JSON.stringify({
-                    description: description
-                  }));
-                  console.log(JSON.stringify({
-                    post_status: row['post_status']
                   }));
                   data = {
                     id: row['id'],
@@ -101,19 +91,22 @@ define(['underscore', 'unserialize'], function(_) {
           };
           quizResponseSummary = _.getQuizResponseSummary(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
-            var contentLayoutValue;
+            var contentLayoutValue, date;
             contentLayoutValue = '';
             contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
             if (contentLayoutValue.status !== "started" || contentLayoutValue.status !== "completed") {
               data.status = 'not started';
+              data.start_date = "null";
             }
             if (contentLayoutValue.status === "started") {
               data.status = 'started';
-              data.start_date = quiz_responses.taken_on;
+              date = quiz_responses.taken_on;
+              data.start_date = date.split(" ").shift();
             }
             if (contentLayoutValue.status === 'completed') {
               data.status = 'completed';
-              data.start_date = quiz_responses.taken_on;
+              date = quiz_responses.taken_on;
+              data.start_date = date.split(" ").shift();
             }
             return d.resolve(data);
           });
