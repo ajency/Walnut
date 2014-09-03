@@ -26,12 +26,3 @@ function get_menus_response() {
     return $menu;
 }
 
-function get_submenu_struct($sub_menuarray){
-    $submenustruct = '<ul class="sub-menu" style="display: none;">';
-    foreach ($sub_menuarray as $submenu){
-      $submenustruct .='<li class=""><a href="'.$submenu['menu_item_link'].'">'.$submenu['post_title'].'</a></li>';  
-    }
-    $submenustruct .='</ul>';
-    return $submenustruct;
-}
-

@@ -165,10 +165,17 @@
                       if ($content['post_title'] === 'Content Management'){
                           $iconclass ='fa fa-book';
                       }
+                                       
+                    $submenustruct = '<ul class="sub-menu" style="display: none;">';
+                    foreach ($content['submenu'] as $submenu){
+                      $submenustruct .='<li class=""><a href="'.$submenu['menu_item_link'].'">'.$submenu['post_title'].'</a></li>';  
+                    }
+                    $submenustruct .='</ul>';
+
                    $menu .= "<li class=''><a href='javascript:;'> "
                            . "<i class='".$iconclass."'></i> "
                            . "<span class='title'>".$content['post_title']."</span> <"
-                           . "span class='arrow'></span> </a>".get_submenu_struct($content['submenu'])."</li>";
+                           . "span class='arrow'></span> </a>".$submenustruct."</li>";
                   }
                   
                   echo $menu;
@@ -346,8 +353,20 @@ jQuery(document).ready(function() {
   });
   
     jQuery(".menu-items li").click(function(){
-        jQuery(this).siblings().find(".sub-menu").slideUp();
-        jQuery(this).toggleClass('open');
+        jQuery(this).siblings().find(".sub-menu").slideUp(function (){
+            jQuery(this).siblings().find(".arrow").removeClass('open');
+        });
+
+        if(jQuery(this).siblings().hasClass('open')){
+           jQuery(this).siblings().removeClass('open')
+        }
+        
+        if(jQuery(this).hasClass('open')){
+           jQuery(this).removeClass('open')
+        }else{
+          jQuery(this).addClass('open')
+        }
+        
         jQuery(this).find(".sub-menu").slideToggle();
         jQuery(this).find(".arrow").toggleClass('open');
 
