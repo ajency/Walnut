@@ -4,7 +4,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
-		getQuizByTextbookIdAndUserID : (textbookId, userID, division)->
+		getQuizByTextbookIdAndUserID : (textbookId)->
 
 			runQuery = ->
 
@@ -21,52 +21,58 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 
 					result = []
-
 					for i in [0..data.rows.length-1] by 1
 
 						row = data.rows.item(i)
-						console.log "row"
-						console.log row
-						console.log JSON.stringify row
 
 						do (row, i)->
-							contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id'])
-							contentPiecesAndDescription.done (data)->
+							metaKeyDescriptionAndContentLayout = _.getMetaKeyDescriptionAndContentLayout(row['id'])
+							metaKeyDescriptionAndContentLayout.done (metaKeyDescriptionContentLayout)->
 
-								contentPieces = description = ''
-								contentPieces = unserialize(data.content_pieces) if data.content_pieces isnt ''
-								description = unserialize(data.description) if data.description isnt ''
+								quizType = contentLayout = description = ''
+								quizType = metaKeyDescriptionContentLayout.quizType
+								console.log quizType
+								# contentLayout = metaKeyDescriptionContentLayout.responseIds
+								contentLayout = _.unserialize(metaKeyDescriptionContentLayout.contentLayout)
+								# console.log JSON.stringify contentLayout
+								description = _.unserialize(metaKeyDescriptionContentLayout.description)
 
-								do (row, i, contentPieces, description)->
-									dateAndStatus = _.getDateAndStatus(row['id'], division, contentPieces)
-									dateAndStatus.done (data)->
-										status = data.status
-										date = data.start_date
+								do (row, i, quizType, contentLayout, description)->
+									dateAndStatus = _.getStartDateAndStatus(row['id'])
+									dateAndStatus.done (dateStatus)->
+										status = dateStatus.status
+										date = dateStatus.start_date
+									if not (row['post_status'] is 'archive' and status is 'not started')
+										console.log JSON.stringify id: row['id']
+										console.log JSON.stringify name: row['name']
+										console.log JSON.stringify training_date: date
+										console.log JSON.stringify content_layout: contentLayout
+										console.log JSON.stringify description: description
+										console.log JSON.stringify post_status: row['post_status']
+										data = 
+											id: row['id']
+											name: row['name']
+											created_on: row['created_on']
+											created_by: row['created_by']
+											last_modified_on: row['last_modified_on']
+											last_modified_by: row['last_modified_by']
+											published_on: row['published_on']
+											published_by: row['published_by']
+											type: row['type']
+											term_ids: _.unserialize(row['term_ids'])
+											duration: _.getDuration(row['duration'])
+											minshours: _.getMinsHours(row['duration'])
+											total_minutes: row['duration']
+											quiz_type: quizType
+											content_layout: contentLayout
+											training_date: date
+											description: description
+											post_status: row['post_status']
 
-										if not (row['status'] is 'archive' and status is 'not started')
-											
-											data = 
-												id: row['id']
-												name: row['name']
-												created_on: row['created_on']
-												created_by: row['created_by']
-												last_modified_on: row['last_modified_on']
-												last_modified_by: row['last_modified_by']
-												published_on: row['published_on']
-												published_by: row['published_by']
-												type: row['type']
-												term_ids: unserialize(row['term_ids'])
-												duration: _.getDuration(row['duration'])
-												minshours: _.getMinsHours(row['duration'])
-												total_minutes: row['duration']
-												status: status
-												training_date: date
-												content_pieces: contentPieces
-												description: description
-												post_status: row['status']
 
-											result.push data
-					
+										console.log JSON.stringify data
+										result.push data
+					console.log JSON.stringify result
 					d.resolve result		
 
 			$.when(runQuery()).done (data)->
@@ -74,126 +80,64 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
-		
-		getContentGroupById : (id)->
-
-			runQuery = ->
-
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_content_collection WHERE id=?", [id]
-							, onSuccess(d), _.deferredErrorHandler(d))
-
-				
-			onSuccess = (d)->
-				(tx, data)->
-
-					row = data.rows.item(0)
-
-					do (row)->
-						contentPiecesAndDescription = _.getContentPiecesAndDescription(row['id'])
-						contentPiecesAndDescription.done (data)->
-							
-							contentPieces = description = ''
-							contentPieces = unserialize(data.content_pieces) if data.content_pieces isnt ''
-							description = unserialize(data.description) if data.description isnt ''
-
-							result = 
-								id: row['id']
-								name: row['name']
-								created_on: row['created_on']
-								created_by: row['created_by']
-								last_modified_on: row['last_modified_on']
-								last_modified_by: row['last_modified_by']
-								published_on: row['published_on']
-								published_by: row['published_by']
-								type: row['type']
-								term_ids: unserialize(row['term_ids'])
-								duration: _.getDuration(row['duration'])
-								minshours: _.getMinsHours(row['duration'])
-								total_minutes: row['duration']
-								status: row['status']
-								content_pieces: contentPieces
-								description: description
-					
-							d.resolve result		
-
-			$.when(runQuery()).done (data)->
-				console.log 'getContentGroupById transaction completed'
-			.fail _.failureHandler
-
-
-
-		
-		getDateAndStatus : (collection_id, division, content_pieces)->
-
+		getStartDateAndStatus : (collection_id)->
 			runFunc = ->
 
 				$.Deferred (d)->
 
 					data = start_date:'', status:''
+					quizResponseSummary = _.getQuizResponseSummary(collection_id)
+					quizResponseSummary.done (quiz_responses)->
+						contentLayoutValue = ''
+						contentLayoutValue = _.unserialize(quiz_responses.quiz_meta)
 
-					module_responses = _.getModuleResponses(collection_id, division)
-					module_responses.done (module_responses)->
-
-						if _.isEmpty module_responses
+						if contentLayoutValue.status isnt "started" or contentLayoutValue.status isnt "completed"
 							data.status = 'not started'
 
-						if not _.isEmpty module_responses
-							if _.first(module_responses).status is 'scheduled' 
-								data.status = 'scheduled'
-							else data.status = 'started'
+						if contentLayoutValue.status is "started"
+							data.status = 'started'
 
-							data.start_date = _.last(module_responses).start_date
+							data.start_date = quiz_responses.taken_on
 
-							response_content_ids = []
+						if contentLayoutValue.status is 'completed'
+							data.status = 'completed'
+							data.start_date = quiz_responses.taken_on
 
-							_.each module_responses, (response, key)->
-								if response.status is 'completed'
-									response_content_ids[key] = response.content_piece_id
 
-							if (content_pieces.length - response_content_ids.length) is 0
-								data.status = 'completed'
-
+						# console.log JSON.stringify data
 						d.resolve data
 
 			
 			$.when(runFunc()).done ->
-				console.log 'getDateAndStatus done'
+				console.log 'getStartDateAndStatus done'
 			.fail _.failureHandler
 
 
 
-		#Get content_piece_id, status, start_date from table 'wp_question_response'
-		getModuleResponses : (collection_id, division)->
-
+		getQuizResponseSummary : (collection_id)->
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT content_piece_id, status, start_date 
-							FROM "+_.getTblPrefix()+"question_response WHERE collection_id=? 
-							AND division=?", [collection_id, division]
+						tx.executeSql("SELECT taken_on, quiz_meta 
+							FROM "+_.getTblPrefix()+"quiz_response_summary WHERE collection_id=? 
+							AND student_id=?", [collection_id, _.getUserID()] 
 							, onSuccess(d), _.deferredErrorHandler(d))
-
 			onSuccess =(d)->
-				(tx, data)->
-					result = []
+				(tx,data)->
 
-					for i in [0..data.rows.length-1] by 1
-
-						result[i] = data.rows.item(i)
-
+					result = data.rows.item(0)
 					d.resolve(result)
 
+
 			$.when(runQuery()).done ->
-				console.log 'getModuleResponses transaction completed'
+				console.log 'getQuizResponseSummary transaction completed'
 			.fail _.failureHandler
 
-		
 
-		getContentPiecesAndDescription : (collection_id)->
 
-			contentPiecesAndDescription = content_pieces: '', description: ''
+		getMetaKeyDescriptionAndContentLayout : (collection_id)->
+
+			metaKeyDescriptionAndContentLayout = quizType: '', contentLayout: '', description: ''
 
 			runQuery =->
 				$.Deferred (d)->
@@ -205,16 +149,31 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx,data)->
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
-						if row['meta_key'] is 'description'
-							contentPiecesAndDescription.description = row['meta_value']
+						if row['meta_key'] is 'quiz_type'
+							metaKeyDescriptionAndContentLayout.quizType = row['meta_value']
 
-						if row['meta_key'] is 'content_pieces'
-							contentPiecesAndDescription.content_pieces = row['meta_value']
+						# if row['meta_key'] is 'content_layout'
+						# 	responseIds = []
+
+						# 	contentLayoutValue = _.unserialize(row['meta_value'])
+
+						# 	_.each contentLayoutValue, (response, key)->
+						# 		if response.type is "content-piece"
+						# 			responseIds.push response.id
+
+						# 	metaKeyDescriptionAndContentLayout.responseIds = responseIds
+						if row['meta_key'] is 'content_layout'
+							metaKeyDescriptionAndContentLayout.contentLayout = row['meta_value']
+							
+
+						if row['meta_key'] is 'description'
+							metaKeyDescriptionAndContentLayout.description = row['meta_value']
+
 					
-					d.resolve(contentPiecesAndDescription)
+					d.resolve(metaKeyDescriptionAndContentLayout)
 
 			$.when(runQuery()).done ->
-				console.log 'getContentPiecesAndDescription transaction completed'
+				console.log 'getMetaKeyDescriptionAndContentLayout transaction completed'
 			.fail _.failureHandler
 
 		

@@ -46,6 +46,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.model = ContentGroup.ItemModel;
 
+      ItemCollection.prototype.name = 'content-group';
+
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-content-groups';
       };

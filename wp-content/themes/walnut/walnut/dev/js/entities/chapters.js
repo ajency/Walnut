@@ -94,7 +94,6 @@ define(["app", 'backbone'], function(App, Backbone) {
           chapter = new Chapters.ItemModel({
             term_id: id
           });
-          console.log(chapter);
           chapter.fetch();
         }
         return chapter;

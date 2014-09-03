@@ -44,7 +44,6 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         this.chaptersCollection = App.request("get:chapters", {
           'parent': textbookID
         });
-        console.log(JSON.stringify(this.chaptersCollection));
         return App.execute("when:fetched", [this.chaptersCollection, this.contentGroupsCollection, this.textbook], (function(_this) {
           return function() {
             var view;

@@ -35,7 +35,6 @@ define ['app'
                     # console.log JSON.stringify @contentGroupsCollection
 
                 @chaptersCollection= App.request "get:chapters", ('parent' : textbookID)
-                console.log JSON.stringify @chaptersCollection
 
                 App.execute "when:fetched", [@chaptersCollection,@contentGroupsCollection,@textbook], =>
 

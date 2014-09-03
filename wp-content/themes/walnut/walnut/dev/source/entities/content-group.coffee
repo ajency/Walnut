@@ -32,6 +32,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         # collection of group of content pieces eg. quizzes, teacher training modules etc.
         class ContentGroup.ItemCollection extends Backbone.Collection
             model: ContentGroup.ItemModel
+            name: 'content-group'
 
             url: ->
                 AJAXURL + '?action=get-content-groups'

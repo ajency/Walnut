@@ -36,7 +36,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz') {
-        data = _.getQuizByTextbookIdAndUserID(opts.textbook, _.getUserID(), opts.division);
+        data = _.getQuizByTextbookIdAndUserID(opts.textbook);
         data.done(function(d) {
           return collection.set(d);
         });

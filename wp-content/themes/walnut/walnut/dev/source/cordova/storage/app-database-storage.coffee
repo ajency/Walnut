@@ -44,7 +44,7 @@ define ['underscore', 'jquery'], (_, $)->
                     , question_response TEXT, time_taken INTEGER, marks_scored INTEGER
                     , status VARCHAR)')
 
-                tx.executeSql('CREATE TABLE IF NOT EXISTS wp_quiz_response_summary 
+                tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'quiz_response_summary 
                     (summary_id VARCHAR, collection_id INTEGER, student_id INTEGER, taken_on
                     , quiz_meta TEXT)')
 

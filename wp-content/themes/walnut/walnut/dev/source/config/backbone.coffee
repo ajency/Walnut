@@ -43,7 +43,7 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'quiz'
-				data = _.getQuizByTextbookIdAndUserID(opts.textbook, _.getUserID(),opts.division)
+				data = _.getQuizByTextbookIdAndUserID(opts.textbook)
 				data.done (d)->
 					collection.set d
 

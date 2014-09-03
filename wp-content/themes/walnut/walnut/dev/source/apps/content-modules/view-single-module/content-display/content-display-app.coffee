@@ -103,8 +103,8 @@ define ['app'
 
 
             getResults:(model,question_response)=>
-                correct_answer='No One'
-                names=[]
+                correct_answer= 'No One'
+                names = []
                 studentCollection= Marionette.getOption @, 'studentCollection'
                 if model.get('question_type') is 'chorus'
                     if question_response

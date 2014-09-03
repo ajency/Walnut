@@ -57,7 +57,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					if not chapter 
 						chapter = new Chapters.ItemModel term_id : id
-						console.log chapter
+						# console.log chapter
 						chapter.fetch()
 					chapter
 
