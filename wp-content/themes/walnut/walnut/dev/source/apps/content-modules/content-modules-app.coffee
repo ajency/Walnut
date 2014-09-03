@@ -1,5 +1,4 @@
 define ['app'
-        'apps/content-modules/edit-module/module-edit-controller'
         'apps/content-modules/view-single-module/single-module-controller'
         'apps/content-modules/modules-listing/app'
 ], (App)->
@@ -20,13 +19,13 @@ define ['app'
 
         Controller =
             addModule: ->
-                new ContentModulesApp.Edit.GroupController
-                    region: App.mainContentRegion
+                App.execute 'show:edit:module:controller',
+                    region : App.mainContentRegion
                     groupType : 'teaching-module'
 
 
             editModule:(id) ->
-                new ContentModulesApp.Edit.GroupController
+                App.execute 'show:edit:module:controller',
                     region: App.mainContentRegion
                     group_id: id
                     groupType : 'teaching-module'

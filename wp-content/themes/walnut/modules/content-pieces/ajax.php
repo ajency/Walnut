@@ -4,7 +4,7 @@ require_once 'functions.php';
 
 function ajax_get_content_pieces() {
 
-    $args = $_GET;
+    $args = $_REQUEST;
 
     $defaults = array(
         'post_type' => 'content-piece'

@@ -470,7 +470,10 @@ function read_folder_directory( $dir, $base_URL = '' ) {
 
                 if (is_file( $dir . "/" . $sub )) {
 
-                    $listDir[] = $base_URL . '/' . $sub;
+                    $file['link']=$base_URL . '/' . $sub;
+                    $file['size']=filesize($dir. '/' . $sub)/1024;
+                    $file['sizeformat'] = 'kB';
+                    $listDir[] = $file;
 
                 } elseif (is_dir( $dir . "/" . $sub )) {
 

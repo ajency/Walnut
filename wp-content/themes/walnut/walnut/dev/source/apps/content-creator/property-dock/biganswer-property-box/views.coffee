@@ -6,7 +6,7 @@ define ['app'],(App)->
 		class Views.PropertyView extends Marionette.ItemView
 
 			template : '<div class="tile-more-content no-padding">
-								<div class="tiles green">
+								<div class="tiles blue">
 									<div class="tile-footer drag">
 										BigAnswer<i class="fa fa-chevron-right"></i> <span class="semi-bold">Big Answer Properties</span>
 									</div>
@@ -109,7 +109,7 @@ define ['app'],(App)->
 							        
 											<div class="textProp slider success">
 												Font Size 
-												<input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="60" data-slider-min="6" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
+												<input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="60" data-slider-min="6" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
 
 											</div>
 

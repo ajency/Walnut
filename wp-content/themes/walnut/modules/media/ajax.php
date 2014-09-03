@@ -120,7 +120,7 @@ function get_media_by_ids(){
         else
             $file_path= $directory.'/audio-web/'.$media_file['filename'];
         
-        if(file_exists($file_path))
+        if(file_exists($file_path) and $media_file)
             $media[] = $media_file;
         
         else 
