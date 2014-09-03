@@ -163,28 +163,12 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('getMetaValue transaction completed');
       }).fail(_.failureHandler);
     },
-    decryptVideoFile: function(source, destination) {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          return decrypt.startDecryption(source, destination, function() {
-            console.log(destination);
-            return d.resolve(destination);
-          }, function(message) {
-            return console.log('ERROR: ' + message);
-          });
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log('Decrypted video file at location: ' + destination);
-      }).fail(_.failureHandler);
-    },
-    decryptAudioFile: function(source, destination) {
+    decryptLocalFile: function(source, destination) {
       return $.Deferred(function(d) {
         return decrypt.startDecryption(source, destination, function() {
           return d.resolve(destination);
         }, function(message) {
-          return console.log('ERROR: ' + message);
+          return console.log('FILE DECRYPTION ERROR: ' + message);
         });
       });
     },

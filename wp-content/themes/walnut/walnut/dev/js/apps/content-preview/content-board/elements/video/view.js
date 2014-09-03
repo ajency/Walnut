@@ -57,24 +57,24 @@ define(['app'], function(App) {
               videosWebDirectory = _.createVideosWebDirectory();
               return videosWebDirectory.done(function() {
                 _.each(_this.videos, function(videoSource, index) {
-                  return (function(videoSource, index) {
+                  return (function(videoSource) {
                     var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
                     url = videoSource.replace("media-web/", "");
                     videosWebUrl = url.substr(url.indexOf("uploads/"));
                     videoUrl = videosWebUrl.replace("videos-web", "videos");
                     encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
                     decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
-                    decryptFile = _.decryptAudioFile(encryptedVideoPath, decryptedVideoPath);
+                    decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath);
                     return deferreds.push(decryptFile);
-                  })(videoSource, index);
+                  })(videoSource);
                 });
                 return $.when.apply($, deferreds).done(function() {
                   var videoPaths;
                   videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(videoPaths, function(localVideoPath, index) {
-                    return (function(localVideoPath) {
+                    return (function(localVideoPath, index) {
                       return _this.videos[index] = 'file:///mnt/sdcard/' + localVideoPath;
-                    })(localVideoPath);
+                    })(localVideoPath, index);
                   });
                   return d.resolve(_this.videos);
                 });

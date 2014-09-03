@@ -95,7 +95,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
                     audiosPath = audioWebPath.replace("audio-web", "audios");
                     encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosPath;
                     decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
-                    decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath);
+                    decryptFile = _.decryptLocalFile(encryptedAudioPath, decryptedAudioPath);
                     return deferreds.push(decryptFile);
                   })(audioUrl);
                 });

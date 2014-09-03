@@ -51,41 +51,6 @@ define ['app'], (App)->
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
 				if _.platform() is 'DEVICE' then @_initLocalVideos()
-					
-
-
-			# _initLocalVideos : ->
-
-			# 	# @videoId = _.uniqueId('video_')
-			# 	# @$el.find('video').attr 'id', @videoId
-
-			# 	widthRatio = 16
-			# 	heightRatio = 9
-			# 	setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
-			# 	@$el.find('video').attr 'height', setHeight
-
-			# 	videosWebDirectory = _.createVideosWebDirectory()
-			# 	videosWebDirectory.done =>
-
-			# 		_.each @videos , (videoSource, index)=>
-			# 			do(videoSource, index)=>
-
-			# 				url = videoSource.replace("media-web/","")
-			# 				videosWebUrl = url.substr(url.indexOf("uploads/"))
-			# 				videoUrl = videosWebUrl.replace("videos-web", "videos")
-			# 				encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-			# 				decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
-
-			# 				decryptFile = _.decryptVideoFile(encryptedVideoPath, decryptedVideoPath)
-			# 				decryptFile.done (videoPath)=>
-
-			# 					@videos[index] = 'file:///mnt/sdcard/'+videoPath
-
-			# 					if index is 0
-			# 						# @$el.find('#'+@videoId)[0].src = @videos[index]
-			# 						# @$el.find('#'+@videoId)[0].load()
-			# 						@$el.find('video')[0].src = @videos[index]
-			# 						@$el.find('video')[0].load()
 
 
 			_initLocalVideos : ->
@@ -105,7 +70,7 @@ define ['app'], (App)->
 						videosWebDirectory.done =>
 
 							_.each @videos , (videoSource, index)=>
-								do(videoSource, index)=>
+								do(videoSource)=>
 
 									url = videoSource.replace("media-web/","")
 									videosWebUrl = url.substr(url.indexOf("uploads/"))
@@ -113,12 +78,12 @@ define ['app'], (App)->
 									encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
 									decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
 
-									decryptFile = _.decryptAudioFile(encryptedVideoPath, decryptedVideoPath)
+									decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
 									deferreds.push decryptFile
 							
 							$.when(deferreds...).done (videoPaths...)=>
 								_.each videoPaths , (localVideoPath , index)=>
-									do(localVideoPath)=> 
+									do(localVideoPath, index)=> 
 										
 										@videos[index] = 'file:///mnt/sdcard/'+localVideoPath
 
@@ -171,24 +136,20 @@ define ['app'], (App)->
 
 			_playPrevVideo : (e)->
 				e.stopPropagation()
-				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 				@index-- if @index > 0
 				@_playVideo()
 
 			_playNextVideo : (e)->
 				e.stopPropagation() if e?
-				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 				if @index < @videos.length-1
 					@index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
 				e.stopPropagation()
-				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
 				@_playVideo()
-
 
 
 			_playVideo:->

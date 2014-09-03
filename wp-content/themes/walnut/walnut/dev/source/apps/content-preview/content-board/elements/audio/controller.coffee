@@ -86,7 +86,7 @@ define ['app'
 											encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosPath
 											decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioWebPath
 
-											decryptFile = _.decryptAudioFile(encryptedAudioPath, decryptedAudioPath)
+											decryptFile = _.decryptLocalFile(encryptedAudioPath, decryptedAudioPath)
 											deferreds.push decryptFile
 									
 									$.when(deferreds...).done (audioPaths...)=>

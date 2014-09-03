@@ -181,28 +181,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 
 		
-		# Decrypt the encrypted video file
-		decryptVideoFile : (source, destination)->
-
-			runFunc = ->
-				$.Deferred (d)->
-
-					decrypt.startDecryption(source, destination
-						, ->
-							console.log destination
-							d.resolve destination
-
-						, (message) ->
-							console.log 'ERROR: '+message
-					)
-
-			$.when(runFunc()).done ->
-				console.log 'Decrypted video file at location: '+destination 
-			.fail _.failureHandler
-
-
-		# Decrypt the encrypted audio file
-		decryptAudioFile : (source, destination)->
+		# Decrypt local files
+		decryptLocalFile : (source, destination)->
 
 			$.Deferred (d)->
 
@@ -211,9 +191,10 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						d.resolve destination
 
 					, (message) ->
-						console.log 'ERROR: '+message
+						console.log 'FILE DECRYPTION ERROR: '+message
 				)
 
+		
 		
 		clearMediaDirectory : (directory_name)->
 			# Delete all video files from 'videos-web' folder
@@ -251,6 +232,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			return time if bit is 1
 			return date+' '+time if bit is 2
 
+		
 		
 		audioQueuesSelection : (selectedAction)->
 			#TODO: Change if condition
@@ -295,6 +277,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						audioCues.release()
 					,2000)
 
+		
 		
 		setAudioCuesToggle : ->
 			if _.getAudioCues() is 'true'
