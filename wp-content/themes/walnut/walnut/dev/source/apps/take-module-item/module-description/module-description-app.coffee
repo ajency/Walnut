@@ -58,7 +58,7 @@ define ['app'
 
 					templateHelpers:
 						showPauseButton:=>
-							pauseBtn = '';
+							pauseBtn= '';
 							if @display_mode is 'class_mode'
 								pauseBtn= '<button type="button" id="pause-session" class="btn btn-white
 									action h-center block m-t-5"><i class="fa fa-pause"></i> Pause</button>'
@@ -71,19 +71,7 @@ define ['app'
 							parseInt (numOfQuestionsCompleted / totalNumofQuestions)*100
 
 						moduleTime:->
-							hours=0
-							time= totalTimeTakenForModule
-							mins=parseInt(time/60)
-							if mins >59
-								hours = parseInt mins/60
-								mins= parseInt mins%60
-							seconds = parseInt time%60
-							display_time = ''
-
-							if hours >0
-								display_time= hours+'h '
-
-							display_time += mins + 'm '+ seconds+'s'
+							display_time = $.timeMinSecs totalTimeTakenForModule
 
 
 		class ModuleDescriptionView extends Marionette.ItemView
@@ -129,7 +117,6 @@ define ['app'
 				if _.platform() is 'DEVICE'
 
 					$('body').css('height' : 'auto')
-
 					@cordovaEventsForModuleDescriptionView()
 
 
@@ -139,8 +126,9 @@ define ['app'
 					@trigger "goto:previous:route"
 
 				else
-					_.audioQueuesSelection 'Click-Pause'
 					console.log 'Invoked onPauseSessionClick'
+
+					_.audioQueuesSelection 'Click-Pause'
 
 					@trigger "goto:previous:route"
 
@@ -150,6 +138,7 @@ define ['app'
 					document.removeEventListener("backbutton", @onPauseSessionClick, false)
 
 
+			
 			cordovaEventsForModuleDescriptionView : ->
 
 				# Cordova backbutton event
@@ -158,19 +147,20 @@ define ['app'
 
 				# Cordova pause event
 				document.addEventListener("pause", @onPauseSessionClick, false)
-					
+
+
 
 			questionCompleted: =>
-				_.audioQueuesSelection 'Click-Next'
-				setTimeout(=>
-					if Marionette.getOption(@, 'display_mode') is 'class_mode'
-						if confirm 'This item will be marked as complete. Continue?'
-								@trigger "question:completed"
 
-					else @trigger "question:completed"
-					
-				,400)
-				
+				_.audioQueuesSelection('Click-Next') if _.platform() is 'DEVICE'
+
+				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+					if confirm 'This item will be marked as complete. Continue?'
+							@trigger "question:completed"
+
+				else @trigger "question:completed"
+
+			
 			onQuestionChanged: (nextItemID)->
 
 				if not nextItemID

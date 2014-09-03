@@ -6,12 +6,36 @@ define ['app'
         class Mcq.Controller extends Element.Controller
 
             initialize : (options)->
-                answerData =
-                    answer : []
-                    marks : 0
-                    comment : 'Not Attempted'
-                @answerModel = App.request "create:new:answer", answerData
 
+                {answerWreqrObject,@answerModel} = options
+
+                @answerModel = App.request "create:new:answer" if not @answerModel
+
+                if answerWreqrObject
+
+                    @displayAnswer = answerWreqrObject.options.displayAnswer
+
+                    answerWreqrObject.setHandler "get:question:answer", =>
+
+                        answer = _.compact @answerModel.get 'answer'
+
+                        if _.isEmpty answer
+                            emptyOrIncomplete = 'empty' 
+
+                        else if _.size(answer)< _.size @layout.model.get 'correct_answer'
+                            emptyOrIncomplete = 'incomplete' 
+
+                        else emptyOrIncomplete = 'complete'
+
+                        data=
+                            'emptyOrIncomplete' : emptyOrIncomplete
+                            'answerModel': @answerModel
+                            'totalMarks' : @layout.model.get('marks')
+
+                    answerWreqrObject.setHandler "submit:answer", =>
+                        #if displayAnswer is true, the correct & wrong answers & marks will be displayed
+                        #default is true
+                        @_submitAnswer @displayAnswer 
 
                 # _.defaults options.modelData,
 
@@ -24,6 +48,8 @@ define ['app'
             renderElement : ()=>
 
                 optionsObj = @layout.model.get 'options'
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.models
 
                 @_parseOptions optionsObj
 
@@ -36,7 +62,6 @@ define ['app'
                         shuffleFlag = false
 
                 if shuffleFlag
-                    console.log 'shuffle'
                     optionsObj = _.shuffle optionsObj
 
                 optionCollection = App.request "create:new:option:collection", optionsObj
@@ -56,12 +81,17 @@ define ['app'
                 # show the view
                 @layout.elementRegion.show @view
 
+
+
             _getMcqView : ->
                 new Mcq.Views.McqView
                     model : @layout.model
+                    answerModel:@answerModel
+                    displayAnswer :@displayAnswer 
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->
+                
                 _.each optionsObj,(option)->
                     option.marks = parseInt option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?
@@ -70,7 +100,7 @@ define ['app'
                 @layout.model.set 'correct_answer', _.map @layout.model.get('correct_answer'), (ans)->
                     parseInt ans
 
-            _submitAnswer : =>
+            _submitAnswer :(displayAnswer=true) =>
                 @answerModel.set 'marks', 0
                 if not @answerModel.get('answer').length
                     # confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
@@ -96,13 +126,15 @@ define ['app'
                                 _.each answersNotMarked, (notMarked)=>
                                     totalMarks -= @layout.model.get('options').get(notMarked).get('marks')
                                 @answerModel.set 'marks', totalMarks
+
+
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
                 # else
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
 
-                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')
+                App.execute "show:response", @answerModel.get('marks'), @layout.model.get('marks')  if displayAnswer
 
-                @view.triggerMethod "add:option:classes", @answerModel.get('answer')
+                @view.triggerMethod "add:option:classes", @answerModel.get('answer')  if displayAnswer
 
 
 

@@ -1,6 +1,6 @@
 require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
-  baseUrl: '/dev/js',
+  baseUrl: './wp-content/themes/walnut/walnut/dev/js',
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
@@ -45,12 +45,7 @@ require.config({
     timerplugin: 'plugins/jquery.countdown_plugin.min',
     countdowntimer: 'plugins/jquery.countdown.min',
     spinedit: 'plugins/bootstrap-spinedit',
-    unserialize: 'plugins/unserialize',
-    serialize: 'plugins/serialize',
-    csvparse: 'plugins/jquery.parse',
-    json2csvparse: 'plugins/json2csv',
-    jszip: 'plugins/jszip',
-    fastclick: 'plugins/fastclick'
+    jPages: 'plugins/jPages.min'
   },
   shim: {
     underscore: {
@@ -96,12 +91,11 @@ require.config({
     timerplugin: ['jquery'],
     countdowntimer: ['jquery', 'timerplugin'],
     spinedit: ['jquery', 'bootstrap'],
-    csvparse: ['jquery'],
-    json2csvparse: ['jquery'],
+    jPages: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'cordova/cordova-apploader', 'app', 'controllers/authenticationcontroller', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, cordova, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
   return App.start();
 });

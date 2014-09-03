@@ -1,6 +1,7 @@
 define ['app'
         'text!apps/media/grid/templates/media.html'
         'text!apps/media/grid/templates/layout-tpl.html'
+        # 'bootbox'
 ], (App, mediaTpl, layoutTpl)->
     App.module 'Media.Grid.Views', (Views, App)->
 
@@ -15,6 +16,15 @@ define ['app'
                 'click a' : (e)->
                     e.preventDefault()
                 'click' : '_whenImageClicked'
+                'click .delete-media-img' : ->
+                    if confirm "Delete image?"#,(result)=>
+                        # if result
+                            @trigger "delete:media:image", @model
+                'click .edit-image' : ->
+                    @trigger 'show:image:editor', @model
+
+            modelEvents : 
+                'change' : 'render'
 
             # override serializeData to set holder property for the view
             #if no thumbnail thn dont show image
@@ -93,6 +103,7 @@ define ['app'
                     .find('.all-media-tab').find('a').trigger 'click'
                     #trigger the selectable to point to the newly added image
                     imageView.$el.find('img').trigger 'click'
+                    @$el.find( '#selectable-images' ).selectSelectableElements imageView.$el
 
                 if not @collection.isEmpty() or mediaType is 'image'
                     @$el.find "#placeholder-video-txt"
@@ -118,9 +129,11 @@ define ['app'
                 if @multiSelect
                     @$el.find('#selectable-images').bind "mousedown", (e)->
                         e.metaKey = true;
-                    .selectable()
+                    .selectable
+                        cancel : '.delete-media-img'
                 else
-                    @$el.find('#selectable-images').selectable()
+                    @$el.find('#selectable-images').selectable
+                        cancel : '.delete-media-img'
 
             _changeChildClass : (toType, evt)->
                 @children.each _.bind @_changeClassOfEachChild, @, toType
@@ -142,3 +155,14 @@ define ['app'
             onMediaCollectionFetched:(coll)=>
                 @collection =coll
                 @render()
+
+            onShowEditImage : ( editView )->
+                @$el.find( '#show-image' ).hide()
+                @$el.find( '#edit-image-view' ).html( editView.render().$el ).show()
+                editView.triggerMethod 'show'
+
+            onImageEditingCancelled : ->
+                self = @
+                @$el.find( '#edit-image-view' ).fadeOut 'fast', ->
+                   $( @ ).empty()
+                   self.$el.find( '#show-image' ).show()

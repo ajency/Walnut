@@ -1,6 +1,6 @@
 define ['app'
-		'apps/content-preview/content-board/element/controller'
-		'apps/content-preview/content-board/elements/video/view'
+        'apps/content-preview/content-board/element/controller'
+        'apps/content-preview/content-board/elements/video/view'
 ],(App,Element)->
 
     App.module 'ContentPreview.ContentBoard.Element.Video',
@@ -56,7 +56,8 @@ define ['app'
                 videoCollection = @_getVideoCollection()
 
                 App.execute "when:fetched", videoCollection, =>
-
+                    @layout.model.set 'videoUrl' : _.first videoCollection.pluck 'url'
+                    @layout.model.set 'videoUrls' : videoCollection.pluck 'url'
                     view = @_getVideoView()
 
                     @layout.elementRegion.show view

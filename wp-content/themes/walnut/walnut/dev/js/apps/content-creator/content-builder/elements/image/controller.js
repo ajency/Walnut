@@ -17,8 +17,16 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           element: 'Image',
           image_id: 0,
           size: 'thumbnail',
-          align: 'left'
+          align: 'left',
+          heightRatio: 'auto',
+          topRatio: 0
         });
+        if (options.modelData.heightRatio !== 'auto') {
+          options.modelData.heightRatio = parseFloat(options.modelData.heightRatio);
+        }
+        if (_.isNaN(options.modelData.topRatio)) {
+          options.modelData.topRatio = 0;
+        }
         return Controller.__super__.initialize.call(this, options);
       };
 
@@ -37,6 +45,8 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._getImageView = function(imageModel) {
         return new Image.Views.ImageView({
           model: imageModel,
+          imageHeightRatio: this.layout.model.get('heightRatio'),
+          positionTopRatio: parseFloat(this.layout.model.get('topRatio')),
           templateHelpers: this._getTemplateHelpers()
         });
       };
@@ -45,26 +55,45 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var imageModel;
         this.removeSpinner();
         imageModel = App.request("get:media:by:id", this.layout.model.get('image_id'));
-        console.log("imageModel ");
         return App.execute("when:fetched", imageModel, (function(_this) {
           return function() {
             var view;
             view = _this._getImageView(imageModel);
-            _this.listenTo(view, "show:media:manager", function() {
+            _this.listenTo(view, "show:media:manager", function(ratio) {
+              if (ratio == null) {
+                ratio = false;
+              }
+              App.currentImageRatio = ratio;
               App.execute("show:media:manager:app", {
                 region: App.dialogRegion,
                 mediaType: 'image'
               });
               _this.listenTo(App.vent, "media:manager:choosed:media", function(media) {
                 _this.layout.model.set('image_id', media.get('id'));
+                App.currentImageRatio = false;
                 return _this.stopListening(App.vent, "media:manager:choosed:media");
               });
               return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
+                App.currentImageRatio = false;
                 return _this.stopListening(App.vent, "media:manager:choosed:media");
               });
             });
             _this.listenTo(view, "image:size:selected", function(size) {
               _this.layout.model.set('size', size);
+              return _this.layout.model.save();
+            });
+            _this.listenTo(view, 'set:image:height', function(height, width) {
+              _this.layout.model.set('height', height);
+              if (height === 'auto') {
+                _this.layout.model.set('heightRatio', 'auto');
+              } else {
+                _this.layout.model.set('heightRatio', height / width);
+              }
+              return _this.layout.model.save();
+            });
+            _this.listenTo(view, 'set:image:top:position', function(width, top) {
+              _this.layout.model.set('top', top);
+              _this.layout.model.set('topRatio', top / width);
               return _this.layout.model.save();
             });
             return _this.layout.elementRegion.show(view);

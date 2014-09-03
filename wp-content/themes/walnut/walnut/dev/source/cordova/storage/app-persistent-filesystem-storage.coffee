@@ -135,6 +135,7 @@ define ['underscore'], ( _) ->
 				console.log 'createVideosWebDirectory done'
 			.fail _.failureHandler
 
+		
 		#Create 'audios-web' directory inside 'uploads' for saving decrypted files
 		createAudiosWebDirectory : ->
 

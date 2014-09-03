@@ -81,9 +81,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/edit-quiz/qui
 
       Controller.prototype.saveContentPieces = function(content) {
         console.log(content);
-        this.model.set('content_pieces', content);
+        this.model.set('content_layout', content);
         return this.model.save({
-          'changed': 'content_pieces'
+          'changed': 'content_layout'
         }, {
           wait: true
         });

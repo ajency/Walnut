@@ -18,7 +18,7 @@ define(['marionette', 'mustache', 'text!config/marionette/templates/modal.html']
       wrapper = Mustache.to_html(modalTpl, options);
       this.$el.html(wrapper);
       this.$el.find('.modal-body').append(view.el);
-      return this.$el.addClass(options.modal_size);
+      return this.$el.addClass(options.modal_size + ' modal');
     };
 
     Dialog.prototype.onShow = function(view) {

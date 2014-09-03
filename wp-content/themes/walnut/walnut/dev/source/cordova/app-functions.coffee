@@ -201,14 +201,13 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
-		# Decrypt the encrypted video file
+		# Decrypt the encrypted audio file
 		decryptAudioFile : (source, destination)->
 
 			$.Deferred (d)->
 
 				decrypt.startDecryption(source, destination
 					, ->
-						console.log destination
 						d.resolve destination
 
 					, (message) ->
@@ -255,47 +254,46 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 		audioQueuesSelection : (selectedAction)->
 			#TODO: Change if condition
-			if _.platform() is "DEVICE"
-				if not _.isNull(_.getAudioCues())
-					if _.getAudioCues() isnt 'false'
-						audioCues = null
-						filepathForIndividualAudio = null
-						filepath = "/android_asset/www/audioCues/"
+			if not _.isNull(_.getAudioCues())
+				if _.getAudioCues() isnt 'false'
+					audioCues = null
+					filepathForIndividualAudio = null
+					filepath = "/android_asset/www/audioCues/"
 
-						switch selectedAction
+					switch selectedAction
 
-							when 'Click-Next'
-								filepathForIndividualAudio = filepath + "nextClick.WAV"
+						when 'Click-Next'
+							filepathForIndividualAudio = filepath + "nextClick.WAV"
 
-							when 'Click-Select'
-								navigator.notification.vibrate(50);
-								filepathForIndividualAudio = filepath + "selectClick.WAV"
+						when 'Click-Select'
+							navigator.notification.vibrate(50);
+							filepathForIndividualAudio = filepath + "selectClick.WAV"
 
-							when 'Click-Start'
-								filepathForIndividualAudio = filepath + "startClick.WAV"
+						when 'Click-Start'
+							filepathForIndividualAudio = filepath + "startClick.WAV"
 
-							when 'Click-Unselect'
-								navigator.notification.vibrate(50);
-								filepathForIndividualAudio = filepath + "unselectClick.WAV"
+						when 'Click-Unselect'
+							navigator.notification.vibrate(50);
+							filepathForIndividualAudio = filepath + "unselectClick.WAV"
 
-							when 'Click-Save'
+						when 'Click-Save'
 
-								filepathForIndividualAudio = filepath + "saveClick.WAV"
+							filepathForIndividualAudio = filepath + "saveClick.WAV"
 
-							when 'Click-Pause'
-								
-								filepathForIndividualAudio = filepath + "pauseClick.WAV"
+						when 'Click-Pause'
+							
+							filepathForIndividualAudio = filepath + "pauseClick.WAV"
 
-						audioCues = new Media filepathForIndividualAudio 
-							, -> 
-								console.log "media played"
-							, (error)->
-								console.log "error"+error.code
+					audioCues = new Media filepathForIndividualAudio 
+						, -> 
+							console.log "media played"
+						, (error)->
+							console.log "error"+error.code
 
-						audioCues.play()
-						setTimeout(->
-							audioCues.release()
-						,2000)
+					audioCues.play()
+					setTimeout(->
+						audioCues.release()
+					,2000)
 
 		
 		setAudioCuesToggle : ->

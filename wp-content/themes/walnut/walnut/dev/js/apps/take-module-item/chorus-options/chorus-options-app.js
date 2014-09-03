@@ -63,7 +63,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
 
       ChorusOptionsView.prototype.onShow = function() {
         var ele, responsePercentage, _i, _len, _ref;
-        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+        if (Marionette.getOption(this, 'display_mode') !== 'readonly') {
           _ref = this.$el.find('.tiles.single');
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             ele = _ref[_i];
@@ -78,12 +78,16 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
 
       ChorusOptionsView.prototype.selectStudent = function(e) {
         var dataValue;
-        _.audioQueuesSelection('Click-Select');
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Select');
+        }
         this.$el.find('#select-an-item').remove();
         this.$el.find('.blue').removeClass('blue').addClass('unselected');
         dataValue = $(e.currentTarget).closest('.tiles.single').attr('id');
         $(e.target).closest('.tiles.single').find('.unselected').removeClass('unselected').addClass('blue').find('i').removeClass('fa-minus-circle').addClass('fa-check-circle');
-        return this.trigger("save:question:response", dataValue);
+        if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
+          return this.trigger("save:question:response", dataValue);
+        }
       };
 
       return ChorusOptionsView;

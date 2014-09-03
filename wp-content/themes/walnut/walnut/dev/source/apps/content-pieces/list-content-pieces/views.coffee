@@ -12,9 +12,14 @@ define ['app'
                                     <td>{{chapterName}}</td>
                                     <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
                                     <td>{{&statusMessage}}</td>
-                                    <td class="text-center"><a target="_blank" href="{{view_url}}">View</a>
+                                    <td data-id="{{ID}}" class="text-center">
+                                        <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a>
                                         {{&edit_link}}
-                                    {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>'
+                                        {{#archivedModule}}
+                                            <span class="nonDevice">|</span>
+                                            <a target="_blank"  class="nonDevice cloneModule">Clone</a>
+                                        {{/archivedModule}}
+                                    </td>'
 
             serializeData:->
                 data= super()
@@ -25,7 +30,12 @@ define ['app'
                 #for sorting the column date-wise
                 data.sort_date= moment(data.post_modified).format "YYYYMMDD"
 
-                data.view_url = SITEURL + '/#content-piece/'+data.ID
+                if data.content_type is 'student_question'
+                    data.view_url = SITEURL + '/#dummy-quiz/'+data.ID
+
+                else
+                    data.view_url = SITEURL + '/#dummy-module/'+data.ID
+
                 edit_url = SITEURL + '/content-creator/#edit-content/'+data.ID
                 data.edit_link= ''
 
@@ -35,7 +45,7 @@ define ['app'
                 data.textbookName = =>
                     if data.term_ids.textbook
                         textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                        textbook.name
+                        textbook.name if textbook
 
                 data.chapterName = =>
                     if data.term_ids.chapter

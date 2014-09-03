@@ -52,8 +52,8 @@ define ['app'
 
             saveContentPieces : (content)=>
                 console.log content
-                @model.set('content_pieces', content)
-                @model.save({ 'changed' : 'content_pieces' }, { wait : true })
+                @model.set('content_layout', content)
+                @model.save({ 'changed' : 'content_layout' }, { wait : true })
 
             _getCollectionContentDisplayView : ->
                 new QuizContentDisplay.Views.ContentDisplayView

@@ -6,16 +6,15 @@
 	}
 }
 
-.cbp_tmtimeline{
-	li.setGroup{
-		margin-bottom: 20px;
-		//padding: 5px 20px 5px 5px;
-		.cbp_tmlabel{
-			margin-bottom: 2px;
-			padding: 10px;
-			&:not(:first-child):after{
-				//display: none;
-			}
+
+.setGroup{
+	margin-bottom: 20px;
+	//padding: 5px 20px 5px 5px;
+	.cbp_tmlabel{
+		margin-bottom: 2px;
+		padding: 10px;
+		&:not(:first-child):after{
+			//display: none;
 		}
 	}
 }
@@ -113,13 +112,28 @@
 			}
 			&.skip{
 				a{
+					background: @color-warning;
+					color: @color-white;
+					&:hover{
+						background: darken(@color-warning, 10%);
+					}
+					&:before{
+						content: "\f051";
+						bottom: 6px;
+						right: 8px;
+						font-size: 18px;
+					}
+				}
+			}
+			&.partiallyCorrect{
+				a{
 					background: @color-info;
 					color: @color-white;
 					&:hover{
 						background: darken(@color-info, 10%);
 					}
 					&:before{
-						content: "\f021";
+						content: "\f046";
 						bottom: 6px;
 						right: 8px;
 						font-size: 18px;

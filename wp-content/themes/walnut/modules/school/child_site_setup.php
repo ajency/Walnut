@@ -10,7 +10,6 @@ function setup_childsite( $blog_id, $additional_details ) {
     update_blog_option( $blog_id, 'template', 'walnut' );
     update_blog_option( $blog_id, 'stylesheet', 'schoolsite' );
 
-    $current_blog = get_current_blog_id();
     switch_to_blog( $blog_id );
 
     setup_childsite_roles();
@@ -19,11 +18,11 @@ function setup_childsite( $blog_id, $additional_details ) {
 
     setup_childsite_tables();
 
-    setup_childsite_menus( $current_blog, $blog_id );
+    setup_childsite_menus($blog_id );
 
     create_temporary_folders();
 
-    switch_to_blog( $current_blog );
+    restore_current_blog();
 
 }
 
@@ -101,6 +100,29 @@ function setup_childsite_tables() {
 
     $wpdb->query( $question_response_meta_table );
 
+    $quiz_summary_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_response_summary` (
+        `summary_id` varchar(30) NOT NULL,
+        `collection_id` int(11) NOT NULL,
+        `student_id` bigint(20) NOT NULL,
+        `taken_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `quiz_meta` text NOT NULL,
+        PRIMARY KEY (`summary_id`)
+      )";
+
+    $wpdb->query( $quiz_summary_table );
+
+    $quiz_responses_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_question_response` (
+        `qr_id` varchar(50) NOT NULL,
+        `summary_id` varchar(30) NOT NULL,
+        `content_piece_id` bigint(20) NOT NULL,
+        `question_response` text NOT NULL,
+        `time_taken` int(11) NOT NULL,
+        `marks_scored` decimal(10,1) NOT NULL DEFAULT '0.0',
+        `status` varchar(30) NOT NULL,
+        PRIMARY KEY (`qr_id`)
+      )";
+
+    $wpdb->query( $quiz_responses_table );
 
     $sync_apps_data_query = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_apps_data` (
@@ -112,38 +134,6 @@ function setup_childsite_tables() {
             )";
 
     $wpdb->query( $sync_apps_data_query );
-}
-
-function setup_childsite_menus( $current_blog, $blog_id ) {
-
-    switch_to_blog( $current_blog );
-
-    $parent_menus = wp_get_nav_menus();
-
-    foreach ($parent_menus as $p_menu) {
-
-        switch_to_blog( $current_blog );
-        $parent_menu_items = wp_get_nav_menu_items( $p_menu->term_id );
-
-        switch_to_blog( $blog_id );
-        $new_menu = wp_create_nav_menu( $p_menu->name );
-
-        foreach ($parent_menu_items as $p_item) {
-            $p_item->post_status = 'publish';
-            $post_id = wp_insert_post( $p_item );
-            $menu_data = array(
-                'menu-item-db-id' => $post_id,
-                'menu-item-object-id' => $p_item->object_id,
-                'menu-item-object' => $p_item->object,
-                'menu-item-parent-id' => $p_item->menu_item_parent,
-                'menu-item-type' => $p_item->type,
-                'menu-item-title' => $p_item->title,
-                'menu-item-url' => $p_item->url,
-                'menu-item-status' => 'publish'
-            );
-            wp_update_nav_menu_item( $new_menu, 0, $menu_data );
-        }
-    }
 }
 
 function create_temporary_folders() {

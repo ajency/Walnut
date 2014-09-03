@@ -156,7 +156,7 @@ define(['jquery', 'underscore'], function($, _) {
     }
   };
   return $.filterTableByTextbooks = function(_this) {
-    var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models;
+    var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type;
     filter_elements = _this.$el.find('select.textbook-filter');
     filterCollection = _this.fullCollection.clone();
     filter_ids = _.map(filter_elements, function(ele, index) {
@@ -171,6 +171,7 @@ define(['jquery', 'underscore'], function($, _) {
     content_type = _this.$el.find('#content-type-filter').val();
     content_status = _this.$el.find('#content-status-filter').val();
     content_post_status = _this.$el.find('#content-post-status-filter').val();
+    quiz_type = _this.$el.find('#quiz-type-filter').val();
     difficulty_level = parseInt(_this.$el.find('#difficulty-level-filter').val());
     if (content_type) {
       filterCollection.reset(filterCollection.where({
@@ -185,6 +186,11 @@ define(['jquery', 'underscore'], function($, _) {
     if (content_post_status) {
       filterCollection.reset(filterCollection.where({
         'post_status': content_post_status
+      }));
+    }
+    if (quiz_type) {
+      filterCollection.reset(filterCollection.where({
+        'quiz_type': quiz_type
       }));
     }
     if (difficulty_level) {

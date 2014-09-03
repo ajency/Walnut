@@ -1,96 +1,5 @@
 <?php
 
-function extra_tax_fields( $tag ) {
-    //check for existing taxonomy meta for term ID
-
-    global $wpdb;
-    $t_id = $tag->term_id;
-    $term_meta = get_option( "taxonomy_$t_id" );
-    $res = $wpdb->get_results( "select class_id, tags from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id, ARRAY_A );
-    $classes = maybe_unserialize( $res[0]['class_id'] );
-    $subjects = maybe_unserialize( $res[0]['tags'] );
-
-    $textbook_fields = '';
-    if ($tag->parent != 0)
-        $textbook_fields = 'style="display:none"';
-    ?>
-    <tr class="form-field textbook_fields" <?= $textbook_fields ?>>
-        <th scope="row" valign="top"><label for="cat_Image_url"><?php _e( 'Textbook Image Url' ); ?></label></th>
-        <td>
-            <div class="row form-input">
-                <div class="col-md-12 labels">
-                    <input id="image-upload" type="file" name="files" class="inline image-upload"/>
-
-                    <div id="progress" class="progress" style="display:none">
-                        <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif">
-                    </div>
-                    <div id="image-container" class="success_container">
-                        <?php echo $term_meta['attachmenturl'] ? '<img src="' . $term_meta['attachmenturl'] . '" height=100px>' : ''; ?>
-
-                    </div>
-
-                    <input type="hidden" class="attachment_id"
-                           value="<?php echo $term_meta['attachmentid'] ? $term_meta['attachmentid'] : ''; ?>"
-                           name="term_meta[attachmentid]" placeholder="" class="col-md-3">
-                    <input type="hidden" class="attachment_url"
-                           value="<?php echo $term_meta['attachmenturl'] ? $term_meta['attachmenturl'] : ''; ?>"
-                           name="term_meta[attachmenturl]" placeholder="" class="col-md-3">
-                </div>
-
-                <div class="form-actions">
-
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr class="form-field  textbook_fields" <?= $textbook_fields ?>>
-        <th scope="row" valign="top"><label for="extra1"><?php _e( 'Author Name' ); ?></label></th>
-        <td>
-            <input type="text" name="term_meta[author]" id="term_meta[extra1]" size="25" style="width:60%;"
-                   value="<?php echo $term_meta['author'] ? $term_meta['author'] : ''; ?>"><br/>
-            <span class="description"><?php _e( 'author name' ); ?></span>
-        </td>
-    </tr>
-    <tr class="form-field textbook_fields" <?= $textbook_fields ?>>
-        <th scope="row" valign="top"><label for="extra2"><?php _e( 'Classes Suitable For' ); ?></label></th>
-        <td><?
-            global $class_ids;
-            for ($i = 1; $i <= sizeof( $class_ids ); $i++) {
-                $selected = '';
-
-                if ($classes)
-                    $selected = in_array( $i, $classes ) ? "checked" : '';
-                ?>
-                <input style="width:20px" type="checkbox" name="classes[]"
-                       value="<?= $i ?>" <?= $selected ?> /> <?= $class_ids[$i]['label'] ?><br>
-            <? } ?>
-            <br>
-            <span class="description"><?php _e( 'classes for which this textbook is suitable for' ); ?></span>
-        </td>
-    </tr>
-    <tr>
-        <td>Subject :</td>
-        <td>
-            <?
-            global $all_subjects;
-            for ($i = 0; $i < sizeof( $all_subjects ); $i++) {
-                $selected = '';
-
-                if ($subjects)
-                    $selected = in_array( $all_subjects[$i], $subjects ) ? "checked" : '';
-                ?>
-                <input style="width:20px" type="checkbox" name="term_tags[]"
-                       value="<?= $all_subjects[$i] ?>" <?= $selected ?> /> <?= $all_subjects[$i] ?><br>
-            <? } ?>
-            <br>
-            <span class="description"><?php _e( 'subjects which this textbook belongs to' ); ?></span>
-
-        </td>
-
-    </tr>
-<?php
-}
-
 function load_fileupload( $hook ) {
     if ($hook == 'edit-tags.php') {
         wp_enqueue_script( 'jquery-ui-widget' );
@@ -193,7 +102,6 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
  */
 
 function get_textbooks( $args = array() ) {
-
     // set defaults
     $defaults = array(
         'hide_empty'    => false,
@@ -210,7 +118,7 @@ function get_textbooks( $args = array() ) {
     $args = wp_parse_args( $args, $defaults );
     $textbooks_for_blog = get_textbooksids_for_current_blog();
 
-    if($args['parent'] ==0)
+    if($args['parent'] ==0 && current_user_can('administrator')==false)
         $args['include']=$textbooks_for_blog;
 
     extract( $args );
@@ -233,8 +141,9 @@ function get_textbooks( $args = array() ) {
 
     //get textbooks for logged in user depending on the class the user belongs to
     //generally used for logged in students
-    else
+    else{
         $textbooks = get_textbooks_for_user( $user_id );
+    }
 
 
     if (is_wp_error( $textbooks ))
@@ -247,8 +156,12 @@ function get_textbooks( $args = array() ) {
         if(isset($args['division']))
             $division = $args['division'];
 
-        foreach ($textbooks as $book)
-            $data[] = get_book( $book,$division );
+        foreach ($textbooks as $book){
+            $book= get_book( $book,$division,$user_id );
+            if($book)
+                $data[]= $book;
+        }
+
 
     }
     $textbooks_data['data'] = $data;
@@ -286,7 +199,7 @@ function get_textbooksids_for_current_blog(){
 
 }
 
-function get_book( $book, $division=0 ) {
+function get_book( $book, $division=0,$user_id=0) {
     global $wpdb;
     $current_blog = get_current_blog_id();
 
@@ -295,6 +208,10 @@ function get_book( $book, $division=0 ) {
     if (is_numeric( $book )) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
+
+        if(!$book_dets)
+            return false;
+
     } else if (is_numeric( $book->term_id )) {
         $book_id = $book->term_id;
         $book_dets = $book;
@@ -317,10 +234,15 @@ function get_book( $book, $division=0 ) {
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
     $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
+    if($division)
+        $module_type = 'teaching-module';
+    else
+        $module_type = 'quiz';
+
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
-            WHERE term_ids LIKE %s AND post_status like %s",
-        array('%"'. $book_id . '";%', 'publish')
+            WHERE term_ids LIKE %s AND post_status like %s AND type like %s",
+        array('%"'. $book_id . '";%', 'publish', $module_type)
     );
     $modules_count = $wpdb->get_row( $modules_count_query );
     $book_dets->modules_count = $modules_count->count;
@@ -347,13 +269,20 @@ function get_book( $book, $division=0 ) {
 
     switch_to_blog( $current_blog );
 
-    if ($division != 0 && $book_dets->parent === 0){
+    if ($division && $book_dets->parent === 0){
         $textbook_status = get_status_for_textbook($book_id, $division);
         $book_dets->chapters_completed = sizeof($textbook_status['completed']);
         $book_dets->chapters_in_progress = sizeof($textbook_status['in_progress']);
         $book_dets->chapters_not_started = sizeof($textbook_status['not_started']);
 
     }
+
+    if($user_id){
+        $quizzes_completed = quizzes_completed_for_textbook($book_id,$user_id);
+        $book_dets->quizzes_completed = $quizzes_completed;
+        $book_dets->quizzes_not_started = $modules_count->count - $quizzes_completed;
+    }
+
 
 
     return $book_dets;
@@ -462,7 +391,8 @@ function get_textbooks_for_class( $classid ) {
         if (is_array( $textbook_ids )) {
             foreach ($textbook_ids as $book) {
                 $bookdets = get_book( $book->textbook_id );
-                $data[] = $bookdets;
+                if($bookdets)
+                    $data[] = $bookdets;
             }
         }
     }
@@ -470,16 +400,49 @@ function get_textbooks_for_class( $classid ) {
 }
 
 function get_assigned_textbooks( $user_id = '' ) {
-
+    
+    global $wpdb;
+    
     if ($user_id == '')
         $user_id = get_current_user_id();
+    
+    if(current_user_can('administrator') || current_user_can('school-admin')){
 
-    $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
+        switch_to_blog(1);
+        $txtbook_ids = get_terms(
+                'textbook', 
+                array(
+                    'hide_empty'=>false, 
+                    'fields'=>'ids')
+                );
+        restore_current_blog();
+    }
+    
+    elseif(current_user_can('student')){
+        
+        $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
+        $division = fetch_single_division($division_id);
+        
+        $class_id= $division['class_id'];
+        
+        $query= $wpdb->prepare(
+                "SELECT textbook_id from {$wpdb->base_prefix}textbook_relationships 
+                    WHERE class_id like %s",
+                '%"'.$class_id.'";%'
+                );
+                
+        $txtbook_ids= $wpdb->get_col($query);
+        
+    }
+    
+    else{
 
-    $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
+        $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
 
+        $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
+    }
+    
     return $txtbook_ids;
-
 }
 
 /**
@@ -492,11 +455,11 @@ function get_textbooks_for_user( $user_id = '' ) {
     $data = array();
 
     $txtbooks_assigned = get_assigned_textbooks( $user_id );
-
     if (is_array( $txtbooks_assigned )) {
         foreach ($txtbooks_assigned as $book) {
-            $bookdets = get_book( $book->textbook_id );
-            $data[] = $bookdets;
+            $bookdets = get_book( $book );
+            if($bookdets)
+                $data[] = $bookdets;
         }
     }
     return $data;

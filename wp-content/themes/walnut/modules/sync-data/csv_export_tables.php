@@ -10,11 +10,12 @@
  * @param string $blog_id
  * @param string $last_sync if blank returns full data in the tables mentioned in get_tables_to_export function
  * if mentioned, returns the data from that time forward
+ * @param string $device_type uniques device type for app|'standalone' for a standalone site 
  * @param string $user_id # todo: sync by textbook id. Its not going to be by user
  * @return mixed
  */
 
-function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
+function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_id=''){
 
     if($blog_id=='')
         $blog_id=get_current_blog_id();
@@ -51,6 +52,8 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
 
     $export_details = array();
 
+    $export_details['blog_expired'] = is_blog_expired($blog_id);
+    
     if($result === false){
         $export_details['error'] = true;
         $export_details['message'] = 'Failed to create export file';
@@ -59,8 +62,26 @@ function export_tables_for_app($blog_id='', $last_sync='', $user_id=''){
         $uploaded_url= $upload_url.$upload_path;
         $export_details['exported_csv_url'] = $uploaded_url;
         $export_details['last_sync']=date('Y-m-d h:i:s');
+        create_sync_device_log($blog_id,$device_type,$export_details['last_sync'],$user_id);
     }
     return $export_details;
+}
+
+function is_blog_expired($blog_id){
+   $current_blog= get_current_blog_id(); 
+   switch_to_blog($blog_id);
+   
+   $blog_meta = get_option('blog_meta');
+   $blog_meta_array = maybe_unserialize($blog_meta);
+   
+   switch_to_blog($current_blog);
+   if($blog_meta_array['validto'] != ''){
+       if(strtotime('+24 hours',strtotime($blog_meta_array['validto'])) < time()){
+           return true;
+       }
+   }
+   
+   return false; 
 }
 
 // this function takes an array of tablenames as argument and makes an array of csv data for each table
@@ -139,11 +160,13 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
     // POST, POST META, COLLECCTION and COLLECTION META TABLES ARE FETCHED BASED ON LAST SYNCED
 
     if(!$last_sync){
+
+        $tables_list[]= get_posts_table_query();
+        $tables_list[]= get_postmeta_table_query();
+
         //IF LAST SYNC TIME IS EMPTY JUST PASSING TABLE NAMES GETS ALL RECORDS IN TABLES
         array_push(
             $tables_list,
-            "{$wpdb->base_prefix}posts",
-            "{$wpdb->base_prefix}postmeta",
             "{$wpdb->base_prefix}content_collection",
             "{$wpdb->base_prefix}collection_meta"
         );
@@ -256,17 +279,22 @@ function get_posts_table_query($last_sync='', $user_id=''){
 
     global $wpdb;
 
-    if(!$last_sync)
-        return false;
-
     if($user_id)
         $user_content_pieces=get_content_pieces_for_user($user_id);
 
-    $posts_table_query=$wpdb->prepare(
-        "SELECT * FROM {$wpdb->base_prefix}posts
-                WHERE post_modified > '%s'",
-        $last_sync
-    );
+    if($last_sync != '')
+        $posts_table_query=$wpdb->prepare(
+            "SELECT * FROM {$wpdb->base_prefix}posts
+                    WHERE post_type <> %s AND post_modified > '%s'",
+            array('page', $last_sync)
+        );
+
+    else 
+        $posts_table_query=$wpdb->prepare(
+            "SELECT * FROM {$wpdb->base_prefix}posts
+                    WHERE  post_type <> %s",
+            'page'
+        );
 
     $posts_table= array(
         'query'=> $posts_table_query,
@@ -280,47 +308,37 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
 
     global $wpdb;
 
-    if(!$last_sync)
-        return false;
-
-    // set it so that empty file is generated if no records are to be sent
-    $meta_ids_str = $post_ids_str = -1;
-
-    $element_metas=$wpdb->prepare(
-        "SELECT p.ID, pm.meta_value as layout FROM
-        {$wpdb->base_prefix}posts p, {$wpdb->base_prefix}postmeta pm
-        WHERE p.post_modified > %s AND p.ID = pm.post_id AND pm.meta_key like %s",
-        array($last_sync,'layout_json')
-    );
-
-    $elements= $wpdb->get_results($element_metas, ARRAY_A);
-
-    $post_ids= __u::pluck($elements, 'ID');
-
-    if($post_ids)
-        $post_ids_str=join(',',$post_ids);
-
-    $layouts =  __u::pluck($elements, 'layout');
-
-    foreach($layouts as $ele){
-        $layout = maybe_unserialize($ele);
-        $layout = maybe_unserialize($layout);
-
-        $meta_ids= array();
-        foreach($layout as $l){
-            $meta_ids= get_meta_ids($l, $meta_ids);
-        }
-
-        if(sizeof($meta_ids>0))
-            $meta_ids_str = join(',',__u::compact($meta_ids));
+    if($last_sync == ''){
+        $postmeta_table_query="SELECT * FROM {$wpdb->base_prefix}postmeta";
+        
     }
+    else{
+        $post_ids_query = $wpdb->prepare(
+                "SELECT DISTINCT p.ID FROM
+                {$wpdb->base_prefix}posts p, {$wpdb->base_prefix}postmeta pm
+                WHERE p.post_modified > %s 
+                    AND p.ID = pm.post_id
+                    AND p.post_status in ('publish','archive')",
+                array($last_sync)
+            );
 
-    $postmeta_table_query=$wpdb->prepare(
-        "SELECT * FROM {$wpdb->base_prefix}postmeta
-                WHERE post_id in ($post_ids_str)
-                OR meta_id in ($meta_ids_str)",
-        null
-    );
+        $post_ids= $wpdb->get_col($post_ids_query);
+
+        if($post_ids)
+            $post_ids_str=join(',', $post_ids);
+        else
+            $post_ids_str=-1;
+
+        $meta_ids_str = get_meta_ids_str($last_sync);
+        
+        if(!$meta_ids_str)
+            $meta_ids_str = -1;
+        
+        $postmeta_table_query="SELECT * FROM {$wpdb->base_prefix}postmeta
+                    WHERE post_id in ($post_ids_str)
+                    OR meta_id in ($meta_ids_str)";
+            
+    }    
 
     $postmeta_table= array(
         'query'=> $postmeta_table_query,
@@ -329,6 +347,42 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
 
     return $postmeta_table;
 }
+
+
+function get_meta_ids_str($last_sync){
+
+    global $wpdb;
+
+    $element_metas=$wpdb->prepare(
+        "SELECT pm.meta_value as layout FROM
+        {$wpdb->base_prefix}posts p, {$wpdb->base_prefix}postmeta pm
+        WHERE p.post_modified > %s AND p.ID = pm.post_id AND pm.meta_key like %s",
+        array($last_sync,'layout_json')
+    );
+
+    $layouts= $wpdb->get_col($element_metas);
+
+    if(is_array($layouts)){
+        $meta_ids= array();
+        foreach($layouts as $ele){
+            $layout = maybe_unserialize($ele);
+            $layout = maybe_unserialize($layout);
+
+            if($layout){
+                foreach($layout as $l){
+                    $meta_ids= get_meta_ids($l, $meta_ids);
+                }
+            }
+        }
+    }
+
+    if(sizeof($meta_ids>0))
+        $meta_ids_str = join(',',__u::compact($meta_ids));
+
+    return $meta_ids_str;
+
+}
+
 
 function get_meta_ids($layout, &$meta_ids)
 {
@@ -580,4 +634,16 @@ function create_zip($files = array(),$destination = '',$overwrite = false) {
 
     return $destination;
 
+}
+
+/*
+ * insert device sync log entry on every sync
+ */
+function create_sync_device_log($blog_id,$device_type,$last_sync,$user_id){
+    global $wpdb;
+
+    $device_meta = array('user_id' => $user_id);
+    $record_data = array('blog_id'=>$blog_id,'device_type'=>$device_type,'sync_date' =>$last_sync,'meta' => maybe_serialize($device_meta)); 
+    $wpdb->insert( $wpdb->base_prefix . "sync_device_log", $record_data );
+    
 }

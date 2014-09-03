@@ -7,21 +7,21 @@ define ['app'],(App)->
 
             className: 'panel panel-default moveable'
 
-            template: '<div class="panel-heading">
-                              <a class="accordion-toggle">
-                                <div class="aj-imp-image-item row">
-
-                                    <a class="thumbnail col-sm-8">
-                                    <div class="imaTitle"><span>{{title_show}}</span></div>
-
-                                    </a>
-
-                                    <div class="imgactions col-sm-4">
-                                        <a class="remove-media" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete Image</a>
+            template: '<div class="accordion-toggle">
+                            <div class="aj-imp-image-item row">
+                                <div class="col-sm-8">
+                                    <div class="thumbnail m-b-5">
+                                        <div class="imaTitle"><span>{{title_show}}</span></div>
                                     </div>
                                 </div>
-                              </a>
-                            </div>'
+
+                                <div class="col-sm-4">
+                                    <div class="imgactions">
+                                        <a class="remove-media text-error" title="Delete Media"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete {{mediaType}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>'
 
             events:
 
@@ -34,6 +34,7 @@ define ['app'],(App)->
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.title_show = _.prune data.title, 50
+                data.mediaType = Marionette.getOption @,'mediaType'
                 data
 
             onRender: ->
@@ -41,12 +42,17 @@ define ['app'],(App)->
 
         class NoMediaView extends Marionette.ItemView
 
-            template: '<div class="alert">No media found. Please add media.</div>'
+            template: '<div class="alert">No {{mediaType}} found. Please add {{mediaType}}.</div>'
+
+            mixinTemplateHelpers :(data)->
+                data = super data
+                data.mediaType = Marionette.getOption @,'mediaType'
+                data
 
 
         class Views.MediaListView extends Marionette.CompositeView
 
-            template: '<div class="aj-imp-image-header row">
+            template: '<div class="aj-imp-image-header m-b-10 row">
 
                             <div class="col-sm-8">
                                 File Name
@@ -60,6 +66,9 @@ define ['app'],(App)->
             itemView: MediaView
 
             emptyView: NoMediaView
+
+            itemViewOptions : ->
+                mediaType : Marionette.getOption @,'mediaType'
 
             itemViewContainer: '#media-accordion'
 

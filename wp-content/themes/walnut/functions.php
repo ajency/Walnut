@@ -19,6 +19,7 @@ require_once 'modules/sync-data/sync-data-ajax.php';
 require_once 'modules/communications/ajax.php';
 require_once 'modules/quiz/ajax.php';
 require_once 'custom_configs.php';
+require_once 'modules/school/school_data_import.php';
 
 
 add_theme_support( 'menus' );
@@ -45,13 +46,25 @@ function upload_attachment( $file_handler, $post_id, $set_thumb = 'false' ) {
 }
 
 
-// define empty functions for standalone installation to ignore multisite functions
 if (!is_multisite()) {
 
+    // define empty functions for standalone installation to ignore multisite functions
     function switch_to_blog(){}
     function restore_current_blog(){}
     function get_blog_option(){}
     function get_active_blog_for_user(){}
     function get_blog_details(){}
 
+    // function to replace media urls incase of standalone site
+    function replace_media_urls($url){
+
+        $url = str_replace(REMOTE_SERVER_URL, get_site_url(), $url);
+        $url = str_replace('media-web/videos-web', 'videos', $url);
+        $url = str_replace('media-web/audio-web', 'audios', $url);
+
+        return $url;
+
+    }
+
 }
+

@@ -20,7 +20,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
       OptionsBarController.prototype.initialize = function(options) {
         this.contentPieceModel = options.contentPieceModel;
         this.view = this._getOptionsBarView();
-        this.textbooksCollection = App.request("get:textbooks");
+        this.textbooksCollection = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
         this.listenTo(this.view, "save:data:to:model", (function(_this) {
           return function(data) {

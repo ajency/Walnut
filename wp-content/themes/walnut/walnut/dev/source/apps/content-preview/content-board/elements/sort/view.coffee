@@ -54,9 +54,13 @@ define ['app'], (App)->
 
                 @_changeHeight @sort_model, @sort_model.get 'height'
 
+                displayAnswer = true
+
+                if Marionette.getOption(@, 'displayAnswer') is false
+                    displayAnswer = false
 
                 @$el.closest('.preview').find('#submit-answer-button').on 'click', =>
-                    @trigger "submit:answer"
+                    @trigger "submit:answer" if displayAnswer
 
 
 

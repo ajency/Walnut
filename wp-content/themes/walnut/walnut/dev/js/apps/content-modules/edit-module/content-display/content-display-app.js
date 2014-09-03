@@ -10,6 +10,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       function CollectionEditContentDisplayController() {
         this.saveContentPieces = __bind(this.saveContentPieces, this);
+        this.contentOrderChanged = __bind(this.contentOrderChanged, this);
         this.contentPiecesChanged = __bind(this.contentPiecesChanged, this);
         return CollectionEditContentDisplayController.__super__.constructor.apply(this, arguments);
       }
@@ -17,10 +18,10 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       CollectionEditContentDisplayController.prototype.initialize = function(opts) {
         var view;
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
-        this.view = view = this._getCollectionContentDisplayView(this.model, this.contentGroupCollection);
-        this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:added', this.contentPiecesChanged);
-        this.listenTo(this.contentGroupCollection, 'content:pieces:of:group:removed', this.contentPiecesChanged);
-        this.listenTo(view, 'changed:order', this.saveContentPieces);
+        this.view = view = this._getCollectionContentDisplayView();
+        this.listenTo(this.contentGroupCollection, 'add remove', this.contentPiecesChanged);
+        this.listenTo(view, 'changed:order', this.contentOrderChanged);
+        this.listenTo(this.view, 'remove:model:from:quiz', this.removeModelFromQuiz);
         if (this.contentGroupCollection.length > 0) {
           return App.execute("when:fetched", this.contentGroupCollection.models, (function(_this) {
             return function() {
@@ -37,13 +38,63 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       };
 
       CollectionEditContentDisplayController.prototype.contentPiecesChanged = function() {
-        var contentIDs;
-        contentIDs = this.contentGroupCollection.pluck('ID');
-        return this.saveContentPieces(contentIDs);
+        var content;
+        if (this.model.get('type') === 'quiz') {
+          content = this.contentGroupCollection.map(function(quizContent) {
+            if (quizContent.get('post_type') === 'content-piece') {
+              return {
+                type: 'content-piece',
+                id: quizContent.get('ID')
+              };
+            } else {
+              return {
+                type: 'content_set',
+                data: quizContent.toJSON()
+              };
+            }
+          });
+        } else {
+          content = this.contentGroupCollection.pluck('ID');
+        }
+        return this.saveContentPieces(content);
       };
 
-      CollectionEditContentDisplayController.prototype.saveContentPieces = function(contentIDs) {
-        this.model.set('content_pieces', contentIDs);
+      CollectionEditContentDisplayController.prototype.contentOrderChanged = function(ids) {
+        var content;
+        if (this.model.get('type') === 'quiz') {
+          content = new Array();
+          _.each(ids, (function(_this) {
+            return function(id) {
+              var setModel;
+              if (_.str.include(id, 'set')) {
+                setModel = _this.contentGroupCollection.findWhere({
+                  'id': id
+                });
+                return content.push({
+                  type: 'content_set',
+                  data: setModel.toJSON()
+                });
+              } else {
+                return content.push({
+                  type: 'content-piece',
+                  id: parseInt(id)
+                });
+              }
+            };
+          })(this));
+        } else {
+          content = ids;
+        }
+        return this.saveContentPieces(content);
+      };
+
+      CollectionEditContentDisplayController.prototype.saveContentPieces = function(content) {
+        if (this.model.get('type') === 'teaching-module') {
+          this.model.set('content_pieces', content);
+        }
+        if (this.model.get('type') === 'quiz') {
+          this.model.set('content_layout', content);
+        }
         return this.model.save({
           'changed': 'content_pieces'
         }, {
@@ -51,11 +102,23 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
         });
       };
 
-      CollectionEditContentDisplayController.prototype._getCollectionContentDisplayView = function(model, collection) {
+      CollectionEditContentDisplayController.prototype._getCollectionContentDisplayView = function() {
         return new ContentDisplayView({
-          model: model,
-          collection: collection
+          model: this.model,
+          collection: this.contentGroupCollection
         });
+      };
+
+      CollectionEditContentDisplayController.prototype.removeModelFromQuiz = function(id) {
+        var setModel;
+        if (_.str.include(id, 'set')) {
+          setModel = this.contentGroupCollection.findWhere({
+            'id': id
+          });
+          return this.contentGroupCollection.remove(setModel);
+        } else {
+          return this.contentGroupCollection.remove(parseInt(id));
+        }
       };
 
       return CollectionEditContentDisplayController;
@@ -74,8 +137,45 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
 
       ContentItemView.prototype.className = 'sortable';
 
+      ContentItemView.prototype.mixinTemplateHelpers = function(data) {
+        var i, lvl, _i;
+        data = ContentItemView.__super__.mixinTemplateHelpers.call(this, data);
+        if (data.post_type === 'content-piece') {
+          data.isContentPiece = true;
+        }
+        if (data.post_type === 'content_set') {
+          data.isSet = true;
+          data.contentLevels = new Array();
+          for (i = _i = 1; _i <= 3; i = ++_i) {
+            lvl = parseInt(data["lvl" + i]);
+            while (lvl > 0) {
+              data.contentLevels.push("Level " + i);
+              lvl--;
+            }
+          }
+        }
+        if (this.groupType === 'quiz') {
+          data.isQuiz = true;
+        }
+        if (this.groupType === 'teaching-module') {
+          data.isModule = true;
+        }
+        if (this.groupType === 'quiz' && data.post_type === 'content-piece') {
+          data.marks = this.model.getMarks();
+        }
+        return data;
+      };
+
+      ContentItemView.prototype.initialize = function() {
+        return this.groupType = Marionette.getOption(this, 'groupType');
+      };
+
       ContentItemView.prototype.onShow = function() {
-        return this.$el.attr('id', this.model.get('ID'));
+        if (this.model.get('post_type') === 'content_set') {
+          return this.$el.attr('id', this.model.get('id'));
+        } else {
+          return this.$el.attr('id', this.model.get('ID'));
+        }
       };
 
       return ContentItemView;
@@ -98,6 +198,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       ContentDisplayView.prototype.className = 'col-md-10';
 
       ContentDisplayView.prototype.id = 'myCanvas-miki';
+
+      ContentDisplayView.prototype.itemViewOptions = function() {
+        return {
+          groupType: this.model.get('type')
+        };
+      };
 
       ContentDisplayView.prototype.events = {
         'click .remove': 'removeItem'
@@ -133,7 +239,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/edit-
       ContentDisplayView.prototype.removeItem = function(e) {
         var id;
         id = $(e.target).closest('.contentPiece').attr('data-id');
-        return this.collection.remove(parseInt(id));
+        return this.trigger('remove:model:from:quiz', id);
       };
 
       return ContentDisplayView;

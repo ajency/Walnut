@@ -67,6 +67,30 @@ define ['app'], (App)->
 
                 @$el.closest('.preview').find('#submit-answer-button').on 'click', =>
                     @trigger "submit:answer"
+            
+                @_autoPopulateAnswers()
+
+
+            _autoPopulateAnswers:=>
+                answerModel = Marionette.getOption @, 'answerModel'
+                if answerModel and answerModel.get('status') isnt 'not_attempted'
+                    answerArray = answerModel.get 'answer'
+                    _.each answerArray, (ans,index)=>
+
+                        if _.str.include(ans.id, "option")
+
+                            optionModel = _.find @optionLayer.getChildren(),(option)=>
+                                    if option.attrs.id is ans.id
+                                        return true
+                                    else return false #@optionCollection.get ans.id
+                            if not @model.get 'transparent'
+                                @_setBlinker(optionModel)
+                            else
+                                @_setBlinker(null, ans)
+                        else
+                            @_setBlinker(null, ans)
+
+                    @trigger "submit:answer" if Marionette.getOption @, 'displayAnswer'
 
             # the handler for all click events
             # iterate thru each option defined
@@ -145,6 +169,7 @@ define ['app'], (App)->
                             opacity : 0.5
                             fill : 'blue'
                             rotation : option.rotation()
+
                     # if not a visible option
                 else
                     blinker = new Kinetic.Circle

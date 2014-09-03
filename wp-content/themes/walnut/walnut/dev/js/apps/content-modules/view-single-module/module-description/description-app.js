@@ -58,7 +58,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
         return {
           showElapsedTime: (function(_this) {
             return function() {
-              var display_time, hours, mins, seconds, time, timeTakenArray, totalTimeTakenForModule;
+              var display_time, timeTakenArray, totalTimeTakenForModule;
               timeTakenArray = _this.questionResponseCollection.pluck('time_taken');
               totalTimeTakenForModule = 0;
               if (_.size(timeTakenArray) > 0) {
@@ -66,20 +66,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
                   return parseInt(memo + parseInt(num));
                 });
               }
-              hours = 0;
-              time = totalTimeTakenForModule;
-              mins = parseInt(totalTimeTakenForModule / 60);
-              if (mins > 59) {
-                hours = parseInt(mins / 60);
-                mins = parseInt(mins % 60);
-              }
-              seconds = parseInt(time % 60);
-              display_time = '';
-              if (hours > 0) {
-                display_time = hours + 'h ';
-              }
-              display_time += mins + 'm ' + seconds + 's';
-              return display_time;
+              return display_time = $.timeMinSecs(totalTimeTakenForModule);
             };
           })(this),
           getProgressData: function() {
@@ -166,7 +153,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       CollectionDetailsView.prototype.startModule = function() {
         var currentRoute;
-        _.audioQueuesSelection('Click-Start');
+        if (_.platform() === 'DEVICE') {
+          _.audioQueuesSelection('Click-Start');
+        }
         currentRoute = App.getCurrentRoute();
         return this.trigger("start:teaching:module");
       };

@@ -45,7 +45,20 @@ function get_site_media($query, $search_string=''){
 	$posts = array_map( 'wp_prepare_attachment_for_js', $query->posts );
 	$posts = array_filter( $posts );
 
-	return $posts;	
+	$media=array();
+
+    foreach($posts as $p){
+
+        if(current_user_can( 'edit_post', $p['id'] )){
+            $edit_nonce=wp_create_nonce( 'image_editor-' . $p['id'] );
+            $p['nonces']['edit']=$edit_nonce;
+            $media[]=$p;
+        }
+    }
+
+
+
+    return $media;
 }
 
 function update_media( $data, $media_id = 0 ) {
@@ -89,13 +102,18 @@ function media_encrypt_files() {
 add_filter( 'admin_init', 'media_encrypt_files', 100);
 
 function encrypt_media_files($media_files){
+    
+    #setting memory limit to infinite for videos conversion.
+    ini_set('memory_limit', '-1');
+    ini_set('max_memory_limit', '-1');
+
     $mediatype =array('audios','videos');
     foreach($media_files as $filepath){
         $parse_file_path = parse_url($filepath);
         $pathinfo = explode('/', $parse_file_path['path']);
         $count_pathinfo = count($pathinfo);
 
-        if($pathinfo[$count_pathinfo-2] == 'audios-web'){
+        if($pathinfo[$count_pathinfo-2] == 'audio-web'){
            $enc_media_type = $mediatype[0];
         }
         elseif($pathinfo[$count_pathinfo-2] == 'videos-web'){

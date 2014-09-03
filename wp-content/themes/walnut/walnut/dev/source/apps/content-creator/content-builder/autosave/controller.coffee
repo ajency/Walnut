@@ -19,6 +19,7 @@ define ['app'], (App)->
                 #localStorage.setItem 'layout',JSON.stringify _json
 
                 data = contentPieceModel.toJSON()
+                delete data.layout
                 data.action = 'save-content-piece-json'
                 data.json = _json
 
@@ -28,16 +29,31 @@ define ['app'], (App)->
                     data : data
 
 
-                $.ajax(options).done (response)->
-                    contentPieceModel.set 'ID' : response.ID
+                if @_checkIfMarksEntered()
+                    $.ajax(options).done (response)->
+                        contentPieceModel.set 'ID' : response.ID
 
-                    $('#saved-successfully').remove()
+                        $('#save-failure').remove()
+                        $('#saved-successfully').remove()
 
-                    $ ".page-title"
-                    .before '<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>'
+                        $ ".page-title"
+                        .before '<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>'
 
-                .fail (resp)->
-                        console.log 'error'
+                    .fail (resp)->
+                            console.log 'error'
+
+            _checkIfMarksEntered :->
+                elements = App.mainContentRegion.$el.find('#myCanvas').find '.element-wrapper'
+                _.every elements, (element)->
+                    if $(element).find('form input[name="element"]').val() in ['Fib','Mcq','Sort','Hotspot','BigAnswer'] and $(element).find('form input[name="complete"]').val() is 'false'
+                        $('#saved-successfully').remove()
+                        $('#save-failure').remove()
+                        $(".page-title").before '<div id="save-failure" style="text-align:center;"
+                            class="alert alert-failure">Ensure you have set the marks and added valid answers to save the question</div>'
+                        return false
+                    else
+                        return true
+
 
             # get the json
             _getPageJson : ($site)->

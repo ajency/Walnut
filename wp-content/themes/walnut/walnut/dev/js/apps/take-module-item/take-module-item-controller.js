@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+            if (contentPiece.get('content_type') === 'content_piece') {
               return _this._showTeacherTrainingFooter();
             } else {
               return _this._showStudentsListView(questionResponseModel);
@@ -71,7 +71,10 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);
-          if (this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+          if (contentPiece.get('question_type') === 'multiple_eval') {
+            this.layout.studentsListRegion.close();
+          }
+          if (contentPiece.get('content_type') === 'content_piece') {
             return this._showTeacherTrainingFooter();
           } else {
             return this._showStudentsListView(questionResponseModel);
@@ -183,16 +186,23 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       TeacherTeachingController.prototype._showQuestionDisplayView = function(model) {
-        return App.execute("show:content:preview", {
-          region: this.layout.questionsDetailsRegion,
-          model: model,
-          textbookNames: this.textbookNames,
-          questionResponseModel: questionResponseModel,
-          timerObject: this.timerObject,
-          display_mode: this.display_mode,
-          classID: this.classID,
-          students: studentCollection
-        });
+        if (!questionResponseModel) {
+          this._getOrCreateModel(model.ID);
+        }
+        return App.execute("when:fetched", questionResponseModel, (function(_this) {
+          return function() {
+            return App.execute("show:content:preview", {
+              region: _this.layout.questionsDetailsRegion,
+              model: model,
+              textbookNames: _this.textbookNames,
+              questionResponseModel: questionResponseModel,
+              timerObject: _this.timerObject,
+              display_mode: _this.display_mode,
+              classID: _this.classID,
+              students: studentCollection
+            });
+          };
+        })(this));
       };
 
       TeacherTeachingController.prototype._showStudentsListView = function(questionResponseModel) {

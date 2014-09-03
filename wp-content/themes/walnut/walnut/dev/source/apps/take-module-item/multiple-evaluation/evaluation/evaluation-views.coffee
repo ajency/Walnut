@@ -33,8 +33,10 @@ define ['app'], (App)->
 					@$el.find("button##{@responseObj[@model.get('id')]}").removeClass('btn-white').addClass('btn-primary')
 
 			_buttonClicked : (e)->
-				_.audioQueuesSelection 'Click-Select'
-				if @display_mode is 'class_mode'
+
+				_.audioQueuesSelection('Click-Select') if _.platform() is 'DEVICE'
+
+				if @display_mode isnt 'readonly'
 					if $(e.target).closest('button').hasClass('btn-primary')
 						@$el.find('button.btn-primary').removeClass('btn-primary').addClass('btn-white')
 						delete @responseObj[@model.get('id')]
@@ -58,11 +60,11 @@ define ['app'], (App)->
 													</div>
 													<div id="evaluation-collection">
 													</div>
-													{{#class_mode}}
+													{{#showButtons}}
 													<div class="row m-r-0 m-l-0 p-t-10">
 														<button class="btn btn-info h-center block" id="saveEval">Save</button>
 													</div>
-													{{/class_mode}}
+													{{/showButtons}}
 													</div>'
 
 			itemView : EvaluationItemView
@@ -75,7 +77,7 @@ define ['app'], (App)->
 
 			mixinTemplateHelpers : (data)->
 				data = super data
-				data.class_mode = true if Marionette.getOption(@, 'display_mode') is 'class_mode'
+				data.showButtons = true if Marionette.getOption(@, 'display_mode') isnt 'readonly'
 				data.studentName = @studentModel.get 'display_name'
 				data
 
@@ -97,8 +99,10 @@ define ['app'], (App)->
 				@$el.slideDown()
 
 			_saveEvalParameters : ->
-				_.audioQueuesSelection 'Click-Save'
-				if _.size(@responseObj) > 1
+
+				_.audioQueuesSelection('Click-Save') if _.platform() is 'DEVICE'
+
+				if _.size(@responseObj) > 1 and Marionette.getOption(@, 'display_mode') is 'class_mode'
 					@trigger "save:eval:parameters"
 
 			_closeEvalParams : ->

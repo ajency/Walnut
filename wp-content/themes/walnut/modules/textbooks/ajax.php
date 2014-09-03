@@ -1,6 +1,7 @@
 <?php
 
 require_once 'functions.php';
+require_once 'additional-textbook-fields.php';
 
 add_action( 'wp_ajax_get-textbooks', 'fetch_textbooks' );
 add_action( 'wp_ajax_get-chapters', 'fetch_textbooks' );
@@ -9,10 +10,12 @@ function fetch_textbooks() {
     
     $args=$_GET;
     
-    $defaults = array(
-            'parent' => 0,
-            'fetch_all' => ($_GET['class_id'])?false:true
-        );
+    $defaults['parent']= 0;
+    
+    if(isset($_GET['parent']))
+      $defaults['fetch_all']= true;
+
+
     $args = wp_parse_args($args, $defaults);
     $textbooks=get_textbooks($args);
     

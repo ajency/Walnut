@@ -20,7 +20,19 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
         'click a': function(e) {
           return e.preventDefault();
         },
-        'click': '_whenImageClicked'
+        'click': '_whenImageClicked',
+        'click .delete-media-img': function() {
+          if (confirm("Delete image?")) {
+            return this.trigger("delete:media:image", this.model);
+          }
+        },
+        'click .edit-image': function() {
+          return this.trigger('show:image:editor', this.model);
+        }
+      };
+
+      MediaView.prototype.modelEvents = {
+        'change': 'render'
       };
 
       MediaView.prototype.mixinTemplateHelpers = function(data) {
@@ -102,7 +114,8 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
               _this._changeChildClass('List');
             }
             _this.$el.closest('.tab-content').siblings('.nav-tabs').find('.all-media-tab').find('a').trigger('click');
-            return imageView.$el.find('img').trigger('click');
+            imageView.$el.find('img').trigger('click');
+            return _this.$el.find('#selectable-images').selectSelectableElements(imageView.$el);
           };
         })(this));
         if (!this.collection.isEmpty() || mediaType === 'image') {
@@ -123,9 +136,13 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
         if (this.multiSelect) {
           return this.$el.find('#selectable-images').bind("mousedown", function(e) {
             return e.metaKey = true;
-          }).selectable();
+          }).selectable({
+            cancel: '.delete-media-img'
+          });
         } else {
-          return this.$el.find('#selectable-images').selectable();
+          return this.$el.find('#selectable-images').selectable({
+            cancel: '.delete-media-img'
+          });
         }
       };
 
@@ -155,6 +172,21 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
       GridView.prototype.onMediaCollectionFetched = function(coll) {
         this.collection = coll;
         return this.render();
+      };
+
+      GridView.prototype.onShowEditImage = function(editView) {
+        this.$el.find('#show-image').hide();
+        this.$el.find('#edit-image-view').html(editView.render().$el).show();
+        return editView.triggerMethod('show');
+      };
+
+      GridView.prototype.onImageEditingCancelled = function() {
+        var self;
+        self = this;
+        return this.$el.find('#edit-image-view').fadeOut('fast', function() {
+          $(this).empty();
+          return self.$el.find('#show-image').show();
+        });
       };
 
       return GridView;

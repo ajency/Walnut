@@ -38,7 +38,7 @@ define ['app'], (App)->
 
 			className: 'studentList m-t-10'
 
-			template: '{{#class_mode}}
+			template: '{{#showButtons}}
 						<div id="select-an-item" class="studentActions p-t-10 p-b-10">
 							<h3 class="no-margin semi-bold muted">Select a student to grade</h3>
 						</div>
@@ -50,7 +50,7 @@ define ['app'], (App)->
 											<i class="fa fa-minus-circle"></i> Unselect Answer
 										</button>
 									</div>
-									{{/class_mode}}
+									{{/showButtons}}
 									<div class="clearfix"></div>
 									<div class="row students m-l-0 m-r-0 m-t-20" id="students-list">
 
@@ -69,14 +69,14 @@ define ['app'], (App)->
 
 			serializeData: ->
 				data = super()
-				if Marionette.getOption(@, 'display_mode') is 'class_mode'
-					data.class_mode = true
+				if Marionette.getOption(@, 'display_mode') isnt 'readonly'
+					data.showButtons = true
 
 				data
 
 			onShow: ->
 
-				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+				if Marionette.getOption(@, 'display_mode') isnt 'readonly'
 					$(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
 				else
@@ -86,10 +86,6 @@ define ['app'], (App)->
 				if not Marionette.getOption(@, 'nextItemID')
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
-
-				@$el.find '.listNav a'
-				.removeAttr 'href'
-				.css 'pointer','cursor'
 
 				$ ".students"
 				.listnav
@@ -110,10 +106,8 @@ define ['app'], (App)->
 					if _.contains(@correctAnswers, eleValue)
 						@markAsCorrectAnswer ele
 
-
-
 			selectStudent: (e)->
-				
+
 				@$el.find '#select-an-item'
 				.remove()
 
@@ -121,7 +115,9 @@ define ['app'], (App)->
 				.show()
 
 				$(e.target).closest('.tiles.single').toggleClass "selected"
+
 				if _.platform() is "DEVICE"
+					
 					if $(e.target).closest('.tiles.single').hasClass("selected")
 						_.audioQueuesSelection 'Click-Select'
 					else
@@ -129,9 +125,11 @@ define ['app'], (App)->
 
 
 			addToCorrectList: =>
+
 				if _.platform() is "DEVICE"
 					_.audioQueuesSelection 'Click-Select'
-					navigator.notification.vibrate(1000);
+					navigator.notification.vibrate(50)
+
 				selectedStudents = @$el.find '.tiles.single.selected'
 
 				for student in selectedStudents
@@ -139,7 +137,10 @@ define ['app'], (App)->
 					@markAsCorrectAnswer student
 
 				@correctAnswers = _.uniq @correctAnswers
-				@trigger "save:question:response", @correctAnswers
+
+				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+					@trigger "save:question:response", @correctAnswers
+
 
 			markAsCorrectAnswer: (student)->
 				$(student).removeClass 'selected'
@@ -151,9 +152,11 @@ define ['app'], (App)->
 									.addClass 'fa-check-circle'
 
 			removeFromCorrectList: ->
+
 				if _.platform() is "DEVICE"
 					_.audioQueuesSelection 'Click-Unselect'
-					navigator.notification.vibrate(1000);
+					navigator.notification.vibrate(50)
+
 				selectedStudents = @$el.find '.tiles.single.selected'
 
 				for student in selectedStudents

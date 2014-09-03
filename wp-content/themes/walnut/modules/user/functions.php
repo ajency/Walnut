@@ -9,10 +9,21 @@ function authenticate_login( $data ) {
         return array( "error" => "Invalid Username or Password" );
 
     else {
+        
+        $current_blog= get_current_blog_id();
+
+        $response_data['blog_details'] = get_primary_blog_details( $login_check->ID );
+
+        if($response_data['blog_details']['blog_id'] != $current_blog){
+            switch_to_blog($response_data['blog_details']['blog_id']);
+            $login_check = get_userdata($login_check->ID);
+        }
+
+        $login_check->division = get_user_meta($login_check->ID,'student_division',true);
 
         $response_data['login_details'] = $login_check;
 
-        $response_data['blog_details'] = get_primary_blog_details( $login_check->ID );
+        restore_current_blog();
 
         return $response_data;
     }
@@ -29,14 +40,21 @@ function get_primary_blog_details( $user_id = '' ) {
 
     switch_to_blog( $blog->blog_id );
 
+    $blog_user_data = new WP_User($user_id);
+  	
     $blog_logo = wp_get_attachment_thumb_url( $blog_logo_id );
 
     $blog_data = array(
         'blog_id' => $blog->blog_id,
         'blog_name' => $blog->blogname,
         'blog_logo' => $blog_logo,
-        'site_url' => $blog->siteurl
+        'site_url' => $blog->siteurl,
+        'blog_roles' =>$blog_user_data->roles
     );
+    
+    if (!is_multisite()) 
+        $blog_data['site_url']=get_site_url();
+    
     return $blog_data;
 }
 
@@ -104,6 +122,10 @@ function user_extend_profile_fields($user){
       else{
          $user_divisions = array_map('intval', $user_divisions);
       }     
+      $hide_textbooks="style='display:none'";
+      if(user_can($user->ID,'teacher'))
+        $hide_textbooks= "";
+      
       switch_to_blog(1);
 ?> 
     
@@ -114,7 +136,7 @@ function user_extend_profile_fields($user){
 
         <td>
             <div>
-            <ul clsss="textbooks-list">
+            <ul class="textbooks-list" <?=$hide_textbooks?>>
     <?php
 
 
@@ -160,7 +182,7 @@ function user_extend_profile_fields($user){
 
         <td>
             <div>
-            <ul clsss="divisions-list">
+            <ul class="divisions-list">
     <?php
         restore_current_blog();
         $divisions =  get_class_divisions();
@@ -571,3 +593,38 @@ function user_bulk_actions_admin($actions){
 add_filter( 'bulk_actions-users','user_bulk_actions_admin',10,1);
 
 /* functions to disable users delete option in admin dashboard end*/
+
+function getLoggedInUserModel(){
+    $user_data = get_userdata( get_current_user_id() );
+    $userModel='';
+    if($user_data){
+        $userdata = __u::toArray($user_data);
+        $userdata['data'] = __u::toArray($userdata['data']);
+        $userdata['data']['display_name']= $user_data->display_name;
+        $userdata['data']['user_email']= $user_data->user_email;
+        $userdata['data']['division']= get_user_meta($user_data->ID,'student_division',true);
+
+        $userModel="USER={}\n";
+
+        foreach ($userdata as $key => $value) {
+        
+            if(in_array($key,array('caps','roles','allcaps','data'))) {
+
+                $userModel .= "USER['$key']={}\n";
+
+                foreach($value as $k=>$v){
+
+                    $userModel .= "USER['$key']['$k']='$v'\n";
+
+                }
+            } 
+
+            else
+                $userModel .= "USER['$key']='$value'\n";
+
+        }
+    }
+
+    return $userModel;
+    
+}

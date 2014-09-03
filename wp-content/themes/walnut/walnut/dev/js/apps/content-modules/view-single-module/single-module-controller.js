@@ -34,10 +34,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
           'division': this.division,
           'collection_id': model.get('id')
         });
-        this.studentCollection = App.request("get:user:collection", {
-          'role': 'student',
-          'division': this.division
-        });
+        if (this.mode === 'training') {
+          this.studentCollection = App.request("get:dummy:students");
+        } else {
+          this.studentCollection = App.request("get:user:collection", {
+            'role': 'student',
+            'division': this.division
+          });
+        }
         return App.execute("when:fetched", model, (function(_this) {
           return function() {
             var layout;
