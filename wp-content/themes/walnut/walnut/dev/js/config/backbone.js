@@ -42,7 +42,7 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-group') {
         data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division);
         data.done(function(d) {
-          return collection.set(d);
+          return collection.set(d.reverse());
         });
       }
       if (collection_name === 'content-piece') {

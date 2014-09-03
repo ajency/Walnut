@@ -40,7 +40,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         # textbooks collection class
         class Textbooks.ItemCollection extends Backbone.Collection
             model: Textbooks.ItemModel
-            comparator: 'term_order'
+            comparator: 'name'
             name: 'textbook'
 
             url: ->

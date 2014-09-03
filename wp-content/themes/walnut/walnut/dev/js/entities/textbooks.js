@@ -67,7 +67,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.model = Textbooks.ItemModel;
 
-      ItemCollection.prototype.comparator = 'term_order';
+      ItemCollection.prototype.comparator = 'name';
 
       ItemCollection.prototype.name = 'textbook';
 

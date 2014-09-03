@@ -43,7 +43,7 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'content-group'
 				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)
 				data.done (d)->
-					collection.set d
+					collection.set d.reverse()
 
 			if collection_name is 'content-piece'
 				data = _.getContentPiecesByIDs(opts.ids)
