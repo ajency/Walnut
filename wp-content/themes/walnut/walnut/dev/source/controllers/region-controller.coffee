@@ -37,5 +37,5 @@ define ["marionette"
 		_manageView: (view, options) ->
 			if options.loading
 				App.commands.execute "show:loading", view, options
-			else
+			else if options.region
 				options.region.show view

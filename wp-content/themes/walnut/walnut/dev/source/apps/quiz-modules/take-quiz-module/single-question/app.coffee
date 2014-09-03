@@ -1,8 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/quiz-modules/take-quiz-module/single-question/views'
-        'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller'
-        'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'],
+        'apps/quiz-modules/take-quiz-module/single-question/views'],
         (App, RegionController)->
 
             App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
@@ -62,12 +60,10 @@ define ['app'
                             @region.trigger "skip:question", @answerModel
 
                         @listenTo layout, 'show:hint:dialog',=>
-                            App.execute 'show:hint:dialog',
-                                hint : @model.get 'hint'
+                            @region.trigger 'show:alert:popup', 'hint'
 
                         @listenTo layout,'show:comment:dialog',=>
-                            App.execute 'show:comment:dialog',
-                                comment : @model.get 'comment'
+                            @region.trigger 'show:alert:popup', 'comment'
 
                         @listenTo @region, 'trigger:submit',=> @_triggerSubmit()
 

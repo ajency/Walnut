@@ -936,6 +936,19 @@
 #slides-info {
   font-size: 16px;
 }
+/*Big Answer*/
+textarea.underline {
+  background: url(../../../images/underline.gif) repeat-x 100% 100%;
+  border: none;
+}
+textarea.border {
+  border: 15px solid transparent;
+  -webkit-border-image: url(../../../images/border.gif) 20 20 stretch;
+  /* Safari 5 */
+  -o-border-image: url(../../../images/border.gif) 20 20 stretch;
+  /* Opera */
+  border-image: url(../../../images/border.gif) 20 20 stretch;
+}
 /*input[type=checkbox].mcq-option-select {
 	display:none;
 }

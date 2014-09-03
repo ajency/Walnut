@@ -30,7 +30,7 @@ define(['app'], function(App) {
         return HotspotElementBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul class="hotspot-elements-container"> </ul> <div class="clearfix"></div> </div> </div> </div>';
+      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles blue"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul class="hotspot-elements-container"> </ul> <div class="clearfix"></div> </div> </div> </div>';
 
       HotspotElementBoxView.prototype.itemView = Views.HotspotElementView;
 

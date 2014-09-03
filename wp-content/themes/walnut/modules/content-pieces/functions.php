@@ -59,6 +59,10 @@ function get_content_pieces($args = array()) {
 
     switch_to_blog(1);
 
+    if(isset($args['exclude'])){
+        $args['exclude'] = $args['exclude'];
+    }
+
     if(isset($args['ids'])){
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];

@@ -131,9 +131,15 @@ define ['app'
                         @_endQuiz()
                         return false
 
+                    if message_type in ['hint','comment']
+                        message_content = questionModel.get message_type
+
+                    else 
+                        message_content = quizModel.getMessageContent message_type
+
                     App.execute 'show:alert:popup',
                         region : App.dialogRegion
-                        message_content: quizModel.getMessageContent message_type
+                        message_content: message_content
                         alert_type: alert_type
                         message_type: message_type
 

@@ -1,0 +1,1 @@
+define(['apps/login/loginapp', 'apps/header/headerapp', 'apps/left-nav/leftnavapp', 'apps/teachers-dashboard/teachers-dashboard-app', 'apps/content-modules/content-modules-app', 'apps/quiz-modules/quiz-module-app', 'apps/content-board/controller', 'apps/take-module-item/take-module-item-app', 'apps/admin-content-modules/app', 'apps/no-permissions/app'], function() {});
