@@ -66,9 +66,132 @@
 <body class="">
 <div id="site_main_container">
     <div>
-        <div id="header-region"></div>
+        <div id="header-region">
+            <div class="header navbar navbar-inverse"><div class="header navbar navbar-inverse"> 
+                   <!-- BEGIN TOP NAVIGATION BAR -->
+                   <div class="navbar-inner">
+                           <!-- BEGIN NAVIGATION HEADER -->
+                           <div class="header-seperation"> 
+                                   <!-- BEGIN MOBILE HEADER -->
+
+                                   <ul class="nav pull-left notifcation-center" id="mobile-menu-toggle-wrapper" style="display:none">	
+                                           <li class="dropdown">
+                                                   <a id="main-menu-toggle" href="#teachers/dashboard" class="btn btn-small btn-primary"><span class="small-text">Dashboard</span>
+                                                   </a>
+                                           </li>		 
+                                   </ul>
+
+
+                                   <!-- END MOBILE HEADER -->
+                                   <!-- BEGIN LOGO -->	
+                                   <a href="#">
+                                           <img width="192" height="38" src="http://localhost/walnut/wp-content/themes/walnut/images/synapse_logo.png" class="logo" alt="" data-src="http://localhost/walnut/wp-content/themes/walnut/images/synapse_logo.png" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/synapse_logo.png">
+                                   </a>
+                                   <!-- END LOGO --> 
+
+
+                                   <!-- END LOGO NAV BUTTONS -->
+                           </div>
+                           <!-- END NAVIGATION HEADER -->
+                           <!-- BEGIN CONTENT HEADER -->
+                           <div class="header-quick-nav"> 
+                                   <div id="header-left"><div class="pull-left"><!-- BEGIN HEADER LEFT SIDE SECTION -->
+                   <!-- BEGIN SLIM NAVIGATION TOGGLE -->
+                   <ul class="nav quick-section">
+                           <li class="quicklinks">
+                                   <a style="cursor:pointer" class="" id="layout-condensed-toggle">
+                                           <div class="iconset top-menu-toggle-dark"></div>
+                                   </a>
+                           </li>
+                   </ul>
+                   <!-- BEGIN HEADER QUICK LINKS -->
+                   <ul class="nav quick-section">
+
+                   </ul>
+                   <!-- BEGIN HEADER QUICK LINKS -->
+
+                                   <!-- END HEADER LEFT SIDE SECTION --></div></div>
+                                   <div id="header-right"><div class="pull-right"><!-- BEGIN HEADER RIGHT SIDE SECTION -->
+                   <!-- BEGIN HEADER NAV BUTTONS -->
+                   <ul id="gears-pc" class="nav quick-section2">
+                           <!-- BEGIN SETTINGS -->
+                           <li class="quicklinks"> 
+                                   <a data-toggle="dropdown" class="dropdown-toggle pull-right" href="#" id="user-options">						
+                                           <div class="iconset top-settings-dark"></div> 	
+                                   </a>
+                                   <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+                                           <li><a href="javascript://" id="user_logout"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
+                                   </ul>
+                           </li>
+                           <!-- END SETTINGS -->
+
+                   </ul>
+                   <!-- END HEADER NAV BUTTONS -->
+           <!-- END HEADER RIGHT SIDE SECTION -->
+
+           <ul class="nav pull-right notifcation-center">
+
+               <!-- BEGIN MOBILE CHAT TOGGLER -->
+               <li class="dropdown" id="portrait-chat-toggler" style="">
+                   <a href="#sidr" class="chat-menu-toggle">
+                       <div class="iconset top-chat-white"></div>
+                   </a>
+               </li>
+               <!-- END MOBILE CHAT TOGGLER -->
+           </ul></div></div>
+
+                           </div> 
+                           <!-- END CONTENT HEADER --> 
+                   </div>
+                   <!-- END TOP NAVIGATION BAR --> 
+           </div></div>           
+            
+        </div>
         <div class="page-container row-fluid">
-            <div id="left-nav-region"></div>
+            <div id="left-nav-region">
+                <div id="main-menu" class="page-sidebar">
+                    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 697.5px;">
+                        <div id="main-menu-wrapper" class="page-sidebar-wrapper" style="overflow: hidden; width: auto; height: 697.5px;">
+
+                  <ul class="menu-items">	
+                  <?php //print_r(get_menus());
+                 $menu_content = get_menus_response();
+                 //print_r($menu_content);
+                 $menu ='';
+                  foreach($menu_content as $content){
+                      if ($content['post_title'] === 'Training Module'){
+                          $iconclass ='fa fa-pencil-square-o';
+                      }
+                      if ($content['post_title'] === 'Content Management'){
+                          $iconclass ='fa fa-book';
+                      }
+                   $menu .= "<li class=''><a href='javascript:;'> "
+                           . "<i class='".$iconclass."'></i> "
+                           . "<span class='title'>".$content['post_title']."</span> <"
+                           . "span class='arrow'></span> </a>".get_submenu_struct($content['submenu'])."</li>";
+                  }
+                  
+                  echo $menu;
+                  ?>
+                          <!-- BEGIN ONE LEVEL MENU -->
+
+                          <!-- END ONE LEVEL MENU -->
+
+                  </ul>
+                  <!-- END SIDEBAR MENU -->
+                  <!-- BEGIN SIDEBAR WIDGETS -->
+                  <div class="side-bar-widgets">
+
+                  </div>
+                  <div class="clearfix"></div>
+                  <!-- END SIDEBAR WIDGETS --> 
+                        </div><div class="slimScrollBar ui-draggable" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 4px; z-index: 99; right: 1px; height: 698px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 4px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                            
+                    </div>   
+                
+                </div>
+
+            </div>
             <a href="#" class="scrollup">Scroll</a>
 
             <div class="page-content">
@@ -85,7 +208,35 @@
                                 <th class="filter-false">Last Ping</th>
                             </tr>
                            </thead>
-                            <?php echo get_sync_log_devices();?>
+                            <?php 
+                            
+                            $sync_log_devices = get_sync_log_devices();
+                                $resultset = '';
+                                if(count($sync_log_devices) > 0){
+                                    foreach ($sync_log_devices as $device) {
+                                           $blog_details = get_blog_details($device->blog_id);
+                                           $last_sync = strtotime($device->last_sync);
+                                           $currentdate = date('Y-m-d');
+                                           $last_syncdate = date('Y-m-d',$last_sync);
+
+                                           if($currentdate == $last_syncdate){
+                                               $days_between = 'Today';
+                                           }else{
+                                               $days_between = (ceil(abs(strtotime($currentdate) - strtotime(date('Y-m-d',strtotime($last_syncdate)))) / 86400) - 1).' days ago';
+                                           }
+                                           $resultset .='<tr>';
+                                           $resultset .='<td>'.$blog_details->blogname.'</td>';
+                                           $resultset .='<td>'.$device->device_type.'</td>';
+                                           $resultset .='<td>'.$days_between.'</td>';
+                                           $resultset .='</tr>';
+                                       }
+                                }
+                                else{
+                                    $resultset .='<tr><td colspan="3">No Results found</td> </tr>';
+                                }
+
+                                echo $resultset;  
+                            ?>
                         </table>
                         <?php endif;?>
                     </div>
@@ -126,20 +277,7 @@ global $chorus_options; ?>
         document.getElementById("site_main_container").setAttribute('class', 'showAll');
     })
 </script>
-<?php
 
-if (ENV == 'dev') {
-    ?>
-    <script type="text/javascript"
-            data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
-            src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
-<?php
-} else {
-
-?>
-    <script type="text/javascript"
-            src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
-<?php } ?>
 
 <script type="text/javascript">  
 jQuery(document).ready(function() {
@@ -206,6 +344,14 @@ jQuery(document).ready(function() {
 
         }
   });
+  
+    jQuery(".menu-items li").click(function(){
+        jQuery(this).siblings().find(".sub-menu").slideUp();
+        jQuery(this).toggleClass('open');
+        jQuery(this).find(".sub-menu").slideToggle();
+        jQuery(this).find(".arrow").toggleClass('open');
+
+    }); 
 });
 </script>
 </body>
