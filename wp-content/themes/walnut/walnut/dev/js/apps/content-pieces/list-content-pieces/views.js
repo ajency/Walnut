@@ -41,7 +41,9 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
               textbook = _.findWhere(_this.textbooks, {
                 "id": data.term_ids.textbook
               });
-              return textbook.name;
+              if (textbook) {
+                return textbook.name;
+              }
             }
           };
         })(this);

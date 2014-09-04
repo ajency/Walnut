@@ -16,8 +16,13 @@ define ['app'], (App)->
                             </video>
                             {{/videoUrl}}
                             {{^videoUrl}}
-                              Sorry, this video file is not available for use
+                                <video  class="video-js vjs-default-skin" controls preload="none" width="100%"
+                                poster="'+SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png"
+                                        data-setup="{}" controls src="{{videoUrl}}">
+
+                                </video>
                             {{/videoUrl}}
+
                             <div class="clearfix"></div>
                       					'
 
@@ -49,6 +54,8 @@ define ['app'], (App)->
 
 
             _setVideoList : ->
+                console.log '@model'
+                console.log @model
                 @$el.append('<div id="playlist-hover" class="playlistHover">
                                 <div class="row m-l-0 m-r-0 p-b-5 m-b-5">
                                     <div class="col-sm-8 nowPlaying">
@@ -106,6 +113,10 @@ define ['app'], (App)->
                 @$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
                 @$el.find('#now-playing-tag').text @model.get('title')[@index]
                 @$el.find('video').attr 'src',@videos[@index]
+
+                if not @videos[@index]
+                    @$el.find('video').attr 'poster', SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png'
+                    
                 @$el.find('video')[0].load()
                 @$el.find('video')[0].play()
 

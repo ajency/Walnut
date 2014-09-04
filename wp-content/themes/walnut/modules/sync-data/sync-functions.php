@@ -470,7 +470,10 @@ function read_folder_directory( $dir, $base_URL = '' ) {
 
                 if (is_file( $dir . "/" . $sub )) {
 
-                    $listDir[] = $base_URL . '/' . $sub;
+                    $file['link']=$base_URL . '/' . $sub;
+                    $file['size']=filesize($dir. '/' . $sub)/1024;
+                    $file['sizeformat'] = 'kB';
+                    $listDir[] = $file;
 
                 } elseif (is_dir( $dir . "/" . $sub )) {
 
@@ -492,31 +495,8 @@ function get_sync_log_devices(){
     
     $qry_results = $wpdb->get_results( $qry );
     
-    $resultset = '';
-    if(count($qry_results) > 0){
-        foreach ($qry_results as $device) {
-               $blog_details = get_blog_details($device->blog_id);
-               $last_sync = strtotime($device->last_sync);
-               $currentdate = date('Y-m-d');
-               $last_syncdate = date('Y-m-d',$last_sync);
-
-               if($currentdate == $last_syncdate){
-                   $days_between = 'Today';
-               }else{
-                   $days_between = (ceil(abs(strtotime($currentdate) - strtotime(date('Y-m-d',strtotime($last_syncdate)))) / 86400) - 1).' days ago';
-               }
-               $resultset .='<tr>';
-               $resultset .='<td>'.$blog_details->blogname.'</td>';
-               $resultset .='<td>'.$device->device_type.'</td>';
-               $resultset .='<td>'.$days_between.'</td>';
-               $resultset .='</tr>';
-           }
-    }
-    else{
-        $resultset .='<tr><td colspan="3">No Results found</td> </tr>';
-    }
-        
-    return  $resultset;  
+    return $qry_results;
+    
 }
 
 function cron_send_site_expiry_notification(){

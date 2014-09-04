@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+            if (contentPiece.get('content_type') === 'content_piece') {
               return _this._showTeacherTrainingFooter();
             } else {
               return _this._showStudentsListView(questionResponseModel);
@@ -134,7 +134,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           model: contentGroupModel,
           mode: this.display_mode,
           division: this.division,
-          classID: this.classID
+          classID: this.classID,
+          studentCollection: studentCollection
         });
       };
 
@@ -187,22 +188,26 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           students: studentCollection,
           classID: this.classID
         });
-        if (contentPiece.get('question_type') === 'multiple_eval') {
-          App.execute("show:single:question:multiple:evaluation:app", {
-            region: this.layout.contentBoardRegion,
-            questionResponseModel: questionResponseModel,
-            studentCollection: studentCollection,
-            display_mode: this.display_mode,
-            timerObject: this.timerObject,
-            evaluationParams: contentPiece.get('grading_params')
-          });
-          return this.layout.studentsListRegion.close();
-        } else {
-          return App.execute("show:content:board", {
-            region: this.layout.contentBoardRegion,
-            model: contentPiece
-          });
-        }
+        return App.execute("when:fetched", questionResponseModel, (function(_this) {
+          return function() {
+            if (contentPiece.get('question_type') === 'multiple_eval') {
+              App.execute("show:single:question:multiple:evaluation:app", {
+                region: _this.layout.contentBoardRegion,
+                questionResponseModel: questionResponseModel,
+                studentCollection: studentCollection,
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject,
+                evaluationParams: contentPiece.get('grading_params')
+              });
+              return _this.layout.studentsListRegion.close();
+            } else {
+              return App.execute("show:content:board", {
+                region: _this.layout.contentBoardRegion,
+                model: contentPiece
+              });
+            }
+          };
+        })(this));
       };
 
       TeacherTeachingController.prototype._showStudentsListView = function(questionResponseModel) {

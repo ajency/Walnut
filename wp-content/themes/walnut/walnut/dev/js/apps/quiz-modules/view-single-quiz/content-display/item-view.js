@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.tagName = 'li';
 
       View.prototype.mixinTemplateHelpers = function(data) {
-        var all_marks, responseModel, total_marks;
+        var all_marks, marks_obtained, responseModel, total_marks;
         responseModel = Marionette.getOption(this, 'responseModel');
         data.dateCompleted = 'N/A';
         if (responseModel) {
@@ -23,7 +23,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
           data.display_answer = Marionette.getOption(this, 'display_answer');
-          data.marks_obtained = responseModel.get('question_response').marks;
+          marks_obtained = responseModel.get('question_response').marks;
+          data.marks_obtained = parseFloat(marks_obtained.toFixed(2));
           all_marks = _.compact(_.pluck(this.model.get('layout'), 'marks'));
           total_marks = 0;
           if (all_marks.length > 0) {

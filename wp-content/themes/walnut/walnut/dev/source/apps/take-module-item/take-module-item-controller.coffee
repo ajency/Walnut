@@ -52,7 +52,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel
@@ -138,6 +138,7 @@ define ['app'
                     mode: @display_mode
                     division: @division
                     classID: @classID
+                    studentCollection: studentCollection
 
 
             _getOrCreateModel : (content_piece_id)=>
@@ -186,22 +187,24 @@ define ['app'
                     students : studentCollection
                     classID  : @classID
 
-                if contentPiece.get('question_type') is 'multiple_eval'
-                    App.execute "show:single:question:multiple:evaluation:app",
-                        region : @layout.contentBoardRegion
-                        questionResponseModel : questionResponseModel
-                        studentCollection : studentCollection
-                        display_mode : @display_mode
-                        timerObject : @timerObject
-                        evaluationParams : contentPiece.get 'grading_params'
+                App.execute "when:fetched", questionResponseModel, =>
 
-                    @layout.studentsListRegion.close()
-                    
+                    if contentPiece.get('question_type') is 'multiple_eval'
+                        App.execute "show:single:question:multiple:evaluation:app",
+                            region : @layout.contentBoardRegion
+                            questionResponseModel : questionResponseModel
+                            studentCollection : studentCollection
+                            display_mode : @display_mode
+                            timerObject : @timerObject
+                            evaluationParams : contentPiece.get 'grading_params'
 
-                else
-                    App.execute "show:content:board",
-                        region : @layout.contentBoardRegion
-                        model : contentPiece
+                        @layout.studentsListRegion.close()
+                        
+
+                    else
+                        App.execute "show:content:board",
+                            region : @layout.contentBoardRegion
+                            model : contentPiece
 
                 
 
