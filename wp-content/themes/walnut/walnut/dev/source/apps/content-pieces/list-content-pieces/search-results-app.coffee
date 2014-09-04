@@ -47,8 +47,10 @@ define ['app'
 
             template: 'Search: <input type="text" class="search-box" id="search-box">
                           <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span>
-                         <button class="btn btn-success btn-cons2" id="search-btn">Search</button>
-                        <i class="none progress-spinner fa fa-spinner fa-spin"></i>
+                        <button class="btn btn-success btn-cons2" id="search-btn">
+                            <i class="none progress-spinner fa fa-spinner fa-spin"></i>
+                            Search
+                        </button>
                        <label id="error-div" class="none"><span class="small text-error">Please enter the search keyword</span></label>
                        <div id="content-selection-region"></div>'
 

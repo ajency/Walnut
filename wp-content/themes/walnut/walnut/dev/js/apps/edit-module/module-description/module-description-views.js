@@ -165,6 +165,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           $('#s2id_textbooks .select2-choice').addClass('error');
         }
         if (this.$el.find('form').valid()) {
+          this.$el.find('#save-content-collection i').addClass('fa-spin fa-spinner');
           data = Backbone.Syphon.serialize(this);
           if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
             data.negMarks = 0;
@@ -230,6 +231,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
         var attrs, msg;
         this.$el.find('#saved-success').remove();
+        this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner').addClass('fa-check');
         attrs = model.changedAttributes();
         msg = attrs.id ? 'saved' : 'updated';
         if (model.get('type') === 'teaching-module') {
