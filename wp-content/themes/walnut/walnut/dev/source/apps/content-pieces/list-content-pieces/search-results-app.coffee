@@ -37,6 +37,8 @@ define ['app'
                 App.execute "when:fetched", @newCollection, =>
                     @searchCollection.reset @newCollection.models
                     @layout.contentSelectionRegion.trigger "update:pager"
+                    @layout.$el.find '.progress-spinner'
+                    .hide()
 
             _getSearchResultsLayout:->
                 new SearchResultsLayout()
@@ -46,7 +48,8 @@ define ['app'
             template: 'Search: <input type="text" class="search-box" id="search-box">
                           <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span>
                          <button class="btn btn-success btn-cons2" id="search-btn">Search</button>
-                       <label id="error-div" style="display:none"><span class="small text-error">Please enter the search keyword</span></label>
+                        <i class="none progress-spinner fa fa-spinner fa-spin"></i>
+                       <label id="error-div" class="none"><span class="small text-error">Please enter the search keyword</span></label>
                        <div id="content-selection-region"></div>'
 
             regions:
@@ -69,6 +72,8 @@ define ['app'
                 if searchStr
                     @$el.find "#error-div"
                     .hide()
+                    @$el.find '.progress-spinner'
+                    .show()
                     @trigger("search:content", searchStr,useFilters)
                 else
                     @$el.find "#error-div"

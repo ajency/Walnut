@@ -51,7 +51,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return App.execute("when:fetched", this.newCollection, (function(_this) {
           return function() {
             _this.searchCollection.reset(_this.newCollection.models);
-            return _this.layout.contentSelectionRegion.trigger("update:pager");
+            _this.layout.contentSelectionRegion.trigger("update:pager");
+            return _this.layout.$el.find('.progress-spinner').hide();
           };
         })(this));
       };
@@ -71,7 +72,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SearchResultsLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <label id="error-div" style="display:none"><span class="small text-error">Please enter the search keyword</span></label> <div id="content-selection-region"></div>';
+      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <input id="use-filters" type="checkbox"> <span class="small"> Search with filters</span> <button class="btn btn-success btn-cons2" id="search-btn">Search</button> <i class="none progress-spinner fa fa-spinner fa-spin"></i> <label id="error-div" class="none"><span class="small text-error">Please enter the search keyword</span></label> <div id="content-selection-region"></div>';
 
       SearchResultsLayout.prototype.regions = {
         contentSelectionRegion: '#content-selection-region'
@@ -96,6 +97,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         }
         if (searchStr) {
           this.$el.find("#error-div").hide();
+          this.$el.find('.progress-spinner').show();
           return this.trigger("search:content", searchStr, useFilters);
         } else {
           return this.$el.find("#error-div").show();
