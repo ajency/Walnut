@@ -18,8 +18,6 @@ function setup_childsite( $blog_id, $additional_details ) {
 
     setup_childsite_tables();
 
-    setup_childsite_menus($blog_id );
-
     create_temporary_folders();
 
     restore_current_blog();
