@@ -219,6 +219,18 @@ function add_pages_to_main_site()
         update_option( 'page_on_front', $postid );
         update_option( 'show_on_front', 'page' );
     }
+    
+    if (!get_page_by_title('Sync Site Content')) {
+        $post = array();
+        $post['post_type'] = 'page'; //could be 'page' for example
+        $post['post_author'] = get_current_user_id();
+        $post['post_status'] = 'publish'; //draft
+        $post['post_title'] = 'Sync Site Content';
+        $postid = wp_insert_post($post);
+
+        update_post_meta($postid, '_wp_page_template', 'site-sync.php');
+
+    }    
 
 }
 
