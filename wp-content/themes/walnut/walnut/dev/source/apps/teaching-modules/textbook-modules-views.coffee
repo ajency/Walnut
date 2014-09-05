@@ -14,7 +14,10 @@ define ['app',
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
 					   	<td>
+					   	{{^practice_quiz}}
 						  <span class="muted status_label">{{&status_str}}</span>
+					   	{{/practice_quiz}}
+
 						</td>
 						<td>
 							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
@@ -82,6 +85,9 @@ define ['app',
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
 					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+
+				if @model.get('quiz_type') is 'practice'
+					data.practice_quiz = true
 
 				data
 
