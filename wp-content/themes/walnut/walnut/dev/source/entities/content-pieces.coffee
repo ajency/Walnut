@@ -76,9 +76,10 @@ define ["app", 'backbone'], (App, Backbone) ->
             getContentPieces : (param = {})->
                 contentPieceCollection = new ContentPiece.ItemCollection
                 
-                contentPieceCollection.add contentPiecesRepository.models
+                if not param.search_str
+                    contentPieceCollection.add contentPiecesRepository.models
 
-                param.exclude = contentPiecesRepository.pluck 'ID'
+                    param.exclude = contentPiecesRepository.pluck 'ID'
 
                 contentPieceCollection.fetch
                     add : true

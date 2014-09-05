@@ -37,7 +37,7 @@ function get_blog_media() {
     
     $enc_media_types = array('audio','video');
     
-    if(in_array($media['type'], $enc_media_types && !is_multisite())){
+    if(in_array($media['type'], $enc_media_types) && !is_multisite()){
             $media = modify_media_url($media,$media['type']);
     }
 

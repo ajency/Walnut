@@ -63,6 +63,9 @@
 .p-t-60 {
   padding-top: 60px;
 }
+.vHidden {
+  visibility: hidden;
+}
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
@@ -2539,7 +2542,7 @@ textarea.error,
   width: 100px;
 }
 #take-class-modules.takeClass th:last-child {
-  width: 40%;
+  width: 30%;
 }
 .table-fixed-layout td.cpHeight {
   white-space: normal;

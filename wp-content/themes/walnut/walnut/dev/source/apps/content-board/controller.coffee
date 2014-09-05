@@ -28,8 +28,13 @@ define ['app'
                         .trigger 'click'
                         
                 @listenTo @view, 'dependencies:fetched', =>
-                    @startFillingElements()          
+                    fillElements = @startFillingElements()          
 
+                    fillElements.done =>
+                        setTimeout ->
+                            $('#loading-content-board').remove()
+                            $('#question-area').removeClass 'vHidden'
+                        ,2000
 
                 #                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 
@@ -52,26 +57,56 @@ define ['app'
             startFillingElements : ()->
                 section = @view.model.get 'layout'
 
+                allItemsDeferred =$.Deferred()
 
                 container = $('#myCanvas #question-area')
                 _.each section, (element, i)=>
+                    itemsDeferred= $.Deferred()
                     if element.element is 'Row' or element.element is 'TeacherQuestion'
-                        @addNestedElements container, element
+                        nestedItems= @addNestedElements container, element
+                        nestedItems.done =>
+                            itemsDeferred.resolve()
                     else
                         App.request "add:new:element", container, element.element, element
+                        itemsDeferred.resolve()
+
+                    itemsDeferred.promise()
+
+                    if i is _.size(section)-1
+                        itemsDeferred.done =>
+                            allItemsDeferred.resolve()
+
+                allItemsDeferred.promise()
 
 
             addNestedElements : (container, element)->
+
+                defer= $.Deferred()
+
                 controller = App.request "add:new:element", container, element.element, element
                 _.each element.elements, (column, index)=>
-                    return if not column.elements
+                    nestedDef=$.Deferred()
+                    if not column.elements
+                        return nestedDef.resolve()
+
+
                     container = controller.layout.elementRegion.currentView.$el.children().eq(index)
                     _.each column.elements, (ele, i)=>
                         if ele.element is 'Row'
-                            @addNestedElements $(container), ele
+                            addedElement = @addNestedElements $(container), ele
+                            addedElement.done =>
+                                nestedDef.resolve()
                         else
                             App.request "add:new:element", container, ele.element, ele
+                            nestedDef.resolve()
 
+                    nestedDef.promise()
+
+                    if index is _.size(element.elements)-1
+                        nestedDef.done =>
+                            defer.resolve()
+
+                defer.promise()
 
             API =
             # add a new element to the builder region

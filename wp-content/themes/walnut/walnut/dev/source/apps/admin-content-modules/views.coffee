@@ -212,7 +212,7 @@ define ['app',
                 .is ':checked'
                     checkboxes= @$el.find '#take-class-modules .tab_checkbox'
                     for checkbox in checkboxes
-                        if checkbox.value in completedModules
+                        if parseInt(checkbox.value) in completedModules
                             $(checkbox).trigger 'click'
                             .prop 'checked', true
 
@@ -289,6 +289,6 @@ define ['app',
                     @$el.find '#communication_sent'
                     .remove()
 
-                    @$el.find '#send-sms'
+                    @$el.find '#send-email'
                     .after '<span class="m-l-40 small" id="communication_sent">
                             Your '+data.communication_mode+' has been queued successfully</span>'

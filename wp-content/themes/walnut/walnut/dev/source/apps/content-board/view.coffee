@@ -4,23 +4,24 @@ define ['app'], (App)->
 
             id: 'myCanvas'
 
-            template: '<div id="question-area"></div>
-            						<div id="feedback-area">
-            							<div id="correct" class="alert alert-success text-center answrMsg">
-            							    <h3 class="bold">{{correct_answer_msg}}</h3>
-            							    <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4>
-            							</div>
+            template: ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1>
+                        <div class="vHidden" id="question-area"></div>
+						<div id="feedback-area">
+							<div id="correct" class="alert alert-success text-center answrMsg">
+							    <h3 class="bold">{{correct_answer_msg}}</h3>
+							    <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4>
+							</div>
 
-            							<div id="wrong" class="alert alert-error text-center answrMsg">
-            							    <h3 class="bold">{{incorrect_answer_msg}}</h3>
-            							    <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4>
-            							</div>
+							<div id="wrong" class="alert alert-error text-center answrMsg">
+							    <h3 class="bold">{{incorrect_answer_msg}}</h3>
+							    <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4>
+							</div>
 
-            							<div id="partially-correct" class="alert alert-info text-center answrMsg">
-            							    <h3 class="bold">{{partial_correct_answers_msg}}</h3>
-            							    <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4>
-            							</div>
-            						</div>'
+							<div id="partially-correct" class="alert alert-info text-center answrMsg">
+							    <h3 class="bold">{{partial_correct_answers_msg}}</h3>
+							    <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4>
+							</div>
+						</div>'
 
             mixinTemplateHelpers:(data)->
                 data.correct_answer_msg              = 'You are correct!'

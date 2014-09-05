@@ -433,13 +433,13 @@ function quizzes_completed_for_textbook($book_id,$student_id){
             FROM  {$wpdb->prefix}quiz_response_summary qr, 
                 {$wpdb->base_prefix}content_collection cc 
             WHERE qr.collection_id = cc.id
+                AND cc.post_status in ('publish','archive')
                 AND qr.student_id = %d
                 AND qr.quiz_meta like %s
                 AND cc.term_ids like %s",
 
         array($student_id, '%completed%', '%"'.$book_id.'";%' )
     );
-
 
     $completed_quizzes= $wpdb->get_var($query);
 
