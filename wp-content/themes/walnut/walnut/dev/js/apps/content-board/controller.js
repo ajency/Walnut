@@ -35,7 +35,14 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         })(this));
         this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
           return function() {
-            return _this.startFillingElements();
+            var fillElements;
+            fillElements = _this.startFillingElements();
+            return fillElements.done(function() {
+              return setTimeout(function() {
+                $('#loading-content').hide();
+                return $('#question-area').show();
+              }, 2000);
+            });
           };
         })(this));
         App.commands.setHandler("show:response", (function(_this) {
@@ -57,38 +64,65 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
       };
 
       Controller.prototype.startFillingElements = function() {
-        var container, section;
+        var allItemsDeferred, container, itemsDeferred, section;
         section = this.view.model.get('layout');
+        allItemsDeferred = $.Deferred();
+        itemsDeferred = [];
         container = $('#myCanvas #question-area');
-        return _.each(section, (function(_this) {
+        _.each(section, (function(_this) {
           return function(element, i) {
+            var nestedItems;
+            itemsDeferred[i] = $.Deferred();
+            nestedItems = [];
             if (element.element === 'Row' || element.element === 'TeacherQuestion') {
-              return _this.addNestedElements(container, element);
+              nestedItems[i] = _this.addNestedElements(container, element);
+              nestedItems[i].done(function() {
+                return itemsDeferred[i].resolve();
+              });
             } else {
-              return App.request("add:new:element", container, element.element, element);
+              App.request("add:new:element", container, element.element, element);
+              itemsDeferred[i].resolve();
             }
+            itemsDeferred[i].promise();
+            return $.when(itemsDeferred[0], itemsDeferred[1], itemsDeferred[2]).done(function() {
+              return allItemsDeferred.resolve();
+            });
           };
         })(this));
+        return allItemsDeferred.promise();
       };
 
       Controller.prototype.addNestedElements = function(container, element) {
-        var controller;
+        var controller, defer;
+        defer = $.Deferred();
         controller = App.request("add:new:element", container, element.element, element);
-        return _.each(element.elements, (function(_this) {
+        _.each(element.elements, (function(_this) {
           return function(column, index) {
+            var nestedDef;
             if (!column.elements) {
               return;
             }
             container = controller.layout.elementRegion.currentView.$el.children().eq(index);
-            return _.each(column.elements, function(ele, i) {
+            nestedDef = [];
+            _.each(column.elements, function(ele, i) {
+              var addedElement;
+              nestedDef[i] = $.Deferred();
               if (ele.element === 'Row') {
-                return _this.addNestedElements($(container), ele);
+                addedElement = _this.addNestedElements($(container), ele);
+                return addedElement.done(function() {
+                  return nestedDef[i].resolve();
+                });
               } else {
-                return App.request("add:new:element", container, ele.element, ele);
+                App.request("add:new:element", container, ele.element, ele);
+                return nestedDef[i].resolve();
               }
+            });
+            return $.when(nestedDef[0], nestedDef[1]).done(function() {
+              return defer.resolve();
             });
           };
         })(this));
+        return defer.promise();
       };
 
       API = {

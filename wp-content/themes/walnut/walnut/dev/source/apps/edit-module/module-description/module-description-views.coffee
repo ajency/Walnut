@@ -172,6 +172,10 @@ define ['app'
                     .addClass 'error'
 
                 if @$el.find('form').valid()
+
+                    @$el.find '#save-content-collection i'
+                    .addClass 'fa-spin fa-spinner'
+
                     data = Backbone.Syphon.serialize (@)
                     #data.term_ids= _.compact(data.term_ids)
                     data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
@@ -230,6 +234,10 @@ define ['app'
 
             onSavedContentGroup : (model) ->
                 @$el.find('#saved-success').remove();
+
+                @$el.find '#save-content-collection i'
+                .removeClass 'fa-spin fa-spinner' 
+                .addClass 'fa-check'
 
                 attrs= model.changedAttributes()
 

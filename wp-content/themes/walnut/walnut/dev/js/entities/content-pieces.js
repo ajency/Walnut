@@ -123,8 +123,10 @@ define(["app", 'backbone'], function(App, Backbone) {
           param = {};
         }
         contentPieceCollection = new ContentPiece.ItemCollection;
-        contentPieceCollection.add(contentPiecesRepository.models);
-        param.exclude = contentPiecesRepository.pluck('ID');
+        if (!param.search_str) {
+          contentPieceCollection.add(contentPiecesRepository.models);
+          param.exclude = contentPiecesRepository.pluck('ID');
+        }
         contentPieceCollection.fetch({
           add: true,
           remove: false,
