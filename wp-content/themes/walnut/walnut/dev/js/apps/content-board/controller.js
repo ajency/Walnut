@@ -39,8 +39,8 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
             fillElements = _this.startFillingElements();
             return fillElements.done(function() {
               return setTimeout(function() {
-                $('#loading-content').hide();
-                return $('#question-area').show();
+                $('#loading-content-board').remove();
+                return $('#question-area').removeClass('vHidden');
               }, 2000);
             });
           };
@@ -64,29 +64,29 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
       };
 
       Controller.prototype.startFillingElements = function() {
-        var allItemsDeferred, container, itemsDeferred, section;
+        var allItemsDeferred, container, section;
         section = this.view.model.get('layout');
         allItemsDeferred = $.Deferred();
-        itemsDeferred = [];
         container = $('#myCanvas #question-area');
         _.each(section, (function(_this) {
           return function(element, i) {
-            var nestedItems;
-            itemsDeferred[i] = $.Deferred();
-            nestedItems = [];
+            var itemsDeferred, nestedItems;
+            itemsDeferred = $.Deferred();
             if (element.element === 'Row' || element.element === 'TeacherQuestion') {
-              nestedItems[i] = _this.addNestedElements(container, element);
-              nestedItems[i].done(function() {
-                return itemsDeferred[i].resolve();
+              nestedItems = _this.addNestedElements(container, element);
+              nestedItems.done(function() {
+                return itemsDeferred.resolve();
               });
             } else {
               App.request("add:new:element", container, element.element, element);
-              itemsDeferred[i].resolve();
+              itemsDeferred.resolve();
             }
-            itemsDeferred[i].promise();
-            return $.when(itemsDeferred[0], itemsDeferred[1], itemsDeferred[2]).done(function() {
-              return allItemsDeferred.resolve();
-            });
+            itemsDeferred.promise();
+            if (i === _.size(section) - 1) {
+              return itemsDeferred.done(function() {
+                return allItemsDeferred.resolve();
+              });
+            }
           };
         })(this));
         return allItemsDeferred.promise();
@@ -99,27 +99,29 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         _.each(element.elements, (function(_this) {
           return function(column, index) {
             var nestedDef;
+            nestedDef = $.Deferred();
             if (!column.elements) {
-              return;
+              return nestedDef.resolve();
             }
             container = controller.layout.elementRegion.currentView.$el.children().eq(index);
-            nestedDef = [];
             _.each(column.elements, function(ele, i) {
               var addedElement;
-              nestedDef[i] = $.Deferred();
               if (ele.element === 'Row') {
                 addedElement = _this.addNestedElements($(container), ele);
                 return addedElement.done(function() {
-                  return nestedDef[i].resolve();
+                  return nestedDef.resolve();
                 });
               } else {
                 App.request("add:new:element", container, ele.element, ele);
-                return nestedDef[i].resolve();
+                return nestedDef.resolve();
               }
             });
-            return $.when(nestedDef[0], nestedDef[1]).done(function() {
-              return defer.resolve();
-            });
+            nestedDef.promise();
+            if (index === _.size(element.elements) - 1) {
+              return nestedDef.done(function() {
+                return defer.resolve();
+              });
+            }
           };
         })(this));
         return defer.promise();

@@ -4,11 +4,8 @@ define ['app'], (App)->
 
             id: 'myCanvas'
 
-            template: ' <h2 id="loading-content">
-                            Loading Content.. Please Wait..
-                        </h2>
-                        
-                        <div class="none" id="question-area"></div>
+            template: ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1>
+                        <div class="vHidden" id="question-area"></div>
 						<div id="feedback-area">
 							<div id="correct" class="alert alert-success text-center answrMsg">
 							    <h3 class="bold">{{correct_answer_msg}}</h3>

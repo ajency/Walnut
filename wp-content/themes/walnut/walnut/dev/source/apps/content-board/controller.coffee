@@ -32,8 +32,8 @@ define ['app'
 
                     fillElements.done =>
                         setTimeout ->
-                            $('#loading-content').hide()
-                            $('#question-area').show()
+                            $('#loading-content-board').remove()
+                            $('#question-area').removeClass 'vHidden'
                         ,2000
 
                 #                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
@@ -57,64 +57,56 @@ define ['app'
             startFillingElements : ()->
                 section = @view.model.get 'layout'
 
-                allItemsDeferred =$.Deferred() 
-
-                itemsDeferred=[]
-                
+                allItemsDeferred =$.Deferred()
 
                 container = $('#myCanvas #question-area')
-
-
                 _.each section, (element, i)=>
-
-                    itemsDeferred[i]= $.Deferred()
-                    nestedItems=[]
-
+                    itemsDeferred= $.Deferred()
                     if element.element is 'Row' or element.element is 'TeacherQuestion'
-                        nestedItems[i]= @addNestedElements container, element
-                        nestedItems[i].done =>
-                            itemsDeferred[i].resolve()
-
+                        nestedItems= @addNestedElements container, element
+                        nestedItems.done =>
+                            itemsDeferred.resolve()
                     else
                         App.request "add:new:element", container, element.element, element
-                        itemsDeferred[i].resolve()
+                        itemsDeferred.resolve()
 
-                    itemsDeferred[i].promise()
+                    itemsDeferred.promise()
 
-                    $.when(itemsDeferred[0], itemsDeferred[1], itemsDeferred[2]).done =>
-                        allItemsDeferred.resolve()
+                    if i is _.size(section)-1
+                        itemsDeferred.done =>
+                            allItemsDeferred.resolve()
 
                 allItemsDeferred.promise()
 
 
             addNestedElements : (container, element)->
-                
+
                 defer= $.Deferred()
 
                 controller = App.request "add:new:element", container, element.element, element
                 _.each element.elements, (column, index)=>
-                    return if not column.elements
+                    nestedDef=$.Deferred()
+                    if not column.elements
+                        return nestedDef.resolve()
+
+
                     container = controller.layout.elementRegion.currentView.$el.children().eq(index)
-
-                    nestedDef= []
                     _.each column.elements, (ele, i)=>
-                        
-                        nestedDef[i]=$.Deferred()
-
                         if ele.element is 'Row'
                             addedElement = @addNestedElements $(container), ele
                             addedElement.done =>
-                                nestedDef[i].resolve()
+                                nestedDef.resolve()
                         else
                             App.request "add:new:element", container, ele.element, ele
-                            nestedDef[i].resolve()
+                            nestedDef.resolve()
 
-                    $.when(nestedDef[0], nestedDef[1]).done =>
-                        defer.resolve()
+                    nestedDef.promise()
+
+                    if index is _.size(element.elements)-1
+                        nestedDef.done =>
+                            defer.resolve()
 
                 defer.promise()
-
-
 
             API =
             # add a new element to the builder region
