@@ -55,9 +55,10 @@ define ['app'
                         contentPieceModel : @contentPieceModel
                         eventObj : @eventObj
 
-                    App.execute "show:property:dock",
-                        region : @layout.PropertyRegion
-                        contentPieceModel : @contentPieceModel
+                    if @contentPieceModel.get('content_type') is 'student_question'
+                        App.execute "show:property:dock",
+                            region : @layout.PropertyRegion
+                            contentPieceModel : @contentPieceModel
 
                     if @contentPieceModel.get('question_type')? and
                     @contentPieceModel.get('question_type') is 'multiple_eval'
@@ -99,7 +100,7 @@ define ['app'
                                     <div class="tiles" id="toolbox"></div>
                                     <div class="" id="content-builder"></div>
                                     <div id="grading-parameter"></div>
-                                    <div class="dock tiles" id="property-dock"></div>
+                                    <div id="property-dock"></div>
                                     </div>'
 
             regions :

@@ -51,6 +51,15 @@ define(['app', 'holder', 'text!apps/content-creator/content-builder/element/temp
       };
 
       ElementView.prototype.onShow = function() {
+        var _ref, _ref1;
+        console.log('elemtn test');
+        console.log(this.model.get('element'));
+        if ((_ref = this.model.get('element')) === 'Row' || _ref === 'ImageWithText') {
+          this.$el.find('.aj-imp-settings-btn').removeClass('hidden');
+        }
+        if ((_ref1 = this.model.get('element')) === 'TeacherQuestion') {
+          this.$el.find('.aj-imp-settings-btn').addClass('hidden');
+        }
         return this.$el.mouseover((function(_this) {
           return function(evt) {
             evt.stopPropagation();
