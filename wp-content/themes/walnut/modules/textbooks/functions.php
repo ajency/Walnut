@@ -304,7 +304,11 @@ function get_status_for_textbook($textbook_id, $division){
     foreach($chapters as $chapter){
         $chapter_status = get_status_for_chapter($chapter, $division);
 
-        if(sizeof($chapter_status['all_modules']) == sizeof($chapter_status['completed']))
+        //if there isnt any modules for the chapter, mark the chapter as not started
+        if (sizeof($chapter_status['all_modules']) ==0)
+            $not_started[]= $chapter;
+
+        elseif(sizeof($chapter_status['all_modules']) == sizeof($chapter_status['completed']))
             $completed[]=$chapter;
 
         elseif(sizeof($chapter_status['in_progress']) > 0 || sizeof($chapter_status['completed']) > 0)
