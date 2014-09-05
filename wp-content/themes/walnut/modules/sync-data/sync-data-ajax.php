@@ -155,4 +155,3 @@ function ajax_check_blog_validity(){
 } 
 add_action( 'wp_ajax_nopriv_check-blog-validity', 'ajax_check_blog_validity' );
 add_action( 'wp_ajax_check-blog-validity', 'ajax_check_blog_validity' );
-

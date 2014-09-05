@@ -488,19 +488,23 @@ function get_meta_values($element, $create = FALSE)
         if (!is_multisite()) {
             if($element['element'] == 'Video'){
                 $ele['videoUrl'] = replace_media_urls($ele['videoUrl']);
-                foreach($ele['videoUrls'] as $url){
-                    $url = replace_media_urls($url);
-                    $newUrls[]=$url;
+                if(count ($ele['videoUrls']) > 0){
+                    foreach($ele['videoUrls'] as $url){
+                        $url = replace_media_urls($url);
+                        $newUrls[]=$url;
+                    }
+                    $ele['videoUrls']=$newUrls;
                 }
-                $ele['videoUrls']=$newUrls;
             }
             if($element['element'] == 'Audio'){
                 $ele['audioUrl'] = replace_media_urls($ele['audioUrl']);
+             if(count ($ele['audioUrls']) > 0){
                 foreach($ele['audioUrls'] as $url){
                     $url = replace_media_urls($url);
                     $newUrls[]=$url;
                 }
                 $ele['audioUrls']=$newUrls;
+             }
             }
         }
     }

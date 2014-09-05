@@ -34,8 +34,10 @@ function ajax_update_question_response() {
         'time_taken'        => $time_taken,
         'status'            => $status
     );
-            
+    
     $response_data = update_question_response($data);
+    
+    clear_user_temp_medias();
     
     wp_send_json($response_data);
 }

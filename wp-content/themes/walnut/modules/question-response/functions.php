@@ -195,3 +195,22 @@ function get_single_question_response($ref_id)
     return $response_data;
 
 }
+
+function clear_user_temp_medias(){
+    $userid = get_current_user_id();
+    $temp_medias = array('audios','videos');
+    
+    foreach($temp_medias as $mediatype){
+        $temp_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$mediatype;
+        $temp_user_path = $temp_path.DIRECTORY_SEPARATOR.get_current_user_id();
+        if(file_exists($temp_user_path)){
+            $files = glob($temp_user_path.'/*'); // get all file names from user media temp folder
+            foreach($files as $file){ // iterate files
+                if(is_file($file))
+                    unlink($file); // delete file
+            }
+            rmdir($temp_user_path);
+        }
+    }
+    
+}
