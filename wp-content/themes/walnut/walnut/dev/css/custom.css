@@ -63,6 +63,9 @@
 .p-t-60 {
   padding-top: 60px;
 }
+.vHidden {
+  visibility: hidden;
+}
 @font-face {
   font-family: 'Roboto';
   font-style: normal;

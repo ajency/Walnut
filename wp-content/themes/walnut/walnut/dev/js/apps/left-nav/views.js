@@ -27,7 +27,7 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
           iconClass = 'fa fa-book';
         }
         if (this.model.get('post_title') === 'Quiz Management') {
-          iconClass = 'fa fa-info-sign';
+          iconClass = 'fa fa-info-circle';
         }
         data.iconClass = iconClass;
         return data;

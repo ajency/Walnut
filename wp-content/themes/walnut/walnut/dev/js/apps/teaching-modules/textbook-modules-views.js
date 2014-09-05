@@ -12,7 +12,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
@@ -42,27 +42,27 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         }
         status = this.model.get('status');
         if ((this.model.get('post_status') != null) && this.model.get('post_status') === 'archive') {
-          data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
+          data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
           data.status_str = '<span class="label label-success">Archived</span>';
           data.action_str = '<i class="fa fa-repeat"></i> Replay';
         } else {
           if (status === 'started' || status === 'resumed') {
-            data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
+            data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
             data.status_str = '<span class="label label-info">In Progress</span>';
             data.action_str = '<i class="fa fa-pause"></i> Resume';
           } else if (status === 'completed') {
             data.status_str = '<span class="label label-success">Completed</span>';
             data.action_str = '<i class="fa fa-repeat"></i> Replay';
             if (Marionette.getOption(this, 'mode') === 'take-quiz') {
-              data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>';
+              data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>';
             } else {
-              data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
+              data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
             }
           } else {
             data.status_str = '<span class="label label-important">Not Started</span>';
             data.action_str = '<i class="fa fa-play"></i> Start';
             if (Marionette.getOption(this, 'mode') !== 'take-quiz') {
-              data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
+              data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
             }
           }
         }
