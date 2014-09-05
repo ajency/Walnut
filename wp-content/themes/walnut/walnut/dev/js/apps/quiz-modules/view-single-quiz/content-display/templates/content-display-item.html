@@ -23,7 +23,7 @@
 	</div>
     {{#responseStatus}}
         <div class="qstnStatus {{statusUI.divClass}} p-t-10">
-            {{#display_answer}}<i class="fa  {{statusUI.icon}}"></i>  {{statusUI.text}}{{/display_answer}}
+            {{#display_answer}}<i class="fa  {{statusUI.icon}}"></i>  {{&statusUI.text}}{{/display_answer}}
             <div>
                 <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>
         </div>
