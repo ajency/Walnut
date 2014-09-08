@@ -420,3 +420,23 @@ function get_module_name($module_id){
     return wp_unslash($module_name);
 
 }
+
+//get any meta value from table wp_collection_meta giving the module id and meta key
+
+function get_module_meta($module_id, $meta_key=''){
+
+    if(!$module_id || !trim($meta_key))
+        return false;
+
+    global $wpdb;
+    
+    $query = $wpdb->prepare(
+        "SELECT meta_value from {$wpdb->base_prefix}collection_meta 
+        WHERE collection_id = %d AND meta_key LIKE %s",
+        array($module_id,$meta_key)
+        );
+    $meta = $wpdb->get_var($query);
+    
+
+    return $meta;
+}
