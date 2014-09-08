@@ -52,6 +52,7 @@ define ['app'
                 new ContentBoard.Views.ContentBoardView
                     model : @model
                     quizModel: @quizModel
+                    answerModel: answerModel
 
             # start filling elements
             startFillingElements : ()->

@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       ContentBoardView.prototype.id = 'myCanvas';
 
-      ContentBoardView.prototype.template = ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1> <div class="vHidden" id="question-area"></div> <div id="feedback-area"> <div id="correct" class="alert alert-success text-center answrMsg"> <h3 class="bold">{{correct_answer_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="wrong" class="alert alert-error text-center answrMsg"> <h3 class="bold">{{incorrect_answer_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="partially-correct" class="alert alert-info text-center answrMsg"> <h3 class="bold">{{partial_correct_answers_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> </div>';
+      ContentBoardView.prototype.template = ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1> <div class="vHidden" id="question-area"></div> <div id="feedback-area"> <div id="correct" class="alert alert-success text-center answrMsg"> <h3 class="bold">{{correct_answer_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="wrong" class="alert alert-error text-center answrMsg"> <h3 class="bold">{{incorrect_answer_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="partially-correct" class="alert alert-info text-center answrMsg"> <h3 class="bold">{{partial_correct_answers_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="skipped" class="alert alert-error text-center answrMsg"> <h3 class="bold">{{skipped_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold">0/<span class="total-marks"></span></span></h4> </div> </div>';
 
       ContentBoardView.prototype.mixinTemplateHelpers = function(data) {
         var quizModel;
@@ -24,6 +24,7 @@ define(['app'], function(App) {
           data.correct_answer_msg = quizModel.getMessageContent('correct_answer');
           data.incorrect_answer_msg = quizModel.getMessageContent('incorrect_answer');
           data.partial_correct_answers_msg = quizModel.getMessageContent('partial_correct_answers');
+          data.skipped_msg = 'This question was skipped';
         }
         return data;
       };
@@ -33,17 +34,23 @@ define(['app'], function(App) {
       };
 
       ContentBoardView.prototype.onShowResponse = function(marks, total) {
+        var answerModel;
         this.$el.find('.total-marks').text(total);
         this.$el.find('.marks').text(marks);
         this.$el.find('#feedback-area div').hide();
-        if (marks === 0) {
-          this.$el.find('#wrong').show();
-        }
-        if (marks === total) {
-          this.$el.find('#correct').show();
-        }
-        if (marks > 0 && marks < total) {
-          return this.$el.find('#partially-correct').show();
+        answerModel = Marionette.getOption(this, 'answerModel');
+        if (answerModel && answerModel.get('status') === 'skipped') {
+          return this.$el.find('#skipped').show();
+        } else {
+          if (marks === 0) {
+            this.$el.find('#wrong').show();
+          }
+          if (marks === total) {
+            this.$el.find('#correct').show();
+          }
+          if (marks > 0 && marks < total) {
+            return this.$el.find('#partially-correct').show();
+          }
         }
       };
 
