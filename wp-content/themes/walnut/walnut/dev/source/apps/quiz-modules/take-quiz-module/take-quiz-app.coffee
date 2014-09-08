@@ -24,11 +24,12 @@ define ['app'
                     @questionResponseCollection,@textbookNames,@display_mode} = opts
 
                     if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
-                        data = 
-                            'status' : 'started'
 
                         quizResponseSummary.save 'status' : 'started'
-                    console.log @questionResponseCollection
+
+                    if quizModel.get('quiz_type') is 'practice'
+                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
+
                     @_startTakeQuiz()
                 
                 _startTakeQuiz:=>
