@@ -99,6 +99,10 @@ global $chorus_options; ?>
     SITEURL = '<?php echo site_url() ?>';
     THEMEURL = '<?php echo get_template_directory_uri()?>';
 
+    <?php if (!is_multisite()){?>
+        IS_STANDALONE_SITE = true
+    <?php } ?>
+
     <?=getLoggedInUserModel()?>
 
     CLASS_LABEL = {};
