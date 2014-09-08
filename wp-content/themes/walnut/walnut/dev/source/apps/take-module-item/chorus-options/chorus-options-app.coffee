@@ -40,7 +40,7 @@ define ['app'
                 'click .tiles.single.selectable': 'selectStudent'
 
             onShow: ->
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                if Marionette.getOption(@, 'display_mode') isnt 'readonly'
                     $(ele).addClass 'selectable' for ele in @$el.find '.tiles.single'
 
                 responsePercentage = Marionette.getOption @, 'responsePercentage'
@@ -71,7 +71,8 @@ define ['app'
                                         .removeClass 'fa-minus-circle'
                                             .addClass 'fa-check-circle'
 
-                @trigger "save:question:response", dataValue
+                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                    @trigger "save:question:response", dataValue
 
         # set handlers
         App.commands.setHandler "show:single:question:chorus:options:app", (opt = {})->

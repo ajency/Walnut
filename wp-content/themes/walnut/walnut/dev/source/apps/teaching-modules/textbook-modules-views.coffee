@@ -13,13 +13,17 @@ define ['app',
 						<td class="v-align-middle">{{quiz_type}}</td>
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-					   <td>
+					   	<td>
+					   	{{^practice_quiz}}
 						  <span class="muted status_label">{{&status_str}}</span>
+					   	{{/practice_quiz}}
 
-						  <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
+						</td>
+						<td>
+							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
 							{{&action_str}}
-						  </button>
-						  {{&training_date}}
+							</button>
+							{{&training_date}}
 						</td>'
 
 			tagName : 'tr'
@@ -50,13 +54,13 @@ define ['app',
 				status = @model.get 'status'
 
 				if @model.get('post_status')? and @model.get('post_status') is 'archive'
-					data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
+					data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 					data.status_str = '<span class="label label-success">Archived</span>'
 					data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
 				else
 					if status is 'started' or status is 'resumed'
-						data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
+						data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 						data.status_str = '<span class="label label-info">In Progress</span>'
 						data.action_str = '<i class="fa fa-pause"></i> Resume'
 
@@ -65,9 +69,9 @@ define ['app',
 						data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
 						if Marionette.getOption(@, 'mode') is 'take-quiz'
-							data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>'
+							data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>'
 						else 
-							data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
+							data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 						
 
 					else
@@ -75,12 +79,15 @@ define ['app',
 						data.action_str = '<i class="fa fa-play"></i> Start'
 
 						if Marionette.getOption(@, 'mode') isnt 'take-quiz'
-							data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date">
+							data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
 																		<i class="fa fa-calendar"></i> ' + training_date + '</button>'
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
 					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+
+				if @model.get('quiz_type') is 'practice'
+					data.practice_quiz = true
 
 				data
 

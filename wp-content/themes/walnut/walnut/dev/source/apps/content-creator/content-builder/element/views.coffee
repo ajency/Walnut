@@ -44,6 +44,16 @@ define ['app'
 						
 					# set mouse hover for element
 					onShow:()=>
+						console.log 'elemtn test'
+						console.log @model.get 'element'
+						if @model.get('element') in ['Row','ImageWithText']
+							@$el.find '.aj-imp-settings-btn'
+							.removeClass 'hidden'
+
+						if @model.get('element') in ['TeacherQuestion']
+							@$el.find '.aj-imp-settings-btn'
+							.addClass 'hidden'
+
 						@$el.mouseover (evt)=>
 							evt.stopPropagation()
 							return if window.dragging
@@ -101,19 +111,19 @@ define ['app'
 					
 					# spinner options
 					_getOptions : ->
-			            lines 		: 10
-			            length 		: 6
-			            width 		: 2.5
-			            radius 		: 7
-			            corners 	: 1
-			            rotate 		: 9
-			            direction 	: 1
-			            color 		: '#000'
-			            speed 		: 1
-			            trail 		: 60
-			            shadow 		: false
-			            hwaccel 	: true
-			            className 	: 'spinner'
-			            zIndex 		: 2e9
-			            top 		: '0px'
-			            left 		: '40px'
+						lines 		: 10
+						length 		: 6
+						width 		: 2.5
+						radius 		: 7
+						corners 	: 1
+						rotate 		: 9
+						direction 	: 1
+						color 		: '#000'
+						speed 		: 1
+						trail 		: 60
+						shadow 		: false
+						hwaccel 	: true
+						className 	: 'spinner'
+						zIndex 		: 2e9
+						top 		: '0px'
+						left 		: '40px'

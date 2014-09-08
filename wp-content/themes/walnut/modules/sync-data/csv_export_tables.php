@@ -309,31 +309,34 @@ function get_postmeta_table_query($last_sync='', $user_id=''){
     global $wpdb;
 
     if($last_sync == ''){
-        $postmeta_table_query=$wpdb->prepare(
-            "SELECT pm.* FROM {$wpdb->base_prefix}postmeta pm,
-                {$wpdb->base_prefix}posts p
-                    WHERE p.post_type <> %s AND p.ID = pm.post_id
-            UNION SELECT * FROM {$wpdb->base_prefix}postmeta WHERE post_id=0
-            ",
-            "page"
-        );
+        $postmeta_table_query="SELECT * FROM {$wpdb->base_prefix}postmeta";
         
     }
     else{
+        $post_ids_query = $wpdb->prepare(
+                "SELECT DISTINCT p.ID FROM
+                {$wpdb->base_prefix}posts p, {$wpdb->base_prefix}postmeta pm
+                WHERE p.post_modified > %s 
+                    AND p.ID = pm.post_id
+                    AND p.post_status in ('publish','archive')",
+                array($last_sync)
+            );
 
-        $meta_ids_str = $post_ids_str = -1;
+        $post_ids= $wpdb->get_col($post_ids_query);
 
-        $m_ids_str = get_meta_ids_str($last_sync);
+        if($post_ids)
+            $post_ids_str=join(',', $post_ids);
+        else
+            $post_ids_str=-1;
+
+        $meta_ids_str = get_meta_ids_str($last_sync);
         
-        if($m_ids_str)
-            $meta_ids_str = $m_ids_str;
+        if(!$meta_ids_str)
+            $meta_ids_str = -1;
         
-        $postmeta_table_query=$wpdb->prepare(
-            "SELECT * FROM {$wpdb->base_prefix}postmeta
+        $postmeta_table_query="SELECT * FROM {$wpdb->base_prefix}postmeta
                     WHERE post_id in ($post_ids_str)
-                    OR meta_id in ($meta_ids_str)",
-            null
-        );
+                    OR meta_id in ($meta_ids_str)";
             
     }    
 
@@ -351,37 +354,30 @@ function get_meta_ids_str($last_sync){
     global $wpdb;
 
     $element_metas=$wpdb->prepare(
-        "SELECT p.ID, pm.meta_value as layout FROM
+        "SELECT pm.meta_value as layout FROM
         {$wpdb->base_prefix}posts p, {$wpdb->base_prefix}postmeta pm
         WHERE p.post_modified > %s AND p.ID = pm.post_id AND pm.meta_key like %s",
         array($last_sync,'layout_json')
     );
 
-    $elements= $wpdb->get_results($element_metas, ARRAY_A);
-
-    $post_ids= __u::pluck($elements, 'ID');
-
-    if($post_ids)
-        $post_ids_str=join(',',$post_ids);
-
-    $layouts =  __u::pluck($elements, 'layout');
+    $layouts= $wpdb->get_col($element_metas);
 
     if(is_array($layouts)){
+        $meta_ids= array();
         foreach($layouts as $ele){
             $layout = maybe_unserialize($ele);
             $layout = maybe_unserialize($layout);
 
-            $meta_ids= array();
             if($layout){
                 foreach($layout as $l){
                     $meta_ids= get_meta_ids($l, $meta_ids);
                 }
             }
-
-            if(sizeof($meta_ids>0))
-                $meta_ids_str = join(',',__u::compact($meta_ids));
         }
     }
+
+    if(sizeof($meta_ids>0))
+        $meta_ids_str = join(',',__u::compact($meta_ids));
 
     return $meta_ids_str;
 

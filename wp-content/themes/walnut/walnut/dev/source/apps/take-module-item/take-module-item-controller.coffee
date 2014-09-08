@@ -4,6 +4,9 @@ define ['app'
         'apps/take-module-item/teacher-training-footer/training-footer-controller'
         'apps/take-module-item/module-description/module-description-app'
         'apps/take-module-item/chorus-options/chorus-options-app'
+        'apps/take-module-item/item-description/controller'
+        'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
+        
 ], (App, RegionController)->
     App.module "TeacherTeachingApp", (View, App)->
 
@@ -49,7 +52,7 @@ define ['app'
                 @listenTo @layout, "show", @_showModuleDescriptionView
 
                 @listenTo @layout, 'show', =>
-                    if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+                    if contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
                     else
                         @_showStudentsListView questionResponseModel
@@ -77,12 +80,13 @@ define ['app'
                     questionResponseModel = @_getOrCreateModel nextQuestion
 
                     @_showQuestionDisplayView contentPiece
+                    @layout.triggerMethod "change:content:piece", contentPiece
 
                     if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
                         @_showTeacherTrainingFooter()
 
-                    else
-                        @_showStudentsListView questionResponseModel
+                    # else if contentPiece.get('question_type') is 'multiple_eval'
+                    #   @_showStudentsListView questionResponseModel
 
                 else
                     @_gotoViewModule()
@@ -134,6 +138,7 @@ define ['app'
                     mode: @display_mode
                     division: @division
                     classID: @classID
+                    studentCollection: studentCollection
 
 
             _getOrCreateModel : (content_piece_id)=>
@@ -173,16 +178,35 @@ define ['app'
                 if not questionResponseModel
                     @_getOrCreateModel model.ID
 
+                App.execute "show:top:panel",
+                    region : @layout.topPanelRegion
+                    model : contentPiece
+                    questionResponseModel : questionResponseModel
+                    timerObject : @timerObject
+                    display_mode : @display_mode
+                    students : studentCollection
+                    classID  : @classID
+
                 App.execute "when:fetched", questionResponseModel, =>
-                    App.execute "show:content:preview",
-                        region : @layout.questionsDetailsRegion
-                        model : model
-                        textbookNames : @textbookNames
-                        questionResponseModel : questionResponseModel
-                        timerObject : @timerObject
-                        display_mode : @display_mode
-                        classID : @classID
-                        students : studentCollection
+
+                    if contentPiece.get('question_type') is 'multiple_eval'
+                        App.execute "show:single:question:multiple:evaluation:app",
+                            region : @layout.contentBoardRegion
+                            questionResponseModel : questionResponseModel
+                            studentCollection : studentCollection
+                            display_mode : @display_mode
+                            timerObject : @timerObject
+                            evaluationParams : contentPiece.get 'grading_params'
+
+                        @layout.studentsListRegion.close()
+                        
+
+                    else
+                        App.execute "show:content:board",
+                            region : @layout.contentBoardRegion
+                            model : contentPiece
+
+                
 
             _showStudentsListView : (questionResponseModel)=>
                 App.execute "when:fetched", contentPiece, =>
@@ -216,23 +240,42 @@ define ['app'
 
             _getTakeSingleQuestionLayout : ->
                 new SingleQuestionLayout
+                    model: contentPiece
 
         class SingleQuestionLayout extends Marionette.Layout
 
             template : '<div id="module-details-region"></div>
-                                    <div id="question-details-region"></div>
-                                    <div id="students-list-region"></div>'
+                        <div class="" id="top-panel"></div>
+                        <div class="container-grey m-b-5  qstnInfo ">
+                            <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label>
+                            <span class="small-text" id="instructions"></span>
+                        </div>
+                        <div id="content-board"></div>
+                        <div id="students-list-region"></div>'
 
             regions :
                 moduleDetailsRegion : '#module-details-region'
-                questionsDetailsRegion : '#question-details-region'
+                contentBoardRegion : '#content-board'
                 studentsListRegion : '#students-list-region'
+                topPanelRegion : '#top-panel'
 
             onShow : ->
                 $('.page-content').addClass 'condensed expand-page'
+                @onChangeContentPiece @model
+
+            onChangeContentPiece:(contentPiece)->
+                instructionsLabel = if contentPiece.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
+
+                if instructionsLabel
+                    @$el.find '#instructions-label'
+                    .html instructionsLabel
+
+                @$el.find '#instructions'
+                .html contentPiece.get 'instructions'
 
 
 
-		
+
+        
 
 

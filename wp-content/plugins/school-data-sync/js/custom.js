@@ -1,6 +1,24 @@
 
 
 jQuery(document).ready(function() {
+    
+    jQuery("#req-test").on('click',function(){
+       jQuery.ajax({  
+                type: 'POST',  
+                url: ajaxurl,  
+                data: {  
+                    action: 'test-server-request',
+                },  
+                success: function(data, textStatus, XMLHttpRequest){  
+                    //alert('Success: ' + data);
+                    console.log(data); 
+                },  
+                error: function(XMLHttpRequest, textStatus, errorThrown){  
+                    console.log(errorThrown);  
+
+                }  
+	    }); 
+    });
 
     jQuery("#validate-blog-user").on('click',function(){
 
@@ -76,15 +94,17 @@ jQuery(document).ready(function() {
       console.log(referer);
        jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
-                type: 'GET',  
-                url: SERVER_AJAXURL,  
+                type: 'POST',  
+                url: ajaxurl,  
                 data: {  
-                    action: 'sync-database',
+                    action: 'sync-local-database',
                     blog_id: blog_id,
-                    last_sync: last_sync
+                    last_sync: last_sync,
+                    device_type: 'standalone'
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
+                    var data = jQuery.parseJSON( data ); 
                     jQuery(referer).next().text('Local Sync started...'); 
                     //jQuery("#test-div1").append(data);  
                     school_data_sync_start(referer,lastsync_id,syncstatus,data)
@@ -98,28 +118,45 @@ jQuery(document).ready(function() {
     }
     
     function school_data_sync_start(referer,lastsync_id,syncstatus,respdata){
-        
-        jQuery.post( ajaxurl,
-        {
-            action    : 'sds_data_sync_start',
-            filepath  : respdata.exported_csv_url,
-            last_sync : respdata.last_sync,
-            lastsync_id : lastsync_id,
-            syncstatus : syncstatus
-        },
-        function(data) {           
-                   if(data.code === 'OK'){ 
-                               jQuery(referer).next().text('File downloaded...');
-                               school_data_sync_import(referer,data.sync_request_id)
-                               
-                  
-                   } else if(data.code === 'ERROR') {
-                               //alert('error');
-                               jQuery(referer).next().text('File download failed'); 
-                               jQuery(referer).prop('disabled', false);
-                               jQuery('#sync-media').prop('disabled', false);
-                   }          
-        },'json');
+        //console.log(respdata)
+        if(respdata.blog_expired){
+            /// code logic to delete site content
+            jQuery.post( ajaxurl,
+            {
+                action    : 'sds_delete_blog_content'
+            },
+            function(data) {           
+                       if(data.code === 'OK'){ 
+                                   jQuery(referer).next().text('Blog Validity Expired'); 
+                                   jQuery(referer).prop('disabled', false);
+                                   jQuery('#sync-media').prop('disabled', false);
+
+                       }       
+            },'json');    
+        }
+        else{
+            jQuery.post( ajaxurl,
+            {
+                action    : 'sds_data_sync_start',
+                filepath  : respdata.exported_csv_url,
+                last_sync : respdata.last_sync,
+                lastsync_id : lastsync_id,
+                syncstatus : syncstatus
+            },
+            function(data) {           
+                       if(data.code === 'OK'){ 
+                                   jQuery(referer).next().text('File downloaded...');
+                                   school_data_sync_import(referer,data.sync_request_id)
+
+
+                       } else if(data.code === 'ERROR') {
+                                   //alert('error');
+                                   jQuery(referer).next().text('File download failed'); 
+                                   jQuery(referer).prop('disabled', false);
+                                   jQuery('#sync-media').prop('disabled', false);
+                       }          
+            },'json');            
+        }
         
     }
     
@@ -250,13 +287,14 @@ jQuery(document).ready(function() {
         var server_sync_id = referer.attr('data-server-sync-id');
         check_server_sync = setInterval(function()
                                 {
-                                  jQuery.get( SERVER_AJAXURL,
+                                  jQuery.get( ajaxurl,
                                   {
-                                    action    : 'check-app-data-sync-completion',
+                                    action    : 'check-server-app-data-sync-completion',
                                     blog_id :blog_id,
                                     sync_request_id:server_sync_id
                                   },
                                     function(data) { 
+                                        var data = jQuery.parseJSON( data );
                                         console.log(data);
                                         if(data === true){ 
                                         jQuery(referer).next().text('Server Syncd...').delay(250).text('Initializing download..');
@@ -279,7 +317,7 @@ jQuery(document).ready(function() {
                 var referer = jQuery(this);
                 jQuery.post( ajaxurl,
                 {
-                    action    : 'sds_media_sync_images',
+                    action    : 'sds_media_sync',
                     type : 'images'
                 },
                 function(data) {           
@@ -306,7 +344,7 @@ jQuery(document).ready(function() {
             referer.next().text('Downloading Audio files...');
                 jQuery.post( ajaxurl,
                 {
-                    action    : 'sds_media_sync_images',
+                    action    : 'sds_media_sync',
                     type : 'audios'
                 },
                 function(data) {           
@@ -332,12 +370,14 @@ jQuery(document).ready(function() {
             referer.next().text('Downloading Video files...');
                 jQuery.post( ajaxurl,
                 {
-                    action : 'sds_media_sync_images',
+                    action : 'sds_media_sync',
                     type : 'videos'
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 
-                                       jQuery(referer).next().text('Video files downloaded...').fadeOut(5000);
+                                       jQuery(referer).next().text('Video files downloaded...').fadeOut(1000,function(){
+                                           jQuery(referer).next().text('Media Sync Completed!').fadeIn(1000);
+                                       });
                                        jQuery(referer).prop('disabled', false);
                                        jQuery('#sync-data').prop('disabled', false);
 

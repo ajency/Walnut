@@ -15,13 +15,17 @@ define ['app'
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
                 #mode refers to "training" mode or "take-class" mode
-                {model,@classID, @mode, @division} = opts
+                {model,@classID, @mode, @division,@studentCollection} = opts
 
                 @questionResponseCollection = App.request "get:question:response:collection",
                     'division': @division
                     'collection_id': model.get 'id'
 
-                @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
+                if not @studentCollection
+                    if @mode is 'training'
+                        @studentCollection = App.request "get:dummy:students"
+                    else
+                        @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", model, =>
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'

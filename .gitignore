@@ -5,9 +5,15 @@ wp-content/uploads
 .idea
 .ssh
 .bash_history
-.gitconfig
+.mysql_history
 .viminfo
+.gitconfig
+.composer
 composer.phar
 wp-content/themes/walnut/vendor
 wp-content/themes/walnut/csvupload
+
+
+
 /nbproject
+

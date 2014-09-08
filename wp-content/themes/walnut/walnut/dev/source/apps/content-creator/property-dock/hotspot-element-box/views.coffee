@@ -21,7 +21,7 @@ define ['app'],(App)->
 		class Views.HotspotElementBoxView extends Marionette.CompositeView
 
 			template : '<div class="tile-more-content no-padding">
-							<div class="tiles green">
+							<div class="tiles blue">
 								<div class="tile-footer drag">
 									Hotspot Properties 
 								</div>

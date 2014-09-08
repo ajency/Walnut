@@ -80,12 +80,13 @@ function school_divisions_options() {
     
     <form action="" method="post">
      <table class="form-table" id="blog-division-table"> 
-         <tr><th>Class</th><th>Division</th></tr>
+         <tr><th>Division ID</th><th>Class</th><th>Division Name</th></tr>
 	<?php 
         $counter=1;
         foreach($divisions_qry as $division){?>
 
          <tr>
+             <td><?php echo $division->id; ?></td>
              <td><?php get_class_dropdown($counter,$division->class_id); ?></td>
              <td>
              <input type='text' class='regular-text code' name='divisionlabel_<?php echo $counter;?>' 

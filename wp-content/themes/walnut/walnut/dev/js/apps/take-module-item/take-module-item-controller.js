@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/take-module-item/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/take-module-item/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/take-module-item/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
     var SingleQuestionLayout, contentGroupModel, contentPiece, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            if (_this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
+            if (contentPiece.get('content_type') === 'content_piece') {
               return _this._showTeacherTrainingFooter();
             } else {
               return _this._showStudentsListView(questionResponseModel);
@@ -71,10 +71,9 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           contentPiece = questionsCollection.get(nextQuestion);
           questionResponseModel = this._getOrCreateModel(nextQuestion);
           this._showQuestionDisplayView(contentPiece);
+          this.layout.triggerMethod("change:content:piece", contentPiece);
           if (this.display_mode === 'training' || contentPiece.get('content_type') === 'content_piece') {
             return this._showTeacherTrainingFooter();
-          } else {
-            return this._showStudentsListView(questionResponseModel);
           }
         } else {
           return this._gotoViewModule();
@@ -135,7 +134,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           model: contentGroupModel,
           mode: this.display_mode,
           division: this.division,
-          classID: this.classID
+          classID: this.classID,
+          studentCollection: studentCollection
         });
       };
 
@@ -179,18 +179,33 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         if (!questionResponseModel) {
           this._getOrCreateModel(model.ID);
         }
+        App.execute("show:top:panel", {
+          region: this.layout.topPanelRegion,
+          model: contentPiece,
+          questionResponseModel: questionResponseModel,
+          timerObject: this.timerObject,
+          display_mode: this.display_mode,
+          students: studentCollection,
+          classID: this.classID
+        });
         return App.execute("when:fetched", questionResponseModel, (function(_this) {
           return function() {
-            return App.execute("show:content:preview", {
-              region: _this.layout.questionsDetailsRegion,
-              model: model,
-              textbookNames: _this.textbookNames,
-              questionResponseModel: questionResponseModel,
-              timerObject: _this.timerObject,
-              display_mode: _this.display_mode,
-              classID: _this.classID,
-              students: studentCollection
-            });
+            if (contentPiece.get('question_type') === 'multiple_eval') {
+              App.execute("show:single:question:multiple:evaluation:app", {
+                region: _this.layout.contentBoardRegion,
+                questionResponseModel: questionResponseModel,
+                studentCollection: studentCollection,
+                display_mode: _this.display_mode,
+                timerObject: _this.timerObject,
+                evaluationParams: contentPiece.get('grading_params')
+              });
+              return _this.layout.studentsListRegion.close();
+            } else {
+              return App.execute("show:content:board", {
+                region: _this.layout.contentBoardRegion,
+                model: contentPiece
+              });
+            }
           };
         })(this));
       };
@@ -235,7 +250,9 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       TeacherTeachingController.prototype._getTakeSingleQuestionLayout = function() {
-        return new SingleQuestionLayout;
+        return new SingleQuestionLayout({
+          model: contentPiece
+        });
       };
 
       return TeacherTeachingController;
@@ -248,16 +265,27 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div id="question-details-region"></div> <div id="students-list-region"></div>';
+      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board"></div> <div id="students-list-region"></div>';
 
       SingleQuestionLayout.prototype.regions = {
         moduleDetailsRegion: '#module-details-region',
-        questionsDetailsRegion: '#question-details-region',
-        studentsListRegion: '#students-list-region'
+        contentBoardRegion: '#content-board',
+        studentsListRegion: '#students-list-region',
+        topPanelRegion: '#top-panel'
       };
 
       SingleQuestionLayout.prototype.onShow = function() {
-        return $('.page-content').addClass('condensed expand-page');
+        $('.page-content').addClass('condensed expand-page');
+        return this.onChangeContentPiece(this.model);
+      };
+
+      SingleQuestionLayout.prototype.onChangeContentPiece = function(contentPiece) {
+        var instructionsLabel;
+        instructionsLabel = contentPiece.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
+        if (instructionsLabel) {
+          this.$el.find('#instructions-label').html(instructionsLabel);
+        }
+        return this.$el.find('#instructions').html(contentPiece.get('instructions'));
       };
 
       return SingleQuestionLayout;

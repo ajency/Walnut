@@ -12,6 +12,8 @@ define(['app'], function(App) {
 
       Layout.prototype.template = '<div class="tiles default"> <div class="tiles-head"> <h4 class="text-white"><span class="semi-bold">Properties </span>Dock</h4> </div> </div> <div id="question-elements-property" class="docket"></div> <div id="question-property" class="docket"></div> <div id="question-elements" class="docket"></div>';
 
+      Layout.prototype.className = 'dock tiles';
+
       Layout.prototype.regions = {
         questElementPropRegion: '#question-elements-property',
         questPropertyRegion: '#question-property',

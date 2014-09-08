@@ -27,6 +27,23 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 marks
 
+            setMarks:(multiplicationFactor)->
+
+                layout= @.get 'layout'
+                
+                _.each layout, (ele)-> 
+                    ele.marks=ele.marks*multiplicationFactor if ele.marks
+
+                    options= ele.optionCollection if _.has ele, 'optionCollection'
+                    options= ele.elements if _.has ele, 'elements'
+                    options= ele.blanksArray if _.has ele, 'blanksArray'
+
+                    if options
+                        _.each options, (op)-> 
+                            op.marks=op.marks*multiplicationFactor if op.marks
+
+                @
+
         # ContentPiece collection class
         class ContentPiece.ItemCollection extends Backbone.Collection
             model : ContentPiece.ItemModel
@@ -34,6 +51,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             url : ->
                 AJAXURL + '?action=get-content-pieces'
 
+        contentPiecesRepository= new ContentPiece.ItemCollection
 
         # collection of content pieces in a content group. eg. questions in a quiz
         class ContentPiece.GroupItemCollection extends Backbone.Collection
@@ -57,11 +75,19 @@ define ["app", 'backbone'], (App, Backbone) ->
         # get all content pieces
             getContentPieces : (param = {})->
                 contentPieceCollection = new ContentPiece.ItemCollection
+                
+                if not param.search_str
+                    contentPieceCollection.add contentPiecesRepository.models
+
+                    param.exclude = contentPiecesRepository.pluck 'ID'
+
                 contentPieceCollection.fetch
-                    reset : true
                     add : true
                     remove : false
                     data : param
+                    type : 'post'
+                    success:(resp)-> contentPiecesRepository.add resp.models
+
                 contentPieceCollection
 
         # get all content pieces belonging to particular group
@@ -82,19 +108,34 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
             getContentPieceByID : (id)->
-                contentPiece = contentPieceCollection.get id if contentPieceCollection?
+                contentPiece = contentPiecesRepository.get id
 
                 if not contentPiece
                     contentPiece = new ContentPiece.ItemModel ID : id
-                    contentPiece.fetch()
+                    contentPiece.fetch
+                        success:(resp)->contentPiecesRepository.add resp
+
                 contentPiece
 
             getContentPiecesByIDs : (ids = [])->
+                
                 contentPieces = new ContentPiece.ItemCollection
+                
+                for id in ids
+                    model= contentPiecesRepository.get id
+                    if model
+                        contentPieces.add model
+                        ids = _.without ids, id
+
                 if _.size(ids) > 0
                     contentPieces.fetch
+                        add : true
+                        remove : false
                         data :
                             ids : ids
+
+                        success:(resp)->contentPiecesRepository.add resp.models
+
                 contentPieces
 
             newContentPiece:->

@@ -4,27 +4,30 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
 
             tagName: 'li'
 
-            template: '<a href="javascript:;">
-                        					<i class="{{iconClass}}"></i>
-                        					<span class="title">{{post_title}}</span>
-                        					<span class="arrow"></span>
-                        				</a>
-                        				<ul class="sub-menu">
-                        					{{#submenu}}
-                        					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
-                        					{{/submenu}}
-                        				</ul>'
+            template:   '<a href="javascript:;">
+        					<i class="{{iconClass}}"></i>
+        					<span class="title">{{post_title}}</span>
+        					<span class="arrow"></span>
+        				</a>
+        				<ul class="sub-menu">
+        					{{#submenu}}
+        					<li><a href="{{menu_item_link}}">{{post_title}}</a></li>
+        					{{/submenu}}
+        				</ul>'
 
             serializeData: ->
                 data = super()
 
                 iconClass = 'icon-custom-ui'
 
-                if @model.get('post_title') is 'Training Module'
+                if @model.get('post_title') is 'Content Management'
                     iconClass = 'fa fa-pencil-square-o'
 
-                if @model.get('post_title') is 'Content Management'
+                if @model.get('post_title') is 'Training Management'
                     iconClass = 'fa fa-book'
+
+                if @model.get('post_title') is 'Quiz Management'
+                    iconClass = 'fa fa-info-circle'
 
                 data.iconClass = iconClass
 

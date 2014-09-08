@@ -6,7 +6,7 @@ function school_data_sync_screen(){
     }
 	?>
 	<script>
-	SERVER_AJAXURL = 'http://synapsedu.info/wp-admin/admin-ajax.php';
+	SERVER_AJAXURL = '<?php echo REMOTE_SERVER_URL?>/wp-admin/admin-ajax.php';
 	</script>
 
 	<?php
@@ -49,20 +49,24 @@ function get_sync_form_html($blog_id){
          <h3>School Data Sync</h3>';
     if($last_sync_imported->last_sync)
         $sync_form_html .= '<p>[Last Data Sync]:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
-
-    $sync_form_html .= '<label>Data Sync </label> ->
-                    <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
-        . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
-        . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
-        . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
-        . 'data-blog-id='.$blog_id.' '
-        . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
-                        <span class="status-msg"></span>
-                     <br/><br/>
-                     <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
-                             <span class="status-msg"></span>
-                     </fieldset>
-                    </form>';
+        
+        $upsyncount = get_upsync_data_count();
+        
+        $sync_form_html .= '<p>Records To Be Upsyncd:'.$upsyncount.'</p>';
+        
+        $sync_form_html .= '<label>Data Sync </label> ->
+                        <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
+            . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
+            . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
+            . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
+            . 'data-blog-id='.$blog_id.' '
+            . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
+                            <span class="status-msg"></span>
+                         <br/><br/>
+                         <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
+                                 <span class="status-msg"></span>
+                         </fieldset>
+                        </form>';
 
     return $sync_form_html;
 
@@ -187,12 +191,19 @@ function sds_get_tables_to_export($last_sync=''){
 
     global $wpdb;
 
-    $tables_list= array(
+    $question_response_table = "{$wpdb->prefix}question_response";
+    $response_meta_table = "{$wpdb->prefix}question_response_meta";
 
-        "{$wpdb->prefix}question_response",
-        "{$wpdb->prefix}question_response_meta"
+    $tables_list[]= array(
+        'query'=> "SELECT * FROM $question_response_table WHERE sync = 0",
+        'table_name'=> $question_response_table
+        );
 
-    );
+    $tables_list[]= array(
+        'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm 
+        WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
+        'table_name'=> $response_meta_table);
+
     return $tables_list;
 }
 
@@ -377,10 +388,19 @@ function sds_get_media_files_directory_json($mediatype = 'images') {
     $wp_upload_dir = wp_upload_dir();
     if($mediatype == 'images'){
      $files = sds_read_folder_directory( $wp_upload_dir['path'], $wp_upload_dir['baseurl']);   
-    }else{
-     $files = sds_read_folder_directory( str_replace("images", $mediatype, $wp_upload_dir['path']), 
-             str_replace("images", $mediatype, $wp_upload_dir['baseurl']));
     }
+
+    else{
+        if($mediatype === 'audios')
+            $folderName='audios';
+
+        if($mediatype === 'videos')
+            $folderName='videos';
+
+        $files = sds_read_folder_directory( str_replace("images", $folderName, $wp_upload_dir['path']), 
+             str_replace("images", $folderName, $wp_upload_dir['baseurl']));
+    }
+
     return $files;
 }
 function sds_get_videos_directory_json() {
@@ -415,24 +435,34 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
     $retarray = array('success'=>true);
       $uploads_dir=wp_upload_dir();
       $upload_path = $uploads_dir['basedir'];
-      if ($mediatype != 'images')
-        $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
+
+        if ($mediatype != 'images'){
+             $upload_path=str_replace("images", $mediatype, $uploads_dir['basedir']);
+        }
+   
+        $max_execution_time = ini_get('max_execution_time');
+        ini_set('max_execution_time', '0');    
+     
         foreach ($files as $key=>$value){
             $url = $value;
             $savepath = $upload_path.'/'.$key;
-            $localpath =  fopen($savepath, "w");
-            $ch = curl_init();
+            $localpath  = $savepath;
+            //$localpath =  fopen($savepath, "w");
+            
+            
+            // function call to download remote file by chunks
+            copyfile_chunked($url,$localpath);
+            /*$ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_FAILONERROR, true);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_AUTOREFERER, true);
             curl_setopt($ch, CURLOPT_BINARYTRANSFER,true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
             curl_setopt($ch, CURLOPT_FILE, $localpath);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 0);
             $executefiledownload = curl_exec($ch);
             if(!$executefiledownload) {
                 $retarray['error'] = $executefiledownload;
@@ -440,8 +470,107 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
              return $retarray;
             }  
             curl_close($ch);
+             */
 
         }
         
+        ini_set('max_execution_time', $max_execution_time);
+        
     return $retarray;
+}
+
+function get_upsync_data_count(){
+    global $wpdb;
+    $upsynccount = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
+    return $upsynccount[0];
+}
+
+function sds_update_data_imported(){
+    global $wpdb;
+    
+    $wpdb->query("UPDATE `{$wpdb->prefix}posts` SET guid = replace(guid, '".REMOTE_SERVER_URL."','".site_url()."')");
+
+}
+
+/**
+ * Copy remote file over HTTP one small chunk at a time.
+ *
+ * @param $infile The full URL to the remote file
+ * @param $outfile The path where to save the file
+ */
+function copyfile_chunked($infile, $outfile) {
+    $chunksize = 10 * (1024 * 1024); // 10 Megs
+
+    /**
+     * parse_url breaks a part a URL into it's parts, i.e. host, path,
+     * query string, etc.
+     */
+    $parts = parse_url($infile);
+    $i_handle = fsockopen($parts['host'], 80, $errstr, $errcode, 5);
+    $o_handle = fopen($outfile, 'wb');
+
+    if ($i_handle == false || $o_handle == false) {
+        return false;
+    }
+
+    if (!empty($parts['query'])) {
+        $parts['path'] .= '?' . $parts['query'];
+    }
+
+    /**
+     * Send the request to the server for the file
+     */
+    $request = "GET {$parts['path']} HTTP/1.1\r\n";
+    $request .= "Host: {$parts['host']}\r\n";
+    $request .= "User-Agent: Mozilla/5.0\r\n";
+    $request .= "Keep-Alive: 115\r\n";
+    $request .= "Connection: keep-alive\r\n\r\n";
+    fwrite($i_handle, $request);
+
+    /**
+     * Now read the headers from the remote server. We'll need
+     * to get the content length.
+     */
+    $headers = array();
+    while(!feof($i_handle)) {
+        $line = fgets($i_handle);
+        if ($line == "\r\n") break;
+        $headers[] = $line;
+    }
+
+    /**
+     * Look for the Content-Length header, and get the size
+     * of the remote file.
+     */
+    $length = 0;
+    foreach($headers as $header) {
+        if (stripos($header, 'Content-Length:') === 0) {
+            $length = (int)str_replace('Content-Length: ', '', $header);
+            break;
+        }
+    }
+
+    /**
+     * Start reading in the remote file, and writing it to the
+     * local file one chunk at a time.
+     */
+    $cnt = 0;
+    while(!feof($i_handle)) {
+        $buf = '';
+        $buf = fread($i_handle, $chunksize);
+        $bytes = fwrite($o_handle, $buf);
+        if ($bytes == false) {
+            return false;
+        }
+        $cnt += $bytes;
+
+        /**
+         * We're done reading when we've reached the content length
+         */
+        if ($cnt >= $length) break;
+    }
+
+    fclose($i_handle);
+    fclose($o_handle);
+    return $cnt;
 }

@@ -41,7 +41,9 @@ define(['app', 'text!apps/content-creator/element-box/templates/toolbox.html'], 
       };
 
       ElementBoxView.prototype.onQuestionElementAdded = function() {
-        return this.$el.find('.qstns *[data-element]').draggable('disable');
+        if (Marionette.getOption(this, 'contentType') === 'student_question') {
+          return this.$el.find('.qstns *[data-element]').draggable('disable');
+        }
       };
 
       ElementBoxView.prototype.onQuestionElementRemoved = function() {

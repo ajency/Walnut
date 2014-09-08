@@ -5,7 +5,7 @@ define ['app'], (App)->
 
             template : '<div class="tile-more-content no-padding">
 
-            							  <div class="tiles green">
+            							  <div class="tiles blue">
 
             							    <div class="tile-footer drag">
             							      FIB
@@ -37,7 +37,7 @@ define ['app'], (App)->
             											<input type="text" id="fib-blanksize" class="blankSize"
             											data-slider-max="50" data-slider-min="1" data-slider-step="1"
             											data-slider-value="{{blank_size}}" data-slider-orientation="horizontal"
-            											 data-slider-selection="before">
+            											 data-slider-selection="before" style="width:85%">
 
             										</div>
 
