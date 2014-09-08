@@ -28,7 +28,7 @@ define ['app'
 
                     marks_obtained = responseModel.get('question_response').marks
 
-                    data.marks_obtained= parseFloat marks_obtained.toFixed 2
+                    data.marks_obtained= parseFloat parseFloat(marks_obtained).toFixed 2
 
                     all_marks  = _.compact _.pluck @model.get('layout'), 'marks'
                     total_marks= 0

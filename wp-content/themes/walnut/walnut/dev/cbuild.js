@@ -38,19 +38,19 @@
         tagsinput: 'plugins/bootstrap-tagsinput.min',
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
         babysitter: 'plugins/backbone.babysitter.min',
-        videojs: 'plugins/video',
-        videojsplaylist : 'plugins/videojs-playlists.min',
+      
         panzer: 'plugins/panzer',
         panzerlist : 'plugins/panzerlist',
         sidr: 'plugins/jquery.sidr.min',
         mmenu: 'plugins/jquery.mmenu.min.all',
+        resizablecolumns : 'plugins/jquery.resizableColumns.min',
+        bootbox : 'plugins/bootbox.min',
 
         // wordpress cropping js
         imageareaselect : '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min',
         imageedit : '../../../../../../wp-admin/js/image-edit',
         json2 : '../../../../../../wp-includes/js/json2',
         svgpainter : '../../../../../../wp-admin/js/svg-painter'
-
     },
     shim: {
         underscore: {
@@ -84,10 +84,12 @@
         tagsinput: ['jquery', 'bootstrap'],
         screwbuttons: ['jquery'],
         babysitter: ['backbone'],
-        videojsplaylist : ['videojs'],
+       
         panzer: ['jquery'],
         panzerlist : ['jquery'],
         sidr: ['jquery'],
+        resizablecolumns : ['jquery'],
+        bootbox : ['jquery', 'bootstrap'],
         app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
     }
 })

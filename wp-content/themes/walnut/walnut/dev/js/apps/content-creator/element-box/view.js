@@ -24,12 +24,12 @@ define(['app', 'text!apps/content-creator/element-box/templates/toolbox.html'], 
         });
         contentType = Marionette.getOption(this, 'contentType');
         if (contentType === 'teacher_question') {
-          elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio'];
+          elementSet = ['Row', 'TeacherQuestion', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio', 'Table'];
         } else if (contentType === 'content_piece') {
-          elementSet = ['Row', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio'];
+          elementSet = ['Row', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio', 'Table'];
           this.$el.find('#questions_elements_label').hide();
         } else {
-          elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio'];
+          elementSet = ['Row', 'Hotspot', 'Mcq', 'Fib', 'BigAnswer', 'Sort', 'Image', 'Text', 'ImageWithText', 'Video', 'Audio', 'Table'];
         }
         return _.each(this.$el.find('li'), function(el, ind) {
           var elementName;

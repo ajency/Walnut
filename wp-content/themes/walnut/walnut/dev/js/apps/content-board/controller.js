@@ -59,7 +59,8 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
       Controller.prototype._getContentBoardView = function() {
         return new ContentBoard.Views.ContentBoardView({
           model: this.model,
-          quizModel: this.quizModel
+          quizModel: this.quizModel,
+          answerModel: answerModel
         });
       };
 
