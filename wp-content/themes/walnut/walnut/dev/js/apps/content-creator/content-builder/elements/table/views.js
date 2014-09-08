@@ -48,24 +48,35 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.rowChanged = function(model, rows) {
-        var currentRows, html, index, _i, _ref;
+        var currentRows, html, index, _i, _ref, _results;
         currentRows = this.$el.find('tbody tr').length;
         if (currentRows === rows) {
 
         } else if (currentRows < rows) {
-          html = '<tr>';
-          for (index = _i = 1, _ref = model.get('column'); 1 <= _ref ? _i <= _ref : _i >= _ref; index = 1 <= _ref ? ++_i : --_i) {
-            html += '<td><div>demo</div></td>';
+          _results = [];
+          while (currentRows !== rows) {
+            html = '<tr>';
+            for (index = _i = 1, _ref = model.get('column'); 1 <= _ref ? _i <= _ref : _i >= _ref; index = 1 <= _ref ? ++_i : --_i) {
+              html += '<td><div>demo</div></td>';
+            }
+            html += '</tr>';
+            this.$el.find('tbody').append(html);
+            this.saveTableMarkup();
+            _results.push(currentRows++);
           }
-          html += '</tr>';
-          this.$el.find('tbody').append(html);
-          return this.saveTableMarkup();
+          return _results;
         } else {
           return bootbox.confirm('Removing a ROW might cause a loss of data. Do you want to continue?', (function(_this) {
             return function(result) {
+              var _results1;
               if (result) {
-                _this.$el.find('tbody tr:last-of-type').remove();
-                return _this.saveTableMarkup();
+                _results1 = [];
+                while (currentRows !== rows) {
+                  _this.$el.find('tbody tr:last-of-type').remove();
+                  _this.saveTableMarkup();
+                  _results1.push(currentRows--);
+                }
+                return _results1;
               } else {
                 return model.set('row', currentRows);
               }
@@ -75,28 +86,39 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.columnChanged = function(model, columns) {
-        var currentColumns, tableRows;
+        var currentColumns, tableRows, _results;
         currentColumns = this.$el.find('thead th').length;
         if (currentColumns === columns) {
 
         } else if (currentColumns < columns) {
-          this.$el.find('thead tr').append('<th><div>demo</div></th>');
-          tableRows = this.$el.find('tbody tr');
-          _.each(tableRows, function(row, index) {
-            return $(row).append('<td><div>demo</div></td>');
-          });
-          this.$el.find('table').resizableColumns('destroy');
-          this.$el.find('table').resizableColumns();
-          return this.saveTableMarkup();
+          _results = [];
+          while (currentColumns !== columns) {
+            this.$el.find('thead tr').append('<th><div>demo</div></th>');
+            tableRows = this.$el.find('tbody tr');
+            _.each(tableRows, function(row, index) {
+              return $(row).append('<td><div>demo</div></td>');
+            });
+            this.$el.find('table').resizableColumns('destroy');
+            this.$el.find('table').resizableColumns();
+            this.saveTableMarkup();
+            _results.push(columns++);
+          }
+          return _results;
         } else {
           return bootbox.confirm('Removing a COLUMN might cause a loss of data. Do you want to continue?', (function(_this) {
             return function(result) {
+              var _results1;
               if (result) {
-                _this.$el.find('thead tr th:last-of-type').remove();
-                tableRows = _this.$el.find('tbody tr td:last-of-type').remove();
-                _this.$el.find('table').resizableColumns('destroy');
-                _this.$el.find('table').resizableColumns();
-                return _this.saveTableMarkup();
+                _results1 = [];
+                while (currentColumns !== columns) {
+                  _this.$el.find('thead tr th:last-of-type').remove();
+                  tableRows = _this.$el.find('tbody tr td:last-of-type').remove();
+                  _this.$el.find('table').resizableColumns('destroy');
+                  _this.$el.find('table').resizableColumns();
+                  _this.saveTableMarkup();
+                  _results1.push(columns--);
+                }
+                return _results1;
               } else {
                 return model.set('column', currentColumns);
               }
@@ -172,6 +194,10 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       TableView.prototype.changeStyle = function(model, style) {
         this.$el.find('table').removeClass('style-1 style-2').addClass(style);
+        return this.saveTableMarkup();
+      };
+
+      TableView.prototype.onSaveTableMarkup = function() {
         return this.saveTableMarkup();
       };
 

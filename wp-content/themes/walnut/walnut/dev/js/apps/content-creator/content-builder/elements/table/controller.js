@@ -57,6 +57,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'text!
             });
           };
         })(this));
+        this.layout.model.on('save:table:markup', (function(_this) {
+          return function() {
+            return _this.view.triggerMethod('save:table:markup');
+          };
+        })(this));
         return this.layout.elementRegion.show(this.view);
       };
 

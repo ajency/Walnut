@@ -24,6 +24,10 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         });
       };
 
+      Controller.prototype.onClose = function() {
+        return this.model.trigger('save:table:markup');
+      };
+
       return Controller;
 
     })(RegionController);

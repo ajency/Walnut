@@ -20,6 +20,9 @@ define ['app'
                 new TablePropertyBox.Views.PropertyView
                     model: model
 
+            onClose : ->
+                @model.trigger 'save:table:markup'
+
 
 
 

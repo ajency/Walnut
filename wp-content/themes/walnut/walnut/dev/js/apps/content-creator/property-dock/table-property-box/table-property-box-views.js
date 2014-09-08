@@ -10,11 +10,12 @@ define(['app'], function(App) {
         return PropertyView.__super__.constructor.apply(this, arguments);
       }
 
-      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles blue"> <div class="tile-footer drag"> Table <i class="fa fa-chevron-right"></i> <span class="semi-bold">Table Properties</span> </div> <div class="docket-body"> <div class="control-group m-b-20"> <label for="spinner-01">Columns: </label> <div class="input-group spinner column-spinner"> <input type="text" class="form-control rowColInput" value="{{column}}"> <div class="input-group-btn-vertical "> <button class="btn btn-default btn-small m-r-5"><i class="fa fa-chevron-up"></i></button> <button class="btn btn-default btn-small"><i class="fa fa-chevron-down"></i></button> </div> </div> </div> <div class="control-group m-b-20"> <label for="spinner-02">Rows: </label> <div class="input-group spinner row-spinner"> <input type="text" class="form-control rowColInput" value="{{row}}"> <div class="input-group-btn-vertical"> <button class="btn btn-default btn-small m-r-5"><i class="fa fa-chevron-up"></i></button> <button class="btn btn-default btn-small"><i class="fa fa-chevron-down"></i></button> </div> </div> </div> <div class="control-group m-b-20"> <label for="properties">Properties: </label> <div class="checkbox check-info"> <input type="checkbox" value="" id="checkbox-bordered" data-toggle="checkbox"> <label class="checkbox" for="checkbox-bordered"> Bordered </label> <input type="checkbox" value="" id="checkbox-striped" data-toggle="checkbox"> <label class="checkbox" for="checkbox-striped"> Striped </label> </div> </div> <div class="control-group styles"> <label for="style">Style: </label> <select id="table-style"> <option value="style-1">Style 1</option> <option value="style-2">Style 2</option> </select> </div> </div> </div> </div>';
+      PropertyView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles blue"> <div class="tile-footer drag"> Table <i class="fa fa-chevron-right"></i> <span class="semi-bold">Table Properties</span> </div> <div class="docket-body"> <div class="control-group m-b-20"> <label for="spinner-01">Columns: </label> <div class="input-group spinner column-spinner"> <input type="text" class="form-control rowColInput" value="{{column}}" > <div class="input-group-btn-vertical "> <button class="btn btn-default btn-small m-r-5"><i class="fa fa-chevron-up"></i></button> <button class="btn btn-default btn-small"><i class="fa fa-chevron-down"></i></button> </div> </div> </div> <div class="control-group m-b-20"> <label for="spinner-02">Rows: </label> <div class="input-group spinner row-spinner"> <input type="text" class="form-control rowColInput" value="{{row}}" > <div class="input-group-btn-vertical"> <button class="btn btn-default btn-small m-r-5"><i class="fa fa-chevron-up"></i></button> <button class="btn btn-default btn-small"><i class="fa fa-chevron-down"></i></button> </div> </div> </div> <div class="control-group m-b-20"> <label for="properties">Properties: </label> <div class="checkbox check-info"> <input type="checkbox" value="" id="checkbox-bordered" data-toggle="checkbox"> <label class="checkbox" for="checkbox-bordered"> Bordered </label> <input type="checkbox" value="" id="checkbox-striped" data-toggle="checkbox"> <label class="checkbox" for="checkbox-striped"> Striped </label> </div> </div> <div class="control-group styles"> <label for="style">Style: </label> <select id="table-style"> <option value="style-1">Style 1</option> <option value="style-2">Style 2</option> </select> </div> </div> </div> </div>';
 
       PropertyView.prototype.events = {
         'click .spinner .btn:first-of-type': 'increaseCount',
         'click .spinner .btn:last-of-type': 'decreaseCount',
+        'blur .spinner input': 'changeCount',
         'change #checkbox-bordered': 'changeBordered',
         'change #checkbox-striped': 'changeStriped',
         'change #table-style': 'changeStyle'
@@ -31,25 +32,46 @@ define(['app'], function(App) {
         return this.$el.find('#table-style').val(this.model.get('style'));
       };
 
+      PropertyView.prototype.changeCount = function(evt) {
+        var count;
+        count = parseInt($(evt.target).closest('.spinner').find('input').val());
+        if (_.isNumber(count) && count > 0) {
+          if ($(evt.target).closest('.spinner').hasClass('column-spinner')) {
+            this.model.set('column', count);
+          }
+          if ($(evt.target).closest('.spinner').hasClass('row-spinner')) {
+            return this.model.set('row', count);
+          }
+        }
+      };
+
       PropertyView.prototype.increaseCount = function(evt) {
+        var count;
         evt.stopPropagation();
-        $(evt.target).closest('.spinner').find('input').val(parseInt($(evt.target).closest('.spinner').find('input').val(), 10) + 1);
+        count = parseInt($(evt.target).closest('.spinner').find('input').val(), 10);
+        count++;
+        $(evt.target).closest('.spinner').find('input').val(count);
         if ($(evt.target).closest('.spinner').hasClass('column-spinner')) {
-          this.model.set('column', parseInt($(evt.target).closest('.spinner').find('input').val()));
+          this.model.set('column', count);
         }
         if ($(evt.target).closest('.spinner').hasClass('row-spinner')) {
-          return this.model.set('row', parseInt($(evt.target).closest('.spinner').find('input').val()));
+          return this.model.set('row', count);
         }
       };
 
       PropertyView.prototype.decreaseCount = function(evt) {
+        var count;
         evt.stopPropagation();
-        $(evt.target).closest('.spinner').find('input').val(parseInt($(evt.target).closest('.spinner').find('input').val(), 10) - 1);
-        if ($(evt.target).closest('.spinner').hasClass('column-spinner')) {
-          this.model.set('column', parseInt($(evt.target).closest('.spinner').find('input').val()));
-        }
-        if ($(evt.target).closest('.spinner').hasClass('row-spinner')) {
-          return this.model.set('row', parseInt($(evt.target).closest('.spinner').find('input').val()));
+        count = parseInt($(evt.target).closest('.spinner').find('input').val(), 10);
+        count--;
+        if (count > 0) {
+          $(evt.target).closest('.spinner').find('input').val(count);
+          if ($(evt.target).closest('.spinner').hasClass('column-spinner')) {
+            this.model.set('column', count);
+          }
+          if ($(evt.target).closest('.spinner').hasClass('row-spinner')) {
+            return this.model.set('row', count);
+          }
         }
       };
 

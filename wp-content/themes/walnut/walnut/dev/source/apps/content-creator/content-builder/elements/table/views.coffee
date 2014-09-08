@@ -58,18 +58,22 @@ define ['app'
 					return
 
 				else if currentRows < rows
-					html = '<tr>'
-					for index in [1..model.get('column')]
-						html += '<td><div>demo</div></td>'
-					html += '</tr>'
-					@$el.find('tbody').append html
-					@saveTableMarkup()
+					while currentRows isnt rows			
+						html = '<tr>'
+						for index in [1..model.get('column')]
+							html += '<td><div>demo</div></td>'
+						html += '</tr>'
+						@$el.find('tbody').append html
+						@saveTableMarkup()
+						currentRows++
 				else
 					bootbox.confirm 'Removing a ROW might cause a loss of data.
 						Do you want to continue?',(result)=>
 						if result
-							@$el.find('tbody tr:last-of-type').remove()
-							@saveTableMarkup()
+							while currentRows isnt rows		
+								@$el.find('tbody tr:last-of-type').remove()
+								@saveTableMarkup()
+								currentRows--
 						else 
 							model.set 'row', currentRows 
 				
@@ -81,23 +85,27 @@ define ['app'
 					return
 
 				else if currentColumns < columns
-					@$el.find('thead tr').append '<th><div>demo</div></th>'
-					tableRows = @$el.find('tbody tr')
-					_.each tableRows,(row,index)->
-						$(row).append '<td><div>demo</div></td>'
+					while currentColumns isnt columns
+						@$el.find('thead tr').append '<th><div>demo</div></th>'
+						tableRows = @$el.find('tbody tr')
+						_.each tableRows,(row,index)->
+							$(row).append '<td><div>demo</div></td>'
 
-					@$el.find('table').resizableColumns('destroy')
-					@$el.find('table').resizableColumns()
-					@saveTableMarkup()
+						@$el.find('table').resizableColumns('destroy')
+						@$el.find('table').resizableColumns()
+						@saveTableMarkup()
+						columns++
 				else 
 					bootbox.confirm 'Removing a COLUMN might cause a loss of data.
 						Do you want to continue?',(result)=>
 						if result
-							@$el.find('thead tr th:last-of-type').remove()
-							tableRows = @$el.find('tbody tr td:last-of-type').remove()
-							@$el.find('table').resizableColumns('destroy')
-							@$el.find('table').resizableColumns()
-							@saveTableMarkup()
+							while currentColumns isnt columns	
+								@$el.find('thead tr th:last-of-type').remove()
+								tableRows = @$el.find('tbody tr td:last-of-type').remove()
+								@$el.find('table').resizableColumns('destroy')
+								@$el.find('table').resizableColumns()
+								@saveTableMarkup()
+								columns--
 						else
 							model.set 'column', currentColumns 
 							# console.log column+1
@@ -173,4 +181,7 @@ define ['app'
 			changeStyle : (model,style)->
 				@$el.find('table').removeClass('style-1 style-2').addClass style
 
+				@saveTableMarkup()
+
+			onSaveTableMarkup: ->
 				@saveTableMarkup()

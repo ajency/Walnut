@@ -57,6 +57,9 @@ define ['app'
 				@listenTo @view, "show show:table:property", =>
 					App.execute "show:question:properties",
 						model : @layout.model
+
+				@layout.model.on 'save:table:markup',=>
+					@view.triggerMethod 'save:table:markup'
 				
 				@layout.elementRegion.show @view
 
