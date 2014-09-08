@@ -41,7 +41,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
               return setTimeout(function() {
                 $('#loading-content-board').remove();
                 return $('#question-area').removeClass('vHidden');
-              }, 2000);
+              }, 500);
             });
           };
         })(this));

@@ -28,13 +28,13 @@ define ['app'
                         .trigger 'click'
                         
                 @listenTo @view, 'dependencies:fetched', =>
-                    fillElements = @startFillingElements()          
+                    fillElements = @startFillingElements()
 
                     fillElements.done =>
                         setTimeout ->
                             $('#loading-content-board').remove()
                             $('#question-area').removeClass 'vHidden'
-                        ,2000
+                        ,500
 
                 #                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 

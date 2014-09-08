@@ -21,17 +21,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       TakeQuizController.prototype.initialize = function(opts) {
-        var data;
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
         if (quizResponseSummary.isNew() && quizModel.get('quiz_type') === 'test') {
-          data = {
-            'status': 'started'
-          };
           quizResponseSummary.save({
             'status': 'started'
           });
         }
-        console.log(this.questionResponseCollection);
+        if (quizModel.get('quiz_type') === 'practice') {
+          quizResponseSummary.save({
+            'attempts': quizModel.get('attempts') + 1
+          });
+        }
         return this._startTakeQuiz();
       };
 

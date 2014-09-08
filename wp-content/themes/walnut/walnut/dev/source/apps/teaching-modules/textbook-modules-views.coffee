@@ -14,8 +14,16 @@ define ['app',
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
 					   	<td>
+					   	{{#practice_quiz}}
+						   	{{#attempts}}
+						   		Attempted: {{attempts}} time(s)
+						   	{{/attempts}}
+						   	{{^attempts}}
+						   		<span class="label label-important">Not Started</span>
+						   	{{/attempts}}
+					   	{{/practice_quiz}}
 					   	{{^practice_quiz}}
-						  <span class="muted status_label">{{&status_str}}</span>
+						  {{&status_str}}
 					   	{{/practice_quiz}}
 
 						</td>
@@ -23,7 +31,16 @@ define ['app',
 							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
 							{{&action_str}}
 							</button>
-							{{&training_date}}
+							{{#schedule_button}}
+								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
+									<i class="fa fa-calendar"></i> {{training_date}}
+								</button>
+							{{/schedule_button}}
+							{{^schedule_button}}
+								{{#training_date}}
+									<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div>
+								{{/training_date}}
+							{{/schedule_button}}
 						</td>'
 
 			tagName : 'tr'
@@ -43,24 +60,28 @@ define ['app',
 						.value()
 					chapter
 
-				training_date = @model.get 'training_date'
-				taken_on      = moment(@model.get('taken_on')).format("Do MMM YYYY")
+				if @model.get('type') is 'teaching-module'
+					training_date = @model.get('training_date')
+					if not training_date
+						training_date = 'Schedule'
+					else
+						training_date = moment(training_date).format("Do MMM YYYY")
 
-				if training_date is ''
-					training_date = 'Schedule'
-
-				else training_date = moment(training_date).format("Do MMM YYYY")
+				else
+					training_date = @model.get('taken_on')
+					if not training_date
+						training_date = null
+					else
+						training_date = moment(training_date).format("Do MMM YYYY")
 
 				status = @model.get 'status'
 
 				if @model.get('post_status')? and @model.get('post_status') is 'archive'
-					data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 					data.status_str = '<span class="label label-success">Archived</span>'
 					data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
 				else
 					if status is 'started' or status is 'resumed'
-						data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 						data.status_str = '<span class="label label-info">In Progress</span>'
 						data.action_str = '<i class="fa fa-pause"></i> Resume'
 
@@ -68,19 +89,15 @@ define ['app',
 						data.status_str = '<span class="label label-success">Completed</span>'
 						data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
-						if Marionette.getOption(@, 'mode') is 'take-quiz'
-							data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>'
-						else 
-							data.training_date = '<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
-						
-
 					else
 						data.status_str = '<span class="label label-important">Not Started</span>'
 						data.action_str = '<i class="fa fa-play"></i> Start'
 
 						if Marionette.getOption(@, 'mode') isnt 'take-quiz'
-							data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
-																		<i class="fa fa-calendar"></i> ' + training_date + '</button>'
+							data.schedule_button = true
+
+
+				data.training_date= training_date
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
