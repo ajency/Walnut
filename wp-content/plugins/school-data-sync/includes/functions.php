@@ -48,7 +48,7 @@ function get_sync_form_html($blog_id){
          <fieldset>
          <h3>School Data Sync</h3>';
     if($last_sync_imported->last_sync)
-        $sync_form_html .= '<p>[Last Data Sync]:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
+        $sync_form_html .= '<p>Last Data Sync:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
         
         $upsyncount = get_upsync_data_count();
         
@@ -200,8 +200,7 @@ function sds_get_tables_to_export($last_sync=''){
         );
 
     $tables_list[]= array(
-        'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm 
-        WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
+        'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
         'table_name'=> $response_meta_table);
 
     return $tables_list;
@@ -337,7 +336,7 @@ function sds_create_zip($files = array(),$destination = '',$overwrite = false) {
 
     }
     //debug
-    //echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
+    //echo 'The zip archive contains '.$zip->numFiles.' files with a status of '.$zip->status.'=destination'.$destination;exit;
 
     //close the zip -- done!
     $zip->close();
@@ -573,4 +572,66 @@ function copyfile_chunked($infile, $outfile) {
     fclose($i_handle);
     fclose($o_handle);
     return $cnt;
+}
+
+
+function get_web_data_sync_html($blog_id){
+
+    global $wpdb;
+    $last_sync_status = get_last_sync_status();
+    $last_sync_imported = get_last_sync_imported();
+    $sync_defaults = array('label' =>'Start','lastsync'=>'','syncstatus' =>'','filepath' =>'','sync_id' => '','server_sync_id'=>'');
+    if(!empty($last_sync_status)){
+        $sync_defaults['sync_id'] = $last_sync_status->id;
+        $sync_defaults['syncstatus'] = $last_sync_status->status;
+        $sync_defaults['lastsync'] = $last_sync_status->last_sync;
+        if($last_sync_status->status != 'imported'){
+             $sync_defaults['label'] = 'Continue';
+             $sync_defaults['syncstatus'] = $last_sync_status->status;
+             $sync_defaults['filepath'] = $last_sync_status->file_path;
+             $sync_defaults['server_sync_id'] = $last_sync_status->server_sync_id;
+        }
+    }
+
+    $sync_form_html= '';
+
+         
+        $upsyncount = get_upsync_data_count();
+        
+        $sync_form_html .= '<div id="totalRecords" class="row">
+                                                  <div class="col-sm-12  m-b-10">
+                                                    <div class="">
+                                                      <h5 id="totalRecordsToBeSynced" class="m-t-10 bold text-center text-error">Records to be synced: '.$upsyncount.'</h5>
+                                                    </div>
+                                                  </div>
+                                                </div>';
+        
+       if($last_sync_imported->last_sync) 
+        $sync_form_html .= '<div id="lastDownload" class="row">
+                                <div class="col-sm-12  m-b-10">
+                                  <div class="">
+                                    <h5 id="lastDownloadTimeStamp" class="m-t-10 bold text-center text-error">Last downloaded: 
+                                    '.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>';       
+        
+        $sync_form_html .= '<div class="row">
+                                <div class="col-sm-12  m-b-10 m-t-10">
+                                  <div class="">
+                                    <button name="sync-data" '
+            . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
+            . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
+            . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
+            . 'data-blog-id='.$blog_id.' '
+            . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'" 
+              type="button" class="btn btn-success h-align-middle block"><span id="syncButtonText" class="bold">'.$sync_defaults['label'].'</span></button>
+              <span class="status-msg"></span>
+                                  </div>
+                                </div>
+                              </div>';
+
+    return $sync_form_html;
+
 }

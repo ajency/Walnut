@@ -120,6 +120,8 @@
                                            <div class="iconset top-settings-dark"></div> 	
                                    </a>
                                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="user-options">
+                                       <li><a href="<?php echo site_url().'/sync-site-content/' ?>"><span class="fa fa-refresh"></span>&nbsp;&nbsp;Sync</a></li>
+                                                <li class="divider"></li>  
                                            <li><a href="javascript://" id="user_logout"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
                                    </ul>
                            </li>
@@ -210,10 +212,52 @@
                         <?php if(is_user_logged_in()):?>
                         <?php 
                                     $blog_id = get_option('blog_id'); 
-                                    $sync_form_html = get_sync_form_html($blog_id); 
-                                    echo $sync_form_html;
+                                    $sync_form_html = get_web_data_sync_html($blog_id); 
+                                    //echo $sync_form_html;
                         ?>                    
-                        <?php endif;?>
+
+                        <div class="col-md-12 m-t-25">
+                                  <div class="tiles white">
+                                          <div class="tiles-body">
+
+                                            <div class="row">
+
+                                              <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
+                                                <!-- <h3 id="userName"class="semi-bold text-center"></h3> -->
+                                                <h3 class="semi-bold text-center">Data Sync</h3>
+
+                                                <?php echo $sync_form_html ;?>
+
+                                                </div>
+
+                                              </div>
+
+                                              <div class="row">
+
+                                              <div class="col-sm-12">
+                                                <h3 class="semi-bold text-center">Media Sync</h3>
+
+                                                <div class="row">
+                                                  <div class="col-sm-12  m-b-10 m-t-10">
+                                                    <div class="">
+                                                      <button name="sync-media" id="sync-media" type="button" class="btn btn-success h-align-middle block"><span id="syncMediaButtonText" class="bold">Start</span></button>
+                                                      <span class="status-msg"></span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                                </div>
+
+                                              </div>
+
+
+                                      </div>
+
+                              </div>
+                        </div> 
+                        
+                        <?php endif;?>      
+                        
                     </div>
                 </div>
             </div>
@@ -400,12 +444,14 @@ jQuery(document).ready(function() {
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
                                jQuery(referer).val('Start');
+                               window.location.reload();
                   
                    } else if(data.code === 'ERROR') {
                                //alert('error');
                                jQuery(referer).next().text('Data Import failed'); 
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
+                               window.location.reload();
                    }          
         },'json');
         
@@ -446,7 +492,14 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text('Local Data exported...');
                                jQuery(referer).attr('data-lastsync-id',data.sync_request_id);
                                jQuery(referer).attr('data-syncstatus',data.status);
-                               school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                               if(data.status == 'export-not-required'){
+                                    //school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                                    init_school_data_sync(referer,data.sync_request_id,data.status,blog_id,lastsync);
+
+                               }
+                               else{
+                                   school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                               }
                                
                   
                    } else if(data.code === 'ERROR') {
@@ -610,6 +663,11 @@ jQuery(document).ready(function() {
         jQuery(this).find(".arrow").toggleClass('open');
 
     }); 
+    
+     jQuery("#user-options").click(function(e){
+         e.preventDefault();
+         jQuery(this).parent(".quicklinks").toggleClass('open');
+     }); 
 });
 </script>
 </body>

@@ -245,7 +245,14 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text('Local Data exported...');
                                jQuery(referer).attr('data-lastsync-id',data.sync_request_id);
                                jQuery(referer).attr('data-syncstatus',data.status);
-                               school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                               if(data.status == 'export-not-required'){
+                                    //school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                                    init_school_data_sync(referer,data.sync_request_id,data.status,blog_id,lastsync);
+
+                               }
+                               else{
+                                   school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                               }
                                
                   
                    } else if(data.code === 'ERROR') {

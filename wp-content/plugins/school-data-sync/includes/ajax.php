@@ -180,11 +180,27 @@ function ajax_sds_data_sync_local_export(){
         $meta_data = array();
         $meta_data['exported_local_csv_url'] =  $export_details['exported_csv_url'];
         
+        $emptyflag = 0;
+        $exp_status = 'export-local';
+        foreach($exported_tables as $value){
+            if($value == ''){
+                $emptyflag++;
+            }
+            
+            if($emptyflag == 2){
+                $exp_status = 'export-not-required';
+            }
+        }
+        
         $wpdb->insert( $table_name, array( 'file_path' => '', 'last_sync' => $export_details['last_sync'] ,
-                        'status' =>'export-local','meta'=>  maybe_serialize($meta_data)  ));
+                        'status' =>$exp_status,'meta'=>  maybe_serialize($meta_data)  ));
         $sync_id = $wpdb->insert_id;
         
-        wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id,'status'=>'export-local') ) );
+        if($emptyflag == 2){
+            wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id,'status'=>$exp_status ) ) );
+        }
+
+        wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id,'status'=>$exp_status ) ) );
     }
 
 }
