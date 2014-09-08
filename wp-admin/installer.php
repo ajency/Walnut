@@ -62,7 +62,7 @@ function display_header() {
 <head>
 	<meta name="viewport" content="width=device-width" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?php _e( 'WordPress &rsaquo; Installation' ); ?></title>
+	<title><?php _e( 'Synapse standalone school installation' ); ?></title>
 	<?php
 	wp_admin_css( 'install', true );
 	?>
@@ -189,8 +189,8 @@ switch($step) {
 	case 1: // Step 1, direct link.
 	  display_header();
 ?>
-<h1><?php _ex( 'Welcome', 'Howdy' ); ?></h1>
-<p><?php printf( __( 'Welcome to the famous five minute WordPress installation process! You may want to browse the <a href="%s">ReadMe documentation</a> at your leisure. Otherwise, just fill in the information below and you&#8217;ll be on your way to using the most extendable and powerful personal publishing platform in the world.' ), '../readme.html' ); ?></p>
+<!--h1><?php _ex( 'Welcome', 'Howdy' ); ?></h1-->
+<!--p><?php printf( __( 'Welcome to the famous five minute WordPress installation process! You may want to browse the <a href="%s">ReadMe documentation</a> at your leisure. Otherwise, just fill in the information below and you&#8217;ll be on your way to using the most extendable and powerful personal publishing platform in the world.' ), '../readme.html' ); ?></p-->
 
 <h1><?php _e( 'Information needed' ); ?></h1>
 <p><?php _e( 'Please provide the following information. Don&#8217;t worry, you can always change these settings later.' ); ?></p>
@@ -247,7 +247,7 @@ switch($step) {
 
 <h1><?php _e( 'Success!' ); ?></h1>
 
-<p><?php _e( 'WordPress has been installed. Once you login, remember to sync your school data to continue to use the site.' ); ?></p>
+<p><?php _e( 'Your school has been installed. Once you login, remember to sync your school data to continue to use the site.' ); ?></p>
 
 <table class="form-table install-success">
 	<tr>
@@ -288,6 +288,7 @@ jQuery(document).ready(function() {
         data['txtpassword'] = jQuery('#pass1').val();
 
         if(data['txtusername']=='' || data['txtpassword']==''){
+            jQuery('.message').remove();
 		  var errormsg = '<p class="message">Only an existing school admin can setup the standalone site. Please enter valid school admin user name and password</p>'
           jQuery('#setup').prepend(errormsg);
           return false
@@ -305,10 +306,12 @@ jQuery(document).ready(function() {
                 var data = jQuery.parseJSON( data );
                 //console.log(data);
               if(data.error){
+                    jQuery('.message').remove();
                     var errormsg = '<p class="message">Only an existing school admin can setup the standalone site. Please enter valid school admin user name and password</p>';
                     jQuery('#setup').prepend(errormsg);
               }
               else if(jQuery.inArray('school-admin',data.blog_details.blog_roles) == -1){
+                  jQuery('.message').remove();
                   var errormsg = '<p class="message">Not a valid School admin</p>';
 		  jQuery('#setup').prepend(errormsg);
               }
