@@ -44,7 +44,7 @@
         sidr: 'plugins/jquery.sidr.min',
         mmenu: 'plugins/jquery.mmenu.min.all',
         resizablecolumns : 'plugins/jquery.resizableColumns.min',
-        bootbox : 'plugins/bootbox.min'
+        bootbox : 'plugins/bootbox.min',
 
         // wordpress cropping js
         imageareaselect : '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min',
