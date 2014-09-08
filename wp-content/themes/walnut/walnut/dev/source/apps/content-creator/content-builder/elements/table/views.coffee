@@ -93,8 +93,9 @@ define ['app'
 
 						@$el.find('table').resizableColumns('destroy')
 						@$el.find('table').resizableColumns()
+						console.log 'in columns increase'
 						@saveTableMarkup()
-						columns++
+						currentColumns++
 				else 
 					bootbox.confirm 'Removing a COLUMN might cause a loss of data.
 						Do you want to continue?',(result)=>
@@ -105,7 +106,7 @@ define ['app'
 								@$el.find('table').resizableColumns('destroy')
 								@$el.find('table').resizableColumns()
 								@saveTableMarkup()
-								columns--
+								currentColumns--
 						else
 							model.set 'column', currentColumns 
 							# console.log column+1

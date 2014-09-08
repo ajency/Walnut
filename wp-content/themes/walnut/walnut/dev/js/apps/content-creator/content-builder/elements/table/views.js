@@ -100,8 +100,9 @@ define(['app', 'bootbox'], function(App, bootbox) {
             });
             this.$el.find('table').resizableColumns('destroy');
             this.$el.find('table').resizableColumns();
+            console.log('in columns increase');
             this.saveTableMarkup();
-            _results.push(columns++);
+            _results.push(currentColumns++);
           }
           return _results;
         } else {
@@ -116,7 +117,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
                   _this.$el.find('table').resizableColumns('destroy');
                   _this.$el.find('table').resizableColumns();
                   _this.saveTableMarkup();
-                  _results1.push(columns--);
+                  _results1.push(currentColumns--);
                 }
                 return _results1;
               } else {
