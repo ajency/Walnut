@@ -55,10 +55,10 @@ define ['app'
                         contentPieceModel : @contentPieceModel
                         eventObj : @eventObj
 
-                    if @contentPieceModel.get('content_type') is 'student_question'
-                        App.execute "show:property:dock",
-                            region : @layout.PropertyRegion
-                            contentPieceModel : @contentPieceModel
+                    # if @contentPieceModel.get('content_type') is 'student_question'
+                    App.execute "show:property:dock",
+                        region : @layout.PropertyRegion
+                        contentPieceModel : @contentPieceModel
 
                     if @contentPieceModel.get('question_type')? and
                     @contentPieceModel.get('question_type') is 'multiple_eval'

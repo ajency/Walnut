@@ -15,6 +15,17 @@ define ['jquery', 'underscore'], ($, _)->
 
         empty
 
+
+    # remove all attributes of the tag
+    $.fn.removeAllAttr = ->
+      attrs = ['class','tabindex','contenteditable','id','spellcheck','role','aria-label','title','aria-describedby','style']
+      _.each @ ,(div)->
+        # console.log div.attributes
+        _.each attrs ,(attr)->
+          $(div).removeAttr attr
+
+
+
     $.fn.center = (parent) ->
         if parent
             parent = @parent()

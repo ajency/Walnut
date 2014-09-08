@@ -40,6 +40,8 @@ require.config({
     timerplugin: 'plugins/jquery.countdown_plugin.min',
     countdowntimer: 'plugins/jquery.countdown.min',
     spinedit: 'plugins/bootstrap-spinedit',
+    resizablecolumns: 'plugins/jquery.resizableColumns.min',
+    bootbox: 'plugins/bootbox.min',
     jPages: 'plugins/jPages.min'
   },
   shim: {
@@ -81,6 +83,8 @@ require.config({
     timerplugin: ['jquery'],
     countdowntimer: ['jquery', 'timerplugin'],
     spinedit: ['jquery', 'bootstrap'],
+    resizablecolumns: ['jquery'],
+    bootbox: ['jquery', 'bootstrap'],
     jPages: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }

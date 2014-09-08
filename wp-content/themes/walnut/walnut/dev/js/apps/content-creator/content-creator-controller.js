@@ -63,12 +63,10 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
               contentPieceModel: _this.contentPieceModel,
               eventObj: _this.eventObj
             });
-            if (_this.contentPieceModel.get('content_type') === 'student_question') {
-              App.execute("show:property:dock", {
-                region: _this.layout.PropertyRegion,
-                contentPieceModel: _this.contentPieceModel
-              });
-            }
+            App.execute("show:property:dock", {
+              region: _this.layout.PropertyRegion,
+              contentPieceModel: _this.contentPieceModel
+            });
             if ((_this.contentPieceModel.get('question_type') != null) && _this.contentPieceModel.get('question_type') === 'multiple_eval') {
               return _this._showGradingParameter();
             }
