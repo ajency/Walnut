@@ -45,6 +45,8 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz'
 				data = _.getQuizByTextbookIdAndUserID(opts.textbook)
 				data.done (d)->
+					console.log('quiz data')
+					console.log(d)
 					collection.set d
 
 			if collection_name is 'content-piece'

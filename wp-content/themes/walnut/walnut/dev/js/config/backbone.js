@@ -38,6 +38,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'quiz') {
         data = _.getQuizByTextbookIdAndUserID(opts.textbook);
         data.done(function(d) {
+          console.log('quiz data');
+          console.log(d);
           return collection.set(d);
         });
       }

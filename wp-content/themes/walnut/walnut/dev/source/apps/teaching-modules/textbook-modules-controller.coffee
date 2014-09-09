@@ -32,7 +32,6 @@ define ['app'
                     @contentGroupsCollection = App.request "get:quizes",
                         'textbook': textbookID
                         'user_id': App.request "get:user:data", "ID"
-                    # console.log JSON.stringify @contentGroupsCollection
 
                 @chaptersCollection= App.request "get:chapters", ('parent' : textbookID)
 
@@ -85,10 +84,10 @@ define ['app'
 
                         showModulesHeading:=>
 
-                            headingString = '<span class="semi-bold"> All </span> Modules'
+                            headingString= '<span class="semi-bold">All</span> Modules'
 
                             if @mode is 'training'
-                                headingString= '<span class="semi-bold">Practice</span> Modules'
+                                headingString = '<span class="semi-bold">Practice</span> Modules'
 
                             headingString
 

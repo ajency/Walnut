@@ -1,3 +1,5 @@
+var __slice = [].slice;
+
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
     getQuizByTextbookIdAndUserID: function(textbookId) {
@@ -16,33 +18,17 @@ define(['underscore', 'unserialize'], function(_) {
           var i, result, row, _fn, _i, _ref;
           result = [];
           _fn = function(row, i) {
-            var metaKeyDescriptionAndContentLayout;
-            metaKeyDescriptionAndContentLayout = _.getMetaKeyDescriptionAndContentLayout(row['id']);
-            return metaKeyDescriptionAndContentLayout.done(function(metaKeyDescriptionContentLayout) {
-              var contentLayout, description, quizType;
-              quizType = contentLayout = description = '';
-              quizType = metaKeyDescriptionContentLayout.quizType;
-              contentLayout = _.unserialize(metaKeyDescriptionContentLayout.contentLayout);
-              description = _.unserialize(metaKeyDescriptionContentLayout.description);
-              return (function(row, i, quizType, contentLayout, description) {
+            var collectionMeta;
+            collectionMeta = _.getCollectionMeta(row['id']);
+            return collectionMeta.done(function(collectionMetaData) {
+              return (function(row, i, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
-                dateAndStatus.done(function(dateStatus) {
+                return dateAndStatus.done(function(dateStatus) {
                   var date, status;
                   status = dateStatus.status;
-                  return date = dateStatus.start_date;
-                });
-                if (!(row['post_status'] === 'archive')) {
-                  console.log(JSON.stringify({
-                    id: row['id']
-                  }));
-                  console.log(JSON.stringify({
-                    training_date: date
-                  }));
-                  console.log(JSON.stringify({
-                    content_layout: contentLayout
-                  }));
-                  data = {
+                  date = dateStatus.start_date;
+                  return result[i] = {
                     id: row['id'],
                     name: row['name'],
                     created_on: row['created_on'],
@@ -51,62 +37,294 @@ define(['underscore', 'unserialize'], function(_) {
                     last_modified_by: row['last_modified_by'],
                     published_on: row['published_on'],
                     published_by: row['published_by'],
+                    post_status: row['post_status'],
                     type: row['type'],
                     term_ids: _.unserialize(row['term_ids']),
                     duration: _.getDuration(row['duration']),
                     minshours: _.getMinsHours(row['duration']),
                     total_minutes: row['duration'],
-                    quiz_type: quizType,
-                    content_layout: contentLayout,
-                    training_date: date,
-                    description: description,
-                    post_status: row['post_status']
+                    description: "",
+                    permissions: collectionMetaData.permission,
+                    instructions: collectionMetaData.instructions,
+                    quiz_type: collectionMetaData.quizType,
+                    marks: collectionMetaData.marks,
+                    negMarksEnable: collectionMetaData.negMarksEnable,
+                    negMarks: collectionMetaData.negMarks,
+                    message: collectionMetaData.message,
+                    content_layout: "",
+                    taken_on: date,
+                    status: status,
+                    content_pieces: collectionMetaData.contentPieces
                   };
-                  console.log(JSON.stringify(data));
-                  return result.push(data);
-                }
-              })(row, i, quizType, contentLayout, description);
+                });
+              })(row, i, collectionMetaData);
             });
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
             row = data.rows.item(i);
             _fn(row, i);
           }
-          console.log(JSON.stringify(result));
           return d.resolve(result);
         };
       };
       return $.when(runQuery()).done(function(data) {
-        return console.log('getContentGroupByTextbookIdAndDivision transaction completed');
+        return console.log('getQuizByTextbookIdAndUserID transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getCollectionMeta: function(collection_id) {
+      var deferreds, onSuccess, result, runQuery;
+      deferreds = [];
+      result = {
+        quizType: '',
+        contentPieces: '',
+        instructions: '',
+        permission: '',
+        marks: '',
+        negMarks: '',
+        negMarksEnable: '',
+        message: ''
+      };
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var i, row, _fn, _i, _ref;
+          _fn = function(row) {
+            var def, description, quiz_meta;
+            if (row['meta_key'] === 'quiz_type') {
+              result.quizType = row['meta_value'];
+            }
+            if (row['meta_key'] === 'description') {
+              description = _.unserialize(row['meta_value']);
+              result.instructions = description.instruction;
+            }
+            if (row['meta_key'] === 'permissions') {
+              result.permission = _.unserialize(row['meta_value']);
+            }
+            if (row['meta_key'] === 'quiz_meta') {
+              quiz_meta = _.unserialize(row['meta_value']);
+              result.marks = quiz_meta.marks;
+              result.negMarks = quiz_meta.negMarks;
+              result.negMarksEnable = quiz_meta.negMarksEnable;
+              result.message = quiz_meta.message;
+            }
+            if (row['meta_key'] === 'content_layout') {
+              def = _.getContentPiecesFromContentLayout(row['meta_value']);
+              return deferreds.push(def);
+            }
+          };
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            _fn(row);
+          }
+          if (deferreds.length === 0) {
+            return d.resolve(result);
+          } else {
+            return $.when.apply($, deferreds).done(function() {
+              var content_pieces;
+              content_pieces = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+              _.each(content_pieces, function(contentPiece) {
+                return result.contentPieces = contentPiece;
+              });
+              return d.resolve(result);
+            });
+          }
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getCollectionMeta transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getContentPiecesFromContentLayout: function(contentLayout) {
+      var content_layout, content_pieces, deferreds, runFunc;
+      content_pieces = [];
+      content_layout = _.unserialize(contentLayout);
+      deferreds = [];
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          _.each(content_layout, function(content, key) {
+            return (function(content, content_pieces) {
+              var def;
+              if (content.type === "content-piece") {
+                if (content.id) {
+                  return content_pieces.push(parseInt(content.id));
+                }
+              } else if (content.type === "content_set") {
+                def = _.generateSetItems(content.data.terms_id, parseInt(content.data.lvl1), parseInt(content.data.lvl2), parseInt(content.data.lvl3), content_pieces);
+                return deferreds.push(def);
+              }
+            })(content, content_pieces);
+          });
+          if (deferreds.length === 0) {
+            return d.resolve(content_pieces);
+          } else {
+            return $.when.apply($, deferreds).done(function() {
+              var content_set_ids;
+              content_set_ids = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+              _.each(content_set_ids, function(contentSetId, key) {
+                return content_pieces = content_pieces.concat(contentSetId);
+              });
+              return d.resolve(content_pieces);
+            });
+          }
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log("getContentPiecesFromContentLayout done");
+      }).fail(_.failureHandler);
+    },
+    generateSetItems: function(term_ids, level1, level2, level3, content_pieces) {
+      var complete_ids, runFunc;
+      complete_ids = [];
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var getPostId;
+          getPostId = _.getIdFromPostMeta();
+          return getPostId.done(function(postIds) {
+            var getUniquePostId;
+            getUniquePostId = _.getUniqueIdFromPostMeta(term_ids, postIds, content_pieces);
+            return getUniquePostId.done(function(uniquePostId) {
+              var getIdFromLevel1;
+              uniquePostId = uniquePostId.join();
+              getIdFromLevel1 = _.checkForEachContentSetValue(uniquePostId, level1, '1');
+              return getIdFromLevel1.done(function(complete_ids_level1) {
+                var getIdFromLevel2;
+                complete_ids = complete_ids.concat(complete_ids_level1);
+                getIdFromLevel2 = _.checkForEachContentSetValue(uniquePostId, level2, '2');
+                return getIdFromLevel2.done(function(complete_ids_level2) {
+                  var getIdFromLevel3;
+                  complete_ids = complete_ids.concat(complete_ids_level2);
+                  getIdFromLevel3 = _.checkForEachContentSetValue(uniquePostId, level3, '3');
+                  return getIdFromLevel3.done(function(complete_ids_level3) {
+                    complete_ids = complete_ids.concat(complete_ids_level3);
+                    return d.resolve(complete_ids);
+                  });
+                });
+              });
+            });
+          });
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log('generateSetItems done');
+      }).fail(_.failureHandler);
+    },
+    getIdFromPostMeta: function() {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT ID FROM wp_posts WHERE ID IN (SELECT post_id FROM wp_postmeta WHERE meta_key='content_type' AND meta_value='student_question') AND post_status = 'publish' ", [], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        var postId;
+        postId = [];
+        return function(tx, data) {
+          var i, _i, _ref;
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            postId.push(data.rows.item(i)['ID']);
+          }
+          return d.resolve(postId);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log("getIdFromPostMeta transaction completed");
+      }).fail(_.failureHandler);
+    },
+    getUniqueIdFromPostMeta: function(term_ids, postIds, content_pieces) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          var difference, term_id;
+          difference = _.difference(postIds, content_pieces);
+          difference = difference.join();
+          term_id = '';
+          _.each(term_ids, function(val) {
+            if (val !== "") {
+              return term_id = val;
+            }
+          });
+          return _.db.transaction(function(tx) {
+            var pattern;
+            pattern = '%"' + term_id + '"%';
+            return tx.executeSql("SELECT post_id FROM wp_postmeta WHERE post_id IN (" + difference + ") AND meta_key='content_piece_meta' AND meta_value LIKE '%" + pattern + "%' ", [], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        var uniquePostId;
+        uniquePostId = [];
+        return function(tx, data) {
+          var i, _i, _ref;
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            uniquePostId.push(data.rows.item(i)['post_id']);
+          }
+          return d.resolve(uniquePostId);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log("getUniqueIdFromPostMeta transaction completed");
+      }).fail(_.failureHandler);
+    },
+    checkForEachContentSetValue: function(uniquePostId, count, level) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT post_id FROM wp_postmeta WHERE post_id in (" + uniquePostId + ") AND meta_key='difficulty_level' AND meta_value = ? ORDER BY RANDOM() LIMIT '" + count + "' ", [level], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        var complete_ids_for_each_level;
+        complete_ids_for_each_level = [];
+        return function(tx, data) {
+          var i, _i, _ref;
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            complete_ids_for_each_level.push(data.rows.item(i)['post_id']);
+          }
+          return d.resolve(complete_ids_for_each_level);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log("checkForEachContentSetValue transaction completed");
       }).fail(_.failureHandler);
     },
     getStartDateAndStatus: function(collection_id) {
-      var runFunc;
+      var data, runFunc;
+      data = {
+        start_date: '',
+        status: ''
+      };
       runFunc = function() {
         return $.Deferred(function(d) {
-          var data, quizResponseSummary;
-          data = {
-            start_date: '',
-            status: ''
-          };
+          var quizResponseSummary;
           quizResponseSummary = _.getQuizResponseSummary(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
             var contentLayoutValue, date;
-            contentLayoutValue = '';
-            contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
-            if (contentLayoutValue.status !== "started" || contentLayoutValue.status !== "completed") {
+            console.log(quiz_responses);
+            if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
-              data.start_date = "null";
+              data.start_date = '';
             }
-            if (contentLayoutValue.status === "started") {
-              data.status = 'started';
-              date = quiz_responses.taken_on;
-              data.start_date = date.split(" ").shift();
-            }
-            if (contentLayoutValue.status === 'completed') {
-              data.status = 'completed';
-              date = quiz_responses.taken_on;
-              data.start_date = date.split(" ").shift();
+            if (!_.isEmpty(quiz_responses)) {
+              contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
+              if (contentLayoutValue.status === "started") {
+                data.status = 'started';
+                date = quiz_responses.taken_on;
+                data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+              } else if (contentLayoutValue.status === "completed") {
+                data.status = 'completed';
+                date = quiz_responses.taken_on;
+                data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+              }
             }
             return d.resolve(data);
           });
@@ -129,47 +347,12 @@ define(['underscore', 'unserialize'], function(_) {
         return function(tx, data) {
           var result;
           result = data.rows.item(0);
+          console.log(JSON.stringify(result));
           return d.resolve(result);
         };
       };
       return $.when(runQuery()).done(function() {
         return console.log('getQuizResponseSummary transaction completed');
-      }).fail(_.failureHandler);
-    },
-    getMetaKeyDescriptionAndContentLayout: function(collection_id) {
-      var metaKeyDescriptionAndContentLayout, onSuccess, runQuery;
-      metaKeyDescriptionAndContentLayout = {
-        quizType: '',
-        contentLayout: '',
-        description: ''
-      };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_collection_meta WHERE collection_id=?", [collection_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, row, _i, _ref;
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            if (row['meta_key'] === 'quiz_type') {
-              metaKeyDescriptionAndContentLayout.quizType = row['meta_value'];
-            }
-            if (row['meta_key'] === 'content_layout') {
-              metaKeyDescriptionAndContentLayout.contentLayout = row['meta_value'];
-            }
-            if (row['meta_key'] === 'description') {
-              metaKeyDescriptionAndContentLayout.description = row['meta_value'];
-            }
-          }
-          return d.resolve(metaKeyDescriptionAndContentLayout);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getMetaKeyDescriptionAndContentLayout transaction completed');
       }).fail(_.failureHandler);
     },
     getDuration: function(duration) {
