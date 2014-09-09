@@ -84,10 +84,10 @@ define ['app'
 
                         showModulesHeading:=>
 
-                            headingString= '<span class="semi-bold">All</span> Modules'
+                            headingString='<span class="semi-bold">All</span> Modules'
 
                             if @mode is 'training'
-                                headingString = '<span class="semi-bold">Practice</span> Modules'
+                                headingString='<span class="semi-bold">Practice</span> Modules'
 
                             headingString
 
