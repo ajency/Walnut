@@ -960,6 +960,11 @@ textarea.border {
   /* Opera */
   border-image: url(../../../images/border.gif) 20 20 stretch;
 }
+input[type="text"].rowColInput {
+  width: 30%;
+  float: left;
+  margin-right: 15px;
+}
 /*input[type=checkbox].mcq-option-select {
 	display:none;
 }
@@ -2548,6 +2553,9 @@ textarea.error,
 }
 #take-class-modules.takeClass th:nth-child(3) {
   width: 100px;
+}
+#take-class-modules.takeClass th.duration {
+  width: 10%;
 }
 #take-class-modules.takeClass th:last-child {
   width: 30%;
