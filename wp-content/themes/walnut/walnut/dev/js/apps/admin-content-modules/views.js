@@ -220,7 +220,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
           _results = [];
           for (_i = 0, _len = checkboxes.length; _i < _len; _i++) {
             checkbox = checkboxes[_i];
-            if (_ref = checkbox.value, __indexOf.call(completedModules, _ref) >= 0) {
+            if (_ref = parseInt(checkbox.value), __indexOf.call(completedModules, _ref) >= 0) {
               _results.push($(checkbox).trigger('click').prop('checked', true));
             } else {
               _results.push(void 0);
@@ -297,7 +297,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         if (data.moduleIDs) {
           this.trigger("save:communications", data);
           this.$el.find('#communication_sent').remove();
-          return this.$el.find('#send-sms').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
+          return this.$el.find('#send-email').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
         }
       };
 

@@ -63,6 +63,9 @@
 .p-t-60 {
   padding-top: 60px;
 }
+.vHidden {
+  visibility: hidden;
+}
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
@@ -2460,6 +2463,9 @@ tbody.rowlink td {
 .tiles-head {
   padding: 10px 18px 5px 24px;
 }
+.pointer {
+  cursor: pointer;
+}
 @media (max-width: 767px) {
   .login-container {
     margin-top: 20px !important;
@@ -2544,7 +2550,7 @@ textarea.error,
   width: 100px;
 }
 #take-class-modules.takeClass th:last-child {
-  width: 40%;
+  width: 30%;
 }
 .table-fixed-layout td.cpHeight {
   white-space: normal;

@@ -41,15 +41,30 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       };
 
       Controller.prototype.renderElement = function() {
-        var optionsObj;
+        var answeredCollection, correctAnswers, optionsObj;
         optionsObj = this.layout.model.get('elements');
         if (optionsObj instanceof Backbone.Collection) {
           optionsObj = optionsObj.models;
         }
         this._parseOptions(optionsObj);
-        optionsObj = _.shuffle(optionsObj);
+        if (this.answerModel.get('status') !== 'skipped') {
+          optionsObj = _.shuffle(optionsObj);
+        }
         this.optionCollection = App.request("create:new:option:collection", optionsObj);
         this.layout.model.set('elements', this.optionCollection);
+        if (this.answerModel.get('status') === 'skipped') {
+          correctAnswers = this.optionCollection.sortBy('index');
+          this.optionCollection = App.request("create:new:option:collection", correctAnswers);
+        } else if (_.size(this.answerModel.get('answer')) > 0) {
+          answeredCollection = _.map(this.answerModel.get('answer'), (function(_this) {
+            return function(el) {
+              return _this.optionCollection.findWhere({
+                'index': el
+              });
+            };
+          })(this));
+          this.optionCollection = App.request("create:new:option:collection", answeredCollection);
+        }
         this.view = this._getSortView(this.optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
@@ -90,6 +105,9 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         }
         this.answerModel.set('marks', this.layout.model.get('marks'));
         displayAnswer = Marionette.getOption(this, 'displayAnswer');
+        this.answerModel.set({
+          'answer': []
+        });
         this.view.$el.find('input#optionNo').each((function(_this) {
           return function(index, element) {
             var answerOptionIndex;

@@ -112,7 +112,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
       ContentCreatorLayout.prototype.className = 'content-creator-layout';
 
-      ContentCreatorLayout.prototype.template = '<div id="options-bar-region"></div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div class="dock tiles" id="property-dock"></div> </div>';
+      ContentCreatorLayout.prototype.template = '<div id="options-bar-region"></div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
 
       ContentCreatorLayout.prototype.regions = {
         elementBoxRegion: '#toolbox',

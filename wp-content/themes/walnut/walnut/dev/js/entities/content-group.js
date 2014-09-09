@@ -22,7 +22,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         last_modified_by: '',
         published_on: '',
         published_by: '',
-        post_status: '',
+        post_status: 'underreview',
         type: 'teaching-module',
         total_minutes: 0,
         duration: 0,

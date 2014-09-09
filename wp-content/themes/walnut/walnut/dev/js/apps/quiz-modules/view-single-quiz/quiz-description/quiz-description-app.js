@@ -20,6 +20,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             return _this.region.trigger("start:quiz:module");
           };
         })(this));
+        this.listenTo(view, 'try:again', (function(_this) {
+          return function() {
+            return _this.region.trigger("try:again");
+          };
+        })(this));
         this.listenTo(view, 'goto:previous:route', this._gotoPreviousRoute);
         return this.show(view);
       };
@@ -67,6 +72,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         'click #take-quiz': function() {
           return this.trigger("start:quiz:module");
         },
+        'click #try-again': function() {
+          return this.trigger("try:again");
+        },
         'click #go-back-button': function() {
           return this.trigger("goto:previous:route");
         }
@@ -95,6 +103,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
           } else {
             data.taken_on_date = moment().format("Do MMM YYYY");
+          }
+          if (data.practice_mode) {
+            data.try_again = true;
           }
         }
         data.negMarksEnable = _.toBool(data.negMarksEnable);

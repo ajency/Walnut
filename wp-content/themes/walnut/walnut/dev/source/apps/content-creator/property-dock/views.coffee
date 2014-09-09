@@ -11,6 +11,8 @@ define ['app'], (App)->
             						<div id="question-property" class="docket"></div>
             						<div id="question-elements" class="docket"></div>'
 
+            className: 'dock tiles'
+
             regions:
                 questElementPropRegion: '#question-elements-property'
                 questPropertyRegion: '#question-property'

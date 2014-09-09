@@ -45,6 +45,8 @@ Template Name: Content Creator
 	<link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
     <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
     <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
+    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev//css/jquery.resizableColumns.css" rel="stylesheet" media="screen"/>
+
     <!-- END CORE CSS FRAMEWORK -->
 
     <!--wordpress image edit css -->
@@ -74,6 +76,17 @@ Template Name: Content Creator
                 <a href="#" class="scrollup">Scroll</a>
                 <div class="page-content condensed">
                     <div class="content">
+                    <?php if(!is_multisite()) :?>
+                        <?php if(!school_is_syncd()) : ?>
+                        <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">School Data Sync</a> <p> 
+                        <?php endif; ?>
+                    <?php endif;?>  
+
+                    <?php global $current_user;?>       
+                    <?php if(!is_multisite() && in_array('teacher', $current_user->roles) && school_is_syncd() && is_user_logged_in()) :?>
+                          <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">Data Sync</a>
+                     <?php endif;?>
+                            
                         <div id="login-region"></div>
                         <div id="breadcrumb-region"></div>
                         <div id="main-content-region" data-height="1006"></div>

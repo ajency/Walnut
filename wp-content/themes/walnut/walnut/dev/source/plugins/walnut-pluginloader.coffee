@@ -33,5 +33,6 @@ define [
     'timerplugin'
     'countdowntimer'
     'spinedit'
+    'bootbox'
     'jPages'
 ], ->

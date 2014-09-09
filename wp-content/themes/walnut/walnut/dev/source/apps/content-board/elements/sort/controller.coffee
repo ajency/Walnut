@@ -39,11 +39,23 @@ define ['app'
 
                 @_parseOptions optionsObj
 
-                # if the object is a collection then keep as it is
-                optionsObj = _.shuffle optionsObj
+                if @answerModel.get('status') isnt 'skipped'
+                    optionsObj = _.shuffle optionsObj
 
                 @optionCollection = App.request "create:new:option:collection", optionsObj
                 @layout.model.set 'elements', @optionCollection
+
+                if @answerModel.get('status') is 'skipped'
+                    correctAnswers = @optionCollection.sortBy 'index'
+
+                    @optionCollection = App.request "create:new:option:collection", correctAnswers
+
+                #if the question is already answered, sort it as per the answer index
+                else if _.size(@answerModel.get('answer'))>0
+                    answeredCollection = _.map @answerModel.get('answer'), (el)=>
+                                            @optionCollection.findWhere 'index': el
+
+                    @optionCollection = App.request "create:new:option:collection", answeredCollection
 
                 # get the view
                 @view = @_getSortView @optionCollection
@@ -76,6 +88,8 @@ define ['app'
             _submitAnswer :(displayAnswer=true) =>
                 @answerModel.set 'marks', @layout.model.get 'marks'
                 displayAnswer = Marionette.getOption @, 'displayAnswer'
+                @answerModel.set 'answer' : []
+
                 @view.$el.find('input#optionNo').each (index, element)=>
                     answerOptionIndex = @optionCollection.get($(element).val()).get('index')
                     @answerModel.get('answer').push answerOptionIndex

@@ -7,6 +7,9 @@
 				<div class="iconset top-settings-dark"></div> 	
 			</a>
 			<ul aria-labelledby="user-options" role="menu" class="dropdown-menu pull-right">
+				{{#syncUrl}}
+                	<li><a href="{{syncUrl}}"><span class="fa fa-refresh"></span>&nbsp;&nbsp;Sync</a></li>
+                {{/syncUrl}}
 				<li><a id="user_logout" href="javascript://"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
 			</ul>
 		</li>

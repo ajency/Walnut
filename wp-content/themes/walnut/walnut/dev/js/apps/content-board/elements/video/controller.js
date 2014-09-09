@@ -28,7 +28,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       Controller.prototype._getVideoCollection = function() {
         if (!this.videoCollection) {
-          if (this.layout.model.get('video_ids').length) {
+          if (this.layout.model.get('video_ids') && this.layout.model.get('video_ids').length) {
             this.videoCollection = App.request("get:media:collection:by:ids", this.layout.model.get('video_ids'));
           } else {
             this.videoCollection = App.request("get:empty:media:collection");

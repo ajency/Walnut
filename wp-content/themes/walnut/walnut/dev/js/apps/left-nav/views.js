@@ -20,11 +20,14 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
         var data, iconClass;
         data = MenuItemView.__super__.serializeData.call(this);
         iconClass = 'icon-custom-ui';
-        if (this.model.get('post_title') === 'Training Module') {
+        if (this.model.get('post_title') === 'Content Management') {
           iconClass = 'fa fa-pencil-square-o';
         }
-        if (this.model.get('post_title') === 'Content Management') {
+        if (this.model.get('post_title') === 'Training Management') {
           iconClass = 'fa fa-book';
+        }
+        if (this.model.get('post_title') === 'Quiz Management') {
+          iconClass = 'fa fa-puzzle-piece';
         }
         data.iconClass = iconClass;
         return data;
