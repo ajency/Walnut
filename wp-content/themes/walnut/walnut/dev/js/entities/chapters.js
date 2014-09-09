@@ -45,6 +45,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.parse = function(resp) {
         this.total = resp.count;
+        console.log(JSON.stringify(resp.data));
         return resp.data;
       };
 
@@ -61,6 +62,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       SubSectionCollection.prototype.model = Chapters.ItemModel;
 
       SubSectionCollection.prototype.comparator = 'term_order';
+
+      SubSectionCollection.prototype.name = 'chapter';
 
       SubSectionCollection.prototype.url = function() {
         return AJAXURL + '?action=get-chapter-subsections';

@@ -41,6 +41,8 @@
                     {{/take_quiz}}
                     <th class="{sorter:\'minutesSort\'}">Duration</th>
                     <th><div id="status_header">Status</div></th>
+                    <th>{{#take_quiz}}Taken On{{/take_quiz}}
+                    {{^take_quiz}}Schedule Date{{/take_quiz}}</th>
                   </tr>
                 </thead>
                 <tbody>

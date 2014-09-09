@@ -25,7 +25,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 					 AJAXURL + '?action=get-chapters'
 				
 				parse:(resp)->
-					@total = resp.count	
+					@total = resp.count
+					console.log JSON.stringify resp.data
 					resp.data
 
 			
@@ -33,6 +34,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class Chapters.SubSectionCollection extends Backbone.Collection
 				model : Chapters.ItemModel
 				comparator : 'term_order'
+				name: 'chapter'
 				url :->
 					 AJAXURL + '?action=get-chapter-subsections'
 				
