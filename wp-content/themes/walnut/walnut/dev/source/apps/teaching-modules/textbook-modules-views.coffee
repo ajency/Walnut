@@ -16,7 +16,7 @@ define ['app',
 					   	<td>
 					   	{{#practice_quiz}}
 						   	{{#attempts}}
-						   		Attempted: {{attempts}} time(s)
+						   		<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
 						   	{{/attempts}}
 						   	{{^attempts}}
 						   		<span class="label label-important">Not Started</span>
