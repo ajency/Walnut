@@ -151,7 +151,7 @@ function display_setup_form( $error = null ) {
 			<td colspan="2"><label><input type="hidden" name="blog_public" value="1" /></label></td>
 		</tr>
 	</table>
-	<p class="step"><input id="install_wordpress" type="submit" name="Submit" value="<?php esc_attr_e( 'Install WordPress' ); ?>" class="button button-large" /></p>
+	<p class="step"><input id="install_wordpress" type="submit" name="Submit" value="<?php esc_attr_e( 'Create Stand alone school' ); ?>" class="button button-large" /></p>
 </form>
 <?php
 } // end display_setup_form()

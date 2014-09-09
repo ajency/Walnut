@@ -85,7 +85,7 @@
                                    <!-- END MOBILE HEADER -->
                                    <!-- BEGIN LOGO -->	
                                    <a href="#">
-                                           <img width="192" height="38" src="http://localhost/walnut/wp-content/themes/walnut/images/synapse_logo.png" class="logo" alt="" data-src="http://localhost/walnut/wp-content/themes/walnut/images/synapse_logo.png" data-src-retina="http://localhost/walnut/wp-content/themes/walnut/images/synapse_logo.png">
+                                       <img width="192" height="38" src="<?php echo get_template_directory_uri().'/images/synapse_logo.png'?>" class="logo" alt="" data-src="<?php echo get_template_directory_uri().'/images/synapse_logo.png'?>" data-src-retina="<?php echo get_template_directory_uri().'/images/synapse_logo.png'?>">
                                    </a>
                                    <!-- END LOGO --> 
 

@@ -73,7 +73,8 @@
                 <div class="content">
                      <?php if(!is_multisite()) :?>
                         <?php if(!school_is_syncd()) : ?>
-                        <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo site_url().'/sync-site-content' ?>">School Data Sync</a> <p> 
+                    <p align="center">You may not see any data if you have not synced.</p> 
+                    <p align="center">Sync data from the drop down on the top right corner after logging in<p> 
                         <?php endif; ?>
                     <?php endif;?>
                                           
