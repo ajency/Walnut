@@ -28,9 +28,11 @@ define ["backbone"], (Backbone) ->
 			# 		collection.set d
 
 			if collection_name is 'chapter'
+
 				data = _.getChaptersByParentId(opts.parent)
 				data.done (d)->
 					collection.set d
+					console.log JSON.stringify(d)                                   
 
 			if collection_name is 'division'
 				data = _.getAllDivisions()
