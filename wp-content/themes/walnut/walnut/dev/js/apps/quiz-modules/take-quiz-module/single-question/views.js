@@ -12,7 +12,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionLayout.prototype.template = '<div id="content-board" class="quizContent no-margin"></div> <div class="well m-b-10 p-t-10 p-b-10 h-center quizActions"> <button type="button" id="previous-question" class="btn btn-info pull-left"> <i class="fa fa-backward"></i> Previous </button> {{#allow_submit_answer}} <button type="button" id="submit-question" class="btn btn-success pull-right"> Submit <i class="fa fa-forward"></i> </button> {{/allow_submit_answer}} <button type="button" style="display:none" id="next-question" class="btn btn-info pull-right"> Next <i class="fa fa-forward"></i> </button> <div class="text-center"> {{#show_hint}} <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10"> <i class="fa fa-lightbulb-o"></i> Hint </button> {{/show_hint}} {{#allow_skip}} <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small"> Skip <i class="fa fa-step-forward"></i> </button> {{/allow_skip}} </div> <div class="clearfix"></div> </div> <div class="tiles grey text-grey b-grey b-b m-t-30 qstnInfo"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border"> <p class="small-text bold inline text-grey"><span class="fa fa-question"></span> Question Info </p> </div> <div class="grid-body no-border"> <p class="bold inline text-grey">{{&instructions}}</p> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class=""></p> </div> </div> </div>';
+      SingleQuestionLayout.prototype.template = '<div id="content-board" class="quizContent no-margin"></div> <div class="well m-b-10 p-t-10 p-b-10 h-center quizActions"> <span class="pull-left" id="first_question"></span> <button type="button" id="previous-question" class="btn btn-info pull-left"> <i class="fa fa-backward"></i> Previous </button> {{#allow_submit_answer}} <button type="button" id="submit-question" class="btn btn-success pull-right"> Submit <i class="fa fa-forward"></i> </button> {{/allow_submit_answer}} <span class="pull-right" id="last_question"></span> <button type="button" id="next-question" class="none btn btn-info pull-right"> Next <i class="fa fa-forward"></i> </button> <div class="text-center"> {{#show_hint}} <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10"> <i class="fa fa-lightbulb-o"></i> Hint </button> {{/show_hint}} {{#allow_skip}} <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small"> Skip <i class="fa fa-step-forward"></i> </button> {{/allow_skip}} </div> <div class="clearfix"></div> </div> <div class="tiles grey text-grey b-grey b-b m-t-30 qstnInfo"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border"> <p class="small-text bold inline text-grey"><span class="fa fa-question"></span> Question Info </p> </div> <div class="grid-body no-border"> <p class="bold inline text-grey">{{&instructions}}</p> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class=""></p> </div> </div> </div>';
 
       SingleQuestionLayout.prototype.regions = {
         contentBoardRegion: '#content-board'
@@ -72,7 +72,15 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       SingleQuestionLayout.prototype.onShow = function() {
         if (this.$el.find('#submit-question').length === 0) {
-          return this.$el.find('#next-question').show();
+          if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
+            this.$el.find('#last_question').html('This is the last question');
+          } else {
+            this.$el.find('#next-question').show();
+          }
+        }
+        if (this.model.id === parseInt(_.first(this.quizModel.get('content_pieces')))) {
+          this.$el.find('#first_question').html('This is the first question');
+          return this.$el.find('#previous-question').hide();
         }
       };
 
@@ -91,7 +99,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           this.trigger('show:comment:dialog');
         }
         this.$el.find("#submit-question").hide();
-        this.$el.find("#next-question").show();
+        if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
+          this.$el.find('#last_question').html('This is the last question');
+        } else {
+          this.$el.find("#next-question").show();
+        }
         return this.$el.find("#skip-question").hide();
       };
 
