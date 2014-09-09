@@ -74,6 +74,7 @@ define ['app'
                     @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
 
                     @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
+                    @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 

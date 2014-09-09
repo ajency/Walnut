@@ -71,6 +71,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "show:alert:popup", this._showPopup);
         this.listenTo(this.layout.quizTimerRegion, "show:alert:popup", this._showPopup);
+        this.listenTo(this.layout.quizTimerRegion, "end:quiz", this._endQuiz);
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
         this.listenTo(App.dialogRegion, "clicked:confirm:yes", this._handlePopups);
         this.listenTo(App.dialogRegion, "clicked:alert:ok", this._handlePopups);

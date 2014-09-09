@@ -1,6 +1,7 @@
 define ['app'
-        'controllers/region-controller'],
-        (App, RegionController)->
+        'controllers/region-controller'
+        'bootbox'],
+        (App, RegionController,bootbox)->
 
             App.module "TakeQuizApp.QuizTimer", (QuizTimer, App)->
                 class QuizTimer.Controller extends RegionController
@@ -8,7 +9,10 @@ define ['app'
                     initialize: (opts)->
                         {@model,@display_mode, @timerObject, @quizResponseSummary} = opts
 
-                        time_taken= parseInt @quizResponseSummary.get 'total_time_taken'
+                        if @quizResponseSummary
+                            time_taken= parseInt @quizResponseSummary.get 'total_time_taken'
+
+                        time_taken =0 if not time_taken
 
                         total_time = parseInt(@model.get('duration')) * 60
 
@@ -41,7 +45,7 @@ define ['app'
                             loading: true
 
                         @listenTo view, 'end:quiz', -> @region.trigger 'show:alert:popup', 'end_quiz'
-                        @listenTo view, 'quiz:time:up', -> @region.trigger 'show:alert:popup', 'quiz_time_up','alert'
+                        @listenTo view, 'quiz:time:up', -> @region.trigger 'end:quiz'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0
@@ -102,4 +106,6 @@ define ['app'
                             onExpiry: @quizTimedOut
 
                     quizTimedOut:=>
-                        @trigger "quiz:time:up"
+                        msgContent= @model.getMessageContent 'end_quiz'
+                        bootbox.alert msgContent,=>
+                            @trigger "quiz:time:up"
