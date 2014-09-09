@@ -119,7 +119,7 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.quizTimedOut = function() {
         var msgContent;
-        msgContent = this.model.getMessageContent('end_quiz');
+        msgContent = this.model.getMessageContent('quiz_time_up');
         return bootbox.alert(msgContent, (function(_this) {
           return function() {
             return _this.trigger("quiz:time:up");

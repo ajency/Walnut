@@ -106,6 +106,6 @@ define ['app'
                             onExpiry: @quizTimedOut
 
                     quizTimedOut:=>
-                        msgContent= @model.getMessageContent 'end_quiz'
+                        msgContent= @model.getMessageContent 'quiz_time_up'
                         bootbox.alert msgContent,=>
                             @trigger "quiz:time:up"
