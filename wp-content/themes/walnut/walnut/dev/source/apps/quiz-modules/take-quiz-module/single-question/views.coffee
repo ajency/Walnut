@@ -111,7 +111,7 @@ define ['app'
                                 @$el.find '#next-question'
                                 .show()
 
-                        if @model.id is parseInt _.first @quizModel.get 'content_pieces'
+                        if parseInt(@model.id) is parseInt _.first @quizModel.get 'content_pieces'
                             @$el.find '#first_question'
                             .html 'This is the first question'
 

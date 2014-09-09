@@ -45,7 +45,14 @@ define ['app'
                     questionIDs = questionsCollection.pluck 'ID'
                     questionIDs= _.map questionIDs, (m)-> parseInt m
 
-                    questionID = _.first questionIDs
+                    pausedQuestion= @questionResponseCollection.findWhere 'status': 'paused'
+
+                    if pausedQuestion 
+                        questionID = pausedQuestion.get 'content_piece_id'
+
+                    else
+                        questionID = _.first questionIDs
+
                     questionModel = questionsCollection.get questionID
                     @layout = layout = new TakeQuizLayout
 
@@ -73,6 +80,34 @@ define ['app'
                     @listenTo App.dialogRegion, "clicked:confirm:yes", @_handlePopups
                     @listenTo App.dialogRegion, "clicked:alert:ok", @_handlePopups
 
+
+                    setInterval =>
+                        @_autosaveQuestionTime()
+                    ,60000
+
+                _autosaveQuestionTime:=>
+
+                    questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
+                        
+                    if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
+
+                        console.log(questionResponseModel.get('status')) if questionResponseModel
+
+                        totalTime =@timerObject.request "get:elapsed:time"
+                        timeTaken= totalTime - timeBeforeCurrentQuestion
+
+                        data =
+                            'summary_id'     : quizResponseSummary.id
+                            'content_piece_id'  : questionModel.id
+                            'question_response' : []
+                            'status'            : 'paused'
+                            'marks_scored'      : 0
+                            'time_taken'        : timeTaken
+
+                        questionResponseModel = App.request "create:quiz:question:response:model", data
+
+                        @_saveQuizResponseModel questionResponseModel
+
                 _changeQuestion:(id)->
                     #save results here of previous question / skip the question
                     questionModel = questionsCollection.get id
@@ -95,6 +130,10 @@ define ['app'
                         'time_taken'        : timeTaken
 
                     newResponseModel = App.request "create:quiz:question:response:model", data
+
+                    @_saveQuizResponseModel newResponseModel
+
+                _saveQuizResponseModel:(newResponseModel)=>
 
                     quizResponseModel = @questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
@@ -167,8 +206,6 @@ define ['app'
                             _.toNumber memo + num,1
 
                     quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
-                    
-                        
 
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
@@ -242,6 +279,7 @@ define ['app'
                         model       : quizModel
                         display_mode: @display_mode
                         timerObject : @timerObject
+                        quizResponseSummary         : quizResponseSummary
 
                     @_showSingleQuestionApp questionModel
 

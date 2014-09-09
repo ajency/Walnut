@@ -78,7 +78,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             this.$el.find('#next-question').show();
           }
         }
-        if (this.model.id === parseInt(_.first(this.quizModel.get('content_pieces')))) {
+        if (parseInt(this.model.id) === parseInt(_.first(this.quizModel.get('content_pieces')))) {
           this.$el.find('#first_question').html('This is the first question');
           return this.$el.find('#previous-question').hide();
         }
