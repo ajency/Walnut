@@ -875,6 +875,9 @@ function sds_postmeta_exists( $postmeta_data ) {
 
     global $wpdb;
 
+    if($postmeta_data['post_id'] == 0){
+        return false;
+    }
     $id= $postmeta_data['meta_id'];
     $post_id= $postmeta_data['post_id'];
     $meta_key= $postmeta_data['meta_key'];

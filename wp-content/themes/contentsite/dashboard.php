@@ -77,10 +77,6 @@
                         <?php endif; ?>
                     <?php endif;?>
                             
-                      <?php global $current_user;?>       
-                      <?php if(!is_multisite() && (in_array('teacher', $current_user->roles) ||  in_array('student', $current_user->roles) ||  in_array('school-admin', $current_user->roles)) && school_is_syncd() && is_user_logged_in()) :?>
-                            <a href="<?php echo site_url().'/sync-site-content' ?>">Sync</a>
-                       <?php endif;?>
                     <div id="login-region"></div>
                     <div id="breadcrumb-region"></div>
                     <div id="main-content-region"></div>

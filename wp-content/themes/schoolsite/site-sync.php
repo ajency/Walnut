@@ -668,6 +668,21 @@ jQuery(document).ready(function() {
          e.preventDefault();
          jQuery(this).parent(".quicklinks").toggleClass('open');
      }); 
+    
+    //logout user 
+     jQuery("#user_logout").click(function(e){
+         e.preventDefault();
+            jQuery.post( AJAXURL,
+                {
+                    action    : 'logout_user'
+                },
+                function(data) {           
+                           if(data.success === 'User logged out.'){ 
+                             window.location.href = data.redirect_url;
+                           }         
+                },'json');
+     }); 
+     
 });
 </script>
 </body>
