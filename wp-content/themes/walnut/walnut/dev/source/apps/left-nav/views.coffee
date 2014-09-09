@@ -27,7 +27,7 @@ define ['app', 'text!apps/left-nav/templates/leftnav.html'], (App, navTpl)->
                     iconClass = 'fa fa-book'
 
                 if @model.get('post_title') is 'Quiz Management'
-                    iconClass = 'fa fa-info-circle'
+                    iconClass = 'fa fa-puzzle-piece'
 
                 data.iconClass = iconClass
 
