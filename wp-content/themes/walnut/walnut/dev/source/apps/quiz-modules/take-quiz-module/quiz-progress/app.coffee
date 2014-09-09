@@ -58,11 +58,15 @@ define ['app'
                         itemNumber: index+1
 
                     events:
-                        'click #quiz-items a' :(e)-> @trigger "change:question", $(e.target).attr 'id'
+                        'click #quiz-items a' : 'changeQuestion'
 
                     mixinTemplateHelpers:(data)->
                         data.totalQuestions = @collection.length
                         data
+
+                    initialize:->
+                        @questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
+                        @quizModel = Marionette.getOption @,'quizModel'
 
                     onShow:->
                         @$el.find "div.holder"
@@ -77,16 +81,20 @@ define ['app'
                             links : "blank"
 
                         currentQuestion = Marionette.getOption @,'currentQuestion'
-
-                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
-                        quizModel = Marionette.getOption @,'quizModel'
-                        questionResponseCollection.each (response)=> @changeClassName(response)  if quizModel.hasPermission 'display_answer'
+                        
+                        @questionResponseCollection.each (response)=> @changeClassName(response)  if @quizModel.hasPermission 'display_answer'
 
                         @onQuestionChange currentQuestion
 
                         @updateProgressBar()
 
                         @updateSkippedCount()
+
+                    changeQuestion:(e)->
+                        selectedQID = parseInt $(e.target).attr 'id'
+
+                        if _.contains(@questionResponseCollection.pluck('content_piece_id'),selectedQID) or @quizModel.hasPermission 'allow_skip'
+                            @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
                         @$el.find "#quiz-items li"
@@ -98,9 +106,7 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        quizModel = Marionette.getOption @,'quizModel'
-
-                        @changeClassName responseModel if quizModel.hasPermission 'display_answer'
+                        @changeClassName responseModel if @quizModel.hasPermission 'display_answer'
 
                         @updateProgressBar()
 
@@ -122,9 +128,8 @@ define ['app'
                         .addClass className
 
                     updateProgressBar:->
-                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
 
-                        responses = questionResponseCollection.pluck 'question_response'
+                        responses = @questionResponseCollection.pluck 'question_response'
 
                         answeredQuestions = _.chain responses
                                     .map (m)->m if m.status isnt 'skipped'
@@ -144,8 +149,7 @@ define ['app'
 
 
                     updateSkippedCount:->
-                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
-                        answers = questionResponseCollection.pluck 'question_response'
+                        answers = @questionResponseCollection.pluck 'question_response'
                         skipped = _.where answers, 'status': 'skipped'
 
                         @$el.find "#skipped-questions"

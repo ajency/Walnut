@@ -57,6 +57,9 @@ define ['app'
                                 if quizModel.get('permissions').randomize
                                     questionsCollection.each (e)-> e.unset 'order'
                                     questionsCollection.reset questionsCollection.shuffle()
+
+                                    #change the order in the main model also
+                                    quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
                         
                         App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
                             @layout = layout = @_getQuizViewLayout()
@@ -66,6 +69,18 @@ define ['app'
                             @listenTo @layout, 'show', @showQuizViews
 
                             @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
+
+                            @listenTo @layout.quizDetailsRegion, 'try:again', =>
+                                @questionResponseCollection = null
+                                quizResponseSummary.set
+                                    'num_skipped'       : 0 
+                                    'status'            : 'not_started'
+                                    'total_marks_scored': 0
+                                    'total_time_taken'  : 0
+
+                                display_mode = 'class_mode'
+                                    
+                                @startQuiz()
 
             _fetchQuizResponseSummary:->
                 defer = $.Deferred();

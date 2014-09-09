@@ -13,6 +13,9 @@ define ['app'
                 @listenTo view, 'start:quiz:module', =>
                     @region.trigger "start:quiz:module"
 
+                @listenTo view, 'try:again', =>
+                    @region.trigger "try:again"
+
                 @listenTo view, 'goto:previous:route', @_gotoPreviousRoute
 
                 @show view
@@ -38,6 +41,7 @@ define ['app'
 
             events :
                 'click #take-quiz' :-> @trigger "start:quiz:module"
+                'click #try-again' :-> @trigger "try:again"
                 'click #go-back-button' : ->@trigger "goto:previous:route"
 
 
@@ -49,7 +53,7 @@ define ['app'
                 data.practice_mode =true if @model.get('quiz_type') is 'practice'
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
-
+                
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
@@ -61,6 +65,8 @@ define ['app'
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
                     else 
                         data.taken_on_date = moment().format("Do MMM YYYY")
+
+                    data.try_again= true if data.practice_mode
 
                 data.negMarksEnable= _.toBool data.negMarksEnable
                 
