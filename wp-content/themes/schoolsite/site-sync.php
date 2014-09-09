@@ -241,7 +241,7 @@
                                                   <div class="col-sm-12  m-b-10 m-t-10">
                                                     <div class="">
                                                       <button name="sync-media" id="sync-media" type="button" class="btn btn-success h-align-middle block"><span id="syncMediaButtonText" class="bold">Start</span></button>
-                                                      <span class="status-msg"></span>
+                                                      <h5 id="syncSuccess" class="m-t-5 semi-bold text-center text-success status-msg"></h5>
                                                     </div>
                                                   </div>
                                                 </div>

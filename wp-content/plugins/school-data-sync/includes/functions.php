@@ -627,7 +627,7 @@ function get_web_data_sync_html($blog_id){
             . 'data-blog-id='.$blog_id.' '
             . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'" 
               type="button" class="btn btn-success h-align-middle block"><span id="syncButtonText" class="bold">'.$sync_defaults['label'].'</span></button>
-              <span class="status-msg"></span>
+              <h5 id="syncSuccess" class="m-t-5 semi-bold text-center text-success status-msg"></h5>
                                   </div>
                                 </div>
                               </div>';
