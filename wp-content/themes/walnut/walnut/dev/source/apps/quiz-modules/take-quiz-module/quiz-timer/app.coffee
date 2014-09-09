@@ -6,9 +6,13 @@ define ['app'
                 class QuizTimer.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@model,@display_mode, @timerObject} = opts
+                        {@model,@display_mode, @timerObject, @quizResponseSummary} = opts
 
-                        @durationInSeconds = @model.get('duration') * 60
+                        time_taken= parseInt @quizResponseSummary.get 'total_time_taken'
+
+                        total_time = parseInt(@model.get('duration')) * 60
+
+                        @durationInSeconds = total_time-time_taken
 
                         @timerObject.setHandler "get:elapsed:time", ()=>
 
@@ -84,9 +88,8 @@ define ['app'
                             .show()
 
                         else
-                            if timeLeftOrElapsed < 0
-                                @countUp timeLeftOrElapsed
-                            else @countDown timeLeftOrElapsed
+                            if timeLeftOrElapsed >= 0
+                                @countDown timeLeftOrElapsed
 
                     countDown:(time)=>
 

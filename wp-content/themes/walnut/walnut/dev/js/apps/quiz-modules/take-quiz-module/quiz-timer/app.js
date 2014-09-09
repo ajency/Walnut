@@ -15,9 +15,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       }
 
       Controller.prototype.initialize = function(opts) {
-        var view;
-        this.model = opts.model, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
-        this.durationInSeconds = this.model.get('duration') * 60;
+        var time_taken, total_time, view;
+        this.model = opts.model, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.quizResponseSummary = opts.quizResponseSummary;
+        time_taken = parseInt(this.quizResponseSummary.get('total_time_taken'));
+        total_time = parseInt(this.model.get('duration')) * 60;
+        this.durationInSeconds = total_time - time_taken;
         this.timerObject.setHandler("get:elapsed:time", (function(_this) {
           return function() {
             var timeElapsed, timerSign, timerTime, timerTimePeriod;
@@ -96,9 +98,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         if (this.display_mode === 'replay') {
           return this.$el.find('#completed-quiz').show();
         } else {
-          if (timeLeftOrElapsed < 0) {
-            return this.countUp(timeLeftOrElapsed);
-          } else {
+          if (timeLeftOrElapsed >= 0) {
             return this.countDown(timeLeftOrElapsed);
           }
         }

@@ -373,29 +373,42 @@ function write_quiz_question_response($args){
     if(!isset($args['qr_id'])){
         $qr_id = 'CP'.$args['content_piece_id'].$args['summary_id'];
         $data['qr_id'] = $qr_id;
-        
-        
 
         $wpdb->insert(($wpdb->prefix).'quiz_question_response', $data );
     }
     // update
     else{
+
         $where_array = array('qr_id' => $args['qr_id']);
 
 
-        //check for single attempt permission
-        if ($quiz_module->permissions['single_attempt']){
-            return false;
-        }
         //get old question response data
-        $question_response = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_question_response
-                    where qr_id = %s",$data['qr_id']));
+        $check_qry = $wpdb->prepare("select * from {$wpdb->prefix}quiz_question_response
+                    where qr_id = %s",$args['qr_id']);
 
-        if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')            
-            return false;
+        $question_response = $wpdb->get_row($check_qry);
+        
+        if($question_response->status == 'paused' && $args['status'] == 'paused'){
 
-        $wpdb->update(($wpdb->prefix).'quiz_question_response', $data ,$where_array);
+            $paused_data = array('status'=>'paused','time_taken' => $args['time_taken']);
+            $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
 
+        }
+
+        else{
+            if($question_response->status != 'paused'){
+                //check for single attempt permission
+                if ($quiz_module->permissions['single_attempt']){
+                    return false;
+                }
+                
+
+                if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')            
+                    return false;
+            }
+
+            $wpdb->update(($wpdb->prefix).'quiz_question_response', $data ,$where_array);
+        }
         $data['qr_id'] = $args['qr_id'];
     }
 
