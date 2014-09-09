@@ -94,6 +94,10 @@ define ['app'
                                 if @quizModel.hasPermission 'allow_resubmit'
                                     data.allow_submit_answer = true
 
+                                if responseModel.get('status') is 'paused'
+                                    data.allow_submit_answer = true
+                                    
+
                             data.allow_skip = false if not data.allow_submit_answer
 
                         data

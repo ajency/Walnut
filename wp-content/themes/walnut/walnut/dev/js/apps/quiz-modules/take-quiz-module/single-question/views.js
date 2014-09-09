@@ -58,6 +58,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             if (this.quizModel.hasPermission('allow_resubmit')) {
               data.allow_submit_answer = true;
             }
+            if (responseModel.get('status') === 'paused') {
+              data.allow_submit_answer = true;
+            }
           }
           if (!data.allow_submit_answer) {
             data.allow_skip = false;
