@@ -36,7 +36,7 @@ function run_standalone_school_setup(){
     //setup the template and stylesheet for child sites
     update_option( 'template', 'walnut' );
     update_option( 'stylesheet', 'schoolsite' );
-    update_option( 'permalink_structure', '/blog/%postname%/' );
+    update_option( 'permalink_structure', '/%postname%/' );
 
     add_pages_to_main_site();
 
