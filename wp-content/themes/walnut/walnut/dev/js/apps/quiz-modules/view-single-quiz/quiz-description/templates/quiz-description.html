@@ -80,10 +80,12 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-success btn-lg btn-large btn-cons2 h-center block" id="take-quiz"> Start Quiz</button>
-{{#try_again}}
-    <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 h-center block" id="try-again"> Try Again</button>
-{{/try_again}}
+<div class="text-center">
+    <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 m-r-10" id="take-quiz"> Start Quiz</button>
+    {{#try_again}}
+        <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 m-r-10" id="try-again"> Try Again</button>
+    {{/try_again}}
 
 
-{{#answer_printing}} <button type="button" class="btn btn-info btn-lg btn-large btn-cons2 h-center block" id="print-quiz"> Print Quiz Answers</button> {{/answer_printing}}
+    {{#answer_printing}} <button type="button" class="btn btn-info btn-lg btn-large btn-cons2" id="print-quiz"> Print Quiz Answers</button> {{/answer_printing}}
+</div>

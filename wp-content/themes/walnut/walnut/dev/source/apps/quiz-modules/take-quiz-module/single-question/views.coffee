@@ -94,6 +94,10 @@ define ['app'
                                 if @quizModel.hasPermission 'allow_resubmit'
                                     data.allow_submit_answer = true
 
+                                if responseModel.get('status') is 'paused'
+                                    data.allow_submit_answer = true
+                                    
+
                             data.allow_skip = false if not data.allow_submit_answer
 
                         data
@@ -111,7 +115,7 @@ define ['app'
                                 @$el.find '#next-question'
                                 .show()
 
-                        if @model.id is parseInt _.first @quizModel.get 'content_pieces'
+                        if parseInt(@model.id) is parseInt _.first @quizModel.get 'content_pieces'
                             @$el.find '#first_question'
                             .html 'This is the first question'
 

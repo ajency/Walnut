@@ -58,6 +58,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             if (this.quizModel.hasPermission('allow_resubmit')) {
               data.allow_submit_answer = true;
             }
+            if (responseModel.get('status') === 'paused') {
+              data.allow_submit_answer = true;
+            }
           }
           if (!data.allow_submit_answer) {
             data.allow_skip = false;
@@ -78,7 +81,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             this.$el.find('#next-question').show();
           }
         }
-        if (this.model.id === parseInt(_.first(this.quizModel.get('content_pieces')))) {
+        if (parseInt(this.model.id) === parseInt(_.first(this.quizModel.get('content_pieces')))) {
           this.$el.find('#first_question').html('This is the first question');
           return this.$el.find('#previous-question').hide();
         }

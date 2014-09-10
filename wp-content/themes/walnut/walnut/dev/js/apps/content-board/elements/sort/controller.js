@@ -59,7 +59,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
           answeredCollection = _.map(this.answerModel.get('answer'), (function(_this) {
             return function(el) {
               return _this.optionCollection.findWhere({
-                'index': el
+                'index': parseInt(el)
               });
             };
           })(this));
