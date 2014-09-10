@@ -37,6 +37,24 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           loading: true
         });
         this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject));
+        this.listenTo(this.region, "silent:save:question", (function(_this) {
+          return function() {
+            var answer_status;
+            answerData = _this.answerWreqrObject.request("get:question:answer");
+            answer = answerData.answerModel;
+            _this.answerWreqrObject.request("submit:answer");
+            answer_status = _this._getAnswerStatus(answer.get('marks'), answerData.totalMarks);
+            answer.set({
+              'status': answer_status
+            });
+            if ((answer.get('status') === 'wrong_answer') && _.toBool(_this.quizModel.get('negMarksEnable'))) {
+              answer.set({
+                'marks': -answerData.totalMarks * _this.quizModel.get('negMarks') / 100
+              });
+            }
+            return _this.region.trigger("submit:question", answer);
+          };
+        })(this));
         this.listenTo(layout, "validate:answer", function() {
           answerData = this.answerWreqrObject.request("get:question:answer");
           answer = answerData.answerModel;

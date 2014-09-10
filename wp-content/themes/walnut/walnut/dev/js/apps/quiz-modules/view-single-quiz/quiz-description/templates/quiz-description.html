@@ -48,6 +48,18 @@
             <div class="col-md-3 b-r b-grey">
                     <label class="form-label">Duration</label>
                     {{total_minutes}} mins
+                    {{#incompleteQuiz}}
+                        <h4 class="text-success semi-bold no-margin inline">
+                            Current Elapsed Time: 
+                            <span class="bold">
+                                {{total_time_taken}}
+                            </span><br> 
+                            Time remaining: 
+                            <span class="bold">
+                                {{time_remaining}}
+                            </span>
+                        </h4>
+                    {{/incompleteQuiz}}
                     {{#responseSummary}} 
                         <h4 class="text-success semi-bold no-margin inline">(Completed in: <span class="bold">{{total_time_taken}}</span>)</h4>
                     {{/responseSummary}}
