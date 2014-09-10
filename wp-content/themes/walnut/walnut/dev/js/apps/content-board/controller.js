@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         })(this));
         App.commands.setHandler("show:response", (function(_this) {
           return function(marks, total) {
-            return _this.view.triggerMethod('show:response', parseInt(marks), parseInt(total));
+            return _this.view.triggerMethod('show:response', parseFloat(marks).toFixed(2), parseFloat(total).toFixed(2));
           };
         })(this));
         return this.show(this.view, {

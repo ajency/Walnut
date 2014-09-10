@@ -101,7 +101,7 @@ define ['app',
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
-					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Quiz'
 
 				if @model.get('quiz_type') is 'practice'
 					data.practice_quiz = true

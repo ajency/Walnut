@@ -84,30 +84,31 @@ define ['app'
 
                     setInterval =>
                         @_autosaveQuestionTime()
-                    ,60000
+                    ,30000
 
                 _autosaveQuestionTime:=>
+                     if quizModel.get('quiz_type') is 'test'
 
-                    questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
-                        
-                    if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
+                        questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
+                            
+                        if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
 
-                        console.log(questionResponseModel.get('status')) if questionResponseModel
+                            console.log(questionResponseModel.get('status')) if questionResponseModel
 
-                        totalTime =@timerObject.request "get:elapsed:time"
-                        timeTaken= totalTime - timeBeforeCurrentQuestion
+                            totalTime =@timerObject.request "get:elapsed:time"
+                            timeTaken= totalTime - timeBeforeCurrentQuestion
 
-                        data =
-                            'summary_id'     : quizResponseSummary.id
-                            'content_piece_id'  : questionModel.id
-                            'question_response' : []
-                            'status'            : 'paused'
-                            'marks_scored'      : 0
-                            'time_taken'        : timeTaken
+                            data =
+                                'summary_id'     : quizResponseSummary.id
+                                'content_piece_id'  : questionModel.id
+                                'question_response' : []
+                                'status'            : 'paused'
+                                'marks_scored'      : 0
+                                'time_taken'        : timeTaken
 
-                        questionResponseModel = App.request "create:quiz:question:response:model", data
+                            questionResponseModel = App.request "create:quiz:question:response:model", data
 
-                        @_saveQuizResponseModel questionResponseModel
+                            @_saveQuizResponseModel questionResponseModel
 
                 _changeQuestion:(id)->
                     #save results here of previous question / skip the question
@@ -117,7 +118,7 @@ define ['app'
 
                 _submitQuestion:(answer)->
                     #save results here
-                    
+
                     totalTime =@timerObject.request "get:elapsed:time"
                     timeTaken= totalTime - timeBeforeCurrentQuestion
                     timeBeforeCurrentQuestion= totalTime
@@ -185,6 +186,8 @@ define ['app'
                         message_type: message_type
 
                 _endQuiz:->
+                    if @display_mode isnt 'replay'
+                        @layout.questionDisplayRegion.trigger "silent:save:question"
 
                     unanswered = @_getUnansweredIDs()
 

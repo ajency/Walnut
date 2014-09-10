@@ -234,43 +234,40 @@ function get_book( $book, $division=0,$user_id=0) {
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
     $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
-    if($division){
-        $modules_count_query=$wpdb->prepare("
-            SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
-                WHERE term_ids LIKE %s AND post_status like %s AND type like %s",
-            array('%"'. $book_id . '";%', 'publish', 'teaching-module')
-        );
-        $modules_count = $wpdb->get_row( $modules_count_query );
-        $book_dets->modules_count = $modules_count->count;
-    }
-    else{
+    
+    $modules_count_query=$wpdb->prepare("
+        SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
+            WHERE term_ids LIKE %s AND post_status like %s AND type like %s",
+        array('%"'. $book_id . '";%', 'publish', 'teaching-module')
+    );
+    $teaching_modules = $wpdb->get_row( $modules_count_query );
+    $book_dets->teaching_modules = (int) $teaching_modules->count;
 
-        $modules_count_query=$wpdb->prepare("SELECT
-            SUM( CASE
-                    WHEN m.meta_value = 'practice' THEN 1 ELSE 0 END
-                ) as practice,
-            SUM( CASE
-                    WHEN m.meta_value = 'test' 
-                    THEN 1 ELSE 0  END
-                ) as class_test
+    $quiz_count_query=$wpdb->prepare("SELECT
+        SUM( CASE
+                WHEN m.meta_value = 'practice' THEN 1 ELSE 0 END
+            ) as practice,
+        SUM( CASE
+                WHEN m.meta_value = 'test' 
+                THEN 1 ELSE 0  END
+            ) as class_test
 
-            FROM `{$wpdb->base_prefix}content_collection` c, {$wpdb->base_prefix}collection_meta m
-            WHERE c.term_ids LIKE %s 
-                AND c.post_status LIKE %s 
-                AND c.type LIKE %s
-                AND c.id = m.collection_id
-                AND m.meta_key LIKE %s",
-                
-            array('%"'. $book_id . '";%', 'publish', 'quiz', 'quiz_type')
-        );
-        $modules_count = $wpdb->get_row( $modules_count_query );
+        FROM `{$wpdb->base_prefix}content_collection` c, {$wpdb->base_prefix}collection_meta m
+        WHERE c.term_ids LIKE %s 
+            AND c.post_status LIKE %s 
+            AND c.type LIKE %s
+            AND c.id = m.collection_id
+            AND m.meta_key LIKE %s",
+            
+        array('%"'. $book_id . '";%', 'publish', 'quiz', 'quiz_type')
+    );
+    $quizzes_count = $wpdb->get_row( $quiz_count_query );
 
-        $book_dets->class_test_count = (int) $modules_count->class_test;
-        $book_dets->practice_count = (int) $modules_count->practice;
-    }
+    $book_dets->class_test_count = (int) $quizzes_count->class_test;
+    $book_dets->practice_count = (int) $quizzes_count->practice;
 
     $questions_count = $wpdb->get_row( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=" . $book_id );
-    $book_dets->questions_count = $questions_count->count;
+    $book_dets->questions_count = (int) $questions_count->count;
 
     $args = array( 'hide_empty' => false,
         'parent' => $book_id,
@@ -302,7 +299,7 @@ function get_book( $book, $division=0,$user_id=0) {
     if($user_id){
         $quizzes_completed = quizzes_completed_for_textbook($book_id,$user_id);
         $book_dets->quizzes_completed = $quizzes_completed;
-        $book_dets->quizzes_not_started = $modules_count->class_test - $quizzes_completed;
+        $book_dets->quizzes_not_started = $quizzes_count->class_test - $quizzes_completed;
     }
 
 
