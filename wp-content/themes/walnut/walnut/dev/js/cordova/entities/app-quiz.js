@@ -2,7 +2,7 @@ var __slice = [].slice;
 
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
-    getQuizByTextbookIdAndUserID: function(textbookId) {
+    getQuizByTextbookId: function(textbookId) {
       var onSuccess, runQuery;
       runQuery = function() {
         var pattern;
@@ -68,7 +68,7 @@ define(['underscore', 'unserialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function(data) {
-        return console.log('getQuizByTextbookIdAndUserID transaction completed');
+        return console.log('getQuizByTextbookId transaction completed');
       }).fail(_.failureHandler);
     },
     getCollectionMeta: function(collection_id) {
@@ -155,7 +155,7 @@ define(['underscore', 'unserialize'], function(_) {
                   return content_pieces.push(parseInt(content.id));
                 }
               } else if (content.type === "content_set") {
-                def = _.generateSetItems(content.data.terms_id, parseInt(content.data.lvl1), parseInt(content.data.lvl2), parseInt(content.data.lvl3), content_pieces);
+                def = _.generateSetItems(content, content_pieces);
                 return deferreds.push(def);
               }
             })(content, content_pieces);
@@ -178,8 +178,12 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log("getContentPiecesFromContentLayout done");
       }).fail(_.failureHandler);
     },
-    generateSetItems: function(term_ids, level1, level2, level3, content_pieces) {
-      var complete_ids, runFunc;
+    generateSetItems: function(content, content_pieces) {
+      var complete_ids, level1, level2, level3, runFunc, term_ids;
+      term_ids = content.data.terms_id;
+      level1 = parseInt(content.data.lvl1);
+      level2 = parseInt(content.data.lvl2);
+      level3 = parseInt(content.data.lvl3);
       complete_ids = [];
       runFunc = function() {
         return $.Deferred(function(d) {
@@ -309,7 +313,6 @@ define(['underscore', 'unserialize'], function(_) {
           quizResponseSummary = _.getQuizResponseSummary(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
             var contentLayoutValue, date;
-            console.log(quiz_responses);
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';
@@ -347,7 +350,6 @@ define(['underscore', 'unserialize'], function(_) {
         return function(tx, data) {
           var result;
           result = data.rows.item(0);
-          console.log(JSON.stringify(result));
           return d.resolve(result);
         };
       };
@@ -368,6 +370,66 @@ define(['underscore', 'unserialize'], function(_) {
       } else {
         return 'mins';
       }
+    },
+    getQuizById: function(id) {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM wp_content_collection WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var row;
+          row = data.rows.item(0);
+          return (function(row) {
+            var collectionMeta;
+            collectionMeta = _.getCollectionMeta(row['id']);
+            return collectionMeta.done(function(collectionMetaData) {
+              (function(row, collectionMetaData) {
+                var dateAndStatus;
+                dateAndStatus = _.getStartDateAndStatus(row['id']);
+                return dateAndStatus.done(function(dateStatus) {
+                  var result;
+                  return result = {
+                    id: row['id'],
+                    content_pieces: collectionMetaData.contentPieces,
+                    created_by: row['created_by'],
+                    created_on: row['created_on'],
+                    duration: row['duration'],
+                    instructions: collectionMetaData.instructions,
+                    last_modified_by: row['last_modified_by'],
+                    last_modified_on: row['last_modified_on'],
+                    marks: collectionMetaData.marks,
+                    message: collectionMetaData.message,
+                    minshours: _.getMinsHours(row['duration']),
+                    name: row['name'],
+                    negMarks: collectionMetaData.negMarks,
+                    negMarksEnable: collectionMetaData.negMarksEnable,
+                    permissions: collectionMetaData.permission,
+                    post_status: row['post_status'],
+                    published_by: row['published_by'],
+                    published_on: row['published_on'],
+                    quiz_type: collectionMetaData.quizType,
+                    status: dateStatus.status,
+                    date: dateStatus.start_date,
+                    term_ids: _.unserialize(row['term_ids']),
+                    total_minutes: row['duration'],
+                    type: row['type']
+                  };
+                });
+              })(row, collectionMetaData);
+              console.log(JSON.stringify(result));
+              return d.resolve(result);
+            });
+          })(row);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getQuizById done');
+      }).fail(_.failureHandler);
     }
   });
 });

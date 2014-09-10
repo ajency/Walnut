@@ -72,7 +72,7 @@
                 <h5 class="bold">Quiz Instructions</h5>
                     {{&instructions}}
                     {{^instructions}}
-                        This quiz has no instructions
+                        This is a class test and can be attempted just once, therefore ensure you have answered all questions before ending the quiz.
                     {{/instructions}}
             </div>
         </div>
@@ -81,4 +81,9 @@
 </div>
 
 <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 h-center block" id="take-quiz"> Start Quiz</button>
+{{#try_again}}
+    <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 h-center block" id="try-again"> Try Again</button>
+{{/try_again}}
+
+
 {{#answer_printing}} <button type="button" class="btn btn-info btn-lg btn-large btn-cons2 h-center block" id="print-quiz"> Print Quiz Answers</button> {{/answer_printing}}

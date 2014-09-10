@@ -20,6 +20,7 @@ define ['app'
 
 			class QuizQuestionResponse.ResponseCollection extends Backbone.Collection
 				model: QuizQuestionResponse.ResponseModel
+				name: 'quiz-question-response'
 				url: ->
 					AJAXURL + '?action=get-all-quiz-question-responses'
 

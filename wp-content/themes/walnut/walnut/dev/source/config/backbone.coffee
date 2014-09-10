@@ -14,7 +14,7 @@ define ["backbone"], (Backbone) ->
 		sync :(method, collection, options)->
 
 			collection_name = collection.name
-			console.log 'Collection name: '+collection_name
+			console.log 'Collection name: '+JSON.stringify collection_name
 			opts = options.data
 
 			if collection_name is 'textbook'
@@ -45,7 +45,7 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'quiz'
-				data = _.getQuizByTextbookIdAndUserID(opts.textbook)
+				data = _.getQuizByTextbookId(opts.textbook)
 				data.done (d)->
 					console.log('quiz data')
 					console.log(d)
@@ -66,10 +66,11 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d
 
-			if collection_name is 'textbookName'
-				data = _.getTextBookNamesByTermIDs(opts.term_ids)
-				data.done (d)->
-					collection.set d
+			# if collection_name is 'textbookName'
+			# 	data = _.getTextBookNamesByTermIDs(opts.term_ids)
+			# 	data.done (d)->
+			# 		collection.set d
+
 
 			if collection_name is 'offlineUsers'
 				data = _.getNamesOfAllOfflineUsers()
@@ -211,6 +212,11 @@ define ["backbone"], (Backbone) ->
 					data = _.getTextBookByTextbookId(model.get('term_id'))
 					data.done (d)->
 						model.set d	
+
+				if modelname is 'quiz'
+					data = _.getQuizById(model.get('id'))
+					data.done (d)->
+						model.set d
 
 				if modelname is 'content-group'
 					data = _.getContentGroupById(model.get('id'))

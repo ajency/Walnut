@@ -148,6 +148,5 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "get:textbook:name:by:id", (id)->
             API.getTextBookNameByID id
 
-
         App.reqres.setHandler "get:textbook:names:by:ids", (ids)->
             API.getTextBookNamesByIDs ids

@@ -36,6 +36,8 @@ define(['app', 'backbone'], function(App, Backbone) {
 
       ResponseCollection.prototype.model = QuizQuestionResponse.ResponseModel;
 
+      ResponseCollection.prototype.name = 'quiz-question-response';
+
       ResponseCollection.prototype.url = function() {
         return AJAXURL + '?action=get-all-quiz-question-responses';
       };

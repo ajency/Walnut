@@ -4,7 +4,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 	_.mixin
 
-		getQuizByTextbookIdAndUserID : (textbookId)->
+		getQuizByTextbookId : (textbookId)->
 
 			runQuery = ->
 
@@ -66,9 +66,8 @@ define ['underscore', 'unserialize'], ( _) ->
 					d.resolve result
 
 			$.when(runQuery()).done (data)->
-				console.log 'getQuizByTextbookIdAndUserID transaction completed'
+				console.log 'getQuizByTextbookId transaction completed'
 			.fail _.failureHandler
-
 
 
 		getCollectionMeta : (collection_id)->
@@ -146,7 +145,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									content_pieces.push(parseInt(content.id))
 
 							else if content.type is "content_set"
-								def = _.generateSetItems(content.data.terms_id, parseInt(content.data.lvl1), parseInt(content.data.lvl2), parseInt(content.data.lvl3), content_pieces)
+								def = _.generateSetItems(content, content_pieces)
 								deferreds.push def
 
 					if deferreds.length is 0
@@ -165,8 +164,11 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 		#This function gets the ids for content sets
-		generateSetItems : (term_ids, level1, level2, level3, content_pieces)->
-
+		generateSetItems : (content, content_pieces)->
+			term_ids = content.data.terms_id
+			level1 = parseInt(content.data.lvl1)
+			level2 = parseInt(content.data.lvl2)
+			level3 = parseInt(content.data.lvl3)
 			complete_ids = []
 
 			runFunc = ->
@@ -309,7 +311,6 @@ define ['underscore', 'unserialize'], ( _) ->
 					
 					quizResponseSummary = _.getQuizResponseSummary(collection_id)
 					quizResponseSummary.done (quiz_responses)->
-						console.log quiz_responses
 						if _.isEmpty quiz_responses
 							data.status = 'not started'
 							data.start_date = ''
@@ -350,7 +351,6 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx,data)->
 
 					result = data.rows.item(0)
-					console.log JSON.stringify result
 					d.resolve(result)
 
 
@@ -373,3 +373,62 @@ define ['underscore', 'unserialize'], ( _) ->
 			if duration > 60
 				'hrs'
 			else 'mins'	
+
+
+
+		getQuizById : (id)->
+
+			runQuery = ->
+
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM wp_content_collection WHERE 
+							id=?", [id], onSuccess(d), _.deferredErrorHandler(d))
+
+
+			onSuccess =(d)->
+				(tx,data)->
+
+					row = data.rows.item(0)
+
+					do (row)->
+						collectionMeta = _.getCollectionMeta(row['id'])
+						collectionMeta.done (collectionMetaData)->
+
+							do(row, collectionMetaData)->
+								dateAndStatus = _.getStartDateAndStatus(row['id'])
+								dateAndStatus.done (dateStatus)->
+
+									result = 
+										id: row['id']
+										content_pieces : collectionMetaData.contentPieces
+										created_by: row['created_by']
+										created_on: row['created_on']
+										duration: row['duration']
+										instructions : collectionMetaData.instructions
+										last_modified_by: row['last_modified_by']
+										last_modified_on: row['last_modified_on']
+										marks : collectionMetaData.marks
+										message : collectionMetaData.message
+										minshours: _.getMinsHours(row['duration'])
+										name: row['name']
+										negMarks : collectionMetaData.negMarks
+										negMarksEnable : collectionMetaData.negMarksEnable
+										permissions : collectionMetaData.permission
+										post_status: row['post_status']
+										published_by: row['published_by']
+										published_on: row['published_on']
+										quiz_type : collectionMetaData.quizType
+										status : dateStatus.status
+										date : dateStatus.start_date
+										term_ids: _.unserialize(row['term_ids'])
+										total_minutes: row['duration']
+										type: row['type']
+
+
+							console.log JSON.stringify result
+							d.resolve(result)
+			
+			$.when(runQuery()).done ->              
+				console.log 'getQuizById done'
+			.fail _.failureHandler

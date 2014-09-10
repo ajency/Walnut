@@ -21,6 +21,7 @@ define ['app'
 
 			class QuizResponseSummary.SummaryCollection extends Backbone.Collection
 				model: QuizResponseSummary.SummaryModel
+				
 				url: ->
 					AJAXURL + '?action=get-quiz-response-summary'
 

@@ -9,7 +9,7 @@ define(["backbone"], function(Backbone) {
     sync: function(method, collection, options) {
       var collection_name, data, opts;
       collection_name = collection.name;
-      console.log('Collection name: ' + collection_name);
+      console.log('Collection name: ' + JSON.stringify(collection_name));
       opts = options.data;
       if (collection_name === 'textbook') {
         data = _.getTextbooksForStudent();
@@ -37,7 +37,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz') {
-        data = _.getQuizByTextbookIdAndUserID(opts.textbook);
+        data = _.getQuizByTextbookId(opts.textbook);
         data.done(function(d) {
           console.log('quiz data');
           console.log(d);
@@ -58,12 +58,6 @@ define(["backbone"], function(Backbone) {
       }
       if (collection_name === 'question-response') {
         data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division);
-        data.done(function(d) {
-          return collection.set(d);
-        });
-      }
-      if (collection_name === 'textbookName') {
-        data = _.getTextBookNamesByTermIDs(opts.term_ids);
         data.done(function(d) {
           return collection.set(d);
         });
@@ -141,6 +135,12 @@ define(["backbone"], function(Backbone) {
         }
         if (modelname === 'textbook') {
           data = _.getTextBookByTextbookId(model.get('term_id'));
+          data.done(function(d) {
+            return model.set(d);
+          });
+        }
+        if (modelname === 'quiz') {
+          data = _.getQuizById(model.get('id'));
           data.done(function(d) {
             return model.set(d);
           });

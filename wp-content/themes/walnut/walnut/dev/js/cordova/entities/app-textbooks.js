@@ -211,33 +211,6 @@ define(['underscore'], function(_) {
       return $.when(runQuery()).done(function(data) {
         return console.log('getTextBookByTextbookId transaction completed');
       }).fail(_.failureHandler);
-    },
-    getTextBookNamesByTermIDs: function(ids) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT term_id, name FROM wp_terms WHERE term_id IN (" + ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, row, _i, _ref;
-          result = [];
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            result[i] = {
-              id: row['term_id'],
-              name: row['name']
-            };
-          }
-          return d.resolve(result);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getTextBookNamesByTermIDs transaction completed');
-      }).fail(_.failureHandler);
     }
   });
 });
