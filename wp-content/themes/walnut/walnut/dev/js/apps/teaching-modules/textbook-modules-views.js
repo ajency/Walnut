@@ -70,7 +70,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         data.training_date = training_date;
         if (Marionette.getOption(this, 'mode') === 'take-quiz') {
           data.take_quiz = true;
-          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Class Test';
+          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Quiz';
         }
         if (this.model.get('quiz_type') === 'practice') {
           data.practice_quiz = true;
