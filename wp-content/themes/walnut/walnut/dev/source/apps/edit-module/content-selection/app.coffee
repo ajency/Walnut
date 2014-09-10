@@ -12,15 +12,19 @@ define ['app'
 
                 {@model,@contentGroupCollection}= opts
 
+                term_ids = @model.get 'term_ids'
+
                 if @model.get('type') is 'teaching-module'
                     @contentPiecesCollection = App.request "get:content:pieces",
                         content_type: ['teacher_question','content_piece']
                         post_status : 'publish'
+                        textbook    :  term_ids['textbook']
 
                 if @model.get('type') is 'quiz'
                     @contentPiecesCollection = App.request "get:content:pieces",
                         content_type: ['student_question']
                         post_status : 'publish'
+                        textbook    :  term_ids['textbook']
 
                 @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
@@ -40,12 +44,19 @@ define ['app'
 
                         filters.pop() if @model.get('type') is 'quiz'
 
+                        if @model.get('type') is 'quiz'
+                            contentSelectionType = 'quiz'
+                        else
+                            contentSelectionType = 'teaching-module'
+
                         App.execute "show:textbook:filters:app",
                             region: @layout.filtersRegion
                             collection: @contentPiecesCollection
                             selectedFilterParamsObject : @selectedFilterParamsObject
                             model: @model
                             filters : filters
+                            dataType: 'content-pieces'
+                            contentSelectionType: contentSelectionType
 
                         App.execute "show:all:content:selection:app",
                             region: @layout.allContentRegion

@@ -16,35 +16,42 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
         this.textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        this.contentPiecesCollection = App.request("get:content:pieces");
-        this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
-        this.layout = this._getContentPiecesLayout();
-        return App.execute("when:fetched", [this.contentPiecesCollection, this.textbooksCollection], (function(_this) {
+        return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
           return function() {
-            _this.show(_this.layout, {
-              loading: true
+            var textbook;
+            textbook = _this.textbooksCollection.first();
+            _this.contentPiecesCollection = App.request("get:content:pieces", {
+              'textbook': textbook.id
             });
-            _this.listenTo(_this.layout, "show", function() {
-              App.execute("show:textbook:filters:app", {
-                region: _this.layout.filtersRegion,
-                collection: _this.contentPiecesCollection,
-                textbooksCollection: _this.textbooksCollection,
-                selectedFilterParamsObject: _this.selectedFilterParamsObject,
-                filters: ['textbooks', 'chapters', 'sections', 'subsections', 'post_status', 'status', 'content_type', 'student_question']
+            _this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
+            _this.layout = _this._getContentPiecesLayout();
+            return App.execute("when:fetched", _this.contentPiecesCollection, function() {
+              _this.show(_this.layout, {
+                loading: true
               });
-              App.execute("show:list:content:pieces:app", {
-                region: _this.layout.allContentRegion,
-                contentPiecesCollection: _this.contentPiecesCollection,
-                textbooksCollection: _this.textbooksCollection
+              _this.listenTo(_this.layout, "show", function() {
+                App.execute("show:textbook:filters:app", {
+                  region: _this.layout.filtersRegion,
+                  collection: _this.contentPiecesCollection,
+                  textbooksCollection: _this.textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                  dataType: 'content-pieces',
+                  filters: ['textbooks', 'chapters', 'sections', 'subsections', 'post_status', 'status', 'content_type', 'student_question']
+                });
+                App.execute("show:list:content:pieces:app", {
+                  region: _this.layout.allContentRegion,
+                  contentPiecesCollection: _this.contentPiecesCollection,
+                  textbooksCollection: _this.textbooksCollection
+                });
+                return new ContentList.SearchResults.Controller({
+                  region: _this.layout.searchResultsRegion,
+                  textbooksCollection: _this.textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject
+                });
               });
-              return new ContentList.SearchResults.Controller({
-                region: _this.layout.searchResultsRegion,
-                textbooksCollection: _this.textbooksCollection,
-                selectedFilterParamsObject: _this.selectedFilterParamsObject
+              return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
+                return _this.layout.allContentRegion.trigger("update:pager");
               });
-            });
-            return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
-              return _this.layout.allContentRegion.trigger("update:pager");
             });
           };
         })(this));

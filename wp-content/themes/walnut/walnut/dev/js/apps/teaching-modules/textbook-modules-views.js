@@ -210,8 +210,13 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       };
 
       ContentGroupsView.prototype.setFilteredContent = function() {
-        var filtered_data, pagerOptions;
-        filtered_data = $.filterTableByTextbooks(this);
+        var dataType, filtered_data, pagerOptions;
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          dataType = 'quiz';
+        } else {
+          dataType = 'teaching-modules';
+        }
+        filtered_data = $.filterTableByTextbooks(this, dataType);
         this.collection.set(filtered_data);
         $("#take-class-modules").trigger("updateCache");
         pagerOptions = {

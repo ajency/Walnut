@@ -10,44 +10,57 @@ define ['app'
                 {@groupType} = options
 
                 @textbooksCollection = App.request "get:textbooks", "fetch_all":true
-                @contentModulesCollection = App.request "get:content:groups", 'post_status': 'any' if @groupType is 'teaching-module'
-                @contentModulesCollection = App.request "get:quizes", 'post_status': 'any' if @groupType is 'quiz'
-
                 
+                App.execute "when:fetched", @textbooksCollection, =>
+                    textbook = @textbooksCollection.first()
 
-                #wreqr object to get the selected filter parameters so that search can be done using them
-                @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
+                    data = 
+                        'post_status': 'any' 
+                        'textbook'   : textbook.id
 
-                @layout = @_getContentPiecesLayout()
+                    if @groupType is 'teaching-module'
+                        @contentModulesCollection = App.request "get:content:groups", data
+                    else
+                        @contentModulesCollection = App.request "get:quizes", data
 
-                App.execute "when:fetched", [@contentModulesCollection, @textbooksCollection], =>
+                    #wreqr object to get the selected filter parameters so that search can be done using them
+                    @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
+
+                    @layout = @_getContentPiecesLayout()
+
+                    App.execute "when:fetched", [@contentModulesCollection, @textbooksCollection], =>
 
 
-                    @show @layout,
-                        loading: true
+                        @show @layout,
+                            loading: true
 
-                    @listenTo @layout, "show",=>
+                        @listenTo @layout, "show",=>
+                            if @groupType is 'teaching-module'
+                                dataType = 'teaching-modules'
+                            else
+                                dataType = 'quiz'
 
-                        App.execute "show:textbook:filters:app",
-                            region: @layout.filtersRegion
-                            collection: @contentModulesCollection
-                            textbooksCollection: @textbooksCollection
-                            selectedFilterParamsObject: @selectedFilterParamsObject
-                            filters : ['textbooks', 'chapters','sections','subsections','module_status']
+                            App.execute "show:textbook:filters:app",
+                                region: @layout.filtersRegion
+                                collection: @contentModulesCollection
+                                textbooksCollection: @textbooksCollection
+                                selectedFilterParamsObject: @selectedFilterParamsObject
+                                dataType : dataType
+                                filters : ['textbooks', 'chapters','sections','subsections','module_status']
 
-                        App.execute "show:list:all:modules:app",
-                            region: @layout.allContentRegion
-                            contentModulesCollection: @contentModulesCollection
-                            textbooksCollection: @textbooksCollection
-                            groupType : @groupType
+                            App.execute "show:list:all:modules:app",
+                                region: @layout.allContentRegion
+                                contentModulesCollection: @contentModulesCollection
+                                textbooksCollection: @textbooksCollection
+                                groupType : @groupType
 
-                        new ModulesListing.SearchResults.Controller
-                            region: @layout.searchResultsRegion
-                            textbooksCollection: @textbooksCollection
-                            selectedFilterParamsObject: @selectedFilterParamsObject
-                            groupType : @groupType
+                            new ModulesListing.SearchResults.Controller
+                                region: @layout.searchResultsRegion
+                                textbooksCollection: @textbooksCollection
+                                selectedFilterParamsObject: @selectedFilterParamsObject
+                                groupType : @groupType
 
-                    @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
+                        @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
 
 

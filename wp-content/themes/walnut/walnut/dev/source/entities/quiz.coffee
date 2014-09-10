@@ -66,6 +66,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             parse: (resp)->
                 resp.data
+        
+        quizRepository= new Quiz.ItemCollection
 
         # API
         API =
@@ -77,6 +79,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 quizCollection.fetch
                     reset: true
                     data: param
+                    success:(resp)-> 
+                        if not param.search_str
+                            quizRepository.reset resp.models
 
                 quizCollection
 
@@ -131,3 +136,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "create:dummy:quiz:module", (content_piece_id)->
             API.getDummyQuiz content_piece_id
+
+        App.reqres.setHandler "get:quiz:repository",->
+            quizRepository.clone()

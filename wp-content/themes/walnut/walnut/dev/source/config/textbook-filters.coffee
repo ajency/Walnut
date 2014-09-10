@@ -152,10 +152,18 @@ define ['jquery', 'underscore'], ($, _)->
             ele.select2().select2 'val', curr_item
 
 
-    $.filterTableByTextbooks = (_this)->
+    $.filterTableByTextbooks = (_this, dataType)->
         filter_elements= _this.$el.find('select.textbook-filter')
 
-        filterCollection = _this.fullCollection.clone()
+        if dataType is 'teaching-modules'
+            filterCollection = App.request "get:content:modules:repository"
+
+        else if dataType is 'quiz'
+            filterCollection = App.request "get:quiz:repository"
+
+        else 
+            filterCollection = App.request "get:content:pieces:repository"
+
 
         filter_ids=_.map filter_elements, (ele,index)->
             item = ''

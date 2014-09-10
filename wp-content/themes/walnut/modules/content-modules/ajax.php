@@ -10,7 +10,7 @@ require_once 'functions.php';
 
 function ajax_fetch_content_modules() {
 
-    $args= $_GET;
+    $args= $_REQUEST;
 
     $content_modules= get_all_content_modules($args);
 

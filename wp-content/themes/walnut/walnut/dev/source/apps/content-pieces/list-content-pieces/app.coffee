@@ -5,42 +5,46 @@ define ['app'
         'apps/textbook-filters/textbook-filters-app'], (App, RegionController)->
     App.module "ContentPiecesApp.ContentList", (ContentList, App)->
         class ContentList.ListController extends RegionController
+            
 
             initialize: ->
                 @textbooksCollection = App.request "get:textbooks", "fetch_all":true
-                @contentPiecesCollection = App.request "get:content:pieces"
 
-                #wreqr object to get the selected filter parameters so that search can be done using them
-                @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
+                App.execute "when:fetched", @textbooksCollection, =>
+                    textbook = @textbooksCollection.first()
+                    @contentPiecesCollection = App.request "get:content:pieces", 'textbook': textbook.id
 
-                @layout = @_getContentPiecesLayout()
+                    #wreqr object to get the selected filter parameters so that search can be done using them
+                    @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
-                App.execute "when:fetched", [@contentPiecesCollection, @textbooksCollection], =>
+                    @layout = @_getContentPiecesLayout()
 
-                    @show @layout,
-                        loading: true
+                    App.execute "when:fetched", @contentPiecesCollection, =>
 
-                    @listenTo @layout, "show",=>
+                        @show @layout,
+                            loading: true
 
-                        App.execute "show:textbook:filters:app",
-                            region: @layout.filtersRegion
-                            collection: @contentPiecesCollection
-                            textbooksCollection: @textbooksCollection
-                            selectedFilterParamsObject: @selectedFilterParamsObject
-                            filters : ['textbooks', 'chapters','sections','subsections','post_status','status','content_type','student_question']
+                        @listenTo @layout, "show",=>
 
-                        App.execute "show:list:content:pieces:app",
-                            region: @layout.allContentRegion
-                            contentPiecesCollection: @contentPiecesCollection
-                            textbooksCollection: @textbooksCollection
+                            App.execute "show:textbook:filters:app",
+                                region: @layout.filtersRegion
+                                collection: @contentPiecesCollection
+                                textbooksCollection: @textbooksCollection
+                                selectedFilterParamsObject: @selectedFilterParamsObject
+                                dataType: 'content-pieces'
+                                filters : ['textbooks', 'chapters','sections','subsections','post_status','status','content_type','student_question']
 
-                        new ContentList.SearchResults.Controller
-                            region: @layout.searchResultsRegion
-                            textbooksCollection: @textbooksCollection
-                            selectedFilterParamsObject: @selectedFilterParamsObject
+                            App.execute "show:list:content:pieces:app",
+                                region: @layout.allContentRegion
+                                contentPiecesCollection: @contentPiecesCollection
+                                textbooksCollection: @textbooksCollection
 
-                    @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
+                            new ContentList.SearchResults.Controller
+                                region: @layout.searchResultsRegion
+                                textbooksCollection: @textbooksCollection
+                                selectedFilterParamsObject: @selectedFilterParamsObject
 
+                        @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
 
 

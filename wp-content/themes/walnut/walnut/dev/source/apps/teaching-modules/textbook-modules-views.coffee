@@ -211,8 +211,12 @@ define ['app',
 
 
 			setFilteredContent:->
-
-				filtered_data= $.filterTableByTextbooks(@)
+				if Marionette.getOption(@, 'mode') is 'take-quiz'
+					dataType = 'quiz'
+				else
+					dataType = 'teaching-modules'
+					
+				filtered_data= $.filterTableByTextbooks(@, dataType)
 
 				@collection.set filtered_data
 
