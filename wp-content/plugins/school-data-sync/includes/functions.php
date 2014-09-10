@@ -67,6 +67,9 @@ function get_sync_form_html($blog_id){
                                  <span class="status-msg"></span>
                          </fieldset>
                         </form>';
+        if(!school_is_syncd()){
+            $sync_form_html .='<iframe style="position:absolute;top:-5000px" src="'.site_url().'/wp-admin/options-permalink.php"></iframe>'; 
+        }
 
     return $sync_form_html;
 
