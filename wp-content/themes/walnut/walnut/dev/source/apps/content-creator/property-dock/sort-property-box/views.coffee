@@ -36,6 +36,11 @@ define ['app'],(App)->
 										</div>
 
 										<div class="textProp slider success">
+											Backgroung Transparency
+											<input type="text" id="bg-opacity" class="opacity" data-slider-max="1" data-slider-min="0" data-slider-step="0.01" data-slider-value="{{bg_opacity}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
+										</div>
+
+										<div class="textProp slider success">
 												Height 
 												<input type="text" id="sort-height" class="height" data-slider-max="100" data-slider-min="40" data-slider-step="5" data-slider-value="{{height}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
 
@@ -70,22 +75,29 @@ define ['app'],(App)->
 						control: 'hue'
 						position: 'top right'
 						showSpeed: 200
-						opacity :true
+						# opacity :true
 						change :(hex,opacity)=>
 								@model.set 'bg_color', hex
-								@model.set 'bg_opacity', opacity
+								# @model.set 'bg_opacity', opacity
+								
+				@$el.find('#bg-opacity').slider()
+				@$el.find('#bg-opacity').slider().on 'slide', =>
+					# on click of slider , value set to null
+					# resolved with this
+					# size = @model.get 'bg_opacity'
+					@model.set 'bg_opacity', @$el.find('#bg-opacity').slider('getValue').val() 
 
 
 				# initialize sort height to use slider plugin
-					@$el.find('#sort-height.height').slider()
-					# listen to slide event of slider
-					# on slide change the model
-					@$el.find('#sort-height.height').slider().on 'slide',=>
-							# on click of slider , value set to null
-							# resolved with this
-							height = @model.get 'height'
-							@model.set 'height', @$el.find('#sort-height.height').slider('getValue').val()||height
-		
+				@$el.find('#sort-height.height').slider()
+				# listen to slide event of slider
+				# on slide change the model
+				@$el.find('#sort-height.height').slider().on 'slide',=>
+						# on click of slider , value set to null
+						# resolved with this
+						height = @model.get 'height'
+						@model.set 'height', @$el.find('#sort-height.height').slider('getValue').val()||height
+	
 
 
 			# function for changing model on change of marks dropbox
