@@ -32,7 +32,7 @@ define ['app'],(App)->
 
 										<div class=" inline colors">
 											Background Color
-											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
+											<input type="hidden" id="bg-color"  class="color-picker" value={{bg_color}}>
 										</div>
 
 										<div class="textProp slider success">
