@@ -19,6 +19,15 @@ define(['jquery', 'underscore'], function($, _) {
     })(this));
     return empty;
   };
+  $.fn.removeAllAttr = function() {
+    var attrs;
+    attrs = ['class', 'tabindex', 'contenteditable', 'id', 'spellcheck', 'role', 'aria-label', 'title', 'aria-describedby', 'style'];
+    return _.each(this, function(div) {
+      return _.each(attrs, function(attr) {
+        return $(div).removeAttr(attr);
+      });
+    });
+  };
   $.fn.center = function(parent) {
     if (parent) {
       parent = this.parent();
@@ -38,6 +47,22 @@ define(['jquery', 'underscore'], function($, _) {
       };
     })(this));
     return this;
+  };
+  $.timeMinSecs = function(timeInSeconds) {
+    var display_time, hours, mins, seconds, time;
+    hours = 0;
+    time = timeInSeconds;
+    mins = parseInt(timeInSeconds / 60);
+    if (mins > 59) {
+      hours = parseInt(mins / 60);
+      mins = parseInt(mins % 60);
+    }
+    seconds = parseInt(time % 60);
+    display_time = '';
+    if (hours > 0) {
+      display_time = hours + 'h ';
+    }
+    return display_time += mins + 'm ' + seconds + 's';
   };
   $(document).on("keyup", ".autogrow", (function(_this) {
     return function(e) {

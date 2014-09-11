@@ -15,6 +15,17 @@ define ['jquery', 'underscore'], ($, _)->
 
         empty
 
+
+    # remove all attributes of the tag
+    $.fn.removeAllAttr = ->
+      attrs = ['class','tabindex','contenteditable','id','spellcheck','role','aria-label','title','aria-describedby','style']
+      _.each @ ,(div)->
+        # console.log div.attributes
+        _.each attrs ,(attr)->
+          $(div).removeAttr attr
+
+
+
     $.fn.center = (parent) ->
         if parent
             parent = @parent()
@@ -34,6 +45,22 @@ define ['jquery', 'underscore'], ($, _)->
                 top: ((($(parent).height() - @outerHeight()) / 2) + $(parent).scrollTop() + "px")
 
         this
+
+    $.timeMinSecs = (timeInSeconds)->
+        hours = 0
+        time = timeInSeconds
+        mins = parseInt timeInSeconds / 60
+        if mins > 59
+            hours = parseInt mins / 60
+            mins = parseInt mins % 60
+        seconds = parseInt time % 60
+        display_time = ''
+
+        if hours > 0
+            display_time = hours + 'h '
+
+        display_time += mins + 'm ' + seconds + 's'
+
 
     $( document ).on  "keyup", ".autogrow", (e)=>
 
