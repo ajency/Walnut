@@ -74,20 +74,24 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
             };
           })(this)
         });
-        return this.$el.find('#bg-color.color-picker').minicolors({
+        this.$el.find('#bg-color.color-picker').minicolors({
           animationSpeed: 200,
           animationEasing: 'swing',
           control: 'hue',
           position: 'top right',
           showSpeed: 200,
-          opacity: true,
           change: (function(_this) {
             return function(hex, opacity) {
-              _this.model.set('bg_color', hex);
-              return _this.model.set('bg_opacity', opacity);
+              return _this.model.set('bg_color', hex);
             };
           })(this)
         });
+        this.$el.find('#bg-opacity').slider();
+        return this.$el.find('#bg-opacity').slider().on('slide', (function(_this) {
+          return function() {
+            return _this.model.set('bg_opacity', _this.$el.find('#bg-opacity').slider('getValue').val());
+          };
+        })(this));
       };
 
       PropertyView.prototype._enableCalculateMarks = function() {
