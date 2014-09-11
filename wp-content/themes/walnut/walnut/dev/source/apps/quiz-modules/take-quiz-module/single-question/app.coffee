@@ -32,6 +32,21 @@ define ['app'
                             loading: true
 
                         @listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject
+                        
+                        @listenTo @region, "silent:save:question", =>
+                            answerData= @answerWreqrObject.request "get:question:answer"
+
+                            answer = answerData.answerModel
+
+                            @answerWreqrObject.request "submit:answer"
+                            answer_status = @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+
+                            answer.set 'status' : answer_status
+
+                            if (answer.get('status') is 'wrong_answer') and _.toBool @quizModel.get 'negMarksEnable'
+                                answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
+
+                            @region.trigger "submit:question", answer
 
                         @listenTo layout, "validate:answer",->
                             answerData= @answerWreqrObject.request "get:question:answer"

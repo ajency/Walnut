@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.QuizTimer", function(QuizTimer, App) {
     var QuizTimerView;
     QuizTimer.Controller = (function(_super) {
@@ -15,9 +15,16 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       }
 
       Controller.prototype.initialize = function(opts) {
-        var view;
-        this.model = opts.model, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject;
-        this.durationInSeconds = this.model.get('duration') * 60;
+        var time_taken, total_time, view;
+        this.model = opts.model, this.display_mode = opts.display_mode, this.timerObject = opts.timerObject, this.quizResponseSummary = opts.quizResponseSummary;
+        if (this.quizResponseSummary) {
+          time_taken = parseInt(this.quizResponseSummary.get('total_time_taken'));
+        }
+        if (!time_taken) {
+          time_taken = 0;
+        }
+        total_time = parseInt(this.model.get('duration')) * 60;
+        this.durationInSeconds = total_time - time_taken;
         this.timerObject.setHandler("get:elapsed:time", (function(_this) {
           return function() {
             var timeElapsed, timerSign, timerTime, timerTimePeriod;
@@ -42,7 +49,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           return this.region.trigger('show:alert:popup', 'end_quiz');
         });
         return this.listenTo(view, 'quiz:time:up', function() {
-          return this.region.trigger('show:alert:popup', 'quiz_time_up', 'alert');
+          return this.region.trigger('end:quiz');
         });
       };
 
@@ -96,9 +103,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         if (this.display_mode === 'replay') {
           return this.$el.find('#completed-quiz').show();
         } else {
-          if (timeLeftOrElapsed < 0) {
-            return this.countUp(timeLeftOrElapsed);
-          } else {
+          if (timeLeftOrElapsed >= 0) {
             return this.countDown(timeLeftOrElapsed);
           }
         }
@@ -113,7 +118,13 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       QuizTimerView.prototype.quizTimedOut = function() {
-        return this.trigger("quiz:time:up");
+        var msgContent;
+        msgContent = this.model.getMessageContent('quiz_time_up');
+        return bootbox.alert(msgContent, (function(_this) {
+          return function() {
+            return _this.trigger("quiz:time:up");
+          };
+        })(this));
       };
 
       return QuizTimerView;

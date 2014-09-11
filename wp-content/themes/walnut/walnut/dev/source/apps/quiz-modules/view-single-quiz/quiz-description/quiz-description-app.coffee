@@ -53,11 +53,13 @@ define ['app'
                 data.practice_mode =true if @model.get('quiz_type') is 'practice'
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
-                
+
+                data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
+
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
-                    data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
+                    
                     data.display_marks = true if @model.hasPermission 'display_answer'
                     data.total_marks_scored = responseSummary.get 'total_marks_scored'
                     
@@ -67,6 +69,14 @@ define ['app'
                         data.taken_on_date = moment().format("Do MMM YYYY")
 
                     data.try_again= true if data.practice_mode
+
+                if responseSummary.get('status') is 'started'
+                    data.incompleteQuiz = true
+                    total= @model.get('total_minutes') * 60
+                    elapsed = responseSummary.get('total_time_taken')
+
+                    data.time_remaining = $.timeMinSecs total-elapsed 
+
 
                 data.negMarksEnable= _.toBool data.negMarksEnable
                 

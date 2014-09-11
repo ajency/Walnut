@@ -45,7 +45,14 @@ define ['app'
                     questionIDs = questionsCollection.pluck 'ID'
                     questionIDs= _.map questionIDs, (m)-> parseInt m
 
-                    questionID = _.first questionIDs
+                    pausedQuestion= @questionResponseCollection.findWhere 'status': 'paused'
+
+                    if pausedQuestion 
+                        questionID = pausedQuestion.get 'content_piece_id'
+
+                    else
+                        questionID = _.first questionIDs
+
                     questionModel = questionsCollection.get questionID
                     @layout = layout = new TakeQuizLayout
 
@@ -67,11 +74,41 @@ define ['app'
                     @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
 
                     @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
+                    @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
                     @listenTo App.dialogRegion, "clicked:confirm:yes", @_handlePopups
                     @listenTo App.dialogRegion, "clicked:alert:ok", @_handlePopups
+
+
+                    setInterval =>
+                        @_autosaveQuestionTime()
+                    ,2000
+
+                _autosaveQuestionTime:=>
+                     if quizModel.get('quiz_type') is 'test'
+
+                        questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
+                            
+                        if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
+
+                            console.log(questionResponseModel.get('status')) if questionResponseModel
+
+                            totalTime =@timerObject.request "get:elapsed:time"
+                            timeTaken= totalTime - timeBeforeCurrentQuestion
+
+                            data =
+                                'summary_id'     : quizResponseSummary.id
+                                'content_piece_id'  : questionModel.id
+                                'question_response' : []
+                                'status'            : 'paused'
+                                'marks_scored'      : 0
+                                'time_taken'        : timeTaken
+
+                            questionResponseModel = App.request "create:quiz:question:response:model", data
+
+                            @_saveQuizResponseModel questionResponseModel
 
                 _changeQuestion:(id)->
                     #save results here of previous question / skip the question
@@ -81,7 +118,7 @@ define ['app'
 
                 _submitQuestion:(answer)->
                     #save results here
-                    
+
                     totalTime =@timerObject.request "get:elapsed:time"
                     timeTaken= totalTime - timeBeforeCurrentQuestion
                     timeBeforeCurrentQuestion= totalTime
@@ -96,6 +133,10 @@ define ['app'
 
                     newResponseModel = App.request "create:quiz:question:response:model", data
 
+                    @_saveQuizResponseModel newResponseModel
+
+                _saveQuizResponseModel:(newResponseModel)=>
+
                     quizResponseModel = @questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
                     #update existing model (incase of resubmit)
@@ -109,7 +150,8 @@ define ['app'
 
                     quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
 
-                    @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+                    if quizResponseModel.get('status') isnt 'paused'
+                        @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
                 _skipQuestion:(answer)->
                     #save skipped status
@@ -145,6 +187,8 @@ define ['app'
                         message_type: message_type
 
                 _endQuiz:->
+                    if @display_mode isnt 'replay'
+                        @layout.questionDisplayRegion.trigger "silent:save:question"
 
                     unanswered = @_getUnansweredIDs()
 
@@ -167,8 +211,6 @@ define ['app'
                             _.toNumber memo + num,1
 
                     quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
-                    
-                        
 
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
@@ -179,7 +221,13 @@ define ['app'
 
                 _getUnansweredIDs:->
                     
+                    pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
+
                     answeredIDs= @questionResponseCollection.pluck 'content_piece_id'
+
+                    if pausedModel
+                        answeredIDs = _.without answeredIDs, pausedModel.get 'content_piece_id'
+                        
                     allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
 
                     unanswered= _.difference allIDs, answeredIDs
@@ -242,6 +290,7 @@ define ['app'
                         model       : quizModel
                         display_mode: @display_mode
                         timerObject : @timerObject
+                        quizResponseSummary         : quizResponseSummary
 
                     @_showSingleQuestionApp questionModel
 
