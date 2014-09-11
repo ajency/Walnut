@@ -84,7 +84,7 @@ define ['app'
 
                     setInterval =>
                         @_autosaveQuestionTime()
-                    ,30000
+                    ,2000
 
                 _autosaveQuestionTime:=>
                      if quizModel.get('quiz_type') is 'test'
@@ -150,7 +150,8 @@ define ['app'
 
                     quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
 
-                    @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+                    if quizResponseModel.get('status') isnt 'paused'
+                        @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
                 _skipQuestion:(answer)->
                     #save skipped status
@@ -220,7 +221,13 @@ define ['app'
 
                 _getUnansweredIDs:->
                     
+                    pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
+
                     answeredIDs= @questionResponseCollection.pluck 'content_piece_id'
+
+                    if pausedModel
+                        answeredIDs = _.without answeredIDs, pausedModel.get 'content_piece_id'
+                        
                     allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
 
                     unanswered= _.difference allIDs, answeredIDs

@@ -66,13 +66,13 @@ define ['app'], (App)->
                     
                 else
 
-                    if marks is 0
+                    if parseFloat(marks) is 0
                         @$el.find('#wrong').show()
 
-                    if marks is total
+                    if parseFloat(marks) is parseFloat(total)
                         @$el.find('#correct').show()
 
-                    if marks > 0 and marks < total
+                    if parseFloat(marks) > 0 and parseFloat(marks) < parseFloat(total)
                         @$el.find('#partially-correct').show()
 
 
