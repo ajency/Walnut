@@ -6,7 +6,6 @@ define [
 	'entities/chapters'
 	# 'entities/schools'
 	# 'entities/breadcrumb'
-	# 'entities/content-pieces'
 	'entities/content-group'
 	'entities/divisions'
 	'entities/quiz'
@@ -23,5 +22,4 @@ define [
 	# 'entities/answer'
 	# 'entities/grading-parameter'
 	# 'entities/communications'
-	# 'entities/quiz'
 ], ->
