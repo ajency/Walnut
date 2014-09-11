@@ -48,13 +48,13 @@ define(['app'], function(App) {
         if (answerModel && answerModel.get('status') === 'skipped') {
           return this.$el.find('#skipped').show();
         } else {
-          if (marks === 0) {
+          if (parseFloat(marks) === 0) {
             this.$el.find('#wrong').show();
           }
-          if (marks === total) {
+          if (parseFloat(marks) === parseFloat(total)) {
             this.$el.find('#correct').show();
           }
-          if (marks > 0 && marks < total) {
+          if (parseFloat(marks) > 0 && parseFloat(marks) < parseFloat(total)) {
             return this.$el.find('#partially-correct').show();
           }
         }
