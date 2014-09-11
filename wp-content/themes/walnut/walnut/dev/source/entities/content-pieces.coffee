@@ -76,17 +76,14 @@ define ["app", 'backbone'], (App, Backbone) ->
             getContentPieces : (param = {})->
                 contentPieceCollection = new ContentPiece.ItemCollection
                 
-                if not param.search_str
-                    contentPieceCollection.add contentPiecesRepository.models
-
-                    param.exclude = contentPiecesRepository.pluck 'ID'
-
                 contentPieceCollection.fetch
                     add : true
                     remove : false
                     data : param
                     type : 'post'
-                    success:(resp)-> contentPiecesRepository.add resp.models
+                    success:(resp)-> 
+                        if not param.search_str
+                            contentPiecesRepository.reset resp.models
 
                 contentPieceCollection
 
@@ -134,8 +131,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                         data :
                             ids : ids
 
-                        success:(resp)->contentPiecesRepository.add resp.models
-
                 contentPieces
 
             newContentPiece:->
@@ -165,3 +160,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "empty:content:pieces:collection",->
             API.emptyContentCollection()
+
+        App.reqres.setHandler "get:content:pieces:repository",->
+            contentPiecesRepository.clone()

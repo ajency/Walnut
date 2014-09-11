@@ -13,17 +13,21 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
       }
 
       ContentSelectionController.prototype.initialize = function(opts) {
+        var term_ids;
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
+        term_ids = this.model.get('term_ids');
         if (this.model.get('type') === 'teaching-module') {
           this.contentPiecesCollection = App.request("get:content:pieces", {
             content_type: ['teacher_question', 'content_piece'],
-            post_status: 'publish'
+            post_status: 'publish',
+            textbook: term_ids['textbook']
           });
         }
         if (this.model.get('type') === 'quiz') {
           this.contentPiecesCollection = App.request("get:content:pieces", {
             content_type: ['student_question'],
-            post_status: 'publish'
+            post_status: 'publish',
+            textbook: term_ids['textbook']
           });
         }
         this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
@@ -42,17 +46,24 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
             });
             _this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
             _this.listenTo(_this.layout, "show", function() {
-              var filters;
+              var contentSelectionType, filters;
               filters = ['textbooks', 'chapters', 'sections', 'subsections', 'content_type'];
               if (_this.model.get('type') === 'quiz') {
                 filters.pop();
+              }
+              if (_this.model.get('type') === 'quiz') {
+                contentSelectionType = 'quiz';
+              } else {
+                contentSelectionType = 'teaching-module';
               }
               App.execute("show:textbook:filters:app", {
                 region: _this.layout.filtersRegion,
                 collection: _this.contentPiecesCollection,
                 selectedFilterParamsObject: _this.selectedFilterParamsObject,
                 model: _this.model,
-                filters: filters
+                filters: filters,
+                dataType: 'content-pieces',
+                contentSelectionType: contentSelectionType
               });
               App.execute("show:all:content:selection:app", {
                 region: _this.layout.allContentRegion,

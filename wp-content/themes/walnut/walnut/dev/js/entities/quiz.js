@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Quiz", function(Quiz, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, quizRepository;
     Quiz.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -95,6 +95,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
+    quizRepository = new Quiz.ItemCollection;
     API = {
       getQuizes: function(param) {
         var quizCollection;
@@ -104,7 +105,12 @@ define(["app", 'backbone'], function(App, Backbone) {
         quizCollection = new Quiz.ItemCollection;
         quizCollection.fetch({
           reset: true,
-          data: param
+          data: param,
+          success: function(resp) {
+            if (!param.search_str) {
+              return quizRepository.reset(resp.models);
+            }
+          }
         });
         return quizCollection;
       },
@@ -161,8 +167,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("new:quiz", function() {
       return API.newQuiz();
     });
-    return App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
+    App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
       return API.getDummyQuiz(content_piece_id);
+    });
+    return App.reqres.setHandler("get:quiz:repository", function() {
+      return quizRepository.clone();
     });
   });
 });

@@ -9,7 +9,6 @@ define ['app'], (App)->
 
                                     {{#textbooks_filter}}
                                     <select class="textbook-filter select2-filters" id="textbooks-filter">
-                                        <option value="">All Textbooks</option>
                                         {{#textbooks}}
                                            <option value="{{id}}">{{name}}</option>
                                         {{/textbooks}}
@@ -79,6 +78,9 @@ define ['app'], (App)->
             className: 'row'
 
             events:
+                'change #textbooks-filter':(e)->
+                    @trigger "fetch:new:content", $(e.target).val()
+
                 'change .filters' :(e)->
                     @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
@@ -147,8 +149,12 @@ define ['app'], (App)->
 
             setFilteredContent:->
 
-                filtered_data= $.filterTableByTextbooks(@)
+                dataType= Marionette.getOption @, 'dataType'
+                filtered_data= $.filterTableByTextbooks(@,dataType)
 
                 @collection.set filtered_data
 
                 @trigger "update:pager"
+
+            onNewContentFetched:->
+                @setFilteredContent()

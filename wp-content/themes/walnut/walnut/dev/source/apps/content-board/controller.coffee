@@ -40,7 +40,7 @@ define ['app'
 
                 App.commands.setHandler "show:response", (marks, total)=>
                    # console.log "#{marks}   #{total}"
-                    @view.triggerMethod 'show:response', parseInt(marks), parseInt(total)
+                    @view.triggerMethod 'show:response', parseFloat(marks).toFixed(2), parseFloat(total).toFixed(2)
 
                 @show @view,
                     loading : true

@@ -6,7 +6,7 @@ define ['app'
         class TextbookFilters.Controller extends RegionController
             initialize: (opts) ->
 
-                {@collection,@model,@filters,@selectedFilterParamsObject}=opts
+                {@collection,@model,@filters,@selectedFilterParamsObject, @dataType, @contentSelectionType}=opts
 
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
                 @textbooksCollection = App.request "get:textbooks", "fetch_all":true
@@ -83,6 +83,29 @@ define ['app'
                                         @fetchSectionOrSubsection(section_id, 'sections-filter',subsection_id) if section_id?
 
                     @listenTo @view, "fetch:chapters:or:sections", @fetchSectionOrSubsection
+                    @listenTo @view, "fetch:new:content", (textbook_id, post_status)-> 
+                        data = 
+                            'textbook': textbook_id
+                            'post_status': 'any'
+
+                        if @contentSelectionType is 'quiz'
+                            data.content_type= ['student_question']
+                            
+                        else if @contentSelectionType is 'teaching-module'
+                            data.content_type= ['teacher_question','content_piece']
+
+
+                        if @dataType is 'teaching-modules'
+                            newContent= App.request "get:content:groups", data
+
+                        else if @dataType is 'quiz'
+                            newContent= App.request "get:quizes", data
+                            
+                        else
+                            newContent= App.request "get:content:pieces", data
+
+                        App.execute "when:fetched", newContent, =>
+                           @view.triggerMethod "new:content:fetched"
 
             fetchSectionOrSubsection:(parentID, filterType, currItem) =>
                 defer = $.Deferred()
@@ -101,8 +124,7 @@ define ['app'
                     contentGroupModel : @model
                     textbooksCollection : @textbooksCollection
                     filters             : @filters
-
-
+                    dataType            : @dataType
 
         # set handlers
         App.commands.setHandler "show:textbook:filters:app", (opt = {})->

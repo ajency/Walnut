@@ -79,30 +79,32 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           return function() {
             return _this._autosaveQuestionTime();
           };
-        })(this), 60000);
+        })(this), 30000);
       };
 
       TakeQuizController.prototype._autosaveQuestionTime = function() {
         var data, timeTaken, totalTime, _ref;
-        questionResponseModel = this.questionResponseCollection.findWhere({
-          'content_piece_id': questionModel.id
-        });
-        if ((!questionResponseModel) || ((_ref = questionResponseModel.get('status')) === 'not_started' || _ref === 'paused')) {
-          if (questionResponseModel) {
-            console.log(questionResponseModel.get('status'));
+        if (quizModel.get('quiz_type') === 'test') {
+          questionResponseModel = this.questionResponseCollection.findWhere({
+            'content_piece_id': questionModel.id
+          });
+          if ((!questionResponseModel) || ((_ref = questionResponseModel.get('status')) === 'not_started' || _ref === 'paused')) {
+            if (questionResponseModel) {
+              console.log(questionResponseModel.get('status'));
+            }
+            totalTime = this.timerObject.request("get:elapsed:time");
+            timeTaken = totalTime - timeBeforeCurrentQuestion;
+            data = {
+              'summary_id': quizResponseSummary.id,
+              'content_piece_id': questionModel.id,
+              'question_response': [],
+              'status': 'paused',
+              'marks_scored': 0,
+              'time_taken': timeTaken
+            };
+            questionResponseModel = App.request("create:quiz:question:response:model", data);
+            return this._saveQuizResponseModel(questionResponseModel);
           }
-          totalTime = this.timerObject.request("get:elapsed:time");
-          timeTaken = totalTime - timeBeforeCurrentQuestion;
-          data = {
-            'summary_id': quizResponseSummary.id,
-            'content_piece_id': questionModel.id,
-            'question_response': [],
-            'status': 'paused',
-            'marks_scored': 0,
-            'time_taken': timeTaken
-          };
-          questionResponseModel = App.request("create:quiz:question:response:model", data);
-          return this._saveQuizResponseModel(questionResponseModel);
         }
       };
 
@@ -187,6 +189,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._endQuiz = function() {
         var unanswered;
+        if (this.display_mode !== 'replay') {
+          this.layout.questionDisplayRegion.trigger("silent:save:question");
+        }
         unanswered = this._getUnansweredIDs();
         if (unanswered) {
           _.each(unanswered, (function(_this) {
