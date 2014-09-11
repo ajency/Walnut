@@ -22,14 +22,14 @@ define ["app", 'backbone'], (App, Backbone) ->
         # PUBLIC API FOR ENitity
         API =
             createElement: (data = {})->
-                if data.meta_id? and data.element isnt 'Row' and  elementsCollection.get(data.meta_id)?
+                if data.meta_id? and data.element not in ['Row','TeacherQuestion'] and  elementsCollection.get(data.meta_id)?
                     element = elementsCollection.get(data.meta_id)
                 else
                     element = new Elements.ElementModel
 #
                     element.set data
 
-                if element.get('element') isnt 'Row' and element.get('element') isnt 'Column'
+                if element.get('element') not in ['Row','TeacherQuestion'] and element.get('element') isnt 'Column'
 
                     if element.isNew()
                         element.save null,
