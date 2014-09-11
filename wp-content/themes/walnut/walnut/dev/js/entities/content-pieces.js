@@ -78,6 +78,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemCollection.prototype.comparator = 'order';
 
+      ItemCollection.prototype.name = 'content-piece';
+
       ItemCollection.prototype.url = function() {
         return AJAXURL + '?action=get-content-pieces';
       };
@@ -97,6 +99,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       GroupItemCollection.prototype.model = ContentPiece.ItemModel;
 
       GroupItemCollection.prototype.comparator = 'order';
+
+      GroupItemCollection.prototype.name = 'content-piece';
 
       GroupItemCollection.prototype.initialize = function() {
         console.log('content piece ');

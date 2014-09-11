@@ -48,6 +48,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         class ContentPiece.ItemCollection extends Backbone.Collection
             model : ContentPiece.ItemModel
             comparator : 'order'
+            name : 'content-piece'
             url : ->
                 AJAXURL + '?action=get-content-pieces'
 
@@ -56,6 +57,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         class ContentPiece.GroupItemCollection extends Backbone.Collection
             model : ContentPiece.ItemModel
             comparator : 'order'
+            name : 'content-piece'
 
             initialize : ->
                 console.log 'content piece '

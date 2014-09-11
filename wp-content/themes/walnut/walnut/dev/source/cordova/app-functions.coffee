@@ -151,60 +151,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
-		
-		#Get meta_value from wp_postmeta
-		getMetaValue : (content_piece_id)->
-
-			meta_value = 
-				content_type : ''
-				layout_json : ''
-				question_type : ''
-				post_tags : ''
-				duration : ''
-				last_modified_by : ''
-				published_by : ''
-				term_ids : ''
-				instructions: ''
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?"
-							, [content_piece_id], onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					for i in [0..data.rows.length-1] by 1
-						row = data.rows.item(i)
-						
-						do(row)->
-
-							if row['meta_key'] is 'content_type'
-								meta_value.content_type = row['meta_value']
-
-							if row['meta_key'] is 'layout_json'
-								meta_value.layout_json = _.unserialize(_.unserialize(row['meta_value']))
-
-							if row['meta_key'] is 'question_type'
-								meta_value.question_type = row['meta_value']	
-
-							if row['meta_key'] is 'content_piece_meta'
-								content_piece_meta = _.unserialize(_.unserialize(row['meta_value']))
-
-								meta_value.post_tags = content_piece_meta.post_tags
-								meta_value.duration = content_piece_meta.duration
-								meta_value.last_modified_by = content_piece_meta.last_modified_by
-								meta_value.published_by = content_piece_meta.published_by
-								meta_value.term_ids = content_piece_meta.term_ids
-								meta_value.instructions = content_piece_meta.instructions
-								
-
-					d.resolve(meta_value)
-
-			$.when(runQuery()).done ->
-				console.log 'getMetaValue transaction completed'
-			.fail _.failureHandler
-
 
 		
 		# Decrypt the encrypted video file

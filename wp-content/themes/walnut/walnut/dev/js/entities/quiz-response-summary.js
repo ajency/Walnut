@@ -37,6 +37,8 @@ define(['app', 'backbone'], function(App, Backbone) {
 
       SummaryCollection.prototype.model = QuizResponseSummary.SummaryModel;
 
+      SummaryCollection.prototype.name = 'quiz-response-summary';
+
       SummaryCollection.prototype.url = function() {
         return AJAXURL + '?action=get-quiz-response-summary';
       };

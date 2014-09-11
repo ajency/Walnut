@@ -382,18 +382,18 @@ define(['underscore', 'unserialize'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var row;
+          var result, row;
+          result = '';
           row = data.rows.item(0);
           return (function(row) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
-              (function(row, collectionMetaData) {
+              return (function(row, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
                 return dateAndStatus.done(function(dateStatus) {
-                  var result;
-                  return result = {
+                  result = {
                     id: row['id'],
                     content_pieces: collectionMetaData.contentPieces,
                     created_by: row['created_by'],
@@ -419,10 +419,9 @@ define(['underscore', 'unserialize'], function(_) {
                     total_minutes: row['duration'],
                     type: row['type']
                   };
+                  return d.resolve(result);
                 });
               })(row, collectionMetaData);
-              console.log(JSON.stringify(result));
-              return d.resolve(result);
             });
           })(row);
         };

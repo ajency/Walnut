@@ -22,7 +22,6 @@ define ['app'
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
                 @fetchQuizResponseSummary = @_fetchQuizResponseSummary()
-                console.log @questionResponseCollection
                 fetchQuestionResponseCollection = @_fetchQuestionResponseCollection()
 
                 fetchQuestionResponseCollection.done =>

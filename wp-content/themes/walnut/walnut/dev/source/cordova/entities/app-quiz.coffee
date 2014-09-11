@@ -388,7 +388,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			onSuccess =(d)->
 				(tx,data)->
-
+					result = ''
 					row = data.rows.item(0)
 
 					do (row)->
@@ -425,9 +425,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										total_minutes: row['duration']
 										type: row['type']
 
-
-							console.log JSON.stringify result
-							d.resolve(result)
+									d.resolve(result)
 			
 			$.when(runQuery()).done ->              
 				console.log 'getQuizById done'

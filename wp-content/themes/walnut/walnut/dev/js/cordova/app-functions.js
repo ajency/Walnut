@@ -136,61 +136,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('getUserDetails transaction completed');
       }).fail(_.failureHandler);
     },
-    getMetaValue: function(content_piece_id) {
-      var meta_value, onSuccess, runQuery;
-      meta_value = {
-        content_type: '',
-        layout_json: '',
-        question_type: '',
-        post_tags: '',
-        duration: '',
-        last_modified_by: '',
-        published_by: '',
-        term_ids: '',
-        instructions: ''
-      };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?", [content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, row, _fn, _i, _ref;
-          _fn = function(row) {
-            var content_piece_meta;
-            if (row['meta_key'] === 'content_type') {
-              meta_value.content_type = row['meta_value'];
-            }
-            if (row['meta_key'] === 'layout_json') {
-              meta_value.layout_json = _.unserialize(_.unserialize(row['meta_value']));
-            }
-            if (row['meta_key'] === 'question_type') {
-              meta_value.question_type = row['meta_value'];
-            }
-            if (row['meta_key'] === 'content_piece_meta') {
-              content_piece_meta = _.unserialize(_.unserialize(row['meta_value']));
-              meta_value.post_tags = content_piece_meta.post_tags;
-              meta_value.duration = content_piece_meta.duration;
-              meta_value.last_modified_by = content_piece_meta.last_modified_by;
-              meta_value.published_by = content_piece_meta.published_by;
-              meta_value.term_ids = content_piece_meta.term_ids;
-              return meta_value.instructions = content_piece_meta.instructions;
-            }
-          };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            _fn(row);
-          }
-          return d.resolve(meta_value);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getMetaValue transaction completed');
-      }).fail(_.failureHandler);
-    },
     decryptVideoFile: function(source, destination) {
       var runFunc;
       runFunc = function() {

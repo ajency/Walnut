@@ -1,1 +1,1 @@
-define(['entities/user', 'entities/menu', 'entities/textbooks', 'entities/chapters', 'entities/content-group', 'entities/divisions', 'entities/quiz', 'entities/quiz-question-response', 'entities/quiz-response-summary'], function() {});
+define(['entities/user', 'entities/menu', 'entities/textbooks', 'entities/chapters', 'entities/content-group', 'entities/divisions', 'entities/quiz', 'entities/quiz-question-response', 'entities/quiz-response-summary', 'entities/content-pieces'], function() {});

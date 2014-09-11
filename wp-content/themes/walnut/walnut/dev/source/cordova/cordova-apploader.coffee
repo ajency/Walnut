@@ -7,7 +7,7 @@ define ['cordova/app-error-handlers'
 
 		'cordova/app-functions'
 		# 'cordova/app-file-download'
-		# 'cordova/app-content-loader'
+		'cordova/app-content-loader'
 		
 		#cordova on device ready
 		'cordova/app-on-load'

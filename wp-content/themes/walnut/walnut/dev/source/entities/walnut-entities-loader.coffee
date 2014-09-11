@@ -12,6 +12,7 @@ define [
 	'entities/quiz'
 	'entities/quiz-question-response'
 	'entities/quiz-response-summary'
+	'entities/content-pieces'
 	# 'entities/question-response'
 	# 'entities/content-creator/element'
 	# 'entities/content-creator/media'

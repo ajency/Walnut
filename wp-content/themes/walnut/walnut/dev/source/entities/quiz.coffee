@@ -128,6 +128,5 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "new:quiz",->
             API.newQuiz()
 
-
         App.reqres.setHandler "create:dummy:quiz:module", (content_piece_id)->
             API.getDummyQuiz content_piece_id

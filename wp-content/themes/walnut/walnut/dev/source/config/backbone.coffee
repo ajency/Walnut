@@ -14,8 +14,9 @@ define ["backbone"], (Backbone) ->
 		sync :(method, collection, options)->
 
 			collection_name = collection.name
-			console.log 'Collection name: '+JSON.stringify collection_name
+			console.log 'Collection name: '+collection_name
 			opts = options.data
+			console.log 'options: '+JSON.stringify opts
 
 			if collection_name is 'textbook'
 				data = _.getTextbooksForStudent()
@@ -31,8 +32,7 @@ define ["backbone"], (Backbone) ->
 
 				data = _.getChaptersByParentId(opts.parent)
 				data.done (d)->
-					collection.set d
-					console.log JSON.stringify(d)                                   
+					collection.set d                                   
 
 			if collection_name is 'division'
 				data = _.getAllDivisions()
@@ -47,8 +47,18 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz'
 				data = _.getQuizByTextbookId(opts.textbook)
 				data.done (d)->
-					console.log('quiz data')
-					console.log(d)
+					collection.set d
+
+			if collection_name is 'quiz-response-summary'
+				data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
+				data.done (d)->
+					collection.set d
+
+			if collection_name is 'quiz-question-response'
+				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
+				data.done (d)->
+					console.log 'quiz-question response'
+					console.log JSON.stringify(d)
 					collection.set d
 
 			if collection_name is 'content-piece'
@@ -66,10 +76,12 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d
 
-			# if collection_name is 'textbookName'
-			# 	data = _.getTextBookNamesByTermIDs(opts.term_ids)
-			# 	data.done (d)->
-			# 		collection.set d
+			if collection_name is 'textbookName'
+				data = _.getTextBookNamesByTermIDs(opts.term_ids)
+				data.done (d)->
+					console.log('textbookName response')
+					console.log JSON.stringify(d)
+					collection.set d
 
 
 			if collection_name is 'offlineUsers'
@@ -216,6 +228,7 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'quiz'
 					data = _.getQuizById(model.get('id'))
 					data.done (d)->
+						console.log JSON.stringify d
 						model.set d
 
 				if modelname is 'content-group'

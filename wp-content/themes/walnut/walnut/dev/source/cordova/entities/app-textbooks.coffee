@@ -236,29 +236,29 @@ define ['underscore'], ( _) ->
 
 
 
-		# getTextBookNamesByTermIDs : (ids)->
+		getTextBookNamesByTermIDs : (ids)->
 				
-		# 	runQuery = ->
-		# 		$.Deferred (d)->
-		# 			_.db.transaction (tx)->
-		# 				tx.executeSql("SELECT term_id, name FROM wp_terms WHERE 
-		# 					term_id IN ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT term_id, name FROM wp_terms WHERE 
+							term_id IN ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
 
-		# 	onSuccess =(d)->
-		# 		(tx, data)->
+			onSuccess =(d)->
+				(tx, data)->
 
-		# 			result = []
+					result = []
 
-		# 			for i in [0..data.rows.length-1] by 1
+					for i in [0..data.rows.length-1] by 1
 
-		# 				row = data.rows.item(i)
+						row = data.rows.item(i)
 
-		# 				result[i] =
-		# 					id: row['term_id']
-		# 					name: row['name']
+						result[i] =
+							id: row['term_id']
+							name: row['name']
 
-		# 			d.resolve(result)
+					d.resolve(result)
 
-		# 	$.when(runQuery()).done ->
-		# 		console.log 'getTextBookNamesByTermIDs transaction completed'
-		# 	.fail _.failureHandler
+			$.when(runQuery()).done ->
+				console.log 'getTextBookNamesByTermIDs transaction completed'
+			.fail _.failureHandler

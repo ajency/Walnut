@@ -39,7 +39,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           region: App.leftNavRegion
         });
         this.fetchQuizResponseSummary = this._fetchQuizResponseSummary();
-        console.log(this.questionResponseCollection);
         fetchQuestionResponseCollection = this._fetchQuestionResponseCollection();
         return fetchQuestionResponseCollection.done((function(_this) {
           return function() {
