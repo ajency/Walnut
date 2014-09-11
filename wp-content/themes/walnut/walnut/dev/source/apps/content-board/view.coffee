@@ -50,7 +50,7 @@ define ['app'], (App)->
 
                 quizModel = Marionette.getOption @, 'quizModel'
 
-                if marks is 0 and _.toBool quizModel.get 'negMarksEnable'
+                if parseFloat(marks) is 0 and _.toBool quizModel.get 'negMarksEnable'
                     display_marks = - total*quizModel.get('negMarks')/100
                 else
                     display_marks = marks

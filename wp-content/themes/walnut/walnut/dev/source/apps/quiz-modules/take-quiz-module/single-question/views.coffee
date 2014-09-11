@@ -30,11 +30,9 @@ define ['app'
                                             <i class="fa fa-lightbulb-o"></i> Hint
                                         </button>
                                         {{/show_hint}}
-                                        {{#allow_skip}}
                                         <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
                                             Skip <i class="fa fa-step-forward"></i>
                                         </button>
-                                        {{/allow_skip}}
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>                                

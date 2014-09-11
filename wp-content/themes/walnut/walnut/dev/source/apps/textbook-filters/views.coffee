@@ -10,7 +10,7 @@ define ['app'], (App)->
                                     {{#textbooks_filter}}
                                     <select class="textbook-filter select2-filters" id="textbooks-filter">
                                         {{#textbooks}}
-                                           <option value="{{id}}">{{name}}</option>
+                                           <option value="{{id}}">{{&name}}</option>
                                         {{/textbooks}}
                                     </select>
                                     {{/textbooks_filter}}

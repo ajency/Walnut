@@ -53,6 +53,9 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           data.isQuiz = true;
         }
         data.type = _.titleize(_.humanize(data.type));
+        if (data.isQuiz) {
+          data.permissions['single_attempt'] = !data.permissions['single_attempt'];
+        }
         data.textBookSelected = function() {
           if (parseInt(this.id) === parseInt(data.term_ids['textbook'])) {
             return 'selected';
@@ -66,15 +69,14 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         permName = $(e.target).closest('.checkbox.perm').find('input').attr('id');
         switch (permName) {
           case 'attempt':
-            return this.unSelectCheckbox('resubmit');
+            this.unSelectCheckbox('resubmit');
+            return this.unSelectCheckbox('answer');
           case 'resubmit':
             this.unSelectCheckbox('attempt');
             return this.unSelectCheckbox('answer');
-          case 'check':
-            return this.unSelectCheckbox('answer');
           case 'answer':
-            this.unSelectCheckbox('check');
-            return this.unSelectCheckbox('resubmit');
+            this.unSelectCheckbox('resubmit');
+            return this.unSelectCheckbox('attempt');
         }
       };
 
@@ -88,7 +90,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           this.$el.find('#qType').val(this.model.get('quiz_type'));
         }
         if (this.model.get('type') === 'quiz') {
-          this._showCustomMessages(this.$el.find('#msgs'));
           this._toggleNegativeMarks(this.$el.find('input[name="negMarksEnable"]:checked'));
         }
         this.$el.find('select:not(#qType,#status)').select2();
@@ -158,7 +159,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.save_content = function(e) {
-        var data;
+        var data, single_attempt;
         e.preventDefault();
         $('#s2id_textbooks .select2-choice').removeClass('error');
         if (this.$el.find('#textbooks').val() === '') {
@@ -167,6 +168,8 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         if (this.$el.find('form').valid()) {
           this.$el.find('#save-content-collection i').addClass('fa-spin fa-spinner');
           data = Backbone.Syphon.serialize(this);
+          single_attempt = data.permissions['single_attempt'];
+          data.permissions['single_attempt'] = !single_attempt;
           if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
             data.negMarks = 0;
           }
@@ -179,14 +182,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           return this.$el.find("#negPercent").removeClass("none").addClass("inline");
         } else {
           return this.$el.find("#negPercent").addClass("none").removeClass("inline");
-        }
-      };
-
-      CollectionDetailsView.prototype._showCustomMessages = function(el) {
-        if ($(el).prop('checked')) {
-          return this.$el.find('#customMsg').show();
-        } else {
-          return this.$el.find('#customMsg').hide();
         }
       };
 

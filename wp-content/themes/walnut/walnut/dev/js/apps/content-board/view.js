@@ -36,7 +36,7 @@ define(['app'], function(App) {
       ContentBoardView.prototype.onShowResponse = function(marks, total) {
         var answerModel, display_marks, quizModel;
         quizModel = Marionette.getOption(this, 'quizModel');
-        if (marks === 0 && _.toBool(quizModel.get('negMarksEnable'))) {
+        if (parseFloat(marks) === 0 && _.toBool(quizModel.get('negMarksEnable'))) {
           display_marks = -total * quizModel.get('negMarks') / 100;
         } else {
           display_marks = marks;

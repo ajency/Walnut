@@ -46,6 +46,10 @@ define ['app'
 
                 data.type = _.titleize _.humanize data.type
 
+                if data.isQuiz
+                    #display value is allow_skip which is opposite of single_attempt so the value is negated and shown
+                    data.permissions['single_attempt'] = ! data.permissions['single_attempt'] 
+
                 # add status values
 
                 data.textBookSelected = ->
@@ -60,15 +64,17 @@ define ['app'
                 .attr 'id'
 
                 switch permName
-                    when 'attempt'          then @unSelectCheckbox 'resubmit'
+                    when 'attempt'          
+                        @unSelectCheckbox 'resubmit'
+                        @unSelectCheckbox 'answer'
+
                     when 'resubmit'         
                         @unSelectCheckbox 'attempt'
                         @unSelectCheckbox 'answer'
-
-                    when 'check'            then @unSelectCheckbox 'answer'
+                        
                     when 'answer'           
-                        @unSelectCheckbox 'check'
                         @unSelectCheckbox 'resubmit'
+                        @unSelectCheckbox 'attempt'
 
             unSelectCheckbox:(checkboxID)->
                 @$el.find 'input#'+checkboxID
@@ -82,7 +88,6 @@ define ['app'
                 @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
                 if @model.get('type') is 'quiz'
-                    @_showCustomMessages @$el.find('#msgs')
 
                     @_toggleNegativeMarks @$el.find 'input[name="negMarksEnable"]:checked'
 
@@ -178,6 +183,11 @@ define ['app'
 
                     data = Backbone.Syphon.serialize (@)
                     #data.term_ids= _.compact(data.term_ids)
+                    single_attempt=data.permissions['single_attempt']
+
+                    #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
+                    data.permissions['single_attempt'] = !single_attempt
+
                     data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
 
                     @trigger "save:content:collection:details", data
@@ -188,13 +198,6 @@ define ['app'
                         @$el.find("#negPercent").removeClass("none").addClass "inline"
                     else
                         @$el.find("#negPercent").addClass("none").removeClass "inline"
-
-            _showCustomMessages : (el)->
-                if $(el).prop 'checked'
-                    @$el.find('#customMsg').show()
-
-                else
-                    @$el.find('#customMsg').hide()
 
             _openCustomMsgPopup : (e)->
                 e.stopPropagation()
