@@ -75,7 +75,13 @@ function get_content_pieces($args = array()) {
                     AND meta_value like %s",
                 array('term_ids', '%"'.$args['textbook'].'";%')                
         );
-        $args['post__in'] = $wpdb->get_col($post_ids);
+        $textbook_posts=$wpdb->get_col($post_ids);
+        if($textbook_posts)
+            $args['post__in'] = $textbook_posts;
+
+        else
+            return false;
+
         unset($args['textbook']);
     }
     
@@ -98,7 +104,7 @@ function get_content_pieces($args = array()) {
 
     if(!isset($args['post_status']))
         $args['post_status'] = 'any';
-    
+     
     $content_items = get_posts($args);
     
     if(isset($args['search_str']) && trim($args['search_str']) !='')

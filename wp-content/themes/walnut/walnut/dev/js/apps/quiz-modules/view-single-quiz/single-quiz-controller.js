@@ -76,7 +76,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                     questionsCollection.each(function(e) {
                       return e.unset('order');
                     });
-                    return questionsCollection.reset(questionsCollection.shuffle());
+                    questionsCollection.reset(questionsCollection.shuffle());
+                    return quizModel.set('content_pieces', questionsCollection.pluck('ID'));
                   }
                 });
               }
@@ -87,7 +88,18 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                   loading: true
                 });
                 _this.listenTo(_this.layout, 'show', _this.showQuizViews);
-                return _this.listenTo(_this.layout.quizDetailsRegion, 'start:quiz:module', _this.startQuiz);
+                _this.listenTo(_this.layout.quizDetailsRegion, 'start:quiz:module', _this.startQuiz);
+                return _this.listenTo(_this.layout.quizDetailsRegion, 'try:again', function() {
+                  _this.questionResponseCollection = null;
+                  quizResponseSummary.set({
+                    'num_skipped': 0,
+                    'status': 'not_started',
+                    'total_marks_scored': 0,
+                    'total_time_taken': 0
+                  });
+                  display_mode = 'class_mode';
+                  return _this.startQuiz();
+                });
               });
             });
           };

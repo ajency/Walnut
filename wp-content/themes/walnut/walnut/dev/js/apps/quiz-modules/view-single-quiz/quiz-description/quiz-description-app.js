@@ -20,6 +20,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             return _this.region.trigger("start:quiz:module");
           };
         })(this));
+        this.listenTo(view, 'try:again', (function(_this) {
+          return function() {
+            return _this.region.trigger("try:again");
+          };
+        })(this));
         this.listenTo(view, 'goto:previous:route', this._gotoPreviousRoute);
         return this.show(view);
       };
@@ -67,13 +72,16 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         'click #take-quiz': function() {
           return this.trigger("start:quiz:module");
         },
+        'click #try-again': function() {
+          return this.trigger("try:again");
+        },
         'click #go-back-button': function() {
           return this.trigger("goto:previous:route");
         }
       };
 
       QuizDetailsView.prototype.serializeData = function() {
-        var data, display_mode, responseSummary;
+        var data, display_mode, elapsed, responseSummary, total;
         data = QuizDetailsView.__super__.serializeData.call(this, data);
         display_mode = Marionette.getOption(this, 'display_mode');
         if (this.model.hasPermission('answer_printing') && display_mode === 'replay') {
@@ -83,10 +91,10 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.practice_mode = true;
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
+        data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
-          data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
           if (this.model.hasPermission('display_answer')) {
             data.display_marks = true;
           }
@@ -96,6 +104,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           } else {
             data.taken_on_date = moment().format("Do MMM YYYY");
           }
+          if (data.practice_mode) {
+            data.try_again = true;
+          }
+        }
+        if (responseSummary.get('status') === 'started') {
+          data.incompleteQuiz = true;
+          total = this.model.get('total_minutes') * 60;
+          elapsed = responseSummary.get('total_time_taken');
+          data.time_remaining = $.timeMinSecs(total - elapsed);
         }
         data.negMarksEnable = _.toBool(data.negMarksEnable);
         return data;

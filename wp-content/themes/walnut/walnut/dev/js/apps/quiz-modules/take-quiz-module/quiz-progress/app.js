@@ -84,9 +84,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.events = {
-        'click #quiz-items a': function(e) {
-          return this.trigger("change:question", $(e.target).attr('id'));
-        }
+        'click #quiz-items a': 'changeQuestion'
       };
 
       QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
@@ -94,8 +92,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         return data;
       };
 
+      QuizProgressView.prototype.initialize = function() {
+        this.questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
+        return this.quizModel = Marionette.getOption(this, 'quizModel');
+      };
+
       QuizProgressView.prototype.onShow = function() {
-        var currentQuestion, questionResponseCollection, quizModel;
+        var currentQuestion;
         this.$el.find("div.holder").jPages({
           containerID: "quiz-items",
           perPage: 9,
@@ -107,11 +110,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           links: "blank"
         });
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
-        questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
-        quizModel = Marionette.getOption(this, 'quizModel');
-        questionResponseCollection.each((function(_this) {
+        this.questionResponseCollection.each((function(_this) {
           return function(response) {
-            if (quizModel.hasPermission('display_answer')) {
+            if (_this.quizModel.hasPermission('display_answer')) {
               return _this.changeClassName(response);
             }
           };
@@ -121,15 +122,21 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         return this.updateSkippedCount();
       };
 
+      QuizProgressView.prototype.changeQuestion = function(e) {
+        var selectedQID;
+        selectedQID = parseInt($(e.target).attr('id'));
+        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || this.quizModel.hasPermission('allow_skip')) {
+          return this.trigger("change:question", selectedQID);
+        }
+      };
+
       QuizProgressView.prototype.onQuestionChange = function(model) {
         this.$el.find("#quiz-items li").removeClass('current');
         return this.$el.find("#quiz-items a#" + model.id).closest('li').addClass('current');
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        var quizModel;
-        quizModel = Marionette.getOption(this, 'quizModel');
-        if (quizModel.hasPermission('display_answer')) {
+        if (this.quizModel.hasPermission('display_answer')) {
           this.changeClassName(responseModel);
         }
         this.updateProgressBar();
@@ -155,9 +162,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.updateProgressBar = function() {
-        var answeredQuestions, progressPercentage, questionResponseCollection, responses;
-        questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
-        responses = questionResponseCollection.pluck('question_response');
+        var answeredQuestions, progressPercentage, responses;
+        responses = this.questionResponseCollection.pluck('question_response');
         answeredQuestions = _.chain(responses).map(function(m) {
           if (m.status !== 'skipped') {
             return m;
@@ -171,9 +177,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.updateSkippedCount = function() {
-        var answers, questionResponseCollection, skipped;
-        questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
-        answers = questionResponseCollection.pluck('question_response');
+        var answers, skipped;
+        answers = this.questionResponseCollection.pluck('question_response');
         skipped = _.where(answers, {
           'status': 'skipped'
         });

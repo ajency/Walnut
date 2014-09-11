@@ -1,14 +1,22 @@
 define ['app'
-        'controllers/region-controller'],
-        (App, RegionController)->
+        'controllers/region-controller'
+        'bootbox'],
+        (App, RegionController,bootbox)->
 
             App.module "TakeQuizApp.QuizTimer", (QuizTimer, App)->
                 class QuizTimer.Controller extends RegionController
 
                     initialize: (opts)->
-                        {@model,@display_mode, @timerObject} = opts
+                        {@model,@display_mode, @timerObject, @quizResponseSummary} = opts
 
-                        @durationInSeconds = @model.get('duration') * 60
+                        if @quizResponseSummary
+                            time_taken= parseInt @quizResponseSummary.get 'total_time_taken'
+
+                        time_taken =0 if not time_taken
+
+                        total_time = parseInt(@model.get('duration')) * 60
+
+                        @durationInSeconds = total_time-time_taken
 
                         @timerObject.setHandler "get:elapsed:time", ()=>
 
@@ -37,7 +45,7 @@ define ['app'
                             loading: true
 
                         @listenTo view, 'end:quiz', -> @region.trigger 'show:alert:popup', 'end_quiz'
-                        @listenTo view, 'quiz:time:up', -> @region.trigger 'show:alert:popup', 'quiz_time_up','alert'
+                        @listenTo view, 'quiz:time:up', -> @region.trigger 'end:quiz'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0
@@ -84,9 +92,8 @@ define ['app'
                             .show()
 
                         else
-                            if timeLeftOrElapsed < 0
-                                @countUp timeLeftOrElapsed
-                            else @countDown timeLeftOrElapsed
+                            if timeLeftOrElapsed >= 0
+                                @countDown timeLeftOrElapsed
 
                     countDown:(time)=>
 
@@ -99,4 +106,6 @@ define ['app'
                             onExpiry: @quizTimedOut
 
                     quizTimedOut:=>
-                        @trigger "quiz:time:up"
+                        msgContent= @model.getMessageContent 'quiz_time_up'
+                        bootbox.alert msgContent,=>
+                            @trigger "quiz:time:up"

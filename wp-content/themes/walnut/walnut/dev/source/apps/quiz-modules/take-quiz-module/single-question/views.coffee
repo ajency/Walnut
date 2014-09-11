@@ -9,6 +9,7 @@ define ['app'
                     template:  '<div id="content-board" class="quizContent no-margin"></div>
 
                                 <div class="well m-b-10 p-t-10 p-b-10 h-center quizActions"> 
+                                    <span class="pull-left" id="first_question"></span>
                                     <button type="button" id="previous-question" class="btn btn-info pull-left"> 
                                         <i class="fa fa-backward"></i> Previous 
                                     </button>
@@ -18,7 +19,8 @@ define ['app'
                                     </button>
                                     {{/allow_submit_answer}}
 
-                                    <button type="button" style="display:none" id="next-question" class="btn btn-info pull-right">
+                                    <span class="pull-right" id="last_question"></span>
+                                    <button type="button" id="next-question" class="none btn btn-info pull-right">
                                         Next <i class="fa fa-forward"></i> 
                                     </button>
 
@@ -92,6 +94,10 @@ define ['app'
                                 if @quizModel.hasPermission 'allow_resubmit'
                                     data.allow_submit_answer = true
 
+                                if responseModel.get('status') is 'paused'
+                                    data.allow_submit_answer = true
+                                    
+
                             data.allow_skip = false if not data.allow_submit_answer
 
                         data
@@ -102,8 +108,20 @@ define ['app'
 
                     onShow:->
                         if @$el.find('#submit-question').length is 0
-                            @$el.find '#next-question'
-                            .show()
+                            if @model.id is parseInt _.last @quizModel.get 'content_pieces'
+                                @$el.find '#last_question'
+                                .html 'This is the last question'
+                            else
+                                @$el.find '#next-question'
+                                .show()
+
+                        if parseInt(@model.id) is parseInt _.first @quizModel.get 'content_pieces'
+                            @$el.find '#first_question'
+                            .html 'This is the first question'
+
+                            @$el.find '#previous-question'
+                            .hide()
+
 
                     onAnswerValidated:(isEmptyAnswer)->
                         if isEmptyAnswer
@@ -120,8 +138,13 @@ define ['app'
                         @$el.find "#submit-question"
                         .hide()
 
-                        @$el.find "#next-question"
-                        .show()
+                        if @model.id is parseInt _.last @quizModel.get 'content_pieces'
+                            @$el.find '#last_question'
+                            .html 'This is the last question'
+
+                        else
+                            @$el.find "#next-question"
+                            .show()
 
                         @$el.find "#skip-question"
                         .hide()

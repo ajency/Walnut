@@ -719,7 +719,7 @@
 }
 .imagewithtext img {
   position: relative;
-  z-index: 2;
+  z-index: 99;
   margin-right: 10px;
   cursor: pointer;
 }
@@ -739,7 +739,7 @@
   text-align: center;
   cursor: pointer;
   position: relative;
-  z-index: 2;
+  z-index: 99;
   color: #aaaaaa;
 }
 .image .image-placeholder .bicon,
@@ -753,6 +753,14 @@
 .audio .audio-placeholder .bicon {
   font-size: 40px;
   display: block;
+}
+.image img {
+  z-index: 99;
+}
+.image .ui-resizable-handle.ui-resizable-s {
+  height: 106%;
+  background-color: #edeef0;
+  bottom: -4px;
 }
 .aj-imp-upload-media {
   text-align: center;
@@ -951,6 +959,11 @@ textarea.border {
   -o-border-image: url(../../../images/border.gif) 20 20 stretch;
   /* Opera */
   border-image: url(../../../images/border.gif) 20 20 stretch;
+}
+input[type="text"].rowColInput {
+  width: 30%;
+  float: left;
+  margin-right: 15px;
 }
 /*input[type=checkbox].mcq-option-select {
 	display:none;
@@ -2540,6 +2553,9 @@ textarea.error,
 }
 #take-class-modules.takeClass th:nth-child(3) {
   width: 100px;
+}
+#take-class-modules.takeClass th.duration {
+  width: 10%;
 }
 #take-class-modules.takeClass th:last-child {
   width: 30%;

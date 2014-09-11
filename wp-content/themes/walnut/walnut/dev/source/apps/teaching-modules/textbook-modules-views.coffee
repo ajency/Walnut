@@ -16,7 +16,7 @@ define ['app',
 					   	<td>
 					   	{{#practice_quiz}}
 						   	{{#attempts}}
-						   		Attempted: {{attempts}} time(s)
+						   		<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
 						   	{{/attempts}}
 						   	{{^attempts}}
 						   		<span class="label label-important">Not Started</span>
@@ -101,7 +101,7 @@ define ['app',
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
-					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Quiz'
 
 				if @model.get('quiz_type') is 'practice'
 					data.practice_quiz = true
@@ -211,8 +211,12 @@ define ['app',
 
 
 			setFilteredContent:->
-
-				filtered_data= $.filterTableByTextbooks(@)
+				if Marionette.getOption(@, 'mode') is 'take-quiz'
+					dataType = 'quiz'
+				else
+					dataType = 'teaching-modules'
+					
+				filtered_data= $.filterTableByTextbooks(@, dataType)
 
 				@collection.set filtered_data
 

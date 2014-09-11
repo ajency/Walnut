@@ -12,7 +12,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} Attempted: {{attempts}} time(s) {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{training_date}} </button> {{/schedule_button}} {{^schedule_button}} {{#training_date}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div> {{/training_date}} {{/schedule_button}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} <span class="label label-info">Attempts: <strong>{{attempts}}</strong></span> {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{training_date}} </button> {{/schedule_button}} {{^schedule_button}} {{#training_date}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div> {{/training_date}} {{/schedule_button}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
@@ -70,7 +70,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         data.training_date = training_date;
         if (Marionette.getOption(this, 'mode') === 'take-quiz') {
           data.take_quiz = true;
-          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Class Test';
+          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Quiz';
         }
         if (this.model.get('quiz_type') === 'practice') {
           data.practice_quiz = true;
@@ -210,8 +210,13 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       };
 
       ContentGroupsView.prototype.setFilteredContent = function() {
-        var filtered_data, pagerOptions;
-        filtered_data = $.filterTableByTextbooks(this);
+        var dataType, filtered_data, pagerOptions;
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          dataType = 'quiz';
+        } else {
+          dataType = 'teaching-modules';
+        }
+        filtered_data = $.filterTableByTextbooks(this, dataType);
         this.collection.set(filtered_data);
         $("#take-class-modules").trigger("updateCache");
         pagerOptions = {
