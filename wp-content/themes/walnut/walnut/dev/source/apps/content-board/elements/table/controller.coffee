@@ -1,6 +1,6 @@
 define ['app'
-		'apps/content-preview/content-board/element/controller'
-		'apps/content-preview/content-board/elements/table/views'
+		'apps/content-board/element/controller'
+		'apps/content-board/elements/table/views'
 ],(App,Element)->
 	App.module 'ContentPreview.ContentBoard.Element.Table', (Table, App)->
 
