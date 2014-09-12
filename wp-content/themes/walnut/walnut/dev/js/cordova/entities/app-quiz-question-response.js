@@ -15,7 +15,7 @@ define(['underscore', 'unserialize'], function(_) {
           result = [];
           _fn = function(row, i) {
             var totalMarksScoredAndTotalTimeTaken;
-            totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id, row['content_piece_id']);
+            totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id);
             return totalMarksScoredAndTotalTimeTaken.done(function(value) {
               return result[i] = {
                 content_piece_id: row['content_piece_id'],
@@ -32,7 +32,6 @@ define(['underscore', 'unserialize'], function(_) {
             row = data.rows.item(i);
             _fn(row, i);
           }
-          console.log(JSON.stringify(result));
           return d.resolve(result);
         };
       };
@@ -40,12 +39,12 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getQuizQuestionResponseBySummaryID transaction completed');
       }).fail(_.failureHandler);
     },
-    getTotalMarksScoredAndTotalTimeTaken: function(summary_id, content_piece_id) {
+    getTotalMarksScoredAndTotalTimeTaken: function(summary_id) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ? AND content_piece_id = ?", [summary_id, content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

@@ -62,6 +62,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		# get all the elements for the layout from its meta id
 		getJsonToClone : (elements)->
+			console.log JSON.stringify elements
 
 			runFunc = ->
 				$.Deferred (d)->
@@ -73,7 +74,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						total = 0
 						_.each elements ,(element)->
 								total++ 
-								if element.element is 'Row' or element.element is 'TeacherQuestion'
+								if element.element is 'Row' or element.element is 'StudentQuestion'
 									# element.columncount = element.elements.length
 									insideElement = _.getRowElements(element)
 									insideElement.done (columnElement)->
@@ -93,6 +94,10 @@ define ['underscore', 'unserialize'], ( _) ->
 
 											if element.element is 'Text'
 												content.excerpt.push meta.content
+											if element.element is 'Fib'
+												content.excerpt.push element.text
+											if element.element is 'Hotspot'
+												content.excerpt.push element.textCollection[0].text
 											if element.element is 'Image'
 												element.image_id = parseInt element.image_id
 											if element.element is 'ImageWithText'
@@ -125,7 +130,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						if column.elements
 							_.each column.elements, (element)->
 								total++
-								if element.element is 'Row' or element.element is 'TeacherQuestion'
+								if element.element is 'Row' or element.element is 'StudentQuestion'
 									# ele.columncount = ele.elements.length;
 									insideElement = _.getRowElements(element)
 									insideElement.done (columnElement)->
@@ -140,8 +145,13 @@ define ['underscore', 'unserialize'], ( _) ->
 										element.meta_id = parseInt element.meta_id
 										if meta isnt false
 											_.defaults(element, meta);
+
 											if element.element is 'Text'
 												content.excerpt.push element.content
+											if element.element is 'Fib'
+												content.excerpt.push element.text
+											if element.element is 'Hotspot'
+												content.excerpt.push element.textCollection[0].text
 											if element.element is 'Image'
 												element.image_id = parseInt element.image_id
 											if element.element is 'ImageWithText'

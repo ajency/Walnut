@@ -22,7 +22,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
 						do (row, i)->
-							totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id , row['content_piece_id'])
+							totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id)
 							totalMarksScoredAndTotalTimeTaken.done (value)->
 
 								result[i] = 
@@ -34,7 +34,6 @@ define ['underscore', 'unserialize'], ( _) ->
 									summary_id :summary_id
 									time_taken : value.total_time_taken
 
-					console.log JSON.stringify result
 					d.resolve(result)
 
 			$.when(runQuery()).done ->
@@ -44,7 +43,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 
-		getTotalMarksScoredAndTotalTimeTaken : (summary_id, content_piece_id)->
+		getTotalMarksScoredAndTotalTimeTaken : (summary_id)->
 
 			runQuery = ->
 
@@ -54,8 +53,8 @@ define ['underscore', 'unserialize'], ( _) ->
 						tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, 
 							SUM(time_taken) as total_time_taken 
 							FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE summary_id = ? AND content_piece_id = ?", 
-							[summary_id, content_piece_id] 
+							WHERE summary_id = ?", 
+							[summary_id] 
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->

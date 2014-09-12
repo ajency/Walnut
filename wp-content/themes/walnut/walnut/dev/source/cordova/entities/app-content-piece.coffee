@@ -32,7 +32,16 @@ define ['underscore', 'unserialize'], ( _) ->
 										do(row, i, author_name, meta_value)->
 											contentElementsArray = _.getJsonToClone(meta_value.layout_json)
 											contentElementsArray.done (contentElements)->
-												console.log contentElements
+												console.log JSON.stringify contentElements
+												excerpt_array = contentElements.excerpt
+
+												excerpt_array = _.flatten excerpt_array
+												taglessArray = new Array
+												_.each excerpt_array , (excerpt)->												
+													taglessArray.push _(excerpt).stripTags()													
+												
+												excerpt = taglessArray.join ' | '
+												excerpt= _(excerpt).prune(500)
 
 												result[i] = 
 													ID: row['ID']
@@ -55,7 +64,7 @@ define ['underscore', 'unserialize'], ( _) ->
 													post_content_filtered: row['post_content_filtered']
 													post_date: row['post_date']
 													post_date_gmt: row['post_date_gmt']
-													post_excerpt: row['post_excerpt']
+													post_excerpt: excerpt
 													post_mime_type: row['post_mime_type']
 													post_modified: row['post_modified']
 													post_modified_gmt: row['post_modified_gmt']

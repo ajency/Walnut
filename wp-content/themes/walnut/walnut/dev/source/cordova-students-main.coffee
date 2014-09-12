@@ -43,21 +43,11 @@ require.config
 		datepicker: 'plugins/bootstrap-datepicker'
 		timepicker : 'plugins/bootstrap-timepicker.min'
 		jquery_listnav: 'plugins/jquery-listnav'
-		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
-		bridget: 'plugins/jquery.bridget'
-		isotope: 'plugins/isotope.pkgd.min'
-		mmenu: 'plugins/jquery.mmenu.min.all'
-		kinetic: 'plugins/kinetic'
-		kineticresize: 'plugins/kinetic.plugin.resize'
-		checkbox: 'plugins/flatui-checkbox'
 		holder: 'plugins/holder'
 		panzer: 'plugins/panzer'
 		panzerlist : 'plugins/panzerlist'
-		timecircles         : 'plugins/TimeCircles'
 		timerplugin: 'plugins/jquery.countdown_plugin.min' #needed for jquerytimer to work
 		countdowntimer: 'plugins/jquery.countdown.min'
-		spinedit : 'plugins/bootstrap-spinedit'
-		resizablecolumns : 'plugins/jquery.resizableColumns.min'
 		bootbox : 'plugins/bootbox.min'
 		unserialize         : 'plugins/unserialize'
 		serialize           : 'plugins/serialize'
@@ -88,24 +78,14 @@ require.config
 		mixitup: ['jquery']
 		jqueryspin: ['spin']
 		moment: ['jquery']
-		mmenu: ['jquery']
 		select2: ['jquery', 'bootstrap']
 		jqueryvalidate: ['jquery']
 		syphon: ['backbone']
 		datepicker: ['jquery', 'bootstrap']
-		timepicker: ['jquery', 'bootstrap']
-		jquery_listnav: ['jquery']
-		screwbuttons: ['jquery']
-		checkbox: ['bootstrap']
-		kineticresize: ['kinetic']
-		bridget: ['jquery']
-		isotope: ['jquery', 'bridget']
 		panzer: ['jquery']
 		panzerlist : ['jquery']
 		timerplugin: ['jquery']
 		countdowntimer: ['jquery','timerplugin']
-		spinedit : ['jquery','bootstrap']
-		resizablecolumns : ['jquery']
 		bootbox : ['jquery','bootstrap']
 		jPages: ['jquery']
 		app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']

@@ -25,7 +25,16 @@ define(['underscore', 'unserialize'], function(_) {
                     var contentElementsArray;
                     contentElementsArray = _.getJsonToClone(meta_value.layout_json);
                     return contentElementsArray.done(function(contentElements) {
-                      console.log(contentElements);
+                      var excerpt, excerpt_array, taglessArray;
+                      console.log(JSON.stringify(contentElements));
+                      excerpt_array = contentElements.excerpt;
+                      excerpt_array = _.flatten(excerpt_array);
+                      taglessArray = new Array;
+                      _.each(excerpt_array, function(excerpt) {
+                        return taglessArray.push(_(excerpt).stripTags());
+                      });
+                      excerpt = taglessArray.join(' | ');
+                      excerpt = _(excerpt).prune(500);
                       return result[i] = {
                         ID: row['ID'],
                         comment_count: row['comment_count'],
@@ -47,7 +56,7 @@ define(['underscore', 'unserialize'], function(_) {
                         post_content_filtered: row['post_content_filtered'],
                         post_date: row['post_date'],
                         post_date_gmt: row['post_date_gmt'],
-                        post_excerpt: row['post_excerpt'],
+                        post_excerpt: excerpt,
                         post_mime_type: row['post_mime_type'],
                         post_modified: row['post_modified'],
                         post_modified_gmt: row['post_modified_gmt'],

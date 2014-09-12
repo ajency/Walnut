@@ -61,6 +61,7 @@ define(['underscore', 'unserialize'], function(_) {
     },
     getJsonToClone: function(elements) {
       var runFunc;
+      console.log(JSON.stringify(elements));
       runFunc = function() {
         return $.Deferred(function(d) {
           var content, total;
@@ -73,7 +74,7 @@ define(['underscore', 'unserialize'], function(_) {
             return _.each(elements, function(element) {
               var insideElement, metaData;
               total++;
-              if (element.element === 'Row' || element.element === 'TeacherQuestion') {
+              if (element.element === 'Row' || element.element === 'StudentQuestion') {
                 insideElement = _.getRowElements(element);
                 return insideElement.done(function(columnElement) {
                   content.excerpt.push(columnElement.excerpt);
@@ -90,6 +91,12 @@ define(['underscore', 'unserialize'], function(_) {
                     _.defaults(element, meta);
                     if (element.element === 'Text') {
                       content.excerpt.push(meta.content);
+                    }
+                    if (element.element === 'Fib') {
+                      content.excerpt.push(element.text);
+                    }
+                    if (element.element === 'Hotspot') {
+                      content.excerpt.push(element.textCollection[0].text);
                     }
                     if (element.element === 'Image') {
                       element.image_id = parseInt(element.image_id);
@@ -131,7 +138,7 @@ define(['underscore', 'unserialize'], function(_) {
               return _.each(column.elements, function(element) {
                 var insideElement, metaData;
                 total++;
-                if (element.element === 'Row' || element.element === 'TeacherQuestion') {
+                if (element.element === 'Row' || element.element === 'StudentQuestion') {
                   insideElement = _.getRowElements(element);
                   return insideElement.done(function(columnElement) {
                     content.excerpt.push(columnElement.excerpt);
@@ -148,6 +155,12 @@ define(['underscore', 'unserialize'], function(_) {
                       _.defaults(element, meta);
                       if (element.element === 'Text') {
                         content.excerpt.push(element.content);
+                      }
+                      if (element.element === 'Fib') {
+                        content.excerpt.push(element.text);
+                      }
+                      if (element.element === 'Hotspot') {
+                        content.excerpt.push(element.textCollection[0].text);
                       }
                       if (element.element === 'Image') {
                         element.image_id = parseInt(element.image_id);

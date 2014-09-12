@@ -39,11 +39,7 @@ define ['app'
 
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-right', text : 'Correct', icon : 'fa-check'
-<<<<<<< HEAD
-                        when 'partially_correct'  then divClass : 'text-right', text : 'Partially <br>Correct', icon : 'fa-check-square'
-=======
                         when 'partially_correct'  then divClass : 'text-right', text : 'Partially<br>Correct', icon : 'fa-check-square'
->>>>>>> 45c6801dc1cfbb0cc788f94a74371fee0e3e5b38
                         when 'skipped'            then divClass : 'text-error', text : 'Skipped', icon : 'fa-share-square'
                         when 'wrong_answer'       then divClass : 'text-error', text : 'Wrong', icon : 'fa-times'
 

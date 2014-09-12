@@ -53,7 +53,7 @@ define ['app'
                 data.practice_mode =true if @model.get('quiz_type') is 'practice'
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
-
+                
                 data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
 
                 if responseSummary.get('status') is 'completed'
@@ -76,7 +76,6 @@ define ['app'
                     elapsed = responseSummary.get('total_time_taken')
 
                     data.time_remaining = $.timeMinSecs total-elapsed 
-
 
                 data.negMarksEnable= _.toBool data.negMarksEnable
                 
