@@ -83,7 +83,8 @@ define ['underscore', 'unserialize'], ( _) ->
 													question_type: meta_value.question_type
 													term_ids: meta_value.term_ids
 													to_ping: row['to_ping']
-					console.log JSON.stringify result
+												console.log JSON.stringify result[i]
+
 					d.resolve(result)
 
 			$.when(runQuery()).done (d)->
