@@ -17,7 +17,7 @@ define ['app'
                         { optionNo : _.uniqueId(), index : 2 }
                     ]
                     bg_color : '#ffffff'
-                    bg_opacity : 1
+                    bg_opacity : 0.5
                     height : 40
                     complete : false
                     

@@ -140,7 +140,14 @@
 			
 			<div class="form-group inline colors">
 				Blank Background
-				<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
+				<input type="hidden" id="bg-color" class="color-picker" value={{bg_color}}>
+			</div>
+
+			<div class="m-b-10">
+				<div class=" slider success">
+					Backgroung Transparency
+					<input type="text" id="bg-opacity" class="opacity" data-slider-max="1" data-slider-min="0" data-slider-step="0.01" data-slider-value="{{bg_opacity}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
+				</div>
 			</div>
 
 			<div class="checkbox check-success">

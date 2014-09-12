@@ -50,7 +50,6 @@ define(['app'], function(App) {
       ImageView.prototype.onShow = function() {
         if (this.model.isNew()) {
           this.$el.resizable({
-            helper: "ui-image-resizable-helper",
             handles: "s",
             stop: (function(_this) {
               return function(evt, ui) {
@@ -67,7 +66,6 @@ define(['app'], function(App) {
           this.$el.find('img').css('top', "" + (this.positionTopRatio * this.$el.width()) + "px");
         }
         this.$el.resizable({
-          helper: "ui-image-resizable-helper",
           handles: "s",
           stop: (function(_this) {
             return function(evt, ui) {
