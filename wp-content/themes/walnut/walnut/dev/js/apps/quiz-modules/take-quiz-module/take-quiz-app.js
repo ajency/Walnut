@@ -79,7 +79,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           return function() {
             return _this._autosaveQuestionTime();
           };
-        })(this), 30000);
+        })(this), 2000);
       };
 
       TakeQuizController.prototype._autosaveQuestionTime = function() {
@@ -144,7 +144,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         if (quizModel.get('quiz_type') === 'test') {
           quizResponseModel.save();
         }
-        return this.layout.quizProgressRegion.trigger("question:submitted", quizResponseModel);
+        if (quizResponseModel.get('status') !== 'paused') {
+          return this.layout.quizProgressRegion.trigger("question:submitted", quizResponseModel);
+        }
       };
 
       TakeQuizController.prototype._skipQuestion = function(answer) {
@@ -235,8 +237,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._getUnansweredIDs = function() {
-        var allIDs, answeredIDs, unanswered;
+        var allIDs, answeredIDs, pausedModel, unanswered;
+        pausedModel = this.questionResponseCollection.findWhere({
+          'status': 'paused'
+        });
         answeredIDs = this.questionResponseCollection.pluck('content_piece_id');
+        if (pausedModel) {
+          answeredIDs = _.without(answeredIDs, pausedModel.get('content_piece_id'));
+        }
         allIDs = _.map(quizModel.get('content_pieces'), function(m) {
           return parseInt(m);
         });
