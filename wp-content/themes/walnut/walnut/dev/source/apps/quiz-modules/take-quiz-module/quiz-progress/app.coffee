@@ -92,8 +92,8 @@ define ['app'
 
                     changeQuestion:(e)->
                         selectedQID = parseInt $(e.target).attr 'id'
-
-                        @trigger "change:question", selectedQID
+                        if not @quizModel.hasPermission 'single_attempt'
+                            @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
                         @$el.find "#quiz-items li"

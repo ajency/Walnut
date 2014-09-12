@@ -93,13 +93,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           questionResponseModel = this.questionResponseCollection.findWhere({
             'content_piece_id': questionModel.id
           });
+          totalTime = this.timerObject.request("get:elapsed:time");
+          timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
+          pausedQuestionTime = 0;
           if ((!questionResponseModel) || ((_ref = questionResponseModel.get('status')) === 'not_started' || _ref === 'paused')) {
             if (questionResponseModel) {
               console.log(questionResponseModel.get('status'));
             }
-            totalTime = this.timerObject.request("get:elapsed:time");
-            timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
-            pausedQuestionTime = 0;
             data = {
               'summary_id': quizResponseSummary.id,
               'content_piece_id': questionModel.id,
@@ -109,8 +109,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
               'time_taken': timeTaken
             };
             questionResponseModel = App.request("create:quiz:question:response:model", data);
-            return this._saveQuizResponseModel(questionResponseModel);
+          } else {
+            questionResponseModel.set({
+              'time_taken': timeTaken
+            });
           }
+          return this._saveQuizResponseModel(questionResponseModel);
         }
       };
 
@@ -215,9 +219,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._endQuiz = function() {
-        var unanswered;
+        var unanswered, _ref;
+        questionResponseModel = this.questionResponseCollection.findWhere({
+          'content_piece_id': questionModel.id
+        });
         if (this.display_mode !== 'replay') {
-          this.layout.questionDisplayRegion.trigger("silent:save:question");
+          if ((!questionResponseModel) || ((_ref = questionResponseModel.get('status')) === 'paused' || _ref === 'not_attempted')) {
+            this.layout.questionDisplayRegion.trigger("silent:save:question");
+          }
         }
         unanswered = this._getUnansweredIDs();
         if (unanswered) {

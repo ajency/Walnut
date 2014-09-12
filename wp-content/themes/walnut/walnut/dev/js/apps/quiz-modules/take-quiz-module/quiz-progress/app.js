@@ -125,7 +125,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeQuestion = function(e) {
         var selectedQID;
         selectedQID = parseInt($(e.target).attr('id'));
-        return this.trigger("change:question", selectedQID);
+        if (!this.quizModel.hasPermission('single_attempt')) {
+          return this.trigger("change:question", selectedQID);
+        }
       };
 
       QuizProgressView.prototype.onQuestionChange = function(model) {

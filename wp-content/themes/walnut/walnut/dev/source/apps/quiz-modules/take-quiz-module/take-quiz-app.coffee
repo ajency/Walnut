@@ -93,14 +93,14 @@ define ['app'
                      if quizModel.get('quiz_type') is 'test'
 
                         questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
-                            
+                        
+                        totalTime =@timerObject.request "get:elapsed:time"
+                        timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+                        pausedQuestionTime =0 #reset to 0 once used
+
                         if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
 
                             console.log(questionResponseModel.get('status')) if questionResponseModel
-
-                            totalTime =@timerObject.request "get:elapsed:time"
-                            timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
-                            pausedQuestionTime =0 #reset to 0 once used
 
                             data =
                                 'summary_id'     : quizResponseSummary.id
@@ -112,7 +112,10 @@ define ['app'
 
                             questionResponseModel = App.request "create:quiz:question:response:model", data
 
-                            @_saveQuizResponseModel questionResponseModel
+                        else
+                            questionResponseModel.set 'time_taken' : timeTaken
+
+                        @_saveQuizResponseModel questionResponseModel
 
                 _changeQuestion:(changeToQuestion)=>
                     #save results here of previous question / skip the question
@@ -211,8 +214,12 @@ define ['app'
                         message_type: message_type
 
                 _endQuiz:->
+
+                    questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
+
                     if @display_mode isnt 'replay'
-                        @layout.questionDisplayRegion.trigger "silent:save:question"
+                        if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
+                            @layout.questionDisplayRegion.trigger "silent:save:question"
 
                     unanswered = @_getUnansweredIDs()
 
