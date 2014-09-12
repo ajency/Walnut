@@ -83,12 +83,10 @@ define ['app'
                             
                             data.allow_submit_answer = true
 
-                            data.allow_skip = true if @quizModel.hasPermission 'allow_skip'
-
                             if @quizModel.hasPermission('allow_hint') and _.trim data.hint
                                 data.show_hint =true
 
-                            if @quizModel.hasPermission 'single_attempt'
+                            if @quizModel.hasPermission('single_attempt') and not @quizModel.hasPermission 'allow_resubmit'
                                 data.show_skip_helper_text=true
 
                             if responseModel

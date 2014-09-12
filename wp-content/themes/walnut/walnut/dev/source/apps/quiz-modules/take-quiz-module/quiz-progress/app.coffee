@@ -92,7 +92,7 @@ define ['app'
 
                     changeQuestion:(e)->
                         selectedQID = parseInt $(e.target).attr 'id'
-                        if not @quizModel.hasPermission 'single_attempt'
+                        if _.contains(@questionResponseCollection.pluck('content_piece_id'),selectedQID) or not @quizModel.hasPermission('single_attempt')
                             @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
@@ -105,7 +105,7 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        @changeClassName responseModel if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
+                        @changeClassName responseModel if @quizModel.hasPermission 'single_attempt'
 
                         @updateProgressBar()
 

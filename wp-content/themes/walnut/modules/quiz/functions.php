@@ -290,7 +290,11 @@ function read_quiz_response_summary($args){
     $quiz_response_summary->status = $quiz_meta['status'];
 
     $additional_details_qry = $wpdb->prepare(
-        "SELECT SUM(marks_scored) as total_marks_scored,
+        "SELECT 
+            SUM(marks_scored) as marks_scored,
+            SUM(
+                CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as negative_scored,
             SUM(time_taken) as total_time_taken
             FROM {$wpdb->prefix}quiz_question_response
         WHERE summary_id = %s", $quiz_response_summary->summary_id
@@ -298,7 +302,12 @@ function read_quiz_response_summary($args){
 
     $additional_details= $wpdb->get_row($additional_details_qry);   
 
-    $quiz_response_summary->total_marks_scored =  $additional_details->total_marks_scored;
+    $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;
+
+    $quiz_response_summary->negative_scored = (float) $additional_details->negative_scored;
+
+    $total_marks_scored = (float) $additional_details->marks_scored + (float) $additional_details->negative_scored;
+    $quiz_response_summary->total_marks_scored = $total_marks_scored;
     
     $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
 

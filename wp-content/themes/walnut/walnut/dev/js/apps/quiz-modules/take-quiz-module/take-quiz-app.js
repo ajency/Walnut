@@ -1,7 +1,6 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app', 'apps/popup-dialog/alerts'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
@@ -119,24 +118,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._changeQuestion = function(changeToQuestion) {
-        var endIndex, index, startIndex, _i, _ref, _ref1;
-        startIndex = _.indexOf(questionIDs, questionModel.id);
-        endIndex = _.indexOf(questionIDs, changeToQuestion);
-        if (startIndex === endIndex) {
-          return false;
-        }
-        this.answerModel = App.request("create:new:answer");
-        this.answerModel.set({
-          'status': 'skipped'
-        });
-        for (index = _i = startIndex, _ref = endIndex - 1; startIndex <= _ref ? _i <= _ref : _i >= _ref; index = startIndex <= _ref ? ++_i : --_i) {
-          console.log(questionIDs[index]);
-          console.log(this.questionResponseCollection.pluck('content_piece_id'));
-          if (_ref1 = questionIDs[index], __indexOf.call(this._getUnansweredIDs(), _ref1) >= 0) {
-            questionModel = questionsCollection.get(questionIDs[index]);
-            this._submitQuestion(this.answerModel);
-          }
-        }
         questionModel = questionsCollection.get(changeToQuestion);
         return this._showSingleQuestionApp(questionModel);
       };
