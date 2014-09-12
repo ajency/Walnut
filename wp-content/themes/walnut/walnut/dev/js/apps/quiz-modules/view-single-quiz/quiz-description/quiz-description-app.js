@@ -99,6 +99,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             data.display_marks = true;
           }
           data.total_marks_scored = responseSummary.get('total_marks_scored');
+          console.log(JSON.stringify(data.total_marks_scored));
+          if (_.platform() === 'DEVICE') {
+            console.log(JSON.stringify(data.total_marks_scored));
+            data.total_marks_scored = data.total_marks_scored.toFixed(2);
+          }
           if (responseSummary.get('taken_on')) {
             data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
           } else {

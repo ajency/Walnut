@@ -62,6 +62,11 @@ define ['app'
                     
                     data.display_marks = true if @model.hasPermission 'display_answer'
                     data.total_marks_scored = responseSummary.get 'total_marks_scored'
+                    console.log JSON.stringify data.total_marks_scored
+
+                    if _.platform() is 'DEVICE'
+                        console.log JSON.stringify data.total_marks_scored
+                        data.total_marks_scored = data.total_marks_scored.toFixed(2);
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
