@@ -75,10 +75,10 @@ define ['app'
                             @region.trigger "skip:question", @answerModel
 
                         @listenTo layout, 'show:hint:dialog',=>
-                            @region.trigger 'show:alert:popup', 'hint'
+                            @region.trigger 'show:alert:popup', 'hint', 'alert'
 
                         @listenTo layout,'show:comment:dialog',=>
-                            @region.trigger 'show:alert:popup', 'comment'
+                            @region.trigger 'show:alert:popup', 'comment', 'alert'
 
                         @listenTo @region, 'trigger:submit',=> @_triggerSubmit()
 

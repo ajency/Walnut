@@ -16,8 +16,8 @@ define ['app'
 
                         @listenTo view, "change:question", (id)-> @region.trigger "change:question", id
 
-                        @listenTo @region, "question:changed", (model)->
-                            @view.triggerMethod "question:change", model
+                        @listenTo @region, "question:changed", (selectedQID)->
+                            @view.triggerMethod "question:change", selectedQID
 
                         @listenTo @region, "question:submitted", (responseModel)->
                             @view.triggerMethod "question:submitted", responseModel
@@ -92,8 +92,7 @@ define ['app'
 
                     changeQuestion:(e)->
                         selectedQID = parseInt $(e.target).attr 'id'
-
-                        if _.contains(@questionResponseCollection.pluck('content_piece_id'),selectedQID) or @quizModel.hasPermission 'allow_skip'
+                        if not @quizModel.hasPermission 'single_attempt'
                             @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
@@ -106,7 +105,7 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        @changeClassName responseModel if @quizModel.hasPermission 'display_answer'
+                        @changeClassName responseModel if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
 
                         @updateProgressBar()
 

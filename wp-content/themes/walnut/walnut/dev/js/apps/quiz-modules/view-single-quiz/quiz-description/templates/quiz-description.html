@@ -68,7 +68,16 @@
                     <label class="form-label">Marks</label>
                     {{marks}}
                     {{#display_marks}} 
-                        <h4 class="text-success semi-bold no-margin inline">(You scored: <span class="bold">{{total_marks_scored}}</span>)</h4>
+                        <h4 class="text-success semi-bold no-margin inline">
+                            {{#negMarksEnable}}
+                                You scored: <span class="bold">{{total_marks_scored}}</span><br>
+                                Negative marks: <span class="bold">0</span><br> 
+                                Total scored: <span class="bold">{{total_marks_scored}}</span><br>
+                            {{/negMarksEnable}}
+                            {{^negMarksEnable}}
+                                (You scored: <span class="bold">{{total_marks_scored}}</span>)
+                            {{/negMarksEnable}}
+                        </h4>
                     {{/display_marks}}
             </div>
             <div class="col-md-3">

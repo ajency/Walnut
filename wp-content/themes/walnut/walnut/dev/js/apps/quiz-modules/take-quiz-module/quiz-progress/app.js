@@ -23,8 +23,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.listenTo(view, "change:question", function(id) {
           return this.region.trigger("change:question", id);
         });
-        this.listenTo(this.region, "question:changed", function(model) {
-          return this.view.triggerMethod("question:change", model);
+        this.listenTo(this.region, "question:changed", function(selectedQID) {
+          return this.view.triggerMethod("question:change", selectedQID);
         });
         return this.listenTo(this.region, "question:submitted", function(responseModel) {
           return this.view.triggerMethod("question:submitted", responseModel);
@@ -125,7 +125,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeQuestion = function(e) {
         var selectedQID;
         selectedQID = parseInt($(e.target).attr('id'));
-        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || this.quizModel.hasPermission('allow_skip')) {
+        if (!this.quizModel.hasPermission('single_attempt')) {
           return this.trigger("change:question", selectedQID);
         }
       };
@@ -136,7 +136,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        if (this.quizModel.hasPermission('display_answer')) {
+        if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
           this.changeClassName(responseModel);
         }
         this.updateProgressBar();

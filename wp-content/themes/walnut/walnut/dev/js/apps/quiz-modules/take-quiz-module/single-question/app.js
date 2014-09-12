@@ -85,12 +85,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         this.listenTo(layout, 'show:hint:dialog', (function(_this) {
           return function() {
-            return _this.region.trigger('show:alert:popup', 'hint');
+            return _this.region.trigger('show:alert:popup', 'hint', 'alert');
           };
         })(this));
         this.listenTo(layout, 'show:comment:dialog', (function(_this) {
           return function() {
-            return _this.region.trigger('show:alert:popup', 'comment');
+            return _this.region.trigger('show:alert:popup', 'comment', 'alert');
           };
         })(this));
         return this.listenTo(this.region, 'trigger:submit', (function(_this) {
