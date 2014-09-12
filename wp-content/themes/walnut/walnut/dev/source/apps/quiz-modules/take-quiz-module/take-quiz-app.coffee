@@ -84,7 +84,7 @@ define ['app'
 
                     setInterval =>
                         @_autosaveQuestionTime()
-                    ,2000
+                    ,30000
 
                 _autosaveQuestionTime:=>
                      if quizModel.get('quiz_type') is 'test'

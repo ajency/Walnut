@@ -79,7 +79,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           return function() {
             return _this._autosaveQuestionTime();
           };
-        })(this), 2000);
+        })(this), 30000);
       };
 
       TakeQuizController.prototype._autosaveQuestionTime = function() {
