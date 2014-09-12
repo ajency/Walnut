@@ -16,8 +16,8 @@ define ['app'
 
                         @listenTo view, "change:question", (id)-> @region.trigger "change:question", id
 
-                        @listenTo @region, "question:changed", (model)->
-                            @view.triggerMethod "question:change", model
+                        @listenTo @region, "question:changed", (selectedQID)->
+                            @view.triggerMethod "question:change", selectedQID
 
                         @listenTo @region, "question:submitted", (responseModel)->
                             @view.triggerMethod "question:submitted", responseModel

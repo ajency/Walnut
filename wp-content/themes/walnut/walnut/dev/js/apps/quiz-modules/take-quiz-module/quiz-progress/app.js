@@ -23,8 +23,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.listenTo(view, "change:question", function(id) {
           return this.region.trigger("change:question", id);
         });
-        this.listenTo(this.region, "question:changed", function(model) {
-          return this.view.triggerMethod("question:change", model);
+        this.listenTo(this.region, "question:changed", function(selectedQID) {
+          return this.view.triggerMethod("question:change", selectedQID);
         });
         return this.listenTo(this.region, "question:submitted", function(responseModel) {
           return this.view.triggerMethod("question:submitted", responseModel);

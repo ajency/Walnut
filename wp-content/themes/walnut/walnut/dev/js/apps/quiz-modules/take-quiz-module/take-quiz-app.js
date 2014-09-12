@@ -1,10 +1,11 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app', 'apps/popup-dialog/alerts'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
-    var TakeQuizLayout, questionIDs, questionModel, questionResponseModel, questionsCollection, quizModel, quizResponseSummary, timeBeforeCurrentQuestion;
+    var TakeQuizLayout, pausedQuestionTime, questionIDs, questionModel, questionResponseModel, questionsCollection, quizModel, quizResponseSummary, timeBeforeCurrentQuestion;
     quizModel = null;
     quizResponseSummary = null;
     questionsCollection = null;
@@ -12,11 +13,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
     questionModel = null;
     questionIDs = null;
     timeBeforeCurrentQuestion = null;
+    pausedQuestionTime = 0;
     View.TakeQuizController = (function(_super) {
       __extends(TakeQuizController, _super);
 
       function TakeQuizController() {
         this._saveQuizResponseModel = __bind(this._saveQuizResponseModel, this);
+        this._changeQuestion = __bind(this._changeQuestion, this);
         this._autosaveQuestionTime = __bind(this._autosaveQuestionTime, this);
         this._startTakeQuiz = __bind(this._startTakeQuiz, this);
         return TakeQuizController.__super__.constructor.apply(this, arguments);
@@ -55,6 +58,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         if (pausedQuestion) {
           questionID = pausedQuestion.get('content_piece_id');
+          pausedQuestionTime = parseInt(pausedQuestion.get('time_taken'));
+          console.log(pausedQuestionTime);
         } else {
           questionID = _.first(questionIDs);
         }
@@ -93,7 +98,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
               console.log(questionResponseModel.get('status'));
             }
             totalTime = this.timerObject.request("get:elapsed:time");
-            timeTaken = totalTime - timeBeforeCurrentQuestion;
+            timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
+            pausedQuestionTime = 0;
             data = {
               'summary_id': quizResponseSummary.id,
               'content_piece_id': questionModel.id,
@@ -108,15 +114,32 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         }
       };
 
-      TakeQuizController.prototype._changeQuestion = function(id) {
-        questionModel = questionsCollection.get(id);
+      TakeQuizController.prototype._changeQuestion = function(changeToQuestion) {
+        var endIndex, index, questions, startIndex, _i, _ref, _ref1;
+        questions = quizModel.get('content_pieces');
+        startIndex = _.indexOf(questions, questionModel.id);
+        endIndex = _.indexOf(questions, changeToQuestion);
+        this.answerModel = App.request("create:new:answer");
+        this.answerModel.set({
+          'status': 'skipped'
+        });
+        for (index = _i = startIndex, _ref = endIndex - 1; startIndex <= _ref ? _i <= _ref : _i >= _ref; index = startIndex <= _ref ? ++_i : --_i) {
+          console.log(questions[index]);
+          console.log(this.questionResponseCollection.pluck('content_piece_id'));
+          if (_ref1 = questions[index], __indexOf.call(this.questionResponseCollection.pluck('content_piece_id'), _ref1) < 0) {
+            questionModel = questionsCollection.get(questions[index]);
+            this._submitQuestion(this.answerModel);
+          }
+        }
+        questionModel = questionsCollection.get(changeToQuestion);
         return this._showSingleQuestionApp(questionModel);
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
         var data, newResponseModel, timeTaken, totalTime;
         totalTime = this.timerObject.request("get:elapsed:time");
-        timeTaken = totalTime - timeBeforeCurrentQuestion;
+        timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
+        pausedQuestionTime = 0;
         timeBeforeCurrentQuestion = totalTime;
         data = {
           'summary_id': quizResponseSummary.id,
@@ -201,15 +224,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
               var answerModel;
               questionModel = questionsCollection.get(question);
               answerModel = App.request("create:new:answer");
-              if (quizModel.hasPermission('allow_skip')) {
-                answerModel.set({
-                  'status': 'skipped'
-                });
-              } else {
-                answerModel.set({
-                  'status': 'wrong_answer'
-                });
-              }
+              answerModel.set({
+                'status': 'skipped'
+              });
               return _this._submitQuestion(answerModel);
             };
           })(this));

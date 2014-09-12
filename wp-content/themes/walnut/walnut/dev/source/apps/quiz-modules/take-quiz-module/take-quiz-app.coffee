@@ -16,6 +16,7 @@ define ['app'
             questionModel = null
             questionIDs = null
             timeBeforeCurrentQuestion = null
+            pausedQuestionTime = 0 # incase a question was paused previously. this time needs to be added to the current question
 
             class View.TakeQuizController extends RegionController
 
@@ -49,6 +50,8 @@ define ['app'
 
                     if pausedQuestion 
                         questionID = pausedQuestion.get 'content_piece_id'
+                        pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'
+                        console.log pausedQuestionTime
 
                     else
                         questionID = _.first questionIDs
@@ -96,7 +99,8 @@ define ['app'
                             console.log(questionResponseModel.get('status')) if questionResponseModel
 
                             totalTime =@timerObject.request "get:elapsed:time"
-                            timeTaken= totalTime - timeBeforeCurrentQuestion
+                            timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+                            pausedQuestionTime =0 #reset to 0 once used
 
                             data =
                                 'summary_id'     : quizResponseSummary.id
@@ -110,9 +114,27 @@ define ['app'
 
                             @_saveQuizResponseModel questionResponseModel
 
-                _changeQuestion:(id)->
+                _changeQuestion:(changeToQuestion)=>
                     #save results here of previous question / skip the question
-                    questionModel = questionsCollection.get id
+                    questions = quizModel.get 'content_pieces'
+
+                    startIndex= _.indexOf questions,questionModel.id
+                    endIndex= _.indexOf questions,changeToQuestion
+                    
+                    @answerModel = App.request "create:new:answer"
+                    @answerModel.set 'status': 'skipped'
+
+                    for index in [startIndex..(endIndex-1)]
+                        console.log questions[index]
+                        console.log @questionResponseCollection.pluck 'content_piece_id'
+
+                        if questions[index] not in @questionResponseCollection.pluck 'content_piece_id'
+
+                            questionModel = questionsCollection.get questions[index]
+                            @_submitQuestion @answerModel
+
+
+                    questionModel = questionsCollection.get changeToQuestion
                     @_showSingleQuestionApp questionModel
 
 
@@ -120,7 +142,8 @@ define ['app'
                     #save results here
 
                     totalTime =@timerObject.request "get:elapsed:time"
-                    timeTaken= totalTime - timeBeforeCurrentQuestion
+                    timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+                    pausedQuestionTime =0 #reset to 0 once used
                     timeBeforeCurrentQuestion= totalTime
 
                     data =
@@ -196,10 +219,7 @@ define ['app'
                         _.each unanswered, (question,index)=>
                             questionModel = questionsCollection.get question
                             answerModel = App.request "create:new:answer"
-                            if quizModel.hasPermission 'allow_skip'
-                                answerModel.set 'status': 'skipped'
-                            else
-                                answerModel.set 'status': 'wrong_answer'
+                            answerModel.set 'status': 'skipped'
 
                             @_submitQuestion answerModel
 
