@@ -44,11 +44,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
               case 'partially_correct':
                 return {
                   divClass: 'text-right',
-<<<<<<< HEAD
-                  text: 'Partially <br>Correct',
-=======
                   text: 'Partially<br>Correct',
->>>>>>> 45c6801dc1cfbb0cc788f94a74371fee0e3e5b38
                   icon: 'fa-check-square'
                 };
               case 'skipped':
