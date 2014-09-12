@@ -116,21 +116,22 @@ define ['app'
 
                 _changeQuestion:(changeToQuestion)=>
                     #save results here of previous question / skip the question
-                    questions = quizModel.get 'content_pieces'
 
-                    startIndex= _.indexOf questions,questionModel.id
-                    endIndex= _.indexOf questions,changeToQuestion
+                    startIndex= _.indexOf questionIDs,questionModel.id
+                    endIndex= _.indexOf questionIDs,changeToQuestion
                     
+                    return false if startIndex is endIndex
+
                     @answerModel = App.request "create:new:answer"
                     @answerModel.set 'status': 'skipped'
 
                     for index in [startIndex..(endIndex-1)]
-                        console.log questions[index]
+                        console.log questionIDs[index]
                         console.log @questionResponseCollection.pluck 'content_piece_id'
 
-                        if questions[index] not in @questionResponseCollection.pluck 'content_piece_id'
+                        if questionIDs[index] in @_getUnansweredIDs()
 
-                            questionModel = questionsCollection.get questions[index]
+                            questionModel = questionsCollection.get questionIDs[index]
                             @_submitQuestion @answerModel
 
 

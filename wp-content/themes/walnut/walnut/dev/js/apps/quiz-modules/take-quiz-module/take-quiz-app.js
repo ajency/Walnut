@@ -115,19 +115,21 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._changeQuestion = function(changeToQuestion) {
-        var endIndex, index, questions, startIndex, _i, _ref, _ref1;
-        questions = quizModel.get('content_pieces');
-        startIndex = _.indexOf(questions, questionModel.id);
-        endIndex = _.indexOf(questions, changeToQuestion);
+        var endIndex, index, startIndex, _i, _ref, _ref1;
+        startIndex = _.indexOf(questionIDs, questionModel.id);
+        endIndex = _.indexOf(questionIDs, changeToQuestion);
+        if (startIndex === endIndex) {
+          return false;
+        }
         this.answerModel = App.request("create:new:answer");
         this.answerModel.set({
           'status': 'skipped'
         });
         for (index = _i = startIndex, _ref = endIndex - 1; startIndex <= _ref ? _i <= _ref : _i >= _ref; index = startIndex <= _ref ? ++_i : --_i) {
-          console.log(questions[index]);
+          console.log(questionIDs[index]);
           console.log(this.questionResponseCollection.pluck('content_piece_id'));
-          if (_ref1 = questions[index], __indexOf.call(this.questionResponseCollection.pluck('content_piece_id'), _ref1) < 0) {
-            questionModel = questionsCollection.get(questions[index]);
+          if (_ref1 = questionIDs[index], __indexOf.call(this._getUnansweredIDs(), _ref1) >= 0) {
+            questionModel = questionsCollection.get(questionIDs[index]);
             this._submitQuestion(this.answerModel);
           }
         }
