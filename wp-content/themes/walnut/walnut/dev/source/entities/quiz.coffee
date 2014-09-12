@@ -48,7 +48,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 message_content = default_messages[message_type]
 
-                if @.hasPermission('customize_messages') and not _.isEmpty @.get 'message'
+                if not _.isEmpty @.get 'message'
                     custom_messages= @.get 'message'
                     message_content = custom_messages[message_type] if custom_messages[message_type]
 
@@ -65,7 +65,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-quizes'
 
             parse: (resp)->
-                resp.data
+                resp.data.reverse()
         
         quizRepository= new Quiz.ItemCollection
 

@@ -93,8 +93,7 @@ define ['app'
                     changeQuestion:(e)->
                         selectedQID = parseInt $(e.target).attr 'id'
 
-                        if _.contains(@questionResponseCollection.pluck('content_piece_id'),selectedQID) or @quizModel.hasPermission 'allow_skip'
-                            @trigger "change:question", selectedQID
+                        @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
                         @$el.find "#quiz-items li"
@@ -106,7 +105,7 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        @changeClassName responseModel if @quizModel.hasPermission 'display_answer'
+                        @changeClassName responseModel if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
 
                         @updateProgressBar()
 
