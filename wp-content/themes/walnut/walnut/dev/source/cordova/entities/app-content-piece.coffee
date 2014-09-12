@@ -32,7 +32,6 @@ define ['underscore', 'unserialize'], ( _) ->
 										do(row, i, author_name, meta_value)->
 											contentElementsArray = _.getJsonToClone(meta_value.layout_json)
 											contentElementsArray.done (contentElements)->
-												console.log JSON.stringify contentElements
 												excerpt_array = contentElements.excerpt
 
 												excerpt_array = _.flatten excerpt_array
@@ -45,17 +44,22 @@ define ['underscore', 'unserialize'], ( _) ->
 
 												result[i] = 
 													ID: row['ID']
+													comment: meta_value.comment
 													comment_count: row['comment_count']
 													comment_status: row['comment_status']
+													comment_enable: meta_value.comment_enable
 													content_type: meta_value.content_type
 													difficulty_level: meta_value.difficulty_level
 													duration: meta_value.duration
 													grading_params: []
 													guid: row['guid']
+													hint_enable: meta_value.hint_enable
+													hint: meta_value.hint
 													instructions: meta_value.instructions
 													last_modified_by: meta_value.last_modified_by
 													layout: contentElements.elements
 													menu_order: row['menu_order']
+													order: _.indexOf(ids, row['ID'].toString())
 													ping_status: row['ping_status']
 													pinged: row['pinged']
 													post_author: row['post_author']
@@ -79,8 +83,7 @@ define ['underscore', 'unserialize'], ( _) ->
 													question_type: meta_value.question_type
 													term_ids: meta_value.term_ids
 													to_ping: row['to_ping']
-
-
+					console.log JSON.stringify result
 					d.resolve(result)
 
 			$.when(runQuery()).done (d)->

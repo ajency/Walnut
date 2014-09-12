@@ -26,7 +26,6 @@ define(['underscore', 'unserialize'], function(_) {
                     contentElementsArray = _.getJsonToClone(meta_value.layout_json);
                     return contentElementsArray.done(function(contentElements) {
                       var excerpt, excerpt_array, taglessArray;
-                      console.log(JSON.stringify(contentElements));
                       excerpt_array = contentElements.excerpt;
                       excerpt_array = _.flatten(excerpt_array);
                       taglessArray = new Array;
@@ -37,17 +36,22 @@ define(['underscore', 'unserialize'], function(_) {
                       excerpt = _(excerpt).prune(500);
                       return result[i] = {
                         ID: row['ID'],
+                        comment: meta_value.comment,
                         comment_count: row['comment_count'],
                         comment_status: row['comment_status'],
+                        comment_enable: meta_value.comment_enable,
                         content_type: meta_value.content_type,
                         difficulty_level: meta_value.difficulty_level,
                         duration: meta_value.duration,
                         grading_params: [],
                         guid: row['guid'],
+                        hint_enable: meta_value.hint_enable,
+                        hint: meta_value.hint,
                         instructions: meta_value.instructions,
                         last_modified_by: meta_value.last_modified_by,
                         layout: contentElements.elements,
                         menu_order: row['menu_order'],
+                        order: _.indexOf(ids, row['ID'].toString()),
                         ping_status: row['ping_status'],
                         pinged: row['pinged'],
                         post_author: row['post_author'],
@@ -82,6 +86,7 @@ define(['underscore', 'unserialize'], function(_) {
             row = data.rows.item(i);
             _fn(row, i);
           }
+          console.log(JSON.stringify(result));
           return d.resolve(result);
         };
       };

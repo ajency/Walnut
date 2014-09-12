@@ -12,7 +12,11 @@ define(['underscore', 'unserialize'], function(_) {
         last_modified_by: '',
         published_by: '',
         term_ids: '',
-        instructions: ''
+        instructions: '',
+        comment_enable: '',
+        comment: '',
+        hint_enable: '',
+        hint: ''
       };
       runQuery = function() {
         return $.Deferred(function(d) {
@@ -45,7 +49,11 @@ define(['underscore', 'unserialize'], function(_) {
               meta_value.last_modified_by = content_piece_meta.last_modified_by;
               meta_value.published_by = content_piece_meta.published_by;
               meta_value.term_ids = content_piece_meta.term_ids;
-              return meta_value.instructions = content_piece_meta.instructions;
+              meta_value.instructions = content_piece_meta.instructions;
+              meta_value.comment_enable = content_piece_meta.comment_enable;
+              meta_value.comment = content_piece_meta.comment;
+              meta_value.hint_enable = content_piece_meta.hint_enable;
+              return meta_value.hint = content_piece_meta.hint;
             }
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {

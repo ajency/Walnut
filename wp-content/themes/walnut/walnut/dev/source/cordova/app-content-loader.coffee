@@ -15,6 +15,10 @@ define ['underscore', 'unserialize'], ( _) ->
 				published_by : ''
 				term_ids : ''
 				instructions: ''
+				comment_enable: ''
+				comment: ''
+				hint_enable: ''
+				hint: ''
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -50,6 +54,10 @@ define ['underscore', 'unserialize'], ( _) ->
 								meta_value.published_by = content_piece_meta.published_by
 								meta_value.term_ids = content_piece_meta.term_ids
 								meta_value.instructions = content_piece_meta.instructions
+								meta_value.comment_enable = content_piece_meta.comment_enable
+								meta_value.comment = content_piece_meta.comment
+								meta_value.hint_enable = content_piece_meta.hint_enable
+								meta_value.hint = content_piece_meta.hint
 								
 
 					d.resolve(meta_value)
