@@ -34,7 +34,7 @@ define(['underscore', 'unserialize'], function(_) {
                       });
                       excerpt = taglessArray.join(' | ');
                       excerpt = _(excerpt).prune(500);
-                      result[i] = {
+                      return result[i] = {
                         ID: row['ID'],
                         comment: meta_value.comment,
                         comment_count: row['comment_count'],
@@ -76,7 +76,6 @@ define(['underscore', 'unserialize'], function(_) {
                         term_ids: meta_value.term_ids,
                         to_ping: row['to_ping']
                       };
-                      return console.log(JSON.stringify(result[i]));
                     });
                   })(row, i, author_name, meta_value);
                 });
