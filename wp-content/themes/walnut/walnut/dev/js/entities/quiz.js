@@ -89,7 +89,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemCollection.prototype.parse = function(resp) {
-        return resp.data;
+        return resp.data.reverse();
       };
 
       return ItemCollection;

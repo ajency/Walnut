@@ -30,9 +30,14 @@ define ['app'
                                             <i class="fa fa-lightbulb-o"></i> Hint
                                         </button>
                                         {{/show_hint}}
-                                        <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
-                                            Skip <i class="fa fa-step-forward"></i>
-                                        </button>
+                                        {{#show_skip}}
+                                            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
+                                                Skip <i class="fa fa-step-forward"></i>
+                                            </button>
+                                        {{/show_skip}}
+                                        {{#show_skip_helper_text}}
+                                            <div><i class="small">(questions once skipped cannot be answered later)</i></div>
+                                        {{/show_skip_helper_text}}
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>                                
@@ -71,6 +76,8 @@ define ['app'
                         responseModel = Marionette.getOption @, 'questionResponseModel'
 
                         display_mode = Marionette.getOption @, 'display_mode'
+                        
+                        data.show_skip = true
 
                         if display_mode isnt 'replay'
                             
@@ -81,6 +88,9 @@ define ['app'
                             if @quizModel.hasPermission('allow_hint') and _.trim data.hint
                                 data.show_hint =true
 
+                            if @quizModel.hasPermission 'single_attempt'
+                                data.show_skip_helper_text=true
+
                             if responseModel
 
                                 if responseModel.get('status') isnt 'skipped'
@@ -88,6 +98,7 @@ define ['app'
 
                                 if @quizModel.hasPermission 'single_attempt'
                                     data.allow_submit_answer = false
+                                    data.show_skip = false
 
                                 if @quizModel.hasPermission 'allow_resubmit'
                                     data.allow_submit_answer = true
@@ -95,6 +106,11 @@ define ['app'
                                 if responseModel.get('status') is 'paused'
                                     data.allow_submit_answer = true
                                     
+                                if responseModel.get('status') not in ['skipped','paused']
+                                    data.show_skip = false
+
+
+
 
                             data.allow_skip = false if not data.allow_submit_answer
 

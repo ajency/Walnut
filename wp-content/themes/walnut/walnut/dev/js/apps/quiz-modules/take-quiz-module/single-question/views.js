@@ -12,7 +12,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionLayout.prototype.template = '<div id="content-board" class="quizContent no-margin"></div> <div class="well m-b-10 p-t-10 p-b-10 h-center quizActions"> <span class="pull-left" id="first_question"></span> <button type="button" id="previous-question" class="btn btn-info pull-left"> <i class="fa fa-backward"></i> Previous </button> {{#allow_submit_answer}} <button type="button" id="submit-question" class="btn btn-success pull-right"> Submit <i class="fa fa-forward"></i> </button> {{/allow_submit_answer}} <span class="pull-right" id="last_question"></span> <button type="button" id="next-question" class="none btn btn-info pull-right"> Next <i class="fa fa-forward"></i> </button> <div class="text-center"> {{#show_hint}} <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10"> <i class="fa fa-lightbulb-o"></i> Hint </button> {{/show_hint}} <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small"> Skip <i class="fa fa-step-forward"></i> </button> </div> <div class="clearfix"></div> </div> <div class="tiles grey text-grey b-grey b-b m-t-30 qstnInfo"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border"> <p class="small-text bold inline text-grey"><span class="fa fa-question"></span> Question Info </p> </div> <div class="grid-body no-border"> <p class="bold inline text-grey">{{&instructions}}</p> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class=""></p> </div> </div> </div>';
+      SingleQuestionLayout.prototype.template = '<div id="content-board" class="quizContent no-margin"></div> <div class="well m-b-10 p-t-10 p-b-10 h-center quizActions"> <span class="pull-left" id="first_question"></span> <button type="button" id="previous-question" class="btn btn-info pull-left"> <i class="fa fa-backward"></i> Previous </button> {{#allow_submit_answer}} <button type="button" id="submit-question" class="btn btn-success pull-right"> Submit <i class="fa fa-forward"></i> </button> {{/allow_submit_answer}} <span class="pull-right" id="last_question"></span> <button type="button" id="next-question" class="none btn btn-info pull-right"> Next <i class="fa fa-forward"></i> </button> <div class="text-center"> {{#show_hint}} <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10"> <i class="fa fa-lightbulb-o"></i> Hint </button> {{/show_hint}} {{#show_skip}} <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small"> Skip <i class="fa fa-step-forward"></i> </button> {{/show_skip}} {{#show_skip_helper_text}} <div><i class="small">(questions once skipped cannot be answered later)</i></div> {{/show_skip_helper_text}} </div> <div class="clearfix"></div> </div> <div class="tiles grey text-grey b-grey b-b m-t-30 qstnInfo"> <div class="grid simple m-b-0 transparent"> <div class="grid-title no-border"> <p class="small-text bold inline text-grey"><span class="fa fa-question"></span> Question Info </p> </div> <div class="grid-body no-border"> <p class="bold inline text-grey">{{&instructions}}</p> </div> <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> <p class=""></p> </div> </div> </div>';
 
       SingleQuestionLayout.prototype.regions = {
         contentBoardRegion: '#content-board'
@@ -37,9 +37,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
-        var display_mode, responseModel;
+        var display_mode, responseModel, _ref;
         responseModel = Marionette.getOption(this, 'questionResponseModel');
         display_mode = Marionette.getOption(this, 'display_mode');
+        data.show_skip = true;
         if (display_mode !== 'replay') {
           data.allow_submit_answer = true;
           if (this.quizModel.hasPermission('allow_skip')) {
@@ -48,18 +49,25 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
             data.show_hint = true;
           }
+          if (this.quizModel.hasPermission('single_attempt')) {
+            data.show_skip_helper_text = true;
+          }
           if (responseModel) {
             if (responseModel.get('status') !== 'skipped') {
               data.allow_submit_answer = false;
             }
             if (this.quizModel.hasPermission('single_attempt')) {
               data.allow_submit_answer = false;
+              data.show_skip = false;
             }
             if (this.quizModel.hasPermission('allow_resubmit')) {
               data.allow_submit_answer = true;
             }
             if (responseModel.get('status') === 'paused') {
               data.allow_submit_answer = true;
+            }
+            if ((_ref = responseModel.get('status')) !== 'skipped' && _ref !== 'paused') {
+              data.show_skip = false;
             }
           }
           if (!data.allow_submit_answer) {

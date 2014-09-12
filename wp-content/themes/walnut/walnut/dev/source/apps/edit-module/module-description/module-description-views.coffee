@@ -46,7 +46,7 @@ define ['app'
 
                 data.type = _.titleize _.humanize data.type
 
-                if data.isQuiz
+                if data.isQuiz and data.permissions
                     #display value is allow_skip which is opposite of single_attempt so the value is negated and shown
                     data.permissions['single_attempt'] = ! data.permissions['single_attempt'] 
 
@@ -54,6 +54,9 @@ define ['app'
 
                 data.textBookSelected = ->
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
+
+                data.defaultRandomize = =>
+                    return 'checked="checked"' if data.isQuiz and @model.isNew()
 
                 data
 
@@ -71,7 +74,7 @@ define ['app'
                     when 'resubmit'         
                         @unSelectCheckbox 'attempt'
                         @unSelectCheckbox 'answer'
-                        
+
                     when 'answer'           
                         @unSelectCheckbox 'resubmit'
                         @unSelectCheckbox 'attempt'

@@ -125,9 +125,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeQuestion = function(e) {
         var selectedQID;
         selectedQID = parseInt($(e.target).attr('id'));
-        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || this.quizModel.hasPermission('allow_skip')) {
-          return this.trigger("change:question", selectedQID);
-        }
+        return this.trigger("change:question", selectedQID);
       };
 
       QuizProgressView.prototype.onQuestionChange = function(model) {
@@ -136,7 +134,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        if (this.quizModel.hasPermission('display_answer')) {
+        if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
           this.changeClassName(responseModel);
         }
         this.updateProgressBar();

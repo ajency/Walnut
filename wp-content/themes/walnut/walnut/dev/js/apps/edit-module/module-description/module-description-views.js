@@ -53,7 +53,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           data.isQuiz = true;
         }
         data.type = _.titleize(_.humanize(data.type));
-        if (data.isQuiz) {
+        if (data.isQuiz && data.permissions) {
           data.permissions['single_attempt'] = !data.permissions['single_attempt'];
         }
         data.textBookSelected = function() {
@@ -61,6 +61,13 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
             return 'selected';
           }
         };
+        data.defaultRandomize = (function(_this) {
+          return function() {
+            if (data.isQuiz && _this.model.isNew()) {
+              return 'checked="checked"';
+            }
+          };
+        })(this);
         return data;
       };
 
