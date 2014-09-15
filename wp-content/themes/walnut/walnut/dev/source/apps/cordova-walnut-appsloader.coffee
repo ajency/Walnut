@@ -4,6 +4,7 @@ define [
     'apps/left-nav/leftnavapp'
     # 'apps/textbooks/app'
     #'apps/breadcrumb/app'
+    'apps/content-board/controller'
     'apps/content-modules/content-modules-app'
     'apps/students-dashboard/teachers-dashboard-app' 
     'apps/quiz-modules/quiz-module-app' 
