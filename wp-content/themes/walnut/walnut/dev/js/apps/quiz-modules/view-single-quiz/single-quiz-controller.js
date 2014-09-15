@@ -54,7 +54,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               }
               textbook_termIDs = _.flatten(quizModel.get('term_ids'));
               _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
-              if (!quizResponseSummary.isNew()) {
+              if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
                 quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               }
               if (!questionsCollection) {

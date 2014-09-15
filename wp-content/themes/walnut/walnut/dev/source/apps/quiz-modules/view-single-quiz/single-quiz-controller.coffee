@@ -43,7 +43,7 @@ define ['app'
                         #the questions must be displayed in the previously taken order
                         #this order is saved on first time taking of quiz
                         #questions wont be randomized again
-                        if not quizResponseSummary.isNew()
+                        if not _.isEmpty quizResponseSummary.get 'questions_order'
                             quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
                         if not questionsCollection
