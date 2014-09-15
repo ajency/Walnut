@@ -75,15 +75,10 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         var permName;
         permName = $(e.target).closest('.checkbox.perm').find('input').attr('id');
         switch (permName) {
-          case 'attempt':
-            this.unSelectCheckbox('resubmit');
-            return this.unSelectCheckbox('answer');
           case 'resubmit':
-            this.unSelectCheckbox('attempt');
             return this.unSelectCheckbox('answer');
           case 'answer':
-            this.unSelectCheckbox('resubmit');
-            return this.unSelectCheckbox('attempt');
+            return this.unSelectCheckbox('resubmit');
         }
       };
 
