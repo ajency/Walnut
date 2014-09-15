@@ -68,3 +68,41 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getTotalMarksScoredAndTotalTimeTaken transaction completed'
 			.fail _.failureHandler
+
+
+		getQuizQuestionResponseBySummaryID : (content_piece_id)->
+
+			runQuery = ->
+
+				$.Deferred (d)->
+
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
+							WHERE content_piece_id = ?", [content_piece_id] 
+							, onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess =(d)->
+
+				(tx,data)->
+
+					result = []
+					for i in [0..data.rows.length-1] by 1
+						row = data.rows.item(i)
+						do (row, i)->
+							totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id)
+							totalMarksScoredAndTotalTimeTaken.done (value)->
+
+								result[i] = 
+									content_piece_id : content_piece_id
+									marks_scored : value.total_marks_scored
+									qr_id: row['qr_id']
+									question_response : _.unserialize(row['question_response'])
+									status : row['status']
+									summary_id :row['summary_id']
+									time_taken : value.total_time_taken
+
+					d.resolve(result)
+
+			$.when(runQuery()).done ->
+				console.log 'getQuizQuestionResponseBySummaryID transaction completed'
+			.fail _.failureHandler

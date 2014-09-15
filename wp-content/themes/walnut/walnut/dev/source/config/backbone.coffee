@@ -57,8 +57,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz-question-response'
 				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
 				data.done (d)->
-					console.log 'quiz-question response'
-					console.log JSON.stringify(d)
 					collection.set d
 
 			if collection_name is 'content-piece'
@@ -75,6 +73,7 @@ define ["backbone"], (Backbone) ->
 				data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division)
 				data.done (d)->
 					collection.set d
+
 
 			if collection_name is 'textbookName'
 				data = _.getTextBookNamesByTermIDs(opts.term_ids)
@@ -213,6 +212,8 @@ define ["backbone"], (Backbone) ->
 			else
 				#Changes needed for offline data retrieval
 				modelname = model.name
+				console.log "model"
+				console.log JSON.stringify model
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
@@ -228,8 +229,20 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'quiz'
 					data = _.getQuizById(model.get('id'))
 					data.done (d)->
+						model.set d
+
+				if modelname is 'quiz-response-summary'
+					data = _.getQuizResponseByCollectionIdAndUserID(model.get('collection_id'))
+					data.done (d)->
 						console.log JSON.stringify d
 						model.set d
+
+				if modelname is 'quiz-question-response'
+					data = _.getQuizQuestionResponseByContentPieceID(model.get('content_piece_id'))
+					data.done (d)->
+						console.log JSON.stringify d
+						model.set d
+
 
 				if modelname is 'content-group'
 					data = _.getContentGroupById(model.get('id'))

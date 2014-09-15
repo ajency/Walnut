@@ -51,8 +51,6 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'quiz-question-response') {
         data = _.getQuizQuestionResponseBySummaryID(opts.summary_id);
         data.done(function(d) {
-          console.log('quiz-question response');
-          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
@@ -146,6 +144,8 @@ define(["backbone"], function(Backbone) {
         xhr = options.xhr = Backbone.ajax(_.extend(params, options));
       } else {
         modelname = model.name;
+        console.log("model");
+        console.log(JSON.stringify(model));
         console.log('Model name: ' + modelname);
         if (modelname === 'division') {
           data = _.fetchSingleDivision(model.get('id'));
@@ -161,6 +161,19 @@ define(["backbone"], function(Backbone) {
         }
         if (modelname === 'quiz') {
           data = _.getQuizById(model.get('id'));
+          data.done(function(d) {
+            return model.set(d);
+          });
+        }
+        if (modelname === 'quiz-response-summary') {
+          data = _.getQuizResponseByCollectionIdAndUserID(model.get('collection_id'));
+          data.done(function(d) {
+            console.log(JSON.stringify(d));
+            return model.set(d);
+          });
+        }
+        if (modelname === 'quiz-question-response') {
+          data = _.getQuizQuestionResponseByContentPieceID(model.get('content_piece_id'));
           data.done(function(d) {
             console.log(JSON.stringify(d));
             return model.set(d);
