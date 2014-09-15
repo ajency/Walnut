@@ -67,17 +67,9 @@ define ['app'
                 .attr 'id'
 
                 switch permName
-                    when 'attempt'          
-                        @unSelectCheckbox 'resubmit'
-                        @unSelectCheckbox 'answer'
+                    when 'resubmit' then @unSelectCheckbox 'answer'
 
-                    when 'resubmit'         
-                        @unSelectCheckbox 'attempt'
-                        @unSelectCheckbox 'answer'
-
-                    when 'answer'           
-                        @unSelectCheckbox 'resubmit'
-                        @unSelectCheckbox 'attempt'
+                    when 'answer' then @unSelectCheckbox 'resubmit'
 
             unSelectCheckbox:(checkboxID)->
                 @$el.find 'input#'+checkboxID
