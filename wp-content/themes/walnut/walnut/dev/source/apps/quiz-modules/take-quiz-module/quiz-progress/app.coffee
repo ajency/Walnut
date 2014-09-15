@@ -62,6 +62,7 @@ define ['app'
 
                     mixinTemplateHelpers:(data)->
                         data.totalQuestions = @collection.length
+                        data.showSkipped = true if @quizModel.hasPermission('single_attempt')
                         data
 
                     initialize:->
@@ -105,11 +106,17 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        @changeClassName responseModel if @quizModel.hasPermission 'single_attempt'
-
                         @updateProgressBar()
 
                         @updateSkippedCount()
+
+                        if responseModel.get('status') is 'skipped' and not @quizModel.hasPermission('single_attempt')
+                            return false
+
+                        else if @quizModel.hasPermission 'display_answer'
+                            @changeClassName responseModel
+
+                        
 
                     changeClassName:(responseModel)->
                         

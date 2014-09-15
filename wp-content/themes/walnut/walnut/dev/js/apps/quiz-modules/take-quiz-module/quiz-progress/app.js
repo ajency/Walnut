@@ -89,6 +89,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
         data.totalQuestions = this.collection.length;
+        if (this.quizModel.hasPermission('single_attempt')) {
+          data.showSkipped = true;
+        }
         return data;
       };
 
@@ -136,11 +139,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        if (this.quizModel.hasPermission('single_attempt')) {
-          this.changeClassName(responseModel);
-        }
         this.updateProgressBar();
-        return this.updateSkippedCount();
+        this.updateSkippedCount();
+        if (responseModel.get('status') === 'skipped' && !this.quizModel.hasPermission('single_attempt')) {
+          return false;
+        } else if (this.quizModel.hasPermission('display_answer')) {
+          return this.changeClassName(responseModel);
+        }
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {
