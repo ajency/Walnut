@@ -4,6 +4,7 @@ define [
 	'entities/menu'
 	'entities/textbooks'
 	'entities/chapters'
+	'entities/answer'
 	# 'entities/schools'
 	# 'entities/breadcrumb'
 	'entities/content-group'

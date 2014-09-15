@@ -57,6 +57,9 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz-question-response'
 				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
 				data.done (d)->
+					console.log('quiz-question-response')
+					console.log JSON.stringify(d)
+					
 					collection.set d
 
 			if collection_name is 'content-piece'

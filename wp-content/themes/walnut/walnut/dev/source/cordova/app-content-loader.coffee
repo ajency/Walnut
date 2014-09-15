@@ -70,7 +70,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		# get all the elements for the layout from its meta id
 		getJsonToClone : (elements)->
-			console.log JSON.stringify elements
 
 			runFunc = ->
 				$.Deferred (d)->

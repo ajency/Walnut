@@ -14,8 +14,12 @@ define ['app'
                         {@model, @quizModel, @questionResponseCollection,@display_mode} = opts
 
                         @questionResponseModel= @questionResponseCollection.findWhere 'content_piece_id' : @model.id
+
+                        console.log JSON.stringify @questionResponseModel
                         
                         displayAnswer = @quizModel.hasPermission 'display_answer'
+
+                        console.log JSON.stringify @displayAnswer
 
                         @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
                         @answerWreqrObject.options = 'displayAnswer': displayAnswer

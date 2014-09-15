@@ -69,7 +69,6 @@ define(['underscore', 'unserialize'], function(_) {
     },
     getJsonToClone: function(elements) {
       var runFunc;
-      console.log(JSON.stringify(elements));
       runFunc = function() {
         return $.Deferred(function(d) {
           var content, total;
