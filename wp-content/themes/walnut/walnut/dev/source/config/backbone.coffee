@@ -241,7 +241,7 @@ define ["backbone"], (Backbone) ->
 						model.set d
 
 				if modelname is 'quiz-question-response'
-					data = _.getQuizQuestionResponseByContentPieceID(model.get('content_piece_id'))
+					data = _.getQuestionResponseBySummaryID(model.get('summary_id'))
 					data.done (d)->
 						console.log JSON.stringify d
 						model.set d

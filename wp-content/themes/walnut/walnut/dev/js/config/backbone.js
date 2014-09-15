@@ -175,7 +175,7 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'quiz-question-response') {
-          data = _.getQuizQuestionResponseByContentPieceID(model.get('content_piece_id'));
+          data = _.getQuestionResponseBySummaryID(model.get('summary_id'));
           data.done(function(d) {
             console.log(JSON.stringify(d));
             return model.set(d);

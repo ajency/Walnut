@@ -60,12 +60,12 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getTotalMarksScoredAndTotalTimeTaken transaction completed');
       }).fail(_.failureHandler);
     },
-    getQuizQuestionResponseBySummaryID: function(content_piece_id) {
+    getQuestionResponseBySummaryID: function(summary_id) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE content_piece_id = ?", [content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -78,12 +78,12 @@ define(['underscore', 'unserialize'], function(_) {
             totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id);
             return totalMarksScoredAndTotalTimeTaken.done(function(value) {
               return result[i] = {
-                content_piece_id: content_piece_id,
+                content_piece_id: row['content_piece_id'],
                 marks_scored: value.total_marks_scored,
                 qr_id: row['qr_id'],
                 question_response: _.unserialize(row['question_response']),
                 status: row['status'],
-                summary_id: row['summary_id'],
+                summary_id: summary_id,
                 time_taken: value.total_time_taken
               };
             });
@@ -96,7 +96,7 @@ define(['underscore', 'unserialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getQuizQuestionResponseBySummaryID transaction completed');
+        return console.log('getQuestionResponseBySummaryID transaction completed');
       }).fail(_.failureHandler);
     }
   });

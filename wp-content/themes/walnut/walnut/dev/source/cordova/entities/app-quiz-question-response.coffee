@@ -70,7 +70,8 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
-		getQuizQuestionResponseBySummaryID : (content_piece_id)->
+
+		getQuestionResponseBySummaryID : (summary_id)->
 
 			runQuery = ->
 
@@ -78,7 +79,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE content_piece_id = ?", [content_piece_id] 
+							WHERE summary_id = ?", [summary_id] 
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->
@@ -93,16 +94,16 @@ define ['underscore', 'unserialize'], ( _) ->
 							totalMarksScoredAndTotalTimeTaken.done (value)->
 
 								result[i] = 
-									content_piece_id : content_piece_id
+									content_piece_id : row['content_piece_id']
 									marks_scored : value.total_marks_scored
 									qr_id: row['qr_id']
 									question_response : _.unserialize(row['question_response'])
 									status : row['status']
-									summary_id :row['summary_id']
+									summary_id :summary_id
 									time_taken : value.total_time_taken
 
 					d.resolve(result)
 
 			$.when(runQuery()).done ->
-				console.log 'getQuizQuestionResponseBySummaryID transaction completed'
+				console.log 'getQuestionResponseBySummaryID transaction completed'
 			.fail _.failureHandler
