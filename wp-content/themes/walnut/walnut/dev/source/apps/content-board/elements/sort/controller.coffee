@@ -65,9 +65,10 @@ define ['app'
                 @listenTo @view, "submit:answer", @_submitAnswer
 
                 
-                @listenTo @view, "show",=>
+                @listenTo @view, "show:completed",=>
                     if @answerModel.get('status') isnt 'not_attempted'
-                        @_submitAnswer() 
+                        @_submitAnswer()
+
 
                 # show the view
                 @layout.elementRegion.show @view
