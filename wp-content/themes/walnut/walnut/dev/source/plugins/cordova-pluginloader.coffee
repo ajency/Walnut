@@ -26,6 +26,8 @@ define [
 	'jquery_listnav'
 	'panzer'
 	'panzerlist'
+	'kinetic'
+	'kineticresize'
 	'timerplugin'
 	'countdowntimer'
 	'detect'

@@ -49,6 +49,8 @@ require.config
 		timerplugin: 'plugins/jquery.countdown_plugin.min' #needed for jquerytimer to work
 		countdowntimer: 'plugins/jquery.countdown.min'
 		bootbox : 'plugins/bootbox.min'
+		kinetic: 'plugins/kinetic'
+		kineticresize: 'plugins/kinetic.plugin.resize'
 		unserialize         : 'plugins/unserialize'
 		serialize           : 'plugins/serialize'
 		fastclick           : 'plugins/fastclick'
@@ -84,6 +86,7 @@ require.config
 		datepicker: ['jquery', 'bootstrap']
 		panzer: ['jquery']
 		panzerlist : ['jquery']
+		kineticresize: ['kinetic']
 		timerplugin: ['jquery']
 		countdowntimer: ['jquery','timerplugin']
 		bootbox : ['jquery','bootstrap']
