@@ -26,21 +26,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
-        if (quizResponseSummary.isNew() && quizModel.get('quiz_type') === 'test') {
-          quizResponseSummary.save({
-            'status': 'started'
-          });
-        }
-        if (quizModel.get('quiz_type') === 'practice') {
-          quizResponseSummary.save({
-            'attempts': quizModel.get('attempts') + 1
-          });
-        }
         return this._startTakeQuiz();
       };
 
       TakeQuizController.prototype._startTakeQuiz = function() {
-        var layout, pausedQuestion, questionID;
+        var layout, pausedQuestion, questionID, unanswered;
         if (!this.questionResponseCollection) {
           this.questionResponseCollection = App.request("create:empty:question:response:collection");
           timeBeforeCurrentQuestion = 0;
@@ -58,9 +48,26 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         if (pausedQuestion) {
           questionID = pausedQuestion.get('content_piece_id');
           pausedQuestionTime = parseInt(pausedQuestion.get('time_taken'));
-          console.log(pausedQuestionTime);
         } else {
-          questionID = _.first(questionIDs);
+          unanswered = this._getUnansweredIDs();
+          if (!_.isEmpty(unanswered)) {
+            questionID = _.first(this._getUnansweredIDs());
+          } else {
+            if (!questionID) {
+              questionID = _.first(questionIDs);
+            }
+          }
+        }
+        if (quizResponseSummary.isNew() && quizModel.get('quiz_type') === 'test') {
+          quizResponseSummary.save({
+            'status': 'started',
+            'questions_order': questionIDs
+          });
+        }
+        if (quizModel.get('quiz_type') === 'practice') {
+          quizResponseSummary.save({
+            'attempts': quizModel.get('attempts') + 1
+          });
         }
         questionModel = questionsCollection.get(questionID);
         this.layout = layout = new TakeQuizLayout;

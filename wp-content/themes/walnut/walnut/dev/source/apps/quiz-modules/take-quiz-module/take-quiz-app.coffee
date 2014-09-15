@@ -24,13 +24,6 @@ define ['app'
                     {quizModel,quizResponseSummary,questionsCollection,
                     @questionResponseCollection,@textbookNames,@display_mode} = opts
 
-                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
-
-                        quizResponseSummary.save 'status' : 'started'
-
-                    if quizModel.get('quiz_type') is 'practice'
-                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
-
                     @_startTakeQuiz()
                 
                 _startTakeQuiz:=>
@@ -50,11 +43,25 @@ define ['app'
 
                     if pausedQuestion 
                         questionID = pausedQuestion.get 'content_piece_id'
-                        pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'
-                        console.log pausedQuestionTime
+                        pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'     
 
                     else
-                        questionID = _.first questionIDs
+                        unanswered = @_getUnansweredIDs()
+
+                        if not _.isEmpty unanswered
+                            questionID =_.first @_getUnansweredIDs()
+
+                        else
+                            questionID = _.first(questionIDs) if not questionID
+
+                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
+
+                        quizResponseSummary.save 
+                            'status' : 'started'
+                            'questions_order': questionIDs
+
+                    if quizModel.get('quiz_type') is 'practice'
+                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
 
                     questionModel = questionsCollection.get questionID
                     @layout = layout = new TakeQuizLayout

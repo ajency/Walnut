@@ -36,9 +36,15 @@ define ['app'
                         if quizResponseSummary.get('status') is 'completed'
                             display_mode = 'replay'
 
-
                         textbook_termIDs = _.flatten quizModel.get 'term_ids'
                         @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+
+                        #if quiz has already been started or taken before, 
+                        #the questions must be displayed in the previously taken order
+                        #this order is saved on first time taking of quiz
+                        #questions wont be randomized again
+                        if not quizResponseSummary.isNew()
+                            quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
                         if not questionsCollection
                             questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
@@ -54,10 +60,9 @@ define ['app'
                                     questionsCollection.each (m)->
                                         m.setMarks multiplicationFactor
 
-                                if quizModel.get('permissions').randomize
+                                if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
                                     questionsCollection.each (e)-> e.unset 'order'
                                     questionsCollection.reset questionsCollection.shuffle()
-
                                     #change the order in the main model also
                                     quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
                         

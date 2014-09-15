@@ -54,6 +54,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               }
               textbook_termIDs = _.flatten(quizModel.get('term_ids'));
               _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+              if (!quizResponseSummary.isNew()) {
+                quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
+              }
               if (!questionsCollection) {
                 questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
                 App.execute("when:fetched", questionsCollection, function() {
@@ -68,10 +71,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                     multiplicationFactor = quizModel.get('marks') / actualMarks;
                   }
                   if (multiplicationFactor) {
-                    return questionsCollection.each(function(m) {
+                    questionsCollection.each(function(m) {
                       return m.setMarks(multiplicationFactor);
                     });
-                  } else if (quizModel.get('permissions').randomize) {
+                  }
+                  if (quizResponseSummary.isNew() && quizModel.get('permissions').randomize) {
                     questionsCollection.each(function(e) {
                       return e.unset('order');
                     });

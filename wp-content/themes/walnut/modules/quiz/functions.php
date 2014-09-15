@@ -288,6 +288,7 @@ function read_quiz_response_summary($args){
     unset($quiz_response_summary->quiz_meta);
 
     $quiz_response_summary->status = $quiz_meta['status'];
+    $quiz_response_summary->questions_order = $quiz_meta['questions_order'];
 
     $additional_details_qry = $wpdb->prepare(
         "SELECT 
@@ -332,8 +333,10 @@ function write_quiz_response_summary($args){
 
     if($quiz_type == 'practice')
         $quiz_meta['attempts']= $args['attempts'];
-    else
+    else{
         $quiz_meta['status'] = $args['status'];
+        $quiz_meta['questions_order'] = array_map('intval', $args['questions_order']);
+    }
 
     if(!isset($args['summary_id'])){
         $summary_id = 'Q'.$args['collection_id'].'S'.$args['student_id'];
