@@ -81,6 +81,8 @@ define ['app'
                             midRange: 15
                             links : "blank"
 
+                        @$el.find('.customButtons').remove() if @collection.length <10
+
                         currentQuestion = Marionette.getOption @,'currentQuestion'
                         
                         @questionResponseCollection.each (response)=> @changeClassName(response)  if @quizModel.hasPermission 'display_answer'

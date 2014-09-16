@@ -112,6 +112,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           midRange: 15,
           links: "blank"
         });
+        if (this.collection.length < 10) {
+          this.$el.find('.customButtons').remove();
+        }
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
         this.questionResponseCollection.each((function(_this) {
           return function(response) {
