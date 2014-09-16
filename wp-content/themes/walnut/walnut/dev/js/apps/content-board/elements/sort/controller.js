@@ -68,7 +68,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         this.view = this._getSortView(this.optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        this.listenTo(this.view, "show", (function(_this) {
+        this.listenTo(this.view, "show:completed", (function(_this) {
           return function() {
             if (_this.answerModel.get('status') !== 'not_attempted') {
               return _this._submitAnswer();

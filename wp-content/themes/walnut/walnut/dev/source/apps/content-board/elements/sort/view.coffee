@@ -62,6 +62,10 @@ define ['app'], (App)->
                 @$el.closest('.preview').find('#submit-answer-button').on 'click', =>
                     @trigger "submit:answer" if displayAnswer
 
+                _.delay =>
+                    @trigger 'show:completed'
+                ,200
+
 
 
             # on change of bg_color property
