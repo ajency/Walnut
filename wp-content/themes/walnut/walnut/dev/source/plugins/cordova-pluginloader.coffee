@@ -24,6 +24,8 @@ define [
 	'select2'
 	'datepicker'
 	'jquery_listnav'
+	'checkbox'
+	'screwbuttons'
 	'panzer'
 	'panzerlist'
 	'kinetic'

@@ -115,7 +115,7 @@ define(['underscore'], function(_) {
         return $.Deferred(function(d) {
           return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
             return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/audio-web", {
-              create: true,
+              create: false,
               exclusive: false
             }, function(fileEntry) {
               console.log('audios-web directory path: ' + fileEntry.toURL());

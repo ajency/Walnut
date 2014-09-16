@@ -1,6 +1,6 @@
 require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
-  baseUrl: '/dev/js',
+  baseUrl: './wp-content/themes/walnut/walnut/dev/js',
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',
@@ -17,20 +17,16 @@ require.config({
     slimroll: 'plugins/jquery.slimscroll.min',
     breakpoints: 'plugins/breakpoints',
     mustache: 'plugins/mustache',
-    core: 'plugins/core',
     componentloader: 'components/component-loader',
     mixitup: 'plugins/jquery.mixitup.min',
     spin: 'plugins/spin',
     jqueryspin: 'plugins/jquery.spin',
     tablesorter: 'plugins/jquery.tablesorter',
     tablesorter_pager: 'plugins/jquery.tablesorter.pager',
-    unveil: 'plugins/jquery.unveil.min',
     detect: 'plugins/detect',
     moment: 'plugins/moment.min',
     select2: 'plugins/select2.min',
     datepicker: 'plugins/bootstrap-datepicker',
-    timepicker: 'plugins/bootstrap-timepicker.min',
-    timecircles: 'plugins/TimeCircles',
     jquery_listnav: 'plugins/jquery-listnav',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
     bridget: 'plugins/jquery.bridget',
@@ -41,16 +37,12 @@ require.config({
     holder: 'plugins/holder',
     panzer: 'plugins/panzer',
     panzerlist: 'plugins/panzerlist',
-    mmenu: 'plugins/jquery.mmenu.min.all',
     timerplugin: 'plugins/jquery.countdown_plugin.min',
     countdowntimer: 'plugins/jquery.countdown.min',
     spinedit: 'plugins/bootstrap-spinedit',
-    unserialize: 'plugins/unserialize',
-    serialize: 'plugins/serialize',
-    csvparse: 'plugins/jquery.parse',
-    json2csvparse: 'plugins/json2csv',
-    jszip: 'plugins/jszip',
-    fastclick: 'plugins/fastclick'
+    resizablecolumns: 'plugins/jquery.resizableColumns.min',
+    bootbox: 'plugins/bootbox.min',
+    jPages: 'plugins/jPages.min'
   },
   shim: {
     underscore: {
@@ -71,9 +63,7 @@ require.config({
     sidr: ['jquery'],
     tablesorter: ['jquery'],
     tablesorter_pager: ['jquery', 'tablesorter'],
-    unveil: ['jquery'],
     slimroll: ['jquery'],
-    core: ['sidr', 'jquery'],
     breakpoints: ['jquery'],
     mixitup: ['jquery'],
     jqueryspin: ['spin'],
@@ -82,8 +72,6 @@ require.config({
     moment: ['jquery'],
     select2: ['jquery', 'bootstrap'],
     datepicker: ['jquery', 'bootstrap'],
-    timepicker: ['jquery', 'bootstrap'],
-    timecircles: ['jquery'],
     jquery_listnav: ['jquery'],
     screwbuttons: ['jquery'],
     checkbox: ['bootstrap'],
@@ -92,16 +80,16 @@ require.config({
     isotope: ['jquery', 'bridget'],
     panzer: ['jquery'],
     panzerlist: ['jquery'],
-    mmenu: ['jquery'],
     timerplugin: ['jquery'],
     countdowntimer: ['jquery', 'timerplugin'],
     spinedit: ['jquery', 'bootstrap'],
-    csvparse: ['jquery'],
-    json2csvparse: ['jquery'],
+    resizablecolumns: ['jquery'],
+    bootbox: ['jquery', 'bootstrap'],
+    jPages: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
 
-require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'cordova/cordova-apploader', 'app', 'controllers/authenticationcontroller', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, cordova, App) {
+require(['plugins/walnut-pluginloader', 'config/walnut-configloader', 'app', 'apps/walnut-appsloader', 'entities/walnut-entities-loader', 'componentloader'], function(plugins, configs, App) {
   return App.start();
 });

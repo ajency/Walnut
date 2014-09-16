@@ -81,8 +81,17 @@ define(['underscore', 'unserialize'], function(_) {
             return _.each(elements, function(element) {
               var insideElement, metaData;
               total++;
-              if (element.element === 'Row' || element.element === 'StudentQuestion') {
+              if (element.element === 'Row') {
                 insideElement = _.getRowElements(element);
+                return insideElement.done(function(columnElement) {
+                  content.excerpt.push(columnElement.excerpt);
+                  total--;
+                  if (!total) {
+                    return d.resolve(content);
+                  }
+                });
+              } else if (element.element === 'Mcq') {
+                insideElement = _.getMcqElements(element);
                 return insideElement.done(function(columnElement) {
                   content.excerpt.push(columnElement.excerpt);
                   total--;
@@ -145,7 +154,7 @@ define(['underscore', 'unserialize'], function(_) {
               return _.each(column.elements, function(element) {
                 var insideElement, metaData;
                 total++;
-                if (element.element === 'Row' || element.element === 'StudentQuestion') {
+                if (element.element === 'Row') {
                   insideElement = _.getRowElements(element);
                   return insideElement.done(function(columnElement) {
                     content.excerpt.push(columnElement.excerpt);
@@ -194,6 +203,71 @@ define(['underscore', 'unserialize'], function(_) {
       };
       return $.when(runFunc()).done(function() {
         return console.log("get getRowElements done");
+      }).fail(_.failureHandler);
+    },
+    getMcqElements: function(rowElements) {
+      var runFunc;
+      runFunc = function() {
+        return $.Deferred(function(d) {
+          var content, total;
+          content = {
+            excerpt: new Array
+          };
+          total = 0;
+          return _.each(rowElements.elements, function(column) {
+            if (column) {
+              return _.each(column, function(element) {
+                var insideElement, metaData;
+                total++;
+                if (element.element === 'Row') {
+                  insideElement = _.getRowElements(element);
+                  return insideElement.done(function(columnElement) {
+                    content.excerpt.push(columnElement.excerpt);
+                    total--;
+                    if (!total) {
+                      return d.resolve(content);
+                    }
+                  });
+                } else {
+                  metaData = _.getElementMetaValues(element);
+                  return metaData.done(function(meta) {
+                    element.meta_id = parseInt(element.meta_id);
+                    if (meta !== false) {
+                      _.defaults(element, meta);
+                      if (element.element === 'Text') {
+                        content.excerpt.push(element.content);
+                      }
+                      if (element.element === 'Fib') {
+                        content.excerpt.push(element.text);
+                      }
+                      if (element.element === 'Hotspot') {
+                        content.excerpt.push(element.textCollection[0].text);
+                      }
+                      if (element.element === 'Image') {
+                        element.image_id = parseInt(element.image_id);
+                      }
+                      if (element.element === 'ImageWithText') {
+                        element.image_id = parseInt(element.image_id);
+                      }
+                      if (element.element === 'Video') {
+                        element.video_id = parseInt(element.video_id);
+                      }
+                    }
+                    total--;
+                    if (!total) {
+                      return d.resolve(content);
+                    }
+                  });
+                }
+              });
+            } else {
+              return d.resolve(content);
+            }
+          });
+        });
+      };
+      return $.when(runFunc()).done(function() {
+        return console.log("get getMcqElements done");
       }).fail(_.failureHandler);
     },
     getElementMetaValues: function(element) {

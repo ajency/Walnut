@@ -72,10 +72,17 @@ define ['app'], (App)->
 
 
                 # custom checkbox
-                @$el.find('input:checkbox').screwDefaultButtons
-                    image : 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")'
-                    width : 32
-                    height : 26
+                if _.platform() is 'BROWSER'
+                    @$el.find('input:checkbox').screwDefaultButtons
+                        image : 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")'
+                        width : 32
+                        height : 26
+                else
+                    @$el.find('input:checkbox').screwDefaultButtons
+                        image : 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")'
+                        width : 32
+                        height : 26
+
 
             # @$el.parent().on "class:changed",=>
             # 	@model.set 'class', @$el.parent().attr('data-class')

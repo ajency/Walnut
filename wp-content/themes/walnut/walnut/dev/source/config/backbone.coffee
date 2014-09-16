@@ -58,13 +58,15 @@ define ["backbone"], (Backbone) ->
 				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
 				data.done (d)->
 					console.log('quiz-question-response')
-					console.log JSON.stringify(d)
+					# console.log JSON.stringify(d)
 					
 					collection.set d
 
 			if collection_name is 'content-piece'
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
+					console.log 'content-piece data'
+					console.log d
 					collection.set d
 
 			if collection_name is 'user'

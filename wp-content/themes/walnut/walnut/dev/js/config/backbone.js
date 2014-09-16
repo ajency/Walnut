@@ -52,13 +52,14 @@ define(["backbone"], function(Backbone) {
         data = _.getQuizQuestionResponseBySummaryID(opts.summary_id);
         data.done(function(d) {
           console.log('quiz-question-response');
-          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
       if (collection_name === 'content-piece') {
         data = _.getContentPiecesByIDs(opts.ids);
         data.done(function(d) {
+          console.log('content-piece data');
+          console.log(d);
           return collection.set(d);
         });
       }

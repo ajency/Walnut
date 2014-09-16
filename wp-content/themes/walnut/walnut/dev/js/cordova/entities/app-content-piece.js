@@ -26,6 +26,7 @@ define(['underscore', 'unserialize'], function(_) {
                     contentElementsArray = _.getJsonToClone(meta_value.layout_json);
                     return contentElementsArray.done(function(contentElements) {
                       var excerpt, excerpt_array, taglessArray;
+                      console.log(contentElements.elements);
                       excerpt_array = contentElements.excerpt;
                       excerpt_array = _.flatten(excerpt_array);
                       taglessArray = new Array;

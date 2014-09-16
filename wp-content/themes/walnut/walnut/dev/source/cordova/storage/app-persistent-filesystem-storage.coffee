@@ -143,7 +143,7 @@ define ['underscore'], ( _) ->
 					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
 						,(fileSystem)->
 							fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/audio-web"
-								,{create: true, exclusive:false} 
+								,{create: false, exclusive:false} 
 								
 								,(fileEntry)->
 									console.log 'audios-web directory path: '+fileEntry.toURL()

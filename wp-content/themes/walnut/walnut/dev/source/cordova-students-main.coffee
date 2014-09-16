@@ -43,6 +43,8 @@ require.config
 		datepicker: 'plugins/bootstrap-datepicker'
 		timepicker : 'plugins/bootstrap-timepicker.min'
 		jquery_listnav: 'plugins/jquery-listnav'
+		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
+		checkbox: 'plugins/flatui-checkbox'
 		holder: 'plugins/holder'
 		panzer: 'plugins/panzer'
 		panzerlist : 'plugins/panzerlist'
@@ -84,6 +86,9 @@ require.config
 		jqueryvalidate: ['jquery']
 		syphon: ['backbone']
 		datepicker: ['jquery', 'bootstrap']
+		jquery_listnav: ['jquery']
+		screwbuttons: ['jquery']
+		checkbox: ['bootstrap']
 		panzer: ['jquery']
 		panzerlist : ['jquery']
 		kineticresize: ['kinetic']

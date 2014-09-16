@@ -90,11 +90,19 @@ define(['app'], function(App) {
 
       McqOptionView.prototype.onShow = function() {
         this.$el.attr('id', 'mcq-option-' + this.model.get('optionNo'));
-        return this.$el.find('input:checkbox').screwDefaultButtons({
-          image: 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")',
-          width: 32,
-          height: 26
-        });
+        if (_.platform() === 'BROWSER') {
+          return this.$el.find('input:checkbox').screwDefaultButtons({
+            image: 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")',
+            width: 32,
+            height: 26
+          });
+        } else {
+          return this.$el.find('input:checkbox').screwDefaultButtons({
+            image: 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")',
+            width: 32,
+            height: 26
+          });
+        }
       };
 
       McqOptionView.prototype._onClickOfCheckbox = function(evt) {

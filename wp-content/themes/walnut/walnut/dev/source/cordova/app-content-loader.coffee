@@ -81,9 +81,18 @@ define ['underscore', 'unserialize'], ( _) ->
 						total = 0
 						_.each elements ,(element)->
 								total++ 
-								if element.element is 'Row' or element.element is 'StudentQuestion'
+								if element.element is 'Row'
 									# element.columncount = element.elements.length
 									insideElement = _.getRowElements(element)
+									insideElement.done (columnElement)->
+										content.excerpt.push columnElement.excerpt
+										total--
+										if not total
+											d.resolve content
+
+								else if element.element is 'Mcq'
+									# element.columncount = element.elements.length
+									insideElement = _.getMcqElements(element)
 									insideElement.done (columnElement)->
 										content.excerpt.push columnElement.excerpt
 										total--
@@ -137,7 +146,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						if column.elements
 							_.each column.elements, (element)->
 								total++
-								if element.element is 'Row' or element.element is 'StudentQuestion'
+								if element.element is 'Row'
 									# ele.columncount = ele.elements.length;
 									insideElement = _.getRowElements(element)
 									insideElement.done (columnElement)->
@@ -174,6 +183,56 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runFunc()).done ->
 				console.log  "get getRowElements done"
 			.fail _.failureHandler	
+
+		getMcqElements : (rowElements)->
+
+			runFunc = ->
+				$.Deferred (d)->
+					content = 
+						excerpt : new Array
+					total = 0
+					_.each rowElements.elements, (column)->
+						if column
+							_.each column, (element)->
+								total++
+								if element.element is 'Row'
+									# ele.columncount = ele.elements.length;
+									insideElement = _.getRowElements(element)
+									insideElement.done (columnElement)->
+
+										content.excerpt.push columnElement.excerpt
+										total--
+										if not total
+											d.resolve content
+								else 
+									metaData = _.getElementMetaValues element
+									metaData.done (meta)->
+										element.meta_id = parseInt element.meta_id
+										if meta isnt false
+											_.defaults(element, meta);
+
+											if element.element is 'Text'
+												content.excerpt.push element.content
+											if element.element is 'Fib'
+												content.excerpt.push element.text
+											if element.element is 'Hotspot'
+												content.excerpt.push element.textCollection[0].text
+											if element.element is 'Image'
+												element.image_id = parseInt element.image_id
+											if element.element is 'ImageWithText'
+												element.image_id = parseInt element.image_id
+											if element.element is 'Video'
+												element.video_id = parseInt element.video_id
+										total--
+										if not total
+											d.resolve content
+						else
+							d.resolve content
+
+			$.when(runFunc()).done ->
+				console.log  "get getMcqElements done"
+			.fail _.failureHandler	
+
 
 
 
