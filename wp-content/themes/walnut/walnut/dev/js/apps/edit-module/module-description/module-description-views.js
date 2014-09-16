@@ -162,6 +162,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
 
       CollectionDetailsView.prototype.save_content = function(e) {
         var data, single_attempt;
+        this.$el.find('#saved-success').remove();
         e.preventDefault();
         $('#s2id_textbooks .select2-choice').removeClass('error');
         if (this.$el.find('#textbooks').val() === '') {
@@ -170,10 +171,22 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         if (this.$el.find('form').valid()) {
           this.$el.find('#save-content-collection i').addClass('fa-spin fa-spinner');
           data = Backbone.Syphon.serialize(this);
-          single_attempt = data.permissions['single_attempt'];
-          data.permissions['single_attempt'] = !single_attempt;
-          if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
-            data.negMarks = 0;
+          if (this.model.get('type') === 'quiz') {
+            single_attempt = data.permissions['single_attempt'];
+            data.permissions['single_attempt'] = !single_attempt;
+            if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
+              data.negMarks = 0;
+            }
+          }
+          if (data.post_status === 'publish') {
+            if (_.isEmpty(this.model.get('content_layout')) && _.isEmpty(this.model.get('content_pieces'))) {
+              this.$el.find('.grid-title').prepend('<div id="saved-success" class="text-error"> Cannot Publish ' + _.titleize(_.humanize(this.model.get('type'))) + '. No Content Pieces Added. </div>');
+              $("html, body").animate({
+                scrollTop: 0
+              }, 700);
+              this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner');
+              return false;
+            }
           }
           return this.trigger("save:content:collection:details", data);
         }
@@ -235,8 +248,11 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
         }
         if (model.get('type') === 'quiz') {
-          return this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
+          this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
         }
+        return $("html, body").animate({
+          scrollTop: 0
+        }, 700);
       };
 
       return CollectionDetailsView;

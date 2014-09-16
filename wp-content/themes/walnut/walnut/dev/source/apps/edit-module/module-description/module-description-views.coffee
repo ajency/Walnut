@@ -162,6 +162,8 @@ define ['app'
 
 
             save_content : (e)->
+
+                @$el.find('#saved-success').remove();
                 e.preventDefault()
 
                 $('#s2id_textbooks .select2-choice')
@@ -178,12 +180,26 @@ define ['app'
 
                     data = Backbone.Syphon.serialize (@)
                     #data.term_ids= _.compact(data.term_ids)
-                    single_attempt=data.permissions['single_attempt']
 
-                    #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
-                    data.permissions['single_attempt'] = !single_attempt
+                    if @model.get('type') is 'quiz'
+                        single_attempt=data.permissions['single_attempt']
 
-                    data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+                        #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
+                        data.permissions['single_attempt'] = !single_attempt
+
+                        data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+
+                    if data.post_status is 'publish'
+                        if _.isEmpty(@model.get('content_layout')) and _.isEmpty(@model.get('content_pieces')) 
+                            @$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
+                                Cannot Publish '+_.titleize(_.humanize(@model.get('type')))+'. No Content Pieces Added.
+
+                            </div>'
+
+                            $("html, body").animate({ scrollTop: 0 }, 700);
+                            @$el.find '#save-content-collection i'
+                            .removeClass 'fa-spin fa-spinner'
+                            return false
 
                     @trigger "save:content:collection:details", data
 
@@ -250,4 +266,5 @@ define ['app'
                         to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>'
 
 
+                $("html, body").animate({ scrollTop: 0 }, 700);
 
