@@ -16,6 +16,14 @@
 /*
 Template Name: Content Creator
 */
+
+
+global $user_ID;
+if (!current_user_can('administrator') || !current_user_can('content-creator')){
+    $blog=get_primary_blog_details($user_ID);
+    wp_safe_redirect($blog['site_url']); exit;
+}
+
 ?>
 
 <!DOCTYPE html>
