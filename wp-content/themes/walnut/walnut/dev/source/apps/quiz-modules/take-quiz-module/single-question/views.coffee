@@ -76,11 +76,11 @@ define ['app'
                         responseModel = Marionette.getOption @, 'questionResponseModel'
 
                         display_mode = Marionette.getOption @, 'display_mode'
-                        
-                        data.show_skip = true
 
                         if display_mode isnt 'replay'
                             
+                            data.show_skip = true
+
                             data.allow_submit_answer = true
 
                             if @quizModel.hasPermission('allow_hint') and _.trim data.hint
