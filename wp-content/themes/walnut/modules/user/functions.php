@@ -54,7 +54,9 @@ function get_primary_blog_details( $user_id = '' ) {
     
     if (!is_multisite()) 
         $blog_data['site_url']=get_site_url();
-    
+
+    restore_current_blog();
+
     return $blog_data;
 }
 
