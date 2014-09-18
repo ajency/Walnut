@@ -145,7 +145,6 @@ define ['app'
                     else
                         quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
                         quizResponseSummaryCollection.add quizResponseSummary
-                        quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
                         defer.resolve()
                         
                 defer.promise()

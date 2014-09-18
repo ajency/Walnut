@@ -159,9 +159,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             } else {
               quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
               quizResponseSummaryCollection.add(quizResponseSummary);
-              quizModel.set({
-                'attempts': parseInt(quizModel.get('attempts')) + 1
-              });
               return defer.resolve();
             }
           };

@@ -63,9 +63,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             'status': 'started',
             'questions_order': questionIDs
           };
-          if (quizModel.get('quiz_type') === 'practice') {
-            data.attempts = quizModel.get('attempts');
-          }
+          quizModel.set({
+            'attempts': parseInt(quizModel.get('attempts')) + 1
+          });
           quizResponseSummary.save(data);
         }
         questionModel = questionsCollection.get(questionID);

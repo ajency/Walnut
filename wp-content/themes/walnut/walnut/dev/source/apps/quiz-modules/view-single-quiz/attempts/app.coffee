@@ -28,7 +28,7 @@ define ['app'
                             <h5 class="bold">{{total_marks_scored}}</h5>
                         </div>
                         <div class="col-md-3">
-                            <h5 class="bold">Time Taken: {{time_taken}}</h5>
+                            <h5 class="bold">{{time_taken}}</h5>
                         </div>
                         <div class="col-md-3">
                             <button data-id={{summary_id}} type="button" class="view-summary btn btn-info btn-small">view &nbsp; <i></i></button>
@@ -45,7 +45,7 @@ define ['app'
 
             template : '<div class="tiles white grid simple vertical blue">
                             <div class="grid-title no-border"> 
-                                <h4 class="">List of <span class="semi-bold">Attempts</span></h4> 
+                                <h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> 
                                 <div class="tools"> <a href="javascript:;" class="expand"></a> </div> 
                             </div>
                             <div class="none grid-body no-border contentSelect">

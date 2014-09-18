@@ -59,7 +59,7 @@ define ['app'
                             'status' : 'started'
                             'questions_order': questionIDs
 
-                        data.attempts = quizModel.get('attempts') if quizModel.get('quiz_type') is 'practice'
+                        quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
 
                         quizResponseSummary.save data
 

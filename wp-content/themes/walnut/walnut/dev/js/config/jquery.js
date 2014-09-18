@@ -1,14 +1,14 @@
 define(['jquery', 'underscore'], function($, _) {
   var adjustPageDim;
-  $(document).on("click", '.grid .tools .collapse, .grid .tools .expand', function(e) {
-    var el;
+  $(document).on("click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', function(e) {
+    var el, icon;
     el = $(e.target).parents(".grid").children(".grid-body");
-    if ($(e.target).hasClass("collapse")) {
-      $(e.target).removeClass("collapse").addClass("expand");
-      return el.slideUp(200);
+    el.slideToggle(200);
+    icon = $(e.target).parents(".grid").find(".tools a");
+    if ($(icon).hasClass("collapse")) {
+      return $(icon).removeClass("collapse").addClass("expand");
     } else {
-      $(e.target).removeClass("expand").addClass("collapse");
-      return el.slideDown(200);
+      return $(icon).removeClass("expand").addClass("collapse");
     }
   });
   $.fn.isEmptyColumn = function(params) {

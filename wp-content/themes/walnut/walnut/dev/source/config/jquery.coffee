@@ -1,16 +1,17 @@
 define ['jquery', 'underscore'], ($, _)->
 
-    $( document ).on  "click", '.grid .tools .collapse, .grid .tools .expand', (e)->
+    $( document ).on  "click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', (e)->
 
         el = $(e.target).parents(".grid").children(".grid-body");
+        el.slideToggle(200);
 
-        if ($(e.target).hasClass("collapse")) 
-            $(e.target).removeClass("collapse").addClass("expand");
-            el.slideUp(200);
+        icon = $(e.target).parents(".grid").find(".tools a");
+
+        if ($(icon).hasClass("collapse")) 
+            $(icon).removeClass("collapse").addClass("expand");
 
         else
-            $(e.target).removeClass("expand").addClass("collapse");
-            el.slideDown(200);
+            $(icon).removeClass("expand").addClass("collapse");
         
 
     # define helper functions
