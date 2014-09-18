@@ -7,8 +7,10 @@
 require_once 'school_data_import.php';
 
 function school_csv_import_menu() {
-    add_options_page( 'CSV Import Options', 'CSV Data Import', 'manage_options', 'school_csv_import', 
-            'school_csv_import_options' );
+    if(!is_main_site()){
+        add_options_page( 'CSV Import Options', 'CSV Data Import', 'manage_options', 'school_csv_import', 
+                'school_csv_import_options' );
+    }
 }
 add_action( 'admin_menu', 'school_csv_import_menu' );
 

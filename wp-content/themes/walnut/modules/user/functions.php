@@ -520,7 +520,7 @@ function add_user_meta_signups($user, $user_email, $key, $meta){
                      wp_new_user_notification($new_parent_id, $password);
 
                      $usermeta['parent_email'.$i] = $_POST['parent_email_'.$i];
-                     $usermeta['child_of'.$i] = $parent_id;
+                     $usermeta['child_of'.$i] = $new_parent_id;
                      //update_user_meta( $new_parent_id, 'parent_of', $user_id );
 
                  }             
