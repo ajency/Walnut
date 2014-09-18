@@ -70,7 +70,7 @@ function get_single_quiz_module ($id,$user_id=0) {
         $data->status = $quiz_status['status'];
 
         if($data->quiz_type == 'practice')
-            $data->attempts = $quiz_status['attempts'];
+            $data->attempts = (int) $quiz_status['attempts'];
     }
 
     $content_ids = array();

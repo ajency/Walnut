@@ -114,7 +114,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         });
         this.summary_data = {
           'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id")
+          'student_id': App.request("get:loggedin:user:id"),
+          'taken_on': moment().format("YYYY-MM-DD")
         };
         quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
         quizResponseSummaryCollection.add(quizResponseSummary);
@@ -146,7 +147,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         }
         this.summary_data = {
           'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id")
+          'student_id': App.request("get:loggedin:user:id"),
+          'taken_on': moment().format("YYYY-MM-DD")
         };
         quizResponseSummaryCollection = App.request("get:quiz:response:summary", this.summary_data);
         App.execute("when:fetched", quizResponseSummaryCollection, (function(_this) {
@@ -156,6 +158,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               return defer.resolve();
             } else {
               quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
+              quizResponseSummaryCollection.add(quizResponseSummary);
+              quizModel.set({
+                'attempts': parseInt(quizModel.get('attempts')) + 1
+              });
               return defer.resolve();
             }
           };

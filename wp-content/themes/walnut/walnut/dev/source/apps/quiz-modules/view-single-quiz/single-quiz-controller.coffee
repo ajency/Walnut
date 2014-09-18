@@ -95,6 +95,7 @@ define ['app'
                 @summary_data= 
                     'collection_id' : quizModel.get 'id'
                     'student_id'    : App.request "get:loggedin:user:id"
+                    'taken_on'      : moment().format("YYYY-MM-DD")
 
                 quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
                 quizResponseSummaryCollection.add quizResponseSummary
@@ -132,6 +133,7 @@ define ['app'
                 @summary_data= 
                     'collection_id' : quizModel.get 'id'
                     'student_id'    : App.request "get:loggedin:user:id"
+                    'taken_on'      : moment().format("YYYY-MM-DD")
 
                 quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
                 App.execute "when:fetched", quizResponseSummaryCollection, =>
@@ -142,6 +144,8 @@ define ['app'
 
                     else
                         quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
+                        quizResponseSummaryCollection.add quizResponseSummary
+                        quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
                         defer.resolve()
                         
                 defer.promise()
