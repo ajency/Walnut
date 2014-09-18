@@ -9,7 +9,7 @@ define ['app'
             template: '<div class="teacher-app">
                             {{#practice_mode}}
                                 <div class="well text-center">
-                                    <h4><span class="bold">This is a practise quiz.
+                                    <h4><span class="bold">This is a practice quiz.
                                         It is designed to help you train for the class tests.</span></h4>
                                 </div>
                             {{/practice_mode}}

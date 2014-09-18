@@ -10,7 +10,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return QuizViewLayout.__super__.constructor.apply(this, arguments);
       }
 
-      QuizViewLayout.prototype.template = '<div class="teacher-app"> {{#practice_mode}} <div class="well text-center"> <h4><span class="bold">This is a practise quiz. It is designed to help you train for the class tests.</span></h4> </div> {{/practice_mode}} {{^practice_mode}} <div class="well text-center"> <h4><span class="bold">This is a class test and can be attempted just once, therefore ensure you have answered all questions before ending the quiz.</span></h4> </div> {{/practice_mode}} <div id="attempts-region"></div> <div id="quiz-details-region"></div> </div> <div id="content-display-region"></div>';
+      QuizViewLayout.prototype.template = '<div class="teacher-app"> {{#practice_mode}} <div class="well text-center"> <h4><span class="bold">This is a practice quiz. It is designed to help you train for the class tests.</span></h4> </div> {{/practice_mode}} {{^practice_mode}} <div class="well text-center"> <h4><span class="bold">This is a class test and can be attempted just once, therefore ensure you have answered all questions before ending the quiz.</span></h4> </div> {{/practice_mode}} <div id="attempts-region"></div> <div id="quiz-details-region"></div> </div> <div id="content-display-region"></div>';
 
       QuizViewLayout.prototype.regions = {
         attemptsRegion: '#attempts-region',
