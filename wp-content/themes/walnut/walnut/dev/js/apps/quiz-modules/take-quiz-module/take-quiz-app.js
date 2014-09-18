@@ -233,9 +233,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           'num_skipped': _.size(this.questionResponseCollection.where({
             'status': 'skipped'
           })),
-          'total_marks_scored': _.reduce(this.questionResponseCollection.pluck('marks_scored'), function(memo, num) {
-            return _.toNumber(memo + num, 1);
-          })
+          'marks_scored': this.questionResponseCollection.getMarksScored(),
+          'negative_scored': this.questionResponseCollection.getNegativeScored(),
+          'total_marks_scored': this.questionResponseCollection.getTotalScored()
         });
         quizResponseSummary.save();
         return App.execute("show:single:quiz:app", {

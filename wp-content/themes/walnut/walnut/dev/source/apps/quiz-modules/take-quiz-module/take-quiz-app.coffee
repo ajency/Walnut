@@ -221,9 +221,14 @@ define ['app'
                     quizResponseSummary.set 
                         'status'            : 'completed' 
                         'total_time_taken'  : timeBeforeCurrentQuestion
+                        
                         'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
-                        'total_marks_scored': _.reduce @questionResponseCollection.pluck('marks_scored'), (memo, num)->
-                            _.toNumber memo + num,1
+
+                        'marks_scored'      : @questionResponseCollection.getMarksScored()
+                        
+                        'negative_scored'   : @questionResponseCollection.getNegativeScored()
+                        
+                        'total_marks_scored': @questionResponseCollection.getTotalScored()
 
                     quizResponseSummary.save()
 

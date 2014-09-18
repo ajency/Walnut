@@ -64,10 +64,10 @@ define ['app'
                     
                     data.display_marks = true if @model.hasPermission 'display_answer'
                     if data.negMarksEnable
-                        data.marks_scored = parseInt responseSummary.get 'marks_scored'
-                        data.negative_scored = parseInt  responseSummary.get 'negative_scored'
+                        data.marks_scored = parseFloat responseSummary.get 'marks_scored'
+                        data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
 
-                    data.total_marks_scored = parseInt responseSummary.get 'total_marks_scored'
+                    data.total_marks_scored = parseFloat responseSummary.get 'total_marks_scored'
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
