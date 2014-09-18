@@ -1,6 +1,7 @@
 define ['app'
-        'controllers/region-controller'],
-        (App, RegionController)->
+        'controllers/region-controller'
+        'bootbox'],
+        (App, RegionController,bootbox)->
 
             App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
@@ -123,6 +124,9 @@ define ['app'
                             if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                                 @$el.find '#last_question'
                                 .html 'This is the last question'
+
+                                
+
                             else
                                 @$el.find '#next-question'
                                 .show()
@@ -144,15 +148,13 @@ define ['app'
 
                     onSubmitQuestion:->
 
-                        if @model.get 'comment'
-                            @trigger 'show:comment:dialog'
-
                         @$el.find "#submit-question"
                         .hide()
 
                         if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                             @$el.find '#last_question'
                             .html 'This is the last question'
+                            bootbox.alert 'You have completed the quiz. Now click on end quiz to view your quiz summary'
 
                         else
                             @$el.find "#next-question"

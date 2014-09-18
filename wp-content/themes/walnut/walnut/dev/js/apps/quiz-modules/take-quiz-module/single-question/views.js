@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
     return SingleQuestion.SingleQuestionLayout = (function(_super) {
       __extends(SingleQuestionLayout, _super);
@@ -103,12 +103,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SingleQuestionLayout.prototype.onSubmitQuestion = function() {
-        if (this.model.get('comment')) {
-          this.trigger('show:comment:dialog');
-        }
         this.$el.find("#submit-question").hide();
         if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
           this.$el.find('#last_question').html('This is the last question');
+          bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
         } else {
           this.$el.find("#next-question").show();
         }
