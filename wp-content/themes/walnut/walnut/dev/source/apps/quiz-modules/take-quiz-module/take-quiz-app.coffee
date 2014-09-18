@@ -54,14 +54,14 @@ define ['app'
                         else
                             questionID = _.first(questionIDs) if not questionID
 
-                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
-
-                        quizResponseSummary.save 
+                    if quizResponseSummary.isNew() 
+                        data = 
                             'status' : 'started'
                             'questions_order': questionIDs
 
-                    if quizModel.get('quiz_type') is 'practice'
-                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
+                        data.attempts = quizModel.get('attempts') if quizModel.get('quiz_type') is 'practice'
+
+                        quizResponseSummary.save data
 
                     questionModel = questionsCollection.get questionID
                     @layout = layout = new TakeQuizLayout
@@ -93,36 +93,35 @@ define ['app'
 
 
                     setInterval =>
-                        @_autosaveQuestionTime()
+                        @_autosaveQuestionTime() if quizResponseSummary.get('status') isnt 'completed'                            
                     ,30000
 
                 _autosaveQuestionTime:=>
-                     if quizModel.get('quiz_type') is 'test'
 
-                        questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
-                        
-                        totalTime =@timerObject.request "get:elapsed:time"
-                        timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
-                        pausedQuestionTime =0 #reset to 0 once used
+                    questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
+                    
+                    totalTime =@timerObject.request "get:elapsed:time"
+                    timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+                    pausedQuestionTime =0 #reset to 0 once used
 
-                        if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
+                    if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
 
-                            console.log(questionResponseModel.get('status')) if questionResponseModel
+                        console.log(questionResponseModel.get('status')) if questionResponseModel
 
-                            data =
-                                'summary_id'     : quizResponseSummary.id
-                                'content_piece_id'  : questionModel.id
-                                'question_response' : []
-                                'status'            : 'paused'
-                                'marks_scored'      : 0
-                                'time_taken'        : timeTaken
+                        data =
+                            'summary_id'     : quizResponseSummary.id
+                            'content_piece_id'  : questionModel.id
+                            'question_response' : []
+                            'status'            : 'paused'
+                            'marks_scored'      : 0
+                            'time_taken'        : timeTaken
 
-                            questionResponseModel = App.request "create:quiz:question:response:model", data
+                        questionResponseModel = App.request "create:quiz:question:response:model", data
 
-                        else
-                            questionResponseModel.set 'time_taken' : timeTaken
+                    else
+                        questionResponseModel.set 'time_taken' : timeTaken
 
-                        @_saveQuizResponseModel questionResponseModel
+                    @_saveQuizResponseModel questionResponseModel
 
                 _changeQuestion:(changeToQuestion)=>
                     #save results here of previous question / skip the question
@@ -163,7 +162,7 @@ define ['app'
                         quizResponseModel = newResponseModel
                         @questionResponseCollection.add newResponseModel
 
-                    quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
+                    quizResponseModel.save()
 
                     if quizResponseModel.get('status') isnt 'paused'
                         @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
@@ -222,11 +221,16 @@ define ['app'
                     quizResponseSummary.set 
                         'status'            : 'completed' 
                         'total_time_taken'  : timeBeforeCurrentQuestion
+                        
                         'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
-                        'total_marks_scored': _.reduce @questionResponseCollection.pluck('marks_scored'), (memo, num)->
-                            _.toNumber memo + num,1
 
-                    quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
+                        'marks_scored'      : @questionResponseCollection.getMarksScored()
+                        
+                        'negative_scored'   : @questionResponseCollection.getNegativeScored()
+                        
+                        'total_marks_scored': @questionResponseCollection.getTotalScored()
+
+                    quizResponseSummary.save()
 
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion

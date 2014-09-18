@@ -24,7 +24,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.responseStatus = responseModel.get('status');
           data.display_answer = Marionette.getOption(this, 'display_answer');
           marks_obtained = responseModel.get('question_response').marks;
-          data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(2));
+          data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(1));
           all_marks = _.compact(_.pluck(this.model.get('layout'), 'marks'));
           total_marks = 0;
           if (all_marks.length > 0) {
@@ -32,7 +32,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
               return parseInt(memo) + parseInt(num);
             });
           }
-          data.total_marks = parseFloat(total_marks.toFixed(2));
+          data.total_marks = parseFloat(total_marks.toFixed(1));
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':

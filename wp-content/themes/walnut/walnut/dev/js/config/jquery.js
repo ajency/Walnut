@@ -1,5 +1,16 @@
 define(['jquery', 'underscore'], function($, _) {
   var adjustPageDim;
+  $(document).on("click", '.grid .tools .collapse, .grid .tools .expand', function(e) {
+    var el;
+    el = $(e.target).parents(".grid").children(".grid-body");
+    if ($(e.target).hasClass("collapse")) {
+      $(e.target).removeClass("collapse").addClass("expand");
+      return el.slideUp(200);
+    } else {
+      $(e.target).removeClass("expand").addClass("collapse");
+      return el.slideDown(200);
+    }
+  });
   $.fn.isEmptyColumn = function(params) {
     if (params == null) {
       params = {};

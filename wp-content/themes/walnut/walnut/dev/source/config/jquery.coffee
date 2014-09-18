@@ -1,5 +1,17 @@
 define ['jquery', 'underscore'], ($, _)->
 
+    $( document ).on  "click", '.grid .tools .collapse, .grid .tools .expand', (e)->
+
+        el = $(e.target).parents(".grid").children(".grid-body");
+
+        if ($(e.target).hasClass("collapse")) 
+            $(e.target).removeClass("collapse").addClass("expand");
+            el.slideUp(200);
+
+        else
+            $(e.target).removeClass("expand").addClass("collapse");
+            el.slideDown(200);
+        
 
     # define helper functions
     $.fn.isEmptyColumn = (params = {})->
