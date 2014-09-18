@@ -109,6 +109,11 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
           bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
         } else {
           this.$el.find("#next-question").show();
+          setTimeout((function(_this) {
+            return function() {
+              return _this.trigger("goto:next:question");
+            };
+          })(this), 3000);
         }
         return this.$el.find("#skip-question").hide();
       };

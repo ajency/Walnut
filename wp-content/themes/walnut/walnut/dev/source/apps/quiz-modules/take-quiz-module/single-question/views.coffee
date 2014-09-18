@@ -160,5 +160,9 @@ define ['app'
                             @$el.find "#next-question"
                             .show()
 
+                            setTimeout =>
+                                @trigger "goto:next:question"                        
+                            ,3000
+
                         @$el.find "#skip-question"
                         .hide()
