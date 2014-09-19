@@ -3,8 +3,7 @@ define ['app'
         'apps/quiz-modules/take-quiz-module/quiz-description/app'
         'apps/quiz-modules/take-quiz-module/quiz-progress/app'
         'apps/quiz-modules/take-quiz-module/quiz-timer/app'
-        'apps/quiz-modules/take-quiz-module/single-question/app'
-        'apps/popup-dialog/alerts'], (App, RegionController)->
+        'apps/quiz-modules/take-quiz-module/single-question/app'], (App, RegionController)->
 
         App.module "TakeQuizApp", (View, App)->
 
@@ -81,16 +80,9 @@ define ['app'
 
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
-
-                    @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
                     @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
-
-                    @listenTo App.dialogRegion, "clicked:confirm:yes", @_handlePopups
-                    @listenTo App.dialogRegion, "clicked:alert:ok", @_handlePopups
-
 
                     setInterval =>
                         @_autosaveQuestionTime() if quizResponseSummary.get('status') isnt 'completed'                            
@@ -140,7 +132,7 @@ define ['app'
                     data =
                         'summary_id'     : quizResponseSummary.id
                         'content_piece_id'  : questionModel.id
-                        'question_response' : answer.toJSON()
+                        'question_response' : _.omit answer.toJSON(), ['marks','status']
                         'status'            : answer.get 'status'
                         'marks_scored'      : answer.get 'marks'
                         'time_taken'        : timeTaken
@@ -182,23 +174,6 @@ define ['app'
 
                     else
                         @_endQuiz()
-
-                _showPopup:(message_type, alert_type='confirm')->
-                    if message_type is 'end_quiz' and _.isEmpty @_getUnansweredIDs()
-                        @_endQuiz()
-                        return false
-
-                    if message_type in ['hint','comment']
-                        message_content = questionModel.get message_type
-
-                    else 
-                        message_content = quizModel.getMessageContent message_type
-
-                    App.execute 'show:alert:popup',
-                        region : App.dialogRegion
-                        message_content: message_content
-                        alert_type: alert_type
-                        message_type: message_type
 
                 _endQuiz:->
 
@@ -313,14 +288,6 @@ define ['app'
                         quizResponseSummary         : quizResponseSummary
 
                     @_showSingleQuestionApp questionModel
-
-                #after confirm box yes is clicked on dialog region
-                _handlePopups:(message_type)->
-                    switch message_type
-                        when 'end_quiz' then @_endQuiz()
-                        when 'quiz_time_up' then @_endQuiz()
-                        when 'submit_without_attempting' then @layout.questionDisplayRegion.trigger "trigger:submit"
-                        when 'incomplete_answer'   then  @layout.questionDisplayRegion.trigger "trigger:submit"
 
             class TakeQuizLayout extends Marionette.Layout
 

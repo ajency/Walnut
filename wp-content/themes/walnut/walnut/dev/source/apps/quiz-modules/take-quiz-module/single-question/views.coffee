@@ -67,7 +67,9 @@ define ['app'
 
                         'click #skip-question'      :-> @trigger "skip:question"
 
-                        'click #show-hint'          :-> @trigger 'show:hint:dialog'
+                        'click #show-hint'          :-> 
+                            bootbox.alert @model.get 'hint'
+                            @trigger 'show:hint:dialog'
 
                         'click #next-question'      :-> @trigger "goto:next:question"
 

@@ -1,7 +1,8 @@
 define ['app'
         'controllers/region-controller'
+        'bootbox'
         'apps/quiz-modules/take-quiz-module/single-question/views'],
-        (App, RegionController)->
+        (App, RegionController,bootbox)->
 
             App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
@@ -25,7 +26,9 @@ define ['app'
                         @answerModel = App.request "create:new:answer"
 
                         if @questionResponseModel
-                            answerData = @questionResponseModel.get('question_response')
+                            answerData = @questionResponseModel.get 'question_response'
+                            answerData.status = @questionResponseModel.get 'status'
+                            answerData.marks = @questionResponseModel.get 'marks_scored'                            
                             @answerModel = App.request "create:new:answer", answerData
 
                         @show layout,
@@ -54,9 +57,17 @@ define ['app'
                             answer = answerData.answerModel
 
                             if answerData.questionType isnt 'sort'
+
                                 switch answerData.emptyOrIncomplete
-                                    when 'empty'        then @region.trigger 'show:alert:popup', 'submit_without_attempting'
-                                    when 'incomplete'   then @region.trigger 'show:alert:popup', 'incomplete_answer'
+
+                                    when 'empty'        
+                                        bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
+                                            @_triggerSubmit() if result
+
+                                    when 'incomplete'   
+                                        bootbox.confirm @quizModel.getMessageContent('incomplete_answer'),(result)=>
+                                            @_triggerSubmit() if result
+
                                     when 'complete'     then @_triggerSubmit()
 
                             else 
@@ -75,10 +86,7 @@ define ['app'
                             @region.trigger "skip:question", @answerModel
 
                         @listenTo layout, 'show:hint:dialog',=>
-                            @region.trigger 'show:alert:popup', 'hint', 'alert'
-
-                        @listenTo layout,'show:comment:dialog',=>
-                            @region.trigger 'show:alert:popup', 'comment', 'alert'
+                            @answerModel.set 'hint_viewed' : true
 
                         @listenTo @region, 'trigger:submit',=> @_triggerSubmit()
 

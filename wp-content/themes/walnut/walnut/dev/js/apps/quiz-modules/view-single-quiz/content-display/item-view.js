@@ -33,6 +33,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             });
           }
           data.total_marks = parseFloat(total_marks.toFixed(1));
+          data.hint_viewed = responseModel.get('question_response').hint_viewed ? 'Yes' : 'No';
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':

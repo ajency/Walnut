@@ -29,6 +29,7 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
           return this.trigger("skip:question");
         },
         'click #show-hint': function() {
+          bootbox.alert(this.model.get('hint'));
           return this.trigger('show:hint:dialog');
         },
         'click #next-question': function() {

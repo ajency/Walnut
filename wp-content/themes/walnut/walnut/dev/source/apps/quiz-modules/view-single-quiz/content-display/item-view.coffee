@@ -37,6 +37,8 @@ define ['app'
                     
                     data.total_marks= parseFloat total_marks.toFixed 1
 
+                    data.hint_viewed = if responseModel.get('question_response').hint_viewed then 'Yes' else 'No'
+
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-right', text : 'Correct', icon : 'fa-check'
                         when 'partially_correct'  then divClass : 'text-right', text : 'Partially<br>Correct', icon : 'fa-check-square'
