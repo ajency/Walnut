@@ -430,15 +430,28 @@ function get_parents_by_student_ids($student_ids){
 function get_students_by_division($division){
 
     global $wpdb;
+    
+    $blogusers = get_users( 'blog_id='.  get_current_blog_id() );
+    $blog_user_ids = array();
+    foreach ( $blogusers as $user ) {
+	$blog_user_ids[] = $user->ID;
+    }
+     
+    if(empty($blog_user_ids)){
+         $student_ids = array();
+    }
+    else{
+        $user_ids = implode(',', $blog_user_ids);   
 
-    $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
-        WHERE meta_key LIKE %s
-        AND meta_value = %d",
-        array('student_division',$division)
-    );
+        $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
+            WHERE meta_key LIKE %s
+            AND meta_value = %d AND user_id IN (".$user_ids.")",
+            array('student_division',$division)
+        );
 
-    $student_ids = $wpdb->get_results($students_query);
-
+        $student_ids = $wpdb->get_results($students_query);
+    }
+    
     $ids= array();
 
     foreach($student_ids as $id)
