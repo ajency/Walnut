@@ -334,10 +334,11 @@ function read_quiz_response_summary($summary_id){
     
     $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
 
+
     $questions_skipped_qry = $wpdb->prepare(
         "SELECT count(status) from {$wpdb->prefix}quiz_question_response
         WHERE status LIKE %s AND summary_id LIKE %s",
-        array('skipped', $summary_id)
+        array('skipped', $quiz_response_summary->summary_id)
     );
 
     $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
