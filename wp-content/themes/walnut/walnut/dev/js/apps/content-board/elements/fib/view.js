@@ -61,7 +61,7 @@ define(['app'], function(App) {
             if (correctAnswerArray[0] !== "") {
               $(input).replaceWith("<span class='fibAns'>" + correctAnswerArray[0] + "</span>");
               if (correctAnswerArray.length > 1) {
-                return _this.$el.find('#allAnswers').append("<span>All answers for " + correctAnswerArray[0] + ": " + (_.toSentence(correctAnswerArray)) + "</span></br>");
+                return _this.$el.find('#allAnswers').append("<span>All correct options for " + correctAnswerArray[0] + ": " + (_.toSentence(correctAnswerArray)) + "</span></br>");
               }
             } else {
               return $(input).replaceWith("<span class='fibAns'>(no correct)</span>");
