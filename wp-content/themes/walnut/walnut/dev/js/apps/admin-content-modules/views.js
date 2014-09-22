@@ -196,7 +196,6 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         textbookFiltersHTML = $.showTextbookFilters({
           textbooks: this.textbooksCollection
         });
-        this.fullCollection = Marionette.getOption(this, 'fullCollection');
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
         this.$el.find(".select2-filters").select2();
         this.$el.find('#take-class-modules').tablesorter();
@@ -232,11 +231,10 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
         }
       };
 
-      ModulesView.prototype.onNewCollectionFetched = function(newCollection, fullCollection, textbooks) {
+      ModulesView.prototype.onNewCollectionFetched = function(newCollection, textbooks) {
         var pagerOptions;
         this.textbooksCollection.reset(textbooks.models);
         this.collection.reset(newCollection.models);
-        this.fullCollection.reset(fullCollection.models);
         $("#take-class-modules").trigger("updateCache");
         pagerOptions = {
           container: $(".pager"),
@@ -262,7 +260,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
 
       ModulesView.prototype.setFilteredContent = function() {
         var filtered_data, pagerOptions;
-        filtered_data = $.filterTableByTextbooks(this);
+        filtered_data = $.filterTableByTextbooks(this, 'teaching-modules');
         this.collection.set(filtered_data);
         $("#take-class-modules").trigger("updateCache");
         pagerOptions = {

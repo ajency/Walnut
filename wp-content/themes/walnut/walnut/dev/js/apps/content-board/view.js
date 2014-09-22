@@ -34,21 +34,27 @@ define(['app'], function(App) {
       };
 
       ContentBoardView.prototype.onShowResponse = function(marks, total) {
-        var answerModel;
+        var answerModel, display_marks, quizModel;
+        quizModel = Marionette.getOption(this, 'quizModel');
+        if (parseFloat(marks) === 0 && _.toBool(quizModel.get('negMarksEnable'))) {
+          display_marks = -total * quizModel.get('negMarks') / 100;
+        } else {
+          display_marks = marks;
+        }
         this.$el.find('.total-marks').text(total);
-        this.$el.find('.marks').text(marks);
+        this.$el.find('.marks').text(display_marks);
         this.$el.find('#feedback-area div').hide();
         answerModel = Marionette.getOption(this, 'answerModel');
         if (answerModel && answerModel.get('status') === 'skipped') {
           return this.$el.find('#skipped').show();
         } else {
-          if (marks === 0) {
+          if (parseFloat(marks) === 0) {
             this.$el.find('#wrong').show();
           }
-          if (marks === total) {
+          if (parseFloat(marks) === parseFloat(total)) {
             this.$el.find('#correct').show();
           }
-          if (marks > 0 && marks < total) {
+          if (parseFloat(marks) > 0 && parseFloat(marks) < parseFloat(total)) {
             return this.$el.find('#partially-correct').show();
           }
         }

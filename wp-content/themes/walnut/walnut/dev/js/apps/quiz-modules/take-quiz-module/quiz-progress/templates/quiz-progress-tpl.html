@@ -4,10 +4,12 @@
 		<div id="quiz-progress-bar" data-percentage="0%" style="width: 0%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="answered-questions">0</span>/{{totalQuestions}}</div>
 	</div>
 </div>
-<div class="text-center small-text p-t-10 m-t-5 p-b-10 b-grey b-t skipped">
-	Questions Skipped: <span id="skipped-questions">0</span>
-</div>
-<div class="quizSteps">
+{{#showSkipped}}
+	<div class="text-center small-text p-t-10 m-t-5 p-b-10 b-grey b-t skipped">
+		Questions Skipped: <span id="skipped-questions">0</span>
+	</div>
+{{/showSkipped}}
+<div class="quizSteps p-b-10">
 	<ul id="quiz-items">
 	</ul>
 	<div class="clearfix"></div>

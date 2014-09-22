@@ -170,8 +170,6 @@ define ['app',
 
                 textbookFiltersHTML= $.showTextbookFilters textbooks: @textbooksCollection
 
-                @fullCollection = Marionette.getOption @, 'fullCollection'
-
                 @$el.find '#textbook-filters'
                 .html textbookFiltersHTML
 
@@ -220,10 +218,9 @@ define ['app',
                     @$el.find '#take-class-modules .tab_checkbox'
                     .removeAttr 'checked'
 
-            onNewCollectionFetched: (newCollection,fullCollection,textbooks)=>
+            onNewCollectionFetched: (newCollection,textbooks)=>
                 @textbooksCollection.reset textbooks.models
                 @collection.reset newCollection.models
-                @fullCollection.reset fullCollection.models
                 $("#take-class-modules").trigger "updateCache"
                 pagerOptions =
                     container : $(".pager")
@@ -244,7 +241,7 @@ define ['app',
 
 
             setFilteredContent:->
-                filtered_data= $.filterTableByTextbooks(@)
+                filtered_data= $.filterTableByTextbooks(@, 'teaching-modules')
 
                 @collection.set filtered_data
 

@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentGroup", function(ContentGroup, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, contentModulesRepository;
     ContentGroup.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -57,6 +57,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
+    contentModulesRepository = new ContentGroup.ItemCollection;
     API = {
       getContentGroups: function(param) {
         var contentGroupCollection;
@@ -65,8 +66,15 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
         contentGroupCollection = new ContentGroup.ItemCollection;
         contentGroupCollection.fetch({
-          reset: true,
-          data: param
+          add: true,
+          remove: false,
+          data: param,
+          type: 'post',
+          success: function(resp) {
+            if (!param.search_str) {
+              return contentModulesRepository.reset(resp.models);
+            }
+          }
         });
         return contentGroupCollection;
       },
@@ -144,8 +152,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("empty:content:modules:collection", function() {
       return API.getEmptyModulesCollection();
     });
-    return App.reqres.setHandler("create:dummy:content:module", function(content_piece_id) {
+    App.reqres.setHandler("create:dummy:content:module", function(content_piece_id) {
       return API.getDummyModules(content_piece_id);
+    });
+    return App.reqres.setHandler("get:content:modules:repository", function() {
+      return contentModulesRepository.clone();
     });
   });
 });

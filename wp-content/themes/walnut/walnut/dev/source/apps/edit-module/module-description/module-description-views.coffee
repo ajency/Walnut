@@ -46,10 +46,17 @@ define ['app'
 
                 data.type = _.titleize _.humanize data.type
 
+                if data.isQuiz and data.permissions
+                    #display value is allow_skip which is opposite of single_attempt so the value is negated and shown
+                    data.permissions['single_attempt'] = ! data.permissions['single_attempt'] 
+
                 # add status values
 
                 data.textBookSelected = ->
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
+
+                data.defaultRandomize = =>
+                    return 'checked="checked"' if data.isQuiz and @model.isNew()
 
                 data
 
@@ -60,15 +67,9 @@ define ['app'
                 .attr 'id'
 
                 switch permName
-                    when 'attempt'          then @unSelectCheckbox 'resubmit'
-                    when 'resubmit'         
-                        @unSelectCheckbox 'attempt'
-                        @unSelectCheckbox 'answer'
+                    when 'resubmit' then @unSelectCheckbox 'answer'
 
-                    when 'check'            then @unSelectCheckbox 'answer'
-                    when 'answer'           
-                        @unSelectCheckbox 'check'
-                        @unSelectCheckbox 'resubmit'
+                    when 'answer' then @unSelectCheckbox 'resubmit'
 
             unSelectCheckbox:(checkboxID)->
                 @$el.find 'input#'+checkboxID
@@ -82,7 +83,6 @@ define ['app'
                 @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
                 if @model.get('type') is 'quiz'
-                    @_showCustomMessages @$el.find('#msgs')
 
                     @_toggleNegativeMarks @$el.find 'input[name="negMarksEnable"]:checked'
 
@@ -162,6 +162,8 @@ define ['app'
 
 
             save_content : (e)->
+
+                @$el.find('#saved-success').remove();
                 e.preventDefault()
 
                 $('#s2id_textbooks .select2-choice')
@@ -178,7 +180,26 @@ define ['app'
 
                     data = Backbone.Syphon.serialize (@)
                     #data.term_ids= _.compact(data.term_ids)
-                    data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+
+                    if @model.get('type') is 'quiz'
+                        single_attempt=data.permissions['single_attempt']
+
+                        #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
+                        data.permissions['single_attempt'] = !single_attempt
+
+                        data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+
+                    if data.post_status is 'publish'
+                        if _.isEmpty(@model.get('content_layout')) and _.isEmpty(@model.get('content_pieces')) 
+                            @$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
+                                Cannot Publish '+_.titleize(_.humanize(@model.get('type')))+'. No Content Pieces Added.
+
+                            </div>'
+
+                            $("html, body").animate({ scrollTop: 0 }, 700);
+                            @$el.find '#save-content-collection i'
+                            .removeClass 'fa-spin fa-spinner'
+                            return false
 
                     @trigger "save:content:collection:details", data
 
@@ -188,13 +209,6 @@ define ['app'
                         @$el.find("#negPercent").removeClass("none").addClass "inline"
                     else
                         @$el.find("#negPercent").addClass("none").removeClass "inline"
-
-            _showCustomMessages : (el)->
-                if $(el).prop 'checked'
-                    @$el.find('#customMsg').show()
-
-                else
-                    @$el.find('#customMsg').hide()
 
             _openCustomMsgPopup : (e)->
                 e.stopPropagation()
@@ -252,4 +266,5 @@ define ['app'
                         to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>'
 
 
+                $("html, body").animate({ scrollTop: 0 }, 700);
 

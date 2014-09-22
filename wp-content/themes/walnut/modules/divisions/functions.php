@@ -5,16 +5,28 @@ function fetch_single_division($id){
     global $wpdb;
     global $classids;
 
+    $blogusers = get_users( 'blog_id='.  get_current_blog_id() );
+    $blog_user_ids = array();
+    foreach ( $blogusers as $user ) {
+	$blog_user_ids[] = $user->ID;
+    }
+      
     $divisions_qry="select * from {$wpdb->prefix}class_divisions where id=".$id;
 
     $division_data = $wpdb->get_results($divisions_qry);
 
     foreach($division_data as $division){
         
-        $student_count_qry="select count(umeta_id) from {$wpdb->base_prefix}usermeta 
-            where meta_key='student_division' and meta_value='".$id."'";
-        
-        $student_count=$wpdb->get_var($student_count_qry);
+        if(empty($blog_user_ids)){
+            $student_count = 0;
+        }
+        else{
+            $user_ids = implode(',', $blog_user_ids);     
+            $student_count_qry="select count(umeta_id) from {$wpdb->base_prefix}usermeta 
+                where meta_key='student_division' and meta_value='".$id."' and user_id IN (".$user_ids.")";
+
+            $student_count=$wpdb->get_var($student_count_qry);
+        }
         
         $data['id']             = $division->id;
         $data['division']       = $division->division;

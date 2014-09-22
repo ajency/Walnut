@@ -155,10 +155,16 @@ define(['jquery', 'underscore'], function($, _) {
       return ele.select2().select2('val', curr_item);
     }
   };
-  return $.filterTableByTextbooks = function(_this) {
+  return $.filterTableByTextbooks = function(_this, dataType) {
     var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type;
     filter_elements = _this.$el.find('select.textbook-filter');
-    filterCollection = _this.fullCollection.clone();
+    if (dataType === 'teaching-modules') {
+      filterCollection = App.request("get:content:modules:repository");
+    } else if (dataType === 'quiz') {
+      filterCollection = App.request("get:quiz:repository");
+    } else {
+      filterCollection = App.request("get:content:pieces:repository");
+    }
     filter_ids = _.map(filter_elements, function(ele, index) {
       var item;
       item = '';

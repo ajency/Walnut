@@ -57,7 +57,7 @@ define ['app'], (App)->
 			onShow: ->
 				if @model.isNew()
 					@$el.resizable
-						helper : "ui-image-resizable-helper"
+						# helper : "resizable-helper"
 						handles: "s"
 						stop : (evt, ui)=>
 							@$el.css 'width','auto'
@@ -71,7 +71,7 @@ define ['app'], (App)->
 
 				# image resizable
 				@$el.resizable
-					helper : "ui-image-resizable-helper"
+					# helper : "ui-image-resizable-helper"
 					handles: "s"
 
 					stop : (evt, ui)=>

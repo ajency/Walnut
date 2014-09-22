@@ -23,8 +23,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.listenTo(view, "change:question", function(id) {
           return this.region.trigger("change:question", id);
         });
-        this.listenTo(this.region, "question:changed", function(model) {
-          return this.view.triggerMethod("question:change", model);
+        this.listenTo(this.region, "question:changed", function(selectedQID) {
+          return this.view.triggerMethod("question:change", selectedQID);
         });
         return this.listenTo(this.region, "question:submitted", function(responseModel) {
           return this.view.triggerMethod("question:submitted", responseModel);
@@ -89,6 +89,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
         data.totalQuestions = this.collection.length;
+        if (this.quizModel.hasPermission('single_attempt')) {
+          data.showSkipped = true;
+        }
         return data;
       };
 
@@ -109,6 +112,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           midRange: 15,
           links: "blank"
         });
+        if (this.collection.length < 10) {
+          this.$el.find('.customButtons').remove();
+        }
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
         this.questionResponseCollection.each((function(_this) {
           return function(response) {
@@ -125,7 +131,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeQuestion = function(e) {
         var selectedQID;
         selectedQID = parseInt($(e.target).attr('id'));
-        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || this.quizModel.hasPermission('allow_skip')) {
+        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || !this.quizModel.hasPermission('single_attempt')) {
           return this.trigger("change:question", selectedQID);
         }
       };
@@ -136,11 +142,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        if (this.quizModel.hasPermission('display_answer')) {
-          this.changeClassName(responseModel);
-        }
         this.updateProgressBar();
-        return this.updateSkippedCount();
+        this.updateSkippedCount();
+        if (responseModel.get('status') === 'skipped' && !this.quizModel.hasPermission('single_attempt')) {
+          return false;
+        } else if (this.quizModel.hasPermission('display_answer')) {
+          return this.changeClassName(responseModel);
+        }
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {

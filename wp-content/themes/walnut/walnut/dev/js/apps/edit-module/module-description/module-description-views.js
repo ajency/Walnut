@@ -53,11 +53,21 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           data.isQuiz = true;
         }
         data.type = _.titleize(_.humanize(data.type));
+        if (data.isQuiz && data.permissions) {
+          data.permissions['single_attempt'] = !data.permissions['single_attempt'];
+        }
         data.textBookSelected = function() {
           if (parseInt(this.id) === parseInt(data.term_ids['textbook'])) {
             return 'selected';
           }
         };
+        data.defaultRandomize = (function(_this) {
+          return function() {
+            if (data.isQuiz && _this.model.isNew()) {
+              return 'checked="checked"';
+            }
+          };
+        })(this);
         return data;
       };
 
@@ -65,15 +75,9 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         var permName;
         permName = $(e.target).closest('.checkbox.perm').find('input').attr('id');
         switch (permName) {
-          case 'attempt':
-            return this.unSelectCheckbox('resubmit');
           case 'resubmit':
-            this.unSelectCheckbox('attempt');
-            return this.unSelectCheckbox('answer');
-          case 'check':
             return this.unSelectCheckbox('answer');
           case 'answer':
-            this.unSelectCheckbox('check');
             return this.unSelectCheckbox('resubmit');
         }
       };
@@ -88,7 +92,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           this.$el.find('#qType').val(this.model.get('quiz_type'));
         }
         if (this.model.get('type') === 'quiz') {
-          this._showCustomMessages(this.$el.find('#msgs'));
           this._toggleNegativeMarks(this.$el.find('input[name="negMarksEnable"]:checked'));
         }
         this.$el.find('select:not(#qType,#status)').select2();
@@ -158,7 +161,8 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.save_content = function(e) {
-        var data;
+        var data, single_attempt;
+        this.$el.find('#saved-success').remove();
         e.preventDefault();
         $('#s2id_textbooks .select2-choice').removeClass('error');
         if (this.$el.find('#textbooks').val() === '') {
@@ -167,8 +171,22 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         if (this.$el.find('form').valid()) {
           this.$el.find('#save-content-collection i').addClass('fa-spin fa-spinner');
           data = Backbone.Syphon.serialize(this);
-          if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
-            data.negMarks = 0;
+          if (this.model.get('type') === 'quiz') {
+            single_attempt = data.permissions['single_attempt'];
+            data.permissions['single_attempt'] = !single_attempt;
+            if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
+              data.negMarks = 0;
+            }
+          }
+          if (data.post_status === 'publish') {
+            if (_.isEmpty(this.model.get('content_layout')) && _.isEmpty(this.model.get('content_pieces'))) {
+              this.$el.find('.grid-title').prepend('<div id="saved-success" class="text-error"> Cannot Publish ' + _.titleize(_.humanize(this.model.get('type'))) + '. No Content Pieces Added. </div>');
+              $("html, body").animate({
+                scrollTop: 0
+              }, 700);
+              this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner');
+              return false;
+            }
           }
           return this.trigger("save:content:collection:details", data);
         }
@@ -179,14 +197,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           return this.$el.find("#negPercent").removeClass("none").addClass("inline");
         } else {
           return this.$el.find("#negPercent").addClass("none").removeClass("inline");
-        }
-      };
-
-      CollectionDetailsView.prototype._showCustomMessages = function(el) {
-        if ($(el).prop('checked')) {
-          return this.$el.find('#customMsg').show();
-        } else {
-          return this.$el.find('#customMsg').hide();
         }
       };
 
@@ -238,8 +248,11 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
         }
         if (model.get('type') === 'quiz') {
-          return this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
+          this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
         }
+        return $("html, body").animate({
+          scrollTop: 0
+        }, 700);
       };
 
       return CollectionDetailsView;

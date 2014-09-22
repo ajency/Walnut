@@ -29,9 +29,9 @@ define ['app'
 
                             if response.blog_details.site_url isnt SITEURL
                                 window.location= response.blog_details.site_url
-
-                            @view.close()
-                            App.vent.trigger 'show:dashboard'
+                            else
+                                @view.close()
+                                App.vent.trigger 'show:dashboard'
                 );
 
                 if(connection_resp is "connection_error")

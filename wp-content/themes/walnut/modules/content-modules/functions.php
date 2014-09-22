@@ -33,6 +33,10 @@ function get_all_content_modules($args=array()){
             array('%\"'.$args['textbook'].'\";%')
         );
         $content_modules = $wpdb->get_results($modules_query, ARRAY_A);
+        
+        if(!$content_modules)
+            return false;
+
         $content_modules_ids_array = __u::flatten($content_modules);
 
     }

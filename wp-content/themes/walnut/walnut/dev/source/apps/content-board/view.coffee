@@ -47,8 +47,16 @@ define ['app'], (App)->
                 @$el.find('#feedback-area div').hide()
 
             onShowResponse : (marks,total)->
+
+                quizModel = Marionette.getOption @, 'quizModel'
+
+                if parseFloat(marks) is 0 and _.toBool quizModel.get 'negMarksEnable'
+                    display_marks = - total*quizModel.get('negMarks')/100
+                else
+                    display_marks = marks
+
                 @$el.find('.total-marks').text total
-                @$el.find('.marks').text marks
+                @$el.find('.marks').text display_marks
                 @$el.find('#feedback-area div').hide()
 
                 answerModel = Marionette.getOption(@, 'answerModel')
@@ -58,13 +66,13 @@ define ['app'], (App)->
                     
                 else
 
-                    if marks is 0
+                    if parseFloat(marks) is 0
                         @$el.find('#wrong').show()
 
-                    if marks is total
+                    if parseFloat(marks) is parseFloat(total)
                         @$el.find('#correct').show()
 
-                    if marks > 0 and marks < total
+                    if parseFloat(marks) > 0 and parseFloat(marks) < parseFloat(total)
                         @$el.find('#partially-correct').show()
 
 

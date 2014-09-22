@@ -1,6 +1,6 @@
 define ['app'
         'controllers/element-controller'
-        'apps//content-board/element/views'], (App, ElementController)->
+        'apps/content-board/element/views'], (App, ElementController)->
     App.module 'ContentPreview.ContentBoard.Element', (Element, App, Backbone, Marionette, $, _)->
 
         # Controller class for showing header resion

@@ -70,7 +70,7 @@ function get_single_quiz_module ($id,$user_id=0) {
         $data->status = $quiz_status['status'];
 
         if($data->quiz_type == 'practice')
-            $data->attempts = $quiz_status['attempts'];
+            $data->attempts = (int) $quiz_status['attempts'];
     }
 
     $content_ids = array();
@@ -107,13 +107,14 @@ function get_quiz_status($quiz_id,$user_id){
         array($quiz_id,$user_id)
     );
 
-    $result= $wpdb->get_row($query);
+    $result= $wpdb->get_results($query);
 
     if($result){
-        $quiz_meta= maybe_unserialize($result->quiz_meta);
+        $quiz_meta= maybe_unserialize(__u::last($result)->quiz_meta);
+
         $status['status']=$quiz_meta['status'];
-        $status['attempts']= (int) $quiz_meta['attempts'];
-        $status['date'] = $result->taken_on;
+        $status['date'] = __u::last($result)->taken_on;
+        $status['attempts']= sizeof($result);
     }
 
     else $status['status']= 'not started';
@@ -261,22 +262,38 @@ function get_all_quiz_modules($args){
     return $result;
 }
 
-function read_quiz_response_summary($args){
+
+function get_quiz_summaries_for_user($user_id, $quiz_id){
+
     global $wpdb;
-    if(!isset($args['student_id'])){
-        $args['student_id'] = get_current_user_id();
-    }
 
-    // if id is passed
-    if(isset($args['summary_id'])){
-        $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
-            where summary_id = %s", $args['summary_id']));
+    if(!$user_id)
+        $user_id = get_current_user_id();
+    
+    $results = $wpdb->get_col($wpdb->prepare("select summary_id from {$wpdb->prefix}quiz_response_summary
+        where student_id = %d and collection_id = %d", $user_id,$quiz_id));
+    
+    $data= array();
 
+    if($results){
+        foreach($results as $summary_id){
+            $data[] = read_quiz_response_summary($summary_id);
+        }
     }
-    else {
-        $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
-            where student_id = %d and collection_id = %d", $args['student_id'],$args['collection_id']));
-    }
+    
+    return $data;
+
+}
+
+function read_quiz_response_summary($summary_id){
+
+    global $wpdb;
+
+    if(!$summary_id)
+        return false;
+
+    $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
+        where summary_id = %s", $summary_id));    
     
     if(!$quiz_response_summary)
         return false;
@@ -288,9 +305,20 @@ function read_quiz_response_summary($args){
     unset($quiz_response_summary->quiz_meta);
 
     $quiz_response_summary->status = $quiz_meta['status'];
+    $quiz_response_summary->questions_order = $quiz_meta['questions_order'];
 
     $additional_details_qry = $wpdb->prepare(
-        "SELECT SUM(marks_scored) as total_marks_scored,
+        "SELECT 
+            SUM(marks_scored) as total_marks_scored,
+
+            SUM(
+                CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as negative_scored,
+
+            SUM( 
+               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END 
+            ) as marks_scored, 
+
             SUM(time_taken) as total_time_taken
             FROM {$wpdb->prefix}quiz_question_response
         WHERE summary_id = %s", $quiz_response_summary->summary_id
@@ -298,14 +326,18 @@ function read_quiz_response_summary($args){
 
     $additional_details= $wpdb->get_row($additional_details_qry);   
 
-    $quiz_response_summary->total_marks_scored =  $additional_details->total_marks_scored;
+    $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;
+
+    $quiz_response_summary->negative_scored = (float) $additional_details->negative_scored;
+
+    $quiz_response_summary->total_marks_scored = (float) $additional_details->total_marks_scored;
     
     $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
 
     $questions_skipped_qry = $wpdb->prepare(
         "SELECT count(status) from {$wpdb->prefix}quiz_question_response
-        WHERE status like %s",
-        'skipped'
+        WHERE status LIKE %s AND summary_id LIKE %s",
+        array('skipped', $summary_id)
     );
 
     $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
@@ -320,14 +352,17 @@ function write_quiz_response_summary($args){
     }   
 
     $quiz_type = get_module_meta($args['collection_id'], 'quiz_type');
-
-    if($quiz_type == 'practice')
-        $quiz_meta['attempts']= $args['attempts'];
-    else
-        $quiz_meta['status'] = $args['status'];
+    
+    $quiz_meta['status'] = $args['status'];
+    $quiz_meta['questions_order'] = array_map('intval', $args['questions_order']);
+    
 
     if(!isset($args['summary_id'])){
+
         $summary_id = 'Q'.$args['collection_id'].'S'.$args['student_id'];
+
+        if ($quiz_type=='practice')
+            $summary_id = $summary_id . '_' . date('dmyhis');
         
         $data = array(
             'summary_id' => $summary_id,
@@ -335,6 +370,7 @@ function write_quiz_response_summary($args){
             'student_id' => $args['student_id'],
             'quiz_meta' => maybe_serialize($quiz_meta)
             );
+
         $wpdb->insert(($wpdb->prefix).'quiz_response_summary', $data );
     }
     else{
@@ -355,11 +391,6 @@ function write_quiz_question_response($args){
 
     $quiz_module = get_single_quiz_module($quiz_details->collection_id);
 
-    if(!$quiz_module->permissions['allow_skip'] && $args['status'] == 'skipped'){
-
-            $args['status'] = 'wrong_answer';
-        }
-
     $data = array(
             // 'qr_id' => $args['qr_id'],
             'summary_id' => $args['summary_id'],
@@ -373,29 +404,42 @@ function write_quiz_question_response($args){
     if(!isset($args['qr_id'])){
         $qr_id = 'CP'.$args['content_piece_id'].$args['summary_id'];
         $data['qr_id'] = $qr_id;
-        
-        
 
         $wpdb->insert(($wpdb->prefix).'quiz_question_response', $data );
     }
     // update
     else{
+
         $where_array = array('qr_id' => $args['qr_id']);
 
 
-        //check for single attempt permission
-        if ($quiz_module->permissions['single_attempt']){
-            return false;
-        }
         //get old question response data
-        $question_response = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_question_response
-                    where qr_id = %s",$data['qr_id']));
+        $check_qry = $wpdb->prepare("select * from {$wpdb->prefix}quiz_question_response
+                    where qr_id = %s",$args['qr_id']);
 
-        if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')            
-            return false;
+        $question_response = $wpdb->get_row($check_qry);
+        
+        if($question_response->status == 'paused' && $args['status'] == 'paused'){
 
-        $wpdb->update(($wpdb->prefix).'quiz_question_response', $data ,$where_array);
+            $paused_data = array('status'=>'paused','time_taken' => $args['time_taken']);
+            $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
 
+        }
+
+        else{
+            if($question_response->status != 'paused'){
+                //check for single attempt permission
+                if ($quiz_module->permissions['single_attempt']){
+                    return false;
+                }
+                
+
+                if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')            
+                    return false;
+            }
+
+            $wpdb->update(($wpdb->prefix).'quiz_question_response', $data ,$where_array);
+        }
         $data['qr_id'] = $args['qr_id'];
     }
 

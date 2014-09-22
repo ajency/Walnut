@@ -54,12 +54,20 @@ define ['app'
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
                 
+                data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
+
+                data.negMarksEnable= _.toBool data.negMarksEnable
+
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
-                    data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
+                    
                     data.display_marks = true if @model.hasPermission 'display_answer'
-                    data.total_marks_scored = responseSummary.get 'total_marks_scored'
+                    if data.negMarksEnable
+                        data.marks_scored = parseFloat responseSummary.get 'marks_scored'
+                        data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
+
+                    data.total_marks_scored = parseFloat responseSummary.get 'total_marks_scored'
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
@@ -68,8 +76,13 @@ define ['app'
 
                     data.try_again= true if data.practice_mode
 
-                data.negMarksEnable= _.toBool data.negMarksEnable
-                
+                if responseSummary.get('status') is 'started'
+                    data.incompleteQuiz = true
+                    total= @model.get('total_minutes') * 60
+                    elapsed = responseSummary.get('total_time_taken')
+
+                    data.time_remaining = $.timeMinSecs total-elapsed 
+
                 data  
 
             onShow:->

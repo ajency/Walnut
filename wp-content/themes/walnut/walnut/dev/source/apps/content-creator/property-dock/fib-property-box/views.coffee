@@ -91,10 +91,17 @@ define ['app'
                     control: 'hue'
                     position: 'top right'
                     showSpeed: 200
-                    opacity: true
+                    # opacity: true
                     change: (hex, opacity)=>
                         @model.set 'bg_color', hex
-                        @model.set 'bg_opacity', opacity
+                        # @model.set 'bg_opacity', opacity
+
+                @$el.find('#bg-opacity').slider()
+                @$el.find('#bg-opacity').slider().on 'slide', =>
+                    # on click of slider , value set to null
+                    # resolved with this
+                    # size = @model.get 'bg_opacity'
+                    @model.set 'bg_opacity', @$el.find('#bg-opacity').slider('getValue').val() 
 
 
 

@@ -48,7 +48,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 message_content = default_messages[message_type]
 
-                if @.hasPermission('customize_messages') and not _.isEmpty @.get 'message'
+                if not _.isEmpty @.get 'message'
                     custom_messages= @.get 'message'
                     message_content = custom_messages[message_type] if custom_messages[message_type]
 
@@ -65,7 +65,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-quizes'
 
             parse: (resp)->
-                resp.data
+                resp.data.reverse()
+        
+        quizRepository= new Quiz.ItemCollection
 
         # API
         API =
@@ -77,6 +79,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 quizCollection.fetch
                     reset: true
                     data: param
+                    success:(resp)-> 
+                        if not param.search_str
+                            quizRepository.reset resp.models
 
                 quizCollection
 
@@ -131,3 +136,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "create:dummy:quiz:module", (content_piece_id)->
             API.getDummyQuiz content_piece_id
+
+        App.reqres.setHandler "get:quiz:repository",->
+            quizRepository.clone()

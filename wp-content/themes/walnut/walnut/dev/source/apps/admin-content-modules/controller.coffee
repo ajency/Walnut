@@ -10,7 +10,6 @@ define ['app'
             initialize: ->
 
                 @contentGroupsCollection    = null
-                @fullCollection             = null
                 @allChaptersCollection      = null
                 @textbooksCollection        = null
 
@@ -38,7 +37,6 @@ define ['app'
 
                         App.execute "when:fetched", [@allChaptersCollection,@textbooksCollection], =>
 
-                            @fullCollection= @contentGroupsCollection.clone()
                             @view = view = @_getContentGroupsListingView @contentGroupsCollection
 
                             @show @view,(loading: true)
@@ -59,8 +57,7 @@ define ['app'
 
                                 @textbooksCollection = App.request "get:textbooks", ('class_id': class_id)
                                 App.execute "when:fetched", [newModulesCollection,@textbooksCollection ], =>
-                                    fullCollection = newModulesCollection.clone()
-                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,fullCollection,@textbooksCollection
+                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,@textbooksCollection
 
                             @listenTo @view, "save:communications", (data)=>
                                 data=
@@ -76,7 +73,6 @@ define ['app'
             _getContentGroupsListingView: (collection)=>
                 new View.AdminModulesView.ModulesView
                     collection          : collection
-                    fullCollection      : @fullCollection
                     textbooksCollection : @textbooksCollection
                     chaptersCollection  : @allChaptersCollection
                     divisionsCollection : @divisionsCollection

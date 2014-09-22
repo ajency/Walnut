@@ -53,7 +53,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           }
         };
         if (this.groupType === 'quiz') {
-          data.quiz_type = _.capitalize(data.quiz_type);
+          data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Quiz';
           data.view_url = SITEURL + ("/#view-quiz/" + data.id);
           data.edit_url = SITEURL + ("/#edit-quiz/" + data.id);
         }

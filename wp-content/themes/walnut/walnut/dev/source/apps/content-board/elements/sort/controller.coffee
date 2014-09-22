@@ -53,7 +53,7 @@ define ['app'
                 #if the question is already answered, sort it as per the answer index
                 else if _.size(@answerModel.get('answer'))>0
                     answeredCollection = _.map @answerModel.get('answer'), (el)=>
-                                            @optionCollection.findWhere 'index': el
+                                            @optionCollection.findWhere 'index': parseInt el
 
                     @optionCollection = App.request "create:new:option:collection", answeredCollection
 
@@ -65,9 +65,10 @@ define ['app'
                 @listenTo @view, "submit:answer", @_submitAnswer
 
                 
-                @listenTo @view, "show",=>
+                @listenTo @view, "show:completed",=>
                     if @answerModel.get('status') isnt 'not_attempted'
-                        @_submitAnswer() 
+                        @_submitAnswer()
+
 
                 # show the view
                 @layout.elementRegion.show @view

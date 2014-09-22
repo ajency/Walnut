@@ -1,7 +1,8 @@
 define ['app'
         'controllers/region-controller'
+        'bootbox'
         'apps/quiz-modules/take-quiz-module/single-question/views'],
-        (App, RegionController)->
+        (App, RegionController,bootbox)->
 
             App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
@@ -25,13 +26,30 @@ define ['app'
                         @answerModel = App.request "create:new:answer"
 
                         if @questionResponseModel
-                            answerData = @questionResponseModel.get('question_response')
+                            answerData = @questionResponseModel.get 'question_response'
+                            answerData.status = @questionResponseModel.get 'status'
+                            answerData.marks = @questionResponseModel.get 'marks_scored'                            
                             @answerModel = App.request "create:new:answer", answerData
 
                         @show layout,
                             loading: true
 
                         @listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject
+                        
+                        @listenTo @region, "silent:save:question", =>
+                            answerData= @answerWreqrObject.request "get:question:answer"
+
+                            answer = answerData.answerModel
+
+                            @answerWreqrObject.request "submit:answer"
+                            answer_status = @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+
+                            answer.set 'status' : answer_status
+
+                            if (answer.get('status') is 'wrong_answer') and _.toBool @quizModel.get 'negMarksEnable'
+                                answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
+
+                            @region.trigger "submit:question", answer
 
                         @listenTo layout, "validate:answer",->
                             answerData= @answerWreqrObject.request "get:question:answer"
@@ -39,9 +57,17 @@ define ['app'
                             answer = answerData.answerModel
 
                             if answerData.questionType isnt 'sort'
+
                                 switch answerData.emptyOrIncomplete
-                                    when 'empty'        then @region.trigger 'show:alert:popup', 'submit_without_attempting'
-                                    when 'incomplete'   then @region.trigger 'show:alert:popup', 'incomplete_answer'
+
+                                    when 'empty'        
+                                        bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
+                                            @_triggerSubmit() if result
+
+                                    when 'incomplete'   
+                                        bootbox.confirm @quizModel.getMessageContent('incomplete_answer'),(result)=>
+                                            @_triggerSubmit() if result
+
                                     when 'complete'     then @_triggerSubmit()
 
                             else 
@@ -60,10 +86,7 @@ define ['app'
                             @region.trigger "skip:question", @answerModel
 
                         @listenTo layout, 'show:hint:dialog',=>
-                            @region.trigger 'show:alert:popup', 'hint'
-
-                        @listenTo layout,'show:comment:dialog',=>
-                            @region.trigger 'show:alert:popup', 'comment'
+                            @answerModel.set 'hint_viewed' : true
 
                         @listenTo @region, 'trigger:submit',=> @_triggerSubmit()
 

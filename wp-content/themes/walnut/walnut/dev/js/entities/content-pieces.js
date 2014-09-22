@@ -123,17 +123,15 @@ define(["app", 'backbone'], function(App, Backbone) {
           param = {};
         }
         contentPieceCollection = new ContentPiece.ItemCollection;
-        if (!param.search_str) {
-          contentPieceCollection.add(contentPiecesRepository.models);
-          param.exclude = contentPiecesRepository.pluck('ID');
-        }
         contentPieceCollection.fetch({
           add: true,
           remove: false,
           data: param,
           type: 'post',
           success: function(resp) {
-            return contentPiecesRepository.add(resp.models);
+            if (!param.search_str) {
+              return contentPiecesRepository.reset(resp.models);
+            }
           }
         });
         return contentPieceCollection;
@@ -189,9 +187,6 @@ define(["app", 'backbone'], function(App, Backbone) {
             remove: false,
             data: {
               ids: ids
-            },
-            success: function(resp) {
-              return contentPiecesRepository.add(resp.models);
             }
           });
         }
@@ -221,8 +216,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("new:content:piece", function() {
       return API.newContentPiece();
     });
-    return App.reqres.setHandler("empty:content:pieces:collection", function() {
+    App.reqres.setHandler("empty:content:pieces:collection", function() {
       return API.emptyContentCollection();
+    });
+    return App.reqres.setHandler("get:content:pieces:repository", function() {
+      return contentPiecesRepository.clone();
     });
   });
 });
