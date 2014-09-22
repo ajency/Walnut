@@ -49,7 +49,11 @@
 		serialize           : 'plugins/serialize',
 		fastclick           : 'plugins/fastclick',
 		jPages              : 'plugins/jPages.min',
-		walnutGlobal        : 'plugins/walnutapp-global'
+		walnutGlobal        : 'plugins/walnutapp-global',
+		sort				: 'plugins/jquery.ui.touch-punch.min',
+		bridget             : 'plugins/jquery.bridget',
+		isotope             : 'plugins/isotope.pkgd.min'
+
 	},
 	shim: {
 		underscore: {
@@ -91,6 +95,9 @@
 		countdowntimer: ['jquery','timerplugin'],
 		bootbox : ['jquery','bootstrap'],
 		jPages          : ['jquery'],
+		sort			:['jquery', 'jqueryui'],
+		bridget : ['jquery'],
+		isotope : ['jquery','bridget'],
 		app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
 	}
 })

@@ -93,11 +93,19 @@ define(['underscore', 'unserialize'], function(_) {
               } else if (element.element === 'Mcq') {
                 insideElement = _.getMcqElements(element);
                 return insideElement.done(function(columnElement) {
-                  content.excerpt.push(columnElement.excerpt);
-                  total--;
-                  if (!total) {
-                    return d.resolve(content);
-                  }
+                  var metaData;
+                  metaData = _.getElementMetaValues(element);
+                  return metaData.done(function(meta) {
+                    element.meta_id = parseInt(element.meta_id);
+                    if (meta !== false) {
+                      _.defaults(element, meta);
+                    }
+                    content.excerpt.push(columnElement.excerpt);
+                    total--;
+                    if (!total) {
+                      return d.resolve(content);
+                    }
+                  });
                 });
               } else {
                 metaData = _.getElementMetaValues(element);

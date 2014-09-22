@@ -14,8 +14,8 @@ define ["backbone"], (Backbone) ->
 		sync :(method, collection, options)->
 
 			collection_name = collection.name
-			console.log 'Collection name: '+collection_name
 			opts = options.data
+			console.log 'Collection name: '+collection_name
 			console.log 'options: '+JSON.stringify opts
 
 			if collection_name is 'textbook'
@@ -34,10 +34,10 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d                                   
 
-			if collection_name is 'division'
-				data = _.getAllDivisions()
-				data.done (d)->
-					collection.set d
+			# if collection_name is 'division'
+			# 	data = _.getAllDivisions()
+			# 	data.done (d)->
+			# 		collection.set d
 
 			if collection_name is 'content-group'
 				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)
@@ -58,7 +58,7 @@ define ["backbone"], (Backbone) ->
 				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
 				data.done (d)->
 					console.log('quiz-question-response')
-					# console.log JSON.stringify(d)
+					console.log JSON.stringify(d)
 					
 					collection.set d
 
@@ -218,8 +218,10 @@ define ["backbone"], (Backbone) ->
 				#Changes needed for offline data retrieval
 				modelname = model.name
 				console.log "model"
-				console.log JSON.stringify model
 				console.log 'Model name: '+modelname
+				console.log JSON.stringify model
+				console.log model.get('term_id')
+				console.log model.get('id')
 
 				if modelname is 'division'
 					data = _.fetchSingleDivision model.get('id')
@@ -229,7 +231,9 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'textbook'
 					data = _.getTextBookByTextbookId(model.get('term_id'))
 					data.done (d)->
+						console.log JSON.stringify d
 						model.set d	
+
 
 				if modelname is 'quiz'
 					data = _.getQuizById(model.get('id'))
@@ -237,16 +241,11 @@ define ["backbone"], (Backbone) ->
 						model.set d
 
 				if modelname is 'quiz-response-summary'
-					data = _.getQuizResponseByCollectionIdAndUserID(model.get('collection_id'))
-					data.done (d)->
-						console.log JSON.stringify d
-						model.set d
+					_.writeQuizResponseSummary(model)
+
 
 				if modelname is 'quiz-question-response'
-					data = _.getQuestionResponseBySummaryID(model.get('summary_id'))
-					data.done (d)->
-						console.log JSON.stringify d
-						model.set d
+					_.writeQuestionResponse(model)
 
 
 				if modelname is 'content-group'

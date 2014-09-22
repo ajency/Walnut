@@ -92,14 +92,18 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
+        data.negMarksEnable = _.toBool(data.negMarksEnable);
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
           if (this.model.hasPermission('display_answer')) {
             data.display_marks = true;
           }
+          if (data.negMarksEnable) {
+            data.marks_scored = responseSummary.get('marks_scored');
+            data.negative_scored = responseSummary.get('negative_scored');
+          }
           data.total_marks_scored = responseSummary.get('total_marks_scored');
-          console.log(JSON.stringify(data.total_marks_scored));
           if (_.platform() === 'DEVICE') {
             console.log(JSON.stringify(data.total_marks_scored));
             data.total_marks_scored = data.total_marks_scored.toFixed(2);
@@ -119,7 +123,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           elapsed = responseSummary.get('total_time_taken');
           data.time_remaining = $.timeMinSecs(total - elapsed);
         }
-        data.negMarksEnable = _.toBool(data.negMarksEnable);
         return data;
       };
 

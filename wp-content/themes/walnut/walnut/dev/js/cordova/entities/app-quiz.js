@@ -21,13 +21,16 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
+              console.log(collectionMetaData);
               return (function(row, i, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
                 return dateAndStatus.done(function(dateStatus) {
-                  var date, status;
+                  var attempts, date, status;
                   status = dateStatus.status;
+                  attempts = dateStatus.attempts;
                   date = dateStatus.start_date;
+                  console.log(JSON.stringify(status));
                   return result[i] = {
                     id: row['id'],
                     name: row['name'],
@@ -54,6 +57,7 @@ define(['underscore', 'unserialize'], function(_) {
                     content_layout: "",
                     taken_on: date,
                     status: status,
+                    attempts: attempts,
                     content_pieces: collectionMetaData.contentPieces
                   };
                 });
@@ -305,28 +309,33 @@ define(['underscore', 'unserialize'], function(_) {
       var data, runFunc;
       data = {
         start_date: '',
-        status: ''
+        status: '',
+        attempts: ''
       };
       runFunc = function() {
         return $.Deferred(function(d) {
           var quizResponseSummary;
-          quizResponseSummary = _.getQuizResponseSummary(collection_id);
+          quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
-            var contentLayoutValue, date;
+            var contentLayoutValue;
+            console.log(quiz_responses);
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';
+              data.attempts = 0;
             }
             if (!_.isEmpty(quiz_responses)) {
               contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
+              if (contentLayoutValue.attempts) {
+                data.attempts = contentLayoutValue.attempts;
+                data.start_date = quiz_responses.taken_on;
+              }
               if (contentLayoutValue.status === "started") {
                 data.status = 'started';
-                date = quiz_responses.taken_on;
-                data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                data.start_date = quiz_responses.taken_on;
               } else if (contentLayoutValue.status === "completed") {
                 data.status = 'completed';
-                date = quiz_responses.taken_on;
-                data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                data.start_date = quiz_responses.taken_on;
               }
             }
             return d.resolve(data);
@@ -337,7 +346,7 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getStartDateAndStatus done');
       }).fail(_.failureHandler);
     },
-    getQuizResponseSummary: function(collection_id) {
+    getQuizResponseSummaryByCollectionId: function(collection_id) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
@@ -354,7 +363,7 @@ define(['underscore', 'unserialize'], function(_) {
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getQuizResponseSummary transaction completed');
+        return console.log('getQuizResponseSummaryByCollectionId transaction completed');
       }).fail(_.failureHandler);
     },
     getDuration: function(duration) {
@@ -393,6 +402,7 @@ define(['underscore', 'unserialize'], function(_) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
                 return dateAndStatus.done(function(dateStatus) {
+                  console.log(JSON.stringify(dateStatus.status));
                   result = {
                     id: row['id'],
                     content_pieces: collectionMetaData.contentPieces,
@@ -414,6 +424,7 @@ define(['underscore', 'unserialize'], function(_) {
                     published_on: row['published_on'],
                     quiz_type: collectionMetaData.quizType,
                     status: dateStatus.status,
+                    attempts: dateStatus.attempts,
                     date: dateStatus.start_date,
                     term_ids: _.unserialize(row['term_ids']),
                     total_minutes: row['duration'],

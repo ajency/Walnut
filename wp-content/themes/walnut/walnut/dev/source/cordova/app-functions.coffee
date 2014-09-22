@@ -152,61 +152,41 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 
 
-		
-		# Decrypt the encrypted video file
-		decryptVideoFile : (source, destination)->
 
-			runFunc = ->
-				$.Deferred (d)->
-
-					decrypt.startDecryption(source, destination
-						, ->
-							console.log destination
-							d.resolve destination
-
-						, (message) ->
-							console.log 'ERROR: '+message
-					)
-
-			$.when(runFunc()).done ->
-				console.log 'Decrypted video file at location: '+destination 
-			.fail _.failureHandler
-
-
-		# Decrypt the encrypted video file
-		decryptAudioFile : (source, destination)->
+		# Decrypt the encrypted audio/video local files
+		decryptLocalFile : (source, destination)->
 
 			$.Deferred (d)->
 
 				decrypt.startDecryption(source, destination
 					, ->
-						console.log destination
 						d.resolve destination
 
 					, (message) ->
-						console.log 'ERROR: '+message
+						console.log 'FILE DECRYPTION ERROR: '+message
 				)
+
 
 		
 		clearMediaDirectory : (directory_name)->
 			# Delete all video files from 'videos-web' folder
-			# window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-			# 	fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
-			# 		, {create: false, exclusive: false}
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
+				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
+					, {create: false, exclusive: false}
 
-			# 		, (directoryEntry)->
-			# 			reader = directoryEntry.createReader()
-			# 			reader.readEntries(
-			# 				(entries)->
-			# 					for i in [0..entries.length-1] by 1
-			# 						entries[i].remove()
+					, (directoryEntry)->
+						reader = directoryEntry.createReader()
+						reader.readEntries(
+							(entries)->
+								for i in [0..entries.length-1] by 1
+									entries[i].remove()
 
-			# 						if i is entries.length-1
-			# 							console.log 'Deleted all files from '+directory_name+' directory'
+									if i is entries.length-1
+										console.log 'Deleted all files from '+directory_name+' directory'
 
-			# 				,_.directoryErrorHandler)
-			# 		, _.directoryErrorHandler)
-			# , _.fileSystemErrorHandler)
+							,_.directoryErrorHandler)
+					, _.directoryErrorHandler)
+			, _.fileSystemErrorHandler)
 			
 
 

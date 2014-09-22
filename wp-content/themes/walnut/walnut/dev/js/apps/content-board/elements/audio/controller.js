@@ -1,6 +1,7 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __slice = [].slice;
 
 define(['app', 'apps/content-board/element/controller', 'apps/content-board/elements/audio/views'], function(App, Element) {
   return App.module('ContentPreview.ContentBoard.Element.Audio', function(Audio, App, Backbone, Marionette, $, _) {
@@ -8,6 +9,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       __extends(Controller, _super);
 
       function Controller() {
+        this._getLocalAudioCollection = __bind(this._getLocalAudioCollection, this);
         this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
@@ -54,19 +56,72 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       Controller.prototype.renderElement = function() {
         var audioCollection;
         this._parseInt();
-        audioCollection = this._getAudioCollection();
-        return App.execute("when:fetched", audioCollection, (function(_this) {
+        if (_.platform() === 'BROWSER') {
+          audioCollection = this._getAudioCollection();
+          return App.execute("when:fetched", audioCollection, (function(_this) {
+            return function() {
+              _this.layout.model.set({
+                'audioUrls': _.first(audioCollection.pluck('url'))
+              });
+              _this.layout.model.set({
+                'audioUrls': audioCollection.pluck('url')
+              });
+              _this.view = _this._getAudioView();
+              return _this.layout.elementRegion.show(_this.view);
+            };
+          })(this));
+        } else {
+          return this._getLocalAudioCollection();
+        }
+      };
+
+      Controller.prototype._getLocalAudioCollection = function() {
+        var runFunc;
+        runFunc = (function(_this) {
           return function() {
-            _this.layout.model.set({
-              'audioUrls': _.first(audioCollection.pluck('url'))
+            return $.Deferred(function(d) {
+              var audiosWebDirectory, deferreds, localAudioPaths;
+              localAudioPaths = [];
+              deferreds = [];
+              audiosWebDirectory = _.createAudiosWebDirectory();
+              return audiosWebDirectory.done(function() {
+                var allAudioUrls;
+                allAudioUrls = _this.layout.model.get('audioUrls');
+                _.each(allAudioUrls, function(audioUrl, index) {
+                  return (function(audioUrl) {
+                    var audioWebPath, audiosPath, decryptFile, decryptedAudioPath, encryptedAudioPath, url;
+                    url = audioUrl.replace("media-web/", "");
+                    audioWebPath = url.substr(url.indexOf("uploads/"));
+                    audiosPath = audioWebPath.replace("audio-web", "audios");
+                    encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosPath;
+                    decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
+                    decryptFile = _.decryptLocalFile(encryptedAudioPath, decryptedAudioPath);
+                    return deferreds.push(decryptFile);
+                  })(audioUrl);
+                });
+                return $.when.apply($, deferreds).done(function() {
+                  var audioPaths;
+                  audioPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+                  _.each(audioPaths, function(localAudioPath, index) {
+                    return (function(localAudioPath) {
+                      var localPath;
+                      localPath = 'file:///mnt/sdcard/' + localAudioPath;
+                      return localAudioPaths.push(localPath);
+                    })(localAudioPath);
+                  });
+                  return d.resolve(_this.layout.model.set('audioUrls', localAudioPaths));
+                });
+              });
             });
-            _this.layout.model.set({
-              'audioUrls': audioCollection.pluck('url')
-            });
+          };
+        })(this);
+        return $.when(runFunc()).done((function(_this) {
+          return function() {
+            console.log('_getLocalAudioCollection done');
             _this.view = _this._getAudioView();
             return _this.layout.elementRegion.show(_this.view);
           };
-        })(this));
+        })(this)).fail(_.failureHandler);
       };
 
       return Controller;

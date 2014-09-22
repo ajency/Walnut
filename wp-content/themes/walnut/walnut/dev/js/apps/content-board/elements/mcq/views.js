@@ -98,7 +98,7 @@ define(['app'], function(App) {
           });
         } else {
           return this.$el.find('input:checkbox').screwDefaultButtons({
-            image: 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")',
+            image: 'url("/images/csscheckbox-correct.png")',
             width: 32,
             height: 26
           });

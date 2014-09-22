@@ -37,5 +37,9 @@ define [
 	'serialize'
 	'fastclick'
 	'walnutGlobal'
+	'bootbox'
 	'jPages'
+	'sort'
+	'bridget'
+	'isotope'
 ], ->

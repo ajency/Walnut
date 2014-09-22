@@ -89,6 +89,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
         data.totalQuestions = this.collection.length;
+        if (this.quizModel.hasPermission('single_attempt')) {
+          data.showSkipped = true;
+        }
         return data;
       };
 
@@ -109,6 +112,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           midRange: 15,
           links: "blank"
         });
+        if (this.collection.length < 10) {
+          this.$el.find('.customButtons').remove();
+        }
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
         this.questionResponseCollection.each((function(_this) {
           return function(response) {
@@ -125,7 +131,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeQuestion = function(e) {
         var selectedQID;
         selectedQID = parseInt($(e.target).attr('id'));
-        if (!this.quizModel.hasPermission('single_attempt')) {
+        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || !this.quizModel.hasPermission('single_attempt')) {
           return this.trigger("change:question", selectedQID);
         }
       };
@@ -136,11 +142,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
-          this.changeClassName(responseModel);
-        }
         this.updateProgressBar();
-        return this.updateSkippedCount();
+        this.updateSkippedCount();
+        if (responseModel.get('status') === 'skipped' && !this.quizModel.hasPermission('single_attempt')) {
+          return false;
+        } else if (this.quizModel.hasPermission('display_answer')) {
+          return this.changeClassName(responseModel);
+        }
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {

@@ -8,4 +8,5 @@ define ['cordova/entities/app-menu'
 		'cordova/entities/app-quiz-response-summary'
 		'cordova/entities/app-quiz-question-response'
 		'cordova/entities/app-content-piece'
+		'cordova/entities/app-media'
 		], ->

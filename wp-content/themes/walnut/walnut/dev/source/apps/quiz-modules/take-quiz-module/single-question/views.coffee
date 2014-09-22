@@ -76,19 +76,17 @@ define ['app'
                         responseModel = Marionette.getOption @, 'questionResponseModel'
 
                         display_mode = Marionette.getOption @, 'display_mode'
-                        
-                        data.show_skip = true
 
                         if display_mode isnt 'replay'
                             
-                            data.allow_submit_answer = true
+                            data.show_skip = true
 
-                            data.allow_skip = true if @quizModel.hasPermission 'allow_skip'
+                            data.allow_submit_answer = true
 
                             if @quizModel.hasPermission('allow_hint') and _.trim data.hint
                                 data.show_hint =true
 
-                            if @quizModel.hasPermission 'single_attempt'
+                            if @quizModel.hasPermission('single_attempt') and not @quizModel.hasPermission 'allow_resubmit'
                                 data.show_skip_helper_text=true
 
                             if responseModel

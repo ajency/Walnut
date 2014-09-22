@@ -56,13 +56,19 @@ define ['app'
                 
                 data.total_time_taken = $.timeMinSecs responseSummary.get 'total_time_taken'
 
+                data.negMarksEnable= _.toBool data.negMarksEnable
+
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
                     
                     data.display_marks = true if @model.hasPermission 'display_answer'
+
+                    if data.negMarksEnable
+                        data.marks_scored =  responseSummary.get 'marks_scored'
+                        data.negative_scored =  responseSummary.get 'negative_scored'
+
                     data.total_marks_scored = responseSummary.get 'total_marks_scored'
-                    console.log JSON.stringify data.total_marks_scored
 
                     if _.platform() is 'DEVICE'
                         console.log JSON.stringify data.total_marks_scored
@@ -82,8 +88,6 @@ define ['app'
 
                     data.time_remaining = $.timeMinSecs total-elapsed 
 
-                data.negMarksEnable= _.toBool data.negMarksEnable
-                
                 data  
 
             onShow:->

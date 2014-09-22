@@ -1,6 +1,6 @@
 define ['underscore', 'unserialize'], ( _) ->
 
-	#Functions related to content-group entity
+	#Functions related to Quiz entity
 
 	_.mixin
 
@@ -28,12 +28,15 @@ define ['underscore', 'unserialize'], ( _) ->
 						do (row, i)->
 							collectionMeta = _.getCollectionMeta(row['id'])
 							collectionMeta.done (collectionMetaData)->
+								console.log collectionMetaData
 
 								do(row, i, collectionMetaData)->
 									dateAndStatus = _.getStartDateAndStatus(row['id'])
 									dateAndStatus.done (dateStatus)->
 										status = dateStatus.status
+										attempts = dateStatus.attempts
 										date = dateStatus.start_date
+										console.log JSON.stringify status
 										
 										result[i] = 
 											id: row['id']
@@ -61,6 +64,7 @@ define ['underscore', 'unserialize'], ( _) ->
 											content_layout: ""
 											taken_on: date
 											status: status
+											attempts: attempts
 											content_pieces: collectionMetaData.contentPieces
 
 					d.resolve result
@@ -303,32 +307,45 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		getStartDateAndStatus : (collection_id)->
 
-			data = start_date:'', status:''
+			data = start_date:'', status:'', attempts:''
 
 			runFunc = ->
 
 				$.Deferred (d)->
 					
-					quizResponseSummary = _.getQuizResponseSummary(collection_id)
+					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
 					quizResponseSummary.done (quiz_responses)->
+						console.log quiz_responses
 						if _.isEmpty quiz_responses
 							data.status = 'not started'
 							data.start_date = ''
+							data.attempts = 0
 
 						if not _.isEmpty quiz_responses
+
 							contentLayoutValue = _.unserialize(quiz_responses.quiz_meta)
+
+							if contentLayoutValue.attempts
+								data.attempts = contentLayoutValue.attempts
+								data.start_date = quiz_responses.taken_on
+								# date = quiz_responses.taken_on
+								# data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+							
 
 							if contentLayoutValue.status is "started"
 								data.status = 'started'
+								data.start_date = quiz_responses.taken_on
+								# date = quiz_responses.taken_on
+								# data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
-								date = quiz_responses.taken_on
-								data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
 							else if contentLayoutValue.status is "completed"
 								data.status = 'completed'
-								date = quiz_responses.taken_on
-								data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
-							
+								data.start_date = quiz_responses.taken_on
+								# date = quiz_responses.taken_on
+								# data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+
+
 						d.resolve data
 
 			
@@ -338,7 +355,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 
-		getQuizResponseSummary : (collection_id)->
+		getQuizResponseSummaryByCollectionId : (collection_id)->
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -355,7 +372,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 			$.when(runQuery()).done ->
-				console.log 'getQuizResponseSummary transaction completed'
+				console.log 'getQuizResponseSummaryByCollectionId transaction completed'
 			.fail _.failureHandler
 
 		
@@ -398,6 +415,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							do(row, collectionMetaData)->
 								dateAndStatus = _.getStartDateAndStatus(row['id'])
 								dateAndStatus.done (dateStatus)->
+									console.log JSON.stringify dateStatus.status
 
 									result = 
 										id: row['id']
@@ -420,6 +438,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										published_on: row['published_on']
 										quiz_type : collectionMetaData.quizType
 										status : dateStatus.status
+										attempts: dateStatus.attempts
 										date : dateStatus.start_date
 										term_ids: _.unserialize(row['term_ids'])
 										total_minutes: row['duration']

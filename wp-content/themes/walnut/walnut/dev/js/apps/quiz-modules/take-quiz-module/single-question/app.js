@@ -22,9 +22,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': this.model.id
         });
-        console.log(JSON.stringify(this.questionResponseModel));
         displayAnswer = this.quizModel.hasPermission('display_answer');
-        console.log(JSON.stringify(this.displayAnswer));
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
         this.answerWreqrObject.options = {
           'displayAnswer': displayAnswer

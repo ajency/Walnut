@@ -32,6 +32,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							result = 
 								collection_id : collection_id
 								status : quiz_meta.status
+								attempts: quiz_meta.attempts
 								num_skipped: skipped
 								student_id : _.getUserID()
 								summary_id : row['summary_id']
@@ -69,44 +70,97 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 
 
-		getQuizResponseByCollectionIdAndUserID : (collection_id)->
+
+		#Insert/update the data in quiz_response_summary if summary_id is present or not
+		writeQuizResponseSummary : (model)->
+			quizMetaValue= ''
+			quizMeta = ''
+
+			collectionMeta = _.getCollectionMeta(model.get('collection_id'))
+			collectionMeta.done (collectionMetaData)->
+				if collectionMetaData.quizType is "practice"
+
+					quizMetaValue = model.get('attempts')
+					quizMeta = 'attempts' : quizMetaValue
+
+
+				else
+					quizMetaValue = model.get('status')
+					quizMeta = 'status' : quizMetaValue
+
+
+
+			# if typeof summary_id != 'undefined'
+			if model.get('summary_id') is "" or typeof model.get('summary_id') is 'undefined'
+				_.insertIntoQuizResponseSummary(model,quizMeta)
+
+			else
+				_.updateIntoQuizResponseSummary(model,quizMeta)
+
+
+		insertIntoQuizResponseSummary : (model,quizMetaValue)->
+
+			summary_id = 'Q'+model.get('collection_id')+'S'+model.get('student_id')
+
+			serializeQuizMetaValue = serialize(quizMetaValue)
+			start_date = _.getCurrentDateTime(0)
+
+			_.db.transaction((tx)->
+
+				tx.executeSql("INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
+					, collection_id, student_id, quiz_meta, taken_on) 
+					VALUES (?,?,?,?,?)"
+					, [summary_id, model.get('collection_id'), model.get('student_id')
+					, serializeQuizMetaValue, start_date])
+
+			,_.transactionErrorhandler
+
+			,(tx)->
+				console.log 'Inserted data in quiz_response_summary'
+				model.set 'summary_id' :summary_id
+				# _.chkInsertData()
+			)
+
+		chkInsertData : ->
 
 			runQuery = ->
 				$.Deferred (d)->
-
+					
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT taken_on, quiz_meta, summary_id 
-							FROM "+_.getTblPrefix()+"quiz_response_summary WHERE collection_id=? 
-							AND student_id=?", [collection_id, _.getUserID()] 
+						tx.executeSql("SELECT * 
+							FROM "+_.getTblPrefix()+"quiz_response_summary ", []
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->
-
 				(tx,data)->
 
-					result = ''
-					row = data.rows.item(0)
+					result = data.rows.item(0)
+					console.log JSON.stringify result
 
-					quiz_meta = _.unserialize(row['quiz_meta'])
-					countForSkippedQuestion = _.getCountForSkippedQuestion()
-					countForSkippedQuestion.done (skipped)->
-
-						totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
-						totalMarksScoredAndTotalTimeTaken.done (value)->
-
-
-							result = 
-								collection_id : collection_id
-								status : quiz_meta.status
-								num_skipped: skipped
-								student_id : _.getUserID()
-								summary_id : row['summary_id']
-								taken_on : row['taken_on']
-								total_marks_scored : value.total_marks_scored
-								total_time_taken : value.total_time_taken
-
-							d.resolve(result)
+					d.resolve(result)
 
 			$.when(runQuery()).done ->
-				console.log 'getQuizResponseByCollectionIdAndUserID transaction completed'
+				console.log 'chkInsertData transaction completed'
 			.fail _.failureHandler
+
+
+		updateIntoQuizResponseSummary : (model,quizMeta)->
+
+			serializeQuizMetaValue = serialize(quizMeta)
+
+			console.log serializeQuizMetaValue
+
+			_.db.transaction((tx)->
+
+				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_response_summary SET 
+					quiz_meta=? 
+					WHERE summary_id=?"
+					, [serializeQuizMetaValue, model.get('summary_id')])
+
+			,_.transactionErrorhandler
+
+			,(tx)->
+				model.set 'summary_id' :summary_id
+				console.log 'Updated data in quiz_response_summary'
+			)
+

@@ -40,16 +40,13 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var display_mode, responseModel, _ref;
         responseModel = Marionette.getOption(this, 'questionResponseModel');
         display_mode = Marionette.getOption(this, 'display_mode');
-        data.show_skip = true;
         if (display_mode !== 'replay') {
+          data.show_skip = true;
           data.allow_submit_answer = true;
-          if (this.quizModel.hasPermission('allow_skip')) {
-            data.allow_skip = true;
-          }
           if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
             data.show_hint = true;
           }
-          if (this.quizModel.hasPermission('single_attempt')) {
+          if (this.quizModel.hasPermission('single_attempt') && !this.quizModel.hasPermission('allow_resubmit')) {
             data.show_skip_helper_text = true;
           }
           if (responseModel) {

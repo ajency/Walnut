@@ -9,8 +9,8 @@ define(["backbone"], function(Backbone) {
     sync: function(method, collection, options) {
       var collection_name, data, opts;
       collection_name = collection.name;
-      console.log('Collection name: ' + collection_name);
       opts = options.data;
+      console.log('Collection name: ' + collection_name);
       console.log('options: ' + JSON.stringify(opts));
       if (collection_name === 'textbook') {
         data = _.getTextbooksForStudent();
@@ -20,12 +20,6 @@ define(["backbone"], function(Backbone) {
       }
       if (collection_name === 'chapter') {
         data = _.getChaptersByParentId(opts.parent);
-        data.done(function(d) {
-          return collection.set(d);
-        });
-      }
-      if (collection_name === 'division') {
-        data = _.getAllDivisions();
         data.done(function(d) {
           return collection.set(d);
         });
@@ -52,6 +46,7 @@ define(["backbone"], function(Backbone) {
         data = _.getQuizQuestionResponseBySummaryID(opts.summary_id);
         data.done(function(d) {
           console.log('quiz-question-response');
+          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
@@ -148,8 +143,10 @@ define(["backbone"], function(Backbone) {
       } else {
         modelname = model.name;
         console.log("model");
-        console.log(JSON.stringify(model));
         console.log('Model name: ' + modelname);
+        console.log(JSON.stringify(model));
+        console.log(model.get('term_id'));
+        console.log(model.get('id'));
         if (modelname === 'division') {
           data = _.fetchSingleDivision(model.get('id'));
           data.done(function(d) {
@@ -159,6 +156,7 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'textbook') {
           data = _.getTextBookByTextbookId(model.get('term_id'));
           data.done(function(d) {
+            console.log(JSON.stringify(d));
             return model.set(d);
           });
         }
@@ -169,18 +167,10 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'quiz-response-summary') {
-          data = _.getQuizResponseByCollectionIdAndUserID(model.get('collection_id'));
-          data.done(function(d) {
-            console.log(JSON.stringify(d));
-            return model.set(d);
-          });
+          _.writeQuizResponseSummary(model);
         }
         if (modelname === 'quiz-question-response') {
-          data = _.getQuestionResponseBySummaryID(model.get('summary_id'));
-          data.done(function(d) {
-            console.log(JSON.stringify(d));
-            return model.set(d);
-          });
+          _.writeQuestionResponse(model);
         }
         if (modelname === 'content-group') {
           data = _.getContentGroupById(model.get('id'));

@@ -62,6 +62,7 @@ define ['app'
 
                     mixinTemplateHelpers:(data)->
                         data.totalQuestions = @collection.length
+                        data.showSkipped = true if @quizModel.hasPermission('single_attempt')
                         data
 
                     initialize:->
@@ -80,6 +81,8 @@ define ['app'
                             midRange: 15
                             links : "blank"
 
+                        @$el.find('.customButtons').remove() if @collection.length <10
+
                         currentQuestion = Marionette.getOption @,'currentQuestion'
                         
                         @questionResponseCollection.each (response)=> @changeClassName(response)  if @quizModel.hasPermission 'display_answer'
@@ -92,7 +95,7 @@ define ['app'
 
                     changeQuestion:(e)->
                         selectedQID = parseInt $(e.target).attr 'id'
-                        if not @quizModel.hasPermission 'single_attempt'
+                        if _.contains(@questionResponseCollection.pluck('content_piece_id'),selectedQID) or not @quizModel.hasPermission('single_attempt')
                             @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
@@ -105,11 +108,17 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        @changeClassName responseModel if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
-
                         @updateProgressBar()
 
                         @updateSkippedCount()
+
+                        if responseModel.get('status') is 'skipped' and not @quizModel.hasPermission('single_attempt')
+                            return false
+
+                        else if @quizModel.hasPermission 'display_answer'
+                            @changeClassName responseModel
+
+                        
 
                     changeClassName:(responseModel)->
                         

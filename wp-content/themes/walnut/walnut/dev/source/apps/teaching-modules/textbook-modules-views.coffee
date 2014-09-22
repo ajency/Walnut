@@ -7,7 +7,7 @@ define ['app',
 			# hence total_minutes is used. it is the duration in minutes.
 			# kept hidden coz the display doesnt need it. only tablesorter does
 
-			template : '<td class="v-align-middle cpHeight">{{name}}</td>
+			template : '<td class="v-align-middle">{{name}}</td>
 						<td class="v-align-middle">{{chapterName}}</td>
 						{{#take_quiz}}
 						<td class="v-align-middle">{{quiz_type}}</td>
@@ -16,7 +16,7 @@ define ['app',
 					   	<td>
 					   	{{#practice_quiz}}
 						   	{{#attempts}}
-						   		Attempted: {{attempts}} time(s)
+						   		<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
 						   	{{/attempts}}
 						   	{{^attempts}}
 						   		<span class="label label-important">Not Started</span>
@@ -54,19 +54,11 @@ define ['app',
 				data = super()
 
 				data.chapterName = =>
-
-					if _.platform() is 'BROWSER'
-						chapter = _.chain @chapters.findWhere "term_id" : data.term_ids.chapter
-						.pluck 'name'
-							.compact()
-							.value()
-						chapter
-
-					else
-						chapter = @chapters.findWhere "term_id" : parseInt(data.term_ids.chapter)
-						if _.isUndefined(chapter) then ''
-						else chapter.get('name')
-
+					chapter = _.chain @chapters.findWhere "term_id" : data.term_ids.chapter
+					.pluck 'name'
+						.compact()
+						.value()
+					chapter
 
 				if @model.get('type') is 'teaching-module'
 					training_date = @model.get('training_date')
@@ -109,7 +101,7 @@ define ['app',
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
-					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Quiz'
 
 				if @model.get('quiz_type') is 'practice'
 					data.practice_quiz = true
@@ -219,8 +211,12 @@ define ['app',
 
 
 			setFilteredContent:->
-
-				filtered_data= $.filterTableByTextbooks(@)
+				if Marionette.getOption(@, 'mode') is 'take-quiz'
+					dataType = 'quiz'
+				else
+					dataType = 'teaching-modules'
+					
+				filtered_data= $.filterTableByTextbooks(@, dataType)
 
 				@collection.set filtered_data
 

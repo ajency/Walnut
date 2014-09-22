@@ -44,5 +44,6 @@ define [
     'csvparse'
     'json2csvparse'
     'jszip'
+    'bootbox'
     'fastclick'
 ], ->

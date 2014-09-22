@@ -94,10 +94,15 @@ define ['underscore', 'unserialize'], ( _) ->
 									# element.columncount = element.elements.length
 									insideElement = _.getMcqElements(element)
 									insideElement.done (columnElement)->
-										content.excerpt.push columnElement.excerpt
-										total--
-										if not total
-											d.resolve content
+										metaData = _.getElementMetaValues(element)
+										metaData.done (meta)->
+											element.meta_id = parseInt element.meta_id
+											if meta isnt false
+												_.defaults element, meta
+											content.excerpt.push columnElement.excerpt
+											total--
+											if not total
+												d.resolve content
 
 
 								else 

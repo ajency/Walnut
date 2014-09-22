@@ -45,7 +45,10 @@ require.config({
     serialize: 'plugins/serialize',
     fastclick: 'plugins/fastclick',
     walnutGlobal: 'plugins/walnutapp-global',
-    jPages: 'plugins/jPages.min'
+    jPages: 'plugins/jPages.min',
+    sort: 'plugins/jquery.ui.touch-punch.min',
+    bridget: 'plugins/jquery.bridget',
+    isotope: 'plugins/isotope.pkgd.min'
   },
   shim: {
     underscore: {
@@ -87,6 +90,9 @@ require.config({
     countdowntimer: ['jquery', 'timerplugin'],
     bootbox: ['jquery', 'bootstrap'],
     jPages: ['jquery'],
+    sort: ['jquery', 'jqueryui'],
+    bridget: ['jquery'],
+    isotope: ['jquery', 'bridget'],
     app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
   }
 });

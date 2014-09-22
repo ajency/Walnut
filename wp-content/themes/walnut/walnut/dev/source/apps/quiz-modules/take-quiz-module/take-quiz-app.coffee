@@ -24,13 +24,6 @@ define ['app'
                     {quizModel,quizResponseSummary,questionsCollection,
                     @questionResponseCollection,@textbookNames,@display_mode} = opts
 
-                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
-
-                        quizResponseSummary.save 'status' : 'started'
-
-                    if quizModel.get('quiz_type') is 'practice'
-                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
-
                     @_startTakeQuiz()
                 
                 _startTakeQuiz:=>
@@ -50,11 +43,25 @@ define ['app'
 
                     if pausedQuestion 
                         questionID = pausedQuestion.get 'content_piece_id'
-                        pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'
-                        console.log pausedQuestionTime
+                        pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'     
 
                     else
-                        questionID = _.first questionIDs
+                        unanswered = @_getUnansweredIDs()
+
+                        if not _.isEmpty unanswered
+                            questionID =_.first @_getUnansweredIDs()
+
+                        else
+                            questionID = _.first(questionIDs) if not questionID
+
+                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
+
+                        quizResponseSummary.save 
+                            'status' : 'started'
+                            'questions_order': questionIDs
+
+                    if quizModel.get('quiz_type') is 'practice'
+                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
 
                     questionModel = questionsCollection.get questionID
                     @layout = layout = new TakeQuizLayout
@@ -119,25 +126,6 @@ define ['app'
 
                 _changeQuestion:(changeToQuestion)=>
                     #save results here of previous question / skip the question
-
-                    startIndex= _.indexOf questionIDs,questionModel.id
-                    endIndex= _.indexOf questionIDs,changeToQuestion
-                    
-                    return false if startIndex is endIndex
-
-                    @answerModel = App.request "create:new:answer"
-                    @answerModel.set 'status': 'skipped'
-
-                    for index in [startIndex..(endIndex-1)]
-                        console.log questionIDs[index]
-                        console.log @questionResponseCollection.pluck 'content_piece_id'
-
-                        if questionIDs[index] in @_getUnansweredIDs()
-
-                            questionModel = questionsCollection.get questionIDs[index]
-                            @_submitQuestion @answerModel
-
-
                     questionModel = questionsCollection.get changeToQuestion
                     @_showSingleQuestionApp questionModel
 
