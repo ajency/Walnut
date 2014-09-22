@@ -85,7 +85,8 @@ define ['app'
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
                     setInterval =>
-                        @_autosaveQuestionTime() if quizResponseSummary.get('status') isnt 'completed'                            
+                        time = @timerObject.request "get:elapsed:time"
+                        @_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
                     ,30000
 
                 _autosaveQuestionTime:=>
