@@ -45,6 +45,26 @@ define ['jquery', 'underscore'], ($, _)->
     # curr_item is the current value for the model in edit mode
     # ie. values which must be selected by default
 
+    $.populateTextbooks = (items, ele)->
+        ele.find '#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter'
+        .html ''
+        
+        textbookElement= ele.find '#textbooks-filter'
+
+        chapterElement= ele.find '#chapters-filter'
+
+        if items instanceof Backbone.Collection
+            items= items.models
+
+        if _.size(items) > 0
+
+            _.each items, (item, index)=>
+                textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
+
+            textbookElement.select2().select2 'val', _.first(items).get 'term_id'
+        else 
+            textbookElement.select2 'data', null
+
     $.populateChapters = (items, ele, curr_item='' )->
 
         ele.find '#chapters-filter,#sections-filter,#subsections-filter'
@@ -155,6 +175,8 @@ define ['jquery', 'underscore'], ($, _)->
     $.filterTableByTextbooks = (_this, dataType)->
         filter_elements= _this.$el.find('select.textbook-filter')
 
+        console.log dataType
+        
         if dataType is 'teaching-modules'
             filterCollection = App.request "get:content:modules:repository"
 

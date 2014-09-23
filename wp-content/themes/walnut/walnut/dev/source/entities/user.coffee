@@ -44,6 +44,18 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					userCollection
 
+				getStudentsByDivision:(division)-> #returns a collection of users
+					
+					stud_data = 
+	                    'role' : 'student'
+	                    'division' : division
+
+					students = new UserCollection
+					students.fetch
+						data : stud_data
+
+					students
+
 				getUserData:(key)->
 					data=loggedInUser.get 'data'
 					console.log data[key]
@@ -91,6 +103,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:user:collection",(opts) ->
 				API.getUsers opts
+
+			App.reqres.setHandler "get:students:by:division",(division)->
+				API.getStudentsByDivision division
 
 			App.reqres.setHandler "get:user:data",(key)->
 				API.getUserData key

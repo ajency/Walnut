@@ -67,6 +67,18 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return userCollection;
       },
+      getStudentsByDivision: function(division) {
+        var stud_data, students;
+        stud_data = {
+          'role': 'student',
+          'division': division
+        };
+        students = new UserCollection;
+        students.fetch({
+          data: stud_data
+        });
+        return students;
+      },
       getUserData: function(key) {
         var data;
         data = loggedInUser.get('data');
@@ -111,6 +123,9 @@ define(["app", 'backbone'], function(App, Backbone) {
     });
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
+    });
+    App.reqres.setHandler("get:students:by:division", function(division) {
+      return API.getStudentsByDivision(division);
     });
     App.reqres.setHandler("get:user:data", function(key) {
       return API.getUserData(key);

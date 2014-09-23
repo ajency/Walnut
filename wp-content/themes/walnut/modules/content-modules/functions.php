@@ -135,11 +135,11 @@ function get_modules_by_search_string($search_string, $all_module_ids){
 
             }
         }
-
         $module_ids = __u::flatten($module_ids);
-
     }
 
+    $module_ids = __u::compact($module_ids);
+    
     return $module_ids;
 
 

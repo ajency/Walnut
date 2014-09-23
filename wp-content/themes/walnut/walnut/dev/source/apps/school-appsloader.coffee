@@ -19,6 +19,8 @@ define [
     #list of modules to check status and send mails if completed in class
     'apps/admin-content-modules/app'
 
+    'apps/quiz-reports/app'
+
     #redirect here if user doesnt have permissions
     'apps/no-permissions/app'
 ], ->

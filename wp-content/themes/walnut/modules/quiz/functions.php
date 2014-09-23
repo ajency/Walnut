@@ -6,7 +6,7 @@
  * Time: 6:47 PM
  */
 
-function get_single_quiz_module ($id,$user_id=0) {
+function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     global $wpdb;
 
     if(!$user_id)
@@ -90,6 +90,16 @@ function get_single_quiz_module ($id,$user_id=0) {
 
         }
         $data->content_pieces = $content_ids;
+    }
+
+    if($division){
+        
+        $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id) 
+            FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d",
+            $id);
+
+        $data->taken_by = (int) $wpdb->get_var($taken_by_query);
+        $data->total_students = get_student_count_in_division($division);
     }
 
     return $data;
@@ -251,11 +261,10 @@ function get_all_quiz_modules($args){
     if(isset($args['search_str']) && trim($args['search_str']) !=''){
         $quiz_ids = get_modules_by_search_string($args['search_str'],$quiz_ids);
     }
-
     $quiz_ids = __u::flatten($quiz_ids);
 
     foreach ($quiz_ids as $id){
-        $quiz_data = get_single_quiz_module((int)$id,$user_id);
+        $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
         $result[] = $quiz_data;
     }
 

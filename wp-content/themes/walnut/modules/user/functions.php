@@ -73,7 +73,7 @@ function get_user_list( $data ) {
     }
 
     $users = get_users( $args );
-
+    
     $user_data = array();
     foreach ($users as $user) {
         $user_data[] = get_user_by_id( $user->id );
@@ -87,12 +87,14 @@ function get_user_by_id( $id ) {
 
     $user = get_userdata( $id );
 
-    $user_data['ID'] = $user->ID;
-    $user_data['display_name'] = $user->display_name;
-    $user_data['role'] = $user->roles;
-    $user_data['user_email'] = $user->user_email;
-    $user_data['user_email'] = $user->user_email;
-    $user_data['profile_pic'] = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
+    $user_data['ID']            = $user->ID;
+    $user_data['display_name']  = $user->display_name;
+    $user_data['role']          = $user->roles;
+    $user_data['user_email']    = $user->user_email;
+    $user_data['user_email']    = $user->user_email;
+    $user_data['roll_no']       = get_user_meta($id, 'student_rollno', true);
+
+    $user_data['profile_pic']   = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
 
     return $user_data;
 

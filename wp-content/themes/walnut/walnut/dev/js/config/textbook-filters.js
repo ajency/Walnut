@@ -21,6 +21,25 @@ define(['jquery', 'underscore'], function($, _) {
     }
     return divHtml += '<select class="textbook-filter select2-filters" id="sections-filter"> <option value="">All Sections</option> </select> <select class="textbook-filter select2-filters" id="subsections-filter"> <option value="">All Sub Sections</option> </select>';
   };
+  $.populateTextbooks = function(items, ele) {
+    var chapterElement, textbookElement;
+    ele.find('#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter').html('');
+    textbookElement = ele.find('#textbooks-filter');
+    chapterElement = ele.find('#chapters-filter');
+    if (items instanceof Backbone.Collection) {
+      items = items.models;
+    }
+    if (_.size(items) > 0) {
+      _.each(items, (function(_this) {
+        return function(item, index) {
+          return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
+        };
+      })(this));
+      return textbookElement.select2().select2('val', _.first(items).get('term_id'));
+    } else {
+      return textbookElement.select2('data', null);
+    }
+  };
   $.populateChapters = function(items, ele, curr_item) {
     var chapterElement, selectedTextbook, txt;
     if (curr_item == null) {
@@ -158,6 +177,7 @@ define(['jquery', 'underscore'], function($, _) {
   return $.filterTableByTextbooks = function(_this, dataType) {
     var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type;
     filter_elements = _this.$el.find('select.textbook-filter');
+    console.log(dataType);
     if (dataType === 'teaching-modules') {
       filterCollection = App.request("get:content:modules:repository");
     } else if (dataType === 'quiz') {
