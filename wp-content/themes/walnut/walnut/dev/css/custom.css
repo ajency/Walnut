@@ -1294,7 +1294,6 @@ p.mcq-option-text {
 }
 .container-grey {
   background: #f3f3f3;
-  border: 1px solid #c3c3c3;
   box-shadow: #dadada 0 0 0 3px inset;
 }
 .hashtags {
@@ -1397,7 +1396,6 @@ p.mcq-option-text {
 .contentInfo {
   width: 235px;
   background: #f3f3f3;
-  border: 1px solid #c3c3c3;
   box-shadow: #dadada 0 0 0 3px inset;
   position: absolute;
 }
@@ -2054,6 +2052,7 @@ input#duration {
 }
 .quizActions {
   max-width: 760px;
+  box-shadow: #dadada 0px 3px 0 0px inset;
 }
 .timerBox {
   float: right;
@@ -2061,8 +2060,10 @@ input#duration {
 .timerBox,
 .quizProgress {
   width: 235px;
-  background: #cdcdcd;
+  background: #f3f3f3;
+  box-shadow: #dadada 0 0 0 3px inset;
   margin: 0 1.5%;
+  padding: 5px;
 }
 .quizProgress {
   float: left;
@@ -2075,6 +2076,7 @@ input#duration {
 .quizSteps ul li {
   text-align: center;
   padding: 0;
+  cursor: pointer;
 }
 .quizSteps ul li a {
   padding: 30px 0;
@@ -2154,6 +2156,34 @@ input#duration {
   bottom: 4px;
   left: 40%;
 }
+.quizSteps ul li.current.right a {
+  box-shadow: inset 0 0 0 10px #1b721a;
+}
+.quizSteps ul li.current.right a:before {
+  color: #1b721a;
+  left: 10%;
+}
+.quizSteps ul li.current.wrong a {
+  box-shadow: inset 0 0 0 10px #f02a28;
+}
+.quizSteps ul li.current.wrong a:before {
+  color: #f02a28;
+  left: 10%;
+}
+.quizSteps ul li.current.skip a {
+  box-shadow: inset 0 0 0 10px #e4b702;
+}
+.quizSteps ul li.current.skip a:before {
+  color: #e4b702;
+  left: 10%;
+}
+.quizSteps ul li.current.partiallyCorrect a {
+  box-shadow: inset 0 0 0 10px #006ea6;
+}
+.quizSteps ul li.current.partiallyCorrect a:before {
+  color: #006ea6;
+  left: 10%;
+}
 .customButtons {
   padding: 15px 15px 20px;
 }
@@ -2194,37 +2224,40 @@ input#duration {
 @media (min-width: 1020px) and (max-width: 1295px) {
   .timerBox,
   .quizProgress {
-    margin: 0;
-    left: 0;
-    position: absolute;
+    margin: 0 1.5%;
+    float: none;
+    position: static;
   }
   .timerBox {
-    top: 420px;
+    margin-bottom: 8px;
   }
   .quizActions {
     margin: 0;
+    margin-bottom: 10px;
     margin-left: auto;
   }
   .sidebarContainer {
     position: relative;
+    float: left;
   }
 }
 @media (max-width: 1019px) {
   .sidebarContainer {
-    position: absolute;
     bottom: 0;
     z-index: 999;
     width: 100%;
   }
   .sidebarContainer .timerBox {
-    float: left;
-    width: 35%;
-    margin: 0;
+    float: none;
+    width: 100%;
+    max-width: 760px;
+    margin: 10px auto;
   }
   .sidebarContainer .quizProgress {
-    float: left;
-    width: 65%;
-    margin: 0;
+    float: none;
+    width: 100%;
+    max-width: 760px;
+    margin: 10px auto;
   }
   .sidebarContainer .quizProgress .quizSteps ul li a {
     width: 15%;
