@@ -149,6 +149,7 @@ define ['app'
 
                         @$el.find "#quiz-progress-bar"
                         .attr "data-percentage", progressPercentage + '%'
+                        .attr "aria-valuenow", progressPercentage
                         .css "width" : progressPercentage + '%'
 
                         @$el.find "#answered-questions"

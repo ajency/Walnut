@@ -1,20 +1,12 @@
-<div class="tiles grey text-grey b-grey b-b m-t-30 qstnInfo">
-    <div class="simple m-b-0 transparent"> 
-        <div class="grid-title no-border"> 
-            <p class="small-text bold inline text-grey"><span class="fa fa-question"></span> Question Info </p>
-        </div>
-        <div class="no-border"> 
-            <p class="bold inline text-grey">{{&instructions}}</p>
-        </div> 
-        <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> 
-            <p class=""></p> 
-        </div> 
-    </div>
+<div class="container-grey m-b-5  qstnInfo">
+    <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
+    <p class="bold inline text-grey">{{&instructions}}</p>
 </div>
+
 <div id="content-board" class="quizContent no-margin"></div>
 
-<div class="well m-b-10 p-t-10 p-b-10 h-center quizActions"> 
-    <span class="pull-left" id="first_question"></span>
+<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
+    <span class="pull-left small" id="first_question"></span>
     <button type="button" id="previous-question" class="btn btn-info pull-left"> 
         <i class="fa fa-backward"></i> Previous 
     </button>
@@ -24,7 +16,7 @@
     </button>
     {{/allow_submit_answer}}
 
-    <span class="pull-right" id="last_question"></span>
+    <span class="pull-right small" id="last_question"></span>
     <button type="button" id="next-question" class="none btn btn-info pull-right">
         Next <i class="fa fa-forward"></i> 
     </button>
@@ -45,19 +37,11 @@
         {{/show_skip_helper_text}}
     </div>
     <div class="clearfix"></div>
-</div>                                
+</div>
+
 {{#showComment}}
-    <div class="tiles grey text-grey b-grey b-b m-t-30 qstnInfo">
-        <div class="grid simple m-b-0 transparent"> 
-            <div class="grid-title no-border grid-body-toggle"> 
-                <p class="small-text bold inline text-grey">Comment </p>
-            </div>
-            <div class="grid-body no-border"> 
-                <p class="bold inline text-grey">{{&comment}}</p>
-            </div> 
-            <div class="qstnInfoBod no-border m-t-10 p-b-5 p-r-20 p-l-20"> 
-                <p class=""></p> 
-            </div> 
-        </div>
+    <div class="container-grey m-b-5 qstnInfo">
+        <label class="form-label bold small-text muted no-margin inline">Comment: </label>
+        <p class="bold inline text-grey">{{&comment}}</p>
     </div>
 {{/showComment}}
