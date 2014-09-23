@@ -56,12 +56,13 @@ define(['app'], function(App) {
         self = this;
         return this.$el.find('h4').find('input').each((function(_this) {
           return function(index, input) {
-            var correctAnswerArray;
-            correctAnswerArray = _this.blanksCollection.get($(input).attr('data-id')).get('correct_answers');
+            var blankModel, correctAnswerArray;
+            blankModel = _this.blanksCollection.get($(input).attr('data-id'));
+            correctAnswerArray = blankModel.get('correct_answers');
             if (correctAnswerArray[0] !== "") {
               $(input).replaceWith("<span class='fibAns'>" + correctAnswerArray[0] + "</span>");
               if (correctAnswerArray.length > 1) {
-                return _this.$el.find('#allAnswers').append("<span>All correct options for " + correctAnswerArray[0] + ": " + (_.toSentence(correctAnswerArray)) + "</span></br>");
+                return _this.$el.find('#allAnswers').append("<span>All correct options for " + (_.getOrdinal(blankModel.get('blank_index'))) + " blank is : " + (_.toSentence(correctAnswerArray)) + "</span></br>");
               }
             } else {
               return $(input).replaceWith("<span class='fibAns'>(no correct)</span>");

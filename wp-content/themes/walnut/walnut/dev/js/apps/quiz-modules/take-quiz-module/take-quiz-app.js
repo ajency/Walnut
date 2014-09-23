@@ -83,7 +83,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
         return setInterval((function(_this) {
           return function() {
-            if (quizResponseSummary.get('status') !== 'completed') {
+            var time;
+            time = _this.timerObject.request("get:elapsed:time");
+            if (time && quizResponseSummary.get('status') !== 'completed') {
               return _this._autosaveQuestionTime();
             }
           };

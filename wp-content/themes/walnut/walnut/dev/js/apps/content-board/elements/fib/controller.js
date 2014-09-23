@@ -62,7 +62,6 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.layout.model.set('blanksArray', this.blanksCollection);
-        console.log(this.blanksCollection.pluck('marks'));
         this.view = this._getFibView(this.layout.model);
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
         return this.layout.elementRegion.show(this.view);
@@ -125,7 +124,6 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               _this.answerModel.get('answer').push($(blank).val());
               blankModel = _this.blanksCollection.get($(blank).attr('data-id'));
               correctAnswersArray = blankModel.get('correct_answers');
-              console.log(correctAnswersArray);
               if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
                 _this.answerModel.set('marks', _this.answerModel.get('marks') + blankModel.get('marks'));
                 return $(blank).addClass('ansRight');
@@ -146,8 +144,6 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       };
 
       Controller.prototype._checkAnswer = function(answer, correctAnswersArray) {
-        console.log(answer);
-        console.log(correctAnswersArray);
         if (this.caseSensitive) {
           return _.contains(correctAnswersArray, answer);
         } else {

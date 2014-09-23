@@ -23,7 +23,6 @@ define ['app'
                     imageCollection : []
                     complete : false
 
-
                 super(options)
 
             _getHotspotView : ()->
