@@ -32,13 +32,15 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			'wp_'+_.getBlogID()+'_'
 
 
+
 		displayConnectionStatusOnMainLoginPage : ->
 			
 			if _.isOnline() then $('#connectionStatus').text('Available')
 			else $('#connectionStatus').text('Unavailable')
 
 
-		
+
+
 		# change main logo to school logo after initial user login
 		setSchoolLogo : ->
 
@@ -208,6 +210,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			return time if bit is 1
 			return date+' '+time if bit is 2
 
+
 		
 		audioQueuesSelection : (selectedAction)->
 			if _.platform() is "DEVICE"
@@ -254,11 +257,13 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							audioCues.release()
 						,2000)
 
+
 		setAudioCuesToggle : ->
 			if _.getAudioCues() is 'true'
 				$('#onOffSwitchToggle').prop "checked" : true
 			else
 				$('#onOffSwitchToggle').prop "checked" : false
+
 
 
 		#Fetch single division id for student
@@ -285,6 +290,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
+
 		getUserEmail :->
 			userDetails = user_email : '', username : ''
 
@@ -308,7 +314,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					d.resolve(userDetails)
 
 			$.when(runQuery()).done ->
-				console.log 'getUserDetails transaction completed'
+				console.log 'getUserEmail transaction completed'
 			.fail _.failureHandler
 
 
@@ -326,16 +332,16 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			singleDivision = @getSingleDivsionByUserId(_.getUserID())
 			singleDivision.done (division)->
 
-				userDeatils = _.getUserEmail(@data.data.txtusername)
-				getUserDetails.done (user)->
-					
-					console.log JSON.stringify user
+				userDeatils = _.getUserEmail()
+				userDeatils.done (userData)->
+
+					console.log JSON.stringify userData
 					
 					data = 
 						'division': division
 						'ID': _.getUserID()
-						'display_name': user.username
-						'user_email': user.user_email
+						'display_name': userData.username
+						'user_email': userData.user_email
 
 
 

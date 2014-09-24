@@ -48,8 +48,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			if ($('#onOffSwitch').is(':checked')) then false else true
 
 		
-		
 		onlineDeviceAuth:->
+
 			@data = 
 				data: @data
 			url = AJAXURL + '?action=get-user-app-profile' 
@@ -66,9 +66,10 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							console.log _.getCookiesValue()
 							xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
 				success : (resp, status, jqXHR)=>
+
 					console.log 'Login Response'
 					console.log JSON.stringify resp
-					console.log JSON.stringify resp.login_details.data.division
+
 					if resp.error
 						@onErrorResponse(resp.error)
 					else

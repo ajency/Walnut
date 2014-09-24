@@ -86,7 +86,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             var store_cookies, userRole;
             console.log('Login Response');
             console.log(JSON.stringify(resp));
-            console.log(JSON.stringify(resp.login_details.data.division));
             if (resp.error) {
               return _this.onErrorResponse(resp.error);
             } else {

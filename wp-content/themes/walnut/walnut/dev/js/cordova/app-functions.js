@@ -295,7 +295,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('getUserDetails transaction completed');
+        return console.log('getUserEmail transaction completed');
       }).fail(_.failureHandler);
     },
     setUserModel: function() {
@@ -312,15 +312,15 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       singleDivision = this.getSingleDivsionByUserId(_.getUserID());
       return singleDivision.done(function(division) {
         var userDeatils;
-        userDeatils = _.getUserEmail(this.data.data.txtusername);
-        return getUserDetails.done(function(user) {
+        userDeatils = _.getUserEmail();
+        return userDeatils.done(function(userData) {
           var data;
-          console.log(JSON.stringify(user));
+          console.log(JSON.stringify(userData));
           data = {
             'division': division,
             'ID': _.getUserID(),
-            'display_name': user.username,
-            'user_email': user.user_email
+            'display_name': userData.username,
+            'user_email': userData.user_email
           };
           return user.set({
             'data': data
