@@ -124,10 +124,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			_.setBlogID(blog_id)
 			_.setUserEmail(user_email)
 
-			# set user model for back button navigation
-			_.setUserModel()
 			
-
+			
 
 
 
@@ -157,7 +155,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			,_.transactionErrorhandler 
 			,(tx)->
 				console.log 'SUCCESS: Inserted new user'
-				
+				# set user model for back button navigation
+				_.setUserModel()
 			)
 
 		

@@ -122,7 +122,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 		#Get all user details from local database
 		getUserDetails : (user)->
-			user.user_name
+			console.log user.user_name
+			console.log user.userId
 			userData = user_id : '', password: '', username: ''
 					, role : '',user_email : '',session_id : '' 
 					,blog_id : '' ,division:'' ,exists : false
@@ -328,7 +329,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 		# user model set for back button navigation
 		setUserModel : ->
-			alert "user model"
 			
 			user = App.request "get:user:model"
 			user.set 'ID' :''+_.getUserID()
@@ -338,11 +338,11 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 			u_id = userId : _.getUserID()
 
-			userDetails = @getUserDetails(u_id)
+			userDetails = _.getUserDetails(u_id)
 			userDetails.done (userData)->
 				console.log JSON.stringify userData
 
-				singleDivision = @getSingleDivsionByUserId(_.getUserID())
+				singleDivision = _.getSingleDivsionByUserId(_.getUserID())
 				singleDivision.done (division)->
 
 					data = 

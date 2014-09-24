@@ -100,7 +100,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     },
     getUserDetails: function(user) {
       var onSuccess, runQuery, userData;
-      user.user_name;
+      console.log(user.user_name);
+      console.log(user.userId);
       userData = {
         user_id: '',
         password: '',
@@ -307,7 +308,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     },
     setUserModel: function() {
       var u_id, user, userDetails;
-      alert("user model");
       user = App.request("get:user:model");
       user.set({
         'ID': '' + _.getUserID()
@@ -320,11 +320,11 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       u_id = {
         userId: _.getUserID()
       };
-      userDetails = this.getUserDetails(u_id);
+      userDetails = _.getUserDetails(u_id);
       return userDetails.done(function(userData) {
         var singleDivision;
         console.log(JSON.stringify(userData));
-        singleDivision = this.getSingleDivsionByUserId(_.getUserID());
+        singleDivision = _.getSingleDivsionByUserId(_.getUserID());
         return singleDivision.done(function(division) {
           var data;
           data = {

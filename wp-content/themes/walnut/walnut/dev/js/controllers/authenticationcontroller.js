@@ -139,8 +139,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       _.setUserID(id);
       _.setUserName(username);
       _.setBlogID(blog_id);
-      _.setUserEmail(user_email);
-      return _.setUserModel();
+      return _.setUserEmail(user_email);
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp, jqXHR) {
@@ -169,7 +168,8 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
           return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, session_id, blog_id, user_email, division) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [resp.ID, _this.data.data.txtusername, _this.data.data.txtpassword, resp.roles[0], cookie, response.blog_details.blog_id, response.login_details.data.user_email, response.login_details.data.division]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
-        return console.log('SUCCESS: Inserted new user');
+        console.log('SUCCESS: Inserted new user');
+        return _.setUserModel();
       });
     };
 
