@@ -34,10 +34,10 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d                                   
 
-			# if collection_name is 'division'
-			# 	data = _.getAllDivisions()
-			# 	data.done (d)->
-			# 		collection.set d
+			if collection_name is 'division'
+				data = _.getAllDivisions()
+				data.done (d)->
+					collection.set d
 
 			if collection_name is 'content-group'
 				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)

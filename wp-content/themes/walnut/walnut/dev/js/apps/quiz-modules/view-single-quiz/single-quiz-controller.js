@@ -2,16 +2,16 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app', 'apps/quiz-modules/view-single-quiz/content-display/content-display-app', 'apps/quiz-modules/take-quiz-module/take-quiz-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/layout', 'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app', 'apps/quiz-modules/view-single-quiz/content-display/content-display-app', 'apps/quiz-modules/view-single-quiz/attempts/app', 'apps/quiz-modules/take-quiz-module/take-quiz-app'], function(App, RegionController) {
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
-    var QuizViewLayout;
     ViewQuiz.Controller = (function(_super) {
-      var display_mode, questionsCollection, quizModel, quizResponseSummary;
+      var display_mode, questionsCollection, quizModel, quizResponseSummary, quizResponseSummaryCollection;
 
       __extends(Controller, _super);
 
       function Controller() {
         this._getQuizViewLayout = __bind(this._getQuizViewLayout, this);
+        this._showAttemptsRegion = __bind(this._showAttemptsRegion, this);
         this.showQuizViews = __bind(this.showQuizViews, this);
         this.startQuiz = __bind(this.startQuiz, this);
         this._fetchQuestionResponseCollection = __bind(this._fetchQuestionResponseCollection, this);
@@ -23,6 +23,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       questionsCollection = null;
 
       quizResponseSummary = null;
+
+      quizResponseSummaryCollection = null;
 
       display_mode = null;
 
@@ -39,7 +41,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           region: App.leftNavRegion
         });
         this.fetchQuizResponseSummary = this._fetchQuizResponseSummary();
-        console.log(this.questionResponseCollection);
         fetchQuestionResponseCollection = this._fetchQuestionResponseCollection();
         return fetchQuestionResponseCollection.done((function(_this) {
           return function() {
@@ -90,27 +91,55 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 _this.show(_this.layout, {
                   loading: true
                 });
-                _this.listenTo(_this.layout, 'show', _this.showQuizViews);
-                _this.listenTo(_this.layout.quizDetailsRegion, 'start:quiz:module', _this.startQuiz);
-                return _this.listenTo(_this.layout.quizDetailsRegion, 'try:again', function() {
-                  _this.questionResponseCollection = null;
-                  quizResponseSummary.set({
-                    'num_skipped': 0,
-                    'status': 'not_started',
-                    'total_marks_scored': 0,
-                    'total_time_taken': 0
-                  });
-                  display_mode = 'class_mode';
-                  return _this.startQuiz();
+                _this.listenTo(_this.layout, 'show', function() {
+                  _this.showQuizViews();
+                  return _this._showAttemptsRegion();
                 });
+                _this.listenTo(_this.layout.quizDetailsRegion, 'start:quiz:module', _this.startQuiz);
+                _this.listenTo(_this.layout.quizDetailsRegion, 'try:again', _this._tryAgain);
+                return _this.listenTo(_this.layout.attemptsRegion, 'view:summary', _this._viewSummary);
               });
             });
           };
         })(this));
       };
 
+      Controller.prototype._tryAgain = function() {
+        if (quizModel.get('quiz_type') !== 'practice') {
+          return false;
+        }
+        this.questionResponseCollection = null;
+        quizModel.set({
+          'attempts': parseInt(quizModel.get('attempts')) + 1
+        });
+        this.summary_data = {
+          'collection_id': quizModel.get('id'),
+          'student_id': App.request("get:loggedin:user:id"),
+          'taken_on': moment().format("YYYY-MM-DD")
+        };
+        quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
+        quizResponseSummaryCollection.add(quizResponseSummary);
+        display_mode = 'class_mode';
+        return this.startQuiz();
+      };
+
+      Controller.prototype._viewSummary = function(summary_id) {
+        var fetchResponses;
+        quizResponseSummary = quizResponseSummaryCollection.get(summary_id);
+        this.questionResponseCollection = null;
+        fetchResponses = this._fetchQuestionResponseCollection();
+        return fetchResponses.done((function(_this) {
+          return function() {
+            _this.layout.$el.find('#quiz-details-region,#content-display-region').hide();
+            _this.layout.$el.find('#quiz-details-region,#content-display-region').fadeIn('slow');
+            _this.showQuizViews();
+            return _this.layout.attemptsRegion.$el.find('.view-summary i').removeClass('fa fa-spin fa-spinner');
+          };
+        })(this));
+      };
+
       Controller.prototype._fetchQuizResponseSummary = function() {
-        var defer, quizResponseSummaryCollection;
+        var defer;
         defer = $.Deferred();
         if (quizResponseSummary) {
           defer.resolve();
@@ -118,16 +147,18 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         }
         this.summary_data = {
           'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id")
+          'student_id': App.request("get:loggedin:user:id"),
+          'taken_on': moment().format("YYYY-MM-DD")
         };
         quizResponseSummaryCollection = App.request("get:quiz:response:summary", this.summary_data);
         App.execute("when:fetched", quizResponseSummaryCollection, (function(_this) {
           return function() {
             if (quizResponseSummaryCollection.length > 0) {
-              quizResponseSummary = quizResponseSummaryCollection.first();
+              quizResponseSummary = quizResponseSummaryCollection.last();
               return defer.resolve();
             } else {
               quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
+              quizResponseSummaryCollection.add(quizResponseSummary);
               return defer.resolve();
             }
           };
@@ -185,34 +216,25 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         }
       };
 
+      Controller.prototype._showAttemptsRegion = function() {
+        if (quizModel.get('quiz_type') === 'practice' && quizModel.get('attempts') > 0) {
+          return App.execute("show:quiz:attempts:app", {
+            region: this.layout.attemptsRegion,
+            model: quizModel,
+            quizResponseSummaryCollection: quizResponseSummaryCollection
+          });
+        }
+      };
+
       Controller.prototype._getQuizViewLayout = function() {
-        return new QuizViewLayout;
+        return new ViewQuiz.LayoutView.QuizViewLayout({
+          model: quizModel
+        });
       };
 
       return Controller;
 
     })(RegionController);
-    QuizViewLayout = (function(_super) {
-      __extends(QuizViewLayout, _super);
-
-      function QuizViewLayout() {
-        return QuizViewLayout.__super__.constructor.apply(this, arguments);
-      }
-
-      QuizViewLayout.prototype.template = '<div class="teacher-app"> <div id="quiz-details-region"></div> </div> <div id="content-display-region"></div>';
-
-      QuizViewLayout.prototype.regions = {
-        quizDetailsRegion: '#quiz-details-region',
-        contentDisplayRegion: '#content-display-region'
-      };
-
-      QuizViewLayout.prototype.onShow = function() {
-        return $('.page-content').removeClass('expand-page');
-      };
-
-      return QuizViewLayout;
-
-    })(Marionette.Layout);
     return App.commands.setHandler("show:single:quiz:app", function(opt) {
       if (opt == null) {
         opt = {};

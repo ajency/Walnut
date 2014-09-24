@@ -141,7 +141,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
 				model.set 'qr_id' :qr_id
-				_.chkTempInsertData()
+				# _.chkTempInsertData()
 			)
 
 		chkTempInsertData : ->
@@ -158,7 +158,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx,data)->
 					for i in [0..data.rows.length-1] by 1
 					
-						result = data.rows.item(0)
+						result = data.rows.item(i)
 						console.log JSON.stringify result
 
 					d.resolve(result)
@@ -231,13 +231,15 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)'
-				_.chkTempInsertData()
+				# _.chkTempInsertData()
 			)
 
 
 
 		updateQuizQuestionResponseData: (model)->
 			qrId = model.get('qr_id')
+			question_response = serialize(model.get('question_response'))
+			console.log JSON.stringify question_response
 			_.db.transaction((tx)->
 
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET summary_id=?, 
@@ -254,7 +256,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updateQuizQuestionResponseData)'
-				_.chkTempInsertData()
+				# _.chkTempInsertData()
 			)
 
 

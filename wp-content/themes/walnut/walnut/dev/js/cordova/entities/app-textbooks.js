@@ -32,30 +32,37 @@ define(['underscore'], function(_) {
                     chapterCount = _.getChapterCount(row['term_id']);
                     return chapterCount.done(function(chapter_count) {
                       return (function(row, i, modules_count, options, chapter_count) {
-                        var completedQuizCount;
-                        completedQuizCount = _.getCompletedQuizCount(row['textbook_id']);
-                        return completedQuizCount.done(function(quizzes_completed) {
-                          return result[i] = {
-                            term_id: row["term_id"],
-                            name: row["name"],
-                            slug: row["slug"],
-                            term_group: row["term_group"],
-                            term_taxonomy_id: row["term_taxonomy_id"],
-                            taxonomy: row["taxonomy"],
-                            description: row["description"],
-                            parent: row["parent"],
-                            count: row["count"],
-                            classes: _.unserialize(row["class_id"]),
-                            subjects: _.unserialize(row["tags"]),
-                            modules_count: modules_count,
-                            author: options.author,
-                            thumbnail: options.attachmenturl,
-                            cover_pic: options.attachmenturl,
-                            filter: 'raw',
-                            chapter_count: chapter_count,
-                            quizzes_completed: quizzes_completed,
-                            quizzes_not_started: modules_count - quizzes_completed
-                          };
+                        var practiceAndTotalQuiz;
+                        practiceAndTotalQuiz = _.getPracticeAndTotalQuiz(row['textbook_id']);
+                        return practiceAndTotalQuiz.done(function(total_quiz_count) {
+                          return (function(row, i, modules_count, options, chapter_count, total_quiz_count) {
+                            var completedQuizCount;
+                            completedQuizCount = _.getCompletedQuizCount(row['textbook_id']);
+                            return completedQuizCount.done(function(quizzes_completed) {
+                              return result[i] = {
+                                term_id: row["term_id"],
+                                name: row["name"],
+                                class_test_count: total_quiz_count.class_test,
+                                slug: row["slug"],
+                                term_group: row["term_group"],
+                                term_taxonomy_id: row["term_taxonomy_id"],
+                                taxonomy: row["taxonomy"],
+                                description: row["description"],
+                                parent: row["parent"],
+                                practice_count: total_quiz_count.practice,
+                                count: row["count"],
+                                classes: _.unserialize(row["class_id"]),
+                                subjects: _.unserialize(row["tags"]),
+                                author: options.author,
+                                thumbnail: options.attachmenturl,
+                                cover_pic: options.attachmenturl,
+                                filter: 'raw',
+                                chapter_count: chapter_count,
+                                quizzes_completed: quizzes_completed,
+                                quizzes_not_started: total_quiz_count.class_test - quizzes_completed
+                              };
+                            });
+                          })(row, i, modules_count, options, chapter_count, total_quiz_count);
                         });
                       })(row, i, modules_count, options, chapter_count);
                     });
@@ -117,13 +124,35 @@ define(['underscore'], function(_) {
         return console.log('getModulesCount transaction completed');
       }).fail(_.failureHandler);
     },
+    getPracticeAndTotalQuiz: function(textbook_id) {
+      var onSuccess, pattern, runQuery;
+      pattern = '%"' + textbook_id + '"%';
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT SUM( CASE WHEN m.meta_value = 'practice' THEN 1 ELSE 0 END ) as practice , SUM( CASE WHEN m.meta_value = 'test' THEN 1 ELSE 0 END ) as class_test FROM wp_content_collection c , wp_collection_meta m WHERE c.term_ids LIKE '" + pattern + "' AND c.post_status=? AND c.type=? AND c.id = m.collection_id AND m.meta_key=? ", ['publish', 'quiz', 'quiz_type'], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var total_count;
+          total_count = data.rows.item(0);
+          console.log(total_count);
+          return d.resolve(total_count);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getPracticeAndTotalQuiz transaction completed');
+      }).fail(_.failureHandler);
+    },
     getCompletedQuizCount: function(textbook_id) {
       var onSuccess, pattern, runQuery;
       pattern = '%"' + textbook_id + '"%';
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(qr.collection_id) AS completed_quiz_count FROM wp_quiz_response_summary qr, wp_content_collection cc WHERE qr.collection_id = cc.id AND qr.student_id = ? AND qr.quiz_meta= ? AND cc.term_ids LIKE '" + pattern + "' ", [_.getUserID(), 'completed'], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT COUNT(distinct(qr.collection_id)) AS completed_quiz_count FROM " + _.getTblPrefix() + "quiz_response_summary qr, wp_content_collection cc , wp_collection_meta m WHERE qr.collection_id = cc.id AND qr.student_id = ? AND cc.post_status in ('publish','archive') AND qr.quiz_meta LIKE '%completed%' AND cc.term_ids LIKE '" + pattern + "' AND m.meta_value=? ", [_.getUserID(), 'test'], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -131,6 +160,7 @@ define(['underscore'], function(_) {
         return function(tx, data) {
           var quizzes_completed;
           quizzes_completed = data.rows.item(0)['completed_quiz_count'];
+          console.log(quizzes_completed);
           return d.resolve(quizzes_completed);
         };
       };

@@ -54,11 +54,18 @@ define ['app',
 				data = super()
 
 				data.chapterName = =>
-					chapter = _.chain @chapters.findWhere "term_id" : data.term_ids.chapter
-					.pluck 'name'
-						.compact()
-						.value()
-					chapter
+					if _.platform() is 'BROWSER'
+						chapter = _.chain @chapters.findWhere "term_id" : data.term_ids.chapter
+						.pluck 'name'
+							.compact()
+							.value()
+						chapter
+
+					else
+						chapter = @chapters.findWhere "term_id" : parseInt(data.term_ids.chapter)
+						if _.isUndefined(chapter) then ''
+						else chapter.get('name')
+
 
 				if @model.get('type') is 'teaching-module'
 					training_date = @model.get('training_date')

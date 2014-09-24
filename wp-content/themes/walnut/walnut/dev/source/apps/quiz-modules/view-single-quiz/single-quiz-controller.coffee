@@ -1,7 +1,9 @@
 define ['app'
         'controllers/region-controller'
+        'apps/quiz-modules/view-single-quiz/layout'
         'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app'
         'apps/quiz-modules/view-single-quiz/content-display/content-display-app'
+        'apps/quiz-modules/view-single-quiz/attempts/app'
         'apps/quiz-modules/take-quiz-module/take-quiz-app'
 ], (App, RegionController)->
     App.module "QuizModuleApp.ViewQuiz", (ViewQuiz, App)->
@@ -10,6 +12,7 @@ define ['app'
             quizModel = null
             questionsCollection = null
             quizResponseSummary = null
+            quizResponseSummaryCollection = null
             display_mode = null
 
             initialize: (opts) ->
@@ -22,7 +25,7 @@ define ['app'
                 App.execute "show:leftnavapp", region : App.leftNavRegion
 
                 @fetchQuizResponseSummary = @_fetchQuizResponseSummary()
-                console.log @questionResponseCollection
+
                 fetchQuestionResponseCollection = @_fetchQuestionResponseCollection()
 
                 fetchQuestionResponseCollection.done =>
@@ -71,21 +74,53 @@ define ['app'
 
                             @show @layout, loading: true
 
-                            @listenTo @layout, 'show', @showQuizViews
+                            @listenTo @layout, 'show', =>
+                                @showQuizViews()
+                                @_showAttemptsRegion()
 
                             @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
 
-                            @listenTo @layout.quizDetailsRegion, 'try:again', =>
-                                @questionResponseCollection = null
-                                quizResponseSummary.set
-                                    'num_skipped'       : 0 
-                                    'status'            : 'not_started'
-                                    'total_marks_scored': 0
-                                    'total_time_taken'  : 0
+                            @listenTo @layout.quizDetailsRegion, 'try:again', @_tryAgain
 
-                                display_mode = 'class_mode'
-                                    
-                                @startQuiz()
+                            @listenTo @layout.attemptsRegion, 'view:summary', @_viewSummary
+
+            _tryAgain:->
+
+                return false if quizModel.get('quiz_type') isnt 'practice'
+
+                @questionResponseCollection = null
+                
+                quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+
+                @summary_data= 
+                    'collection_id' : quizModel.get 'id'
+                    'student_id'    : App.request "get:loggedin:user:id"
+                    'taken_on'      : moment().format("YYYY-MM-DD")
+
+                quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
+                quizResponseSummaryCollection.add quizResponseSummary
+
+                display_mode = 'class_mode'
+
+                @startQuiz()
+
+            _viewSummary:(summary_id)->
+                quizResponseSummary = quizResponseSummaryCollection.get summary_id
+                @questionResponseCollection = null
+                fetchResponses = @_fetchQuestionResponseCollection()
+                fetchResponses.done => 
+                    @layout.$el.find '#quiz-details-region,#content-display-region'
+                    .hide()
+                    @layout.$el.find '#quiz-details-region,#content-display-region'
+                    .fadeIn('slow')
+
+                    @showQuizViews()
+
+                    @layout.attemptsRegion.$el.find '.view-summary i'
+                    .removeClass 'fa fa-spin fa-spinner'
+
+
+                                
 
             _fetchQuizResponseSummary:->
                 defer = $.Deferred();
@@ -98,16 +133,18 @@ define ['app'
                 @summary_data= 
                     'collection_id' : quizModel.get 'id'
                     'student_id'    : App.request "get:loggedin:user:id"
+                    'taken_on'      : moment().format("YYYY-MM-DD")
 
                 quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
                 App.execute "when:fetched", quizResponseSummaryCollection, =>
 
                     if quizResponseSummaryCollection.length>0
-                        quizResponseSummary= quizResponseSummaryCollection.first()
+                        quizResponseSummary= quizResponseSummaryCollection.last()
                         defer.resolve()
 
                     else
                         quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
+                        quizResponseSummaryCollection.add quizResponseSummary
                         defer.resolve()
                         
                 defer.promise()
@@ -156,23 +193,18 @@ define ['app'
                         groupContentCollection  : questionsCollection
                         questionResponseCollection: @questionResponseCollection
 
+                
+            _showAttemptsRegion: =>
+                if quizModel.get('quiz_type') is 'practice' and quizModel.get('attempts') >0
+
+                    App.execute "show:quiz:attempts:app",
+                        region                  : @layout.attemptsRegion
+                        model                   : quizModel
+                        quizResponseSummaryCollection  : quizResponseSummaryCollection
+
             _getQuizViewLayout: =>
-                new QuizViewLayout
-
-
-        class QuizViewLayout extends Marionette.Layout
-
-            template: '<div class="teacher-app">
-                          <div id="quiz-details-region"></div>
-                        </div>
-                        <div id="content-display-region"></div>'
-
-            regions:
-                quizDetailsRegion: '#quiz-details-region'
-                contentDisplayRegion: '#content-display-region'
-
-            onShow:->
-                $('.page-content').removeClass 'expand-page'
+                new ViewQuiz.LayoutView.QuizViewLayout
+                    model: quizModel
 
 
         # set handlers

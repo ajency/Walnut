@@ -51,6 +51,9 @@ define ['app'
 
 			itemViewContainer : 'ul.textbooks_list'
 
+			events :
+				'click #tableEntry' : '_chkQuizQuestionResponse'
+
 			itemViewOptions:->
 				data = mode: Marionette.getOption @,'mode'
 
@@ -63,6 +66,42 @@ define ['app'
 				data.take_quiz = true if mode is 'take-quiz' 
 
 				data
+
+			_chkQuizQuestionResponse :->
+				console.log "data"
+				alert "data"
+
+				runQuery = ->
+					$.Deferred (d)->
+						
+						_.db.transaction (tx)->
+							tx.executeSql("SELECT COUNT(distinct(qr.collection_id)) AS completed_quiz_count 
+							FROM "+_.getTblPrefix()+"quiz_response_summary qr,
+							wp_content_collection cc
+							, wp_collection_meta m WHERE 
+							qr.collection_id = cc.id 
+							AND qr.student_id = ? 
+							AND cc.post_status in ('publish','archive') 
+							AND qr.quiz_meta LIKE '%completed%' 
+							AND cc.term_ids LIKE '%3%' 
+							AND m.meta_value=? "
+							, [_.getUserID(), 'test']
+							, onSuccess(d), _.deferredErrorHandler(d))
+
+				onSuccess =(d)->
+					(tx,data)->
+						alert "length"
+						console.log data.rows.length
+						for i in [0..data.rows.length-1] by 1
+						
+							result = data.rows.item(i)
+							console.log JSON.stringify result
+
+						d.resolve(result)
+
+				$.when(runQuery()).done ->
+					console.log 'chkQuizQuestionResponse transaction completed'
+				.fail _.failureHandler
 
 
 			onShow:->

@@ -65,6 +65,10 @@ define(['app', 'text!apps/students-dashboard/textbooks/templates/textbooks-list.
 
       TextbooksListView.prototype.itemViewContainer = 'ul.textbooks_list';
 
+      TextbooksListView.prototype.events = {
+        'click #tableEntry': '_chkQuizQuestionResponse'
+      };
+
       TextbooksListView.prototype.itemViewOptions = function() {
         var data;
         return data = {
@@ -80,6 +84,34 @@ define(['app', 'text!apps/students-dashboard/textbooks/templates/textbooks-list.
           data.take_quiz = true;
         }
         return data;
+      };
+
+      TextbooksListView.prototype._chkQuizQuestionResponse = function() {
+        var onSuccess, runQuery;
+        console.log("data");
+        alert("data");
+        runQuery = function() {
+          return $.Deferred(function(d) {
+            return _.db.transaction(function(tx) {
+              return tx.executeSql("SELECT COUNT(distinct(qr.collection_id)) AS completed_quiz_count FROM " + _.getTblPrefix() + "quiz_response_summary qr, wp_content_collection cc , wp_collection_meta m WHERE qr.collection_id = cc.id AND qr.student_id = ? AND cc.post_status in ('publish','archive') AND qr.quiz_meta LIKE '%completed%' AND cc.term_ids LIKE '%3%' AND m.meta_value=? ", [_.getUserID(), 'test'], onSuccess(d), _.deferredErrorHandler(d));
+            });
+          });
+        };
+        onSuccess = function(d) {
+          return function(tx, data) {
+            var i, result, _i, _ref;
+            alert("length");
+            console.log(data.rows.length);
+            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+              result = data.rows.item(i);
+              console.log(JSON.stringify(result));
+            }
+            return d.resolve(result);
+          };
+        };
+        return $.when(runQuery()).done(function() {
+          return console.log('chkQuizQuestionResponse transaction completed');
+        }).fail(_.failureHandler);
       };
 
       TextbooksListView.prototype.onShow = function() {

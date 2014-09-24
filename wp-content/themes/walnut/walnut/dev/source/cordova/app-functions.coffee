@@ -121,7 +121,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		#Get all user details from local database
 		getUserDetails : (username)->
 
-			userData = user_id : '', password: '', role : '', exists : false
+			userData = user_id : '', password: '', role : '',user_email : '',session_id : '' ,blog_id : '' , exists : false
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -140,6 +140,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							role : row['user_role']
 							session_id:row['session_id']
 							blog_id:row['blog_id']
+							user_email:row['user_email']
 							exists : true
 						console.log "user data"
 						console.log userData
@@ -297,6 +298,10 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 				
 				data = 
 					'division': division
+					'ID': _.getUserID()
+					'display_name': _.getUserName()
+					'user_email': _.getUserEmail()
+
 
 
 				user.set 'data' : data

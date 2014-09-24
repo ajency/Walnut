@@ -28,6 +28,30 @@ define ['app'
 					@total = resp.count
 					resp.data
 
+				getTotalScored:->
+					total = _.reduce @.pluck('marks_scored'), (memo, num)->
+								_.toNumber memo + num,1
+								
+				getMarksScored:->
+					
+					scored =0
+
+					marks=@.pluck('marks_scored')
+					
+					_.each marks, (m)-> scored += m if m>0
+
+					scored.toFixed 1
+
+				getNegativeScored:->
+					
+					negative =0
+
+					marks=@.pluck('marks_scored')
+
+					_.each marks, (m)-> negative += m if m<0
+
+					negative.toFixed 1
+
 
 			API = 
 

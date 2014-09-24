@@ -2211,18 +2211,18 @@ input#duration {
 }
 @media (max-width: 1019px) {
   .sidebarContainer {
-    position: absolute;
+    position: static;
     bottom: 0;
     z-index: 999;
     width: 100%;
   }
   .sidebarContainer .timerBox {
-    float: left;
+    float: none;
     width: 35%;
     margin: 0;
   }
   .sidebarContainer .quizProgress {
-    float: left;
+    float: none;
     width: 65%;
     margin: 0;
   }

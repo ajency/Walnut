@@ -9,6 +9,12 @@ define(['underscore'], function(_) {
     getCookiesValue: function() {
       return _.localStorage.getItem("CookiesVal");
     },
+    setUserEmail: function(u_email) {
+      return _.localStorage.setItem("user_email", u_email);
+    },
+    getUserEmail: function() {
+      return _.localStorage.getItem("user_email");
+    },
     setUserID: function(id) {
       return _.localStorage.setItem("user_id", id);
     },

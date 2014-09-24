@@ -44,8 +44,7 @@ define ['app'
                         @show view,
                             loading: true
 
-                        @listenTo view, 'end:quiz', -> @region.trigger 'show:alert:popup', 'end_quiz'
-                        @listenTo view, 'quiz:time:up', -> @region.trigger 'end:quiz'
+                        @listenTo view, 'end:quiz', -> @region.trigger 'end:quiz'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0
@@ -80,7 +79,7 @@ define ['app'
                                 </div>'
 
                     events:
-                        'click #end-quiz' :-> @trigger "end:quiz"
+                        'click #end-quiz' : 'endQuiz'
 
                     onShow:->
 
@@ -108,4 +107,10 @@ define ['app'
                     quizTimedOut:=>
                         msgContent= @model.getMessageContent 'quiz_time_up'
                         bootbox.alert msgContent,=>
-                            @trigger "quiz:time:up"
+                            @trigger "end:quiz"
+
+                    endQuiz:->                        
+                        msgContent= @model.getMessageContent 'end_quiz'
+                        bootbox.confirm msgContent,(result)=>
+                            @trigger("end:quiz") if result
+                            

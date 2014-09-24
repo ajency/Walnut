@@ -104,6 +104,9 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         user_id: '',
         password: '',
         role: '',
+        user_email: '',
+        session_id: '',
+        blog_id: '',
         exists: false
       };
       runQuery = function() {
@@ -124,6 +127,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               role: row['user_role'],
               session_id: row['session_id'],
               blog_id: row['blog_id'],
+              user_email: row['user_email'],
               exists: true
             };
             console.log("user data");
@@ -277,7 +281,10 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       return singleDivision.done(function(division) {
         var data;
         data = {
-          'division': division
+          'division': division,
+          'ID': _.getUserID(),
+          'display_name': _.getUserName(),
+          'user_email': _.getUserEmail()
         };
         return user.set({
           'data': data

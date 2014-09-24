@@ -86,6 +86,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             var store_cookies, userRole;
             console.log('Login Response');
             console.log(JSON.stringify(resp));
+            console.log(JSON.stringify(resp.login_details.data.user_email));
             if (resp.error) {
               return _this.onErrorResponse(resp.error);
             } else {
@@ -95,7 +96,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
               } else if (userRole === "student") {
                 store_cookies = jqXHR.getResponseHeader('Set-Cookie');
                 _.setCookiesValue(store_cookies);
-                _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername, resp.blog_details.blog_id);
+                _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername, resp.blog_details.blog_id, resp.login_details.data.user_email);
                 _.setUserCapabilities(resp.login_details.allcaps);
                 _.setStudentDivision(resp.login_details.data.division);
                 _.createDataTables(_.db);
@@ -120,7 +121,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(user) {
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
-              _this.setUserDetails(user.user_id, _this.data.txtusername, user.blog_id);
+              _this.setUserDetails(user.user_id, _this.data.txtusername, user.blog_id, user.user_email);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -132,10 +133,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
-    AuthenticationController.prototype.setUserDetails = function(id, username, blog_id) {
+    AuthenticationController.prototype.setUserDetails = function(id, username, blog_id, user_email) {
       _.setUserID(id);
       _.setUserName(username);
       _.setBlogID(blog_id);
+      _.setUserEmail(user_email);
       return _.setUserModel();
     };
 
@@ -159,7 +161,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       cookie = jqXHR.getResponseHeader('Set-Cookie');
       return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, session_id, blog_id) VALUES (?, ?, ?, ?, ?, ?)', [resp.ID, _this.data.data.txtusername, _this.data.data.txtpassword, resp.roles[0], cookie, response.blog_details.blog_id]);
+          return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, session_id, blog_id, user_email) VALUES (?, ?, ?, ?, ?, ?, ?)', [resp.ID, _this.data.data.txtusername, _this.data.data.txtpassword, resp.roles[0], cookie, response.blog_details.blog_id, response.login_details.data.user_email]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Inserted new user');
@@ -171,7 +173,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       resp = response.login_details;
       return _.db.transaction((function(_this) {
         return function(tx) {
-          return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.data.txtusername, _this.data.data.txtpassword, resp.ID, response.blog_details.blog_id]);
+          return tx.executeSql("UPDATE USERS SET username=?, password=?, user_email=? where user_id=?", [_this.data.data.txtusername, _this.data.data.txtpassword, resp.ID, response.blog_details.blog_id, response.login_details.data.user_email]);
         };
       })(this), _.transactionErrorhandler, function(tx) {
         return console.log('SUCCESS: Updated user details');

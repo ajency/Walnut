@@ -3,8 +3,7 @@ define ['app'
         'apps/quiz-modules/take-quiz-module/quiz-description/app'
         'apps/quiz-modules/take-quiz-module/quiz-progress/app'
         'apps/quiz-modules/take-quiz-module/quiz-timer/app'
-        'apps/quiz-modules/take-quiz-module/single-question/app'
-        'apps/popup-dialog/alerts'], (App, RegionController)->
+        'apps/quiz-modules/take-quiz-module/single-question/app'], (App, RegionController)->
 
         App.module "TakeQuizApp", (View, App)->
 
@@ -54,14 +53,14 @@ define ['app'
                         else
                             questionID = _.first(questionIDs) if not questionID
 
-                    if quizResponseSummary.isNew() and quizModel.get('quiz_type') is 'test'
-
-                        quizResponseSummary.save 
+                    if quizResponseSummary.isNew() 
+                        data = 
                             'status' : 'started'
                             'questions_order': questionIDs
 
-                    if quizModel.get('quiz_type') is 'practice'
-                        quizResponseSummary.save 'attempts' : quizModel.get('attempts')+1
+                        quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+
+                        quizResponseSummary.save data
 
                     questionModel = questionsCollection.get questionID
                     @layout = layout = new TakeQuizLayout
@@ -81,48 +80,41 @@ define ['app'
 
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "show:alert:popup", @_showPopup
-
-                    @listenTo @layout.quizTimerRegion, "show:alert:popup", @_showPopup
                     @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
-                    @listenTo App.dialogRegion, "clicked:confirm:yes", @_handlePopups
-                    @listenTo App.dialogRegion, "clicked:alert:ok", @_handlePopups
-
-
                     setInterval =>
-                        @_autosaveQuestionTime()
+                        time = @timerObject.request "get:elapsed:time"
+                        @_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
                     ,30000
 
                 _autosaveQuestionTime:=>
-                     if quizModel.get('quiz_type') is 'test'
 
-                        questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
-                        
-                        totalTime =@timerObject.request "get:elapsed:time"
-                        timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
-                        pausedQuestionTime =0 #reset to 0 once used
+                    questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
+                    
+                    totalTime =@timerObject.request "get:elapsed:time"
+                    timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+                    pausedQuestionTime =0 #reset to 0 once used
 
-                        if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
+                    if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
 
-                            console.log(questionResponseModel.get('status')) if questionResponseModel
+                        console.log(questionResponseModel.get('status')) if questionResponseModel
 
-                            data =
-                                'summary_id'     : quizResponseSummary.id
-                                'content_piece_id'  : questionModel.id
-                                'question_response' : []
-                                'status'            : 'paused'
-                                'marks_scored'      : 0
-                                'time_taken'        : timeTaken
+                        data =
+                            'summary_id'     : quizResponseSummary.id
+                            'content_piece_id'  : questionModel.id
+                            'question_response' : []
+                            'status'            : 'paused'
+                            'marks_scored'      : 0
+                            'time_taken'        : timeTaken
 
-                            questionResponseModel = App.request "create:quiz:question:response:model", data
+                        questionResponseModel = App.request "create:quiz:question:response:model", data
 
-                        else
-                            questionResponseModel.set 'time_taken' : timeTaken
+                    else
+                        questionResponseModel.set 'time_taken' : timeTaken
 
-                        @_saveQuizResponseModel questionResponseModel
+                    @_saveQuizResponseModel questionResponseModel
 
                 _changeQuestion:(changeToQuestion)=>
                     #save results here of previous question / skip the question
@@ -141,7 +133,7 @@ define ['app'
                     data =
                         'summary_id'     : quizResponseSummary.id
                         'content_piece_id'  : questionModel.id
-                        'question_response' : answer.toJSON()
+                        'question_response' : _.omit answer.toJSON(), ['marks','status']
                         'status'            : answer.get 'status'
                         'marks_scored'      : answer.get 'marks'
                         'time_taken'        : timeTaken
@@ -163,7 +155,7 @@ define ['app'
                         quizResponseModel = newResponseModel
                         @questionResponseCollection.add newResponseModel
 
-                    quizResponseModel.save() if quizModel.get('quiz_type') is 'test'
+                    quizResponseModel.save()
 
                     if quizResponseModel.get('status') isnt 'paused'
                         @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
@@ -183,23 +175,6 @@ define ['app'
 
                     else
                         @_endQuiz()
-
-                _showPopup:(message_type, alert_type='confirm')->
-                    if message_type is 'end_quiz' and _.isEmpty @_getUnansweredIDs()
-                        @_endQuiz()
-                        return false
-
-                    if message_type in ['hint','comment']
-                        message_content = questionModel.get message_type
-
-                    else 
-                        message_content = quizModel.getMessageContent message_type
-
-                    App.execute 'show:alert:popup',
-                        region : App.dialogRegion
-                        message_content: message_content
-                        alert_type: alert_type
-                        message_type: message_type
 
                 _endQuiz:->
 
@@ -222,11 +197,16 @@ define ['app'
                     quizResponseSummary.set 
                         'status'            : 'completed' 
                         'total_time_taken'  : timeBeforeCurrentQuestion
+                        
                         'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
-                        'total_marks_scored': _.reduce @questionResponseCollection.pluck('marks_scored'), (memo, num)->
-                            _.toNumber memo + num,1
 
-                    quizResponseSummary.save() if quizModel.get('quiz_type') is 'test'
+                        'marks_scored'      : @questionResponseCollection.getMarksScored()
+                        
+                        'negative_scored'   : @questionResponseCollection.getNegativeScored()
+                        
+                        'total_marks_scored': @questionResponseCollection.getTotalScored()
+
+                    quizResponseSummary.save()
 
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
@@ -309,14 +289,6 @@ define ['app'
                         quizResponseSummary         : quizResponseSummary
 
                     @_showSingleQuestionApp questionModel
-
-                #after confirm box yes is clicked on dialog region
-                _handlePopups:(message_type)->
-                    switch message_type
-                        when 'end_quiz' then @_endQuiz()
-                        when 'quiz_time_up' then @_endQuiz()
-                        when 'submit_without_attempting' then @layout.questionDisplayRegion.trigger "trigger:submit"
-                        when 'incomplete_answer'   then  @layout.questionDisplayRegion.trigger "trigger:submit"
 
             class TakeQuizLayout extends Marionette.Layout
 

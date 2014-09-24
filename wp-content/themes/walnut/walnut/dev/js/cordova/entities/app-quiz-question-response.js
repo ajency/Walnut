@@ -109,10 +109,9 @@ define(['underscore', 'unserialize'], function(_) {
         return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_question_response (qr_id , summary_id, content_piece_id, question_response , time_taken, marks_scored, status) VALUES (?,?,?,?,?,?,?)", [qr_id, model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status')]);
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz question response');
-        model.set({
+        return model.set({
           'qr_id': qr_id
         });
-        return _.chkTempInsertData();
       });
     },
     chkTempInsertData: function() {
@@ -128,7 +127,7 @@ define(['underscore', 'unserialize'], function(_) {
         return function(tx, data) {
           var i, result, _i, _ref;
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            result = data.rows.item(0);
+            result = data.rows.item(i);
             console.log(JSON.stringify(result));
           }
           return d.resolve(result);
@@ -177,21 +176,21 @@ define(['underscore', 'unserialize'], function(_) {
         model.set({
           'qr_id': qrId
         });
-        console.log('Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)');
-        return _.chkTempInsertData();
+        return console.log('Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)');
       });
     },
     updateQuizQuestionResponseData: function(model) {
-      var qrId;
+      var qrId, question_response;
       qrId = model.get('qr_id');
+      question_response = serialize(model.get('question_response'));
+      console.log(JSON.stringify(question_response));
       return _.db.transaction(function(tx) {
         return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET summary_id=?, content_piece_id=?, question_response=? , time_taken=?, marks_scored=?, status=? WHERE qr_id=?", [model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), model.get('qr_id')]);
       }, _.transactionErrorhandler, function(tx) {
         model.set({
           'qr_id': qrId
         });
-        console.log('Updated data in quiz_question_response (updateQuizQuestionResponseData)');
-        return _.chkTempInsertData();
+        return console.log('Updated data in quiz_question_response (updateQuizQuestionResponseData)');
       });
     }
   });

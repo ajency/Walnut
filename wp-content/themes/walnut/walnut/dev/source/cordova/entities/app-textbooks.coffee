@@ -42,29 +42,34 @@ define ['underscore'], ( _) ->
 											chapterCount.done (chapter_count)->
 
 												do(row, i, modules_count, options,chapter_count)->
-													completedQuizCount = _.getCompletedQuizCount(row['textbook_id'])
-													completedQuizCount.done (quizzes_completed)-> 
+													practiceAndTotalQuiz = _.getPracticeAndTotalQuiz(row['textbook_id'])
+													practiceAndTotalQuiz.done (total_quiz_count)->
 
-														result[i] = 
-															term_id: row["term_id"]
-															name: row["name"]
-															slug: row["slug"]
-															term_group: row["term_group"]
-															term_taxonomy_id: row["term_taxonomy_id"]
-															taxonomy: row["taxonomy"]
-															description: row["description"]
-															parent: row["parent"]
-															count: row["count"]
-															classes: _.unserialize(row["class_id"])
-															subjects: _.unserialize(row["tags"])
-															modules_count: modules_count
-															author: options.author
-															thumbnail: options.attachmenturl
-															cover_pic: options.attachmenturl
-															filter: 'raw'
-															chapter_count : chapter_count
-															quizzes_completed : quizzes_completed
-															quizzes_not_started : modules_count - quizzes_completed 
+														do(row, i, modules_count, options,chapter_count,total_quiz_count)->
+															completedQuizCount = _.getCompletedQuizCount(row['textbook_id'])
+															completedQuizCount.done (quizzes_completed)->
+
+																result[i] = 
+																	term_id: row["term_id"]
+																	name: row["name"]
+																	class_test_count: total_quiz_count.class_test
+																	slug: row["slug"]
+																	term_group: row["term_group"]
+																	term_taxonomy_id: row["term_taxonomy_id"]
+																	taxonomy: row["taxonomy"]
+																	description: row["description"]
+																	parent: row["parent"]
+																	practice_count: total_quiz_count.practice
+																	count: row["count"]
+																	classes: _.unserialize(row["class_id"])
+																	subjects: _.unserialize(row["tags"])
+																	author: options.author
+																	thumbnail: options.attachmenturl
+																	cover_pic: options.attachmenturl
+																	filter: 'raw'
+																	chapter_count : chapter_count
+																	quizzes_completed : quizzes_completed
+																	quizzes_not_started : total_quiz_count.class_test - quizzes_completed 
 
 					d.resolve(result)
 			
@@ -124,6 +129,45 @@ define ['underscore'], ( _) ->
 				console.log 'getModulesCount transaction completed'
 			.fail _.failureHandler
 
+
+		#get Total Quiz and Practice Quiz
+		getPracticeAndTotalQuiz : (textbook_id)->
+			
+			pattern = '%"'+textbook_id+'"%'
+
+			runQuery =->
+
+				$.Deferred (d)->
+
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT SUM( CASE WHEN m.meta_value = 'practice' THEN 1 ELSE 0 END ) 
+							as practice
+							, SUM( CASE WHEN m.meta_value = 'test' THEN 1 ELSE 0 END ) as class_test 
+							FROM wp_content_collection c
+							, wp_collection_meta m
+							 WHERE c.term_ids LIKE '"+pattern+"' 
+							 AND c.post_status=? 
+							 AND c.type=? 
+							 AND c.id = m.collection_id 
+							 AND m.meta_key=? "
+							, ['publish', 'quiz', 'quiz_type']
+
+							,onSuccess(d), _.deferredErrorHandler(d))
+
+
+			onSuccess =(d)->
+
+				(tx,data)->
+					total_count = data.rows.item(0)
+					console.log total_count
+					d.resolve(total_count)
+
+
+			$.when(runQuery()).done ->
+				console.log 'getPracticeAndTotalQuiz transaction completed'
+			.fail _.failureHandler			
+
+
 		
 		#get Completed quiz count for student app
 		getCompletedQuizCount : (textbook_id)->
@@ -133,22 +177,23 @@ define ['underscore'], ( _) ->
 			runQuery =->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(qr.collection_id) AS completed_quiz_count 
-							FROM wp_quiz_response_summary qr,
+						tx.executeSql("SELECT COUNT(distinct(qr.collection_id)) AS completed_quiz_count 
+							FROM "+_.getTblPrefix()+"quiz_response_summary qr,
 							wp_content_collection cc
-
-							WHERE 
-								qr.collection_id = cc.id 
-								AND qr.student_id = ?
-								AND qr.quiz_meta= ?
-								AND cc.term_ids LIKE '"+pattern+"' " , 
-
-								[ _.getUserID(), 'completed']
+							, wp_collection_meta m WHERE 
+							qr.collection_id = cc.id 
+							AND qr.student_id = ? 
+							AND cc.post_status in ('publish','archive') 
+							AND qr.quiz_meta LIKE '%completed%' 
+							AND cc.term_ids LIKE '"+pattern+"' 
+							AND m.meta_value=? "
+							, [_.getUserID(), 'test']
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->
 				(tx,data)->
 					quizzes_completed = data.rows.item(0)['completed_quiz_count']
+					console.log quizzes_completed
 					d.resolve(quizzes_completed)
 
 			$.when(runQuery()).done ->

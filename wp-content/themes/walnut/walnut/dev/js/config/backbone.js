@@ -24,6 +24,12 @@ define(["backbone"], function(Backbone) {
           return collection.set(d);
         });
       }
+      if (collection_name === 'division') {
+        data = _.getAllDivisions();
+        data.done(function(d) {
+          return collection.set(d);
+        });
+      }
       if (collection_name === 'content-group') {
         data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division);
         data.done(function(d) {
