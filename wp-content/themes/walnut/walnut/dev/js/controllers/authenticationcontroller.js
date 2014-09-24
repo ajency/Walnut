@@ -96,10 +96,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
                 store_cookies = jqXHR.getResponseHeader('Set-Cookie');
                 _.setCookiesValue(store_cookies);
                 _this.setUserDetails(resp.login_details.ID, _this.data.data.txtusername, resp.blog_details.blog_id, resp.login_details.data.user_email, resp.login_details.data.division);
+                _this.saveUpdateUserDetails(resp, jqXHR);
                 _.setUserCapabilities(resp.login_details.allcaps);
                 _.setStudentDivision(resp.login_details.data.division);
                 _.createDataTables(_.db);
-                _this.saveUpdateUserDetails(resp, jqXHR);
                 return _this.onSuccessResponse();
               }
             }
@@ -114,8 +114,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
-      var offlineUser;
-      offlineUser = _.getUserDetails(this.data.txtusername);
+      var offlineUser, u_name;
+      u_name = {
+        user_name: this.data.txtusername
+      };
+      offlineUser = _.getUserDetails(u_name);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {
@@ -141,8 +144,11 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(resp, jqXHR) {
-      var offlineUser;
-      offlineUser = _.getUserDetails(this.data.data.txtusername);
+      var offlineUser, u_name;
+      u_name = {
+        user_name: this.data.data.txtusername
+      };
+      offlineUser = _.getUserDetails(u_name);
       return offlineUser.done((function(_this) {
         return function(user) {
           if (user.exists) {

@@ -121,17 +121,22 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 	
 		
 		#Get all user details from local database
-		getUserDetails : (username)->
-
-			userData = user_id : '', password: ''
+		getUserDetails : (user)->
+			user.user_name
+			userData = user_id : '', password: '', username: ''
 					, role : '',user_email : '',session_id : '' 
 					,blog_id : '' ,division:'' ,exists : false
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM USERS WHERE username=?"
-								, [username], onSuccess(d), _.deferredErrorHandler(d))	
+							if user.user_name
+								tx.executeSql("SELECT * FROM USERS WHERE username=?"
+								, [user.user_name], onSuccess(d), _.deferredErrorHandler(d))
+
+							else if user.userId
+								tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
+								, [user.userId], onSuccess(d), _.deferredErrorHandler(d))
 			
 			onSuccess = (d)->
 				(tx, data)->
@@ -140,15 +145,16 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						row = data.rows.item(0)
 						userData =
 							user_id : row['user_id']
+							username: row['username']
 							password : row['password']
 							role : row['user_role']
-							session_id:row['session_id']
-							blog_id:row['blog_id']
-							user_email:row['user_email']
-							division:row['division']
+							session_id: row['session_id']
+							blog_id: row['blog_id']
+							user_email: row['user_email']
+							division: row['division']
 							exists : true
 
-						console.log userData
+						console.log JSON.stringify userData
 
 					d.resolve(userData)
 
@@ -322,6 +328,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 		# user model set for back button navigation
 		setUserModel : ->
+			alert "user model"
 			
 			user = App.request "get:user:model"
 			user.set 'ID' :''+_.getUserID()
@@ -329,19 +336,20 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			if not _.isNull(_.getUserCapabilities())
 				user.set 'allcaps' : _.getUserCapabilities()
 
-			singleDivision = @getSingleDivsionByUserId(_.getUserID())
-			singleDivision.done (division)->
+			u_id = userId : _.getUserID()
 
-				userDeatils = _.getUserEmail()
-				userDeatils.done (userData)->
+			userDetails = @getUserDetails(u_id)
+			userDetails.done (userData)->
+				console.log JSON.stringify userData
 
-					console.log JSON.stringify userData
-					
+				singleDivision = @getSingleDivsionByUserId(_.getUserID())
+				singleDivision.done (division)->
+
 					data = 
 						'division': division
 						'ID': _.getUserID()
-						'display_name': userData.username
-						'user_email': userData.user_email
+						'display_name': _.getUserName()
+						'user_email': _.getUserEmail()
 
 
 

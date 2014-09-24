@@ -98,11 +98,13 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return unserialize(string);
       }
     },
-    getUserDetails: function(username) {
+    getUserDetails: function(user) {
       var onSuccess, runQuery, userData;
+      user.user_name;
       userData = {
         user_id: '',
         password: '',
+        username: '',
         role: '',
         user_email: '',
         session_id: '',
@@ -113,7 +115,11 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess(d), _.deferredErrorHandler(d));
+            if (user.user_name) {
+              return tx.executeSql("SELECT * FROM USERS WHERE username=?", [user.user_name], onSuccess(d), _.deferredErrorHandler(d));
+            } else if (user.userId) {
+              return tx.executeSql("SELECT * FROM USERS WHERE user_id=?", [user.userId], onSuccess(d), _.deferredErrorHandler(d));
+            }
           });
         });
       };
@@ -124,6 +130,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
             row = data.rows.item(0);
             userData = {
               user_id: row['user_id'],
+              username: row['username'],
               password: row['password'],
               role: row['user_role'],
               session_id: row['session_id'],
@@ -132,7 +139,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               division: row['division'],
               exists: true
             };
-            console.log(userData);
+            console.log(JSON.stringify(userData));
           }
           return d.resolve(userData);
         };
@@ -299,7 +306,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }).fail(_.failureHandler);
     },
     setUserModel: function() {
-      var singleDivision, user;
+      var u_id, user, userDetails;
+      alert("user model");
       user = App.request("get:user:model");
       user.set({
         'ID': '' + _.getUserID()
@@ -309,18 +317,21 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           'allcaps': _.getUserCapabilities()
         });
       }
-      singleDivision = this.getSingleDivsionByUserId(_.getUserID());
-      return singleDivision.done(function(division) {
-        var userDeatils;
-        userDeatils = _.getUserEmail();
-        return userDeatils.done(function(userData) {
+      u_id = {
+        userId: _.getUserID()
+      };
+      userDetails = this.getUserDetails(u_id);
+      return userDetails.done(function(userData) {
+        var singleDivision;
+        console.log(JSON.stringify(userData));
+        singleDivision = this.getSingleDivsionByUserId(_.getUserID());
+        return singleDivision.done(function(division) {
           var data;
-          console.log(JSON.stringify(userData));
           data = {
             'division': division,
             'ID': _.getUserID(),
-            'display_name': userData.username,
-            'user_email': userData.user_email
+            'display_name': _.getUserName(),
+            'user_email': _.getUserEmail()
           };
           return user.set({
             'data': data

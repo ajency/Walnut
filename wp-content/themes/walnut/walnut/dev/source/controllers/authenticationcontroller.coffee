@@ -79,17 +79,19 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 						else if userRole is "student"
 							store_cookies = jqXHR.getResponseHeader('Set-Cookie'); 
+							
 							_.setCookiesValue(store_cookies);
 
-
+							
 							@setUserDetails(resp.login_details.ID, @data.data.txtusername, 
 								resp.blog_details.blog_id, resp.login_details.data.user_email
 								, resp.login_details.data.division)
 
+							@saveUpdateUserDetails(resp, jqXHR)
+
 							_.setUserCapabilities(resp.login_details.allcaps)
 							_.setStudentDivision(resp.login_details.data.division)
 							_.createDataTables(_.db)
-							@saveUpdateUserDetails(resp, jqXHR)
 							@onSuccessResponse()
 
 				error :(jqXHR, err) => 
@@ -98,7 +100,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		offlineDeviceAuth : -> 
-			offlineUser = _.getUserDetails(@data.txtusername)
+			u_name = user_name : @data.txtusername
+			offlineUser = _.getUserDetails(u_name)
 
 			offlineUser.done (user)=>
 				if user.exists 
@@ -123,13 +126,15 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			# set user model for back button navigation
 			_.setUserModel()
+			
 
 
 
 
 		# save new user or update existing user 
 		saveUpdateUserDetails : (resp, jqXHR)-> 
-			offlineUser = _.getUserDetails(@data.data.txtusername)
+			u_name = user_name:@data.data.txtusername
+			offlineUser = _.getUserDetails(u_name)
 			
 			offlineUser.done (user)=>
 				if user.exists then @updateExistingUser(resp,jqXHR)
@@ -152,6 +157,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			,_.transactionErrorhandler 
 			,(tx)->
 				console.log 'SUCCESS: Inserted new user'
+				
 			)
 
 		
