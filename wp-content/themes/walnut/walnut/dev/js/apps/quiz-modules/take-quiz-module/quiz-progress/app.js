@@ -178,7 +178,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           }
         }).compact().size().value();
         progressPercentage = (answeredQuestions / this.collection.length) * 100;
-        this.$el.find("#quiz-progress-bar").attr("data-percentage", progressPercentage + '%').css({
+        this.$el.find("#quiz-progress-bar").attr("data-percentage", progressPercentage + '%').attr("aria-valuenow", progressPercentage).css({
           "width": progressPercentage + '%'
         });
         return this.$el.find("#answered-questions").html(answeredQuestions);

@@ -68,7 +68,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				success : (resp, status, jqXHR)=>
 					console.log 'Login Response'
 					console.log JSON.stringify resp
-					console.log JSON.stringify resp.login_details.data.user_email
+					console.log JSON.stringify resp.login_details.data.division
 					if resp.error
 						@onErrorResponse(resp.error)
 					else
@@ -81,7 +81,10 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 							_.setCookiesValue(store_cookies);
 
 
-							@setUserDetails(resp.login_details.ID, @data.data.txtusername, resp.blog_details.blog_id, resp.login_details.data.user_email)
+							@setUserDetails(resp.login_details.ID, @data.data.txtusername, 
+								resp.blog_details.blog_id, resp.login_details.data.user_email
+								, resp.login_details.data.division)
+
 							_.setUserCapabilities(resp.login_details.allcaps)
 							_.setStudentDivision(resp.login_details.data.division)
 							_.createDataTables(_.db)
@@ -100,7 +103,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				if user.exists 
 					if user.password is @data.txtpassword
 
-						@setUserDetails(user.user_id, @data.txtusername, user.blog_id, user.user_email)
+						@setUserDetails(user.user_id, @data.txtusername
+							, user.blog_id, user.user_email, user.division)
 						@onSuccessResponse()
 
 					else @onErrorResponse('Invalid Password')       
@@ -109,7 +113,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 
 		
-		setUserDetails : (id, username,blog_id,user_email)-> 
+		setUserDetails : (id, username,blog_id,user_email,division)-> 
 			# save logged in user id and username
 			_.setUserID(id)
 			_.setUserName(username)
@@ -138,10 +142,11 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			_.db.transaction((tx)=>
 				tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, 
-					session_id, blog_id, user_email) 
-					VALUES (?, ?, ?, ?, ?, ?, ?)', 
+					session_id, blog_id, user_email, division) 
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
 					[resp.ID, @data.data.txtusername, @data.data.txtpassword, resp.roles[0], 
-					cookie, response.blog_details.blog_id, response.login_details.data.user_email])
+					cookie, response.blog_details.blog_id
+					, response.login_details.data.user_email, response.login_details.data.division])
 
 			,_.transactionErrorhandler 
 			,(tx)->
@@ -154,9 +159,10 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			resp = response.login_details
 
 			_.db.transaction((tx)=>
-				tx.executeSql("UPDATE USERS SET username=?, password=?, user_email=? where user_id=?", 
+				tx.executeSql("UPDATE USERS SET username=?, password=?, user_email=?, division=? where user_id=?", 
 					[@data.data.txtusername, @data.data.txtpassword, resp.ID
-					, response.blog_details.blog_id, response.login_details.data.user_email])
+					, response.blog_details.blog_id, response.login_details.data.user_email
+					, response.login_details.data.division])
 
 			,_.transactionErrorhandler 
 			,(tx)->

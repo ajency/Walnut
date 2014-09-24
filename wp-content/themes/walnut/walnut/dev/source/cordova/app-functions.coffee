@@ -121,7 +121,9 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		#Get all user details from local database
 		getUserDetails : (username)->
 
-			userData = user_id : '', password: '', role : '',user_email : '',session_id : '' ,blog_id : '' , exists : false
+			userData = user_id : '', password: ''
+					, role : '',user_email : '',session_id : '' 
+					,blog_id : '' ,division:'' ,exists : false
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -141,8 +143,9 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							session_id:row['session_id']
 							blog_id:row['blog_id']
 							user_email:row['user_email']
+							division:row['division']
 							exists : true
-						console.log "user data"
+
 						console.log userData
 
 					d.resolve(userData)
@@ -282,6 +285,33 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			.fail _.failureHandler
 
 
+		getUserEmail :->
+			userDetails = user_email : '', username : ''
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+							tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
+								, [_.getUserID()], onSuccess(d), _.deferredErrorHandler(d))	
+			
+			onSuccess = (d)->
+				(tx, data)->
+
+					if data.rows.length isnt 0
+						row = data.rows.item(0)
+						userDetails =
+							user_email: row['user_email']
+							username: row['username']
+
+						console.log userDetails
+
+					d.resolve(userDetails)
+
+			$.when(runQuery()).done ->
+				console.log 'getUserDetails transaction completed'
+			.fail _.failureHandler
+
+
 		
 
 		# user model set for back button navigation
@@ -295,16 +325,21 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 			singleDivision = @getSingleDivsionByUserId(_.getUserID())
 			singleDivision.done (division)->
-				
-				data = 
-					'division': division
-					'ID': _.getUserID()
-					'display_name': _.getUserName()
-					'user_email': _.getUserEmail()
+
+				userDeatils = _.getUserEmail(@data.data.txtusername)
+				getUserDetails.done (user)->
+					
+					console.log JSON.stringify user
+					
+					data = 
+						'division': division
+						'ID': _.getUserID()
+						'display_name': user.username
+						'user_email': user.user_email
 
 
 
-				user.set 'data' : data
+					user.set 'data' : data
 
 
 

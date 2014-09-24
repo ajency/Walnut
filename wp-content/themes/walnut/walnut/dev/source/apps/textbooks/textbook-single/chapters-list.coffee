@@ -38,36 +38,3 @@ define ['app'
 
 				console.log 'collection'
 				console.log @collection  
-
-		  #    onShow:->
-		  #    	responsiveHelper = undefined;
-				# breakpointDefinition = {
-				# 	tablet: 1024,
-				# 	phone : 480
-				# };    
-				# tableElement = $('#example2');
-
-				# tableElement.dataTable
-				# 	"sDom": "<'row'<'col-md-6'l T><'col-md-6'f>r>t<'row'<'col-md-12'p i>>"
-				# 	"oTableTools": 
-				# 		"aButtons": 
-				# 			"sExtends":    "collection",
-				# 			"sButtonText": "<i class='fa fa-cloud-download'></i>",
-				# 			"aButtons":    [ "csv", "xls", "pdf", "copy"]
-					
-				# 		"sPaginationType": "bootstrap",
-				# 		"aoColumnDefs":
-				# 			'bSortable': false, 'aTargets': [ 0 ]
-						
-				# 		"aaSorting": [[ 1, "asc" ]],
-				# 		"oLanguage":
-				# 			"sLengthMenu": "_MENU_ ",
-				# 			"sInfo": "Showing <b>_START_ to _END_</b> of _TOTAL_ entries"
-					
-				# 	bAutoWidth: false						
-				   
-				# 	fnRowCallback  : (nRow) ->
-				# 		responsiveHelper.createExpandIcon(nRow);
-					
-				# 	fnDrawCallback : (oSettings)->
-				# 		responsiveHelper.respond();

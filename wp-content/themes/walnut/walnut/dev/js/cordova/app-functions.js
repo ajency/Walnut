@@ -107,6 +107,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         user_email: '',
         session_id: '',
         blog_id: '',
+        division: '',
         exists: false
       };
       runQuery = function() {
@@ -128,9 +129,9 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               session_id: row['session_id'],
               blog_id: row['blog_id'],
               user_email: row['user_email'],
+              division: row['division'],
               exists: true
             };
-            console.log("user data");
             console.log(userData);
           }
           return d.resolve(userData);
@@ -266,6 +267,37 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return console.log('fetchSingleDivsion transaction completed');
       }).fail(_.failureHandler);
     },
+    getUserEmail: function() {
+      var onSuccess, runQuery, userDetails;
+      userDetails = {
+        user_email: '',
+        username: ''
+      };
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM USERS WHERE user_id=?", [_.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var row;
+          if (data.rows.length !== 0) {
+            row = data.rows.item(0);
+            userDetails = {
+              user_email: row['user_email'],
+              username: row['username']
+            };
+            console.log(userDetails);
+          }
+          return d.resolve(userDetails);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getUserDetails transaction completed');
+      }).fail(_.failureHandler);
+    },
     setUserModel: function() {
       var singleDivision, user;
       user = App.request("get:user:model");
@@ -279,15 +311,20 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }
       singleDivision = this.getSingleDivsionByUserId(_.getUserID());
       return singleDivision.done(function(division) {
-        var data;
-        data = {
-          'division': division,
-          'ID': _.getUserID(),
-          'display_name': _.getUserName(),
-          'user_email': _.getUserEmail()
-        };
-        return user.set({
-          'data': data
+        var userDeatils;
+        userDeatils = _.getUserEmail(this.data.data.txtusername);
+        return getUserDetails.done(function(user) {
+          var data;
+          console.log(JSON.stringify(user));
+          data = {
+            'division': division,
+            'ID': _.getUserID(),
+            'display_name': user.username,
+            'user_email': user.user_email
+          };
+          return user.set({
+            'data': data
+          });
         });
       });
     }

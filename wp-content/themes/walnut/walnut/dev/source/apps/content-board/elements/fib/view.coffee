@@ -49,12 +49,12 @@ define ['app'], (App)->
 
                 @$el.find('h4').find('input').each (index,input)=>
                     # console.log $(input).attr('data-id')
-
-                    correctAnswerArray = @blanksCollection.get($(input).attr('data-id')).get('correct_answers')
+                    blankModel =  @blanksCollection.get($(input).attr('data-id'))
+                    correctAnswerArray = blankModel.get('correct_answers')
                     if correctAnswerArray[0] isnt ""
                         $(input).replaceWith("<span class='fibAns'>#{correctAnswerArray[0]}</span>")
                         if correctAnswerArray.length > 1
-                            @$el.find('#allAnswers').append "<span>All answers for #{correctAnswerArray[0]}:
+                            @$el.find('#allAnswers').append "<span>All correct options for #{_.getOrdinal(blankModel.get('blank_index'))} blank is :
                             #{_.toSentence(correctAnswerArray)}</span></br>"
                     else
                         $(input).replaceWith("<span class='fibAns'>(no correct)</span>")
