@@ -309,7 +309,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           'allcaps': _.getUserCapabilities()
         });
       }
-      singleDivision = this.getSingleDivsionByUserId(_.getUserID());
+      singleDivision = _.getSingleDivsionByUserId(_.getUserID());
       return singleDivision.done(function(division) {
         var userDeatils;
         userDeatils = _.getUserEmail();

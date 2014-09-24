@@ -329,7 +329,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			if not _.isNull(_.getUserCapabilities())
 				user.set 'allcaps' : _.getUserCapabilities()
 
-			singleDivision = @getSingleDivsionByUserId(_.getUserID())
+			singleDivision = _.getSingleDivsionByUserId(_.getUserID())
 			singleDivision.done (division)->
 
 				userDeatils = _.getUserEmail()
