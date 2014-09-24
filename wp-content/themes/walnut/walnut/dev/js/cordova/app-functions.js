@@ -319,8 +319,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           data = {
             'division': division,
             'ID': _.getUserID(),
-            'display_name': userData.username,
-            'user_email': userData.user_email
+            'display_name': _.getUserName(),
+            'user_email': _.getUserEmail()
           };
           return user.set({
             'data': data
