@@ -73,7 +73,7 @@ define(['underscore'], function(_) {
             userDetails = _.getUserDetails(_.getUserID());
             return userDetails.done(function(userDetails) {
               var studentsCountClassIdValue;
-              studentsCountClassIdValue = _.getStudentsCountClassIdValue(userDetails.blog_id);
+              studentsCountClassIdValue = _.getStudentsCountForBlogId(userDetails.blog_id);
               return studentsCountClassIdValue.done(function(students_count_classid_value) {
                 var studentsCount;
                 studentsCount = _.getStudentsCount(row['id'], students_count_classid_value);
@@ -96,7 +96,7 @@ define(['underscore'], function(_) {
         return console.log('fetchSingleDivision transaction completed');
       }).fail(_.failureHandler);
     },
-    getStudentsCountClassIdValue: function(blog_id) {
+    getStudentsCountForBlogId: function(blog_id) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
@@ -122,7 +122,6 @@ define(['underscore'], function(_) {
     getStudentsCount: function(division_id, ids) {
       var onSuccess, runQuery;
       ids = ids.join();
-      console.log(ids);
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {

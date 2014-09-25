@@ -74,7 +74,7 @@ define ['underscore'], ( _) ->
 						userDetails = _.getUserDetails(_.getUserID())
 						userDetails.done (userDetails)->
 
-							studentsCountClassIdValue = _.getStudentsCountClassIdValue(userDetails.blog_id)
+							studentsCountClassIdValue = _.getStudentsCountForBlogId(userDetails.blog_id)
 							studentsCountClassIdValue.done (students_count_classid_value)->
 
 								studentsCount = _.getStudentsCount(row['id'], students_count_classid_value)
@@ -92,7 +92,7 @@ define ['underscore'], ( _) ->
 			.fail _.failureHandler
 
 
-		getStudentsCountClassIdValue : (blog_id)->
+		getStudentsCountForBlogId : (blog_id)->
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -121,7 +121,6 @@ define ['underscore'], ( _) ->
 		getStudentsCount : (division_id, ids)->
 
 			ids = ids.join()
-			console.log ids
 
 			runQuery = ->
 				$.Deferred (d)->
