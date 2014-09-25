@@ -4,13 +4,12 @@ function fetch_single_division($id){
     
     global $wpdb;
     global $classids;
-
+      
     $divisions_qry="select * from {$wpdb->prefix}class_divisions where id=".$id;
 
     $division_data = $wpdb->get_results($divisions_qry);
 
     foreach($division_data as $division){
-
         $data['id']             = $division->id;
         $data['division']       = $division->division;
         $data['class_id']       = (int) $division->class_id;

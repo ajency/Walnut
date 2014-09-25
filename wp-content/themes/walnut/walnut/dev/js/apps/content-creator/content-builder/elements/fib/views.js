@@ -60,7 +60,11 @@ define(['app'], function(App) {
         CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.attr('id')));
         this.editor.setData(_.stripslashes(this.model.get('text')));
-        return _.delay(this._afterCKEditorInitialization, 500);
+        return this.editor.on('instanceReady', (function(_this) {
+          return function() {
+            return _this._afterCKEditorInitialization();
+          };
+        })(this));
       };
 
       FibView.prototype.configureEditor = function(event) {
@@ -68,9 +72,11 @@ define(['app'], function(App) {
         editor = event.editor;
         element = editor.element;
         if (element.getAttribute('id') === this.$el.attr('id')) {
-          return editor.on('configLoaded', function() {
-            return editor.config.placeholder = 'This is a FIB Block. Use this to provide text and blanks…';
-          });
+          return editor.on('configLoaded', (function(_this) {
+            return function() {
+              return editor.config.placeholder = 'This is a FIB Block. Use this to provide text and blanks…';
+            };
+          })(this));
         }
       };
 
@@ -130,6 +136,10 @@ define(['app'], function(App) {
           inputId = _.uniqueId('input-');
           inputNumber = this.model.get('blanksArray').size() + 1;
           this.trigger("create:new:fib:element", inputId);
+          if (!this.$el.find('p').length) {
+            this.$el.html('<p></p>');
+            this.$el.removeClass('placeholder');
+          }
           this.$el.find('p').first().append("<span contenteditable='false'> <span class='fibno'>" + inputNumber + "</span><input type='text' data-id='" + inputId + "' data-cke-editable='1' style=' height :100%' contenteditable='false' ></span>&nbsp;&nbsp;");
           blanksModel = this.model.get('blanksArray').get(inputId);
           this._initializeEachBlank(blanksModel);

@@ -53,3 +53,12 @@ define ['underscore', 'underscorestring'], (_) ->
 
             result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')'
 
+
+        getOrdinal : (n)->
+            if parseFloat(n) is parseInt(n) and not _.isNaN(n)
+                s=["th","st","nd","rd"]
+                v=n%100
+                return n+(s[(v-20)%10]||s[v]||s[0])
+            
+            return n
+

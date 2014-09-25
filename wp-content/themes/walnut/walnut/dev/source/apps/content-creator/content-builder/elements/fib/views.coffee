@@ -48,15 +48,18 @@ define ['app'], (App)->
                 @editor.setData _.stripslashes @model.get 'text'
 
                 # wait for CKEditor to be loaded
-                _.delay @_afterCKEditorInitialization, 500
+                @editor.on 'instanceReady',=>
+                    @_afterCKEditorInitialization()
+                # _.delay @_afterCKEditorInitialization, 1000
 
             configureEditor: (event) =>
                 editor = event.editor
                 element = editor.element
 
                 if element.getAttribute('id') is @$el.attr 'id'
-                    editor.on 'configLoaded', ->
+                    
 
+                    editor.on 'configLoaded', =>
                         editor.config.placeholder = 'This is a FIB Block. Use this to provide text and blanks…'
 
 
@@ -117,6 +120,10 @@ define ['app'], (App)->
                     inputId = _.uniqueId 'input-'
                     inputNumber = @model.get('blanksArray').size() + 1
                     @trigger "create:new:fib:element", inputId
+
+                    if not @$el.find('p').length
+                        @$el.html '<p></p>'
+                        @$el.removeClass 'placeholder'
 
                     @$el.find('p').first().append "<span contenteditable='false'>
                         <span class='fibno'>#{inputNumber}</span><input type='text'
