@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.html'], function(App, contentListTpl) {
@@ -9,8 +8,6 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
       __extends(ListItemView, _super);
 
       function ListItemView() {
-        this.successUpdateFn = __bind(this.successUpdateFn, this);
-        this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -18,11 +15,13 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> <td>view report</td>';
+      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> <td><button class="btn btn-small btn-success view-report">view report</button></td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data, _ref;
+        var data;
         data = ListItemView.__super__.serializeData.call(this);
+        this.textbooks = Marionette.getOption(this, 'textbooksCollection');
+        this.chapters = Marionette.getOption(this, 'chaptersCollection');
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
@@ -45,17 +44,7 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
             }
           };
         })(this);
-        data.durationRounded = function() {
-          if (data.minshours === 'hrs') {
-            return _.numberFormat(parseFloat(data.duration), 2);
-          } else {
-            return data.duration;
-          }
-        };
         data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Quiz';
-        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
-          data.archivedModule = true;
-        }
         data.taken_by = (function() {
           switch (data.taken_by) {
             case 0:
@@ -73,74 +62,10 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
         return data;
       };
 
-      ListItemView.prototype.mixinTemplateHelpers = function(data) {
-        data = ListItemView.__super__.mixinTemplateHelpers.call(this, data);
-        data.isQuiz = true;
-        return data;
-      };
-
       ListItemView.prototype.events = {
-        'click a.cloneModule': 'cloneModule'
-      };
-
-      ListItemView.prototype.initialize = function(options) {
-        this.textbooks = options.textbooksCollection;
-        this.chapters = options.chaptersCollection;
-        return this.groupType = options.groupType;
-      };
-
-      ListItemView.prototype.cloneModule = function() {
-        var groupData, _ref;
-        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
-          if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
-            if (this.groupType === 'teaching-module') {
-              this.cloneModel = App.request("new:content:group");
-            }
-            if (this.groupType === 'quiz') {
-              this.cloneModel = App.request("new:quiz");
-            }
-            groupData = this.model.toJSON();
-            this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-            this.clonedData.name = "" + this.clonedData.name + " clone";
-            this.clonedData.post_status = "underreview";
-            return App.execute("when:fetched", this.cloneModel, (function(_this) {
-              return function() {
-                return _this.cloneModel.save(_this.clonedData, {
-                  wait: true,
-                  success: _this.successSaveFn,
-                  error: _this.errorFn
-                });
-              };
-            })(this));
-          }
+        'click .view-report': function() {
+          return this.trigger('view:quiz:report', this.model.id);
         }
-      };
-
-      ListItemView.prototype.successSaveFn = function(model) {
-        model.set('content_pieces', this.clonedData.content_pieces);
-        return model.save({
-          'changed': 'content_pieces'
-        }, {
-          wait: true,
-          success: this.successUpdateFn,
-          error: this.errorFn
-        });
-      };
-
-      ListItemView.prototype.successUpdateFn = function(model) {
-        if (this.groupType === 'teaching-module') {
-          return App.navigate("edit-module/" + (model.get('id')), {
-            trigger: true
-          });
-        } else {
-          return App.navigate("edit-quiz/" + (model.get('id')), {
-            trigger: true
-          });
-        }
-      };
-
-      ListItemView.prototype.errorFn = function() {
-        return console.log('error');
       };
 
       return ListItemView;
@@ -184,32 +109,12 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
       ModulesListingView.prototype.itemViewOptions = function() {
         return {
           textbooksCollection: this.textbooks,
-          chaptersCollection: Marionette.getOption(this, 'chaptersCollection'),
-          groupType: this.groupType
+          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
         };
-      };
-
-      ModulesListingView.prototype.mixinTemplateHelpers = function(data) {
-        data = ModulesListingView.__super__.mixinTemplateHelpers.call(this, data);
-        if (this.groupType === 'quiz') {
-          data.isQuiz = true;
-        }
-        data.type = _.titleize(_.humanize(data.type));
-        console.log(this.groupType);
-        return data;
-      };
-
-      ModulesListingView.prototype.events = {
-        'change .textbook-filter': function(e) {
-          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
-        },
-        'change #check_all_div': 'checkAll',
-        'change #content-post-status-filter': 'setFilteredContent'
       };
 
       ModulesListingView.prototype.initialize = function() {
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
-        this.groupType = Marionette.getOption(this, 'groupType');
         this.textbooks = new Array();
         return this.textbooksCollection.each((function(_this) {
           return function(textbookModel, ind) {
@@ -222,44 +127,8 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
       };
 
       ModulesListingView.prototype.onShow = function() {
-        var textbookFiltersHTML;
-        textbookFiltersHTML = $.showTextbookFilters({
-          textbooks: this.textbooksCollection
-        });
-        this.fullCollection = Marionette.getOption(this, 'fullCollection');
-        this.$el.find('#textbook-filters').html(textbookFiltersHTML);
-        this.$el.find(".select2-filters").select2();
         this.$el.find('#content-pieces-table').tablesorter();
         return this.onUpdatePager();
-      };
-
-      ModulesListingView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
-        switch (filterType) {
-          case 'textbooks-filter':
-            $.populateChapters(filteredCollection, this.$el);
-            break;
-          case 'chapters-filter':
-            $.populateSections(filteredCollection, this.$el);
-            break;
-          case 'sections-filter':
-            $.populateSubSections(filteredCollection, this.$el);
-        }
-        return this.setFilteredContent();
-      };
-
-      ModulesListingView.prototype.setFilteredContent = function() {
-        var filtered_data;
-        filtered_data = $.filterTableByTextbooks(this);
-        this.collection.set(filtered_data);
-        return this.onUpdatePager();
-      };
-
-      ModulesListingView.prototype.checkAll = function() {
-        if (this.$el.find('#check_all').is(':checked')) {
-          return this.$el.find('.table-striped .tab_checkbox').trigger('click').prop('checked', true);
-        } else {
-          return this.$el.find('.table-striped .tab_checkbox').removeAttr('checked');
-        }
       };
 
       ModulesListingView.prototype.onUpdatePager = function() {

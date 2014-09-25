@@ -21,14 +21,12 @@ define ['app'
                     #all chapter names in this set of contentModulesscollection
                     @allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
 
-                    @fullCollection = @contentModulesCollection.clone()
-
                     App.execute "when:fetched", @allChaptersCollection, =>
                         @view = view = @_getContentModulessListingView()
 
                         @show view,
                             loading : true
-                            entities : [@contentModulesCollection, @textbooksCollection, @fullCollection]
+                            entities : [@contentModulesCollection, @textbooksCollection]
 
                         @listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
                             chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
@@ -37,6 +35,11 @@ define ['app'
 
                         @listenTo @region, "update:pager",=>
                             @view.triggerMethod "update:pager"
+
+                        @listenTo @view, 'itemview:view:quiz:report', @_showQuizReportApp
+
+            _showQuizReportApp:(itemview, quiz_id)->
+                @region.trigger "show:quiz:report", @contentModulesCollection.get quiz_id
 
             _getContentModulessListingView : =>
                 new ClassQuizReportListing.Views.ModulesListingView

@@ -20,13 +20,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
             var chapter_ids;
             chapter_ids = _.chain(_this.contentModulesCollection.pluck('term_ids')).pluck('chapter').unique().compact().value();
             _this.allChaptersCollection = App.request("get:textbook:names:by:ids", chapter_ids);
-            _this.fullCollection = _this.contentModulesCollection.clone();
             return App.execute("when:fetched", _this.allChaptersCollection, function() {
               var view;
               _this.view = view = _this._getContentModulessListingView();
               _this.show(view, {
                 loading: true,
-                entities: [_this.contentModulesCollection, _this.textbooksCollection, _this.fullCollection]
+                entities: [_this.contentModulesCollection, _this.textbooksCollection]
               });
               _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {
                 var chaptersOrSections;
@@ -37,12 +36,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                   return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
                 });
               });
-              return _this.listenTo(_this.region, "update:pager", function() {
+              _this.listenTo(_this.region, "update:pager", function() {
                 return _this.view.triggerMethod("update:pager");
               });
+              return _this.listenTo(_this.view, 'itemview:view:quiz:report', _this._showQuizReportApp);
             });
           };
         })(this));
+      };
+
+      Controller.prototype._showQuizReportApp = function(itemview, quiz_id) {
+        return this.region.trigger("show:quiz:report", this.contentModulesCollection.get(quiz_id));
       };
 
       Controller.prototype._getContentModulessListingView = function() {

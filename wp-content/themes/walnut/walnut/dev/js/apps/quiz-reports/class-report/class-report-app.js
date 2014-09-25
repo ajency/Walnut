@@ -1,25 +1,29 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/quiz-reports/class-report/templates/class-report-layout.html', 'apps/quiz-reports/class-report/listing-controller', 'apps/quiz-reports/class-report/student-filter-app', 'apps/quiz-reports/class-report/search-results-app'], function(App, RegionController, classReportLayoutTpl) {
+define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/listing-controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app'], function(App, RegionController) {
   return App.module("ClassReportApp", function(ClassReportApp, App) {
-    var ContentPiecesLayout;
     ClassReportApp.Controller = (function(_super) {
+      var students;
+
       __extends(Controller, _super);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
+      students = null;
+
       Controller.prototype.initialize = function() {
+        this.division = 0;
         this.divisionsCollection = App.request("get:divisions");
         return App.execute("when:fetched", this.divisionsCollection, (function(_this) {
           return function() {
-            var class_id, division;
-            division = _this.divisionsCollection.first().get('id');
+            var class_id;
+            _this.division = _this.divisionsCollection.first().get('id');
             class_id = _this.divisionsCollection.first().get('class_id');
             _this.textbooksCollection = App.request("get:textbooks", {
-              'division': division
+              'division': _this.division
             });
             return App.execute("when:fetched", _this.textbooksCollection, function() {
               var data, textbook;
@@ -27,17 +31,16 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-reports/class-re
               data = {
                 'post_status': 'any',
                 'textbook': textbook.id,
-                'division': division
+                'division': _this.division
               };
               _this.contentModulesCollection = App.request("get:quizes", data);
               _this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
-              _this.layout = _this._getContentPiecesLayout(_this.students);
+              _this.layout = _this._getContentPiecesLayout(students);
               return App.execute("when:fetched", [_this.contentModulesCollection, _this.textbooksCollection], function() {
                 _this.show(_this.layout, {
                   loading: true
                 });
                 _this.listenTo(_this.layout, "show", function() {
-                  var students;
                   App.execute("show:textbook:filters:app", {
                     region: _this.layout.filtersRegion,
                     collection: _this.contentModulesCollection,
@@ -68,11 +71,21 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-reports/class-re
                 _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
                   return _this.layout.allContentRegion.trigger("update:pager");
                 });
-                return _this.listenTo(_this.layout.filtersRegion, "division:changed", function(division) {
-                  var students;
+                _this.listenTo(_this.layout.filtersRegion, "division:changed", function(division) {
+                  _this.division = division;
                   students = App.request("get:students:by:division", division);
                   return App.execute("when:fetched", students, function() {
-                    return _this.layout.studentFilterRegion.trigger('change:division', students);
+                    _this.layout.studentFilterRegion.trigger('change:division', students);
+                    return _this.layout.triggerMethod('change:division', students);
+                  });
+                });
+                return _this.listenTo(_this.layout.allContentRegion, "show:quiz:report", function(quizModel) {
+                  App.navigate("quiz-report/div/" + this.division + "/quiz/" + quizModel.id);
+                  return App.execute("show:quiz:report:app", {
+                    region: App.mainContentRegion,
+                    division: this.divisionsCollection.get(this.division),
+                    students: students,
+                    quiz: quizModel
                   });
                 });
               });
@@ -82,7 +95,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-reports/class-re
       };
 
       Controller.prototype._getContentPiecesLayout = function(students) {
-        return new ContentPiecesLayout({
+        return new ClassReportApp.Layout.ContentPiecesLayout({
           students: students
         });
       };
@@ -90,37 +103,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-reports/class-re
       return Controller;
 
     })(RegionController);
-    ContentPiecesLayout = (function(_super) {
-      __extends(ContentPiecesLayout, _super);
-
-      function ContentPiecesLayout() {
-        return ContentPiecesLayout.__super__.constructor.apply(this, arguments);
-      }
-
-      ContentPiecesLayout.prototype.template = classReportLayoutTpl;
-
-      ContentPiecesLayout.prototype.className = 'tiles white grid simple vertical green';
-
-      ContentPiecesLayout.prototype.regions = {
-        studentFilterRegion: '#students-filter-region',
-        filtersRegion: '#filters-region',
-        allContentRegion: '#all-content-region',
-        searchResultsRegion: '#search-results-region'
-      };
-
-      ContentPiecesLayout.prototype.events = {
-        'click #addContent a': 'changeTab'
-      };
-
-      ContentPiecesLayout.prototype.changeTab = function(e) {
-        e.preventDefault();
-        this.$el.find('#addContent a').removeClass('active');
-        return $(e.target).closest('a').addClass('active').tab('show');
-      };
-
-      return ContentPiecesLayout;
-
-    })(Marionette.Layout);
     return App.commands.setHandler("show:class:report:app", function(opt) {
       if (opt == null) {
         opt = {};

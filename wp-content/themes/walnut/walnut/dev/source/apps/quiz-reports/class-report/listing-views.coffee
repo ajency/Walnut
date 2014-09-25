@@ -9,13 +9,16 @@ define ['app'
 
             template : '<td>{{name}}</td>
                         <td>{{chapterName}}</td>
-                        <td>{{durationRounded}} {{minshours}}</td>
+                        <td>{{duration}} mins</td>
                         <td>{{quiz_type}}</td>
                         <td>{{taken_by}}</td>
-                        <td>view report</td>'
+                        <td><button class="btn btn-small btn-success view-report">view report</button></td>'
 
             serializeData : ->
                 data = super()
+
+                @textbooks = Marionette.getOption @, 'textbooksCollection'
+                @chapters = Marionette.getOption @, 'chaptersCollection'
 
                 data.textbookName = =>
                     textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
@@ -29,15 +32,7 @@ define ['app'
                             .value()
                         chapter
 
-                data.durationRounded = ->
-                    if data.minshours is 'hrs'
-                        _.numberFormat parseFloat(data.duration), 2
-                    else
-                        data.duration
-
                 data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Quiz'
-
-                data.archivedModule = true if data.post_status in ['publish', 'archive']
 
                 data.taken_by = switch data.taken_by
                     when 0 then 'None'
@@ -47,58 +42,8 @@ define ['app'
                             
                 data
 
-            mixinTemplateHelpers : (data)->
-                data = super data
-                data.isQuiz = true
-                data
-
             events:
-                'click a.cloneModule' : 'cloneModule'
-
-            initialize : (options)->
-                @textbooks = options.textbooksCollection
-                @chapters = options.chaptersCollection
-                @groupType = options.groupType
-
-            cloneModule :->
-                if @model.get('post_status') in ['publish','archive']
-                    if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
-
-                        @cloneModel = App.request "new:content:group" if @groupType is 'teaching-module'
-
-                        @cloneModel = App.request "new:quiz" if @groupType is 'quiz'
-
-                        groupData = @model.toJSON()
-                        @clonedData = _.omit groupData,
-                          ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
-                        @clonedData.name = "#{@clonedData.name} clone"
-                        @clonedData.post_status = "underreview"
-
-                        App.execute "when:fetched", @cloneModel, =>
-                            @cloneModel.save @clonedData,
-                                wait : true
-                                success : @successSaveFn
-                                error : @errorFn
-
-            successSaveFn : (model)=>
-                model.set('content_pieces', @clonedData.content_pieces)
-                model.save 'changed' : 'content_pieces' ,
-                    wait : true
-                    success : @successUpdateFn
-                    error : @errorFn
-
-            successUpdateFn : (model)=>
-                if @groupType is 'teaching-module'
-                    App.navigate "edit-module/#{model.get('id')}",
-                        trigger : true
-
-                else
-                    App.navigate "edit-quiz/#{model.get('id')}",
-                        trigger : true
-
-            errorFn : ->
-                console.log 'error'
-
+                'click .view-report' :-> @trigger 'view:quiz:report', @model.id
 
         class EmptyView extends Marionette.ItemView
 
@@ -124,25 +69,9 @@ define ['app'
             itemViewOptions : ->
                 textbooksCollection : @textbooks
                 chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
-                groupType : @groupType
-
-            mixinTemplateHelpers : (data)->
-                data = super data
-                data.isQuiz = true if @groupType is 'quiz'
-                data.type = _.titleize _.humanize data.type
-                console.log @groupType
-                data
-
-            events :
-                'change .textbook-filter' :(e)->
-                    @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
-
-                'change #check_all_div'     : 'checkAll'
-                'change #content-post-status-filter'  : 'setFilteredContent'
 
             initialize : ->
                 @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
-                @groupType = Marionette.getOption @, 'groupType'
                 @textbooks = new Array()
                 @textbooksCollection.each (textbookModel, ind)=>
                     @textbooks.push
@@ -150,50 +79,10 @@ define ['app'
                         'id' : textbookModel.get('term_id')
 
             onShow : ->
-
-                textbookFiltersHTML= $.showTextbookFilters textbooks: @textbooksCollection
-                @fullCollection = Marionette.getOption @, 'fullCollection'
-
-                @$el.find '#textbook-filters'
-                .html textbookFiltersHTML
-
-                @$el.find ".select2-filters"
-                .select2()
-
                 @$el.find '#content-pieces-table'
                 .tablesorter();
 
                 @onUpdatePager()
-
-            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
-
-                switch filterType
-                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
-                    when 'chapters-filter' then $.populateSections filteredCollection, @$el
-                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el
-
-                @setFilteredContent()
-
-
-            setFilteredContent:->
-
-                filtered_data= $.filterTableByTextbooks(@)
-
-                @collection.set filtered_data
-
-                @onUpdatePager()
-
-            checkAll: ->
-                if @$el.find '#check_all'
-                .is ':checked'
-                    @$el.find '.table-striped .tab_checkbox'
-                    .trigger 'click'
-                        .prop 'checked', true
-
-                else
-                    @$el.find '.table-striped .tab_checkbox'
-                    .removeAttr 'checked'
-
 
             onUpdatePager:->
 

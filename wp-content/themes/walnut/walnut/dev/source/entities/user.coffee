@@ -7,6 +7,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				name: 'user'
 
+				idAttribute : 'ID'
+
 				defaults : ->
 					display_name 	: ''
 					user_email 		: ''

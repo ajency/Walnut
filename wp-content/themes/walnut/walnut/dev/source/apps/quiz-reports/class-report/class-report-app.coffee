@@ -1,23 +1,27 @@
 define ['app'
     'controllers/region-controller'
-    'text!apps/quiz-reports/class-report/templates/class-report-layout.html'
+    'apps/quiz-reports/class-report/class-report-layout'
     'apps/quiz-reports/class-report/listing-controller'
-    'apps/quiz-reports/class-report/student-filter-app'
-    'apps/quiz-reports/class-report/search-results-app'], (App, RegionController,classReportLayoutTpl)->
+    'apps/quiz-reports/student-filter/student-filter-app'
+    'apps/quiz-reports/class-report/search-results-app'], (App, RegionController)->
 
     App.module "ClassReportApp", (ClassReportApp, App)->
         class ClassReportApp.Controller extends RegionController
 
+            students = null
+
             initialize: ->
-                
+
+                @division = 0
+
                 @divisionsCollection = App.request "get:divisions"
 
                 App.execute "when:fetched", @divisionsCollection, =>
 
-                    division= @divisionsCollection.first().get 'id'
+                    @division= @divisionsCollection.first().get 'id'
                     class_id= @divisionsCollection.first().get 'class_id'
 
-                    @textbooksCollection = App.request "get:textbooks", 'division' : division
+                    @textbooksCollection = App.request "get:textbooks", 'division' : @division
 
                     App.execute "when:fetched", @textbooksCollection, =>
                         textbook = @textbooksCollection.first()
@@ -25,17 +29,16 @@ define ['app'
                         data = 
                             'post_status'   : 'any' 
                             'textbook'      : textbook.id
-                            'division'      : division
+                            'division'      : @division
 
                         @contentModulesCollection = App.request "get:quizes", data
 
                         #wreqr object to get the selected filter parameters so that search can be done using them
                         @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
-                        @layout = @_getContentPiecesLayout @students
+                        @layout = @_getContentPiecesLayout students
 
                         App.execute "when:fetched", [@contentModulesCollection, @textbooksCollection], =>
-
 
                             @show @layout,
                                 loading: true
@@ -69,40 +72,26 @@ define ['app'
                                         selectedFilterParamsObject: @selectedFilterParamsObject
 
                             @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
+                            
                             @listenTo @layout.filtersRegion, "division:changed",(division)=>
+                                @division = division
                                 students = App.request "get:students:by:division", division
                                 App.execute "when:fetched", students, =>
                                     @layout.studentFilterRegion.trigger 'change:division', students
+                                    @layout.triggerMethod 'change:division', students
+
+                            @listenTo @layout.allContentRegion, "show:quiz:report", (quizModel)->
+                                App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"
+                                
+                                App.execute "show:quiz:report:app",
+                                    region      : App.mainContentRegion
+                                    division    : @divisionsCollection.get @division
+                                    students    : students
+                                    quiz        : quizModel
 
             _getContentPiecesLayout:(students)->
-                new ContentPiecesLayout
+                new ClassReportApp.Layout.ContentPiecesLayout
                     students : students
-
-
-        class ContentPiecesLayout extends Marionette.Layout
-            template : classReportLayoutTpl
-
-            className: 'tiles white grid simple vertical green'
-
-            regions:
-                studentFilterRegion : '#students-filter-region'
-                filtersRegion       : '#filters-region'
-                allContentRegion    : '#all-content-region'
-                searchResultsRegion : '#search-results-region'
-
-            events:
-                'click #addContent a': 'changeTab'
-
-            changeTab: (e)->
-                e.preventDefault()
-
-                @$el.find '#addContent a'
-                .removeClass 'active'
-
-                $(e.target).closest 'a'
-                .addClass 'active'
-                    .tab 'show'
-
 
         # set handlers
         App.commands.setHandler "show:class:report:app", (opt = {})->

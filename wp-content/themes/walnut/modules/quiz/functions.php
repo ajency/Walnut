@@ -333,6 +333,8 @@ function read_quiz_response_summary($summary_id){
         WHERE summary_id = %s", $quiz_response_summary->summary_id
     );
 
+    $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
+
     $additional_details= $wpdb->get_row($additional_details_qry);   
 
     $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;

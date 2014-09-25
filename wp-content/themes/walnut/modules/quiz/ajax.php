@@ -55,16 +55,23 @@ function fetch_quiz_response_summary(){
     unset($_GET['action']);
     $args = $_GET;
 
+    $quiz_summary = array();
+
     if(isset($_GET['summary_id']))
         $quiz_summary = read_quiz_response_summary($_GET['summary_id']);
 
     else{
         $quiz_id = $_GET['collection_id'];
-        
+
         if(!$quiz_id)
             wp_send_json(array('error' => 'quiz id undefined'));
 
-        $quiz_summary = get_quiz_summaries_for_user($_GET['student_id'],$quiz_id);
+        if(isset($_GET['student_ids']))
+            foreach($_GET['student_ids'] as $student)
+                $quiz_summary = array_merge($quiz_summary, get_quiz_summaries_for_user($student,$quiz_id));
+        
+        else
+            $quiz_summary = get_quiz_summaries_for_user($_GET['student_id'],$quiz_id);
     }
     
     wp_send_json(array('code' => 'OK','data' => $quiz_summary));
