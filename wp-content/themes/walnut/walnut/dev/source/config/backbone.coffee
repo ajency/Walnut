@@ -15,7 +15,7 @@ define ["backbone"], (Backbone) ->
 
 			collection_name = collection.name
 			opts = options.data
-			console.log 'Collection name: '+collection_name
+			console.log 'Collection name: '+ 
 			console.log 'options: '+JSON.stringify opts
 
 			if collection_name is 'textbook'

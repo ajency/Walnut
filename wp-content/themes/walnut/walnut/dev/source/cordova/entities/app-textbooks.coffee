@@ -25,7 +25,6 @@ define ['underscore'], ( _) ->
 			onSuccess = (d)->
 				(tx, data)->
 					result = []
-					alert data.rows.length
 					for i in [0..data.rows.length-1] by 1
 
 						row = data.rows.item(i)

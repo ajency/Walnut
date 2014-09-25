@@ -122,7 +122,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         console.log('Synapse App Logout');
         _.removeCordovaBackbuttonEventListener();
         _.setUserID(null);
-        _.setBlogID(null);
+        _.setTblPrefix(null);
         user = App.request("get:user:model");
         user.clear();
         App.leftNavRegion.close();

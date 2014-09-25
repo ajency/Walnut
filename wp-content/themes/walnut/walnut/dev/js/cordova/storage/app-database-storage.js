@@ -2,14 +2,14 @@ define(['underscore', 'jquery'], function(_, $) {
   return _.mixin({
     cordovaOpenPrepopulatedDatabase: function() {
       _.db = window.sqlitePlugin.openDatabase({
-        name: "synapseStudentTestApp"
+        name: "synapseStudentAppNewDb"
       });
       console.log('Local database object: ' + _.db);
       return _.createLocalTables(_.db);
     },
     createLocalTables: function(db) {
       return db.transaction(function(tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY , user_id UNIQUE, username , password, user_role, session_id, blog_id, user_email,division)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY , user_id INTEGER, username, display_name, password, user_capabilities, user_role , cookie, blog_id, user_email, division)');
         return tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)');
       }, _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: createLocalTables transaction completed');

@@ -10,8 +10,7 @@ define(["backbone"], function(Backbone) {
       var collection_name, data, opts;
       collection_name = collection.name;
       opts = options.data;
-      console.log('Collection name: ' + collection_name);
-      console.log('options: ' + JSON.stringify(opts));
+      console.log('Collection name: ' + console.log('options: ' + JSON.stringify(opts)));
       if (collection_name === 'textbook') {
         data = _.getTextbooksForStudent();
         data.done(function(d) {

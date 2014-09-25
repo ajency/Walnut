@@ -7,7 +7,7 @@ define ['underscore', 'jquery'], (_, $)->
         
         cordovaOpenPrepopulatedDatabase : ->
 
-            _.db = window.sqlitePlugin.openDatabase({name: "synapseStudentTestApp"})
+            _.db = window.sqlitePlugin.openDatabase({name: "synapseStudentAppNewDb"})
 
             console.log 'Local database object: '+_.db
 
@@ -20,8 +20,8 @@ define ['underscore', 'jquery'], (_, $)->
             db.transaction((tx)->
                 #User table
                 tx.executeSql('CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY
-                    , user_id UNIQUE, username
-                    , password, user_role, session_id, blog_id, user_email,division)')
+                    , user_id INTEGER, username, display_name, password, user_capabilities, user_role
+                    , cookie, blog_id, user_email, division)')
 
                 tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details
                     (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')

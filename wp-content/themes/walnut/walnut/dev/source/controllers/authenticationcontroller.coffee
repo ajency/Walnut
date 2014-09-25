@@ -43,69 +43,138 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			
 
 		
-		isOfflineLoginEnabled:->
+		isOfflineLoginEnabled : ->
 
 			if ($('#onOffSwitch').is(':checked')) then false else true
 
 		
-		onlineDeviceAuth:->
+		onlineDeviceAuth : ->
 
-			@data = 
-				data: @data
-			url = AJAXURL + '?action=get-user-app-profile' 
+			@data = data: @data
+
 			$.ajax 
 				type: 'POST' 
-				url : url  
+				url : AJAXURL + '?action=get-user-app-profile'  
 				data: @data   
 				dataType: 'json' 
 				xhrFields: 
-						withCredentials: true 
-				beforeSend: (xhr)->
-					if not _.isNull(_.getCookiesValue())
-						if _.getCookiesValue() isnt 'null'
-							console.log _.getCookiesValue()
-							xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
-				success : (resp, status, jqXHR)=>
+						withCredentials: true
 
-					console.log 'Login Response'
-					console.log JSON.stringify resp
+				# beforeSend: (xhr)->
+				# 	if not _.isNull(_.getCookiesValue())
+				# 		if _.getCookiesValue() isnt 'null'
+				# 			console.log _.getCookiesValue()
+				# 			xhr.setRequestHeader('Set-Cookie', _.getCookiesValue()); 
 
+				success : (resp, status, xhr)=>
+					
 					if resp.error
 						@onErrorResponse(resp.error)
 					else
-						userRole = resp.login_details.roles[0]
-						if userRole is "teacher"
-							@onErrorResponse("Your are not allowed to login")
+						_.each resp.login_details.roles, (userRole)=>
 
-						else if userRole is "student"
-							store_cookies = jqXHR.getResponseHeader('Set-Cookie'); 
-							_.setCookiesValue(store_cookies);
+							if userRole is "teacher"
+								@onErrorResponse("Your are not allowed to login")
 
+							else if userRole is "student"
 
-							@setUserDetails(resp.login_details.ID, @data.data.txtusername, 
-								resp.blog_details.blog_id, resp.login_details.data.user_email
-								, resp.login_details.data.division)
+								cookie = xhr.getResponseHeader('Set-Cookie'); 
 
-							_.setUserCapabilities(resp.login_details.allcaps)
-							_.setStudentDivision(resp.login_details.data.division)
-							_.createDataTables(_.db)
-							@saveUpdateUserDetails(resp, jqXHR)
-							@onSuccessResponse()
+								_.setUserID(resp.login_details.ID)
+								@setUserModelForOnlineLogin(resp)
 
-				error :(jqXHR, err) => 
+								userDetails = resp: resp, cookie: cookie, userRole: userRole
+								@saveUpdateUserDetails(userDetails)
+								
+								@onSuccessResponse()
+
+				error :(err) => 
 					@onErrorResponse('Could not connect to server')
 
 
 
-		offlineDeviceAuth : -> 
-			offlineUser = _.getUserDetails(@data.txtusername)
+		setUserModelForOnlineLogin : (resp)->
+			
+			blog = resp.blog_details
+			_.setTblPrefix(blog.blog_id)
 
-			offlineUser.done (user)=>
+			login = resp.login_details
+
+			user = App.request "get:user:model"
+			data = 
+				'ID': resp.ID
+				'division': login.data.division
+				'display_name': login.data.username
+				'user_email': login.data.user_email
+			
+			user.set 'data' : data
+
+			#Create tables based on the users blog id
+			_.createDataTables(_.db)
+
+
+		# save new user or update existing user 
+		saveUpdateUserDetails : (userDetails)->
+
+			existingUser = @isExistingUser(@data.data.txtusername)
+			existingUser.done (user)=>
+
+				if user.exists then @updateExistingUser(userDetails)
+				else @inputNewUser(userDetails)
+
+
+		inputNewUser : (userDetails)->
+
+			login = userDetails.resp.login_details
+			blog = userDetails.resp.blog_details
+			cookie = userDetails.cookie
+			userRole = userDetails.userRole
+
+			_.db.transaction((tx)=>
+				tx.executeSql("INSERT INTO USERS (user_id, username, display_name, password
+					, user_capabilities, user_role, cookie, blog_id, user_email, division) 
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+					[login.ID, @data.data.txtusername, login.data.display_name
+					, @data.data.txtpassword, JSON.stringify(login.allcaps) , userRole
+					, cookie, blog.blog_id, login.data.user_email, login.data.division])
+
+			,_.transactionErrorhandler 
+			,(tx)->
+				console.log 'SUCCESS: Inserted new user'
+			)
+
+
+		updateExistingUser : (userDetails)->
+
+			login = userDetails.resp.login_details
+			blog = userDetails.resp.blog_details
+			cookie = userDetails.cookie
+			userRole = userDetails.userRole
+
+			_.db.transaction((tx)=>
+				tx.executeSql("UPDATE USERS SET username=?, display_name=?, password=?
+					, user_capabilities=?, user_role=?, cookie=?, blog_id=?, user_email=?
+					, division=? WHERE user_id=?", 
+					[@data.data.txtusername, login.data.display_name, @data.data.txtpassword
+					JSON.stringify(login.allcaps), userRole, cookie, blog.blog_id
+					, login.data.user_email, login.data.division, login.ID])
+
+			,_.transactionErrorhandler 
+			,(tx)->
+				console.log 'SUCCESS: Updated user details'
+			)
+
+
+
+		offlineDeviceAuth : -> 
+
+			existingUser = @isExistingUser(@data.txtusername)
+			existingUser.done (user)=>
 				if user.exists 
 					if user.password is @data.txtpassword
 
-						@setUserDetails(user.user_id, @data.txtusername
-							, user.blog_id, user.user_email, user.division)
+						_.setUserID(user.userID)
+						@setUserModelForOfflineLogin()
 						@onSuccessResponse()
 
 					else @onErrorResponse('Invalid Password')       
@@ -113,62 +182,57 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				else @onErrorResponse('No such user has previously logged in')
 
 
-		
-		setUserDetails : (id, username,blog_id,user_email,division)-> 
-			# save logged in user id and username
-			_.setUserID(id)
-			_.setUserName(username)
-			_.setBlogID(blog_id)
-			_.setUserEmail(user_email)
 
-			# set user model for back button navigation
-			_.setUserModel()
-
-
-
-
-		# save new user or update existing user 
-		saveUpdateUserDetails : (resp, jqXHR)-> 
-			offlineUser = _.getUserDetails(@data.data.txtusername)
+		setUserModelForOfflineLogin : ->
 			
-			offlineUser.done (user)=>
-				if user.exists then @updateExistingUser(resp,jqXHR)
-				else @inputNewUser(resp,jqXHR)
-		
+			userDetails = _.getUserDetails(_.getUserID())
+			userDetails.done (userDetails)=>
 
-		inputNewUser : (response, jqXHR)->
- 
-			resp = response.login_details
-			cookie = jqXHR.getResponseHeader('Set-Cookie')
+				_.setTblPrefix(userDetails.blog_id)
 
-			_.db.transaction((tx)=>
-				tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role, 
-					session_id, blog_id, user_email, division) 
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-					[resp.ID, @data.data.txtusername, @data.data.txtpassword, resp.roles[0], 
-					cookie, response.blog_details.blog_id
-					, response.login_details.data.user_email, response.login_details.data.division])
+				user = App.request "get:user:model"
 
-			,_.transactionErrorhandler 
-			,(tx)->
-				console.log 'SUCCESS: Inserted new user'
-			)
+				data = 
+					'ID': userDetails.user_id
+					'division': userDetails.division
+					'display_name': userDetails.username
+					'user_email': userDetails.user_email
+
+
+				user.set 'data' : data
+
+				App.vent.trigger "show:dashboard"
+				App.loginRegion.close()
+
 
 		
-		updateExistingUser : (response, jqXHR)->
+		isExistingUser : (userName)->
 
-			resp = response.login_details
+			user = exists: false, userID: '', password: ''
 
-			_.db.transaction((tx)=>
-				tx.executeSql("UPDATE USERS SET username=?, password=?, user_email=?, division=? where user_id=?", 
-					[@data.data.txtusername, @data.data.txtpassword, resp.ID
-					, response.blog_details.blog_id, response.login_details.data.user_email
-					, response.login_details.data.division])
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT user_id, password FROM USERS WHERE username=?"
+						, [userName], onSuccess(d), _.deferredErrorHandler(d))
+			
+			onSuccess = (d)->
+				(tx, data)->
 
-			,_.transactionErrorhandler 
-			,(tx)->
-				console.log 'SUCCESS: Updated user details'
-			)
+					if data.rows.length isnt 0
+
+						row = data.rows.item(0)
+						user = 
+							exists: true
+							userID: row['user_id']
+							password: row['password']
+
+					d.resolve(user)
+
+			$.when(runQuery()).done ->
+				console.log 'isExistingUser transaction completed'
+			.fail _.failureHandler
+
 
 		
 		onConnectionError :->

@@ -67,19 +67,27 @@ define(['underscore'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var row, studentsCount;
+          var row, userDetails;
           if (data.rows.length !== 0) {
             row = data.rows.item(0);
-            studentsCount = _.getStudentsCount(row['id']);
-            return studentsCount.done(function(students_count) {
-              divisionData = {
-                id: row['id'],
-                division: row['division'],
-                class_id: row['class_id'],
-                class_label: CLASS_LABEL[row['class_id']],
-                students_count: students_count
-              };
-              return d.resolve(divisionData);
+            userDetails = _.getUserDetails(_.getUserID());
+            return userDetails.done(function(userDetails) {
+              var studentsCountClassIdValue;
+              studentsCountClassIdValue = _.getStudentsCountClassIdValue(userDetails.blog_id);
+              return studentsCountClassIdValue.done(function(students_count_classid_value) {
+                var studentsCount;
+                studentsCount = _.getStudentsCount(row['id'], students_count_classid_value);
+                return studentsCount.done(function(students_count) {
+                  divisionData = {
+                    id: row['id'],
+                    division: row['division'],
+                    class_id: row['class_id'],
+                    class_label: CLASS_LABEL[row['class_id']],
+                    students_count: students_count
+                  };
+                  return d.resolve(divisionData);
+                });
+              });
             });
           }
         };
@@ -88,12 +96,37 @@ define(['underscore'], function(_) {
         return console.log('fetchSingleDivision transaction completed');
       }).fail(_.failureHandler);
     },
-    getStudentsCount: function(id) {
+    getStudentsCountClassIdValue: function(blog_id) {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta WHERE meta_key=? AND meta_value=?", ['student_division', id], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT user_id FROM wp_usermeta WHERE meta_key=? AND meta_value=?", ['primary_blog', blog_id], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var i, students_count_classid_value, _i, _ref;
+          students_count_classid_value = [];
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            students_count_classid_value.push(data.rows.item(i)['user_id']);
+          }
+          return d.resolve(students_count_classid_value);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getStudentsCountClassIdValue transaction completed');
+      }).fail(_.failureHandler);
+    },
+    getStudentsCount: function(division_id, ids) {
+      var onSuccess, runQuery;
+      ids = ids.join();
+      console.log(ids);
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT COUNT(user_id) AS students_count FROM wp_usermeta WHERE meta_key=? AND meta_value=? AND user_id IN (" + ids + ")", ['student_division', division_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

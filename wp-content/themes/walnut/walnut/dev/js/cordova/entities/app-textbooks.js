@@ -19,7 +19,6 @@ define(['underscore'], function(_) {
         return function(tx, data) {
           var i, result, row, _fn, _i, _ref;
           result = [];
-          alert(data.rows.length);
           _fn = function(row, i) {
             var modulesCount;
             modulesCount = _.getModulesCount(row['textbook_id']);

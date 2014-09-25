@@ -30,21 +30,20 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    var xhr;
+    var authController, xhr;
     App.startHistory();
     if (_.platform() === 'DEVICE') {
       if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
         this.rootRoute = 'app-login';
-        if (_.isNull(_.getBlogID())) {
+        if (_.isNull(_.getUserID())) {
           this.rootRoute = 'login';
         }
         App.navigate(this.rootRoute, {
           trigger: true
         });
       } else {
-        _.setUserModel();
-        App.vent.trigger("show:dashboard");
-        App.loginRegion.close();
+        authController = App.request("get:auth:controller");
+        authController.setUserModelForOfflineLogin();
       }
     } else {
       return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
