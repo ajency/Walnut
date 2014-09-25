@@ -71,30 +71,64 @@ define ['underscore'], ( _) ->
 					if data.rows.length isnt 0
 						row = data.rows.item(0)
 
-						studentsCount = _.getStudentsCount(row['id'])
-						studentsCount.done (students_count)->
-						
-							divisionData = id: row['id'], division: row['division']
-											, class_id: row['class_id']
-											, class_label: CLASS_LABEL[row['class_id']]
-											, students_count: students_count	
+						userDetails = _.getUserDetails(_.getUserID())
+						userDetails.done (userDetails)->
 
-							d.resolve divisionData
+							studentsCountClassIdValue = _.getStudentsCountClassIdValue(userDetails.blog_id)
+							studentsCountClassIdValue.done (students_count_classid_value)->
+
+								studentsCount = _.getStudentsCount(row['id'], students_count_classid_value)
+								studentsCount.done (students_count)->
+							
+									divisionData = id: row['id'], division: row['division']
+													, class_id: row['class_id']
+													, class_label: CLASS_LABEL[row['class_id']]
+													, students_count: students_count	
+
+									d.resolve divisionData
 
 			$.when(runQuery()).done ->
 				console.log 'fetchSingleDivision transaction completed'
 			.fail _.failureHandler
 
 
-		
-		# Get the count of number of students assigned to each division.
-		getStudentsCount : (id)->
+		getStudentsCountClassIdValue : (blog_id)->
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta 
-							WHERE meta_key=? AND meta_value=?", ['student_division', id]
+						tx.executeSql("SELECT user_id FROM wp_usermeta 
+							WHERE meta_key=? AND meta_value=?", ['primary_blog', blog_id]
+							,onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					
+					students_count_classid_value = []
+					
+					for i in [0..data.rows.length-1] by 1
+						students_count_classid_value.push data.rows.item(i)['user_id']
+
+					d.resolve students_count_classid_value
+
+			$.when(runQuery()).done ->
+				console.log 'getStudentsCountClassIdValue transaction completed'
+			.fail _.failureHandler
+		
+
+
+		# Get the count of number of students assigned to each division.
+		getStudentsCount : (division_id, ids)->
+
+			ids = ids.join()
+			console.log ids
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT COUNT(user_id) AS students_count FROM wp_usermeta 
+							WHERE meta_key=? AND meta_value=? AND user_id IN ("+ids+")"
+							, ['student_division',division_id ]
 							,onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
