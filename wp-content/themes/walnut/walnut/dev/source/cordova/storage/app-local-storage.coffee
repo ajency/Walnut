@@ -8,22 +8,6 @@ define ['underscore'], ( _)->
 
 			_.localStorage = window.localStorage
 
-		#save for trmporary purpose the cookies values
-		setCookiesValue : (cookiesValue)->
-			_.localStorage.setItem("CookiesVal", cookiesValue)
-
-
-		getCookiesValue : ->
-			_.localStorage.getItem("CookiesVal");
-
-
-		# save/get logged in user ID
-		setUserEmail : (u_email)->
-			_.localStorage.setItem("user_email", u_email)
-
-		getUserEmail : ->
-			_.localStorage.getItem("user_email");
-
 
 		# save/get logged in user ID
 		setUserID : (id)->
@@ -32,53 +16,13 @@ define ['underscore'], ( _)->
 		getUserID : ->
 			_.localStorage.getItem("user_id")
 
+		
+		# save/get table prefix
+		setTblPrefix : (blog_id)->
+			_.localStorage.setItem("table_prefix", 'wp_'+blog_id+'_')
 
-		# save/get logged in username
-		setUserName : (name)->
-			_.localStorage.setItem("user_name", name)
-
-		getUserName : ->
-			_.localStorage.getItem("user_name")    
-
-
-		# save/get blog id
-		setBlogID : (id)->
-			_.localStorage.setItem("blog_id", id)
-
-		getBlogID : ->
-			_.localStorage.getItem("blog_id")
-
-
-		# save/get blog name
-		setBlogName : (name)->
-			_.localStorage.setItem("blog_name", name)
-
-		getBlogName : ->
-			_.localStorage.getItem("blog_name")
-
-
-		# save/get site url
-		setSiteUrl : (url)->
-			_.localStorage.setItem("site_url", url)
-
-		getSiteUrl : ->
-			_.localStorage.getItem("site_url")
-
-
-		# save/get student division
-		setStudentDivision : (division)->
-			_.localStorage.setItem("student_division", division)
-
-		getStudentDivision : ->
-			_.localStorage.getItem("student_division")
-
-
-		# save/get user capabilities
-		setUserCapabilities : (allcaps)->
-			_.localStorage.setItem("user_capabilities", JSON.stringify(allcaps))
-
-		getUserCapabilities : ->
-			JSON.parse(_.localStorage.getItem("user_capabilities"))
+		getTblPrefix : ->
+			_.localStorage.getItem("table_prefix")
 
 
 		# save/get school logo image source

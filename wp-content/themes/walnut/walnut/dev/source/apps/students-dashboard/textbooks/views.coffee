@@ -125,6 +125,8 @@ define ['app'
 
 				if _.platform() is 'DEVICE'
 
+					_.cordovaHideSplashscreen()
+
 					_.removeCordovaBackbuttonEventListener()
 
 					_.disableCordovaBackbuttonNavigation() 

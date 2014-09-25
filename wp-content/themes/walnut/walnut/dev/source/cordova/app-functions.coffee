@@ -4,34 +4,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 	_.mixin
 
-		getTheBlogId : (id)->
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT blog_id FROM USERS WHERE user_id=?" 
-							,[id] 
-							onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					blog_id= ''
-					if data.rows.length isnt 0
-						blog_id = data.rows.items(0)['blog_id']
-						console.log blog_id
-					d.resolve blog_id
-
-
-			$.when(runQuery()).done ->
-				console.log 'get blog id from the local users table'
-			.fail _.failureHandler
-
-					
-
-		getTblPrefix : ->
-			'wp_'+_.getBlogID()+'_'
-
-
 
 		displayConnectionStatusOnMainLoginPage : ->
 			
@@ -120,48 +92,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 	
 		
-		#Get all user details from local database
-		getUserDetails : (user)->
-			console.log user.user_name
-			console.log user.userId
-			userData = user_id : '', password: '', username: ''
-					, role : '',user_email : '',session_id : '' 
-					,blog_id : '' ,division:'' ,exists : false
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-							if user.user_name
-								tx.executeSql("SELECT * FROM USERS WHERE username=?"
-								, [user.user_name], onSuccess(d), _.deferredErrorHandler(d))
-
-							else if user.userId
-								tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
-								, [user.userId], onSuccess(d), _.deferredErrorHandler(d))
-			
-			onSuccess = (d)->
-				(tx, data)->
-
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
-						userData =
-							user_id : row['user_id']
-							username: row['username']
-							password : row['password']
-							role : row['user_role']
-							session_id: row['session_id']
-							blog_id: row['blog_id']
-							user_email: row['user_email']
-							division: row['division']
-							exists : true
-
-						console.log JSON.stringify userData
-
-					d.resolve(userData)
-
-			$.when(runQuery()).done ->
-				console.log 'getUserDetails transaction completed'
-			.fail _.failureHandler
+		
 
 
 
@@ -273,89 +204,38 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 
 
-		#Fetch single division id for student
-		getSingleDivsionByUserId : (id)->
+		getUserDetails : (userID)->
+
+			userDetails = user_id: '', username: '', display_name: '', password: ''
+					, user_capabilities: '', user_role: '', cookie: '', blog_id: ''
+					, user_email: '', division: ''
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? 
-							AND meta_key=?", [id, 'student_division']
-							,onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess = (d)->
-				(tx, data)->
-					id = ''
-					if data.rows.length isnt 0
-						id = data.rows.item(0)['meta_value']
-						console.log id
-
-					d.resolve id
-
-			$.when(runQuery()).done ->
-				console.log 'fetchSingleDivsion transaction completed'
-			.fail _.failureHandler
-
-
-
-		getUserEmail :->
-			userDetails = user_email : '', username : ''
-
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
-								, [_.getUserID()], onSuccess(d), _.deferredErrorHandler(d))	
+						tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
+						, [userID], onSuccess(d), _.deferredErrorHandler(d))
 			
 			onSuccess = (d)->
 				(tx, data)->
 
 					if data.rows.length isnt 0
 						row = data.rows.item(0)
-						userDetails =
-							user_email: row['user_email']
-							username: row['username']
 
-						console.log userDetails
+						userDetails =
+							user_id : row['user_id']
+							username: row['username']
+							display_name: row['display_name']
+							password : row['password']
+							user_capabilities: row['user_capabilities']
+							user_role : row['user_role']
+							cookie: row['cookie']
+							blog_id: row['blog_id']
+							user_email: row['user_email']
+							division: row['division']
 
 					d.resolve(userDetails)
 
 			$.when(runQuery()).done ->
-				console.log 'getUserEmail transaction completed'
+				console.log 'getUserDetails transaction completed'
 			.fail _.failureHandler
-
-
-		
-
-		# user model set for back button navigation
-		setUserModel : ->
-			
-			user = App.request "get:user:model"
-			user.set 'ID' :''+_.getUserID()
-
-			if not _.isNull(_.getUserCapabilities())
-				user.set 'allcaps' : _.getUserCapabilities()
-
-			u_id = userId : _.getUserID()
-
-			userDetails = _.getUserDetails(u_id)
-			userDetails.done (userData)->
-				console.log JSON.stringify userData
-
-				singleDivision = _.getSingleDivsionByUserId(_.getUserID())
-				singleDivision.done (division)->
-
-					data = 
-						'division': division
-						'ID': _.getUserID()
-						'display_name': _.getUserName()
-						'user_email': _.getUserEmail()
-
-
-
-					user.set 'data' : data
-
-
-
-
-

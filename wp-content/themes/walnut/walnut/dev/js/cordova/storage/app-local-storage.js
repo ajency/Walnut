@@ -3,59 +3,17 @@ define(['underscore'], function(_) {
     cordovaLocalStorage: function() {
       return _.localStorage = window.localStorage;
     },
-    setCookiesValue: function(cookiesValue) {
-      return _.localStorage.setItem("CookiesVal", cookiesValue);
-    },
-    getCookiesValue: function() {
-      return _.localStorage.getItem("CookiesVal");
-    },
-    setUserEmail: function(u_email) {
-      return _.localStorage.setItem("user_email", u_email);
-    },
-    getUserEmail: function() {
-      return _.localStorage.getItem("user_email");
-    },
     setUserID: function(id) {
       return _.localStorage.setItem("user_id", id);
     },
     getUserID: function() {
       return _.localStorage.getItem("user_id");
     },
-    setUserName: function(name) {
-      return _.localStorage.setItem("user_name", name);
+    setTblPrefix: function(blog_id) {
+      return _.localStorage.setItem("table_prefix", 'wp_' + blog_id + '_');
     },
-    getUserName: function() {
-      return _.localStorage.getItem("user_name");
-    },
-    setBlogID: function(id) {
-      return _.localStorage.setItem("blog_id", id);
-    },
-    getBlogID: function() {
-      return _.localStorage.getItem("blog_id");
-    },
-    setBlogName: function(name) {
-      return _.localStorage.setItem("blog_name", name);
-    },
-    getBlogName: function() {
-      return _.localStorage.getItem("blog_name");
-    },
-    setSiteUrl: function(url) {
-      return _.localStorage.setItem("site_url", url);
-    },
-    getSiteUrl: function() {
-      return _.localStorage.getItem("site_url");
-    },
-    setStudentDivision: function(division) {
-      return _.localStorage.setItem("student_division", division);
-    },
-    getStudentDivision: function() {
-      return _.localStorage.getItem("student_division");
-    },
-    setUserCapabilities: function(allcaps) {
-      return _.localStorage.setItem("user_capabilities", JSON.stringify(allcaps));
-    },
-    getUserCapabilities: function() {
-      return JSON.parse(_.localStorage.getItem("user_capabilities"));
+    getTblPrefix: function() {
+      return _.localStorage.getItem("table_prefix");
     },
     setSchoolLogoSrc: function(src) {
       return _.localStorage.setItem("school_logo_src", src);

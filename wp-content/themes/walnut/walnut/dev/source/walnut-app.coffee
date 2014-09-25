@@ -55,14 +55,13 @@ define ['marionette'], (Marionette)->
                 # Navigate to main login screen if blog id is null, else show list of users view.
 
                 @rootRoute = 'app-login'
-                @rootRoute = 'login' if _.isNull _.getBlogID()
+                @rootRoute = 'login' if _.isNull(_.getUserID())
                 App.navigate(@rootRoute, trigger: true)
             else
                 #If User ID is set, then navigate to dashboard.
 
-                _.setUserModel()
-                App.vent.trigger "show:dashboard"
-                App.loginRegion.close() 
+                authController = App.request "get:auth:controller"
+                authController.setUserModelForOfflineLogin()
 
             return
 

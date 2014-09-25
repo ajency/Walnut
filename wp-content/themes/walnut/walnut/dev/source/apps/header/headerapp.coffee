@@ -117,8 +117,7 @@ define ['app'
 				_.removeCordovaBackbuttonEventListener()
 				
 				_.setUserID(null)
-				#clears the blog id after the student has logged out
-				_.setBlogID(null)
+				_.setTblPrefix(null)
 
 				user = App.request "get:user:model"
 				user.clear()
