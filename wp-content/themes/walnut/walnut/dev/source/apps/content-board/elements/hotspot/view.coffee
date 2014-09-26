@@ -99,7 +99,7 @@ define ['app'], (App)->
             _clickHandler : ->
                 _.each @optionLayer.getChildren(), @_iterateThruOptions
                 if @model.get 'transparent'
-                    @stage.on 'click', @_onOutsideClick
+                    @stage.on 'click touchstart', @_onOutsideClick
 
 
             # handler for click event outside of the options area
@@ -116,7 +116,7 @@ define ['app'], (App)->
             # iterator for the option
             # set click handler for the options
             _iterateThruOptions : (option)=>
-                option.on 'click', _.bind @_onOptionClick, @, option
+                option.on 'click touchstart', _.bind @_onOptionClick, @, option
 
             # function to run on click of option
             # stop event propogation
@@ -199,10 +199,10 @@ define ['app'], (App)->
                     anim.stop()
 
 
-                blinker.on 'click', =>
+                blinker.on 'click touchstart', =>
                     answerObject = _.findWhere @answerModel.get('answer'), { id : blinker.name() }
                     @answerModel.set 'answer', _.without @answerModel.get('answer'), answerObject
-                    blinker.off 'click'
+                    blinker.off 'click touchstart'
                     blinker.destroy()
 
             # handler for "show:feedback" event
