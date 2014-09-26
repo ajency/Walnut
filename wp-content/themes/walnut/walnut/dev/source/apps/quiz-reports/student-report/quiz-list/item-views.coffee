@@ -18,7 +18,7 @@ define ['app'
                             Negative Marks: {{negative_scored}}<br>
                             Total Marks Scored: {{total_marks_scored}}
                         </td>
-                        <td>Attempted: {{attempts}} <span class="view-attempts">view</span>
+                        <td>Attempted: {{attempts}} <span class="view-attempts fa fa-plus-circle"></span>
                         </td>
                         <td><button class="btn btn-success btn-small replay_quiz" data-summary-id={{summary_id}}>Replay</button></td>'
 

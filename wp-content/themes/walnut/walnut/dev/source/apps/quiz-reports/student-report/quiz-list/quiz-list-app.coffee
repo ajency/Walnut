@@ -51,6 +51,7 @@ define ['app'
                     region      : App.dialogRegion
                     student     : @student_id
                     quiz        : @quizzes.get quiz_id
+                    summaries   : @quizResponseSummaries.where 'collection_id' : quiz_id
                         
             _replay_quiz:(itemview,student_id,summary_id)->
 

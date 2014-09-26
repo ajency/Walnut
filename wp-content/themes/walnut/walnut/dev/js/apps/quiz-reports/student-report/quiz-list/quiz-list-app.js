@@ -52,7 +52,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
         return App.execute("show:attempts:popup", {
           region: App.dialogRegion,
           student: this.student_id,
-          quiz: this.quizzes.get(quiz_id)
+          quiz: this.quizzes.get(quiz_id),
+          summaries: this.quizResponseSummaries.where({
+            'collection_id': quiz_id
+          })
         });
       };
 

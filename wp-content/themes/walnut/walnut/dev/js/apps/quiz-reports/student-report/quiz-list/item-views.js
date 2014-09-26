@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{chapterName}}</td> <td>Quiz Time: {{total_minutes}}m<br> Time Taken: {{time_taken}} </td> <td>{{quiz_type}} </td> <td>Marks Scored: {{marks_scored}}<br> Negative Marks: {{negative_scored}}<br> Total Marks Scored: {{total_marks_scored}} </td> <td>Attempted: {{attempts}} <span class="view-attempts">view</span> </td> <td><button class="btn btn-success btn-small replay_quiz" data-summary-id={{summary_id}}>Replay</button></td>';
+      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{chapterName}}</td> <td>Quiz Time: {{total_minutes}}m<br> Time Taken: {{time_taken}} </td> <td>{{quiz_type}} </td> <td>Marks Scored: {{marks_scored}}<br> Negative Marks: {{negative_scored}}<br> Total Marks Scored: {{total_marks_scored}} </td> <td>Attempted: {{attempts}} <span class="view-attempts fa fa-plus-circle"></span> </td> <td><button class="btn btn-success btn-small replay_quiz" data-summary-id={{summary_id}}>Replay</button></td>';
 
       ListItemView.prototype.mixinTemplateHelpers = function(data) {
         var completed_summaries, summaries, textbookNames;
