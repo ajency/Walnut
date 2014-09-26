@@ -16,9 +16,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-filte
         this.show(this.view, {
           loading: true
         });
-        return this.listenTo(this.region, "change:division", function(students) {
+        this.listenTo(this.region, "change:division", function(students) {
           this.students.reset(students.models);
           return this.show(this.view);
+        });
+        return this.listenTo(this.view, "view:student:report", function(student_id) {
+          App.navigate("quiz-report/student/" + student_id);
+          return App.execute("show:student:report:app", {
+            region: App.mainContentRegion,
+            students: this.students,
+            student_id: student_id
+          });
         });
       };
 

@@ -15,6 +15,15 @@ define ['app'
                     @students.reset students.models
                     @show @view
 
+                @listenTo @view, "view:student:report", (student_id)->
+
+                    App.navigate "quiz-report/student/#{student_id}"
+                    
+                    App.execute "show:student:report:app",
+                        region      : App.mainContentRegion
+                        students    : @students
+                        student_id  : student_id
+
             _getStudentsFilterView:->
                 new StudentsFilterApp.StudentsFilterView
                     students: @students

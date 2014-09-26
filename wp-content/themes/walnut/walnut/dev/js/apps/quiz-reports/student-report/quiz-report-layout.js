@@ -10,7 +10,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return QuizReportLayout.__super__.constructor.apply(this, arguments);
       }
 
-      QuizReportLayout.prototype.template = '<div class="grid-title no-border"> <h4 class="">Quiz<span class="semi-bold"> Report</span></h4> <div class="tools"> <a href="javascript:;" class="collapse"></a> </div> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div id="quiz-details-region"></div> <div class="row m-t-20 small"> <div class="col-md-4"> Taken By 0 out of {{totalStudents}} students </div> <div class="col-md-8" id="students-filter-region"></div> </div> <div id="students-list-region"></div> </div>';
+      QuizReportLayout.prototype.template = '<div class="grid-title no-border"> <h4 class="">Quiz<span class="semi-bold"> Report</span></h4> <div class="tools"> <a href="javascript:;" class="collapse"></a> </div> </div> <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;"> <div id="quiz-details-region"></div> <div class="row m-t-20"> <div class="col-md-4"> Taken By 0 out of {{totalStudents}} students </div> <div class="col-md-8" id="students-filter-region"></div> </div> <div id="students-list-region"></div> </div>';
 
       QuizReportLayout.prototype.className = 'tiles white grid simple vertical green';
 
@@ -27,6 +27,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       QuizReportLayout.prototype.mixinTemplateHelpers = function(data) {
         data.totalStudents = _.size(Marionette.getOption(this, 'students'));
         return data;
+      };
+
+      QuizReportLayout.prototype.changeTab = function(e) {
+        e.preventDefault();
+        this.$el.find('#addContent a').removeClass('active');
+        return $(e.target).closest('a').addClass('active').tab('show');
       };
 
       return QuizReportLayout;

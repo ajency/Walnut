@@ -69,6 +69,14 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return userCollection;
       },
+      getUserByID: function(id) {
+        var user;
+        user = new Users.UserModel({
+          'ID': id
+        });
+        user.fetch();
+        return user;
+      },
       getStudentsByDivision: function(division) {
         var stud_data, students;
         stud_data = {
@@ -132,8 +140,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:user:data", function(key) {
       return API.getUserData(key);
     });
-    return App.reqres.setHandler("get:dummy:students", function() {
+    App.reqres.setHandler("get:dummy:students", function() {
       return API.getDummyStudents();
+    });
+    return App.reqres.setHandler("get:user:by:id", function(id) {
+      return API.getUserByID(id);
     });
   });
 });

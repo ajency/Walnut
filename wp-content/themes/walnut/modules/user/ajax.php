@@ -45,6 +45,16 @@ function ajax_fetch_users() {
 
 add_action( 'wp_ajax_get-users', 'ajax_fetch_users' );
 
+function ajax_read_user() {
+
+    $user_data = get_user_by_id( $_GET['ID'] );
+
+    wp_send_json( $user_data );
+
+}
+
+add_action( 'wp_ajax_read-user', 'ajax_read_user' );
+
 function redirect_user_to_primary_blog(){
     
     if ( ! is_admin()){

@@ -14,7 +14,7 @@ define ['app'
                         <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
                             <div id="quiz-details-region"></div>
 
-                            <div class="row m-t-20">
+                            <div class="row m-t-20 small">
                                 <div class="col-md-4">
                                     Taken By 0 out of {{totalStudents}} students
                                 </div>
@@ -40,13 +40,3 @@ define ['app'
                 data.totalStudents = _.size Marionette.getOption @,'students'
 
                 data
-
-            changeTab: (e)->
-                e.preventDefault()
-
-                @$el.find '#addContent a'
-                .removeClass 'active'
-
-                $(e.target).closest 'a'
-                .addClass 'active'
-                    .tab 'show'

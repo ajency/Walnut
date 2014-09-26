@@ -52,6 +52,8 @@ define ['app'
                             </div>
                         </div>'
 
+            className: 'small'
+
             mixinTemplateHelpers:(data)->
 
                 textbookNames = Marionette.getOption @, 'textbookNames'

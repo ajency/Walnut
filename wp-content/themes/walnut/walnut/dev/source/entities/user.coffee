@@ -46,11 +46,19 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 					userCollection
 
+				getUserByID:(id)-> #returns a collection of users
+					
+					user = new Users.UserModel ('ID': id)
+					user.fetch()
+					
+					user
+
+
 				getStudentsByDivision:(division)-> #returns a collection of users
 					
 					stud_data = 
-	                    'role' : 'student'
-	                    'division' : division
+						'role' : 'student'
+						'division' : division
 
 					students = new UserCollection
 					students.fetch
@@ -114,3 +122,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:dummy:students",->
 				API.getDummyStudents()
+
+			App.reqres.setHandler "get:user:by:id",(id) ->
+				API.getUserByID id

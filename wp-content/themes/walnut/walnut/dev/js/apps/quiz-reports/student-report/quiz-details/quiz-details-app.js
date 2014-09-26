@@ -40,8 +40,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       QuizDetailsView.prototype.template = '<div class="row"> <div class="col-md-4"> Division: {{division}} </div> <div class="col-md-8"> Quiz Name: {{name}} </div> </div> <div class="row"> <div class="col-md-2"> Total Marks: {{marks}} </div> <div class="col-md-2"> Duration: {{duration}} min </div> <div class="col-md-2"> Textbook: {{textbookName}} </div> <div class="col-md-2"> Chapter: {{chapterName}} </div> <div class="col-md-2"> Section: {{sectionNames}} </div> <div class="col-md-2"> Subsection: {{subSectionNames}} </div> </div>';
 
-      QuizDetailsView.prototype.className = 'small';
-
       QuizDetailsView.prototype.mixinTemplateHelpers = function(data) {
         var divisionModel, terms, textbookNames;
         textbookNames = Marionette.getOption(this, 'textbookNames');

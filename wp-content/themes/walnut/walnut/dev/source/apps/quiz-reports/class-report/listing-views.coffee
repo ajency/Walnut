@@ -32,7 +32,7 @@ define ['app'
                             .value()
                         chapter
 
-                data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Quiz'
+                data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Class Test'
 
                 data.taken_by = switch data.taken_by
                     when 0 then 'None'

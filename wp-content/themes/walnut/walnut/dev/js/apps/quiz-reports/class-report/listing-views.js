@@ -44,7 +44,7 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
             }
           };
         })(this);
-        data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Quiz';
+        data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Class Test';
         data.taken_by = (function() {
           switch (data.taken_by) {
             case 0:

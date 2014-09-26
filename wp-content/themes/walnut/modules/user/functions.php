@@ -96,6 +96,12 @@ function get_user_by_id( $id ) {
 
     $user_data['profile_pic']   = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
 
+    if(in_array('student', $user->roles))
+        $user_data['division'] = get_user_meta($user->ID,'student_division',true);
+    
+    if(in_array('teacher', $user->roles))
+        $user_data['division'] = get_user_meta($user->ID,'division',true);
+
     return $user_data;
 
 }
