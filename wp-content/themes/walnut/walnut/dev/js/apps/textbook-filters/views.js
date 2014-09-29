@@ -50,13 +50,15 @@ define(['app'], function(App) {
           t.name = m.get('name');
           return t;
         });
-        data.divisions = divisions.map(function(m) {
-          var d;
-          d = [];
-          d.id = m.get('id');
-          d.name = m.get('division');
-          return d;
-        });
+        if (divisions) {
+          data.divisions = divisions.map(function(m) {
+            var d;
+            d = [];
+            d.id = m.get('id');
+            d.name = m.get('division');
+            return d;
+          });
+        }
         filters = Marionette.getOption(this, 'filters');
         if (_.contains(filters, 'divisions')) {
           data.divisions_filter = true;

@@ -60,6 +60,7 @@ define ['app'
                     quizModel                   : @quizzes.get quiz_id
                     quizResponseSummary         : @quizResponseSummaries.get summary_id
                     quizResponseSummaryCollection: @quizResponseSummaries
+                    display_mode                : 'quiz_report'
 
             _getQuizListView :(quizzes,textbookNames) ->
                 new QuizList.Views.QuizListView

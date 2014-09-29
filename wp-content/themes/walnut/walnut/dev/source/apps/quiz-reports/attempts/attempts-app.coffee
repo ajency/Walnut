@@ -32,6 +32,8 @@ define ['app'
                     quizModel                   : @quizModel
                     quizResponseSummary         : @summariesCollection.get summary_id
                     quizResponseSummaryCollection: @summariesCollection
+                    display_mode                : 'quiz_report'
+                    student                     : @studentModel
 
             _getStudentModel:(student)->
                 studentModel = if student instanceof Backbone.Model 

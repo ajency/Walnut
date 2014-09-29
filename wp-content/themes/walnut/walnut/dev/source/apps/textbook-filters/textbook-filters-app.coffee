@@ -10,10 +10,13 @@ define ['app'
 
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
 
-                class_id= @divisionsCollection.first().get 'class_id'
-                
-                data = 'class_id': class_id if class_id
-
+                if @divisionsCollection
+                    class_id= @divisionsCollection.first().get('class_id') 
+                    
+                    data = 'class_id': class_id if class_id
+                else
+                    data = 'fetch_all' : true
+                    
                 @textbooksCollection = App.request "get:textbooks", data
 
                 @selectedFilterParamsObject.setHandler "get:selected:parameters", =>

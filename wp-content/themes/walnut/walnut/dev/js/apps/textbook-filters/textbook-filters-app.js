@@ -19,10 +19,16 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
-        class_id = this.divisionsCollection.first().get('class_id');
-        if (class_id) {
+        if (this.divisionsCollection) {
+          class_id = this.divisionsCollection.first().get('class_id');
+          if (class_id) {
+            data = {
+              'class_id': class_id
+            };
+          }
+        } else {
           data = {
-            'class_id': class_id
+            'fetch_all': true
           };
         }
         this.textbooksCollection = App.request("get:textbooks", data);

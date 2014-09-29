@@ -80,7 +80,7 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
                 quizModel: dummyQuizModel,
                 quizResponseSummary: quizResponseSummary,
                 questionsCollection: questionsCollection,
-                display_mode: 'take-quiz',
+                display_mode: 'class-mode',
                 textbookNames: textbookNames
               });
             });

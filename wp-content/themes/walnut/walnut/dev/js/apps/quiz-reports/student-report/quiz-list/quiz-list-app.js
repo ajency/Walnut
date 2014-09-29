@@ -64,7 +64,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
           region: App.mainContentRegion,
           quizModel: this.quizzes.get(quiz_id),
           quizResponseSummary: this.quizResponseSummaries.get(summary_id),
-          quizResponseSummaryCollection: this.quizResponseSummaries
+          quizResponseSummaryCollection: this.quizResponseSummaries,
+          display_mode: 'quiz_report'
         });
       };
 

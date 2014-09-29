@@ -40,6 +40,8 @@ define ['app'
                     quizModel                   : @quizModel
                     quizResponseSummary         : @quizResponseSummaries.get summary_id
                     quizResponseSummaryCollection: @quizResponseSummaries
+                    display_mode                : 'quiz_report'
+                    student                     : @students.get student_id
 
             _getStudentsListView :(students,quizModel,summaries) ->
 

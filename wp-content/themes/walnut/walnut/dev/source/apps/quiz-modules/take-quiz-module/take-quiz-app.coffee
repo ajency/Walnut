@@ -180,33 +180,34 @@ define ['app'
 
                     questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
-                    if @display_mode isnt 'replay'
+                    if @display_mode not in ['replay', 'quiz_report']
+
                         if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
                             @layout.questionDisplayRegion.trigger "silent:save:question"
 
-                    unanswered = @_getUnansweredIDs()
+                        unanswered = @_getUnansweredIDs()
 
-                    if unanswered
-                        _.each unanswered, (question,index)=>
-                            questionModel = questionsCollection.get question
-                            answerModel = App.request "create:new:answer"
-                            answerModel.set 'status': 'skipped'
+                        if unanswered
+                            _.each unanswered, (question,index)=>
+                                questionModel = questionsCollection.get question
+                                answerModel = App.request "create:new:answer"
+                                answerModel.set 'status': 'skipped'
 
-                            @_submitQuestion answerModel
+                                @_submitQuestion answerModel
 
-                    quizResponseSummary.set 
-                        'status'            : 'completed' 
-                        'total_time_taken'  : timeBeforeCurrentQuestion
-                        
-                        'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
+                        quizResponseSummary.set 
+                            'status'            : 'completed' 
+                            'total_time_taken'  : timeBeforeCurrentQuestion
+                            
+                            'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
 
-                        'marks_scored'      : @questionResponseCollection.getMarksScored()
-                        
-                        'negative_scored'   : @questionResponseCollection.getNegativeScored()
-                        
-                        'total_marks_scored': @questionResponseCollection.getTotalScored()
+                            'marks_scored'      : @questionResponseCollection.getMarksScored()
+                            
+                            'negative_scored'   : @questionResponseCollection.getNegativeScored()
+                            
+                            'total_marks_scored': @questionResponseCollection.getTotalScored()
 
-                    quizResponseSummary.save()
+                        quizResponseSummary.save()
 
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
@@ -214,6 +215,7 @@ define ['app'
                         questionsCollection         : questionsCollection
                         questionResponseCollection  : @questionResponseCollection
                         quizResponseSummary         : quizResponseSummary
+                        display_mode                : @display_mode
 
                 _getUnansweredIDs:->
                     

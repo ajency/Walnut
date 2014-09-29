@@ -92,10 +92,10 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
       };
 
       QuizTimerView.prototype.onShow = function() {
-        var timeLeftOrElapsed;
+        var timeLeftOrElapsed, _ref;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.display_mode === 'replay') {
+        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
           return this.$el.find('#completed-quiz').show();
         } else {
           if (timeLeftOrElapsed >= 0) {

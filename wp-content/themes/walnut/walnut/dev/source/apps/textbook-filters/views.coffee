@@ -114,11 +114,12 @@ define ['app'], (App)->
                     t.name= m.get 'name'
                     t
 
-                data.divisions = divisions.map (m)->
-                    d=[]
-                    d.id = m.get 'id'
-                    d.name= m.get 'division'
-                    d
+                if divisions
+                    data.divisions = divisions.map (m)->
+                        d=[]
+                        d.id = m.get 'id'
+                        d.name= m.get 'division'
+                        d
 
                 filters= Marionette.getOption @, 'filters'
 

@@ -35,7 +35,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/attempts/comp
           region: App.mainContentRegion,
           quizModel: this.quizModel,
           quizResponseSummary: this.summariesCollection.get(summary_id),
-          quizResponseSummaryCollection: this.summariesCollection
+          quizResponseSummaryCollection: this.summariesCollection,
+          display_mode: 'quiz_report',
+          student: this.studentModel
         });
       };
 

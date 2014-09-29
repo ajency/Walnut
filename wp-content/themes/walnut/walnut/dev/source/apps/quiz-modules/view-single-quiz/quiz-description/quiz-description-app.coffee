@@ -48,7 +48,8 @@ define ['app'
             serializeData:->
                 data = super data
                 display_mode =  Marionette.getOption @, 'display_mode'
-                data.answer_printing = true if @model.hasPermission('answer_printing') and display_mode is 'replay'
+
+                data.quiz_report = true if display_mode is 'quiz_report'
 
                 data.practice_mode =true if @model.get('quiz_type') is 'practice'
 
@@ -74,7 +75,7 @@ define ['app'
                     else 
                         data.taken_on_date = moment().format("Do MMM YYYY")
 
-                    data.try_again= true if data.practice_mode
+                    data.try_again= true if data.practice_mode and display_mode isnt 'quiz_report'
 
                 if responseSummary.get('status') is 'started'
                     data.incompleteQuiz = true
@@ -94,7 +95,7 @@ define ['app'
 
 
 
-                if Marionette.getOption(@, 'display_mode') is 'replay'
+                if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
 
                     if @model.hasPermission 'disable_quiz_replay'
                         @$el.find "#take-quiz"

@@ -86,7 +86,7 @@ define ['app'
                         timeLeftOrElapsed =Marionette.getOption @,'timeLeftOrElapsed'
                         @display_mode = Marionette.getOption @, 'display_mode'
 
-                        if @display_mode is 'replay'
+                        if @display_mode in ['replay','quiz_report']
                             @$el.find '#completed-quiz'
                             .show()
 

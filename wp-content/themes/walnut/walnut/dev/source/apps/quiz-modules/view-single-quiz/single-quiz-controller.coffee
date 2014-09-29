@@ -13,13 +13,19 @@ define ['app'
             questionsCollection = null
             quizResponseSummary = null
             quizResponseSummaryCollection = null
+            studentModel = null
+
+            #display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
             display_mode = null
 
             initialize: (opts) ->
 
-                {quiz_id,quizModel,questionsCollection,@questionResponseCollection,quizResponseSummary,quizResponseSummaryCollection} = opts
+                {quiz_id,quizModel,questionsCollection,@questionResponseCollection} =opts
+
+                {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
+                studentModel = @student if @student
 
                 App.execute "show:headerapp", region : App.headerRegion
                 App.execute "show:leftnavapp", region : App.leftNavRegion
@@ -31,13 +37,15 @@ define ['app'
                 fetchQuestionResponseCollection.done =>
                     App.execute "when:fetched", quizModel, =>
 
-                        display_mode = 'class_mode'
+                        if display_mode isnt 'quiz_report'
 
-                        if quizResponseSummary.get('status') is 'started'
                             display_mode = 'class_mode'
 
-                        if quizResponseSummary.get('status') is 'completed'
-                            display_mode = 'replay'
+                            if quizResponseSummary.get('status') is 'started'
+                                display_mode = 'class_mode'
+
+                            if quizResponseSummary.get('status') is 'completed'
+                                display_mode = 'replay'
 
                         textbook_termIDs = _.flatten quizModel.get 'term_ids'
                         @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
@@ -100,6 +108,8 @@ define ['app'
                 quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
                 quizResponseSummaryCollection.add quizResponseSummary
 
+                console.log quizResponseSummaryCollection
+
                 display_mode = 'class_mode'
 
                 @startQuiz()
@@ -119,11 +129,11 @@ define ['app'
                     @layout.attemptsRegion.$el.find '.view-summary i'
                     .removeClass 'fa fa-spin fa-spinner'
 
-
-                                
-
-            _fetchQuizResponseSummary:->
+            _fetchQuizResponseSummary:=>
                 defer = $.Deferred();
+
+                #if the summarycollection has been passed from quiz reports screens
+                quizResponseSummaryCollection= @quizResponseSummaryCollection if @quizResponseSummaryCollection
 
                 #if the summary has been passed from the take-quiz-module app after quiz completion
                 if quizResponseSummary
@@ -201,9 +211,11 @@ define ['app'
                         model                   : quizModel
                         quizResponseSummaryCollection  : quizResponseSummaryCollection
 
-            _getQuizViewLayout: =>
+            _getQuizViewLayout: ->
                 new ViewQuiz.LayoutView.QuizViewLayout
                     model: quizModel
+                    display_mode: display_mode
+                    student: studentModel
 
 
         # set handlers

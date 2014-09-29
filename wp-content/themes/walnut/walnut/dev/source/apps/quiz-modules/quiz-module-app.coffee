@@ -66,7 +66,7 @@ define ['app'
                             quizModel               : dummyQuizModel
                             quizResponseSummary     : quizResponseSummary
                             questionsCollection     : questionsCollection
-                            display_mode            : 'take-quiz'
+                            display_mode            : 'class-mode'
                             textbookNames           : textbookNames
 
         QuizModuleApp.on 'start',->

@@ -5,16 +5,16 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/layout', 'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app', 'apps/quiz-modules/view-single-quiz/content-display/content-display-app', 'apps/quiz-modules/view-single-quiz/attempts/app', 'apps/quiz-modules/take-quiz-module/take-quiz-app'], function(App, RegionController) {
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
     ViewQuiz.Controller = (function(_super) {
-      var display_mode, questionsCollection, quizModel, quizResponseSummary, quizResponseSummaryCollection;
+      var display_mode, questionsCollection, quizModel, quizResponseSummary, quizResponseSummaryCollection, studentModel;
 
       __extends(Controller, _super);
 
       function Controller() {
-        this._getQuizViewLayout = __bind(this._getQuizViewLayout, this);
         this._showAttemptsRegion = __bind(this._showAttemptsRegion, this);
         this.showQuizViews = __bind(this.showQuizViews, this);
         this.startQuiz = __bind(this.startQuiz, this);
         this._fetchQuestionResponseCollection = __bind(this._fetchQuestionResponseCollection, this);
+        this._fetchQuizResponseSummary = __bind(this._fetchQuizResponseSummary, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -26,13 +26,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       quizResponseSummaryCollection = null;
 
+      studentModel = null;
+
       display_mode = null;
 
       Controller.prototype.initialize = function(opts) {
         var fetchQuestionResponseCollection, quiz_id;
-        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, quizResponseSummary = opts.quizResponseSummary, quizResponseSummaryCollection = opts.quizResponseSummaryCollection;
+        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection;
+        quizResponseSummary = opts.quizResponseSummary, this.quizResponseSummaryCollection = opts.quizResponseSummaryCollection, display_mode = opts.display_mode, this.student = opts.student;
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
+        }
+        if (this.student) {
+          studentModel = this.student;
         }
         App.execute("show:headerapp", {
           region: App.headerRegion
@@ -46,12 +52,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           return function() {
             return App.execute("when:fetched", quizModel, function() {
               var textbook_termIDs;
-              display_mode = 'class_mode';
-              if (quizResponseSummary.get('status') === 'started') {
+              if (display_mode !== 'quiz_report') {
                 display_mode = 'class_mode';
-              }
-              if (quizResponseSummary.get('status') === 'completed') {
-                display_mode = 'replay';
+                if (quizResponseSummary.get('status') === 'started') {
+                  display_mode = 'class_mode';
+                }
+                if (quizResponseSummary.get('status') === 'completed') {
+                  display_mode = 'replay';
+                }
               }
               textbook_termIDs = _.flatten(quizModel.get('term_ids'));
               _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
@@ -119,6 +127,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         };
         quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
         quizResponseSummaryCollection.add(quizResponseSummary);
+        console.log(quizResponseSummaryCollection);
         display_mode = 'class_mode';
         return this.startQuiz();
       };
@@ -141,6 +150,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       Controller.prototype._fetchQuizResponseSummary = function() {
         var defer;
         defer = $.Deferred();
+        if (this.quizResponseSummaryCollection) {
+          quizResponseSummaryCollection = this.quizResponseSummaryCollection;
+        }
         if (quizResponseSummary) {
           defer.resolve();
           return defer.promise();
@@ -228,7 +240,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype._getQuizViewLayout = function() {
         return new ViewQuiz.LayoutView.QuizViewLayout({
-          model: quizModel
+          model: quizModel,
+          display_mode: display_mode,
+          student: studentModel
         });
       };
 
