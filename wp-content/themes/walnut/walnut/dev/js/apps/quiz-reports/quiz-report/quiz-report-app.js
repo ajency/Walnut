@@ -36,7 +36,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
         this.show(this.layout, {
           loading: true
         });
-        this.listenTo(this.layout, "show", (function(_this) {
+        return this.listenTo(this.layout, "show", (function(_this) {
           return function() {
             var textbook_termIDs;
             App.execute("show:student:filter:app", {
@@ -57,14 +57,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
               region: _this.layout.studentsListRegion,
               students: students,
               quizModel: _this.quizModel
-            });
-          };
-        })(this));
-        return this.listenTo(this.layout.filtersRegion, "division:changed", (function(_this) {
-          return function(division) {
-            students = App.request("get:students:by:division", division);
-            return App.execute("when:fetched", students, function() {
-              return _this.layout.studentFilterRegion.trigger('change:division', students);
             });
           };
         })(this));

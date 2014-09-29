@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{roll_no}}</td> <td>{{display_name}}</td> <td>{{#answered}} Marks Scored: {{marks_scored}}<br> Negative Marks: {{negative_scored}}<br> Total Marks Scored: {{total_marks_scored}} {{/answered}} {{^answered}}N/A{{/answered}} </td> <td>{{#answered}}{{total_time_taken}}{{/answered}} {{^answered}}N/A{{/answered}} </td> <td>{{#answered}}Attempted: {{attempts}}{{/answered}} {{^answered}}N/A{{/answered}} </td> <td>{{#answered}} <button class="btn btn-success btn-small replay_quiz" data-summary-id={{summary_id}}>Replay</button> {{/answered}} {{^answered}}Not Taken{{/answered}} </td>';
+      ListItemView.prototype.template = '<td>{{roll_no}}</td> <td>{{display_name}}</td> <td>{{#answered}} Marks Scored: {{marks_scored}}<br> Negative Marks: {{negative_scored}}<br> Total Marks Scored: {{total_marks_scored}} {{/answered}} {{^answered}}N/A{{/answered}} </td> <td>{{#answered}}{{total_time_taken}}{{/answered}} {{^answered}}N/A{{/answered}} </td> <td>{{#answered}}Attempted: {{attempts}} <span class="view-attempts fa fa-plus-circle"></span>{{/answered}} {{^answered}}N/A{{/answered}} </td> <td>{{#answered}} <button class="btn btn-success btn-small replay_quiz" data-summary-id={{summary_id}}>Replay</button> {{/answered}} {{^answered}}Not Taken{{/answered}} </td>';
 
       ListItemView.prototype.mixinTemplateHelpers = function(data) {
         var completed_summaries, summaries;
@@ -37,6 +37,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           var summary_id;
           summary_id = $(e.target).attr('data-summary-id');
           return this.trigger('replay:quiz', this.model.id, summary_id);
+        },
+        'click .view-attempts': function(e) {
+          return this.trigger("view:attempts", this.model.id);
         }
       };
 

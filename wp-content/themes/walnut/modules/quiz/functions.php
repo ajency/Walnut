@@ -494,7 +494,7 @@ function get_all_quiz_question_responses($summary_id){
             'summary_id'        => $response->summary_id,
             'qr_id'             => $response->qr_id,
             'content_piece_id'  => (int) $response->content_piece_id,
-            'marks_scored'      => (int) $response->marks_scored,
+            'marks_scored'      => (float) $response->marks_scored,
             'question_response' => maybe_unserialize($response->question_response),
             'status'            => $response->status,
             'time_taken'        => (int) $response->time_taken

@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       AttemptsItemView.prototype.className = 'gradeX odd';
 
-      AttemptsItemView.prototype.template = '<td>{{taken_on}}</td> <td>Marks Scored: {{marks_scored}}<br> Negative Marks: {{negative_scored}}<br> Total Marks Scored: {{total_marks_scored}}</td> <td>{{time_taken}}</td> <td><button class="btn btn-success btn-small replay_quiz">Replay</button></td>';
+      AttemptsItemView.prototype.template = '<td>{{taken_on}}</td> <td>Marks Scored: {{marks_scored}}<br> Negative Marks: {{negative_scored}}<br> Total Marks Scored: {{total_marks_scored}}</td> <td>{{time_taken}}</td> <td><button class="btn btn-success btn-small replay_quiz" data-dismiss="modal">Replay</button></td>';
 
       AttemptsItemView.prototype.mixinTemplateHelpers = function(data) {
         data.taken_on = moment(data.taken_on).format("Do MMM YYYY");
@@ -24,7 +24,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       AttemptsItemView.prototype.events = {
         'click .replay_quiz': function(e) {
-          return this.trigger('replay:quiz', summary_id);
+          return this.trigger('replay:quiz', this.model.id);
         }
       };
 

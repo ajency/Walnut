@@ -17,7 +17,7 @@ define ['app'
 
             initialize: (opts) ->
 
-                {quiz_id,quizModel,questionsCollection,@questionResponseCollection,quizResponseSummary} = opts
+                {quiz_id,quizModel,questionsCollection,@questionResponseCollection,quizResponseSummary,quizResponseSummaryCollection} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
@@ -162,7 +162,6 @@ define ['app'
                     else
                         defer.resolve()
 
-                
                 defer.promise()
 
             startQuiz: =>

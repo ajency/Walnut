@@ -19,7 +19,7 @@ define ['app'
                         <td>{{#answered}}{{total_time_taken}}{{/answered}}
                             {{^answered}}N/A{{/answered}}
                         </td>
-                        <td>{{#answered}}Attempted: {{attempts}}{{/answered}}
+                        <td>{{#answered}}Attempted: {{attempts}} <span class="view-attempts fa fa-plus-circle"></span>{{/answered}}
                             {{^answered}}N/A{{/answered}}
                         </td>
                         <td>{{#answered}}
@@ -43,6 +43,8 @@ define ['app'
                 'click .replay_quiz' :(e)-> 
                     summary_id = $(e.target).attr 'data-summary-id'
                     @trigger 'replay:quiz',@model.id, summary_id
+
+                'click .view-attempts' :(e)-> @trigger "view:attempts", @model.id
 
         class Views.EmptyView extends Marionette.ItemView
 

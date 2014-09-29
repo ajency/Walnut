@@ -30,7 +30,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype.initialize = function(opts) {
         var fetchQuestionResponseCollection, quiz_id;
-        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, quizResponseSummary = opts.quizResponseSummary;
+        quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, quizResponseSummary = opts.quizResponseSummary, quizResponseSummaryCollection = opts.quizResponseSummaryCollection;
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }

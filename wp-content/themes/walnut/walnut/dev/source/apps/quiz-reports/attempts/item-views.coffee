@@ -12,7 +12,7 @@ define ['app'
                             Negative Marks: {{negative_scored}}<br>
                             Total Marks Scored: {{total_marks_scored}}</td>
                         <td>{{time_taken}}</td>
-                        <td><button class="btn btn-success btn-small replay_quiz">Replay</button></td>'
+                        <td><button class="btn btn-success btn-small replay_quiz" data-dismiss="modal">Replay</button></td>'
 
             mixinTemplateHelpers:(data)->
 
@@ -21,4 +21,4 @@ define ['app'
                 data
 
             events:
-                'click .replay_quiz' :(e)-> @trigger 'replay:quiz', summary_id
+                'click .replay_quiz' :(e)-> @trigger 'replay:quiz', @model.id

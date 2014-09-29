@@ -23,7 +23,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
           data.display_answer = Marionette.getOption(this, 'display_answer');
-          marks_obtained = responseModel.get('question_response').marks;
+          marks_obtained = responseModel.get('marks_scored');
           data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(1));
           all_marks = _.compact(_.pluck(this.model.get('layout'), 'marks'));
           total_marks = 0;

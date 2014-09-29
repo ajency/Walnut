@@ -13,36 +13,60 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/attempts/comp
       }
 
       Controller.prototype.initialize = function(options) {
-        var quiz, quiz_id, student, student_id;
-        student = options.student, quiz = options.quiz, this.summaries = options.summaries;
-        this.studentModel = student instanceof Backbone.Model ? student : App.request("get:user:by:id", student);
-        this.quizModel = quiz instanceof Backbone.Model ? quiz : App.request("get:quiz:by:id", quiz);
-        if (!this.summaries) {
-          quiz_id = _.isNumber(quiz) ? quiz : quiz.id;
-          student_id = _.isNumber(student) ? student : student.id;
-          this.summariesCollection = App.request("get:quiz:response:summary", {
-            'collection_id': quiz_id,
-            'student_id': student_id
-          });
-        } else {
-          this.summariesCollection = App.request("create:quiz:response:summary:collection", this.summaries);
-        }
+        var quiz, student, summaries;
+        student = options.student, quiz = options.quiz, summaries = options.summaries;
+        this.studentModel = this._getStudentModel(student);
+        this.quizModel = this._getQuizModel(quiz);
+        this.summariesCollection = this._getSummaryCollection(summaries, quiz, student);
         return App.execute("when:fetched", [this.studentModel, this.quizModel, this.summariesCollection], (function(_this) {
           return function() {
             _this.view = _this._getAttemptsView();
-            _this.show(_this.view, {
-              loading: true,
-              entities: [_this.studentModel, _this.quizModel]
-            });
-            return _this.listenTo(_this.view, 'close:popup:dialog', function() {
+            _this.show(_this.view);
+            _this.listenTo(_this.view, 'close:popup:dialog', function() {
               return this.region.closeDialog();
             });
+            return _this.listenTo(_this.view, 'itemview:replay:quiz', _this._replay_quiz);
           };
         })(this));
       };
 
+      Controller.prototype._replay_quiz = function(itemview, summary_id) {
+        return App.execute("show:single:quiz:app", {
+          region: App.mainContentRegion,
+          quizModel: this.quizModel,
+          quizResponseSummary: this.summariesCollection.get(summary_id),
+          quizResponseSummaryCollection: this.summariesCollection
+        });
+      };
+
+      Controller.prototype._getStudentModel = function(student) {
+        var studentModel;
+        return studentModel = student instanceof Backbone.Model ? student : App.request("get:user:by:id", student);
+      };
+
+      Controller.prototype._getQuizModel = function(quiz) {
+        var quizModel;
+        return quizModel = quiz instanceof Backbone.Model ? quiz : App.request("get:quiz:by:id", quiz);
+      };
+
+      Controller.prototype._getSummaryCollection = function(summaries, quiz, student) {
+        var quiz_id, student_id, summariesCollection;
+        if (!summaries) {
+          quiz_id = _.isNumber(quiz) ? quiz : quiz.id;
+          student_id = _.isNumber(student) ? student : student.id;
+          summariesCollection = App.request("get:quiz:response:summary", {
+            'collection_id': quiz_id,
+            'student_id': student_id
+          });
+        } else if (summaries instanceof Backbone.Collection) {
+          summariesCollection = summaries;
+        } else {
+          summariesCollection = App.request("create:quiz:response:summary:collection", summaries);
+        }
+        return summariesCollection;
+      };
+
       Controller.prototype._getAttemptsView = function() {
-        console.log(this.summariesCollection);
         return new AttemptsPopupApp.Views.AttemptsMainView({
           student: this.studentModel,
           quiz: this.quizModel,

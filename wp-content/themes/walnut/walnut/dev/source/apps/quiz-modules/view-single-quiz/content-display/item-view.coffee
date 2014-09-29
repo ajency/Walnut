@@ -26,7 +26,7 @@ define ['app'
 
                     data.display_answer = Marionette.getOption @,'display_answer'
 
-                    marks_obtained = responseModel.get('question_response').marks
+                    marks_obtained = responseModel.get 'marks_scored'
 
                     data.marks_obtained= parseFloat parseFloat(marks_obtained).toFixed 1
 

@@ -59,11 +59,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
         });
       };
 
-      Controller.prototype._replay_quiz = function(itemview, student_id, summary_id) {
+      Controller.prototype._replay_quiz = function(itemview, quiz_id, summary_id) {
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
-          quizModel: this.quizModel,
-          quizResponseSummary: this.quizResponseSummaries.get(summary_id)
+          quizModel: this.quizzes.get(quiz_id),
+          quizResponseSummary: this.quizResponseSummaries.get(summary_id),
+          quizResponseSummaryCollection: this.quizResponseSummaries
         });
       };
 

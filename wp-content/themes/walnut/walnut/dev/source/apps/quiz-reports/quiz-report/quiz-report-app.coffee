@@ -58,12 +58,6 @@ define ['app'
                         students    : students
                         quizModel   : @quizModel
 
-                @listenTo @layout.filtersRegion, "division:changed",(division)=>
-                    students = App.request "get:students:by:division", division
-                    App.execute "when:fetched", students, =>
-                        @layout.studentFilterRegion.trigger 'change:division', students
-
-
             _getQuizReportLayout:(students)->
                 new QuizReportApp.Layout.QuizReportLayout
                     students : students

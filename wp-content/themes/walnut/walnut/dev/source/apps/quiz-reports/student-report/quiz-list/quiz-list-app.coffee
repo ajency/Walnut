@@ -53,12 +53,13 @@ define ['app'
                     quiz        : @quizzes.get quiz_id
                     summaries   : @quizResponseSummaries.where 'collection_id' : quiz_id
                         
-            _replay_quiz:(itemview,student_id,summary_id)->
+            _replay_quiz:(itemview,quiz_id,summary_id)->
 
                 App.execute "show:single:quiz:app",
                     region                      : App.mainContentRegion
-                    quizModel                   : @quizModel
+                    quizModel                   : @quizzes.get quiz_id
                     quizResponseSummary         : @quizResponseSummaries.get summary_id
+                    quizResponseSummaryCollection: @quizResponseSummaries
 
             _getQuizListView :(quizzes,textbookNames) ->
                 new QuizList.Views.QuizListView
