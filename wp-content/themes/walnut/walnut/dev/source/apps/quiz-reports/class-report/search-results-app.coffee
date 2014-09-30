@@ -20,6 +20,7 @@ define ['app'
                         textbooksCollection: @textbooksCollection
 
                 @listenTo @layout, "search:content", @_searchContent
+                @listenTo @layout.contentSelectionRegion, "show:quiz:report", (quizModel)-> @region.trigger "show:quiz:report",quizModel
 
             _searchContent:(searchStr)=>
                 filters= @selectedFilterParamsObject.request "get:parameters:for:search"

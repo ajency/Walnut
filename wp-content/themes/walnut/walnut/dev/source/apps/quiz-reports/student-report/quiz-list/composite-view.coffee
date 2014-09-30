@@ -6,10 +6,11 @@ define ['app'
         class Views.QuizListView extends Marionette.CompositeView
 
             template : '<div class="col-lg-12">
-                            <table class="table table-bordered m-t-15" id="content-pieces-table" >                                
+                            <table class="table table-bordered m-t-15" id="quiz-table" >                                
                                 <thead>
                                     <tr>
                                         <th>Quiz Name</th>
+                                        <th>Textbook</th>
                                         <th>Chapter</th>
                                         <th>Time Taken</th>
                                         <th>Type</th>
@@ -49,3 +50,12 @@ define ['app'
                 data=
                     summaries       : summaries
                     textbookNames   : textbookNames
+
+            onShow:->
+                pagerOptions =
+                    container : @$el.find ".pager"
+                    output : '{startRow} to {endRow} of {totalRows}'
+
+                @$el.find '#quiz-table'
+                .tablesorter()
+                .tablesorterPager pagerOptions

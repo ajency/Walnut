@@ -9,85 +9,99 @@ define ['app'
         class ClassReportApp.Controller extends RegionController
 
             students = null
+            textbooksCollection = null
+            divisionsCollection = null
+            quizzes = null
 
             initialize: ->
 
                 @division = 0
 
-                @divisionsCollection = App.request "get:divisions"
+                divisionsCollection = App.request "get:divisions"
 
-                App.execute "when:fetched", @divisionsCollection, =>
+                App.execute "when:fetched", divisionsCollection, @_fetchTextbooks                          
 
-                    @division= @divisionsCollection.first().get 'id'
-                    class_id= @divisionsCollection.first().get 'class_id'
+            _fetchTextbooks:=>
+                
+                class_id= divisionsCollection.first().get 'class_id'
+                division= divisionsCollection.first().get 'id'
 
-                    @textbooksCollection = App.request "get:textbooks", 'division' : @division
+                textbooksCollection = App.request "get:textbooks", 'division_id' : division
 
-                    App.execute "when:fetched", @textbooksCollection, =>
-                        textbook = @textbooksCollection.first()
+                App.execute "when:fetched", textbooksCollection, => 
+                    App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
 
-                        data = 
-                            'post_status'   : 'any' 
-                            'textbook'      : textbook.id
-                            'division'      : @division
+            _fetchQuizzes:=>
 
-                        @contentModulesCollection = App.request "get:quizes", data
+                textbook = textbooksCollection.first()
+                @division= divisionsCollection.first().get 'id'
+                
+                data = 
+                    'post_status'   : 'any' 
+                    'textbook'      : textbook.id
+                    'division'      : @division
 
-                        #wreqr object to get the selected filter parameters so that search can be done using them
-                        @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
+                quizzes = App.request "get:quizes", data
 
-                        @layout = @_getContentPiecesLayout students
+                App.execute "when:fetched", quizzes, @_showViews 
 
-                        App.execute "when:fetched", [@contentModulesCollection, @textbooksCollection], =>
+            _showViews:=>
+                #wreqr object to get the selected filter parameters so that search can be done using them
+                @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
-                            @show @layout,
-                                loading: true
+                @layout = @_getContentPiecesLayout students
+                @show @layout,
+                    loading: true
 
-                            @listenTo @layout, "show",=>
+                @listenTo @layout, "show", =>
+                    App.execute "show:textbook:filters:app",
+                        region: @layout.filtersRegion
+                        collection: quizzes
+                        textbooksCollection: textbooksCollection
+                        selectedFilterParamsObject: @selectedFilterParamsObject
+                        divisionsCollection : divisionsCollection
+                        dataType : 'quiz'
+                        filters : ['divisions','textbooks', 'chapters']
 
-                                App.execute "show:textbook:filters:app",
-                                    region: @layout.filtersRegion
-                                    collection: @contentModulesCollection
-                                    textbooksCollection: @textbooksCollection
-                                    selectedFilterParamsObject: @selectedFilterParamsObject
-                                    divisionsCollection : @divisionsCollection
-                                    dataType : 'quiz'
-                                    filters : ['divisions','textbooks', 'chapters']
+                        students = App.request "get:students:by:division", divisionsCollection.first().get 'id'
 
-                                students = App.request "get:students:by:division", @divisionsCollection.first().get 'id'
+                        App.execute "when:fetched", students, =>
+                            App.execute "show:student:filter:app",
+                                region: @layout.studentFilterRegion
+                                students: students
 
-                                App.execute "when:fetched", students, =>
-                                    App.execute "show:student:filter:app",
-                                        region: @layout.studentFilterRegion
-                                        students: students
+                            App.execute "show:list:quiz:report:app",
+                                region: @layout.allContentRegion
+                                contentModulesCollection: quizzes
+                                textbooksCollection: textbooksCollection
 
-                                    App.execute "show:list:quiz:report:app",
-                                        region: @layout.allContentRegion
-                                        contentModulesCollection: @contentModulesCollection
-                                        textbooksCollection: @textbooksCollection
+                            new ClassReportApp.SearchResults.Controller
+                                region: @layout.searchResultsRegion
+                                textbooksCollection: textbooksCollection
+                                selectedFilterParamsObject: @selectedFilterParamsObject
 
-                                    new ClassReportApp.SearchResults.Controller
-                                        region: @layout.searchResultsRegion
-                                        textbooksCollection: @textbooksCollection
-                                        selectedFilterParamsObject: @selectedFilterParamsObject
+                    @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
+                    
+                    @listenTo @layout.filtersRegion, "division:changed",(division)=>
+                        @division = division
+                        students = App.request "get:students:by:division", division
+                        App.execute "when:fetched", students, =>
+                            @layout.studentFilterRegion.trigger 'change:division', students
+                            @layout.triggerMethod 'change:division', students
 
-                            @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
-                            
-                            @listenTo @layout.filtersRegion, "division:changed",(division)=>
-                                @division = division
-                                students = App.request "get:students:by:division", division
-                                App.execute "when:fetched", students, =>
-                                    @layout.studentFilterRegion.trigger 'change:division', students
-                                    @layout.triggerMethod 'change:division', students
+                    @listenTo @layout.allContentRegion, "show:quiz:report", @_showQuiz
+                    @listenTo @layout.searchResultsRegion, "show:quiz:report", @_showQuiz
 
-                            @listenTo @layout.allContentRegion, "show:quiz:report", (quizModel)->
-                                App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"
-                                
-                                App.execute "show:quiz:report:app",
-                                    region      : App.mainContentRegion
-                                    division    : @divisionsCollection.get @division
-                                    students    : students
-                                    quiz        : quizModel
+
+
+            _showQuiz:(quizModel)->
+                App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"
+                
+                App.execute "show:quiz:report:app",
+                    region      : App.mainContentRegion
+                    division    : divisionsCollection.get @division
+                    students    : students
+                    quiz        : quizModel
 
             _getContentPiecesLayout:(students)->
                 new ClassReportApp.Layout.ContentPiecesLayout

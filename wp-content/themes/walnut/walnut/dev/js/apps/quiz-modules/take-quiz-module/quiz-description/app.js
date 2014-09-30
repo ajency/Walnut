@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       Controller.prototype.initialize = function(opts) {
         var currentQuestion, model, textbookID, view;
-        model = opts.model, currentQuestion = opts.currentQuestion, this.textbookNames = opts.textbookNames;
+        model = opts.model, currentQuestion = opts.currentQuestion, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
         this.view = view = this._showQuizDescriptionView(model, currentQuestion);
         textbookID = model.get('term_ids').textbook;
         this.textbookModel = App.request("get:textbook:by:id", textbookID);
@@ -36,6 +36,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         terms = model.get('term_ids');
         return new ModuleDescriptionView({
           model: model,
+          display_mode: this.display_mode,
           templateHelpers: {
             getQuestionDuration: currentQuestion.get('duration'),
             getClass: (function(_this) {
@@ -84,8 +85,10 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       ModuleDescriptionView.prototype.serializeData = function() {
         var data;
         data = ModuleDescriptionView.__super__.serializeData.call(this);
-        if (this.model.get('quiz_type') === 'practice') {
-          data.practice_mode = true;
+        if (Marionette.getOption(this, 'display_mode') !== 'quiz_report') {
+          if (this.model.get('quiz_type') === 'practice') {
+            data.practice_mode = true;
+          }
         }
         return data;
       };

@@ -8,6 +8,7 @@ define ['app'
             className: 'gradeX odd'
 
             template:   '<td>{{name}}</td>
+                        <td>{{textbookName}}</td>
                         <td>{{chapterName}}</td>
                         <td>Quiz Time: {{total_minutes}}m<br>
                             Time Taken: {{time_taken}}
@@ -36,6 +37,7 @@ define ['app'
                     data.time_taken = $.timeMinSecs data.total_time_taken
                     data.attempts = _.size summaries
                 
+                data.textbookName = textbookNames.getTextbookName data.term_ids
                 data.chapterName = textbookNames.getChapterName data.term_ids
                 data
 

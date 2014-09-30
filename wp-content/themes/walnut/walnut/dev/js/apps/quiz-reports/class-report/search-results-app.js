@@ -30,7 +30,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             });
           };
         })(this));
-        return this.listenTo(this.layout, "search:content", this._searchContent);
+        this.listenTo(this.layout, "search:content", this._searchContent);
+        return this.listenTo(this.layout.contentSelectionRegion, "show:quiz:report", function(quizModel) {
+          return this.region.trigger("show:quiz:report", quizModel);
+        });
       };
 
       Controller.prototype._searchContent = function(searchStr) {

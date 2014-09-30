@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
 
       Controller.prototype.initialize = function(opts) {
         var fetchStudents, students;
-        students = opts.students, this.student_id = opts.student_id;
+        students = opts.students, this.student_id = opts.student_id, this.display_mode = opts.display_mode;
         fetchStudents = this._fetchStudents(students);
         return fetchStudents.done((function(_this) {
           return function() {
@@ -70,7 +70,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
 
       Controller.prototype._getStudentReportLayout = function(studentModel) {
         return new StudentReportApp.Layout({
-          model: studentModel
+          model: studentModel,
+          display_mode: this.display_mode
         });
       };
 

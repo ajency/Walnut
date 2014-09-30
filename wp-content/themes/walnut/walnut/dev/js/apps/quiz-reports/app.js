@@ -14,7 +14,8 @@ define(['app', 'apps/quiz-reports/class-report/class-report-app', 'apps/quiz-rep
       QuizReportsRouter.prototype.appRoutes = {
         'quiz-report': 'classReports',
         'quiz-report/div/:div/quiz/:quiz': 'quizReport',
-        'quiz-report/student/:id': 'studentReport'
+        'quiz-report/student/:id': 'studentReport',
+        'myreport': 'studentReport'
       };
 
       return QuizReportsRouter;
@@ -34,9 +35,15 @@ define(['app', 'apps/quiz-reports/class-report/class-report-app', 'apps/quiz-rep
         });
       },
       studentReport: function(id) {
+        var display_mode;
+        if (!id) {
+          id = App.request("get:loggedin:user:id");
+          display_mode = 'ownReport';
+        }
         return App.execute("show:student:report:app", {
           region: App.mainContentRegion,
-          student_id: id
+          student_id: id,
+          display_mode: display_mode
         });
       }
     };

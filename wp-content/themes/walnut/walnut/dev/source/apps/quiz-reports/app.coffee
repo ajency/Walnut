@@ -12,6 +12,7 @@ define ['app'
                 'quiz-report'                        : 'classReports'
                 'quiz-report/div/:div/quiz/:quiz'    : 'quizReport'
                 'quiz-report/student/:id'            : 'studentReport'
+                'myreport'                           : 'studentReport'
 
 
         Controller =
@@ -27,9 +28,15 @@ define ['app'
                     quiz        : quiz
 
             studentReport:(id) ->
+
+                if not id
+                    id=App.request "get:loggedin:user:id"
+                    display_mode = 'ownReport'
+
                 App.execute "show:student:report:app",
-                    region      : App.mainContentRegion
-                    student_id     : id
+                    region          : App.mainContentRegion
+                    student_id      : id
+                    display_mode    : display_mode
 
 
         QuizReportsApp.on "start", ->

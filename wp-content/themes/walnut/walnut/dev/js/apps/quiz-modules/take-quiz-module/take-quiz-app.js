@@ -274,13 +274,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showSingleQuestionApp = function() {
+        var display_mode;
+        display_mode = this.display_mode === 'quiz_report' ? 'replay' : this.display_mode;
         if (questionModel) {
           new View.SingleQuestion.Controller({
             region: this.layout.questionDisplayRegion,
             model: questionModel,
             quizModel: quizModel,
             questionResponseCollection: this.questionResponseCollection,
-            display_mode: this.display_mode
+            display_mode: display_mode
           });
           this.layout.quizProgressRegion.trigger("question:changed", questionModel);
           return this.layout.quizDescriptionRegion.trigger("question:changed", questionModel);
@@ -292,7 +294,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           region: this.layout.quizDescriptionRegion,
           model: quizModel,
           currentQuestion: questionModel,
-          textbookNames: this.textbookNames
+          textbookNames: this.textbookNames,
+          display_mode: this.display_mode
         });
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,

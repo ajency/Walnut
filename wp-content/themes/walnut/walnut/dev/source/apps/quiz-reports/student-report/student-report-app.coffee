@@ -11,7 +11,7 @@ define ['app'
 
             initialize:(opts)->
 
-                {students,@student_id} = opts
+                {students,@student_id, @display_mode} = opts
 
                 fetchStudents = @_fetchStudents students                
 
@@ -53,7 +53,8 @@ define ['app'
 
             _getStudentReportLayout:(studentModel)->
                 new StudentReportApp.Layout
-                    model : studentModel
+                    model           : studentModel
+                    display_mode    : @display_mode
 
 
         # set handlers

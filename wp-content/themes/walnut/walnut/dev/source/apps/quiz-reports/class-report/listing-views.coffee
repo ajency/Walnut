@@ -8,7 +8,8 @@ define ['app'
             className : 'gradeX odd'
 
             template : '<td>{{name}}</td>
-                        <td>{{chapterName}}</td>
+                        <td>{{&textbookName}}</td>
+                        <td>{{&chapterName}}</td>
                         <td>{{duration}} mins</td>
                         <td>{{quiz_type}}</td>
                         <td>{{taken_by}}</td>
@@ -16,12 +17,11 @@ define ['app'
 
             serializeData : ->
                 data = super()
-
                 @textbooks = Marionette.getOption @, 'textbooksCollection'
                 @chapters = Marionette.getOption @, 'chaptersCollection'
 
                 data.textbookName = =>
-                    textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+                    textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
                     textbook.name if textbook?
 
                 data.chapterName = =>

@@ -25,7 +25,6 @@ define ['app'
                 {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
-                studentModel = @student if @student
 
                 App.execute "show:headerapp", region : App.headerRegion
                 App.execute "show:leftnavapp", region : App.leftNavRegion
@@ -38,14 +37,9 @@ define ['app'
                     App.execute "when:fetched", quizModel, =>
 
                         if display_mode isnt 'quiz_report'
-
-                            display_mode = 'class_mode'
-
-                            if quizResponseSummary.get('status') is 'started'
-                                display_mode = 'class_mode'
-
-                            if quizResponseSummary.get('status') is 'completed'
-                                display_mode = 'replay'
+                            display_mode = if quizResponseSummary.get('status') is 'completed' 
+                                                'replay' 
+                                            else 'class_mode'
 
                         textbook_termIDs = _.flatten quizModel.get 'term_ids'
                         @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
@@ -57,40 +51,62 @@ define ['app'
                         if not _.isEmpty quizResponseSummary.get 'questions_order'
                             quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-                        if not questionsCollection
-                            questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
-
-                            App.execute "when:fetched", questionsCollection, ->
-
-                                actualMarks= 0
-                                questionsCollection.each (m)-> actualMarks += m.getMarks() if m.getMarks()
-                                
-                                multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
-
-                                if multiplicationFactor
-                                    questionsCollection.each (m)->
-                                        m.setMarks multiplicationFactor
-
-                                if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
-                                    questionsCollection.each (e)-> e.unset 'order'
-                                    questionsCollection.reset questionsCollection.shuffle()
-                                    #change the order in the main model also
-                                    quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
+                        @_setMarksAndOrder() if not questionsCollection
                         
                         App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
-                            @layout = layout = @_getQuizViewLayout()
 
-                            @show @layout, loading: true
+                            getStudentModel = @_getStudent()
 
-                            @listenTo @layout, 'show', =>
-                                @showQuizViews()
-                                @_showAttemptsRegion()
+                            getStudentModel.done =>
+                                @layout = layout = @_getQuizViewLayout()
 
-                            @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
+                                @show @layout, loading: true
 
-                            @listenTo @layout.quizDetailsRegion, 'try:again', @_tryAgain
+                                @listenTo @layout, 'show', =>
+                                    @showQuizViews()
+                                    @_showAttemptsRegion()
 
-                            @listenTo @layout.attemptsRegion, 'view:summary', @_viewSummary
+                                @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
+
+                                @listenTo @layout.quizDetailsRegion, 'try:again', @_tryAgain
+
+                                @listenTo @layout.attemptsRegion, 'view:summary', @_viewSummary
+
+            _setMarksAndOrder:->
+
+                questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+
+                App.execute "when:fetched", questionsCollection, ->
+
+                    actualMarks= 0
+                    questionsCollection.each (m)-> actualMarks += m.getMarks() if m.getMarks()
+                    
+                    multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
+
+                    if multiplicationFactor
+                        questionsCollection.each (m)->
+                            m.setMarks multiplicationFactor
+
+                    if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
+                        questionsCollection.each (e)-> e.unset 'order'
+                        questionsCollection.reset questionsCollection.shuffle()
+                        #change the order in the main model also
+                        quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
+
+            _getStudent:->
+                @defer = $.Deferred()
+
+                if @student
+                    if @student instanceof Backbone.Model
+                        studentModel = @student
+                        @defer.resolve()
+                    else
+                        studentModel= App.request "get:user:by:id", @student
+                        App.execute "when:fetched", studentModel, => @defer.resolve()
+
+                else @defer.resolve()
+
+                @defer.promise()
 
             _tryAgain:->
 
@@ -107,8 +123,6 @@ define ['app'
 
                 quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
                 quizResponseSummaryCollection.add quizResponseSummary
-
-                console.log quizResponseSummaryCollection
 
                 display_mode = 'class_mode'
 

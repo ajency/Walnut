@@ -15,7 +15,7 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> <td><button class="btn btn-small btn-success view-report">view report</button></td>';
+      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> <td><button class="btn btn-small btn-success view-report">view report</button></td>';
 
       ListItemView.prototype.serializeData = function() {
         var data;
@@ -26,7 +26,7 @@ define(['app', 'text!apps/quiz-reports/class-report/templates/outer-template.htm
           return function() {
             var textbook;
             textbook = _.findWhere(_this.textbooks, {
-              "id": data.term_ids.textbook
+              "id": parseInt(data.term_ids.textbook)
             });
             if (textbook != null) {
               return textbook.name;

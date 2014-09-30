@@ -60,12 +60,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
       };
 
       Controller.prototype._replay_quiz = function(itemview, quiz_id, summary_id) {
+        var display_mode;
+        if (this.student_id === App.request("get:loggedin:user:id")) {
+          App.navigate("view-quiz/" + quiz_id);
+        } else {
+          App.navigate("quiz-report/student/" + this.student_id + "/quiz/" + quiz_id);
+          display_mode = 'quiz_report';
+        }
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: this.quizzes.get(quiz_id),
           quizResponseSummary: this.quizResponseSummaries.get(summary_id),
           quizResponseSummaryCollection: this.quizResponseSummaries,
-          display_mode: 'quiz_report'
+          display_mode: display_mode,
+          student: this.student_id
         });
       };
 

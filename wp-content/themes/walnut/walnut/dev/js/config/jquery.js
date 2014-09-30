@@ -11,6 +11,9 @@ define(['jquery', 'underscore'], function($, _) {
       return $(icon).removeClass("expand").addClass("collapse");
     }
   });
+  $(document).on("click", '.goto-prev-page', function() {
+    return window.history.back();
+  });
   $.fn.isEmptyColumn = function(params) {
     if (params == null) {
       params = {};

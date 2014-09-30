@@ -7,7 +7,7 @@ define ['app'
                 class QuizDescription.Controller extends RegionController
 
                     initialize: (opts)->
-                        {model, currentQuestion,@textbookNames} = opts
+                        {model, currentQuestion,@textbookNames, @display_mode} = opts
 
                         @view = view = @_showQuizDescriptionView model, currentQuestion
 
@@ -26,6 +26,7 @@ define ['app'
 
                         new ModuleDescriptionView
                             model           : model
+                            display_mode   : @display_mode
 
                             templateHelpers :
                                 getQuestionDuration: currentQuestion.get 'duration'
@@ -45,7 +46,11 @@ define ['app'
 
                         data = super()
                         
-                        data.practice_mode =true if @model.get('quiz_type') is 'practice'
+                        #if this screen is accessed from the quiz_reports section by school admin / parent etc the practice header 
+                        #doesnt need to be seen
+
+                        if Marionette.getOption(@, 'display_mode') isnt 'quiz_report'
+                            data.practice_mode =true if @model.get('quiz_type') is 'practice'
 
                         data
 

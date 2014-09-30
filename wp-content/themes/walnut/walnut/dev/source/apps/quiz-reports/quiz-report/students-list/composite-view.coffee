@@ -6,7 +6,7 @@ define ['app'
         class Views.StudentsDetailsView extends Marionette.CompositeView
 
             template : '<div class="col-lg-12">
-                            <table class="table table-bordered m-t-15" id="content-pieces-table" >                                
+                            <table class="table table-bordered m-t-15" id="students-table" >                                
                                 <thead>
                                     <tr>
                                         <th>Roll No.</th>
@@ -44,3 +44,12 @@ define ['app'
                 quizResponseSummaries = Marionette.getOption @,'quizResponseSummaries'
                 summaries = quizResponseSummaries.where 'student_id' : model.get 'ID'
                 summaries: summaries
+
+            onShow:->
+                pagerOptions =
+                    container : @$el.find ".pager"
+                    output : '{startRow} to {endRow} of {totalRows}'
+
+                @$el.find '#students-table'
+                .tablesorter()
+                .tablesorterPager pagerOptions

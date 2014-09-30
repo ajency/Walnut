@@ -12,7 +12,9 @@ define ['jquery', 'underscore'], ($, _)->
 
         else
             $(icon).removeClass("expand").addClass("collapse");
-        
+    
+    $( document ).on "click", '.goto-prev-page', ->
+        window.history.back()        
 
     # define helper functions
     $.fn.isEmptyColumn = (params = {})->

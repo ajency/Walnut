@@ -129,7 +129,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return loggedInUser;
     });
     App.reqres.setHandler("get:loggedin:user:id", function() {
-      return loggedInUser.get('ID');
+      return parseInt(loggedInUser.get('ID'));
     });
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);

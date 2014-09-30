@@ -19,7 +19,11 @@ function authenticate_login( $data ) {
             $login_check = get_userdata($login_check->ID);
         }
 
-        $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+        if(in_array('student',$login_check->allcaps))
+            $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+
+        elseif(in_array('teacher',$login_check->allcaps))
+            $login_check->division = get_user_meta($login_check->ID,'division',true);
 
         $response_data['login_details'] = $login_check;
 

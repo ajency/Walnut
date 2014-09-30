@@ -258,13 +258,16 @@ define ['app'
 
 
                 _showSingleQuestionApp:->
+
+                    display_mode = if @display_mode is 'quiz_report' then 'replay' else @display_mode
+
                     if questionModel
                         new View.SingleQuestion.Controller
                             region                  : @layout.questionDisplayRegion
                             model                   : questionModel
                             quizModel               : quizModel
                             questionResponseCollection   : @questionResponseCollection
-                            display_mode            : @display_mode
+                            display_mode            : display_mode
 
                         @layout.quizProgressRegion.trigger "question:changed", questionModel
                         @layout.quizDescriptionRegion.trigger "question:changed", questionModel
@@ -275,6 +278,8 @@ define ['app'
                         model           : quizModel
                         currentQuestion : questionModel
                         textbookNames   : @textbookNames
+                        display_mode    : @display_mode
+
 
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion

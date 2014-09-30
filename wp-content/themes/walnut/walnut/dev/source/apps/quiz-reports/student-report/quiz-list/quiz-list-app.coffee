@@ -54,13 +54,22 @@ define ['app'
                     summaries   : @quizResponseSummaries.where 'collection_id' : quiz_id
                         
             _replay_quiz:(itemview,quiz_id,summary_id)->
+                
+                if @student_id is App.request "get:loggedin:user:id"
+                    App.navigate "view-quiz/#{quiz_id}"
+                    
+                else
+                    App.navigate "quiz-report/student/#{@student_id}/quiz/#{quiz_id}"                    
+                    display_mode =  'quiz_report'
 
                 App.execute "show:single:quiz:app",
                     region                      : App.mainContentRegion
                     quizModel                   : @quizzes.get quiz_id
                     quizResponseSummary         : @quizResponseSummaries.get summary_id
                     quizResponseSummaryCollection: @quizResponseSummaries
-                    display_mode                : 'quiz_report'
+                    display_mode                : display_mode
+                    student                     : @student_id
+
 
             _getQuizListView :(quizzes,textbookNames) ->
                 new QuizList.Views.QuizListView

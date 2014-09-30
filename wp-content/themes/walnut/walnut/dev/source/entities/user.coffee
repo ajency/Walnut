@@ -109,7 +109,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 				loggedInUser	
 
 			App.reqres.setHandler "get:loggedin:user:id", ->
-				loggedInUser.get 'ID'
+				parseInt loggedInUser.get 'ID'
 
 			App.reqres.setHandler "get:user:collection",(opts) ->
 				API.getUsers opts
