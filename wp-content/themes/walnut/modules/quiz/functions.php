@@ -93,12 +93,33 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     }
 
     if($division){
-        
-        $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id) 
-            FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d",
-            $id);
 
-        $data->taken_by = (int) $wpdb->get_var($taken_by_query);
+        $taken_by=0;
+        
+        $args=array(
+                'role'=>'student',
+                'division'=>$division,
+            );
+
+        $students=get_user_list($args);
+
+        if($students){
+            $student_ids=__u::pluck($students,'ID');
+
+            if(sizeof($student_ids)>0){
+                $students_str= join($student_ids,',');
+
+                $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id) 
+                    FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
+                    AND student_id in ($students_str)",
+                    $id);
+
+                $taken_by=(int) $wpdb->get_var($taken_by_query);
+            }
+        }
+
+        $data->taken_by = $taken_by;
+        
         $data->total_students = get_student_count_in_division($division);
     }
 

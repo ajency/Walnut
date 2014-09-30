@@ -127,9 +127,7 @@ define(['app'], function(App) {
         var dataType, filtered_data;
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);
-        this.collection.set(filtered_data);
-        console.log('setFilteredContent');
-        console.log(this.collection);
+        this.collection.reset(filtered_data);
         return this.trigger("update:pager");
       };
 

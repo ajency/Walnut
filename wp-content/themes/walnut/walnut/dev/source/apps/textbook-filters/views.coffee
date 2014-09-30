@@ -171,9 +171,7 @@ define ['app'], (App)->
                 dataType= Marionette.getOption @, 'dataType'
                 filtered_data= $.filterTableByTextbooks(@,dataType)
 
-                @collection.set filtered_data
-                console.log 'setFilteredContent'
-                console.log @collection
+                @collection.reset filtered_data
                 @trigger "update:pager"
 
             onNewContentFetched:->

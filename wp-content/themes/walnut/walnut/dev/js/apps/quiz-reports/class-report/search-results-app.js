@@ -39,14 +39,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       Controller.prototype._searchContent = function(searchStr) {
         var filters;
         filters = this.selectedFilterParamsObject.request("get:parameters:for:search");
-        if (!filters.post_status) {
-          filters.post_status = 'any';
-        }
         this.newCollection = App.request("get:quizes", {
-          post_status: 'any',
           search_str: searchStr,
           textbook: filters.term_id != null ? filters.term_id : void 0,
-          post_status: filters.post_status != null ? filters.post_status : void 0,
           division: filters.division != null ? filters.division : void 0
         });
         return App.execute("when:fetched", this.newCollection, (function(_this) {

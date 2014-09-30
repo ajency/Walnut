@@ -24,14 +24,10 @@ define ['app'
 
             _searchContent:(searchStr)=>
                 filters= @selectedFilterParamsObject.request "get:parameters:for:search"
-
-                filters.post_status = 'any' if not filters.post_status
                 
                 @newCollection = App.request "get:quizes",
-                    post_status     : 'any'
                     search_str      : searchStr
                     textbook        : filters.term_id  if filters.term_id?
-                    post_status     : filters.post_status if filters.post_status?
                     division        : filters.division if filters.division?
 
                 App.execute "when:fetched", @newCollection, =>

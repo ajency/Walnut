@@ -26,7 +26,7 @@ define ['app'
                 class_id= divisionsCollection.first().get 'class_id'
                 division= divisionsCollection.first().get 'id'
 
-                textbooksCollection = App.request "get:textbooks", 'division_id' : division
+                textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
 
                 App.execute "when:fetched", textbooksCollection, => 
                     App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
@@ -37,7 +37,6 @@ define ['app'
                 @division= divisionsCollection.first().get 'id'
                 
                 data = 
-                    'post_status'   : 'any' 
                     'textbook'      : textbook.id
                     'division'      : @division
 
