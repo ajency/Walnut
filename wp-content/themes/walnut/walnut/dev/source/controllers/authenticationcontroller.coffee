@@ -151,7 +151,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 					VALUES (?, ?, ?, ?)', 
 					[resp.ID, @data.txtusername, @data.txtpassword, resp.roles[0]])
 
-			,_.transactionErrorhandler 
+			,_.transactionErrorHandler 
 			,(tx)->
 				console.log 'SUCCESS: Inserted new user'
 			)
@@ -165,7 +165,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", 
 					[@data.txtusername, @data.txtpassword, resp.ID])
 
-			,_.transactionErrorhandler 
+			,_.transactionErrorHandler 
 			,(tx)->
 				console.log 'SUCCESS: Updated user details'
 			)

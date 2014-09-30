@@ -87,7 +87,7 @@ define(['underscore', 'unserialize'], function(_) {
     updateSyncDetails: function(operation, time_stamp) {
       return _.db.transaction(function(tx) {
         return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", [operation, time_stamp]);
-      }, _.transactionErrorhandler, function(tx) {
+      }, _.transactionErrorHandler, function(tx) {
         return console.log('Updated sync details for ' + operation);
       });
     },
