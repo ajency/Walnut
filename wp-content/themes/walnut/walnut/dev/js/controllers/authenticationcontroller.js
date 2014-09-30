@@ -152,7 +152,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(tx) {
           return tx.executeSql('INSERT INTO USERS (user_id, username, password, user_role) VALUES (?, ?, ?, ?)', [resp.ID, _this.data.txtusername, _this.data.txtpassword, resp.roles[0]]);
         };
-      })(this), _.transactionErrorhandler, function(tx) {
+      })(this), _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Inserted new user');
       });
     };
@@ -164,7 +164,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         return function(tx) {
           return tx.executeSql("UPDATE USERS SET username=?, password=? where user_id=?", [_this.data.txtusername, _this.data.txtpassword, resp.ID]);
         };
-      })(this), _.transactionErrorhandler, function(tx) {
+      })(this), _.transactionErrorHandler, function(tx) {
         return console.log('SUCCESS: Updated user details');
       });
     };

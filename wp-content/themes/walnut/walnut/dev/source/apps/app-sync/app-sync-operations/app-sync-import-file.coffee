@@ -64,7 +64,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , division, class_id) VALUES (?,?,?)"
                             , [row[0], row[1], row[2]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in '+_.getTblPrefix()+'class_divisions'
                     _.insertIntoWpQuestionResponse()
@@ -87,7 +87,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
                             , row[9], 1])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in '+_.getTblPrefix()+'question_response'
                     _.insertIntoWpQuestionResponseMeta()
@@ -108,7 +108,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], 1])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in '+_.getTblPrefix()+'question_response_meta'
                     _.insertIntoWpCollectionMeta()
@@ -128,7 +128,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , meta_key, meta_value) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_collection_meta'
                     _.insertIntoWpContentCollection()
@@ -150,7 +150,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
                             , row[9], row[10], row[11]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_content_collection'
                     _.insertIntoWpOptions()
@@ -171,31 +171,50 @@ define ['underscore', 'csvparse'], ( _) ->
                             , option_value, autoload) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_options'
                     _.insertIntoWpPostMeta()
                 )
 
 
+        
         insertIntoWpPostMeta : ->
 
             _.importingFileMessage 7
 
             getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
             getParsedData.done (data)->
-                _.db.transaction((tx)->
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
-                            , meta_key, meta_value) VALUES (?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3]])
+                splitArray = _.groupBy data, (element, index)->
+                    Math.floor(index/2000)
 
-                ,_.transactionErrorhandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_postmeta'
-                    _.insertIntoWpPosts()
-                )
+                splitArray = _.toArray(splitArray);
+
+                insertRecords = (splitData, index)->
+                    _.db.transaction((tx)->
+
+                        _.each splitData, (row, i)->
+                            tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
+                                , meta_key, meta_value) VALUES (?,?,?,?)"
+                                , [row[0], row[1], row[2], row[3]])
+
+                    ,_.transactionErrorHandler
+                    ,(tx)->
+                        console.log 'Inserted data in wp_postmeta'
+                        index = index + 1
+                        if index < splitArray.length
+                            setTimeout(->
+                                insertRecords(splitArray[index], index)
+                            , 100)
+                            
+                        else
+                            _.insertIntoWpPosts()
+                    )
+                
+                insertRecords(splitArray[0], 0)
+                
+
 
 
         insertIntoWpPosts : ->
@@ -217,7 +236,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]
                             , row[17], row[18], row[19], row[20], row[21], row[22]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_posts'
                     _.insertIntoWpTermRelationships()
@@ -237,7 +256,7 @@ define ['underscore', 'csvparse'], ( _) ->
                         tx.executeSql("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id
                             , term_order) VALUES (?,?,?)", [row[0], row[1], row[2]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_term_relationships'
                     _.insertIntoWpTermTaxonomy()
@@ -258,7 +277,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , description, parent, count) VALUES (?,?,?,?,?,?)"
                             , [row[0], row[1], row[2], row[3], row[4], row[5]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_term_taxonomy'
                     _.insertIntoWpTerms()
@@ -278,7 +297,7 @@ define ['underscore', 'csvparse'], ( _) ->
                         tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) 
                             VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)=>
                     console.log 'Inserted data in wp_terms'
                     _.insertIntoWpTextbookRelationships()
@@ -299,7 +318,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             (id, textbook_id, class_id, tags) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_textbook_relationships'
                     _.insertIntoWpUserMeta()
@@ -319,7 +338,7 @@ define ['underscore', 'csvparse'], ( _) ->
                         tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
                             VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_usermeta'
                     _.insertIntoWpUsers()
@@ -342,7 +361,7 @@ define ['underscore', 'csvparse'], ( _) ->
                             , [row[0], row[1], row[2], row[3], row[4], row[5]
                             , row[6], row[7], row[8], row[9], row[10], row[11]])
 
-                ,_.transactionErrorhandler
+                ,_.transactionErrorHandler
                 ,(tx)->
                     console.log 'Inserted data in wp_users'
                     _.onFileImportSuccess()

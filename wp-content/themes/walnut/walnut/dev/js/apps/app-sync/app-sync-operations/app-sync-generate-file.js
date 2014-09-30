@@ -51,7 +51,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
     updateSyncFlag: function(table_name) {
       return _.db.transaction(function(tx) {
         return tx.executeSql("UPDATE " + _.getTblPrefix() + table_name + " SET sync=? WHERE sync=?", [1, 0]);
-      }, _.transactionErrorhandler, function(tx) {
+      }, _.transactionErrorHandler, function(tx) {
         console.log('Updated sync flag in ' + table_name);
         if (table_name === 'question_response') {
           return _.updateSyncFlag('question_response_meta');

@@ -82,7 +82,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 				tx.executeSql("UPDATE "+_.getTblPrefix()+table_name+" SET sync=? 
 					WHERE sync=?", [1, 0])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 			
 			,(tx)->
 				

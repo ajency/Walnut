@@ -111,7 +111,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
 					VALUES (?,?)", [operation, time_stamp])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 			,(tx)->
 				console.log 'Updated sync details for '+operation
 			)
