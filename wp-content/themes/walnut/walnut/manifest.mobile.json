@@ -1,6 +1,6 @@
 {
   "packageId": "com.synapse.edu",         // [Synapse Staging Package]
   // "packageId": "com.synapse.learning",    // [Synapse Production Package]
-  "versionCode": 4,
+  "versionCode": 5,
   "CFBundleVersion": "1.1.1"
 }
