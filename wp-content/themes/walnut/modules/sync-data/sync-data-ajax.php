@@ -48,7 +48,6 @@ function ajax_sync_app_data() {
 add_action( 'wp_ajax_nopriv_sync-app-data', 'ajax_sync_app_data' );
 add_action( 'wp_ajax_sync-app-data', 'ajax_sync_app_data' );
 
-
 function cron_school_app_data_sync() {
 
     $pending_sync_request_ids = get_pending_app_sync_request_ids();
@@ -135,7 +134,19 @@ function ajax_sync_database(){
 
     $last_sync= (isset($_REQUEST['last_sync']))? $_REQUEST['last_sync']: '';
 
-    $export_details = export_tables_for_app($blog_id, $last_sync ,$device_type);
+    $sync_type = 'teacher_app';
+
+    if(isset($_REQUEST['sync_type']) && ($_REQUEST['sync_type'] === 'student_app'))
+        $sync_type = 'student_app';
+
+    $args= array(
+            'blog_id'       => $blog_id,
+            'last_sync'     => $last_sync,
+            'device_type'   => $device_type,
+            'sync_type'     => $sync_type
+        );
+
+    $export_details = export_tables_for_app($args);
 
     wp_send_json($export_details);
 

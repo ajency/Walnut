@@ -15,7 +15,11 @@
  * @return mixed
  */
 
-function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_id=''){
+function export_tables_for_app($args){
+
+    $blog_id= $last_sync=$device_type=$user_id='';
+
+    extract($args);
 
     if($blog_id=='')
         $blog_id=get_current_blog_id();
@@ -24,7 +28,7 @@ function export_tables_for_app($blog_id='', $last_sync='',$device_type='',$user_
 
     switch_to_blog($blog_id);
 
-    $tables_to_export= get_tables_to_export($blog_id, $last_sync, $user_id);
+    $tables_to_export= get_tables_to_export($blog_id, $last_sync, $sync_type, $user_id);
 
     $exported_tables= prepare_csvs_for_export($tables_to_export);
 
@@ -126,7 +130,7 @@ function export_table_to_csv($table){
 }
 
 
-function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
+function get_tables_to_export($blog_id, $last_sync='', $sync_type, $user_id=''){
 
     global $wpdb;
 
@@ -143,11 +147,18 @@ function get_tables_to_export($blog_id, $last_sync='', $user_id=''){
         "{$wpdb->base_prefix}usermeta",
 
         //CHILD SITE TABLE QUERIES
-        "{$wpdb->prefix}class_divisions",
-        "{$wpdb->prefix}question_response",
-        "{$wpdb->prefix}question_response_meta"
+        "{$wpdb->prefix}class_divisions"
 
     );
+
+    if($sync_type=='student_app'){
+        $tables_list[]="{$wpdb->prefix}quiz_question_response";
+        $tables_list[]="{$wpdb->prefix}quiz_response_summary";
+    }
+    else{
+        $tables_list[]="{$wpdb->prefix}question_response";
+        $tables_list[]="{$wpdb->prefix}question_response_meta";
+    }
 
     // ONLY THE RECORDS REGARDING TEXTBOOKS ADDITIONAL DATA
     // LIKE AUTHOR AND IMAGE FROM WP_OPTIONS TABLE ARE FETCHED
