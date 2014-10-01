@@ -31,12 +31,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/attempts/comp
       };
 
       Controller.prototype._replay_quiz = function(itemview, summary_id) {
+        var display_mode;
+        if (this.studentModel.id === App.request("get:loggedin:user:id")) {
+          App.navigate("view-quiz/" + this.quizModel.id);
+        } else {
+          App.navigate("quiz-report/student/" + this.studentModel.id + "/quiz/" + this.quizModel.id);
+          display_mode = 'quiz_report';
+        }
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: this.quizModel,
           quizResponseSummary: this.summariesCollection.get(summary_id),
           quizResponseSummaryCollection: this.summariesCollection,
-          display_mode: 'quiz_report',
+          display_mode: display_mode,
           student: this.studentModel
         });
       };

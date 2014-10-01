@@ -27,12 +27,19 @@ define ['app'
 
             _replay_quiz:(itemview,summary_id)->
 
+                if @studentModel.id is App.request "get:loggedin:user:id"
+                    App.navigate "view-quiz/#{@quizModel.id}"
+                    
+                else
+                    App.navigate "quiz-report/student/#{@studentModel.id}/quiz/#{@quizModel.id}"                    
+                    display_mode =  'quiz_report'
+                    
                 App.execute "show:single:quiz:app",
                     region                      : App.mainContentRegion
                     quizModel                   : @quizModel
                     quizResponseSummary         : @summariesCollection.get summary_id
                     quizResponseSummaryCollection: @summariesCollection
-                    display_mode                : 'quiz_report'
+                    display_mode                : display_mode
                     student                     : @studentModel
 
             _getStudentModel:(student)->
