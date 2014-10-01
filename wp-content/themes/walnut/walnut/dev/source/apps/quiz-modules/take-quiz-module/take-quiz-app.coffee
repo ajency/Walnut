@@ -31,9 +31,8 @@ define ['app'
                         @questionResponseCollection= App.request "create:empty:question:response:collection"
                         timeBeforeCurrentQuestion = 0
 
-                    App.leftNavRegion.close()
-                    App.headerRegion.close()
-                    App.breadcrumbRegion.close()
+                    App.leftNavRegion.reset()
+                    App.headerRegion.reset()
 
                     questionIDs = questionsCollection.pluck 'ID'
                     questionIDs= _.map questionIDs, (m)-> parseInt m

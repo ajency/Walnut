@@ -26,8 +26,8 @@ define ['app'
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
-                App.execute "show:headerapp", region : App.headerRegion
-                App.execute "show:leftnavapp", region : App.leftNavRegion
+                #get the header and left nav back incase it was hidden for quiz view
+                $.showHeaderAndLeftNav()
 
                 @fetchQuizResponseSummary = @_fetchQuizResponseSummary()
 

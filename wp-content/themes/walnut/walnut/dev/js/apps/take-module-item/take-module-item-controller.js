@@ -30,9 +30,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       TeacherTeachingController.prototype.initialize = function(opts) {
         var layout;
         this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, contentPiece = opts.contentPiece, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
-        App.leftNavRegion.close();
-        App.headerRegion.close();
-        App.breadcrumbRegion.close();
+        App.leftNavRegion.reset();
+        App.headerRegion.reset();
         App.execute("when:fetched", [questionResponseCollection, contentPiece], (function(_this) {
           return function() {
             return _this._getOrCreateModel(contentPiece.get('ID'));
@@ -123,12 +122,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       TeacherTeachingController.prototype._startViewModuleApp = function() {
-        App.execute("show:headerapp", {
-          region: App.headerRegion
-        });
-        App.execute("show:leftnavapp", {
-          region: App.leftNavRegion
-        });
+        $.showHeaderAndLeftNav();
         return App.execute("show:single:module:app", {
           region: App.mainContentRegion,
           model: contentGroupModel,

@@ -11,8 +11,8 @@ define ['app'
 
             initialize: (opts) ->
 
-                App.execute "show:headerapp", region : App.headerRegion
-                App.execute "show:leftnavapp", region : App.leftNavRegion
+                #get the header and left nav back incase it was hidden for quiz view
+                $.showHeaderAndLeftNav()
 
                 #mode refers to "training" mode or "take-class" mode
                 {model,@classID, @mode, @division,@studentCollection} = opts
@@ -117,10 +117,6 @@ define ['app'
             regions:
                 collectionDetailsRegion: '#collection-details-region'
                 contentDisplayRegion: '#content-display-region'
-
-            onShow:->
-                $('.page-content').removeClass 'expand-page'
-
 
         # set handlers
         App.commands.setHandler "show:single:module:app", (opt = {})->

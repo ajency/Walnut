@@ -13,6 +13,9 @@ define ['app'
 
                 {students,@student_id, @display_mode} = opts
 
+                #get the header and left nav back incase it was hidden for quiz view
+                $.showHeaderAndLeftNav()
+                
                 fetchStudents = @_fetchStudents students                
 
                 fetchStudents.done =>

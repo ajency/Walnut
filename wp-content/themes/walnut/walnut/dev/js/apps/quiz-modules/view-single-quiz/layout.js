@@ -33,10 +33,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         return data;
       };
 
-      QuizViewLayout.prototype.onShow = function() {
-        return $('.page-content').removeClass('expand-page');
-      };
-
       return QuizViewLayout;
 
     })(Marionette.Layout);

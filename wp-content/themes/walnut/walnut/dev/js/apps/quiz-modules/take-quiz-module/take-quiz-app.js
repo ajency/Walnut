@@ -35,9 +35,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           this.questionResponseCollection = App.request("create:empty:question:response:collection");
           timeBeforeCurrentQuestion = 0;
         }
-        App.leftNavRegion.close();
-        App.headerRegion.close();
-        App.breadcrumbRegion.close();
+        App.leftNavRegion.reset();
+        App.headerRegion.reset();
         questionIDs = questionsCollection.pluck('ID');
         questionIDs = _.map(questionIDs, function(m) {
           return parseInt(m);

@@ -30,6 +30,14 @@ define ['jquery', 'underscore'], ($, _)->
 
         empty
 
+    $.showHeaderAndLeftNav = ->
+        if _.isEmpty App.headerRegion.$el 
+            App.execute "show:headerapp", region : App.headerRegion
+
+        if _.isEmpty App.leftNavRegion.$el 
+            App.execute "show:leftnavapp", region : App.leftNavRegion
+
+        $('.page-content').removeClass 'expand-page'
 
     # remove all attributes of the tag
     $.fn.removeAllAttr = ->

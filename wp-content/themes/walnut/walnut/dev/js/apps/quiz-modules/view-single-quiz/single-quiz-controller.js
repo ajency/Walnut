@@ -37,12 +37,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
-        App.execute("show:headerapp", {
-          region: App.headerRegion
-        });
-        App.execute("show:leftnavapp", {
-          region: App.leftNavRegion
-        });
+        $.showHeaderAndLeftNav();
         this.fetchQuizResponseSummary = this._fetchQuizResponseSummary();
         fetchQuestionResponseCollection = this._fetchQuestionResponseCollection();
         return fetchQuestionResponseCollection.done((function(_this) {

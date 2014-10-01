@@ -27,6 +27,3 @@ define ['app'
                 data.practice_mode=true if @model.get('quiz_type') is 'practice'
 
                 data
-
-            onShow:->
-                $('.page-content').removeClass 'expand-page'

@@ -33,6 +33,19 @@ define(['jquery', 'underscore'], function($, _) {
     })(this));
     return empty;
   };
+  $.showHeaderAndLeftNav = function() {
+    if (_.isEmpty(App.headerRegion.$el)) {
+      App.execute("show:headerapp", {
+        region: App.headerRegion
+      });
+    }
+    if (_.isEmpty(App.leftNavRegion.$el)) {
+      App.execute("show:leftnavapp", {
+        region: App.leftNavRegion
+      });
+    }
+    return $('.page-content').removeClass('expand-page');
+  };
   $.fn.removeAllAttr = function() {
     var attrs;
     attrs = ['class', 'tabindex', 'contenteditable', 'id', 'spellcheck', 'role', 'aria-label', 'title', 'aria-describedby', 'style'];

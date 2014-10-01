@@ -19,6 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
       Controller.prototype.initialize = function(opts) {
         var fetchStudents, students;
         students = opts.students, this.student_id = opts.student_id, this.display_mode = opts.display_mode;
+        $.showHeaderAndLeftNav();
         fetchStudents = this._fetchStudents(students);
         return fetchStudents.done((function(_this) {
           return function() {
