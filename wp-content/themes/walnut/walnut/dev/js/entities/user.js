@@ -13,6 +13,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       UserModel.prototype.name = 'user';
 
+      UserModel.prototype.idAttribute = 'ID';
+
       UserModel.prototype.defaults = function() {
         return {
           display_name: '',
@@ -83,6 +85,26 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return userCollection;
       },
+      getUserByID: function(id) {
+        var user;
+        user = new Users.UserModel({
+          'ID': id
+        });
+        user.fetch();
+        return user;
+      },
+      getStudentsByDivision: function(division) {
+        var stud_data, students;
+        stud_data = {
+          'role': 'student',
+          'division': division
+        };
+        students = new UserCollection;
+        students.fetch({
+          data: stud_data
+        });
+        return students;
+      },
       getOfflineUsers: function() {
         var offlineUsers;
         offlineUsers = new OfflineUserCollection;
@@ -94,13 +116,42 @@ define(["app", 'backbone'], function(App, Backbone) {
         data = loggedInUser.get('data');
         console.log(data[key]);
         return data[key];
+      },
+      getDummyStudents: function() {
+        var students, userCollection;
+        userCollection = new UserCollection;
+        students = [
+          {
+            ID: 2343424,
+            display_name: 'Dummy Student 1',
+            user_email: 'dummystudent1@mailinator.com'
+          }, {
+            ID: 2343434,
+            display_name: 'Dummy Student 2',
+            user_email: 'dummystudent2@mailinator.com'
+          }, {
+            ID: 23434234,
+            display_name: 'Dummy Student 3',
+            user_email: 'dummystudent3@mailinator.com'
+          }, {
+            ID: 2343423432,
+            display_name: 'Dummy Student 4',
+            user_email: 'dummystudent4@mailinator.com'
+          }, {
+            ID: 2343432342,
+            display_name: 'Dummy Student 5',
+            user_email: 'dummystudent5@mailinator.com'
+          }
+        ];
+        userCollection.set(students);
+        return userCollection;
       }
     };
     App.reqres.setHandler("get:user:model", function() {
       return loggedInUser;
     });
     App.reqres.setHandler("get:loggedin:user:id", function() {
-      return loggedInUser.get('ID');
+      return parseInt(loggedInUser.get('ID'));
     });
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
@@ -108,8 +159,17 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:offline:user:collection", function() {
       return API.getOfflineUsers();
     });
-    return App.reqres.setHandler("get:user:data", function(key) {
+    App.reqres.setHandler("get:students:by:division", function(division) {
+      return API.getStudentsByDivision(division);
+    });
+    App.reqres.setHandler("get:user:data", function(key) {
       return API.getUserData(key);
+    });
+    App.reqres.setHandler("get:dummy:students", function() {
+      return API.getDummyStudents();
+    });
+    return App.reqres.setHandler("get:user:by:id", function(id) {
+      return API.getUserByID(id);
     });
   });
 });

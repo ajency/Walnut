@@ -54,18 +54,17 @@ define ['app',
 				data = super()
 
 				data.chapterName = =>
+					
 					if _.platform() is 'BROWSER'
 						chapter = _.chain @chapters.findWhere "term_id" : data.term_ids.chapter
 						.pluck 'name'
 							.compact()
 							.value()
 						chapter
-
 					else
 						chapter = @chapters.findWhere "term_id" : parseInt(data.term_ids.chapter)
 						if _.isUndefined(chapter) then ''
 						else chapter.get('name')
-
 
 				if @model.get('type') is 'teaching-module'
 					training_date = @model.get('training_date')
@@ -185,7 +184,6 @@ define ['app',
 				@trigger "schedule:training", dataID
 
 			onShow : =>
-				$('.page-content').removeClass 'expand-page'
 				if Marionette.getOption(@, 'mode') is 'training'
 					@$el.find '.status_label, .training-date, #status_header, .dateInfo'
 					.remove();
@@ -197,7 +195,7 @@ define ['app',
 				.html textbookFiltersHTML
 
 				@$el.find ".select2-filters"
-				.select2()
+				.select2 minimumResultsForSearch: -1
 
 				$('#take-class-modules').tablesorter();
 

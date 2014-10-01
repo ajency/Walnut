@@ -43,6 +43,9 @@ require.config({
     kineticresize: 'plugins/kinetic.plugin.resize',
     unserialize: 'plugins/unserialize',
     serialize: 'plugins/serialize',
+    csvparse: 'plugins/papaparse',
+    json2csvparse: 'plugins/json2csv',
+    jszip: 'plugins/jszip',
     fastclick: 'plugins/fastclick',
     walnutGlobal: 'plugins/walnutapp-global',
     jPages: 'plugins/jPages.min',
@@ -93,6 +96,7 @@ require.config({
     sort: ['jquery', 'jqueryui'],
     bridget: ['jquery'],
     isotope: ['jquery', 'bridget'],
+    json2csvparse: ['jquery'],
     app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
   }
 });

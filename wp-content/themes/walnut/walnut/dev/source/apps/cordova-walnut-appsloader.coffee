@@ -14,5 +14,5 @@ define [
     'apps/content-pieces/content-pieces-app'
     # 'apps/admin-content-modules/app'
     'apps/popup-dialog/single-edit-popup/single-edit-popup-controller'
-    # 'apps/app-sync/app'
+    'apps/app-sync/app'
 ], ->

@@ -21,6 +21,25 @@ define(['jquery', 'underscore'], function($, _) {
     }
     return divHtml += '<select class="textbook-filter select2-filters" id="sections-filter"> <option value="">All Sections</option> </select> <select class="textbook-filter select2-filters" id="subsections-filter"> <option value="">All Sub Sections</option> </select>';
   };
+  $.populateTextbooks = function(items, ele) {
+    var chapterElement, textbookElement;
+    ele.find('#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter').html('');
+    textbookElement = ele.find('#textbooks-filter');
+    chapterElement = ele.find('#chapters-filter');
+    if (items instanceof Backbone.Collection) {
+      items = items.models;
+    }
+    if (_.size(items) > 0) {
+      _.each(items, (function(_this) {
+        return function(item, index) {
+          return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
+        };
+      })(this));
+      return textbookElement.select2().select2('val', _.first(items).get('term_id'));
+    } else {
+      return textbookElement.select2('data', null);
+    }
+  };
   $.populateChapters = function(items, ele, curr_item) {
     var chapterElement, selectedTextbook, txt;
     if (curr_item == null) {
@@ -155,10 +174,16 @@ define(['jquery', 'underscore'], function($, _) {
       return ele.select2().select2('val', curr_item);
     }
   };
-  return $.filterTableByTextbooks = function(_this) {
-    var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models;
+  return $.filterTableByTextbooks = function(_this, dataType) {
+    var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type;
     filter_elements = _this.$el.find('select.textbook-filter');
-    filterCollection = _this.fullCollection.clone();
+    if (dataType === 'teaching-modules') {
+      filterCollection = App.request("get:content:modules:repository");
+    } else if (dataType === 'quiz') {
+      filterCollection = App.request("get:quiz:repository");
+    } else {
+      filterCollection = App.request("get:content:pieces:repository");
+    }
     filter_ids = _.map(filter_elements, function(ele, index) {
       var item;
       item = '';
@@ -171,6 +196,7 @@ define(['jquery', 'underscore'], function($, _) {
     content_type = _this.$el.find('#content-type-filter').val();
     content_status = _this.$el.find('#content-status-filter').val();
     content_post_status = _this.$el.find('#content-post-status-filter').val();
+    quiz_type = _this.$el.find('#quiz-type-filter').val();
     difficulty_level = parseInt(_this.$el.find('#difficulty-level-filter').val());
     if (content_type) {
       filterCollection.reset(filterCollection.where({
@@ -185,6 +211,11 @@ define(['jquery', 'underscore'], function($, _) {
     if (content_post_status) {
       filterCollection.reset(filterCollection.where({
         'post_status': content_post_status
+      }));
+    }
+    if (quiz_type) {
+      filterCollection.reset(filterCollection.where({
+        'quiz_type': quiz_type
       }));
     }
     if (difficulty_level) {

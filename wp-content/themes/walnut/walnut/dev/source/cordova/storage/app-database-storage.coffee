@@ -43,11 +43,11 @@ define ['underscore', 'jquery'], (_, $)->
                 tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'quiz_question_response 
                     (qr_id VARCHAR, summary_id VARCHAR, content_piece_id INTEGER
                     , question_response TEXT, time_taken INTEGER, marks_scored INTEGER
-                    , status VARCHAR)')
+                    , status VARCHAR, sync INTEGER)')
 
                 tx.executeSql('CREATE TABLE IF NOT EXISTS '+_.getTblPrefix()+'quiz_response_summary 
                     (summary_id VARCHAR, collection_id INTEGER, student_id INTEGER, taken_on
-                    , quiz_meta TEXT)')
+                    , quiz_meta TEXT, sync INTEGER)')
 
                 # tx.executeSql('CREATE TABLE IF NOT EXISTS user_session_value_check 
                 #     (user_id VARCHAR, username VARCHAR, session_id VARCHAR)')

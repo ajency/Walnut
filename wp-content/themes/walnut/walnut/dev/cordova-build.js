@@ -47,6 +47,9 @@
 		checkbox: 'plugins/flatui-checkbox',
 		unserialize         : 'plugins/unserialize',
 		serialize           : 'plugins/serialize',
+		csvparse            : 'plugins/papaparse',
+		json2csvparse       : 'plugins/json2csv',
+		jszip               : 'plugins/jszip',
 		fastclick           : 'plugins/fastclick',
 		jPages              : 'plugins/jPages.min',
 		walnutGlobal        : 'plugins/walnutapp-global',
@@ -98,6 +101,7 @@
 		sort			:['jquery', 'jqueryui'],
 		bridget : ['jquery'],
 		isotope : ['jquery','bridget'],
+		json2csvparse   : ['jquery'],
 		app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
 	}
 })

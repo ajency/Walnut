@@ -187,7 +187,6 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
 
       ContentGroupsView.prototype.onShow = function() {
         var pagerOptions, textbookFiltersHTML;
-        $('.page-content').removeClass('expand-page');
         if (Marionette.getOption(this, 'mode') === 'training') {
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }
@@ -197,7 +196,9 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         console.log(this.fullCollection);
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
-        this.$el.find(".select2-filters").select2();
+        this.$el.find(".select2-filters").select2({
+          minimumResultsForSearch: -1
+        });
         $('#take-class-modules').tablesorter();
         pagerOptions = {
           container: $(".pager"),

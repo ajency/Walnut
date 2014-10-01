@@ -21,7 +21,6 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
-              console.log(collectionMetaData);
               return (function(row, i, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
@@ -30,7 +29,7 @@ define(['underscore', 'unserialize'], function(_) {
                   status = dateStatus.status;
                   attempts = dateStatus.attempts;
                   date = dateStatus.start_date;
-                  console.log(JSON.stringify(status));
+                  console.log(JSON.stringify(dateStatus));
                   return result[i] = {
                     id: row['id'],
                     name: row['name'],
@@ -317,8 +316,8 @@ define(['underscore', 'unserialize'], function(_) {
           var quizResponseSummary;
           quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
-            var contentLayoutValue;
-            console.log(quiz_responses);
+            var contentLayoutValue, date;
+            console.log(JSON.stringify(quiz_responses));
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';
@@ -328,14 +327,29 @@ define(['underscore', 'unserialize'], function(_) {
               contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
               if (contentLayoutValue.attempts) {
                 data.attempts = contentLayoutValue.attempts;
-                data.start_date = quiz_responses.taken_on;
+                if (moment(quiz_responses.taken_on).isValid()) {
+                  data.start_date = quiz_responses.taken_on;
+                } else {
+                  date = quiz_responses.taken_on;
+                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                }
               }
               if (contentLayoutValue.status === "started") {
                 data.status = 'started';
-                data.start_date = quiz_responses.taken_on;
+                if (moment(quiz_responses.taken_on).isValid()) {
+                  data.start_date = quiz_responses.taken_on;
+                } else {
+                  date = quiz_responses.taken_on;
+                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                }
               } else if (contentLayoutValue.status === "completed") {
                 data.status = 'completed';
-                data.start_date = quiz_responses.taken_on;
+                if (moment(quiz_responses.taken_on).isValid()) {
+                  data.start_date = quiz_responses.taken_on;
+                } else {
+                  date = quiz_responses.taken_on;
+                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                }
               }
             }
             return d.resolve(data);
@@ -351,7 +365,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT taken_on, quiz_meta FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT COUNT(summary_id) AS attempts, taken_on, quiz_meta FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -359,7 +373,12 @@ define(['underscore', 'unserialize'], function(_) {
         return function(tx, data) {
           var result;
           result = data.rows.item(0);
-          return d.resolve(result);
+          if (result.attempts === 0) {
+            result = '';
+            return d.resolve(result);
+          } else {
+            return d.resolve(result);
+          }
         };
       };
       return $.when(runQuery()).done(function() {

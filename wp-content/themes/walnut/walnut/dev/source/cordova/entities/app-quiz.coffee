@@ -21,6 +21,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 					result = []
 
+
 					for i in [0..data.rows.length-1] by 1
 
 						row = data.rows.item(i)
@@ -28,7 +29,6 @@ define ['underscore', 'unserialize'], ( _) ->
 						do (row, i)->
 							collectionMeta = _.getCollectionMeta(row['id'])
 							collectionMeta.done (collectionMetaData)->
-								console.log collectionMetaData
 
 								do(row, i, collectionMetaData)->
 									dateAndStatus = _.getStartDateAndStatus(row['id'])
@@ -36,7 +36,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										status = dateStatus.status
 										attempts = dateStatus.attempts
 										date = dateStatus.start_date
-										console.log JSON.stringify status
+										console.log JSON.stringify dateStatus
 										
 										result[i] = 
 											id: row['id']
@@ -315,7 +315,9 @@ define ['underscore', 'unserialize'], ( _) ->
 					
 					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
 					quizResponseSummary.done (quiz_responses)->
-						console.log quiz_responses
+
+						console.log JSON.stringify quiz_responses
+
 						if _.isEmpty quiz_responses
 							data.status = 'not started'
 							data.start_date = ''
@@ -327,23 +329,35 @@ define ['underscore', 'unserialize'], ( _) ->
 
 							if contentLayoutValue.attempts
 								data.attempts = contentLayoutValue.attempts
-								data.start_date = quiz_responses.taken_on
-								# date = quiz_responses.taken_on
-								# data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+
+								if moment(quiz_responses.taken_on).isValid()
+									data.start_date = quiz_responses.taken_on
+
+								else
+									date = quiz_responses.taken_on
+									data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 							
 
 							if contentLayoutValue.status is "started"
 								data.status = 'started'
-								data.start_date = quiz_responses.taken_on
-								# date = quiz_responses.taken_on
-								# data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+
+								if moment(quiz_responses.taken_on).isValid()
+									data.start_date = quiz_responses.taken_on
+
+								else
+									date = quiz_responses.taken_on
+									data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
 
 							else if contentLayoutValue.status is "completed"
 								data.status = 'completed'
-								data.start_date = quiz_responses.taken_on
-								# date = quiz_responses.taken_on
-								# data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+
+								if moment(quiz_responses.taken_on).isValid()
+									data.start_date = quiz_responses.taken_on
+
+								else
+									date = quiz_responses.taken_on
+									data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
 
 						d.resolve data
@@ -360,7 +374,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT taken_on, quiz_meta 
+						tx.executeSql("SELECT COUNT(summary_id) AS attempts, taken_on, quiz_meta 
 							FROM "+_.getTblPrefix()+"quiz_response_summary WHERE collection_id=? 
 							AND student_id=?", [collection_id, _.getUserID()] 
 							, onSuccess(d), _.deferredErrorHandler(d))
@@ -368,7 +382,13 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx,data)->
 
 					result = data.rows.item(0)
-					d.resolve(result)
+					if result.attempts is 0
+						result = ''
+						d.resolve(result)
+					else
+						d.resolve(result)
+					
+					
 
 
 			$.when(runQuery()).done ->

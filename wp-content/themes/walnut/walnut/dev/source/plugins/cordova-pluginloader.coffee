@@ -42,4 +42,7 @@ define [
 	'sort'
 	'bridget'
 	'isotope'
+	'csvparse'
+	'json2csvparse'
+	'jszip'
 ], ->

@@ -35,9 +35,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           this.questionResponseCollection = App.request("create:empty:question:response:collection");
           timeBeforeCurrentQuestion = 0;
         }
-        App.leftNavRegion.close();
-        App.headerRegion.close();
-        App.breadcrumbRegion.close();
+        App.leftNavRegion.reset();
+        App.headerRegion.reset();
         questionIDs = questionsCollection.pluck('ID');
         questionIDs = _.map(questionIDs, function(m) {
           return parseInt(m);
@@ -180,46 +179,47 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._endQuiz = function() {
-        var unanswered, _ref;
+        var unanswered, _ref, _ref1;
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
-        if (this.display_mode !== 'replay') {
-          if ((!questionResponseModel) || ((_ref = questionResponseModel.get('status')) === 'paused' || _ref === 'not_attempted')) {
+        if ((_ref = this.display_mode) !== 'replay' && _ref !== 'quiz_report') {
+          if ((!questionResponseModel) || ((_ref1 = questionResponseModel.get('status')) === 'paused' || _ref1 === 'not_attempted')) {
             this.layout.questionDisplayRegion.trigger("silent:save:question");
           }
+          unanswered = this._getUnansweredIDs();
+          if (unanswered) {
+            _.each(unanswered, (function(_this) {
+              return function(question, index) {
+                var answerModel;
+                questionModel = questionsCollection.get(question);
+                answerModel = App.request("create:new:answer");
+                answerModel.set({
+                  'status': 'skipped'
+                });
+                return _this._submitQuestion(answerModel);
+              };
+            })(this));
+          }
+          quizResponseSummary.set({
+            'status': 'completed',
+            'total_time_taken': timeBeforeCurrentQuestion,
+            'num_skipped': _.size(this.questionResponseCollection.where({
+              'status': 'skipped'
+            })),
+            'marks_scored': this.questionResponseCollection.getMarksScored(),
+            'negative_scored': this.questionResponseCollection.getNegativeScored(),
+            'total_marks_scored': this.questionResponseCollection.getTotalScored()
+          });
+          quizResponseSummary.save();
         }
-        unanswered = this._getUnansweredIDs();
-        if (unanswered) {
-          _.each(unanswered, (function(_this) {
-            return function(question, index) {
-              var answerModel;
-              questionModel = questionsCollection.get(question);
-              answerModel = App.request("create:new:answer");
-              answerModel.set({
-                'status': 'skipped'
-              });
-              return _this._submitQuestion(answerModel);
-            };
-          })(this));
-        }
-        quizResponseSummary.set({
-          'status': 'completed',
-          'total_time_taken': timeBeforeCurrentQuestion,
-          'num_skipped': _.size(this.questionResponseCollection.where({
-            'status': 'skipped'
-          })),
-          'marks_scored': this.questionResponseCollection.getMarksScored(),
-          'negative_scored': this.questionResponseCollection.getNegativeScored(),
-          'total_marks_scored': this.questionResponseCollection.getTotalScored()
-        });
-        quizResponseSummary.save();
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
           questionsCollection: questionsCollection,
           questionResponseCollection: this.questionResponseCollection,
-          quizResponseSummary: quizResponseSummary
+          quizResponseSummary: quizResponseSummary,
+          display_mode: this.display_mode
         });
       };
 
@@ -273,13 +273,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._showSingleQuestionApp = function() {
+        var display_mode;
+        display_mode = this.display_mode === 'quiz_report' ? 'replay' : this.display_mode;
         if (questionModel) {
           new View.SingleQuestion.Controller({
             region: this.layout.questionDisplayRegion,
             model: questionModel,
             quizModel: quizModel,
             questionResponseCollection: this.questionResponseCollection,
-            display_mode: this.display_mode
+            display_mode: display_mode
           });
           this.layout.quizProgressRegion.trigger("question:changed", questionModel);
           return this.layout.quizDescriptionRegion.trigger("question:changed", questionModel);
@@ -291,7 +293,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           region: this.layout.quizDescriptionRegion,
           model: quizModel,
           currentQuestion: questionModel,
-          textbookNames: this.textbookNames
+          textbookNames: this.textbookNames,
+          display_mode: this.display_mode
         });
         new View.QuizProgress.Controller({
           region: this.layout.quizProgressRegion,

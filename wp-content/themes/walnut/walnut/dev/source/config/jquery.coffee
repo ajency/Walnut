@@ -1,5 +1,20 @@
 define ['jquery', 'underscore'], ($, _)->
 
+    $( document ).on  "click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', (e)->
+
+        el = $(e.target).parents(".grid").children(".grid-body");
+        el.slideToggle(200);
+
+        icon = $(e.target).parents(".grid").find(".tools a");
+
+        if ($(icon).hasClass("collapse")) 
+            $(icon).removeClass("collapse").addClass("expand");
+
+        else
+            $(icon).removeClass("expand").addClass("collapse");
+    
+    $( document ).on "click", '.goto-prev-page', ->
+        window.history.back()        
 
     # define helper functions
     $.fn.isEmptyColumn = (params = {})->
@@ -15,6 +30,14 @@ define ['jquery', 'underscore'], ($, _)->
 
         empty
 
+    $.showHeaderAndLeftNav = ->
+        if _.isEmpty App.headerRegion.$el 
+            App.execute "show:headerapp", region : App.headerRegion
+
+        if _.isEmpty App.leftNavRegion.$el 
+            App.execute "show:leftnavapp", region : App.leftNavRegion
+
+        $('.page-content').removeClass 'expand-page'
 
     # remove all attributes of the tag
     $.fn.removeAllAttr = ->

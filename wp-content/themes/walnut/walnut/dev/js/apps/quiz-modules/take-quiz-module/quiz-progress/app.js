@@ -116,13 +116,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           this.$el.find('.customButtons').remove();
         }
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
-        this.questionResponseCollection.each((function(_this) {
-          return function(response) {
-            if (_this.quizModel.hasPermission('display_answer')) {
+        if (this.quizModel.hasPermission('display_answer')) {
+          this.questionResponseCollection.each((function(_this) {
+            return function(response) {
               return _this.changeClassName(response);
-            }
-          };
-        })(this));
+            };
+          })(this));
+        }
         this.onQuestionChange(currentQuestion);
         this.updateProgressBar();
         return this.updateSkippedCount();
@@ -152,10 +152,10 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {
-        var answer, className;
-        answer = responseModel.get('question_response');
+        var className, status;
+        status = responseModel.get('status');
         className = (function() {
-          switch (answer.status) {
+          switch (status) {
             case 'correct_answer':
               return 'right';
             case 'partially_correct':
@@ -170,13 +170,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.updateProgressBar = function() {
-        var answeredQuestions, progressPercentage, responses;
-        responses = this.questionResponseCollection.pluck('question_response');
-        answeredQuestions = _.chain(responses).map(function(m) {
-          if (m.status !== 'skipped') {
-            return m;
-          }
-        }).compact().size().value();
+        var answeredQuestions, progressPercentage, skipped;
+        skipped = _.size(this.questionResponseCollection.where({
+          'status': 'skipped'
+        }));
+        answeredQuestions = this.questionResponseCollection.length - skipped;
         progressPercentage = (answeredQuestions / this.collection.length) * 100;
         this.$el.find("#quiz-progress-bar").attr("data-percentage", progressPercentage + '%').attr("aria-valuenow", progressPercentage).css({
           "width": progressPercentage + '%'

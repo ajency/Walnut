@@ -31,9 +31,8 @@ define ['app'
                         @questionResponseCollection= App.request "create:empty:question:response:collection"
                         timeBeforeCurrentQuestion = 0
 
-                    App.leftNavRegion.close()
-                    App.headerRegion.close()
-                    App.breadcrumbRegion.close()
+                    App.leftNavRegion.reset()
+                    App.headerRegion.reset()
 
                     questionIDs = questionsCollection.pluck 'ID'
                     questionIDs= _.map questionIDs, (m)-> parseInt m
@@ -180,33 +179,34 @@ define ['app'
 
                     questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
-                    if @display_mode isnt 'replay'
+                    if @display_mode not in ['replay', 'quiz_report']
+
                         if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
                             @layout.questionDisplayRegion.trigger "silent:save:question"
 
-                    unanswered = @_getUnansweredIDs()
+                        unanswered = @_getUnansweredIDs()
 
-                    if unanswered
-                        _.each unanswered, (question,index)=>
-                            questionModel = questionsCollection.get question
-                            answerModel = App.request "create:new:answer"
-                            answerModel.set 'status': 'skipped'
+                        if unanswered
+                            _.each unanswered, (question,index)=>
+                                questionModel = questionsCollection.get question
+                                answerModel = App.request "create:new:answer"
+                                answerModel.set 'status': 'skipped'
 
-                            @_submitQuestion answerModel
+                                @_submitQuestion answerModel
 
-                    quizResponseSummary.set 
-                        'status'            : 'completed' 
-                        'total_time_taken'  : timeBeforeCurrentQuestion
-                        
-                        'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
+                        quizResponseSummary.set 
+                            'status'            : 'completed' 
+                            'total_time_taken'  : timeBeforeCurrentQuestion
+                            
+                            'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
 
-                        'marks_scored'      : @questionResponseCollection.getMarksScored()
-                        
-                        'negative_scored'   : @questionResponseCollection.getNegativeScored()
-                        
-                        'total_marks_scored': @questionResponseCollection.getTotalScored()
+                            'marks_scored'      : @questionResponseCollection.getMarksScored()
+                            
+                            'negative_scored'   : @questionResponseCollection.getNegativeScored()
+                            
+                            'total_marks_scored': @questionResponseCollection.getTotalScored()
 
-                    quizResponseSummary.save()
+                        quizResponseSummary.save()
 
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
@@ -214,6 +214,7 @@ define ['app'
                         questionsCollection         : questionsCollection
                         questionResponseCollection  : @questionResponseCollection
                         quizResponseSummary         : quizResponseSummary
+                        display_mode                : @display_mode
 
                 _getUnansweredIDs:->
                     
@@ -256,13 +257,16 @@ define ['app'
 
 
                 _showSingleQuestionApp:->
+
+                    display_mode = if @display_mode is 'quiz_report' then 'replay' else @display_mode
+
                     if questionModel
                         new View.SingleQuestion.Controller
                             region                  : @layout.questionDisplayRegion
                             model                   : questionModel
                             quizModel               : quizModel
                             questionResponseCollection   : @questionResponseCollection
-                            display_mode            : @display_mode
+                            display_mode            : display_mode
 
                         @layout.quizProgressRegion.trigger "question:changed", questionModel
                         @layout.quizDescriptionRegion.trigger "question:changed", questionModel
@@ -273,6 +277,8 @@ define ['app'
                         model           : quizModel
                         currentQuestion : questionModel
                         textbookNames   : @textbookNames
+                        display_mode    : @display_mode
+
 
                     new View.QuizProgress.Controller
                         region: @layout.quizProgressRegion

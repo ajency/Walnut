@@ -66,11 +66,15 @@ define(['underscore', 'unserialize'], function(_) {
       quizMeta = '';
       collectionMeta = _.getCollectionMeta(model.get('collection_id'));
       collectionMeta.done(function(collectionMetaData) {
+        var quizResponseSummary;
         if (collectionMetaData.quizType === "practice") {
-          quizMetaValue = model.get('attempts');
-          return quizMeta = {
-            'attempts': quizMetaValue
-          };
+          quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'));
+          return quizResponseSummary.done(function(quiz_responses) {
+            quizMetaValue = quiz_responses.attempts;
+            return quizMeta = {
+              'attempts': quizMetaValue
+            };
+          });
         } else {
           quizMetaValue = model.get('status');
           return quizMeta = {
@@ -86,11 +90,12 @@ define(['underscore', 'unserialize'], function(_) {
     },
     insertIntoQuizResponseSummary: function(model, quizMetaValue) {
       var serializeQuizMetaValue, start_date, summary_id;
-      summary_id = 'Q' + model.get('collection_id') + 'S' + model.get('student_id');
+      summary_id = 'Q' + model.get('collection_id') + 'S' + _.getUserID();
       serializeQuizMetaValue = serialize(quizMetaValue);
-      start_date = _.getCurrentDateTime(0);
+      start_date = _.getCurrentDateTime(2);
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on) VALUES (?,?,?,?,?)", [summary_id, model.get('collection_id'), model.get('student_id'), serializeQuizMetaValue, start_date]);
+        tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on) VALUES (?,?,?,?,?)", [summary_id, model.get('collection_id'), _.getUserID(), serializeQuizMetaValue, start_date]);
+        return console.log("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on) VALUES (" + summary_id + "," + model.get('collection_id') + "," + _.getUserID() + "," + serializeQuizMetaValue + "," + start_date + ")");
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz_response_summary');
         return model.set({

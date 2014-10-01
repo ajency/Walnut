@@ -15,7 +15,7 @@ define ["backbone"], (Backbone) ->
 
 			collection_name = collection.name
 			opts = options.data
-			console.log 'Collection name: '+ 
+			console.log 'Collection name: '+collection_name
 			console.log 'options: '+JSON.stringify opts
 
 			if collection_name is 'textbook'
@@ -48,6 +48,8 @@ define ["backbone"], (Backbone) ->
 				data = _.getQuizByTextbookId(opts.textbook)
 				data.done (d)->
 					collection.set d
+
+					App.request "app:reset:quiz:repository", d
 
 			if collection_name is 'quiz-response-summary'
 				data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
@@ -220,7 +222,6 @@ define ["backbone"], (Backbone) ->
 				console.log "model"
 				console.log 'Model name: '+modelname
 				console.log JSON.stringify model
-				console.log model.get('term_id')
 				console.log model.get('id')
 
 				if modelname is 'division'
@@ -231,7 +232,7 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'textbook'
 					data = _.getTextBookByTextbookId(model.get('term_id'))
 					data.done (d)->
-						console.log JSON.stringify d
+						# console.log JSON.stringify d
 						model.set d	
 
 

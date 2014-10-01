@@ -85,7 +85,8 @@ define ['app'
 
                         currentQuestion = Marionette.getOption @,'currentQuestion'
                         
-                        @questionResponseCollection.each (response)=> @changeClassName(response)  if @quizModel.hasPermission 'display_answer'
+                        if @quizModel.hasPermission 'display_answer'
+                            @questionResponseCollection.each (response)=> @changeClassName(response) 
 
                         @onQuestionChange currentQuestion
 
@@ -118,13 +119,11 @@ define ['app'
                         else if @quizModel.hasPermission 'display_answer'
                             @changeClassName responseModel
 
-                        
-
                     changeClassName:(responseModel)->
                         
-                        answer = responseModel.get 'question_response'
+                        status = responseModel.get 'status'
                         
-                        className = switch answer.status
+                        className = switch status
                             when 'correct_answer'       then 'right'
                             when 'partially_correct'    then 'partiallyCorrect'
                             when 'wrong_answer'         then 'wrong'
@@ -137,13 +136,9 @@ define ['app'
 
                     updateProgressBar:->
 
-                        responses = @questionResponseCollection.pluck 'question_response'
+                        skipped = _.size @questionResponseCollection.where 'status' : 'skipped'
 
-                        answeredQuestions = _.chain responses
-                                    .map (m)->m if m.status isnt 'skipped'
-                                    .compact()
-                                    .size()
-                                    .value()
+                        answeredQuestions = @questionResponseCollection.length - skipped
 
                         progressPercentage = (answeredQuestions / @collection.length) * 100
 
@@ -154,8 +149,6 @@ define ['app'
 
                         @$el.find "#answered-questions"
                         .html answeredQuestions
-
-
 
                     updateSkippedCount:->
                         answers = @questionResponseCollection.pluck 'question_response'

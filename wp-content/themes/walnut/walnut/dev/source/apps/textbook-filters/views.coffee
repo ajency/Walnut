@@ -6,12 +6,17 @@ define ['app'], (App)->
             template: '<div class="col-xs-11">
                             <div class="filters">
                                 <div class="table-tools-actions">
-
+                                    {{#divisions_filter}}
+                                        <select class="select2-filters" id="divisions-filter">
+                                        {{#divisions}}
+                                           <option value="{{id}}">{{&name}}</option>
+                                        {{/divisions}}
+                                    </select>
+                                    {{/divisions_filter}}
                                     {{#textbooks_filter}}
                                     <select class="textbook-filter select2-filters" id="textbooks-filter">
-                                        <option value="">All Textbooks</option>
                                         {{#textbooks}}
-                                           <option value="{{id}}">{{name}}</option>
+                                           <option value="{{id}}">{{&name}}</option>
                                         {{/textbooks}}
                                     </select>
                                     {{/textbooks_filter}}
@@ -79,8 +84,16 @@ define ['app'], (App)->
             className: 'row'
 
             events:
+                'change #textbooks-filter':(e)->
+                    @trigger "fetch:new:content", $(e.target).val()
+
+                'change #divisions-filter':(e)->
+                    @trigger "fetch:textbooks:by:division", $(e.target).val()
+
                 'change .filters' :(e)->
-                    @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+                    if e.target.id isnt 'divisions-filter'
+                        console.log e.target.id
+                        @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change .content-type-filter' : (e)->
                     if $(e.target).val() is 'student_question'
@@ -93,6 +106,7 @@ define ['app'], (App)->
             mixinTemplateHelpers:->
                 data=super data
                 textbooks = Marionette.getOption @, 'textbooksCollection'
+                divisions = Marionette.getOption @, 'divisionsCollection'
 
                 data.textbooks= textbooks.map (m)->
                     t=[]
@@ -100,8 +114,16 @@ define ['app'], (App)->
                     t.name= m.get 'name'
                     t
 
+                if divisions
+                    data.divisions = divisions.map (m)->
+                        d=[]
+                        d.id = m.get 'id'
+                        d.name= m.get 'division'
+                        d
+
                 filters= Marionette.getOption @, 'filters'
 
+                data.divisions_filter = true if _.contains filters, 'divisions'
                 data.textbooks_filter = true if _.contains filters, 'textbooks'
                 data.chapters_filter = true if _.contains filters, 'chapters'
                 data.sections_filter = true if _.contains filters, 'sections'
@@ -120,10 +142,8 @@ define ['app'], (App)->
 
             onShow:->
 
-                @fullCollection= Marionette.getOption @, 'fullCollection'
-
-                $ ".filters select"
-                .select2();
+                @$el.find ".select2-filters"
+                .select2 minimumResultsForSearch: -1
 
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 
@@ -137,18 +157,25 @@ define ['app'], (App)->
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
 
-                switch filterType
+                switch filterType                    
+                    when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
                     when 'chapters-filter' then $.populateSections filteredCollection, @$el, currItem
                     when 'sections-filter' then $.populateSubSections filteredCollection, @$el, currItem
 
-                @setFilteredContent()
+                @setFilteredContent() if filterType not in ['divisions-filter','textbooks-filter']
 
 
             setFilteredContent:->
 
-                filtered_data= $.filterTableByTextbooks(@)
+                dataType= Marionette.getOption @, 'dataType'
+                filtered_data= $.filterTableByTextbooks(@,dataType)
 
-                @collection.set filtered_data
-
+                @collection.reset filtered_data
                 @trigger "update:pager"
+
+            onNewContentFetched:->
+                @setFilteredContent()
+
+            onDivisionChanged:(textbooksCollection)->
+

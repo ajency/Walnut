@@ -10,7 +10,8 @@ define(["backbone"], function(Backbone) {
       var collection_name, data, opts;
       collection_name = collection.name;
       opts = options.data;
-      console.log('Collection name: ' + console.log('options: ' + JSON.stringify(opts)));
+      console.log('Collection name: ' + collection_name);
+      console.log('options: ' + JSON.stringify(opts));
       if (collection_name === 'textbook') {
         data = _.getTextbooksForStudent();
         data.done(function(d) {
@@ -38,7 +39,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'quiz') {
         data = _.getQuizByTextbookId(opts.textbook);
         data.done(function(d) {
-          return collection.set(d);
+          collection.set(d);
+          return App.request("app:reset:quiz:repository", d);
         });
       }
       if (collection_name === 'quiz-response-summary') {
@@ -150,7 +152,6 @@ define(["backbone"], function(Backbone) {
         console.log("model");
         console.log('Model name: ' + modelname);
         console.log(JSON.stringify(model));
-        console.log(model.get('term_id'));
         console.log(model.get('id'));
         if (modelname === 'division') {
           data = _.fetchSingleDivision(model.get('id'));
@@ -161,7 +162,6 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'textbook') {
           data = _.getTextBookByTextbookId(model.get('term_id'));
           data.done(function(d) {
-            console.log(JSON.stringify(d));
             return model.set(d);
           });
         }

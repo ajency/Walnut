@@ -75,13 +75,14 @@ define ['underscore', 'unserialize'], ( _) ->
 		writeQuizResponseSummary : (model)->
 			quizMetaValue= ''
 			quizMeta = ''
-
 			collectionMeta = _.getCollectionMeta(model.get('collection_id'))
 			collectionMeta.done (collectionMetaData)->
-				if collectionMetaData.quizType is "practice"
 
-					quizMetaValue = model.get('attempts')
-					quizMeta = 'attempts' : quizMetaValue
+				if collectionMetaData.quizType is "practice"
+					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'))
+					quizResponseSummary.done (quiz_responses)->
+						quizMetaValue = quiz_responses.attempts
+						quizMeta = 'attempts' : quizMetaValue
 
 
 				else
@@ -100,18 +101,22 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		insertIntoQuizResponseSummary : (model,quizMetaValue)->
 
-			summary_id = 'Q'+model.get('collection_id')+'S'+model.get('student_id')
+			summary_id = 'Q'+model.get('collection_id')+'S'+_.getUserID()
 
 			serializeQuizMetaValue = serialize(quizMetaValue)
-			start_date = _.getCurrentDateTime(0)
+			start_date = _.getCurrentDateTime(2)
 
 			_.db.transaction((tx)->
 
 				tx.executeSql("INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
 					, collection_id, student_id, quiz_meta, taken_on) 
 					VALUES (?,?,?,?,?)"
-					, [summary_id, model.get('collection_id'), model.get('student_id')
+					, [summary_id, model.get('collection_id'), _.getUserID()
 					, serializeQuizMetaValue, start_date])
+
+				console.log "INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
+					, collection_id, student_id, quiz_meta, taken_on) 
+					VALUES ("+summary_id+","+model.get('collection_id')+","+_.getUserID()+","+serializeQuizMetaValue+","+start_date+")"
 
 			,_.transactionErrorhandler
 
