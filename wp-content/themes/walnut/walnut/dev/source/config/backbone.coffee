@@ -25,10 +25,10 @@ define ["backbone"], (Backbone) ->
 						console.log d
 						collection.set d
 			
-			if collection_name is 'menu-item'
-				data = _.getAppMenuItems()
-				data.done (d)->
-					collection.set d
+			# if collection_name is 'menu-item'
+			# 	data = _.getAppMenuItems()
+			# 	data.done (d)->
+			# 		collection.set d
 
 			if collection_name is 'chapter'
 				data = _.getChaptersByParentId(opts.parent)
