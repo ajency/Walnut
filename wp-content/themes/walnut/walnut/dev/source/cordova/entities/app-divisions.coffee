@@ -21,7 +21,7 @@ define ['underscore'], ( _) ->
 								singleDivision = _.fetchSingleDivision(id)
 								singleDivision.done (data)->
 									results[i] = data
-						
+
 						d.resolve results
 
 			$.when(runFunc()).done ->

@@ -21,12 +21,6 @@ define(["backbone"], function(Backbone) {
           });
         }
       }
-      if (collection_name === 'menu-item') {
-        data = _.getAppMenuItems();
-        data.done(function(d) {
-          return collection.set(d);
-        });
-      }
       if (collection_name === 'chapter') {
         data = _.getChaptersByParentId(opts.parent);
         data.done(function(d) {
