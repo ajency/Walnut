@@ -1,5 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html'], function(App, RegionController, quizDetailsTpl) {
   return App.module("QuizModuleApp.Controller", function(Controller, App) {
@@ -63,6 +64,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       __extends(QuizDetailsView, _super);
 
       function QuizDetailsView() {
+        this.onPauseSessionClick = __bind(this.onPauseSessionClick, this);
         return QuizDetailsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -76,7 +78,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           return this.trigger("try:again");
         },
         'click #go-back-button': function() {
-          return this.trigger("goto:previous:route");
+          return this.onPauseSessionClick();
         }
       };
 
@@ -130,10 +132,29 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         if ((_ref = Marionette.getOption(this, 'display_mode')) === 'replay' || _ref === 'quiz_report') {
           if (this.model.hasPermission('disable_quiz_replay')) {
-            return this.$el.find("#take-quiz").remove();
+            this.$el.find("#take-quiz").remove();
           } else {
-            return this.$el.find("#take-quiz").html('Replay');
+            this.$el.find("#take-quiz").html('Replay');
           }
+        }
+        if (_.platform() === 'DEVICE') {
+          $('body').css({
+            'height': 'auto'
+          });
+          return this.cordovaEventsForModuleDescriptionView();
+        }
+      };
+
+      QuizDetailsView.prototype.onPauseSessionClick = function() {
+        if (_.platform() === 'BROWSER') {
+          return this.trigger("goto:previous:route");
+        } else {
+          console.log('Invoked onPauseSessionClick');
+          _.audioQueuesSelection('Click-Pause');
+          this.trigger("goto:previous:route");
+          _.clearMediaDirectory('videos-web');
+          _.clearMediaDirectory('audio-web');
+          return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
         }
       };
 
