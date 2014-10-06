@@ -25,11 +25,6 @@ function read_quiz_question_response_csv_file( $file_path ) {
     $lexer->parse( $file_path, $interpreter );
 }
 
-/**
- * @param $question_response_data
- * @return bool|WP_Error
- * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
- */
 function validate_quiz_response_csv_row( $quiz_response_data ) {
 
     if (!is_array( $quiz_response_data ))
@@ -38,8 +33,8 @@ function validate_quiz_response_csv_row( $quiz_response_data ) {
     if($quiz_response_data [0] == 'qr_id')
         return false;
         
-    // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $quiz_response_data ) !== 7)
+    // Total columns for each row MUST be 8. else its a improper CSV row
+    if (count( $quiz_response_data ) !== 8)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid

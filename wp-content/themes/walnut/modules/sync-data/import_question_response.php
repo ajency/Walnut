@@ -40,7 +40,7 @@ function validate_csv_row( $question_response_data ) {
         return false;
         
     // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $question_response_data ) !== 10)
+    if (count( $question_response_data ) !== 11)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid
