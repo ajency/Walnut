@@ -140,6 +140,7 @@ function ajax_sync_database(){
         $sync_type = 'student_app';
 
     $args= array(
+            'user_id'       => $user_id,
             'blog_id'       => $blog_id,
             'last_sync'     => $last_sync,
             'device_type'   => $device_type,
@@ -153,7 +154,6 @@ function ajax_sync_database(){
 }
 add_action( 'wp_ajax_nopriv_sync-database', 'ajax_sync_database' );
 add_action( 'wp_ajax_sync-database', 'ajax_sync_database' );
-
 
 function ajax_check_blog_validity(){
     $blog_id = $_REQUEST['blog_id'];
