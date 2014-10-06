@@ -528,28 +528,61 @@ function get_all_quiz_question_responses($summary_id){
 }
 
 
-function quizzes_completed_for_textbook($book_id,$student_id){
+function quiz_status_for_textbook($book_id,$student_id){
     global $wpdb;
 
     $query= $wpdb->prepare(
-        "SELECT count(distinct qr.collection_id)
+        "SELECT cc.id,cm.meta_value as quiz_type, qr.quiz_meta 
             FROM  {$wpdb->prefix}quiz_response_summary qr, 
-                {$wpdb->base_prefix}content_collection cc 
+                {$wpdb->base_prefix}content_collection cc,
+                {$wpdb->base_prefix}collection_meta cm 
             WHERE qr.collection_id = cc.id
+                AND cm.collection_id = cc.id 
+                AND cm.meta_key like %s
                 AND cc.post_status in ('publish','archive')
                 AND qr.student_id = %d
-                AND qr.quiz_meta like %s
                 AND cc.term_ids like %s",
 
-        array($student_id, '%completed%', '%"'.$book_id.'";%' )
+        array('quiz_type',$student_id, '%"'.$book_id.'";%' )
     );
 
-    $completed_quizzes= $wpdb->get_var($query);
+    $result= $wpdb->get_results($query);
 
-    if(!$completed_quizzes)
-        $completed_quizzes=0;
+    $class_test_completed = $practice_completed =$class_test_in_progress = $practice_in_progress = array();
 
-    return $completed_quizzes;
+    foreach ($result as $res) {
+        $quiz_meta= maybe_unserialize($res->quiz_meta);
+        $status = $quiz_meta['status'];
+
+        if($status === 'completed'){
+            if($res->quiz_type==='test')
+                $class_test_completed[]=$res->id;
+            else
+                $practice_completed[]=$res->id;
+        }
+        else{
+            if($res->quiz_type==='test')
+                $class_test_in_progress[]=$res->id;
+            else
+                $practice_in_progress[]=$res->id;
+        }
+    }
+
+    if(sizeof($practice_completed>0))
+        $count_practice_completed = sizeof(__u::uniq($practice_completed));
+
+    if(sizeof($practice_in_progress>0))
+        $count_practice_in_progress = sizeof(__u::uniq($practice_in_progress));
+
+    $data=array(
+        'class_test_completed'      => sizeof($class_test_completed), 
+        'practice_completed'        => $count_practice_completed,
+        'class_test_in_progress'    => sizeof($class_test_in_progress),
+        'practice_in_progress'      => $count_practice_in_progress,
+    );
+
+    return $data;
+        
 }
 
 

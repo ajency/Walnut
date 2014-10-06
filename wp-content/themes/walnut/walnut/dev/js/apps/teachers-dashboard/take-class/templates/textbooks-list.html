@@ -1,7 +1,7 @@
 <div class="list" id="textbooks">
 	<!-- "TABLE" HEADER CONTAINING SORT BUTTONS (HIDDEN IN GRID MODE)-->
 	<div class="list_header">
-		<div class="meta name active desc" id="SortByName"> 
+		<div class="meta name active desc rec" id="SortByName"> 
 			Name &nbsp; 
 			<span class="sort anim150 asc active" data-sort="data-name" data-order="desc"></span> 
 			<span class="sort anim150 desc" data-sort="data-name" data-order="asc"></span> 
@@ -18,11 +18,16 @@
 			</div>
 		{{/take_quiz}}
 
-		<div class="meta rec">Status
+		<div class="meta rec">{{#take_quiz}} Practice {{/take_quiz}} Status 
 			<span class="sort anim150 asc" data-sort="data-modules" data-order="desc"></span>
 			<span class="sort anim150 desc" data-sort="data-modules" data-order="asc"></span>
 		</div>
 
+		{{#take_quiz}}
+			<div class="meta modules">
+			    Class Test Status 
+			</div>
+		{{/take_quiz}}
 		
 	</div>
 

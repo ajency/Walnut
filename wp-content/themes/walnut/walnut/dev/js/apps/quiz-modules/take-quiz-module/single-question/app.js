@@ -31,6 +31,9 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         this.answerModel = App.request("create:new:answer");
         if (this.questionResponseModel) {
           answerData = this.questionResponseModel.get('question_response');
+          if (_.isEmpty(answerData)) {
+            answerData = {};
+          }
           answerData.status = this.questionResponseModel.get('status');
           answerData.marks = this.questionResponseModel.get('marks_scored');
           this.answerModel = App.request("create:new:answer", answerData);
