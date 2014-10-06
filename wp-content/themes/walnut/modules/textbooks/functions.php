@@ -297,9 +297,15 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
     if($user_id){
-        $quizzes_completed = quizzes_completed_for_textbook($book_id,$user_id);
-        $book_dets->quizzes_completed = $quizzes_completed;
-        $book_dets->quizzes_not_started = $quizzes_count->class_test - $quizzes_completed;
+        $quizzes_status = quiz_status_for_textbook($book_id,$user_id);
+        $book_dets->class_test_completed    = $quizzes_status['class_test_completed'];
+        $book_dets->class_test_in_progress  = $quizzes_status['class_test_in_progress'];
+        $book_dets->class_test_not_started = $quizzes_count->class_test - ($quizzes_status['class_test_completed']+$quizzes_status['class_test_in_progress']);
+
+        $book_dets->practice_completed    = $quizzes_status['practice_completed'];
+        $book_dets->practice_in_progress  = $quizzes_status['practice_in_progress'];
+        $book_dets->practice_not_started = $quizzes_count->practice - ($quizzes_status['practice_completed']+$quizzes_status['practice_in_progress']);
+    
     }
 
 
