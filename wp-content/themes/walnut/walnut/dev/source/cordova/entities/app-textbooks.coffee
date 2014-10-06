@@ -90,7 +90,7 @@ define ['underscore'], ( _) ->
 
 			onSuccess = (d)->
 				(tx, data)->
-
+					class_id= ''
 					class_id = data.rows.item(0)['meta_value']
 					console.log class_id 
 					# console.log class_id.replace(/"([^"]+(?="))"/g, "$1")

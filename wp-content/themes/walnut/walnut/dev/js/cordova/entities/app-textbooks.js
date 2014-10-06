@@ -94,6 +94,7 @@ define(['underscore'], function(_) {
       onSuccess = function(d) {
         return function(tx, data) {
           var class_id;
+          class_id = '';
           class_id = data.rows.item(0)['meta_value'];
           console.log(class_id);
           return d.resolve(class_id);

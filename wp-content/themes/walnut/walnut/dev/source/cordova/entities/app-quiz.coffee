@@ -414,6 +414,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 		getQuizById : (id)->
+			
 
 			runQuery = ->
 
@@ -459,13 +460,13 @@ define ['underscore', 'unserialize'], ( _) ->
 										quiz_type : collectionMetaData.quizType
 										status : dateStatus.status
 										attempts: dateStatus.attempts
-										date : dateStatus.start_date
+										taken_on : dateStatus.start_date
 										term_ids: _.unserialize(row['term_ids'])
 										total_minutes: row['duration']
 										type: row['type']
 
 									d.resolve(result)
 			
-			$.when(runQuery()).done ->              
+			$.when(runQuery()).done ->
 				console.log 'getQuizById done'
 			.fail _.failureHandler

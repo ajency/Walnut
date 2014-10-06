@@ -56,15 +56,14 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					when 'none'
 						$('#syncButtonText').text('Start')
 						#temporarily disabled
-						# $('#syncMediaStart').prop("disabled",true)
+						$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_import'
 						$('#syncButtonText').text('Start')
 
 					when 'file_download'
 						$('#syncButtonText').text('Continue')
-						#temporarily disabled
-						# $('#syncMediaStart').prop("disabled",true)
+						$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_generate'
 						$('#syncButtonText').text('Continue')
@@ -86,8 +85,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			$('#syncError').css("display","none")
 
 			# Disable media sync button
-			#temporarily disabled
-			# $('#syncMediaStart').prop("disabled",true)
+			$('#syncMediaStart').prop("disabled",true)
 
 
 			# Create 'SynapseData' inside 'SynapseAssets' directory

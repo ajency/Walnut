@@ -100,7 +100,7 @@ define(['underscore', 'csvparse'], function(_) {
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on , created_by, last_modified_on, last_modified_by, published_on, published_by , status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on , created_by, last_modified_on, last_modified_by, published_on, published_by , post_status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_content_collection');

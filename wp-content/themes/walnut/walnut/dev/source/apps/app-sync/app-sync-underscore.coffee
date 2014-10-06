@@ -38,7 +38,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT type_of_operation FROM sync_details 
-							ORDER BY id DESC LIMIT 1", []
+							ORDER BY id DESC LIMIT 1" , []
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
@@ -52,8 +52,29 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runQuery()).done ->
 				console.log 'getLastSyncOperation transaction completed'
 			.fail _.failureHandler
-			
+		
 
+		chkUserIDForSync : ->
+
+			runQuery = ->
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT id FROM sync_details WHERE user_id=?" 
+							, [_.getUserID()]
+							, onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess = (d)->
+				(tx, data)->
+					id = ''
+					if data.rows.length isnt 0
+
+						id = data.rows.item(0)['id']
+					
+					d.resolve id
+
+			$.when(runQuery()).done ->
+				console.log 'chkUserIDForSync transaction completed'
+			.fail _.failureHandler
 		
 		# Get total records from wp_question_response where sync=0 
 		getTotalRecordsTobeSynced : ->
@@ -62,9 +83,9 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT SUM(rows) AS total FROM 
-							(SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response 
+							(SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"quiz_question_response 
 							WHERE sync=? UNION ALL
-							SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"question_response_meta 
+							SELECT COUNT(*) AS rows FROM "+_.getTblPrefix()+"quiz_response_summary 
 							WHERE sync=?)"
 							, [0, 0], onSuccess(d), _.deferredErrorHandler(d))
 
@@ -87,8 +108,8 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT time_stamp FROM sync_details 
-							WHERE type_of_operation=? ORDER BY id DESC LIMIT 1"
-							, ['file_download'], onSuccess(d), _.deferredErrorHandler(d))
+							WHERE type_of_operation=? AND user_id=? ORDER BY id DESC LIMIT 1"
+							, ['file_download', _.getUserID()], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
 				(tx, data)->
@@ -108,8 +129,8 @@ define ['underscore', 'unserialize'], ( _) ->
 		updateSyncDetails : (operation, time_stamp)->
 
 			_.db.transaction((tx)->
-				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) 
-					VALUES (?,?)", [operation, time_stamp])
+				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp, user_id) 
+					VALUES (?,?,?)", [operation, time_stamp, _.getUserID])
 
 			,_.transactionErrorhandler
 			,(tx)->
@@ -179,11 +200,11 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			onSuccess = (d)->
 				(tx, data)->
-					textbook_ids = []
+					textbook_ids = new Array()
 
-					if data.rows.length isnt 0
-						for i in [0..data.rows.length-1] by 1
-							textbook_ids.push data.rows.item(i)['textbook_id']
+					
+					for i in [0..data.rows.length-1] by 1
+						textbook_ids[i] = data.rows.item(i)['textbook_id']
 					
 					d.resolve textbook_ids
 

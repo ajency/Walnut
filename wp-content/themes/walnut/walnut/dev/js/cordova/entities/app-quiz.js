@@ -444,7 +444,7 @@ define(['underscore', 'unserialize'], function(_) {
                     quiz_type: collectionMetaData.quizType,
                     status: dateStatus.status,
                     attempts: dateStatus.attempts,
-                    date: dateStatus.start_date,
+                    taken_on: dateStatus.start_date,
                     term_ids: _.unserialize(row['term_ids']),
                     total_minutes: row['duration'],
                     type: row['type']

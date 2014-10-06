@@ -76,12 +76,31 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
-      var user;
+      var hasPreviouslyLoggedIn, user;
       user = App.request("get:user:model");
       user_role = user.get("roles");
       if (_.platform() === 'DEVICE') {
-        App.navigate('students/dashboard', {
-          trigger: true
+        hasPreviouslyLoggedIn = _.chkUserIDForSync();
+        hasPreviouslyLoggedIn.done(function(id) {
+          var lastSyncOperation;
+          if (_.isEmpty(id)) {
+            lastSyncOperation = _.getLastSyncOperation();
+            return lastSyncOperation.done(function(type_of_operation) {
+              if (type_of_operation === 'none' || type_of_operation !== 'file_import') {
+                return App.navigate('sync', {
+                  trigger: true
+                });
+              } else {
+                return App.navigate('students/dashboard', {
+                  trigger: true
+                });
+              }
+            });
+          } else {
+            return App.navigate('students/dashboard', {
+              trigger: true
+            });
+          }
         });
       } else {
         if (user_role[0] === 'administrator') {

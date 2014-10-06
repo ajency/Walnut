@@ -42,7 +42,7 @@ define ['app'
             events :
                 'click #take-quiz' :-> @trigger "start:quiz:module"
                 'click #try-again' :-> @trigger "try:again"
-                'click #go-back-button' : ->@onPauseSessionClick() #@trigger "goto:previous:route"
+                'click #go-back-button' : ->@trigger "goto:previous:route"
 
 
             serializeData:->
@@ -69,6 +69,9 @@ define ['app'
                         data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
 
                     data.total_marks_scored = parseFloat responseSummary.get 'total_marks_scored'
+                    if _.platform() is 'DEVICE'
+                        console.log JSON.stringify data.total_marks_scored
+                        data.total_marks_scored = data.total_marks_scored.toFixed(2);
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
@@ -103,29 +106,6 @@ define ['app'
                     else
                         @$el.find "#take-quiz"
                         .html 'Replay'
-
-                if _.platform() is 'DEVICE'
-
-                    $('body').css('height' : 'auto')
-                    @cordovaEventsForModuleDescriptionView()
-            
-
-            onPauseSessionClick : =>
-
-                if _.platform() is 'BROWSER'
-                    @trigger "goto:previous:route"
-
-                else
-                    console.log 'Invoked onPauseSessionClick'
-
-                    _.audioQueuesSelection 'Click-Pause'
-
-                    @trigger "goto:previous:route"
-
-                    _.clearMediaDirectory 'videos-web'
-                    _.clearMediaDirectory 'audio-web'
-
-                    document.removeEventListener("backbutton", @onPauseSessionClick, false)
                     
 
         # set handlers

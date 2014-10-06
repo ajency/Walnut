@@ -99,9 +99,25 @@ define ['marionette'], (Marionette)->
             # not be allowed to navigate else where in the app and only the sync screen should be visible
             # to the user.
 
+            hasPreviouslyLoggedIn = _.chkUserIDForSync()
+            hasPreviouslyLoggedIn.done (id)->
+                
+                if _.isEmpty id
+
+                    lastSyncOperation = _.getLastSyncOperation()
+                    lastSyncOperation.done (type_of_operation)->
+                        
+                        if type_of_operation is 'none' or type_of_operation isnt 'file_import'
+                            App.navigate('sync', trigger: true)
+                        else
+                            App.navigate('students/dashboard', trigger: true)
+                else
+                    App.navigate('students/dashboard', trigger: true)
 
             # App.navigate('header', trigger: true)
-            App.navigate('students/dashboard', trigger: true)
+
+            
+            # App.navigate('students/dashboard', trigger: true)
                 
 
         else

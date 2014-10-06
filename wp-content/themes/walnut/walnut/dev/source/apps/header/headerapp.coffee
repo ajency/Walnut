@@ -168,16 +168,19 @@ define ['app'
 
 
 			checkIfServerImportOperationCompleted : ->
-				data = blog_id : _.getBlogID()
-				sendit = new XMLHttpRequest()
-				sendit.open 'GET', AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId() , false
-				sendit.setRequestHeader 'Set-Cookie', _.getCookiesValue() 
-				sendit.send data 
-				if sendit.status is 200
-					console.log JSON.parse sendit.responseText
-					sessionResponse = sendit.responseText
-					if sessionResponse is 0
-						@onAppLogout()
+				userDetails = _.getUserDetails(_.getUserID())
+				userDetails.done (userDetails)->
+					blog_id = userDetails.blog_id
+					data = blog_id : blog_id
+					sendit = new XMLHttpRequest()
+					sendit.open 'GET', AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId() , false
+					sendit.setRequestHeader 'Set-Cookie', _.getCookiesValue() 
+					sendit.send data 
+					if sendit.status is 200
+						console.log JSON.parse sendit.responseText
+						sessionResponse = sendit.responseText
+						if sessionResponse is 0
+							@onAppLogout()
 
 					
 

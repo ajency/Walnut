@@ -14,9 +14,9 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 				quizResponseSummaryData = _.getDataFromQuizResponseSummary()
 				quizResponseSummaryData.done (quiz_response_summary_data)->
 
-					quiz_question_response_data = _.convertDataToCSV(quiz_question_response_data, 'question_response')
+					quiz_question_response_data = _.convertDataToCSV(quiz_question_response_data, 'quiz_question_response')
 					quiz_response_summary_data = 
-					_.convertDataToCSV(quiz_response_summary_data, 'question_response_meta')
+					_.convertDataToCSV(quiz_response_summary_data, 'quiz_response_summary')
 
 					_.writeToZipFile(quiz_question_response_data, quiz_response_summary_data)
 
@@ -37,8 +37,8 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 		writeToZipFile : (quiz_question_response_data, quiz_response_summary_data) ->
 
 			zip = new JSZip()
-			zip.file(''+_.getTblPrefix()+'question_response.csv', quiz_question_response_data)
-			zip.file(''+_.getTblPrefix()+'question_response_meta.csv', quiz_response_summary_data)
+			zip.file(''+_.getTblPrefix()+'quiz_question_response.csv', quiz_question_response_data)
+			zip.file(''+_.getTblPrefix()+'quiz_response_summary.csv', quiz_response_summary_data)
 			
 			content = zip.generate({type:"blob"})
 
@@ -70,11 +70,11 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 			
 			$('#syncSuccess').css("display","block").text("File generation completed...")
 			
-			_.updateSyncFlag('question_response')
+			_.updateSyncFlag('quiz_question_response')
 
 
 		
-		#Update 'sync' field to 1 in 'wp_question_response' and 'wp_question_response_meta' table 
+		#Update 'sync' field to 1 in 'wp_quiz_question_response' and 'wp_question_response_meta' table 
 		#after file generation.
 		updateSyncFlag : (table_name)->
 
@@ -88,23 +88,25 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 				
 				console.log 'Updated sync flag in '+table_name
 
-				if table_name is 'question_response'
-					_.updateSyncFlag('question_response_meta')
+				if table_name is 'quiz_question_response'
+					_.updateSyncFlag('quiz_response_summary')
 
 				else
 					setTimeout(=>
-						_.uploadGeneratedZipFile()
+						# _.uploadGeneratedZipFile()
+						#temporarily path changed
+						App.navigate('students/dashboard', trigger: true)
 					,2000)
 			)
 		
 		
-		#Get all data from wp_question_response where sync=0
-		getDataFromQuestionResponse : ->
+		#Get all data from wp_quiz_question_response where sync=0
+		getDataFromQuizQuestionResponse : ->
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response 
+						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
 							WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
@@ -115,25 +117,24 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 						row = data.rows.item(i)
 
 						do(i, row)->
-							quiz_question_response_data[i] = [row.ref_id, row.teacher_id
-									, row.content_piece_id, row.collection_id, row.division
-									, row.question_response, row.time_taken, row.start_date
-									, row.end_date, row.status]
+							quiz_question_response_data[i] = [row.qr_id, row.summary_id
+									, row.content_piece_id, row.question_response, row.time_taken
+									, row.marks_scored, row.status]
 
 					d.resolve quiz_question_response_data
 
 			$.when(runQuery()).done ->
-				console.log 'getDataFromQuestionResponse transaction completed'
+				console.log 'getDataFromQuizQuestionResponse transaction completed'
 			.fail _.failureHandler
 
 
-		#Get all data from wp_question_response_meta where sync=0
+		#Get all data from wp_quiz_response_summary where sync=0
 		getDataFromQuizResponseSummary : ->
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response_meta 
+						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_response_summary 
 							WHERE sync=?", [0], onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
@@ -144,7 +145,8 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 						row = data.rows.item(i)
 
 						do(i, row)->
-							quiz_response_summary_data[i] = [row.qr_ref_id, row.meta_key, row.meta_value]
+							quiz_response_summary_data[i] = [row.summary_id, row.collection_id
+							, row.student_id, row.taken_on, row.quiz_meta]
 
 					d.resolve quiz_response_summary_data
 

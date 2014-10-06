@@ -147,21 +147,26 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       };
 
       HeaderView.prototype.checkIfServerImportOperationCompleted = function() {
-        var data, sendit, sessionResponse;
-        data = {
-          blog_id: _.getBlogID()
-        };
-        sendit = new XMLHttpRequest();
-        sendit.open('GET', AJAXURL + '?action=check-app-data-sync-completion&sync_request_id=' + _.getSyncRequestId(), false);
-        sendit.setRequestHeader('Set-Cookie', _.getCookiesValue());
-        sendit.send(data);
-        if (sendit.status === 200) {
-          console.log(JSON.parse(sendit.responseText));
-          sessionResponse = sendit.responseText;
-          if (sessionResponse === 0) {
-            return this.onAppLogout();
+        var userDetails;
+        userDetails = _.getUserDetails(_.getUserID());
+        return userDetails.done(function(userDetails) {
+          var blog_id, data, sendit, sessionResponse;
+          blog_id = userDetails.blog_id;
+          data = {
+            blog_id: blog_id
+          };
+          sendit = new XMLHttpRequest();
+          sendit.open('GET', AJAXURL + '?action=check-app-data-sync-completion&sync_request_id=' + _.getSyncRequestId(), false);
+          sendit.setRequestHeader('Set-Cookie', _.getCookiesValue());
+          sendit.send(data);
+          if (sendit.status === 200) {
+            console.log(JSON.parse(sendit.responseText));
+            sessionResponse = sendit.responseText;
+            if (sessionResponse === 0) {
+              return this.onAppLogout();
+            }
           }
-        }
+        });
       };
 
       HeaderView.prototype.onErrorResponse = function(msg) {

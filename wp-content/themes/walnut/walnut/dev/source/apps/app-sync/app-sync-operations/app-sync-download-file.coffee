@@ -14,13 +14,15 @@ define ['underscore'], ( _) ->
 
 				lastDownloadTimestamp = _.getLastDownloadTimeStamp()
 				lastDownloadTimestamp.done (time_stamp)->
+					# if _.isEmpty time_stamp
+					
+					
+					# textbookIdsByClassID = _.getTextbookIdsByClassID()
+					# textbookIdsByClassID.done (textbook_ids)->
 
-					textbookIdsByClassID = _.getTextbookIdsByClassID()
-					textbookIdsByClassID.done (textbook_ids)->
-
-						data = blog_id: blog_id, last_sync: time_stamp
-							, textbook_ids: textbook_ids, user_id: _.getUserID()
-							, sync_type : "student_app"
+					data = blog_id: blog_id, last_sync: time_stamp
+						, user_id: _.getUserID()
+						, sync_type : "student_app"
 
 						console.log JSON.stringify data
 
@@ -30,7 +32,6 @@ define ['underscore'], ( _) ->
 								(resp)=>
 									console.log 'getZipFileDownloadDetails response'
 									console.log JSON.stringify resp
-									alert "data"
 									_.downloadZipFile resp
 
 								,
@@ -89,11 +90,9 @@ define ['underscore'], ( _) ->
 				
 				$('#syncSuccess').css("display","block").text("File download completed")
 				
-				# setTimeout(=>
-					# _.startFileImport()
-				# ,2000)
 				setTimeout(=>
-				    App.navigate('students/dashboard', trigger: true)
+					_.startFileImport()
 				,2000)
+				
 				
 			zip.unzip(source, destination, onFileUnzipSuccess)

@@ -218,7 +218,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			
 			onSuccess = (d)->
 				(tx, data)->
-
+					userDetails = ''
 					if data.rows.length isnt 0
 						row = data.rows.item(0)
 
@@ -234,7 +234,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							user_email: row['user_email']
 							division: row['division']
 
-					d.resolve(userDetails)
+
+						d.resolve(userDetails)
 
 			$.when(runQuery()).done ->
 				console.log 'getUserDetails transaction completed'

@@ -50,7 +50,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
 
 
-        # Insert data into 14 tables
+        
         # insertIntoWpClassDivisions : ->
 
         #     _.importingFileMessage 1
@@ -71,7 +71,7 @@ define ['underscore', 'csvparse'], ( _) ->
         #             _.insertIntoWpQuestionResponse()
         #         )
 
-
+        # Insert data into 13 tables
         insertIntoWpQuizQuestionResponse : ->
 
             _.importingFileMessage 1
@@ -147,7 +147,7 @@ define ['underscore', 'csvparse'], ( _) ->
                     _.each data, (row, i)->
                         tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on
                             , created_by, last_modified_on, last_modified_by, published_on, published_by
-                            , status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+                            , post_status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
                             , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
                             , row[9], row[10], row[11]])
 

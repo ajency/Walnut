@@ -9,28 +9,22 @@ define(['underscore'], function(_) {
         blog_id = userDetails.blog_id;
         lastDownloadTimestamp = _.getLastDownloadTimeStamp();
         return lastDownloadTimestamp.done(function(time_stamp) {
-          var textbookIdsByClassID;
-          textbookIdsByClassID = _.getTextbookIdsByClassID();
-          return textbookIdsByClassID.done(function(textbook_ids) {
-            var data;
-            data = {
-              blog_id: blog_id,
-              last_sync: time_stamp,
-              textbook_ids: textbook_ids,
-              user_id: _.getUserID(),
-              sync_type: "student_app"
+          var data;
+          data = {
+            blog_id: blog_id,
+            last_sync: time_stamp,
+            user_id: _.getUserID(),
+            sync_type: "student_app"
+          };
+          console.log(JSON.stringify(data));
+          return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
+            return function(resp) {
+              console.log('getZipFileDownloadDetails response');
+              console.log(JSON.stringify(resp));
+              return _.downloadZipFile(resp);
             };
-            console.log(JSON.stringify(data));
-            return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
-              return function(resp) {
-                console.log('getZipFileDownloadDetails response');
-                console.log(JSON.stringify(resp));
-                alert("data");
-                return _.downloadZipFile(resp);
-              };
-            })(this), 'json').fail(function() {
-              return _.onDataSyncError("none", "Could not connect to server");
-            });
+          })(this), 'json').fail(function() {
+            return _.onDataSyncError("none", "Could not connect to server");
           });
         });
       });
@@ -69,9 +63,7 @@ define(['underscore'], function(_) {
         $('#syncSuccess').css("display", "block").text("File download completed");
         return setTimeout((function(_this) {
           return function() {
-            return App.navigate('students/dashboard', {
-              trigger: true
-            });
+            return _.startFileImport();
           };
         })(this), 2000);
       };

@@ -24,7 +24,7 @@ define ['underscore', 'jquery'], (_, $)->
                     , cookie, blog_id, user_email, division)')
 
                 tx.executeSql('CREATE TABLE IF NOT EXISTS sync_details
-                    (id INTEGER PRIMARY KEY, type_of_operation, time_stamp)')
+                    (id INTEGER PRIMARY KEY, type_of_operation, time_stamp, user_id)')
                 
             ,_.transactionErrorHandler
             ,(tx)->

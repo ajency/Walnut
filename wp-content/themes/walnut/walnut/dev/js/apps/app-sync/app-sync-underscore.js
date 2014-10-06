@@ -41,12 +41,35 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getLastSyncOperation transaction completed');
       }).fail(_.failureHandler);
     },
+    chkUserIDForSync: function() {
+      var onSuccess, runQuery;
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT id FROM sync_details WHERE user_id=?", [_.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var id;
+          id = '';
+          if (data.rows.length !== 0) {
+            id = data.rows.item(0)['id'];
+          }
+          return d.resolve(id);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('chkUserIDForSync transaction completed');
+      }).fail(_.failureHandler);
+    },
     getTotalRecordsTobeSynced: function() {
       var onSuccess, runQuery;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "question_response_meta WHERE sync=?)", [0, 0], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT SUM(rows) AS total FROM (SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "quiz_question_response WHERE sync=? UNION ALL SELECT COUNT(*) AS rows FROM " + _.getTblPrefix() + "quiz_response_summary WHERE sync=?)", [0, 0], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -66,7 +89,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? ORDER BY id DESC LIMIT 1", ['file_download'], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT time_stamp FROM sync_details WHERE type_of_operation=? AND user_id=? ORDER BY id DESC LIMIT 1", ['file_download', _.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -86,7 +109,7 @@ define(['underscore', 'unserialize'], function(_) {
     },
     updateSyncDetails: function(operation, time_stamp) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp) VALUES (?,?)", [operation, time_stamp]);
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp, user_id) VALUES (?,?,?)", [operation, time_stamp, _.getUserID]);
       }, _.transactionErrorhandler, function(tx) {
         return console.log('Updated sync details for ' + operation);
       });
@@ -148,11 +171,9 @@ define(['underscore', 'unserialize'], function(_) {
       onSuccess = function(d) {
         return function(tx, data) {
           var i, textbook_ids, _i, _ref;
-          textbook_ids = [];
-          if (data.rows.length !== 0) {
-            for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-              textbook_ids.push(data.rows.item(i)['textbook_id']);
-            }
+          textbook_ids = new Array();
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            textbook_ids[i] = data.rows.item(i)['textbook_id'];
           }
           return d.resolve(textbook_ids);
         };
