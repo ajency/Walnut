@@ -442,7 +442,7 @@ class ExportTables {
         if($this->sync_type === 'student_app'){
             $collection_ids=$this->get_collection_ids_for_user($this->user_id);
             $collection_ids= join(',',$collection_ids);
-            $collectionStr = " AND c.id in ($collection_ids)";
+            $collectionStr = " AND cm.collection_id in ($collection_ids)";
         }
 
 
@@ -456,7 +456,7 @@ class ExportTables {
             );
         }
         else{
-            $collectionmeta_table_query=$wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}content_collection c 
+            $collectionmeta_table_query=$wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta cm 
                 WHERE 1 ".$collectionStr, null);
         }
 

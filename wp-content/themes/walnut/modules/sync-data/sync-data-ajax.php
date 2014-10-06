@@ -146,8 +146,9 @@ function ajax_sync_database(){
             'device_type'   => $device_type,
             'sync_type'     => $sync_type
         );
-
-    $export_details = export_tables_for_app($args);
+    
+    $exObject = new ExportTables($args);
+    $export_details= $exObject->export_tables_for_app();
 
     wp_send_json($export_details);
 
