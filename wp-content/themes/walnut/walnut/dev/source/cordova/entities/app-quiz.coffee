@@ -464,7 +464,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										term_ids: _.unserialize(row['term_ids'])
 										total_minutes: row['duration']
 										type: row['type']
-
+									
 									d.resolve(result)
 			
 			$.when(runQuery()).done ->

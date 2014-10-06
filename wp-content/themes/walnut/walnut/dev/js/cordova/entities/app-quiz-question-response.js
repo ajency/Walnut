@@ -65,7 +65,6 @@ define(['underscore', 'unserialize'], function(_) {
     writeQuestionResponse: function(model) {
       var quizResponseSummary;
       console.log(JSON.stringify(model));
-      alert("model");
       quizResponseSummary = _.getQuizResponseSummary(model.get('summary_id'));
       return quizResponseSummary.done(function(collection_id) {
         var collectionMeta;
@@ -110,8 +109,6 @@ define(['underscore', 'unserialize'], function(_) {
         return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_question_response (qr_id , summary_id, content_piece_id, question_response , time_taken, marks_scored, status) VALUES (?,?,?,?,?,?,?)", [qr_id, model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status')]);
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz question response');
-        console.log(JSON.stringify(qr_id));
-        alert("qrid");
         return model.set({
           'qr_id': qr_id
         });

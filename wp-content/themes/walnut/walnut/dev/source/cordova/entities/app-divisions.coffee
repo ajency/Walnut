@@ -71,10 +71,8 @@ define ['underscore'], ( _) ->
 					if data.rows.length isnt 0
 						row = data.rows.item(0)
 
-						userDetails = _.getUserDetails(_.getUserID())
-						userDetails.done (userDetails)->
-							alert "userDetails"
-							console.log JSON.stringify userDetails
+						userDetailsInfo = _.getUserDetails(_.getUserID())
+						userDetailsInfo.done (userDetails)->
 
 							studentsCountClassIdValue = _.getStudentsCountForBlogId(userDetails.blog_id)
 							studentsCountClassIdValue.done (students_count_classid_value)->
@@ -95,9 +93,6 @@ define ['underscore'], ( _) ->
 
 
 		getStudentsCountForBlogId : (blog_id)->
-			alert "blog_id"
-			console.log blog_id
-			
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -118,7 +113,6 @@ define ['underscore'], ( _) ->
 					d.resolve students_count_classid_value
 
 			$.when(runQuery()).done ->
-				alert "1"
 				console.log 'getStudentsCountClassIdValue transaction completed'
 			.fail _.failureHandler
 		
@@ -126,9 +120,6 @@ define ['underscore'], ( _) ->
 
 		# Get the count of number of students assigned to each division.
 		getStudentsCount : (division_id, ids)->
-			alert "ids"
-			console.log JSON.stringify ids
-
 
 			ids = ids.join()
 
@@ -146,7 +137,6 @@ define ['underscore'], ( _) ->
 					d.resolve students_count
 
 			$.when(runQuery()).done ->
-				alert "2"
 				console.log 'getStudentsCount transaction completed'
 			.fail _.failureHandler
 

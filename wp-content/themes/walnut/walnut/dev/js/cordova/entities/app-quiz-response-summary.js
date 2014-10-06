@@ -62,8 +62,6 @@ define(['underscore', 'unserialize'], function(_) {
     },
     writeQuizResponseSummary: function(model) {
       var collectionMeta, quizMeta, quizMetaValue;
-      alert("writeQuizResponseSummary");
-      console.log(JSON.stringify(model));
       quizMetaValue = '';
       quizMeta = '';
       collectionMeta = _.getCollectionMeta(model.get('collection_id'));
@@ -72,8 +70,6 @@ define(['underscore', 'unserialize'], function(_) {
         if (collectionMetaData.quizType === "practice") {
           quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'));
           return quizResponseSummary.done(function(attempts) {
-            alert(" attempts");
-            console.log(JSON.stringify(attempts));
             quizMetaValue = attempts;
             return quizMeta = {
               'attempts': quizMetaValue
@@ -102,10 +98,9 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on) VALUES (" + summary_id + "," + model.get('collection_id') + "," + _.getUserID() + "," + serializeQuizMetaValue + "," + start_date + ")");
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz_response_summary');
-        model.set({
+        return model.set({
           'summary_id': summary_id
         });
-        return alert("summary_id");
       });
     },
     chkInsertData: function() {

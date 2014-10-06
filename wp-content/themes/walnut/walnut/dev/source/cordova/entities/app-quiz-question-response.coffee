@@ -77,7 +77,6 @@ define ['underscore', 'unserialize'], ( _) ->
 		writeQuestionResponse : (model)->
 
 			console.log JSON.stringify model
-			alert "model"
 
 			quizResponseSummary = _.getQuizResponseSummary(model.get('summary_id'))
 			quizResponseSummary.done (collection_id)->
@@ -141,8 +140,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
-				console.log JSON.stringify qr_id
-				alert "qrid"
 				model.set 'qr_id' :qr_id
 				# _.chkTempInsertData()
 			)

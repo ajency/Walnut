@@ -73,8 +73,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		#Insert/update the data in quiz_response_summary if summary_id is present or not
 		writeQuizResponseSummary : (model)->
-			alert "writeQuizResponseSummary"
-			console.log JSON.stringify model
 			quizMetaValue= ''
 			quizMeta = ''
 			collectionMeta = _.getCollectionMeta(model.get('collection_id'))
@@ -83,8 +81,6 @@ define ['underscore', 'unserialize'], ( _) ->
 				if collectionMetaData.quizType is "practice"
 					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'))
 					quizResponseSummary.done (attempts)->
-						alert " attempts"
-						console.log JSON.stringify attempts
 						quizMetaValue = attempts
 						quizMeta = 'attempts' : quizMetaValue
 
@@ -127,7 +123,6 @@ define ['underscore', 'unserialize'], ( _) ->
 			,(tx)->
 				console.log 'Inserted data in quiz_response_summary'
 				model.set 'summary_id' :summary_id
-				alert "summary_id"
 				# _.chkInsertData()
 			)
 

@@ -213,8 +213,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               user_email: row['user_email'],
               division: row['division']
             };
-            return d.resolve(userDetails);
           }
+          return d.resolve(userDetails);
         };
       };
       return $.when(runQuery()).done(function() {

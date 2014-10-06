@@ -59,8 +59,6 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       MediaCollection.prototype.model = Media.MediaModel;
 
-      MediaCollection.prototype.name = 'media';
-
       MediaCollection.prototype.parse = function(resp) {
         if (resp.code === 'OK') {
           return resp.data;

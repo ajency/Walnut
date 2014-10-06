@@ -9,8 +9,8 @@ define ['underscore', 'csvparse'], ( _) ->
             $('#syncSuccess').css("display","block").text("Starting file import...")
 
             setTimeout(=>
-                # _.insertIntoWpClassDivisions()
-                _.insertIntoWpQuizQuestionResponse()
+                _.insertIntoWpClassDivisions()
+                # _.insertIntoWpQuizQuestionResponse()
             ,2000)
 
 
@@ -50,31 +50,31 @@ define ['underscore', 'csvparse'], ( _) ->
 
 
 
-        
-        # insertIntoWpClassDivisions : ->
-
-        #     _.importingFileMessage 1
-
-        #     getParsedData = _.parseCSVToJSON _.getTblPrefix()+'class_divisions.csv'
-        #     getParsedData.done (data)->
-        #         _.db.transaction((tx)->
-        #             tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
-                    
-        #             _.each data, (row, i)->
-        #                 tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id
-        #                     , division, class_id) VALUES (?,?,?)"
-        #                     , [row[0], row[1], row[2]])
-
-        #         ,_.transactionErrorhandler
-        #         ,(tx)->
-        #             console.log 'Inserted data in '+_.getTblPrefix()+'class_divisions'
-        #             _.insertIntoWpQuestionResponse()
-        #         )
-
-        # Insert data into 13 tables
-        insertIntoWpQuizQuestionResponse : ->
+        # Insert data into 14 tables
+        insertIntoWpClassDivisions : ->
 
             _.importingFileMessage 1
+
+            getParsedData = _.parseCSVToJSON _.getTblPrefix()+'class_divisions.csv'
+            getParsedData.done (data)->
+                _.db.transaction((tx)->
+                    tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
+                    
+                    _.each data, (row, i)->
+                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id
+                            , division, class_id) VALUES (?,?,?)"
+                            , [row[0], row[1], row[2]])
+
+                ,_.transactionErrorhandler
+                ,(tx)->
+                    console.log 'Inserted data in '+_.getTblPrefix()+'class_divisions'
+                    _.insertIntoWpQuizQuestionResponse()
+                )
+
+        
+        insertIntoWpQuizQuestionResponse : ->
+
+            _.importingFileMessage 2
 
             getParsedData = _.parseCSVToJSON _.getTblPrefix()+'quiz_question_response.csv'
             getParsedData.done (data)->
@@ -96,7 +96,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpQuizResponseSummary : ->
 
-            _.importingFileMessage 2
+            _.importingFileMessage 3
 
             getParsedData = _.parseCSVToJSON _.getTblPrefix()+'quiz_response_summary.csv'
             getParsedData.done (data)->
@@ -118,7 +118,7 @@ define ['underscore', 'csvparse'], ( _) ->
         
         insertIntoWpCollectionMeta : ->
 
-            _.importingFileMessage 3
+            _.importingFileMessage 4
 
             getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'
             getParsedData.done (data)->
@@ -138,7 +138,7 @@ define ['underscore', 'csvparse'], ( _) ->
         
         insertIntoWpContentCollection : ->
 
-            _.importingFileMessage 4
+            _.importingFileMessage 5
 
             getParsedData = _.parseCSVToJSON 'wp_content_collection.csv'
             getParsedData.done (data)->
@@ -160,7 +160,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpOptions : ->
 
-            _.importingFileMessage 5
+            _.importingFileMessage 6
 
             getParsedData = _.parseCSVToJSON 'wp_options.csv'
             getParsedData.done (data)->
@@ -181,27 +181,43 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpPostMeta : ->
 
-            _.importingFileMessage 6
+            _.importingFileMessage 7
 
             getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
             getParsedData.done (data)->
-                _.db.transaction((tx)->
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
-                            , meta_key, meta_value) VALUES (?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3]])
+                splitArray = _.groupBy data, (element, index)->
+                    Math.floor(index/2000)
 
-                ,_.transactionErrorhandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_postmeta'
-                    _.insertIntoWpPosts()
-                )
+                splitArray = _.toArray(splitArray);
+
+                insertRecords = (splitData, index)->
+                    _.db.transaction((tx)->
+
+                        _.each splitData, (row, i)->
+                            tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
+                                , meta_key, meta_value) VALUES (?,?,?,?)"
+                                , [row[0], row[1], row[2], row[3]])
+
+                    ,_.transactionErrorHandler
+                    ,(tx)->
+                        console.log 'Inserted data in wp_postmeta'
+                        index = index + 1
+                        if index < splitArray.length
+                            setTimeout(->
+                                insertRecords(splitArray[index], index)
+                            , 100)
+                            
+                        else
+                            _.insertIntoWpPosts()
+                    )
+                
+                insertRecords(splitArray[0], 0)
 
 
         insertIntoWpPosts : ->
 
-            _.importingFileMessage 7
+            _.importingFileMessage 8
 
             getParsedData = _.parseCSVToJSON 'wp_posts.csv'
             getParsedData.done (data)->
@@ -227,7 +243,7 @@ define ['underscore', 'csvparse'], ( _) ->
         
         insertIntoWpTermRelationships : ->
 
-            _.importingFileMessage 8
+            _.importingFileMessage 9
 
             getParsedData = _.parseCSVToJSON 'wp_term_relationships.csv'
             getParsedData.done (data)->
@@ -247,7 +263,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpTermTaxonomy : ->
 
-            _.importingFileMessage 9
+            _.importingFileMessage 10
 
             getParsedData = _.parseCSVToJSON 'wp_term_taxonomy.csv'
             getParsedData.done (data)->
@@ -268,7 +284,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpTerms : ->
 
-            _.importingFileMessage 10
+            _.importingFileMessage 11
 
             getParsedData = _.parseCSVToJSON 'wp_terms.csv'
             getParsedData.done (data)->
@@ -288,7 +304,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpTextbookRelationships : ->
 
-            _.importingFileMessage 11
+            _.importingFileMessage 12
 
             getParsedData = _.parseCSVToJSON 'wp_textbook_relationships.csv'
             getParsedData.done (data)->
@@ -309,7 +325,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpUserMeta : ->
 
-            _.importingFileMessage 12
+            _.importingFileMessage 13
 
             getParsedData = _.parseCSVToJSON 'wp_usermeta.csv'
             getParsedData.done (data)->
@@ -329,7 +345,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
         insertIntoWpUsers : ->
 
-            _.importingFileMessage 13
+            _.importingFileMessage 14
 
             getParsedData = _.parseCSVToJSON 'wp_users.csv'
             getParsedData.done (data)->

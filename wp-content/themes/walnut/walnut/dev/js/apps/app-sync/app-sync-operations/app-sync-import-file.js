@@ -4,7 +4,7 @@ define(['underscore', 'csvparse'], function(_) {
       $('#syncSuccess').css("display", "block").text("Starting file import...");
       return setTimeout((function(_this) {
         return function() {
-          return _.insertIntoWpQuizQuestionResponse();
+          return _.insertIntoWpClassDivisions();
         };
       })(this), 2000);
     },
@@ -46,9 +46,25 @@ define(['underscore', 'csvparse'], function(_) {
         return console.log('parseCSVToJSON done for file ' + fileName);
       }).fail(_.failureHandler);
     },
-    insertIntoWpQuizQuestionResponse: function() {
+    insertIntoWpClassDivisions: function() {
       var getParsedData;
       _.importingFileMessage(1);
+      getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'class_divisions.csv');
+      return getParsedData.done(function(data) {
+        return _.db.transaction(function(tx) {
+          tx.executeSql("DELETE FROM " + _.getTblPrefix() + "class_divisions");
+          return _.each(data, function(row, i) {
+            return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "class_divisions (id , division, class_id) VALUES (?,?,?)", [row[0], row[1], row[2]]);
+          });
+        }, _.transactionErrorhandler, function(tx) {
+          console.log('Inserted data in ' + _.getTblPrefix() + 'class_divisions');
+          return _.insertIntoWpQuizQuestionResponse();
+        });
+      });
+    },
+    insertIntoWpQuizQuestionResponse: function() {
+      var getParsedData;
+      _.importingFileMessage(2);
       getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'quiz_question_response.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -64,7 +80,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpQuizResponseSummary: function() {
       var getParsedData;
-      _.importingFileMessage(2);
+      _.importingFileMessage(3);
       getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'quiz_response_summary.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -80,7 +96,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpCollectionMeta: function() {
       var getParsedData;
-      _.importingFileMessage(3);
+      _.importingFileMessage(4);
       getParsedData = _.parseCSVToJSON('wp_collection_meta.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -95,7 +111,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpContentCollection: function() {
       var getParsedData;
-      _.importingFileMessage(4);
+      _.importingFileMessage(5);
       getParsedData = _.parseCSVToJSON('wp_content_collection.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -110,7 +126,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpOptions: function() {
       var getParsedData;
-      _.importingFileMessage(5);
+      _.importingFileMessage(6);
       getParsedData = _.parseCSVToJSON('wp_options.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -126,22 +142,37 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpPostMeta: function() {
       var getParsedData;
-      _.importingFileMessage(6);
+      _.importingFileMessage(7);
       getParsedData = _.parseCSVToJSON('wp_postmeta.csv');
       return getParsedData.done(function(data) {
-        return _.db.transaction(function(tx) {
-          return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id , meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
-          });
-        }, _.transactionErrorhandler, function(tx) {
-          console.log('Inserted data in wp_postmeta');
-          return _.insertIntoWpPosts();
+        var insertRecords, splitArray;
+        splitArray = _.groupBy(data, function(element, index) {
+          return Math.floor(index / 2000);
         });
+        splitArray = _.toArray(splitArray);
+        insertRecords = function(splitData, index) {
+          return _.db.transaction(function(tx) {
+            return _.each(splitData, function(row, i) {
+              return tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id , meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+            });
+          }, _.transactionErrorHandler, function(tx) {
+            console.log('Inserted data in wp_postmeta');
+            index = index + 1;
+            if (index < splitArray.length) {
+              return setTimeout(function() {
+                return insertRecords(splitArray[index], index);
+              }, 100);
+            } else {
+              return _.insertIntoWpPosts();
+            }
+          });
+        };
+        return insertRecords(splitArray[0], 0);
       });
     },
     insertIntoWpPosts: function() {
       var getParsedData;
-      _.importingFileMessage(7);
+      _.importingFileMessage(8);
       getParsedData = _.parseCSVToJSON('wp_posts.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -156,7 +187,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpTermRelationships: function() {
       var getParsedData;
-      _.importingFileMessage(8);
+      _.importingFileMessage(9);
       getParsedData = _.parseCSVToJSON('wp_term_relationships.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -172,7 +203,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpTermTaxonomy: function() {
       var getParsedData;
-      _.importingFileMessage(9);
+      _.importingFileMessage(10);
       getParsedData = _.parseCSVToJSON('wp_term_taxonomy.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -188,7 +219,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpTerms: function() {
       var getParsedData;
-      _.importingFileMessage(10);
+      _.importingFileMessage(11);
       getParsedData = _.parseCSVToJSON('wp_terms.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -206,7 +237,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpTextbookRelationships: function() {
       var getParsedData;
-      _.importingFileMessage(11);
+      _.importingFileMessage(12);
       getParsedData = _.parseCSVToJSON('wp_textbook_relationships.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -222,7 +253,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpUserMeta: function() {
       var getParsedData;
-      _.importingFileMessage(12);
+      _.importingFileMessage(13);
       getParsedData = _.parseCSVToJSON('wp_usermeta.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
@@ -238,7 +269,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     insertIntoWpUsers: function() {
       var getParsedData;
-      _.importingFileMessage(13);
+      _.importingFileMessage(14);
       getParsedData = _.parseCSVToJSON('wp_users.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {

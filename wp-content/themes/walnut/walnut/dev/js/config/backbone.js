@@ -162,12 +162,14 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'textbook') {
           data = _.getTextBookByTextbookId(model.get('term_id'));
           data.done(function(d) {
+            console.log(JSON.stringify(d));
             return model.set(d);
           });
         }
         if (modelname === 'quiz') {
           data = _.getQuizById(model.get('id'));
           data.done(function(d) {
+            console.log(JSON.stringify(d));
             return model.set(d);
           });
         }

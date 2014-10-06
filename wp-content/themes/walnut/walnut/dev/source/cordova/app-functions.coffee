@@ -235,7 +235,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							division: row['division']
 
 
-						d.resolve(userDetails)
+					d.resolve(userDetails)
 
 			$.when(runQuery()).done ->
 				console.log 'getUserDetails transaction completed'

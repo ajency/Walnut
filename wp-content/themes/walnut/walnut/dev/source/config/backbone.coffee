@@ -232,13 +232,14 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'textbook'
 					data = _.getTextBookByTextbookId(model.get('term_id'))
 					data.done (d)->
-						# console.log JSON.stringify d
+						console.log JSON.stringify d
 						model.set d	
 
 
 				if modelname is 'quiz'
 					data = _.getQuizById(model.get('id'))
 					data.done (d)->
+						console.log JSON.stringify d
 						model.set d
 
 				if modelname is 'quiz-response-summary'
