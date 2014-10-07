@@ -197,13 +197,15 @@ define ['app'
                             timerObject : @timerObject
                             evaluationParams : contentPiece.get 'grading_params'
 
-                        @layout.studentsListRegion.close()
+                        @layout.studentsListRegion.reset()
                         
 
                     else
                         App.execute "show:content:board",
                             region : @layout.contentBoardRegion
                             model : contentPiece
+
+                        @_showStudentsListView questionResponseModel
 
                 
 

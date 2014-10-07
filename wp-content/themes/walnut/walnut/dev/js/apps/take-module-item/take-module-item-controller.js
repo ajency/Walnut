@@ -193,12 +193,13 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
                 timerObject: _this.timerObject,
                 evaluationParams: contentPiece.get('grading_params')
               });
-              return _this.layout.studentsListRegion.close();
+              return _this.layout.studentsListRegion.reset();
             } else {
-              return App.execute("show:content:board", {
+              App.execute("show:content:board", {
                 region: _this.layout.contentBoardRegion,
                 model: contentPiece
               });
+              return _this._showStudentsListView(questionResponseModel);
             }
           };
         })(this));
