@@ -13,6 +13,9 @@ define ['app'
                 @quizResponseSummaries = App.request "get:quiz:response:summary", 'student_id'   : @student_id
 
                 App.execute "when:fetched", @quizResponseSummaries, =>
+                    
+                    @quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
+
                     quiz_ids = @quizResponseSummaries.pluck 'collection_id'
                     quiz_ids= _.uniq quiz_ids if quiz_ids
 
@@ -23,6 +26,7 @@ define ['app'
                                     App.request "empty:content:modules:collection"
 
                     App.execute "when:fetched", @quizzes, =>
+                        
                         term_ids = _.flatten @quizzes.pluck 'term_ids'
 
                         term_ids= _.chain term_ids

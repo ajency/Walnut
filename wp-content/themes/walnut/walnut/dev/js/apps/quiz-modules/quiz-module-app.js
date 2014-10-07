@@ -35,7 +35,8 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         return new QuizModuleApp.ViewQuiz.Controller({
           region: App.mainContentRegion,
           quiz_id: quiz_id,
-          student: student_id
+          student: student_id,
+          d_mode: 'quiz_report'
         });
       },
       startQuizClassMode: function(tID, qID) {

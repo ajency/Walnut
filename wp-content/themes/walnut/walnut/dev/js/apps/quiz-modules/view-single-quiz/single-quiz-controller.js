@@ -31,11 +31,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       display_mode = null;
 
       Controller.prototype.initialize = function(opts) {
-        var fetchQuestionResponseCollection, quiz_id;
+        var d_mode, fetchQuestionResponseCollection, quiz_id;
         quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection;
-        quizResponseSummary = opts.quizResponseSummary, this.quizResponseSummaryCollection = opts.quizResponseSummaryCollection, display_mode = opts.display_mode, this.student = opts.student;
+        quizResponseSummary = opts.quizResponseSummary, this.quizResponseSummaryCollection = opts.quizResponseSummaryCollection, display_mode = opts.display_mode, this.student = opts.student, d_mode = opts.d_mode;
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
+        }
+        if (d_mode) {
+          display_mode = d_mode;
         }
         $.showHeaderAndLeftNav();
         this.fetchQuizResponseSummary = this._fetchQuizResponseSummary();

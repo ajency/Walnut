@@ -17,14 +17,17 @@ define ['app'
 
             #display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
             display_mode = null
-
+            
             initialize: (opts) ->
 
                 {quiz_id,quizModel,questionsCollection,@questionResponseCollection} =opts
 
-                {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student} = opts
+                {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
+
+                #incase the display mode is sent from router on page refresh
+                display_mode = d_mode if d_mode
 
                 #get the header and left nav back incase it was hidden for quiz view
                 $.showHeaderAndLeftNav()

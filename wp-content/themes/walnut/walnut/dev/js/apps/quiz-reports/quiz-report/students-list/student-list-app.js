@@ -23,6 +23,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/s
         return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
           return function() {
             var view;
+            _this.quizResponseSummaries.remove(_this.quizResponseSummaries.where({
+              'status': 'started'
+            }));
             _this.view = view = _this._getStudentsListView(_this.students, _this.quizModel, _this.quizResponseSummaries);
             _this.show(view);
             _this.listenTo(_this.view, 'itemview:replay:quiz', _this._replay_quiz);
