@@ -59,7 +59,7 @@ class ExportTables {
             'blog_id'       => get_current_blog_id(),
             'last_sync'     => '',
             'device_type'   => 'standalone',
-            'sync_type'     => 'teacher-app',
+            'sync_type'     => 'teacher_app',
             'textbook_ids'  => array()
         );
 
@@ -288,10 +288,14 @@ class ExportTables {
 
         if($this->sync_type === 'student_app'){
 
-            $user_content_pieces=$this->get_content_pieces_for_user();
-            $user_content_pieces_str= join(',',$user_content_pieces);
-
-            $posts_table_query .= " AND ID in ($user_content_pieces_str)";
+            $posts_table_query=$wpdb->prepare(
+                "SELECT * FROM {$wpdb->base_prefix}posts p,  {$wpdb->base_prefix}postmeta pm
+                        WHERE  post_type <> %s 
+                        AND p.ID = pm.post_id 
+                        AND pm.meta_key LIKE %s 
+                        AND pm.meta_value LIKE %s",
+                array('page', 'content_type', 'student_question')
+            );
         }
 
         $posts_table= array(
