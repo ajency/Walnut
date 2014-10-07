@@ -77,8 +77,6 @@ define ['underscore'], ( _) ->
 		onFileDownloadSuccess : (source, destination, last_sync)->
 
 			console.log 'Downloaded Zip file successfully'
-			console.log JSON.stringify source
-			console.log JSON.stringify destination
 			
 
 			# Unzip downloaded file

@@ -130,9 +130,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_options.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_options");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_options (option_id, option_name , option_value, autoload) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_options (option_id, option_name , option_value, autoload) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_options');
@@ -153,7 +152,8 @@ define(['underscore', 'csvparse'], function(_) {
         insertRecords = function(splitData, index) {
           return _.db.transaction(function(tx) {
             return _.each(splitData, function(row, i) {
-              return tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id , meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+              tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id , meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+              return console.log("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id , meta_key, meta_value) VALUES (" + row[0] + ", " + row[1] + ", " + row[2] + ", " + row[3] + ")");
             });
           }, _.transactionErrorHandler, function(tx) {
             console.log('Inserted data in wp_postmeta');
@@ -177,7 +177,8 @@ define(['underscore', 'csvparse'], function(_) {
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date , post_date_gmt, post_content, post_title, post_excerpt, post_status , comment_status, ping_status, post_password, post_name, to_ping, pinged , post_modified, post_modified_gmt, post_content_filtered, post_parent , guid, menu_order, post_type, post_mime_type, comment_count) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20], row[21], row[22]]);
+            tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date , post_date_gmt, post_content, post_title, post_excerpt, post_status , comment_status, ping_status, post_password, post_name, to_ping, pinged , post_modified, post_modified_gmt, post_content_filtered, post_parent , guid, menu_order, post_type, post_mime_type, comment_count) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20], row[21], row[22]]);
+            return console.log("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date , post_date_gmt, post_content, post_title, post_excerpt, post_status , comment_status, ping_status, post_password, post_name, to_ping, pinged , post_modified, post_modified_gmt, post_content_filtered, post_parent , guid, menu_order, post_type, post_mime_type, comment_count) VALUES (" + row[0] + ", " + row[1] + ", " + row[2] + ", " + row[3] + ", " + row[4] + ", " + row[5] + ", " + row[6] + ", " + row[7] + ", " + row[8] + ", " + row[9] + ", " + row[10] + ", " + row[11] + ", " + row[12] + ", " + row[13] + ", " + row[14] + ", " + row[15] + ", " + row[16] + ", " + row[17] + ", " + row[18] + ", " + row[19] + ", " + row[20] + ", " + row[21] + ", " + row[22] + ")");
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_posts');
@@ -191,9 +192,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_term_relationships.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_term_relationships");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id , term_order) VALUES (?,?,?)", [row[0], row[1], row[2]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_term_relationships (object_id, term_taxonomy_id , term_order) VALUES (?,?,?)", [row[0], row[1], row[2]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_term_relationships');
@@ -207,9 +207,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_term_taxonomy.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_term_taxonomy");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy , description, parent, count) VALUES (?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy , description, parent, count) VALUES (?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_term_taxonomy');
@@ -223,9 +222,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_terms.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_terms");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_terms (term_id, name, slug, term_group) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
           });
         }, _.transactionErrorhandler, (function(_this) {
           return function(tx) {
@@ -241,9 +239,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_textbook_relationships.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_textbook_relationships");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_textbook_relationships (id, textbook_id, class_id, tags) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_textbook_relationships (id, textbook_id, class_id, tags) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_textbook_relationships');
@@ -257,9 +254,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_usermeta.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_usermeta");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_usermeta');
@@ -273,9 +269,8 @@ define(['underscore', 'csvparse'], function(_) {
       getParsedData = _.parseCSVToJSON('wp_users.csv');
       return getParsedData.done(function(data) {
         return _.db.transaction(function(tx) {
-          tx.executeSql("DELETE FROM wp_users");
           return _.each(data, function(row, i) {
-            return tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename , user_email, user_url, user_registered, user_activation_key, user_status , display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]]);
+            return tx.executeSql("INSERT OR REPLACE INTO wp_users (ID, user_login, user_pass, user_nicename , user_email, user_url, user_registered, user_activation_key, user_status , display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]]);
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_users');

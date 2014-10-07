@@ -23,7 +23,7 @@ define ['app'
 
 			_getVideoCollection: ->
 				if not @videoCollection
-					if @layout.model.get('video_ids') and @layout.model.get('video_ids').length
+					if @layout.model.get('video_ids').length
 						@videoCollection = App.request "get:media:collection:by:ids", @layout.model.get 'video_ids'
 					else
 						@videoCollection = App.request "get:empty:media:collection"

@@ -55,8 +55,6 @@ define(['underscore'], function(_) {
     onFileDownloadSuccess: function(source, destination, last_sync) {
       var onFileUnzipSuccess;
       console.log('Downloaded Zip file successfully');
-      console.log(JSON.stringify(source));
-      console.log(JSON.stringify(destination));
       onFileUnzipSuccess = function() {
         console.log('Files unzipped successfully');
         _.updateSyncDetails('file_download', last_sync);

@@ -51,6 +51,8 @@ define ['app'
                         if not _.isEmpty quizResponseSummary.get 'questions_order'
                             quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
+                        # questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+
                         @_setMarksAndOrder() if not questionsCollection
                         
                         App.execute "when:fetched", [questionsCollection,@textbookNames],  =>

@@ -52,6 +52,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 searchStr: ''
 
             model : Media.MediaModel
+            name : 'media'
 
             parse : (resp)->
                 return resp.data if resp.code is 'OK'

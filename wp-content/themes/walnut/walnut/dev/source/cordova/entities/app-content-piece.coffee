@@ -85,6 +85,7 @@ define ['underscore', 'unserialize'], ( _) ->
 													term_ids: meta_value.term_ids
 													to_ping: row['to_ping']
 
+					
 					d.resolve(result)
 
 			$.when(runQuery()).done (d)->

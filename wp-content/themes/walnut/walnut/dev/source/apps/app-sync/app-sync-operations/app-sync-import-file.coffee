@@ -165,10 +165,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_options.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_options")
+                    # tx.executeSql("DELETE FROM wp_options")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_options (option_id, option_name
+                        tx.executeSql("INSERT OR REPLACE INTO wp_options (option_id, option_name
                             , option_value, autoload) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
@@ -198,6 +198,8 @@ define ['underscore', 'csvparse'], ( _) ->
                             tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
                                 , meta_key, meta_value) VALUES (?,?,?,?)"
                                 , [row[0], row[1], row[2], row[3]])
+                            console.log "INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
+                                , meta_key, meta_value) VALUES ("+row[0]+", "+row[1]+", "+row[2]+", "+row[3]+")"
 
                     ,_.transactionErrorHandler
                     ,(tx)->
@@ -233,6 +235,15 @@ define ['underscore', 'csvparse'], ( _) ->
                             , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
                             , row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]
                             , row[17], row[18], row[19], row[20], row[21], row[22]])
+                        
+                        console.log "INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date
+                            , post_date_gmt, post_content, post_title, post_excerpt, post_status
+                            , comment_status, ping_status, post_password, post_name, to_ping, pinged
+                            , post_modified, post_modified_gmt, post_content_filtered, post_parent
+                            , guid, menu_order, post_type, post_mime_type, comment_count) 
+                            VALUES ("+row[0]+", "+row[1]+", "+row[2]+", "+row[3]+", "+row[4]+", "+row[5]+", "+row[6]+", "+row[7]+", "+row[8]+"
+                            , "+row[9]+", "+row[10]+", "+row[11]+", "+row[12]+", "+row[13]+", "+row[14]+", "+row[15]+", "+row[16]+"
+                            , "+row[17]+", "+row[18]+", "+row[19]+", "+row[20]+", "+row[21]+", "+row[22]+")"
 
                 ,_.transactionErrorhandler
                 ,(tx)->
@@ -248,10 +259,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_term_relationships.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_term_relationships")
+                    # tx.executeSql("DELETE FROM wp_term_relationships")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id
+                        tx.executeSql("INSERT OR REPLACE INTO wp_term_relationships (object_id, term_taxonomy_id
                             , term_order) VALUES (?,?,?)", [row[0], row[1], row[2]])
 
                 ,_.transactionErrorhandler
@@ -268,10 +279,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_term_taxonomy.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_term_taxonomy")
+                    # tx.executeSql("DELETE FROM wp_term_taxonomy")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy
+                        tx.executeSql("INSERT OR REPLACE INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy
                             , description, parent, count) VALUES (?,?,?,?,?,?)"
                             , [row[0], row[1], row[2], row[3], row[4], row[5]])
 
@@ -289,10 +300,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_terms.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_terms")
+                    # tx.executeSql("DELETE FROM wp_terms")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) 
+                        tx.executeSql("INSERT OR REPLACE INTO wp_terms (term_id, name, slug, term_group) 
                             VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
 
                 ,_.transactionErrorhandler
@@ -309,10 +320,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_textbook_relationships.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_textbook_relationships")
+                    # tx.executeSql("DELETE FROM wp_textbook_relationships")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_textbook_relationships 
+                        tx.executeSql("INSERT OR REPLACE INTO wp_textbook_relationships 
                             (id, textbook_id, class_id, tags) VALUES (?,?,?,?)"
                             , [row[0], row[1], row[2], row[3]])
 
@@ -330,10 +341,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_usermeta.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_usermeta")
+                    # tx.executeSql("DELETE FROM wp_usermeta")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
+                        tx.executeSql("INSERT OR REPLACE INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
                             VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
 
                 ,_.transactionErrorhandler
@@ -350,10 +361,10 @@ define ['underscore', 'csvparse'], ( _) ->
             getParsedData = _.parseCSVToJSON 'wp_users.csv'
             getParsedData.done (data)->
                 _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_users")
+                    # tx.executeSql("DELETE FROM wp_users")
 
                     _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename
+                        tx.executeSql("INSERT OR REPLACE INTO wp_users (ID, user_login, user_pass, user_nicename
                             , user_email, user_url, user_registered, user_activation_key, user_status
                             , display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
                             , [row[0], row[1], row[2], row[3], row[4], row[5]

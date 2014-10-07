@@ -9,16 +9,14 @@ define ['app'], (App)->
 			className : 'video'
 
 			template : '    {{#videoUrl}}
-							<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-							poster="/images/video-poster.jpg"
-									data-setup="{}" controls src="{{videoUrl}}">
+								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
+								poster="/images/video-poster.jpg" data-setup="{}">
 
-							</video>
+								</video>
 							{{/videoUrl}}
 							{{^videoUrl}}
 								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-								poster="/images/video-unavailable.png"
-										data-setup="{}" controls src="{{videoUrl}}">
+								poster="/images/video-unavailable.png" data-setup="{}">
 
 								</video>
 							{{/videoUrl}}
@@ -56,7 +54,7 @@ define ['app'], (App)->
 
 			_initLocalVideos : ->
 
-				# navigator.notification.activityStart("Please wait", "loading content...")
+				navigator.notification.activityStart("Please wait", "loading content...")
 
 				widthRatio = 16
 				heightRatio = 9
@@ -72,6 +70,8 @@ define ['app'], (App)->
 
 							_.each @videos , (videoSource, index)=>
 								do(videoSource)=>
+									console.log JSON.stringify videoSource
+									
 
 									url = videoSource.replace("media-web/","")
 									videosWebUrl = url.substr(url.indexOf("uploads/"))
@@ -92,7 +92,7 @@ define ['app'], (App)->
 
 				$.when(runFunc()).done =>
 					console.log('_initLocalVideos done')
-					# navigator.notification.activityStop()
+					navigator.notification.activityStop()
 					@$el.find('video')[0].src = @videos[0]
 					@$el.find('video')[0].load()
 

@@ -68,7 +68,7 @@ define ["backbone"], (Backbone) ->
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
 					console.log 'content-piece data'
-					console.log d
+					console.log JSON.stringify d
 					collection.set d
 
 			if collection_name is 'user'

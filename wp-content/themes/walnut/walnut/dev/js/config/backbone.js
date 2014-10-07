@@ -61,7 +61,7 @@ define(["backbone"], function(Backbone) {
         data = _.getContentPiecesByIDs(opts.ids);
         data.done(function(d) {
           console.log('content-piece data');
-          console.log(d);
+          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
