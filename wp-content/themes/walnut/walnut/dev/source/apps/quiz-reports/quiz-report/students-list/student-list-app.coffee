@@ -17,6 +17,9 @@ define ['app'
                 @quizResponseSummaries = App.request "get:quiz:response:summary", data
 
                 App.execute "when:fetched", @quizResponseSummaries, =>
+
+                    @quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
+                    
                     @view = view = @_getStudentsListView @students, @quizModel,@quizResponseSummaries
 
                     @show view

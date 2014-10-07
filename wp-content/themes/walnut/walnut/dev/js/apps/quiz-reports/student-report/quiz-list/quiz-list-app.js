@@ -18,6 +18,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
         return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
           return function() {
             var quiz_ids;
+            _this.quizResponseSummaries.remove(_this.quizResponseSummaries.where({
+              'status': 'started'
+            }));
             quiz_ids = _this.quizResponseSummaries.pluck('collection_id');
             if (quiz_ids) {
               quiz_ids = _.uniq(quiz_ids);

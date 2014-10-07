@@ -1,14 +1,6 @@
 {{#quiz_report}}
     <div class="row tiles white grid simple">
         <div class="col-md-4">
-            <button type="button" class="btn btn-white btn-cons m-t-10 goto-prev-page">
-                <h4 class="bold  text-info no-margin">
-                    <span class="fa fa-arrow-circle-left"></span>
-                    Back to List of Quizzes
-                </h4>
-            </button>
-        </div>
-        <div class="col-md-4">
             <h4><span class="bold">Student Name: {{studentName}}</span>
             </h4>
         </div>
@@ -33,6 +25,12 @@
         {{/practice_mode}}
 
     {{/quiz_report}}
+    <button type="button" class="btn btn-white btn-cons goto-prev-page">
+        <h4 class="bold text-info no-margin">
+            <span class="fa fa-arrow-circle-left"></span>
+            Back to List of Quizzes
+        </h4>
+    </button>
     <div id="attempts-region"></div>
     <div id="quiz-details-region"></div>
 </div>

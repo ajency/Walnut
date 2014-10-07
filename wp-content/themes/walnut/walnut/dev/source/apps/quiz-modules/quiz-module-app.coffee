@@ -27,6 +27,7 @@ define ['app'
                     region: App.mainContentRegion
                     quiz_id: quiz_id
                     student: student_id
+                    d_mode: 'quiz_report'
 
             startQuizClassMode:(tID,qID)->
                 new QuizModuleApp.ViewQuiz.Controller
