@@ -68,8 +68,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           quizResponseSummary.save(data);
         }
         questionModel = questionsCollection.get(questionID);
-        console.log("take-quiz-module");
-        console.log(JSON.stringify(questionsCollection));
         this.layout = layout = new TakeQuizLayout;
         this.show(this.layout, {
           loading: true

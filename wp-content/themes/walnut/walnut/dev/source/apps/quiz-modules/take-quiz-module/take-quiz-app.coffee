@@ -62,8 +62,6 @@ define ['app'
                         quizResponseSummary.save data
 
                     questionModel = questionsCollection.get questionID
-                    console.log "take-quiz-module"
-                    console.log JSON.stringify questionsCollection
 
                     @layout = layout = new TakeQuizLayout
 

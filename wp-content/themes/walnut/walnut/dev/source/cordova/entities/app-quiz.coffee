@@ -29,6 +29,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						do (row, i)->
 							collectionMeta = _.getCollectionMeta(row['id'])
 							collectionMeta.done (collectionMetaData)->
+								console.log JSON.stringify collectionMetaData
 
 								do(row, i, collectionMetaData)->
 									dateAndStatus = _.getStartDateAndStatus(row['id'])
@@ -432,6 +433,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					do (row)->
 						collectionMeta = _.getCollectionMeta(row['id'])
 						collectionMeta.done (collectionMetaData)->
+							console.log JSON.stringify collectionMetaData
 
 							do(row, collectionMetaData)->
 								dateAndStatus = _.getStartDateAndStatus(row['id'])

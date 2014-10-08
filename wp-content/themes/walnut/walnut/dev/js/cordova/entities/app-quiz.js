@@ -21,6 +21,7 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
+              console.log(JSON.stringify(collectionMetaData));
               return (function(row, i, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
@@ -417,6 +418,7 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
+              console.log(JSON.stringify(collectionMetaData));
               return (function(row, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);

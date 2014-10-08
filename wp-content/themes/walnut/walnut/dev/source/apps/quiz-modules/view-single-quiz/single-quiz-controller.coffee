@@ -54,6 +54,7 @@ define ['app'
                         # questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
                         @_setMarksAndOrder() if not questionsCollection
+
                         
                         App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
 
@@ -145,6 +146,7 @@ define ['app'
                     @layout.attemptsRegion.$el.find '.view-summary i'
                     .removeClass 'fa fa-spin fa-spinner'
 
+# put break point
             _fetchQuizResponseSummary:=>
                 defer = $.Deferred();
 

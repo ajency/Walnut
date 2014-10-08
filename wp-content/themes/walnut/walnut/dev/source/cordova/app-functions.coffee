@@ -90,10 +90,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			if string is '' then string
 			else unserialize(string)
 		
-	
-		
-		
-
 
 
 
