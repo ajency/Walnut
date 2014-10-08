@@ -2356,11 +2356,20 @@ ul.classes .classesWrap {
   padding-top: 4px;
   padding-bottom: 4px;
 }
+#textbooks.list.myClass .meta {
+  width: 15.5%;
+}
 #textbooks.list.myClass .meta.name {
-  width: 40%;
+  width: 25%;
+}
+#textbooks.list.myClass .meta.name .img_wrapper {
+  width: 25%;
+}
+#textbooks.list.myClass .meta.name .titles {
+  width: 65%;
 }
 #textbooks.list.myClass .meta.rec {
-  width: 20%;
+  width: 22%;
 }
 #textbooks.list.myClass .txtbook {
   cursor: pointer;
