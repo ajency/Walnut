@@ -25,7 +25,7 @@ define ['app'
 
                         @answerModel = App.request "create:new:answer"
 
-                        if @questionResponseModel
+                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'
                             answerData = @questionResponseModel.get 'question_response'
                             
                             answerData = {} if _.isEmpty answerData
