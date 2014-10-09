@@ -739,7 +739,6 @@
   text-align: center;
   cursor: pointer;
   position: relative;
-  z-index: 99;
   color: #aaaaaa;
 }
 .image .image-placeholder .bicon,
@@ -755,12 +754,25 @@
   display: block;
 }
 .image img {
-  z-index: 99;
+  height: inherit;
 }
 .image .ui-resizable-handle.ui-resizable-s {
-  height: 106%;
-  background-color: #edeef0;
-  bottom: -4px;
+  height: 15px;
+  bottom: -5px;
+  text-align: center;
+}
+.image .ui-resizable-handle.ui-resizable-s:hover {
+  background-color: #0090d9;
+}
+.image .ui-resizable-handle.ui-resizable-s:hover:after {
+  color: #ffffff;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 12px;
+  font-size: 20px;
+  -webkit-font-smoothing: antialiased;
+  content: "\f141";
 }
 .aj-imp-upload-media {
   text-align: center;
