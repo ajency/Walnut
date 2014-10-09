@@ -25,7 +25,7 @@ require.config({
     tablesorter_pager: 'plugins/jquery.tablesorter.pager',
     detect: 'plugins/detect',
     moment: 'plugins/moment.min',
-    select2: 'plugins/select2.min',
+    select2: 'plugins/select2',
     datepicker: 'plugins/bootstrap-datepicker',
     jquery_listnav: 'plugins/jquery-listnav',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
