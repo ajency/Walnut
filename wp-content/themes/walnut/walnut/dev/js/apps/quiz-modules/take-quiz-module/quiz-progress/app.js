@@ -116,13 +116,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           this.$el.find('.customButtons').remove();
         }
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
-        if (this.quizModel.hasPermission('display_answer')) {
-          this.questionResponseCollection.each((function(_this) {
-            return function(response) {
+        this.questionResponseCollection.each((function(_this) {
+          return function(response) {
+            if (_this.quizModel.hasPermission('display_answer') || response.get('status') === 'skipped') {
               return _this.changeClassName(response);
-            };
-          })(this));
-        }
+            }
+          };
+        })(this));
         this.onQuestionChange(currentQuestion);
         this.updateProgressBar();
         return this.updateSkippedCount();
@@ -146,7 +146,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.updateSkippedCount();
         if (responseModel.get('status') === 'skipped' && !this.quizModel.hasPermission('single_attempt')) {
           return false;
-        } else if (this.quizModel.hasPermission('display_answer')) {
+        } else if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
           return this.changeClassName(responseModel);
         }
       };
@@ -183,12 +183,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.updateSkippedCount = function() {
-        var answers, skipped;
-        answers = this.questionResponseCollection.pluck('question_response');
-        skipped = _.where(answers, {
+        var skipped;
+        skipped = _.size(this.questionResponseCollection.where({
           'status': 'skipped'
-        });
-        return this.$el.find("#skipped-questions").html(_.size(skipped));
+        }));
+        return this.$el.find("#skipped-questions").html(skipped);
       };
 
       return QuizProgressView;
