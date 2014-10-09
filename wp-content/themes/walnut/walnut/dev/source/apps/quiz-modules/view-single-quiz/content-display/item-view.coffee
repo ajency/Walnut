@@ -14,6 +14,8 @@ define ['app'
             mixinTemplateHelpers:(data)->
                 responseModel = Marionette.getOption @, 'responseModel'
 
+                quizModel = Marionette.getOption @, 'quizModel'
+
                 data.dateCompleted= 'N/A'
 
                 if responseModel
@@ -24,7 +26,7 @@ define ['app'
 
                     data.responseStatus = responseModel.get 'status'
 
-                    data.display_answer = Marionette.getOption @,'display_answer'
+                    data.display_answer = quizModel.hasPermission 'display_answer'
 
                     marks_obtained = responseModel.get 'marks_scored'
 
@@ -38,6 +40,8 @@ define ['app'
                     data.total_marks= parseFloat total_marks.toFixed 1
 
                     data.hint_viewed = if responseModel.get('question_response').hint_viewed then 'Yes' else 'No'
+
+                    data.hint = false if not quizModel.hasPermission 'allow_hint'
 
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-success', text : 'Correct', icon : 'fa-check'
