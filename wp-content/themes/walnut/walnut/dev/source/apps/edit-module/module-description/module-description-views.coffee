@@ -190,18 +190,30 @@ define ['app'
                         data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
 
                     if data.post_status is 'publish'
-                        if _.isEmpty(@model.get('content_layout')) and _.isEmpty(@model.get('content_pieces')) 
-                            @$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
-                                Cannot Publish '+_.titleize(_.humanize(@model.get('type')))+'. No Content Pieces Added.
+                        if @model.get('type') is 'quiz' and _.isEmpty @model.get 'content_layout'
+                            @_cannotPublish()
+                            return false
 
-                            </div>'
-
-                            $("html, body").animate({ scrollTop: 0 }, 700);
-                            @$el.find '#save-content-collection i'
-                            .removeClass 'fa-spin fa-spinner'
+                        if @model.get('type') is 'teaching-module' and _.isEmpty @model.get 'content_pieces'
+                            @_cannotPublish()
                             return false
 
                     @trigger "save:content:collection:details", data
+
+            _cannotPublish:->
+
+                item = if @model.get('type') is 'quiz' then 'questions' else 'Content Pieces'
+
+                module = _.titleize _.humanize @model.get 'type'
+
+                @$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
+                        Cannot Publish '+module+'. No '+item+' Added.
+                    </div>'
+
+                $("html, body").animate scrollTop: 0 , 700
+
+                @$el.find '#save-content-collection i'
+                .removeClass 'fa-spin fa-spinner'
 
             _toggleNegativeMarks : (el)->
 

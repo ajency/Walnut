@@ -59,6 +59,8 @@ define ['app'
 
                 data.negMarksEnable= _.toBool data.negMarksEnable
 
+                data.hasQuestions=true if not _.isEmpty data.content_pieces
+
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
