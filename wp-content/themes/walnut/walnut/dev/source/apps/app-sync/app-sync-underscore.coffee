@@ -54,7 +54,9 @@ define ['underscore', 'unserialize'], ( _) ->
 			.fail _.failureHandler
 		
 
-		chkUserIDForSync : ->
+		hasUserPreviouslySynced : ->
+
+			synced = false
 
 			runQuery = ->
 				$.Deferred (d)->
@@ -65,15 +67,14 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			onSuccess = (d)->
 				(tx, data)->
-					id = ''
 					if data.rows.length isnt 0
 
-						id = data.rows.item(0)['id']
+						synced = true
 					
-					d.resolve id
+					d.resolve synced
 
 			$.when(runQuery()).done ->
-				console.log 'chkUserIDForSync transaction completed'
+				console.log 'hasUserPreviouslySynced transaction completed'
 			.fail _.failureHandler
 		
 		# Get total records from wp_question_response where sync=0 

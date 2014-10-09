@@ -100,9 +100,9 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             showModulesHeading: (function(_this) {
               return function() {
                 var headingString;
-                headingString = '<span class="semi-bold">All</span> Modules';
+                headingString = '<span class= "semi-bold" >All </span> Modules';
                 if (_this.mode === 'training') {
-                  headingString = '<span class="semi-bold">Practice</span> Modules';
+                  headingString = '<span class= "semi-bold">Practice</span> Modules';
                 }
                 return headingString;
               };

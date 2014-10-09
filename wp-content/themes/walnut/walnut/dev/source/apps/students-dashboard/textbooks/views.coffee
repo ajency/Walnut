@@ -130,4 +130,6 @@ define ['app'
 
 					_.removeCordovaBackbuttonEventListener()
 
-					_.disableCordovaBackbuttonNavigation() 
+					_.enableCordovaBackbuttonNavigation()
+
+					# _.disableCordovaBackbuttonNavigation()

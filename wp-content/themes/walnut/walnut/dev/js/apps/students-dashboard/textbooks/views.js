@@ -110,7 +110,7 @@ define(['app', 'text!apps/students-dashboard/textbooks/templates/textbooks-list.
           _.setSynapseMediaDirectoryPathToLocalStorage();
           _.cordovaHideSplashscreen();
           _.removeCordovaBackbuttonEventListener();
-          return _.disableCordovaBackbuttonNavigation();
+          return _.enableCordovaBackbuttonNavigation();
         }
       };
 

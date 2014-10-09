@@ -98,7 +98,7 @@ define ['app'
 				#     @$el.find('#app_username').text('Hi '+_.getUserName()+',')
 
 
-				#commented for time being
+				
 				# if _.platform() is 'DEVICE'
 				# 	lastSyncOperation = _.getLastSyncOperation()
 				# 	lastSyncOperation.done (typeOfOperation)->

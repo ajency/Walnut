@@ -41,8 +41,9 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getLastSyncOperation transaction completed');
       }).fail(_.failureHandler);
     },
-    chkUserIDForSync: function() {
-      var onSuccess, runQuery;
+    hasUserPreviouslySynced: function() {
+      var onSuccess, runQuery, synced;
+      synced = false;
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
@@ -52,16 +53,14 @@ define(['underscore', 'unserialize'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var id;
-          id = '';
           if (data.rows.length !== 0) {
-            id = data.rows.item(0)['id'];
+            synced = true;
           }
-          return d.resolve(id);
+          return d.resolve(synced);
         };
       };
       return $.when(runQuery()).done(function() {
-        return console.log('chkUserIDForSync transaction completed');
+        return console.log('hasUserPreviouslySynced transaction completed');
       }).fail(_.failureHandler);
     },
     getTotalRecordsTobeSynced: function() {

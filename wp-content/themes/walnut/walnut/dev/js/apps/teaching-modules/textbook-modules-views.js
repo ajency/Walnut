@@ -18,7 +18,13 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
 
       ContentGroupsItemView.prototype.onShow = function() {
         this.$el.attr('id', 'row-' + this.model.get('id'));
-        return this.$el.attr('data-id', this.model.get('id'));
+        this.$el.attr('data-id', this.model.get('id'));
+        if (_.platform() === 'DEVICE') {
+          $('body').css({
+            'height': '100%'
+          });
+          return _.disableCordovaBackbuttonNavigation();
+        }
       };
 
       ContentGroupsItemView.prototype.serializeData = function() {
@@ -27,21 +33,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
-            if (_.platform() === 'BROWSER') {
-              chapter = _.chain(_this.chapters.findWhere({
-                "term_id": data.term_ids.chapter
-              })).pluck('name').compact().value();
-              return chapter;
-            } else {
-              chapter = _this.chapters.findWhere({
-                "term_id": parseInt(data.term_ids.chapter)
-              });
-              if (_.isUndefined(chapter)) {
-                return '';
-              } else {
-                return chapter.get('name');
-              }
-            }
+            chapter = _.chain(_this.chapters.findWhere({
+              "term_id": data.term_ids.chapter
+            })).pluck('name').compact().value();
+            return chapter;
           };
         })(this);
         if (this.model.get('type') === 'teaching-module') {
@@ -196,16 +191,15 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         console.log(this.fullCollection);
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
-        this.$el.find(".select2-filters").select2();
+        this.$el.find(".select2-filters").select2({
+          minimumResultsForSearch: -1
+        });
         $('#take-class-modules').tablesorter();
         pagerOptions = {
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };
-        $('#take-class-modules').tablesorterPager(pagerOptions);
-        if (_.platform() === 'DEVICE') {
-          return _.disableCordovaBackbuttonNavigation();
-        }
+        return $('#take-class-modules').tablesorterPager(pagerOptions);
       };
 
       ContentGroupsView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {

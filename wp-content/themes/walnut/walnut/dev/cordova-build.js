@@ -34,7 +34,7 @@
 		detect: 'plugins/detect',
 		kinetic             : 'plugins/kinetic',
 		kineticresize       : 'plugins/kinetic.plugin.resize',
-		select2             : 'plugins/select2.min',
+		select2             : 'plugins/select2',
 		datepicker          : 'plugins/bootstrap-datepicker',
 		holder              : 'plugins/holder',
 		panzer              : 'plugins/panzer',
