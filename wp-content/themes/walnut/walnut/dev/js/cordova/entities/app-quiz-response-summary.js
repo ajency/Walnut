@@ -94,7 +94,7 @@ define(['underscore', 'unserialize'], function(_) {
       serializeQuizMetaValue = serialize(quizMetaValue);
       start_date = _.getCurrentDateTime(0);
       return _.db.transaction(function(tx) {
-        tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on) VALUES (?,?,?,?,?)", [summary_id, model.get('collection_id'), _.getUserID(), serializeQuizMetaValue, start_date]);
+        tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on, sync) VALUES (?,?,?,?,?,?)", [summary_id, model.get('collection_id'), _.getUserID(), serializeQuizMetaValue, start_date], 0);
         return console.log("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on) VALUES (" + summary_id + "," + model.get('collection_id') + "," + _.getUserID() + "," + serializeQuizMetaValue + "," + start_date + ")");
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz_response_summary');
@@ -129,7 +129,7 @@ define(['underscore', 'unserialize'], function(_) {
       serializeQuizMetaValue = serialize(quizMeta);
       console.log(serializeQuizMetaValue);
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_response_summary SET quiz_meta=? WHERE summary_id=?", [serializeQuizMetaValue, model.get('summary_id')]);
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_response_summary SET quiz_meta=?, sync=? WHERE summary_id=?", [serializeQuizMetaValue, model.get('summary_id'), 0]);
       }, _.transactionErrorhandler, function(tx) {
         model.set({
           'summary_id': summary_id

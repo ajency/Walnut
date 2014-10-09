@@ -38,7 +38,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT type_of_operation FROM sync_details 
-							ORDER BY id DESC LIMIT 1" , []
+							WHERE user_id=? ORDER BY id DESC LIMIT 1" , [_.getUserID()]
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess = (d)->
@@ -130,7 +130,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			_.db.transaction((tx)->
 				tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp, user_id) 
-					VALUES (?,?,?)", [operation, time_stamp, _.getUserID])
+					VALUES (?,?,?)", [operation, time_stamp, _.getUserID()])
 
 			,_.transactionErrorhandler
 			,(tx)->

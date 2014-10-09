@@ -68,7 +68,10 @@ define ['underscore', 'unserialize'], ( _) ->
 											attempts: attempts
 											content_pieces: collectionMetaData.contentPieces
 
+					
 					d.resolve result
+					
+					
 
 			$.when(runQuery()).done (data)->
 				console.log 'getQuizByTextbookId transaction completed'

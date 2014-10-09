@@ -1,6 +1,5 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html'], function(App, RegionController, quizDetailsTpl) {
   return App.module("QuizModuleApp.Controller", function(Controller, App) {
@@ -64,7 +63,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       __extends(QuizDetailsView, _super);
 
       function QuizDetailsView() {
-        this.onPauseSessionClick = __bind(this.onPauseSessionClick, this);
         return QuizDetailsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -95,6 +93,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
         data.negMarksEnable = _.toBool(data.negMarksEnable);
+        if (!_.isEmpty(data.content_pieces)) {
+          data.hasQuestions = true;
+        }
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
@@ -135,33 +136,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         if ((_ref = Marionette.getOption(this, 'display_mode')) === 'replay' || _ref === 'quiz_report') {
           if (this.model.hasPermission('disable_quiz_replay')) {
-            this.$el.find("#take-quiz").remove();
+            return this.$el.find("#take-quiz").remove();
           } else {
-            this.$el.find("#take-quiz").html('Replay');
+            return this.$el.find("#take-quiz").html('Replay');
           }
         }
-        if (_.platform() === 'DEVICE') {
-          $('body').css({
-            'height': 'auto'
-          });
-          return this.cordovaEventsForModuleDescriptionView();
-        }
-      };
-
-      QuizDetailsView.prototype.onPauseSessionClick = function() {
-        if (_.platform() === 'BROWSER') {
-          return this.trigger("goto:previous:route");
-        } else {
-          console.log('Invoked onPauseSessionClick');
-          this.trigger("goto:previous:route");
-          return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
-        }
-      };
-
-      QuizDetailsView.prototype.cordovaEventsForModuleDescriptionView = function() {
-        navigator.app.overrideBackbutton(true);
-        document.addEventListener("backbutton", this.onPauseSessionClick, false);
-        return document.addEventListener("pause", this.onPauseSessionClick, false);
       };
 
       return QuizDetailsView;

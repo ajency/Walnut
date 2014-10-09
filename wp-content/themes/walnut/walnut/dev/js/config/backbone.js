@@ -60,6 +60,8 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-piece') {
         data = _.getContentPiecesByIDs(opts.ids);
         data.done(function(d) {
+          console.log('content-piece data');
+          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
@@ -166,6 +168,7 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'quiz') {
           data = _.getQuizById(model.get('id'));
           data.done(function(d) {
+            console.log("quiz model");
             console.log(JSON.stringify(d));
             return model.set(d);
           });

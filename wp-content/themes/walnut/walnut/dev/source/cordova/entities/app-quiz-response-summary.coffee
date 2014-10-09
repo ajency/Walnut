@@ -109,10 +109,10 @@ define ['underscore', 'unserialize'], ( _) ->
 			_.db.transaction((tx)->
 
 				tx.executeSql("INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
-					, collection_id, student_id, quiz_meta, taken_on) 
-					VALUES (?,?,?,?,?)"
+					, collection_id, student_id, quiz_meta, taken_on, sync) 
+					VALUES (?,?,?,?,?,?)"
 					, [summary_id, model.get('collection_id'), _.getUserID()
-					, serializeQuizMetaValue, start_date])
+					, serializeQuizMetaValue, start_date], 0)
 
 				console.log "INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
 					, collection_id, student_id, quiz_meta, taken_on) 
@@ -158,9 +158,9 @@ define ['underscore', 'unserialize'], ( _) ->
 			_.db.transaction((tx)->
 
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_response_summary SET 
-					quiz_meta=? 
+					quiz_meta=?, sync=? 
 					WHERE summary_id=?"
-					, [serializeQuizMetaValue, model.get('summary_id')])
+					, [serializeQuizMetaValue, model.get('summary_id'), 0])
 
 			,_.transactionErrorhandler
 

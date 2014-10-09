@@ -29,8 +29,11 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         };
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
-        if (this.questionResponseModel) {
+        if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
           answerData = this.questionResponseModel.get('question_response');
+          if (_.isEmpty(answerData)) {
+            answerData = {};
+          }
           answerData.status = this.questionResponseModel.get('status');
           answerData.marks = this.questionResponseModel.get('marks_scored');
           this.answerModel = App.request("create:new:answer", answerData);

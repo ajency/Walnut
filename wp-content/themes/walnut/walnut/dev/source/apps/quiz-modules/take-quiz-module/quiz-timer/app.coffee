@@ -1,7 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'bootbox'],
-        (App, RegionController,bootbox)->
+        'bootbox'
+        'backbone'],
+        (App, RegionController,bootbox, Backbone)->
 
             App.module "TakeQuizApp.QuizTimer", (QuizTimer, App)->
                 class QuizTimer.Controller extends RegionController
@@ -94,6 +95,11 @@ define ['app'
                             if timeLeftOrElapsed >= 0
                                 @countDown timeLeftOrElapsed
 
+                        if _.platform() is 'DEVICE'
+
+                            # $('body').css('height' : 'auto')
+                            @cordovaEventsForModuleDescriptionView()
+
                     countDown:(time)=>
 
                         @$el.find '#downUpTimer'
@@ -113,4 +119,29 @@ define ['app'
                         msgContent= @model.getMessageContent 'end_quiz'
                         bootbox.confirm msgContent,(result)=>
                             @trigger("end:quiz") if result
+
+
+                    onPauseSessionClick : =>
+
+                        console.log 'Invoked onPauseSessionClick'
+                        Backbone.history.history.back()
+                        @clearMediaData()
+
+                        document.removeEventListener("backbutton", @onPauseSessionClick, false)
+
+                    
+                    
+                    cordovaEventsForModuleDescriptionView : ->
+
+                        # Cordova backbutton event
+                        navigator.app.overrideBackbutton(true)
+                        document.addEventListener("backbutton", @onPauseSessionClick, false)
+
+                        # Cordova pause event
+                        document.addEventListener("pause", @onPauseSessionClick, false)
+
+
+                    clearMediaData : =>
+                        _.clearMediaDirectory 'videos-web'
+                        _.clearMediaDirectory 'audio-web'
                             

@@ -5,45 +5,48 @@ define ['underscore'], ( _) ->
 	_.mixin
 
 		uploadGeneratedZipFile: ->
+			userDetails = _.getUserDetails(_.getUserID())
+			userDetails.done (userDetails)->
+				blog_id = userDetails.blog_id
 
-			$('#syncSuccess').css("display","block").text("Starting file upload...")
-			
-			zipFilePath = _.getGeneratedZipFilePath()
-
-			uploadURI = encodeURI(AJAXURL + '?action=sync-app-data')
-
-			options = new FileUploadOptions()
-
-			options.fileKey = "file"
-			options.fileName = zipFilePath.substr(zipFilePath.lastIndexOf('/') + 1)
-			options.mimeType = "application/octet";
-			
-			params = blog_id : _.getBlogID()
-			options.params = params
-
-			fileTransfer = new FileTransfer()
-
-			fileTransfer.upload(zipFilePath, uploadURI
+				$('#syncSuccess').css("display","block").text("Starting file upload...")
 				
-				, (success)->
+				zipFilePath = _.getGeneratedZipFilePath()
 
-					response = JSON.parse success.response
-					_.setSyncRequestId response.sync_request_id
+				uploadURI = encodeURI(AJAXURL + '?action=sync-app-data')
 
-					_.onFileUploadSuccess()
+				options = new FileUploadOptions()
 
-					console.log "CODE: " + success.responseCode
-					console.log "RESPONSE: " + success.response
-					console.log "BYTES SENT: " + success.bytesSent
+				options.fileKey = "file"
+				options.fileName = zipFilePath.substr(zipFilePath.lastIndexOf('/') + 1)
+				options.mimeType = "application/octet";
+				
+				params = blog_id : blog_id
+				options.params = params
 
-				, (error)->
+				fileTransfer = new FileTransfer()
 
-					_.onDataSyncError(error, "An error occurred during file upload")
+				fileTransfer.upload(zipFilePath, uploadURI
+					
+					, (success)->
 
-					console.log "UPLOAD ERROR SOURCE" + error.source
-					console.log "UPLOAD ERROR TARGET" + error.target
+						response = JSON.parse success.response
+						_.setSyncRequestId response.sync_request_id
 
-				, options)
+						_.onFileUploadSuccess()
+
+						console.log "CODE: " + success.responseCode
+						console.log "RESPONSE: " + success.response
+						console.log "BYTES SENT: " + success.bytesSent
+
+					, (error)->
+
+						_.onDataSyncError(error, "An error occurred during file upload")
+
+						console.log "UPLOAD ERROR SOURCE" + error.source
+						console.log "UPLOAD ERROR TARGET" + error.target
+
+					, options)
 
 
 		
@@ -60,28 +63,31 @@ define ['underscore'], ( _) ->
 
 		
 		checkIfServerImportOperationCompleted : ->
+			userDetails = _.getUserDetails(_.getUserID())
+			userDetails.done (userDetails)->
+				blog_id = userDetails.blog_id
 
-			escaped = $('<div>').text("Please wait...\nThis should take a few minutes").text()
-			$('#syncSuccess').css("display","block").html(escaped.replace(/\n/g, '<br />'))
+				escaped = $('<div>').text("Please wait...\nThis should take a few minutes").text()
+				$('#syncSuccess').css("display","block").html(escaped.replace(/\n/g, '<br />'))
 
-			setTimeout(=>
+				setTimeout(=>
 
-				data = blog_id : _.getBlogID()
+					data = blog_id : blog_id
 
-				$.get AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId(),
-					data,
-					(resp)=>
-						console.log 'Sync completion response'
-						console.log resp
+					$.get AJAXURL + '?action=check-app-data-sync-completion&sync_request_id='+_.getSyncRequestId(),
+						data,
+						(resp)=>
+							console.log 'Sync completion response'
+							console.log resp
 
-						if not resp
-							_.checkIfServerImportOperationCompleted()
-						else
-							_.getZipFileDownloadDetails()
-					,
-					'json'
+							if not resp
+								_.checkIfServerImportOperationCompleted()
+							else
+								_.getZipFileDownloadDetails()
+						,
+						'json'
 
-				.fail ->
-					_.onDataSyncError("none", "Could not connect to server")
-	
-			,10000)
+					.fail ->
+						_.onDataSyncError("none", "Could not connect to server")
+		
+				,10000)

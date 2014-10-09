@@ -25,7 +25,7 @@ define ['app'
 
                 breadcrumb_items =
                     'items': [
-                        {'label': 'Dashboard', 'link': '#teachers/dashboard'},
+                        {'label': 'Dashboard', 'link': '#students/dashboard'},
                         {'label': breadcrumb_label, 'link': 'javascript://'}
                     ]
 

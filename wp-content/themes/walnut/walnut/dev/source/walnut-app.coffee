@@ -103,6 +103,9 @@ define ['marionette'], (Marionette)->
 			hasPreviouslyLoggedIn.done (id)->
 				
 				if _.isEmpty id
+					App.navigate('sync', trigger: true)
+					
+				else
 
 					lastSyncOperation = _.getLastSyncOperation()
 					lastSyncOperation.done (type_of_operation)->
@@ -111,8 +114,6 @@ define ['marionette'], (Marionette)->
 							App.navigate('sync', trigger: true)
 						else
 							App.navigate('students/dashboard', trigger: true)
-				else
-					App.navigate('students/dashboard', trigger: true)
 
 			
 

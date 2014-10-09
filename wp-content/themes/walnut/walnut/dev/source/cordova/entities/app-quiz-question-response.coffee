@@ -13,6 +13,8 @@ define ['underscore', 'unserialize'], ( _) ->
 						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
 							WHERE summary_id = ?", [summary_id] 
 							, onSuccess(d), _.deferredErrorHandler(d))
+						console.log "SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
+							WHERE summary_id = "+summary_id+" "
 
 			onSuccess =(d)->
 
@@ -33,9 +35,10 @@ define ['underscore', 'unserialize'], ( _) ->
 									status : row['status']
 									summary_id :summary_id
 									time_taken : value.total_time_taken
+								console.log JSON.stringify result[i]
 
-					if result.length>0
-						d.resolve(result)
+					# if result.length>0
+					d.resolve(result)
 
 			$.when(runQuery()).done ->
 				console.log 'getQuizQuestionResponseBySummaryID transaction completed'
@@ -130,11 +133,11 @@ define ['underscore', 'unserialize'], ( _) ->
 
 				tx.executeSql("INSERT INTO "+_.getTblPrefix()+"quiz_question_response (qr_id
 					, summary_id, content_piece_id, question_response
-					, time_taken, marks_scored, status) 
-					VALUES (?,?,?,?,?,?,?)"
+					, time_taken, marks_scored, status, sync) 
+					VALUES (?,?,?,?,?,?,?,?)"
 					, [qr_id, model.get('summary_id'), model.get('content_piece_id'), 
 					question_response, model.get('time_taken'), 
-					model.get('marks_scored'), model.get('status')])
+					model.get('marks_scored'), model.get('status'), 0])
 
 			,_.transactionErrorhandler
 
@@ -222,9 +225,9 @@ define ['underscore', 'unserialize'], ( _) ->
 			_.db.transaction((tx)->
 
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET 
-					status=?, time_taken=? 
+					status=?, time_taken=?, sync=? 
 					WHERE summary_id=?"
-					, ['paused', model.get('time_taken'), model.get('summary_id')])
+					, ['paused', model.get('time_taken'), model.get('summary_id'), 0])
 
 			,_.transactionErrorhandler
 
@@ -244,12 +247,12 @@ define ['underscore', 'unserialize'], ( _) ->
 
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET summary_id=?, 
 					content_piece_id=?, question_response=?
-					, time_taken=?, marks_scored=?, status=? 
+					, time_taken=?, marks_scored=?, status=?, sync=? 
 					WHERE qr_id=?"
 					, [ model.get('summary_id'), model.get('content_piece_id'), 
 					question_response, model.get('time_taken'), 
 					model.get('marks_scored'), model.get('status')
-					, model.get('qr_id')])
+					, model.get('qr_id'), 0])
 
 			,_.transactionErrorhandler
 

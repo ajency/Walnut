@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'bootbox'], function(App, RegionController, bootbox) {
+define(['app', 'controllers/region-controller', 'bootbox', 'backbone'], function(App, RegionController, bootbox, Backbone) {
   return App.module("TakeQuizApp.QuizTimer", function(QuizTimer, App) {
     var QuizTimerView;
     QuizTimer.Controller = (function(_super) {
@@ -78,6 +78,8 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
       __extends(QuizTimerView, _super);
 
       function QuizTimerView() {
+        this.clearMediaData = __bind(this.clearMediaData, this);
+        this.onPauseSessionClick = __bind(this.onPauseSessionClick, this);
         this.quizTimedOut = __bind(this.quizTimedOut, this);
         this.countDown = __bind(this.countDown, this);
         return QuizTimerView.__super__.constructor.apply(this, arguments);
@@ -96,11 +98,14 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
         if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
-          return this.$el.find('#completed-quiz').show();
+          this.$el.find('#completed-quiz').show();
         } else {
           if (timeLeftOrElapsed >= 0) {
-            return this.countDown(timeLeftOrElapsed);
+            this.countDown(timeLeftOrElapsed);
           }
+        }
+        if (_.platform() === 'DEVICE') {
+          return this.cordovaEventsForModuleDescriptionView();
         }
       };
 
@@ -132,6 +137,24 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
             }
           };
         })(this));
+      };
+
+      QuizTimerView.prototype.onPauseSessionClick = function() {
+        console.log('Invoked onPauseSessionClick');
+        Backbone.history.history.back();
+        this.clearMediaData();
+        return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+      };
+
+      QuizTimerView.prototype.cordovaEventsForModuleDescriptionView = function() {
+        navigator.app.overrideBackbutton(true);
+        document.addEventListener("backbutton", this.onPauseSessionClick, false);
+        return document.addEventListener("pause", this.onPauseSessionClick, false);
+      };
+
+      QuizTimerView.prototype.clearMediaData = function() {
+        _.clearMediaDirectory('videos-web');
+        return _.clearMediaDirectory('audio-web');
       };
 
       return QuizTimerView;

@@ -55,7 +55,6 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 					when 'none'
 						$('#syncButtonText').text('Start')
-						#temporarily disabled
 						$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_import'
@@ -123,7 +122,8 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 							$('#syncSuccess').css("display","block").text("Resuming data sync...")
 
 							setTimeout(=>
-								App.navigate('students/dashboard', trigger: true)
+								# App.navigate('students/dashboard', trigger: true)
+								_.startFileImport()
 							,2000)
 						
 

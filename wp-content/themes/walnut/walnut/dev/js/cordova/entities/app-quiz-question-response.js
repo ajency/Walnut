@@ -5,7 +5,8 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
+            tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
+            return console.log("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = " + summary_id + " ");
           });
         });
       };
@@ -17,7 +18,7 @@ define(['underscore', 'unserialize'], function(_) {
             var totalMarksScoredAndTotalTimeTaken;
             totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id);
             return totalMarksScoredAndTotalTimeTaken.done(function(value) {
-              return result[i] = {
+              result[i] = {
                 content_piece_id: row['content_piece_id'],
                 marks_scored: value.total_marks_scored,
                 qr_id: row['qr_id'],
@@ -26,15 +27,14 @@ define(['underscore', 'unserialize'], function(_) {
                 summary_id: summary_id,
                 time_taken: value.total_time_taken
               };
+              return console.log(JSON.stringify(result[i]));
             });
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
             row = data.rows.item(i);
             _fn(row, i);
           }
-          if (result.length > 0) {
-            return d.resolve(result);
-          }
+          return d.resolve(result);
         };
       };
       return $.when(runQuery()).done(function() {
@@ -106,7 +106,7 @@ define(['underscore', 'unserialize'], function(_) {
       question_response = serialize(model.get('question_response'));
       console.log(JSON.stringify(question_response));
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_question_response (qr_id , summary_id, content_piece_id, question_response , time_taken, marks_scored, status) VALUES (?,?,?,?,?,?,?)", [qr_id, model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status')]);
+        return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_question_response (qr_id , summary_id, content_piece_id, question_response , time_taken, marks_scored, status, sync) VALUES (?,?,?,?,?,?,?,?)", [qr_id, model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), 0]);
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz question response');
         return model.set({
@@ -171,7 +171,7 @@ define(['underscore', 'unserialize'], function(_) {
       var qrId;
       qrId = model.get('qr_id');
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET status=?, time_taken=? WHERE summary_id=?", ['paused', model.get('time_taken'), model.get('summary_id')]);
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET status=?, time_taken=?, sync=? WHERE summary_id=?", ['paused', model.get('time_taken'), model.get('summary_id'), 0]);
       }, _.transactionErrorhandler, function(tx) {
         model.set({
           'qr_id': qrId
@@ -185,7 +185,7 @@ define(['underscore', 'unserialize'], function(_) {
       question_response = serialize(model.get('question_response'));
       console.log(JSON.stringify(question_response));
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET summary_id=?, content_piece_id=?, question_response=? , time_taken=?, marks_scored=?, status=? WHERE qr_id=?", [model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), model.get('qr_id')]);
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET summary_id=?, content_piece_id=?, question_response=? , time_taken=?, marks_scored=?, status=?, sync=? WHERE qr_id=?", [model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), model.get('qr_id'), 0]);
       }, _.transactionErrorhandler, function(tx) {
         model.set({
           'qr_id': qrId

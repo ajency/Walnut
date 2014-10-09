@@ -198,8 +198,6 @@ define ['underscore', 'csvparse'], ( _) ->
                             tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
                                 , meta_key, meta_value) VALUES (?,?,?,?)"
                                 , [row[0], row[1], row[2], row[3]])
-                            console.log "INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
-                                , meta_key, meta_value) VALUES ("+row[0]+", "+row[1]+", "+row[2]+", "+row[3]+")"
 
                     ,_.transactionErrorHandler
                     ,(tx)->
@@ -236,15 +234,6 @@ define ['underscore', 'csvparse'], ( _) ->
                             , row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]
                             , row[17], row[18], row[19], row[20], row[21], row[22]])
                         
-                        console.log "INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date
-                            , post_date_gmt, post_content, post_title, post_excerpt, post_status
-                            , comment_status, ping_status, post_password, post_name, to_ping, pinged
-                            , post_modified, post_modified_gmt, post_content_filtered, post_parent
-                            , guid, menu_order, post_type, post_mime_type, comment_count) 
-                            VALUES ("+row[0]+", "+row[1]+", "+row[2]+", "+row[3]+", "+row[4]+", "+row[5]+", "+row[6]+", "+row[7]+", "+row[8]+"
-                            , "+row[9]+", "+row[10]+", "+row[11]+", "+row[12]+", "+row[13]+", "+row[14]+", "+row[15]+", "+row[16]+"
-                            , "+row[17]+", "+row[18]+", "+row[19]+", "+row[20]+", "+row[21]+", "+row[22]+")"
-
                 ,_.transactionErrorhandler
                 ,(tx)->
                     console.log 'Inserted data in wp_posts'

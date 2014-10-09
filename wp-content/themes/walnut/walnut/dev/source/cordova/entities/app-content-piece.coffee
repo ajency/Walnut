@@ -32,7 +32,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										do(row, i, author_name, meta_value)->
 											contentElementsArray = _.getJsonToClone(meta_value.layout_json)
 											contentElementsArray.done (contentElements)->
-												console.log contentElements.elements
+												# console.log contentElements.elements
 												excerpt_array = contentElements.excerpt
 
 												excerpt_array = _.flatten excerpt_array

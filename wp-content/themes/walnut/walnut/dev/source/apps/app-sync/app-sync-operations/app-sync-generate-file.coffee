@@ -93,9 +93,9 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 
 				else
 					setTimeout(=>
-						# _.uploadGeneratedZipFile()
+						_.uploadGeneratedZipFile()
 						#temporarily path changed
-						App.navigate('students/dashboard', trigger: true)
+						# App.navigate('students/dashboard', trigger: true)
 					,2000)
 			)
 		

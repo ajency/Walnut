@@ -17,6 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       __extends(TakeQuizController, _super);
 
       function TakeQuizController() {
+        this.clearMediaDataOnEndQuiz = __bind(this.clearMediaDataOnEndQuiz, this);
         this._saveQuizResponseModel = __bind(this._saveQuizResponseModel, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
         this._autosaveQuestionTime = __bind(this._autosaveQuestionTime, this);
@@ -180,6 +181,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._endQuiz = function() {
         var unanswered, _ref, _ref1;
+        this.clearMediaDataOnEndQuiz();
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
@@ -221,6 +223,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           quizResponseSummary: quizResponseSummary,
           display_mode: this.display_mode
         });
+      };
+
+      TakeQuizController.prototype.clearMediaDataOnEndQuiz = function() {
+        _.clearMediaDirectory('videos-web');
+        return _.clearMediaDirectory('audio-web');
       };
 
       TakeQuizController.prototype._getUnansweredIDs = function() {

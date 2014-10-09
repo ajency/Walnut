@@ -84,6 +84,10 @@ define(['marionette'], function(Marionette) {
         hasPreviouslyLoggedIn.done(function(id) {
           var lastSyncOperation;
           if (_.isEmpty(id)) {
+            return App.navigate('sync', {
+              trigger: true
+            });
+          } else {
             lastSyncOperation = _.getLastSyncOperation();
             return lastSyncOperation.done(function(type_of_operation) {
               if (type_of_operation === 'none' || type_of_operation !== 'file_import') {
@@ -95,10 +99,6 @@ define(['marionette'], function(Marionette) {
                   trigger: true
                 });
               }
-            });
-          } else {
-            return App.navigate('students/dashboard', {
-              trigger: true
             });
           }
         });

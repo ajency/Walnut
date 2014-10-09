@@ -42,7 +42,7 @@ define ['app'
             events :
                 'click #take-quiz' :-> @trigger "start:quiz:module"
                 'click #try-again' :-> @trigger "try:again"
-                'click #go-back-button' : -> @trigger "goto:previous:route" #@onPauseSessionClick() 
+                'click #go-back-button' : ->@trigger "goto:previous:route"
 
 
             serializeData:->
@@ -59,6 +59,8 @@ define ['app'
 
                 data.negMarksEnable= _.toBool data.negMarksEnable
 
+                data.hasQuestions=true if not _.isEmpty data.content_pieces
+
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
@@ -70,7 +72,7 @@ define ['app'
 
                     data.total_marks_scored = parseFloat responseSummary.get 'total_marks_scored'
                     if _.platform() is 'DEVICE'
-                        data.total_marks_scored = data.total_marks_scored.toFixed(2);
+                    	data.total_marks_scored = data.total_marks_scored.toFixed(2);
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
@@ -105,39 +107,6 @@ define ['app'
                     else
                         @$el.find "#take-quiz"
                         .html 'Replay'
-
-                if _.platform() is 'DEVICE'
-
-                    $('body').css('height' : 'auto')
-                    @cordovaEventsForModuleDescriptionView()
-            
-
-            onPauseSessionClick : =>
-
-                if _.platform() is 'BROWSER'
-                    @trigger "goto:previous:route"
-
-                else
-                    console.log 'Invoked onPauseSessionClick'
-
-                    # _.audioQueuesSelection 'Click-Pause'
-
-                    @trigger "goto:previous:route"
-
-                    # _.clearMediaDirectory 'videos-web'
-                    # _.clearMediaDirectory 'audio-web'
-
-                    document.removeEventListener("backbutton", @onPauseSessionClick, false)
-
-
-            cordovaEventsForModuleDescriptionView : ->
-
-                # Cordova backbutton event
-                navigator.app.overrideBackbutton(true)
-                document.addEventListener("backbutton", @onPauseSessionClick, false)
-
-                # Cordova pause event
-                document.addEventListener("pause", @onPauseSessionClick, false)
                     
 
         # set handlers

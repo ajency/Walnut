@@ -38,19 +38,19 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             switch (data.responseStatus) {
               case 'correct_answer':
                 return {
-                  divClass: 'text-right',
+                  divClass: 'text-success',
                   text: 'Correct',
                   icon: 'fa-check'
                 };
               case 'partially_correct':
                 return {
-                  divClass: 'text-right',
-                  text: 'Partially<br>Correct &nbsp;',
+                  divClass: 'text-success',
+                  text: 'Partially Correct',
                   icon: 'fa-check-square'
                 };
               case 'skipped':
                 return {
-                  divClass: 'text-error',
+                  divClass: 'text-warning',
                   text: 'Skipped',
                   icon: 'fa-share-square'
                 };

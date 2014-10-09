@@ -62,7 +62,6 @@ define ['app'
                         quizResponseSummary.save data
 
                     questionModel = questionsCollection.get questionID
-
                     @layout = layout = new TakeQuizLayout
 
                     @show @layout,
@@ -177,6 +176,7 @@ define ['app'
                         @_endQuiz()
 
                 _endQuiz:->
+                    @clearMediaDataOnEndQuiz()
 
                     questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
@@ -217,6 +217,10 @@ define ['app'
                         quizResponseSummary         : quizResponseSummary
                         display_mode                : @display_mode
 
+                clearMediaDataOnEndQuiz : =>
+                        _.clearMediaDirectory 'videos-web'
+                        _.clearMediaDirectory 'audio-web'
+                
                 _getUnansweredIDs:->
                     
                     pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
@@ -316,6 +320,8 @@ define ['app'
 
                 onShow : ->
                     $('.page-content').addClass 'condensed expand-page'
+                    # Changes for cordova app
+
 
             # set handlers
             App.commands.setHandler "start:take:quiz:app", (opt = {})->

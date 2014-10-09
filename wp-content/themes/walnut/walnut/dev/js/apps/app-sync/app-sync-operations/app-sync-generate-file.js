@@ -58,9 +58,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
         } else {
           return setTimeout((function(_this) {
             return function() {
-              return App.navigate('students/dashboard', {
-                trigger: true
-              });
+              return _.uploadGeneratedZipFile();
             };
           })(this), 2000);
         }

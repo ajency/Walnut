@@ -23,7 +23,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT type_of_operation FROM sync_details ORDER BY id DESC LIMIT 1", [], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT type_of_operation FROM sync_details WHERE user_id=? ORDER BY id DESC LIMIT 1", [_.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -109,7 +109,7 @@ define(['underscore', 'unserialize'], function(_) {
     },
     updateSyncDetails: function(operation, time_stamp) {
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp, user_id) VALUES (?,?,?)", [operation, time_stamp, _.getUserID]);
+        return tx.executeSql("INSERT INTO sync_details (type_of_operation, time_stamp, user_id) VALUES (?,?,?)", [operation, time_stamp, _.getUserID()]);
       }, _.transactionErrorhandler, function(tx) {
         return console.log('Updated sync details for ' + operation);
       });

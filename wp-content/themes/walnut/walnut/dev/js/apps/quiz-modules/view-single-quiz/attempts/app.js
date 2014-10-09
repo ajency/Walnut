@@ -38,7 +38,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return AttemptsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      AttemptsItemView.prototype.template = '<div class="col-md-3"> <h5 class="bold">{{taken_on}}</h5> </div> <div class="col-md-3"> <h5 class="bold">{{total_marks_scored}}</h5> </div> <div class="col-md-3"> <h5 class="bold">{{time_taken}}</h5> </div> <div class="col-md-3"> <button data-id={{summary_id}} type="button" class="view-summary btn btn-info btn-small">view &nbsp; <i></i></button> </div>';
+      AttemptsItemView.prototype.template = '<div class="col-md-4"> <h5 class="semi-bold">{{taken_on}}</h5> </div> <div class="col-md-4"> <h5 class="semi-bold">{{total_marks_scored}}</h5> </div> <div class="col-md-3"> <h5 class="semi-bold">{{time_taken}}</h5> </div> <div class="col-md-1 p-b-5"> <button data-id={{summary_id}} type="button" class="pull-right view-summary btn btn-info btn-small m-t-5">view &nbsp; <i></i></button> <div class="clearfix"></div> </div>';
 
       AttemptsItemView.prototype.className = 'row b-t b-grey';
 
@@ -58,7 +58,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return QuizAttemptsView.__super__.constructor.apply(this, arguments);
       }
 
-      QuizAttemptsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title no-border"> <h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> <div class="tools"> <a href="javascript:;" class="expand"></a> </div> </div> <div class="none grid-body no-border contentSelect"> <div class="row"> <div class="col-md-3"> <h5 class="bold">Attempted On </h5> </div> <div class="col-md-3"> <h5 class="bold">Marks Scored (out of {{marks}}) </h5> </div> <div class="col-md-3"> <h5 class="bold">Time Taken (out of {{total_minutes}}m) </h5> </div> </div> <div id="attempts_list"> </div> </div> </div>';
+      QuizAttemptsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title no-border"> <h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> <div class="tools"> <a href="javascript:;" class="expand"></a> </div> </div> <div class="none grid-body no-border contentSelect"> <div class="row"> <div class="col-md-4"> <label class="text-grey">Attempted On </label> </div> <div class="col-md-4"> <label class="text-grey">Marks Scored (out of {{marks}}) </label> </div> <div class="col-md-3"> <label class="text-grey">Time Taken (out of {{total_minutes}}m) </label> </div> </div> <div id="attempts_list"> </div> </div> </div>';
 
       QuizAttemptsView.prototype.itemView = AttemptsItemView;
 

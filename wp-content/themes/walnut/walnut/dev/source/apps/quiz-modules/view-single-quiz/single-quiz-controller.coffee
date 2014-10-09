@@ -17,14 +17,17 @@ define ['app'
 
             #display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
             display_mode = null
-
+            
             initialize: (opts) ->
 
                 {quiz_id,quizModel,questionsCollection,@questionResponseCollection} =opts
 
-                {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student} = opts
+                {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts
 
                 quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
+
+                #incase the display mode is sent from router on page refresh
+                display_mode = d_mode if d_mode
 
                 #get the header and left nav back incase it was hidden for quiz view
                 $.showHeaderAndLeftNav()
@@ -51,10 +54,7 @@ define ['app'
                         if not _.isEmpty quizResponseSummary.get 'questions_order'
                             quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-                        # questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
-
                         @_setMarksAndOrder() if not questionsCollection
-
                         
                         App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
 
@@ -146,13 +146,16 @@ define ['app'
                     @layout.attemptsRegion.$el.find '.view-summary i'
                     .removeClass 'fa fa-spin fa-spinner'
 
-# put break point
             _fetchQuizResponseSummary:=>
                 defer = $.Deferred();
 
+               
+                console.log JSON.stringify @quizResponseSummaryCollection
                 #if the summarycollection has been passed from quiz reports screens
                 quizResponseSummaryCollection= @quizResponseSummaryCollection if @quizResponseSummaryCollection
 
+                
+                console.log JSON.stringify quizResponseSummary
                 #if the summary has been passed from the take-quiz-module app after quiz completion
                 if quizResponseSummary
                     defer.resolve()

@@ -66,6 +66,7 @@ define ['app',
 						if _.isUndefined(chapter) then ''
 						else chapter.get('name')
 
+
 				if @model.get('type') is 'teaching-module'
 					training_date = @model.get('training_date')
 					if not training_date
@@ -195,7 +196,7 @@ define ['app',
 				.html textbookFiltersHTML
 
 				@$el.find ".select2-filters"
-				.select2 minimumResultsForSearch: -1
+				.select2()
 
 				$('#take-class-modules').tablesorter();
 
@@ -204,6 +205,12 @@ define ['app',
 					output : '{startRow} to {endRow} of {totalRows}'
 
 				$('#take-class-modules').tablesorterPager pagerOptions
+
+				if _.platform() is 'DEVICE'
+				    
+				    # $('body').css('height' : '100%')
+
+				    _.disableCordovaBackbuttonNavigation()
 
 			onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 

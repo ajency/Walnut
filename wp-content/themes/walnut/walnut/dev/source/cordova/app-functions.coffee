@@ -48,7 +48,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			currentRoute = App.getCurrentRoute()
 			console.log 'Fired cordova back button event for '+currentRoute
 
-			if currentRoute is 'teachers/dashboard' or currentRoute is 'app-login'
+			if currentRoute is 'students/dashboard' or currentRoute is 'app-login'
 				navigator.app.exitApp()
 			else 	
 				App.navigate('app-login', trigger: true)

@@ -25,11 +25,15 @@ define ['app'
 
                         @answerModel = App.request "create:new:answer"
 
-                        if @questionResponseModel
+                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'
                             answerData = @questionResponseModel.get 'question_response'
+                            
+                            answerData = {} if _.isEmpty answerData
+
                             answerData.status = @questionResponseModel.get 'status'
                             answerData.marks = @questionResponseModel.get 'marks_scored'                            
                             @answerModel = App.request "create:new:answer", answerData
+
 
                         @show layout,
                             loading: true

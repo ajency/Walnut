@@ -30,7 +30,7 @@ define(['app', 'controllers/region-controller', 'text!apps/students-dashboard/te
           'items': [
             {
               'label': 'Dashboard',
-              'link': '#teachers/dashboard'
+              'link': '#students/dashboard'
             }, {
               'label': breadcrumb_label,
               'link': 'javascript://'

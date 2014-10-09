@@ -103,9 +103,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               $('#syncSuccess').css("display", "block").text("Resuming data sync...");
               return setTimeout((function(_this) {
                 return function() {
-                  return App.navigate('students/dashboard', {
-                    trigger: true
-                  });
+                  return _.startFileImport();
                 };
               })(this), 2000);
             case 'file_generate':

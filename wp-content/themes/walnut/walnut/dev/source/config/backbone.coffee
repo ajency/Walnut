@@ -67,8 +67,8 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'content-piece'
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
-					# console.log 'content-piece data'
-					# console.log JSON.stringify d
+					console.log 'content-piece data'
+					console.log JSON.stringify d
 					collection.set d
 
 			if collection_name is 'user'
@@ -238,6 +238,7 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'quiz'
 					data = _.getQuizById(model.get('id'))
 					data.done (d)->
+						console.log "quiz model"
 						console.log JSON.stringify d
 						model.set d
 
