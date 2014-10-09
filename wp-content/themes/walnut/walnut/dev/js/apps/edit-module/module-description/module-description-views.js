@@ -179,17 +179,28 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
             }
           }
           if (data.post_status === 'publish') {
-            if (_.isEmpty(this.model.get('content_layout')) && _.isEmpty(this.model.get('content_pieces'))) {
-              this.$el.find('.grid-title').prepend('<div id="saved-success" class="text-error"> Cannot Publish ' + _.titleize(_.humanize(this.model.get('type'))) + '. No Content Pieces Added. </div>');
-              $("html, body").animate({
-                scrollTop: 0
-              }, 700);
-              this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner');
+            if (this.model.get('type') === 'quiz' && _.isEmpty(this.model.get('content_layout'))) {
+              this._cannotPublish();
+              return false;
+            }
+            if (this.model.get('type') === 'teaching-module' && _.isEmpty(this.model.get('content_pieces'))) {
+              this._cannotPublish();
               return false;
             }
           }
           return this.trigger("save:content:collection:details", data);
         }
+      };
+
+      CollectionDetailsView.prototype._cannotPublish = function() {
+        var item, module;
+        item = this.model.get('type') === 'quiz' ? 'questions' : 'Content Pieces';
+        module = _.titleize(_.humanize(this.model.get('type')));
+        this.$el.find('.grid-title').prepend('<div id="saved-success" class="text-error"> Cannot Publish ' + module + '. No ' + item + ' Added. </div>');
+        $("html, body").animate({
+          scrollTop: 0
+        }, 700);
+        return this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner');
       };
 
       CollectionDetailsView.prototype._toggleNegativeMarks = function(el) {

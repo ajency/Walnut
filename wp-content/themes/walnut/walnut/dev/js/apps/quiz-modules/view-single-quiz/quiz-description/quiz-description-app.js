@@ -93,6 +93,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
         data.negMarksEnable = _.toBool(data.negMarksEnable);
+        if (!_.isEmpty(data.content_pieces)) {
+          data.hasQuestions = true;
+        }
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
