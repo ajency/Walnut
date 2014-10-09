@@ -56,7 +56,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               }
               if (!questionsCollection) {
-                _this._setMarksAndOrder();
+                questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+                App.execute("when:fetched", questionsCollection, function() {
+                  _this._setMarks();
+                  return _this._randomizeOrder();
+                });
               }
               return App.execute("when:fetched", [questionsCollection, _this.textbookNames], function() {
                 var getStudentModel;
@@ -81,32 +85,32 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         })(this));
       };
 
-      Controller.prototype._setMarksAndOrder = function() {
-        questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
-        return App.execute("when:fetched", questionsCollection, function() {
-          var actualMarks, multiplicationFactor;
-          actualMarks = 0;
-          questionsCollection.each(function(m) {
-            if (m.getMarks()) {
-              return actualMarks += m.getMarks();
-            }
-          });
-          if (actualMarks > 0) {
-            multiplicationFactor = quizModel.get('marks') / actualMarks;
-          }
-          if (multiplicationFactor) {
-            questionsCollection.each(function(m) {
-              return m.setMarks(multiplicationFactor);
-            });
-          }
-          if (quizResponseSummary.isNew() && quizModel.get('permissions').randomize) {
-            questionsCollection.each(function(e) {
-              return e.unset('order');
-            });
-            questionsCollection.reset(questionsCollection.shuffle());
-            return quizModel.set('content_pieces', questionsCollection.pluck('ID'));
+      Controller.prototype._setMarks = function() {
+        var actualMarks, multiplicationFactor;
+        actualMarks = 0;
+        questionsCollection.each(function(m) {
+          if (m.getMarks()) {
+            return actualMarks += m.getMarks();
           }
         });
+        if (actualMarks > 0) {
+          multiplicationFactor = quizModel.get('marks') / actualMarks;
+        }
+        if (multiplicationFactor) {
+          return questionsCollection.each(function(m) {
+            return m.setMarks(multiplicationFactor);
+          });
+        }
+      };
+
+      Controller.prototype._randomizeOrder = function() {
+        if (quizResponseSummary.isNew() && quizModel.get('permissions').randomize) {
+          questionsCollection.each(function(e) {
+            return e.unset('order');
+          });
+          questionsCollection.reset(questionsCollection.shuffle());
+          return quizModel.set('content_pieces', questionsCollection.pluck('ID'));
+        }
       };
 
       Controller.prototype._getStudent = function() {
@@ -145,6 +149,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
         quizResponseSummaryCollection.add(quizResponseSummary);
         display_mode = 'class_mode';
+        this._randomizeOrder();
         return this.startQuiz();
       };
 
@@ -155,6 +160,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         fetchResponses = this._fetchQuestionResponseCollection();
         return fetchResponses.done((function(_this) {
           return function() {
+            var m, reorderQuestions, _i, _len, _ref;
+            if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
+              questionsCollection.each(function(e) {
+                return e.unset('order');
+              });
+              quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
+              reorderQuestions = [];
+              _ref = quizModel.get('content_pieces');
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                m = _ref[_i];
+                reorderQuestions.push(questionsCollection.get(m));
+              }
+              questionsCollection.reset(reorderQuestions);
+            }
             _this.layout.$el.find('#quiz-details-region,#content-display-region').hide();
             _this.layout.$el.find('#quiz-details-region,#content-display-region').fadeIn('slow');
             _this.showQuizViews();
