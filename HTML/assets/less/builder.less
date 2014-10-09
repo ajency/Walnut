@@ -606,7 +606,7 @@
 		//border: 3px dashed @preview-grey;
 		cursor: pointer;
 		position: relative;
-		z-index: 99;
+		// z-index: 99;
 		color: @dash-grey;
 		.bicon{
 			font-size: 40px;
@@ -617,12 +617,28 @@
 
 .image{
 	img{
-		z-index: 99;
+		// z-index: 99;
+		height: inherit;
 	}
 	.ui-resizable-handle.ui-resizable-s{
-		height: 106%;
-		background-color: lighten(@color-grey, 35%);
-		bottom: -4px;
+		height: 15px;
+		bottom: -5px;
+		text-align: center;
+
+		&:hover{
+			// background-color: lighten(@color-grey, 20%);
+			background-color: @color-info;
+			&:after{
+				color: @color-white;
+				font-family: FontAwesome;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 12px;
+				font-size: 20px;
+				-webkit-font-smoothing: antialiased;
+				content: "\f141";
+			}
+		}
 	}
 }
 
