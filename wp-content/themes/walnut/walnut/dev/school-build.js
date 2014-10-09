@@ -32,7 +32,7 @@
         tablesorter: 'plugins/jquery.tablesorter',
         tablesorter_pager: 'plugins/jquery.tablesorter.pager',
         moment: 'plugins/moment.min',
-        select2             : 'plugins/select2.min',
+        select2             : 'plugins/select2',
         datepicker          : 'plugins/bootstrap-datepicker',
         timepicker          : 'plugins/bootstrap-timepicker.min',
         timecircles         : 'plugins/TimeCircles',
