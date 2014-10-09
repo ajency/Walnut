@@ -19,18 +19,20 @@
     {{#responseStatus}}
         <div class="qstnStatus {{statusUI.divClass}} p-t-10">
             {{#display_answer}}
-                <i class="fa  {{statusUI.icon}}"></i>  {{&statusUI.text}}
+                <label>
+                    {{&statusUI.text}} <span class="fa  {{statusUI.icon}}"></span>  
+                </label>
             {{/display_answer}}
 
-            <div>
-                {{#display_answer}}
-                    <label>
-                        Marks Obtained: <span class="bold">{{marks_obtained}}/{{total_marks}}</span>
-                    </label>
-                {{/display_answer}}
-                <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label>
-            </div>
-            {{#hint}}<div class="small">Viewed Hint: {{hint_viewed}}</div>{{/hint}}
+            {{#display_answer}}
+                <label class="text-info">
+                    Marks: <span class="bold">{{marks_obtained}}/{{total_marks}}</span>
+                </label>
+            {{/display_answer}}
+            <label class="small-text text-grey">Time Taken: <span class="bold">{{timeTaken}}</span></label>
+            {{#hint}}
+                <label class="small-text text-grey ">Viewed Hint: <span class="bold">{{hint_viewed}}<span></label>
+            {{/hint}}
         </div>
     {{/responseStatus}}
 </div>
