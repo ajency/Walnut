@@ -99,10 +99,10 @@ define ['marionette'], (Marionette)->
 			# not be allowed to navigate else where in the app and only the sync screen should be visible
 			# to the user.
 
-			# userSynced = _.hasUserPreviouslySynced()
-			# userSynced.done (synced)->
+			userSynced = _.hasUserPreviouslySynced()
+			userSynced.done (synced)->
 				
-				if synced
+				if not synced
 					App.navigate('sync', trigger: true)
 					
 				else

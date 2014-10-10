@@ -34,7 +34,7 @@ define ['underscore', 'csvparse'], ( _) ->
                                             _.each parsedData, (outerRow, i)->
                                                 _.each outerRow, (innerRow, j)->
                                                     # Replace back slash (/) with empty quote.
-                                                    parsedData[i][j] = parsedData[i][j].replace(/\\/g,'')
+                                                    parsedData[i][j] = _.stripslashes(parsedData[i][j]) # parsedData[i][j].replace(/\\/g,'')
 
                                         d.resolve parsedData
 

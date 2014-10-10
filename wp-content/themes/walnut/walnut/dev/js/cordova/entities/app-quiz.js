@@ -318,6 +318,7 @@ define(['underscore', 'unserialize'], function(_) {
           quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
             var contentLayoutValue, date;
+            console.log(JSON.stringify(quiz_responses));
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';

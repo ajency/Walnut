@@ -107,6 +107,12 @@ define ['app'
                     else
                         @$el.find "#take-quiz"
                         .html 'Replay'
+                    # Changes for cordova app
+                    if _.platform() is 'DEVICE'
+                        
+                        $('body').css('height' : '100%')
+
+                        _.disableCordovaBackbuttonNavigation()
                     
 
         # set handlers

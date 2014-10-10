@@ -18,13 +18,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
 
       ContentGroupsItemView.prototype.onShow = function() {
         this.$el.attr('id', 'row-' + this.model.get('id'));
-        this.$el.attr('data-id', this.model.get('id'));
-        if (_.platform() === 'DEVICE') {
-          $('body').css({
-            'height': '100%'
-          });
-          return _.disableCordovaBackbuttonNavigation();
-        }
+        return this.$el.attr('data-id', this.model.get('id'));
       };
 
       ContentGroupsItemView.prototype.serializeData = function() {

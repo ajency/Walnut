@@ -49,12 +49,7 @@ define ['app',
 			onShow : ->
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
-				# Changes for cordova app
-				if _.platform() is 'DEVICE'
-				    
-				    $('body').css('height' : '100%')
-
-				    _.disableCordovaBackbuttonNavigation()
+				
 
 			serializeData : ->
 				data = super()

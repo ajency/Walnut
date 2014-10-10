@@ -30,7 +30,7 @@ define(['underscore', 'csvparse'], function(_) {
                   (function(parsedData) {
                     return _.each(parsedData, function(outerRow, i) {
                       return _.each(outerRow, function(innerRow, j) {
-                        return parsedData[i][j] = parsedData[i][j].replace(/\\/g, '');
+                        return parsedData[i][j] = _.stripslashes(parsedData[i][j]);
                       });
                     });
                   })(parsedData);

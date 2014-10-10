@@ -319,6 +319,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					
 					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
 					quizResponseSummary.done (quiz_responses)->
+						console.log JSON.stringify quiz_responses
 
 						if _.isEmpty quiz_responses
 							data.status = 'not started'

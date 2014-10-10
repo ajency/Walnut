@@ -136,9 +136,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         if ((_ref = Marionette.getOption(this, 'display_mode')) === 'replay' || _ref === 'quiz_report') {
           if (this.model.hasPermission('disable_quiz_replay')) {
-            return this.$el.find("#take-quiz").remove();
+            this.$el.find("#take-quiz").remove();
           } else {
-            return this.$el.find("#take-quiz").html('Replay');
+            this.$el.find("#take-quiz").html('Replay');
+          }
+          if (_.platform() === 'DEVICE') {
+            $('body').css({
+              'height': '100%'
+            });
+            return _.disableCordovaBackbuttonNavigation();
           }
         }
       };
