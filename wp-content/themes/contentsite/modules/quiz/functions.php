@@ -67,7 +67,7 @@ function save_quiz_module ($data = array()) {
             'marks' => $data['marks'],
             'negMarksEnable' => $data['negMarksEnable'],
             'negMarks' => $data['negMarks'],
-            'message' => $data['message']
+            'message' => wp_unslash($data['message'])
         );
         $meta_quiz_meta = array(
             'collection_id' => $module_id,
