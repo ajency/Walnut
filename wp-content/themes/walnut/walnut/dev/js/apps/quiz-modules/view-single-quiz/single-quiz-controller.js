@@ -177,9 +177,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             _this.layout.$el.find('#quiz-details-region,#content-display-region').hide();
             _this.layout.$el.find('#quiz-details-region,#content-display-region').fadeIn('slow');
             _this.showQuizViews();
-            return _this.layout.attemptsRegion.$el.find('.view-summary i').removeClass('fa fa-spin fa-spinner');
+            _this.layout.attemptsRegion.$el.find('.view-summary i').removeClass('fa fa-spin fa-spinner');
+            return _this._scrolltoQuizDetailsRegion();
           };
         })(this));
+      };
+
+      Controller.prototype._scrolltoQuizDetailsRegion = function() {
+        var top;
+        top = this.layout.quizDetailsRegion.$el.offset().top;
+        top = top - 70;
+        return $('html,body').animate({
+          scrollTop: top
+        }, 'slow');
       };
 
       Controller.prototype._fetchQuizResponseSummary = function() {
