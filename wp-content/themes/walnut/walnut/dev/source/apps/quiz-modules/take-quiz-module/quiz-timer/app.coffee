@@ -95,10 +95,10 @@ define ['app'
                             if timeLeftOrElapsed >= 0
                                 @countDown timeLeftOrElapsed
 
-                        if _.platform() is 'DEVICE'
+                        # if _.platform() is 'DEVICE'
 
                             # $('body').css('height' : 'auto')
-                            @cordovaEventsForModuleDescriptionView()
+                            # @cordovaEventsForModuleDescriptionView()
 
                     countDown:(time)=>
 

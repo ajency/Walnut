@@ -227,7 +227,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET 
 					status=?, time_taken=?, sync=? 
 					WHERE summary_id=?"
-					, ['paused', model.get('time_taken'), model.get('summary_id'), 0])
+					, ['paused', model.get('time_taken'), 0, model.get('summary_id')])
 
 			,_.transactionErrorhandler
 
@@ -251,8 +251,8 @@ define ['underscore', 'unserialize'], ( _) ->
 					WHERE qr_id=?"
 					, [ model.get('summary_id'), model.get('content_piece_id'), 
 					question_response, model.get('time_taken'), 
-					model.get('marks_scored'), model.get('status')
-					, model.get('qr_id'), 0])
+					model.get('marks_scored'), model.get('status'), 0
+					, model.get('qr_id')])
 
 			,_.transactionErrorhandler
 

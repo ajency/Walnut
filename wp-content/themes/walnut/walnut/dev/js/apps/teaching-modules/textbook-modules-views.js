@@ -27,10 +27,21 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
-            chapter = _.chain(_this.chapters.findWhere({
-              "term_id": data.term_ids.chapter
-            })).pluck('name').compact().value();
-            return chapter;
+            if (_.platform() === 'BROWSER') {
+              chapter = _.chain(_this.chapters.findWhere({
+                "term_id": data.term_ids.chapter
+              })).pluck('name').compact().value();
+              return chapter;
+            } else {
+              chapter = _this.chapters.findWhere({
+                "term_id": parseInt(data.term_ids.chapter)
+              });
+              if (_.isUndefined(chapter)) {
+                return '';
+              } else {
+                return chapter.get('name');
+              }
+            }
           };
         })(this);
         if (this.model.get('type') === 'teaching-module') {
@@ -193,7 +204,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
           container: $(".pager"),
           output: '{startRow} to {endRow} of {totalRows}'
         };
-        return $('#take-class-modules').tablesorterPager(pagerOptions);
+        $('#take-class-modules').tablesorterPager(pagerOptions);
+        if (_.platform() === 'DEVICE') {
+          return _.disableCordovaBackbuttonNavigation();
+        }
       };
 
       ContentGroupsView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {

@@ -320,7 +320,6 @@ define ['app'
 
                 onShow : ->
                     $('.page-content').addClass 'condensed expand-page'
-                    # Changes for cordova app
 
 
             # set handlers

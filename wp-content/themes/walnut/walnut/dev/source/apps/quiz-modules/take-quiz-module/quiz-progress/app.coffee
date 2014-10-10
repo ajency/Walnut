@@ -85,8 +85,9 @@ define ['app'
 
                         currentQuestion = Marionette.getOption @,'currentQuestion'
                         
-                        if @quizModel.hasPermission 'display_answer'
-                            @questionResponseCollection.each (response)=> @changeClassName(response) 
+                        @questionResponseCollection.each (response)=> 
+                            if @quizModel.hasPermission('display_answer') or response.get('status') is 'skipped'
+                                @changeClassName(response) 
 
                         @onQuestionChange currentQuestion
 
@@ -116,7 +117,7 @@ define ['app'
                         if responseModel.get('status') is 'skipped' and not @quizModel.hasPermission('single_attempt')
                             return false
 
-                        else if @quizModel.hasPermission 'display_answer'
+                        else if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
                             @changeClassName responseModel
 
                     changeClassName:(responseModel)->
@@ -151,11 +152,10 @@ define ['app'
                         .html answeredQuestions
 
                     updateSkippedCount:->
-                        answers = @questionResponseCollection.pluck 'question_response'
-                        skipped = _.where answers, 'status': 'skipped'
+                        skipped = _.size @questionResponseCollection.where 'status' : 'skipped'
 
                         @$el.find "#skipped-questions"
-                        .html _.size skipped
+                        .html skipped
 
 
                     

@@ -141,9 +141,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             this.$el.find("#take-quiz").html('Replay');
           }
           if (_.platform() === 'DEVICE') {
-            $('body').css({
-              'height': '100%'
-            });
             return _.disableCordovaBackbuttonNavigation();
           }
         }

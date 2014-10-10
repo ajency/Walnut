@@ -4,6 +4,8 @@ define ['app'], (App)->
 
             id: 'myCanvas'
 
+            className: 'animated fadeIn'
+
             template: ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1>
                         <div class="vHidden" id="question-area"></div>
 						<div id="feedback-area">
@@ -48,9 +50,13 @@ define ['app'], (App)->
 
             onShowResponse : (marks,total)->
 
+                marks = parseFloat marks
+                total = parseFloat total
+                display_marks = parseFloat display_marks
+
                 quizModel = Marionette.getOption @, 'quizModel'
 
-                if parseFloat(marks) is 0 and _.toBool quizModel.get 'negMarksEnable'
+                if marks is 0 and _.toBool quizModel.get 'negMarksEnable'
                     display_marks = - total*quizModel.get('negMarks')/100
                 else
                     display_marks = marks
@@ -66,13 +72,13 @@ define ['app'], (App)->
                     
                 else
 
-                    if parseFloat(marks) is 0
+                    if marks is 0
                         @$el.find('#wrong').show()
 
-                    if parseFloat(marks) is parseFloat(total)
+                    if marks is total
                         @$el.find('#correct').show()
 
-                    if parseFloat(marks) > 0 and parseFloat(marks) < parseFloat(total)
+                    if marks > 0 and marks < total
                         @$el.find('#partially-correct').show()
 
 

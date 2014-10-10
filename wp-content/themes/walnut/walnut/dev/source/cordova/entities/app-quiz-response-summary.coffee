@@ -33,6 +33,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								collection_id : collection_id
 								status : quiz_meta.status
 								attempts: quiz_meta.attempts
+								questions_order:quiz_meta.questions_order
 								num_skipped: skipped
 								student_id : _.getUserID()
 								summary_id : row['summary_id']
@@ -160,7 +161,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_response_summary SET 
 					quiz_meta=?, sync=? 
 					WHERE summary_id=?"
-					, [serializeQuizMetaValue, model.get('summary_id'), 0])
+					, [serializeQuizMetaValue, 0, model.get('summary_id')])
 
 			,_.transactionErrorhandler
 

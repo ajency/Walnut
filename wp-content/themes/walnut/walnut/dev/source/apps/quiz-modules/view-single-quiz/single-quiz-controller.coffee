@@ -54,7 +54,12 @@ define ['app'
                         if not _.isEmpty quizResponseSummary.get 'questions_order'
                             quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-                        @_setMarksAndOrder() if not questionsCollection
+                        if not questionsCollection
+                            questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+
+                            App.execute "when:fetched", questionsCollection, =>
+                                @_setMarks()
+                                @_randomizeOrder()
                         
                         App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
 
@@ -75,26 +80,23 @@ define ['app'
 
                                 @listenTo @layout.attemptsRegion, 'view:summary', @_viewSummary
 
-            _setMarksAndOrder:->
+            _setMarks:->
 
-                questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+                actualMarks= 0
+                questionsCollection.each (m)-> actualMarks += m.getMarks() if m.getMarks()
+                
+                multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
 
-                App.execute "when:fetched", questionsCollection, ->
+                if multiplicationFactor
+                    questionsCollection.each (m)->
+                        m.setMarks multiplicationFactor
 
-                    actualMarks= 0
-                    questionsCollection.each (m)-> actualMarks += m.getMarks() if m.getMarks()
-                    
-                    multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
-
-                    if multiplicationFactor
-                        questionsCollection.each (m)->
-                            m.setMarks multiplicationFactor
-
-                    if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
-                        questionsCollection.each (e)-> e.unset 'order'
-                        questionsCollection.reset questionsCollection.shuffle()
-                        #change the order in the main model also
-                        quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
+            _randomizeOrder:->
+                if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
+                    questionsCollection.each (e)-> e.unset 'order'
+                    questionsCollection.reset questionsCollection.shuffle()
+                    #change the order in the main model also
+                    quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
 
             _getStudent:->
                 @defer = $.Deferred()
@@ -129,6 +131,8 @@ define ['app'
 
                 display_mode = 'class_mode'
 
+                @_randomizeOrder()
+
                 @startQuiz()
 
             _viewSummary:(summary_id)->
@@ -136,6 +140,20 @@ define ['app'
                 @questionResponseCollection = null
                 fetchResponses = @_fetchQuestionResponseCollection()
                 fetchResponses.done => 
+
+                    if not _.isEmpty quizResponseSummary.get 'questions_order'
+                        
+                        #reorder the questions as per the order that it was taken in
+                        questionsCollection.each (e)-> e.unset 'order'
+
+                        quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+
+                        reorderQuestions = []
+
+                        reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
+
+                        questionsCollection.reset reorderQuestions
+
                     @layout.$el.find '#quiz-details-region,#content-display-region'
                     .hide()
                     @layout.$el.find '#quiz-details-region,#content-display-region'
@@ -146,16 +164,23 @@ define ['app'
                     @layout.attemptsRegion.$el.find '.view-summary i'
                     .removeClass 'fa fa-spin fa-spinner'
 
+                    @_scrolltoQuizDetailsRegion()
+
+            _scrolltoQuizDetailsRegion:->
+                
+                top= @layout.quizDetailsRegion.$el.offset().top
+                #cancel out the header div height
+                top= top-70
+
+                $('html,body').animate scrollTop: top, 'slow'
+
+
             _fetchQuizResponseSummary:=>
                 defer = $.Deferred();
 
-               
-                console.log JSON.stringify @quizResponseSummaryCollection
                 #if the summarycollection has been passed from quiz reports screens
                 quizResponseSummaryCollection= @quizResponseSummaryCollection if @quizResponseSummaryCollection
 
-                
-                console.log JSON.stringify quizResponseSummary
                 #if the summary has been passed from the take-quiz-module app after quiz completion
                 if quizResponseSummary
                     defer.resolve()

@@ -98,14 +98,11 @@ define(['app', 'controllers/region-controller', 'bootbox', 'backbone'], function
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
         if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
-          this.$el.find('#completed-quiz').show();
+          return this.$el.find('#completed-quiz').show();
         } else {
           if (timeLeftOrElapsed >= 0) {
-            this.countDown(timeLeftOrElapsed);
+            return this.countDown(timeLeftOrElapsed);
           }
-        }
-        if (_.platform() === 'DEVICE') {
-          return this.cordovaEventsForModuleDescriptionView();
         }
       };
 
