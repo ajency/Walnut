@@ -23,12 +23,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
-        App.execute("show:headerapp", {
-          region: App.headerRegion
-        });
-        App.execute("show:leftnavapp", {
-          region: App.leftNavRegion
-        });
+        $.showHeaderAndLeftNav();
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.studentCollection = opts.studentCollection;
         this.questionResponseCollection = App.request("get:question:response:collection", {
           'division': this.division,
@@ -150,10 +145,6 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
       ContentGroupViewLayout.prototype.regions = {
         collectionDetailsRegion: '#collection-details-region',
         contentDisplayRegion: '#content-display-region'
-      };
-
-      ContentGroupViewLayout.prototype.onShow = function() {
-        return $('.page-content').removeClass('expand-page');
       };
 
       return ContentGroupViewLayout;

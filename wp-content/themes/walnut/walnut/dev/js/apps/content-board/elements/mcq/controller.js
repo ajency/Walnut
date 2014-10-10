@@ -1,6 +1,7 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define(['app', 'apps/content-board/element/controller', 'apps/content-board/elements/mcq/views'], function(App, Element) {
   return App.module("ContentPreview.ContentBoard.Element.Mcq", function(Mcq, App, Backbone, Marionette, $, _) {
@@ -253,18 +254,13 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       };
 
       Controller.prototype._optionChecked = function(model) {
-        var answerArray;
+        var answerArray, _ref;
         answerArray = this.answerModel.get('answer');
-        if (!this.layout.model.get('multiple') && answerArray.length) {
-          this.answerModel.set('answer', [model.get('optionNo')]);
-          console.log('in check');
-          this.view.$el.find('input:checkbox').prop('checked', false);
-          this.view.$el.find('input:checkbox').parent().css('background-position', '0px 0px');
-          this.view.$el.find("input#option-" + (model.get('optionNo'))).prop('checked', true);
-          this.view.$el.find("input#option-" + (model.get('optionNo'))).parent().css('background-position', '0px -26px');
-        } else {
+        if (_ref = model.get('optionNo'), __indexOf.call(answerArray, _ref) < 0) {
           answerArray.push(model.get('optionNo'));
         }
+        this.view.$el.find("input#option-" + (model.get('optionNo'))).prop('checked', true);
+        this.view.$el.find("input#option-" + (model.get('optionNo'))).parent().css('background-position', '0px -26px');
         answerArray.sort();
         return console.log(this.answerModel.get('answer'));
       };

@@ -17,7 +17,8 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         'quiz-list': 'showQuizList',
         'view-quiz/:id': 'viewQuiz',
         'students/dashboard/textbook/:tID/quiz/:qID': 'startQuizClassMode',
-        'dummy-quiz/:content_piece_id': 'showDummyQuiz'
+        'dummy-quiz/:content_piece_id': 'showDummyQuiz',
+        'quiz-report/student/:sID/quiz/:qID': 'viewStudentsQuiz'
       };
 
       return QuizModuleRouter;
@@ -28,6 +29,14 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         return new QuizModuleApp.ViewQuiz.Controller({
           region: App.mainContentRegion,
           quiz_id: id
+        });
+      },
+      viewStudentsQuiz: function(student_id, quiz_id) {
+        return new QuizModuleApp.ViewQuiz.Controller({
+          region: App.mainContentRegion,
+          quiz_id: quiz_id,
+          student: student_id,
+          d_mode: 'quiz_report'
         });
       },
       startQuizClassMode: function(tID, qID) {
@@ -80,7 +89,7 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
                 quizModel: dummyQuizModel,
                 quizResponseSummary: quizResponseSummary,
                 questionsCollection: questionsCollection,
-                display_mode: 'take-quiz',
+                display_mode: 'class-mode',
                 textbookNames: textbookNames
               });
             });

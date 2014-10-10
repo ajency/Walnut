@@ -6,12 +6,13 @@ define ['app'
         class QuizModuleRouter extends Marionette.AppRouter
 
             appRoutes :
-                'create-quiz'   : 'createQuiz'
-                'edit-quiz/:id' : 'editQuiz'
-                'quiz-list'     : 'showQuizList'
-                'view-quiz/:id' : 'viewQuiz'
+                'create-quiz'                               : 'createQuiz'
+                'edit-quiz/:id'                             : 'editQuiz'
+                'quiz-list'                                 : 'showQuizList'
+                'view-quiz/:id'                             : 'viewQuiz'
                 'students/dashboard/textbook/:tID/quiz/:qID': 'startQuizClassMode'
-                'dummy-quiz/:content_piece_id' : 'showDummyQuiz'
+                'dummy-quiz/:content_piece_id'              : 'showDummyQuiz'
+                'quiz-report/student/:sID/quiz/:qID'        : 'viewStudentsQuiz'
 
 
         Controller =
@@ -20,6 +21,13 @@ define ['app'
                 new QuizModuleApp.ViewQuiz.Controller
                     region: App.mainContentRegion
                     quiz_id: id
+
+            viewStudentsQuiz: (student_id,quiz_id)->
+                new QuizModuleApp.ViewQuiz.Controller
+                    region: App.mainContentRegion
+                    quiz_id: quiz_id
+                    student: student_id
+                    d_mode: 'quiz_report'
 
             startQuizClassMode:(tID,qID)->
                 new QuizModuleApp.ViewQuiz.Controller
@@ -66,7 +74,7 @@ define ['app'
                             quizModel               : dummyQuizModel
                             quizResponseSummary     : quizResponseSummary
                             questionsCollection     : questionsCollection
-                            display_mode            : 'take-quiz'
+                            display_mode            : 'class-mode'
                             textbookNames           : textbookNames
 
         QuizModuleApp.on 'start',->

@@ -25,9 +25,8 @@ define ['app'
                 questionsCollection,questionResponseCollection,
                 contentPiece,@display_mode,studentCollection} = opts
 
-                App.leftNavRegion.close()
-                App.headerRegion.close()
-                App.breadcrumbRegion.close()
+                App.leftNavRegion.reset()
+                App.headerRegion.reset()
 
                 App.execute "when:fetched", [questionResponseCollection, contentPiece], =>
                     #checking if model exists in collection. if so, replacing the empty model
@@ -129,8 +128,8 @@ define ['app'
 
             _startViewModuleApp:=>
 
-                App.execute "show:headerapp", region : App.headerRegion
-                App.execute "show:leftnavapp", region : App.leftNavRegion
+                #get the header and left nav back incase it was hidden for quiz view
+                $.showHeaderAndLeftNav()
 
                 App.execute "show:single:module:app",
                     region: App.mainContentRegion
@@ -198,13 +197,15 @@ define ['app'
                             timerObject : @timerObject
                             evaluationParams : contentPiece.get 'grading_params'
 
-                        @layout.studentsListRegion.close()
+                        @layout.studentsListRegion.reset()
                         
 
                     else
                         App.execute "show:content:board",
                             region : @layout.contentBoardRegion
                             model : contentPiece
+
+                        @_showStudentsListView questionResponseModel
 
                 
 

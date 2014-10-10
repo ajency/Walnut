@@ -456,6 +456,17 @@ textarea[class*="span"] {
             }
         }
     }
+    &.radioCheck{
+        input[type=checkbox]:checked {
+            & + label {
+                color: #4d5056;
+                &::after {
+                    font-family: 'FontAwesome';
+                    content: "\f111";
+                }
+            }
+        }
+    }
     input[type=checkbox][disabled] {
         & + label {
             opacity: 0.65;
@@ -499,6 +510,20 @@ textarea[class*="span"] {
                 }
                 &::after {
                     color:  @color-white ;
+                }
+            }
+        }
+        &.radioCheck{
+            input[type=checkbox]:checked {
+                & + label {
+                    &:before {
+                        background-color: @color-white;
+                        border: 1px solid @color-grey;
+                    }
+                    &::after {
+                        color:  @color-info;
+                        font-size: 13px;
+                    }
                 }
             }
         }

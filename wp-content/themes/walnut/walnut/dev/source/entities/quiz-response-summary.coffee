@@ -61,6 +61,14 @@ define ['app'
 
 					quizResponseSummary
 
+				createQuizResponseSummaryCollection:(data)->
+
+					QuizResponseSummaryCollection = new QuizResponseSummary.SummaryCollection
+
+					QuizResponseSummaryCollection.set data
+
+					QuizResponseSummaryCollection
+
 
 
 			App.reqres.setHandler "create:quiz:response:summary",(data)->
@@ -72,5 +80,7 @@ define ['app'
 			App.reqres.setHandler "get:quiz:response:summary",(data)->
 					API.getQuizResponseSummary data
 
+			App.reqres.setHandler "create:quiz:response:summary:collection",(data)->
+					API.createQuizResponseSummaryCollection data
 
 

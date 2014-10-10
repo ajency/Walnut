@@ -1,5 +1,19 @@
 define(['jquery', 'underscore'], function($, _) {
   var adjustPageDim;
+  $(document).on("click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', function(e) {
+    var el, icon;
+    el = $(e.target).parents(".grid").children(".grid-body");
+    el.slideToggle(200);
+    icon = $(e.target).parents(".grid").find(".tools a");
+    if ($(icon).hasClass("collapse")) {
+      return $(icon).removeClass("collapse").addClass("expand");
+    } else {
+      return $(icon).removeClass("expand").addClass("collapse");
+    }
+  });
+  $(document).on("click", '.goto-prev-page', function() {
+    return window.history.back();
+  });
   $.fn.isEmptyColumn = function(params) {
     if (params == null) {
       params = {};
@@ -18,6 +32,19 @@ define(['jquery', 'underscore'], function($, _) {
       };
     })(this));
     return empty;
+  };
+  $.showHeaderAndLeftNav = function() {
+    if (_.isEmpty(App.headerRegion.$el)) {
+      App.execute("show:headerapp", {
+        region: App.headerRegion
+      });
+    }
+    if (_.isEmpty(App.leftNavRegion.$el)) {
+      App.execute("show:leftnavapp", {
+        region: App.leftNavRegion
+      });
+    }
+    return $('.page-content').removeClass('expand-page');
   };
   $.fn.removeAllAttr = function() {
     var attrs;

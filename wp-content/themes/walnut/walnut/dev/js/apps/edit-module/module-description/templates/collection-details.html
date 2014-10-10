@@ -197,56 +197,7 @@
                         <div class="panel-collapse collapse" id="collapseOne">
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[single_attempt]" id="attempt" type="checkbox" value="1">
-                                            <label for="attempt">Single Attempt</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[randomize]" id="random" type="checkbox" value="1">
-                                            <label for="random">Randomize Order</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[display_answer]" id="answer" type="checkbox" value="1">
-                                            <label for="answer">Display Answer</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[teacher_check]" id="check" type="checkbox" value="1">
-                                            <label for="check">Teacher Check</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[allow_skip]" id="skip" type="checkbox" value="1">
-                                            <label for="skip">Allow Skip</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[disable_quiz_replay]" id="marks" type="checkbox" value="1">
-                                            <label for="marks">Disable Quiz Replay</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[allow_resubmit]" id="resubmit" type="checkbox" value="1">
-                                            <label for="resubmit">Allow Resubmit</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[answer_printing]" id="print" type="checkbox" value="1">
-                                            <label for="print">Allow Answer Printing</label>
-                                        </div>
-                                    </div>
+                                    <div class="col-sm-3"><label>General: </label> </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3">
@@ -257,21 +208,45 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="checkbox check-info checkbox-circle perm">
-                                            <input name="permissions[customize_messages]" id="msgs" type="checkbox" value="1">
-                                            <label for="msgs">Customize Messages</label>
+                                            <input name="permissions[randomize]" id="random" type="checkbox" {{defaultRandomize}} value="1">
+                                            <label for="random">Randomize Order</label>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
-
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[disable_quiz_replay]" id="marks" type="checkbox" value="1">
+                                            <label for="marks">Disable Quiz Replay</label>
+                                        </div>
                                     </div>
                                     <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm">
+                                            <input name="permissions[single_attempt]" id="attempt" type="checkbox" value="1">
+                                            <label for="attempt">Allow Skip</label>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="row">
+                                    <div class="col-sm-3"><label>Show answer: </label> </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm radioCheck">
+                                            <input name="permissions[allow_resubmit]" id="resubmit" type="checkbox" value="1">
+                                            <label for="resubmit">Allow Resubmit</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox check-info checkbox-circle perm radioCheck">
+                                            <input name="permissions[display_answer]" id="answer" type="checkbox" value="1">
+                                            <label for="answer">Display Answer</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-default none" id="customMsg">
+                    <div class="panel panel-default" id="customMsg">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="collapsed"> &nbsp;

@@ -97,7 +97,7 @@ define ['app'], (App)->
                 if @$el.height()>0
                     @stage.setSize
                         width : @$el.width()
-                        height : @$el.height() - 7
+                        height : @$el.height() - 8
 
                 @model.set 'height', @stage.height()
                 # resize the default image

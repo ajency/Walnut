@@ -45,10 +45,7 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         this.show(view, {
           loading: true
         });
-        this.listenTo(view, 'end:quiz', function() {
-          return this.region.trigger('show:alert:popup', 'end_quiz');
-        });
-        return this.listenTo(view, 'quiz:time:up', function() {
+        return this.listenTo(view, 'end:quiz', function() {
           return this.region.trigger('end:quiz');
         });
       };
@@ -88,19 +85,17 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.className = 'timerBox';
 
-      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> <div id="downUpTimer" timerdirection=""></div> <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> <div class="qstnStatus"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div>';
+      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> <div id="downUpTimer" timerdirection=""></div> <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div>';
 
       QuizTimerView.prototype.events = {
-        'click #end-quiz': function() {
-          return this.trigger("end:quiz");
-        }
+        'click #end-quiz': 'endQuiz'
       };
 
       QuizTimerView.prototype.onShow = function() {
-        var timeLeftOrElapsed;
+        var timeLeftOrElapsed, _ref;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.display_mode === 'replay') {
+        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
           return this.$el.find('#completed-quiz').show();
         } else {
           if (timeLeftOrElapsed >= 0) {
@@ -122,7 +117,19 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         msgContent = this.model.getMessageContent('quiz_time_up');
         return bootbox.alert(msgContent, (function(_this) {
           return function() {
-            return _this.trigger("quiz:time:up");
+            return _this.trigger("end:quiz");
+          };
+        })(this));
+      };
+
+      QuizTimerView.prototype.endQuiz = function() {
+        var msgContent;
+        msgContent = this.model.getMessageContent('end_quiz');
+        return bootbox.confirm(msgContent, (function(_this) {
+          return function(result) {
+            if (result) {
+              return _this.trigger("end:quiz");
+            }
           };
         })(this));
       };

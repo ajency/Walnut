@@ -65,7 +65,7 @@ define ['app'
 
                 @layout.model.set 'blanksArray', @blanksCollection
 
-                console.log @blanksCollection.pluck 'marks'
+                # console.log @blanksCollection.pluck 'marks'
                 # get the view
                 @view = @_getFibView @layout.model
 
@@ -127,7 +127,7 @@ define ['app'
                         # get array of correct answers
                         blankModel = @blanksCollection.get($(blank).attr('data-id'))
                         correctAnswersArray = blankModel.get('correct_answers')
-                        console.log correctAnswersArray
+                        # console.log correctAnswersArray
 
                         if @_checkAnswer $(blank).val(), correctAnswersArray
                             @answerModel.set 'marks', @answerModel.get('marks') + blankModel.get('marks')
@@ -146,8 +146,8 @@ define ['app'
 
             # function to check wether a given blank is correct
             _checkAnswer : (answer, correctAnswersArray)->
-                console.log answer
-                console.log correctAnswersArray
+                # console.log answer
+                # console.log correctAnswersArray
 
                 if @caseSensitive
                     return _.contains correctAnswersArray, answer

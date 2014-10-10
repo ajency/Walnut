@@ -43,9 +43,6 @@ define ['app'
                             {{/alert}}
                         </div>'
 
-            dialogOptions :
-                modal_title : 'ALERT'
-
             events :
                 'click #confirm-yes'    :-> @trigger 'confirm:yes'
                 'click #alert-ok'    :-> @trigger 'alert:ok'
@@ -60,6 +57,11 @@ define ['app'
                 data.confirm=true if alert_type is 'confirm'
 
                 data
+
+            onShow:->
+                @$el.closest '.modal-dialog'
+                .find '.modal-header h4'
+                .html _.humanize Marionette.getOption @, 'alert_type'
 
             _closeComment : ->
                 @trigger 'close:popup:dialog'

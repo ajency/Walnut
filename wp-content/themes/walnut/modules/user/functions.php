@@ -19,7 +19,11 @@ function authenticate_login( $data ) {
             $login_check = get_userdata($login_check->ID);
         }
 
-        $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+        if(in_array('student',$login_check->allcaps))
+            $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+
+        elseif(in_array('teacher',$login_check->allcaps))
+            $login_check->division = get_user_meta($login_check->ID,'division',true);
 
         $response_data['login_details'] = $login_check;
 
@@ -54,7 +58,9 @@ function get_primary_blog_details( $user_id = '' ) {
     
     if (!is_multisite()) 
         $blog_data['site_url']=get_site_url();
-    
+
+    restore_current_blog();
+
     return $blog_data;
 }
 
@@ -71,7 +77,7 @@ function get_user_list( $data ) {
     }
 
     $users = get_users( $args );
-
+    
     $user_data = array();
     foreach ($users as $user) {
         $user_data[] = get_user_by_id( $user->id );
@@ -85,12 +91,20 @@ function get_user_by_id( $id ) {
 
     $user = get_userdata( $id );
 
-    $user_data['ID'] = $user->ID;
-    $user_data['display_name'] = $user->display_name;
-    $user_data['role'] = $user->roles;
-    $user_data['user_email'] = $user->user_email;
-    $user_data['user_email'] = $user->user_email;
-    $user_data['profile_pic'] = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
+    $user_data['ID']            = $user->ID;
+    $user_data['display_name']  = $user->display_name;
+    $user_data['role']          = $user->roles;
+    $user_data['user_email']    = $user->user_email;
+    $user_data['user_email']    = $user->user_email;
+    $user_data['roll_no']       = get_user_meta($id, 'student_rollno', true);
+
+    $user_data['profile_pic']   = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
+
+    if(in_array('student', $user->roles))
+        $user_data['division'] = get_user_meta($user->ID,'student_division',true);
+    
+    if(in_array('teacher', $user->roles))
+        $user_data['division'] = get_user_meta($user->ID,'division',true);
 
     return $user_data;
 
@@ -428,15 +442,28 @@ function get_parents_by_student_ids($student_ids){
 function get_students_by_division($division){
 
     global $wpdb;
+    
+    $blogusers = get_users( 'blog_id='.  get_current_blog_id() );
+    $blog_user_ids = array();
+    foreach ( $blogusers as $user ) {
+	$blog_user_ids[] = $user->ID;
+    }
+     
+    if(empty($blog_user_ids)){
+         $student_ids = array();
+    }
+    else{
+        $user_ids = implode(',', $blog_user_ids);   
 
-    $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
-        WHERE meta_key LIKE %s
-        AND meta_value = %d",
-        array('student_division',$division)
-    );
+        $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
+            WHERE meta_key LIKE %s
+            AND meta_value = %d AND user_id IN (".$user_ids.")",
+            array('student_division',$division)
+        );
 
-    $student_ids = $wpdb->get_results($students_query);
-
+        $student_ids = $wpdb->get_results($students_query);
+    }
+    
     $ids= array();
 
     foreach($student_ids as $id)
@@ -518,7 +545,7 @@ function add_user_meta_signups($user, $user_email, $key, $meta){
                      wp_new_user_notification($new_parent_id, $password);
 
                      $usermeta['parent_email'.$i] = $_POST['parent_email_'.$i];
-                     $usermeta['child_of'.$i] = $parent_id;
+                     $usermeta['child_of'.$i] = $new_parent_id;
                      //update_user_meta( $new_parent_id, 'parent_of', $user_id );
 
                  }             

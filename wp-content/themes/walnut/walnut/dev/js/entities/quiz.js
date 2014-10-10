@@ -63,7 +63,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           quiz_time_up: 'Sorry, your time is up'
         };
         message_content = default_messages[message_type];
-        if (this.hasPermission('customize_messages') && !_.isEmpty(this.get('message'))) {
+        if (!_.isEmpty(this.get('message'))) {
           custom_messages = this.get('message');
           if (custom_messages[message_type]) {
             message_content = custom_messages[message_type];
@@ -89,7 +89,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemCollection.prototype.parse = function(resp) {
-        return resp.data;
+        return resp.data.reverse();
       };
 
       return ItemCollection;

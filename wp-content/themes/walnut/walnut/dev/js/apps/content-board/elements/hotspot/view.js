@@ -106,7 +106,7 @@ define(['app'], function(App) {
       HotspotView.prototype._clickHandler = function() {
         _.each(this.optionLayer.getChildren(), this._iterateThruOptions);
         if (this.model.get('transparent')) {
-          return this.stage.on('click', this._onOutsideClick);
+          return this.stage.on('click touchstart', this._onOutsideClick);
         }
       };
 
@@ -119,7 +119,7 @@ define(['app'], function(App) {
       };
 
       HotspotView.prototype._iterateThruOptions = function(option) {
-        return option.on('click', _.bind(this._onOptionClick, this, option));
+        return option.on('click touchstart', _.bind(this._onOptionClick, this, option));
       };
 
       HotspotView.prototype._onOptionClick = function(option, evt) {
@@ -190,13 +190,13 @@ define(['app'], function(App) {
         this.listenTo(this, "show:feedback", function() {
           return anim.stop();
         });
-        return blinker.on('click', (function(_this) {
+        return blinker.on('click touchstart', (function(_this) {
           return function() {
             answerObject = _.findWhere(_this.answerModel.get('answer'), {
               id: blinker.name()
             });
             _this.answerModel.set('answer', _.without(_this.answerModel.get('answer'), answerObject));
-            blinker.off('click');
+            blinker.off('click touchstart');
             return blinker.destroy();
           };
         })(this));
