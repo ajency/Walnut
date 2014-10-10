@@ -26,7 +26,7 @@ define(['underscore', 'jquery'], function(_, $) {
                 $('#syncMediaSuccess').css("display", "block").text("All media files updated");
                 return setTimeout((function(_this) {
                   return function() {
-                    return App.navigate('teachers/dashboard', {
+                    return App.navigate('students/dashboard', {
                       trigger: true
                     });
                   };
@@ -71,7 +71,7 @@ define(['underscore', 'jquery'], function(_, $) {
                   $('#syncMediaSuccess').css("display", "block").text("Media sync completed");
                   return setTimeout((function(_this) {
                     return function() {
-                      return App.navigate('teachers/dashboard', {
+                      return App.navigate('students/dashboard', {
                         trigger: true
                       });
                     };

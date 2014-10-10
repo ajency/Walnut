@@ -34,7 +34,7 @@ define ['underscore', 'jquery'], ( _ , $) ->
 								$('#syncMediaSuccess').css("display","block").text("All media files updated")
 
 								setTimeout(=>
-									App.navigate('teachers/dashboard', trigger: true)
+									App.navigate('students/dashboard', trigger: true)
 								,2000)
 
 
@@ -87,7 +87,7 @@ define ['underscore', 'jquery'], ( _ , $) ->
 										$('#syncMediaSuccess').css("display","block").text("Media sync completed")
 
 										setTimeout(=>
-											App.navigate('teachers/dashboard', trigger: true)
+											App.navigate('students/dashboard', trigger: true)
 										,2000)
 
 
