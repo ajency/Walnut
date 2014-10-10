@@ -27,7 +27,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 marks = parseFloat marks # removes the unnecessary decimal incase of 40.0 
 
                 marks=0 if not marks or _.isNaN parseInt marks
-                console.log marks
 
                 marks
 

@@ -164,6 +164,17 @@ define ['app'
                     @layout.attemptsRegion.$el.find '.view-summary i'
                     .removeClass 'fa fa-spin fa-spinner'
 
+                    @_scrolltoQuizDetailsRegion()
+
+            _scrolltoQuizDetailsRegion:->
+                
+                top= @layout.quizDetailsRegion.$el.offset().top
+                #cancel out the header div height
+                top= top-70
+
+                $('html,body').animate scrollTop: top, 'slow'
+
+
             _fetchQuizResponseSummary:=>
                 defer = $.Deferred();
 

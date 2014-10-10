@@ -34,7 +34,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (!marks || _.isNaN(parseInt(marks))) {
           marks = 0;
         }
-        console.log(marks);
         return marks;
       };
 
