@@ -286,7 +286,7 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
 
-    switch_to_blog( $current_blog );
+    restore_current_blog();
 
     if ($division && $book_dets->parent === 0){
         $textbook_status = get_status_for_textbook($book_id, $division);
@@ -319,11 +319,11 @@ function get_status_for_textbook($textbook_id, $division){
         'parent' => $textbook_id,
         'fields' => 'ids' );
 
-    $current_blog = get_current_blog_id();
     switch_to_blog( 1 );
     $chapters = get_terms( 'textbook', $args );
-    switch_to_blog( $current_blog );
-
+    
+    restore_current_blog();
+    
     $completed = $in_progress = $not_started = array();
 
     foreach($chapters as $chapter){
@@ -356,19 +356,21 @@ function get_status_for_textbook($textbook_id, $division){
 function get_status_for_chapter($chapter_id, $division){
 
     global $wpdb;
-
+    
+    restore_current_blog();
+    
     if(!(int)$chapter_id || ! (int) $division)
         return false;
 
     $completed = $in_progress = $not_started = array();
 
     $module_ids_query = $wpdb->prepare("SELECT id FROM {$wpdb->base_prefix}content_collection
-        WHERE term_ids like %s AND post_status like %s",
-        array('%"' . $chapter_id . '";%', 'publish')
+        WHERE term_ids like %s AND post_status like %s AND type like %s",
+        array('%"' . $chapter_id . '";%', 'publish', 'teaching-module')
     );
 
     $module_ids = $wpdb->get_results($module_ids_query);
-
+    
     if($module_ids){
         foreach($module_ids as $module){
             $module_status = get_content_module_status($module->id, $division);
