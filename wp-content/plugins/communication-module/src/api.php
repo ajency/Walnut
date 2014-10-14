@@ -54,7 +54,9 @@ if(is_plugin_active('json-rest-api/plugin.php')){
              $routes['/ajcm/emailpreferences/(?P<user_id>\d+)/(?P<component>\w+)/(?P<communication_type>\w+)'] = array(
                 array( array( $this, 'update_user_emailpreference'), WP_JSON_Server::EDITABLE | WP_JSON_Server::ACCEPT_JSON ),
                 ); 
-             
+             $routes['/ajcm/mandrill/templatepreview'] = array(
+                array( array( $this, 'get_template_preview'), WP_JSON_Server::CREATABLE  | WP_JSON_Server::ACCEPT_JSON ),
+                );              
             return $routes;
         }
         
@@ -86,51 +88,51 @@ if(is_plugin_active('json-rest-api/plugin.php')){
             $user_id = intval($user_id);
             $response = $aj_comm->get_user_preferences($user_id);
             if(empty($response)){
-                 wp_send_json_error($response);
+             wp_send_json_error($response);
             }else{
-                 wp_send_json(array('success'=>true,'data'=>$response));
+             wp_send_json(array('success'=>true,'data'=>$response));
             }
            
         }
         
         public function user_emailpreference($user_id,$communication_type){
             global $aj_comm;
-            
             $user_id = intval($user_id);
             $response = $aj_comm->get_user_preferences($user_id,$communication_type);
             if(empty($response)){
-                 wp_send_json_error($response);
+                wp_send_json_error($response);
             }else{
-                
-                 if($response[$communication_type] == 'yes' ){
-                     $ret = 1;
-                 }else{
-                     $ret = 0;
-                 }
-                 
-                 wp_send_json(array('success'=>true,'data'=>$ret));
-            }   
+                if($response[$communication_type] == 'yes' ){
+                    $ret = 1;
+                }else{
+                    $ret = 0;
+                }
+                wp_send_json(array('success'=>true,'data'=>$ret));
+            } 
         }
         
         public function update_user_emailpreference($user_id,$component,$communication_type,$data){
             global $aj_comm;
-            
-            // check if component,communication type is registered  
+            // check if component,communication type is registered
             if(! $aj_comm->is_registered_component_type($component,$communication_type) ){
                 $response = array('data' => array('msg'=>'Communication type not registered.'));
-                wp_send_json_error($response); 
+                wp_send_json_error($response);
             }
             
             if(! $aj_comm->is_preference_editable($component,$communication_type) ){
                 $response = array('data' => array('msg'=>'Preference not editable.'));
-                wp_send_json_error($response); 
+                wp_send_json_error($response);
             }
             
             $preference = (bool) $data['preference'];
             $preference = ($preference == true) ? 'yes':'no';
-            
             $resp = $aj_comm->update_user_email_preference($preference,$user_id,$communication_type);
             wp_send_json(array('success'=>true,'data'=>$resp));
+        }
+        
+        public function get_template_preview($data){
+            
+            wp_send_json($data);
         }
             
     }
