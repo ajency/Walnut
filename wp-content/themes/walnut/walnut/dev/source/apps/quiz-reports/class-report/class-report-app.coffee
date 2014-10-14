@@ -1,7 +1,7 @@
 define ['app'
     'controllers/region-controller'
     'apps/quiz-reports/class-report/class-report-layout'
-    'apps/quiz-reports/class-report/listing-controller'
+    'apps/quiz-reports/class-report/modules-listing/controller'
     'apps/quiz-reports/student-filter/student-filter-app'
     'apps/quiz-reports/class-report/search-results-app'], (App, RegionController)->
 
@@ -26,7 +26,7 @@ define ['app'
                 class_id= divisionsCollection.first().get 'class_id'
                 division= divisionsCollection.first().get 'id'
 
-                textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
+                textbooksCollection = App.request "get:textbooks"
 
                 App.execute "when:fetched", textbooksCollection, => 
                     App.execute "when:fetched", textbooksCollection, @_fetchQuizzes

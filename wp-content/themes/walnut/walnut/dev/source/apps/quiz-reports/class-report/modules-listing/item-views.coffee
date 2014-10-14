@@ -1,8 +1,7 @@
 define ['app'
-        'text!apps/quiz-reports/class-report/templates/outer-template.html'
-], (App, contentListTpl)->
+], (App)->
     App.module "ClassQuizReportListing.Views", (Views, App, Backbone, Marionette, $, _)->
-        class ListItemView extends Marionette.ItemView
+        class Views.ListItemView extends Marionette.ItemView
 
             tagName : 'tr'
             className : 'gradeX odd'
@@ -45,7 +44,7 @@ define ['app'
             events:
                 'click .view-report' :-> @trigger 'view:quiz:report', @model.id
 
-        class EmptyView extends Marionette.ItemView
+        class Views.EmptyView extends Marionette.ItemView
 
             template: 'No Content Available'
 
@@ -54,43 +53,4 @@ define ['app'
             onShow:->
                 @$el.attr 'colspan',6
 
-        class Views.ModulesListingView extends Marionette.CompositeView
-
-            template : contentListTpl
-
-            className : 'row'
-
-            itemView : ListItemView
-
-            emptyView : EmptyView
-
-            itemViewContainer : '#list-content-pieces'
-
-            itemViewOptions : ->
-                textbooksCollection : @textbooks
-                chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
-
-            initialize : ->
-                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
-                @textbooks = new Array()
-                @textbooksCollection.each (textbookModel, ind)=>
-                    @textbooks.push
-                        'name' : textbookModel.get('name')
-                        'id' : textbookModel.get('term_id')
-
-            onShow : ->
-                @$el.find '#content-pieces-table'
-                .tablesorter();
-
-                @onUpdatePager()
-
-            onUpdatePager:->
-
-                @$el.find "#content-pieces-table"
-                .trigger "updateCache"
-                pagerOptions =
-                    container : @$el.find ".pager"
-                    output : '{startRow} to {endRow} of {totalRows}'
-
-                @$el.find "#content-pieces-table"
-                .tablesorterPager pagerOptions
+        

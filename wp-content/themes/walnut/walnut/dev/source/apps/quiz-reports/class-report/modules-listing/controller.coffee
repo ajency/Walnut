@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'apps/quiz-reports/class-report/listing-views'
+        'apps/quiz-reports/class-report/modules-listing/composite-view'
 ], (App, RegionController)->
     App.module "ClassQuizReportListing", (ClassQuizReportListing, App, Backbone, Marionette, $, _)->
         class ClassQuizReportListing.Controller extends RegionController

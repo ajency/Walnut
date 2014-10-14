@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/listing-controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/modules-listing/controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app'], function(App, RegionController) {
   return App.module("ClassReportApp", function(ClassReportApp, App) {
     ClassReportApp.Controller = (function(_super) {
       var divisionsCollection, quizzes, students, textbooksCollection;
@@ -34,9 +34,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
         var class_id, division;
         class_id = divisionsCollection.first().get('class_id');
         division = divisionsCollection.first().get('id');
-        textbooksCollection = App.request("get:textbooks", {
-          'class_id': class_id
-        });
+        textbooksCollection = App.request("get:textbooks");
         return App.execute("when:fetched", textbooksCollection, (function(_this) {
           return function() {
             return App.execute("when:fetched", textbooksCollection, _this._fetchQuizzes);
