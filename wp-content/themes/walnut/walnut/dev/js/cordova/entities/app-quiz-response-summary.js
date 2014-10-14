@@ -11,28 +11,33 @@ define(['underscore', 'unserialize'], function(_) {
       };
       onSuccess = function(d) {
         return function(tx, data) {
-          var countForSkippedQuestion, quiz_meta, result, row;
+          var quizResponseSummary, quiz_meta, result, row;
           result = '';
           row = data.rows.item(0);
           quiz_meta = _.unserialize(row['quiz_meta']);
-          countForSkippedQuestion = _.getCountForSkippedQuestion();
-          return countForSkippedQuestion.done(function(skipped) {
-            var totalMarksScoredAndTotalTimeTaken;
-            totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id']);
-            return totalMarksScoredAndTotalTimeTaken.done(function(value) {
-              result = {
-                collection_id: collection_id,
-                status: quiz_meta.status,
-                attempts: quiz_meta.attempts,
-                questions_order: quiz_meta.questions_order,
-                num_skipped: skipped,
-                student_id: _.getUserID(),
-                summary_id: row['summary_id'],
-                taken_on: row['taken_on'],
-                total_marks_scored: value.total_marks_scored,
-                total_time_taken: value.total_time_taken
-              };
-              return d.resolve(result);
+          quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
+          return quizResponseSummary.done(function(quiz_responses) {
+            var countForSkippedQuestion;
+            countForSkippedQuestion = _.getCountForSkippedQuestion();
+            return countForSkippedQuestion.done(function(skipped) {
+              var totalMarksScoredAndTotalTimeTaken;
+              totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id']);
+              return totalMarksScoredAndTotalTimeTaken.done(function(value) {
+                result = {
+                  collection_id: collection_id,
+                  marks_scored: value.marks_scored,
+                  negative_scored: value.negative_scored,
+                  num_skipped: skipped,
+                  questions_order: quiz_meta.questions_order,
+                  status: quiz_meta.status,
+                  student_id: _.getUserID(),
+                  summary_id: row['summary_id'],
+                  taken_on: row['taken_on'],
+                  total_marks_scored: value.total_marks_scored,
+                  total_time_taken: value.total_time_taken
+                };
+                return d.resolve(result);
+              });
             });
           });
         };
@@ -67,15 +72,11 @@ define(['underscore', 'unserialize'], function(_) {
       quizMeta = '';
       collectionMeta = _.getCollectionMeta(model.get('collection_id'));
       collectionMeta.done(function(collectionMetaData) {
-        var quizResponseSummary;
         if (collectionMetaData.quizType === "practice") {
-          quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'));
-          return quizResponseSummary.done(function(attempts) {
-            quizMetaValue = attempts;
-            return quizMeta = {
-              'attempts': quizMetaValue
-            };
-          });
+          quizMetaValue = model.get('status');
+          return quizMeta = {
+            'status': quizMetaValue
+          };
         } else {
           quizMetaValue = model.get('status');
           return quizMeta = {

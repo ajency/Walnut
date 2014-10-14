@@ -29,12 +29,13 @@ define ['underscore', 'unserialize'], ( _) ->
 
 								result[i] = 
 									content_piece_id : row['content_piece_id']
-									marks_scored : value.total_marks_scored
+									marks_scored: value.total_marks_scored
 									qr_id: row['qr_id']
 									question_response : _.unserialize(row['question_response'])
 									status : row['status']
 									summary_id :summary_id
 									time_taken : value.total_time_taken
+									
 								console.log JSON.stringify result[i]
 
 					# if result.length>0
@@ -55,6 +56,10 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, 
+							SUM(CASE WHEN status = 'wrong_answer' 
+							THEN marks_scored ELSE 0 END) as negative_scored, 
+							SUM(CASE WHEN status <> 'wrong_answer' 
+							THEN marks_scored ELSE 0 END) as marks_scored, 
 							SUM(time_taken) as total_time_taken 
 							FROM "+_.getTblPrefix()+"quiz_question_response 
 							WHERE summary_id = ?", 

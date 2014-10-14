@@ -45,21 +45,24 @@ define ['underscore'], ( _) ->
 													practiceAndTotalQuiz = _.getPracticeAndTotalQuiz(row['textbook_id'])
 													practiceAndTotalQuiz.done (total_quiz_count)->
 
-														do(row, i, modules_count, options,chapter_count,total_quiz_count)->
-															completedQuizCount = _.getCompletedQuizCount(row['textbook_id'])
-															completedQuizCount.done (quizzes_completed)->
+
+														do(row, i, modules_count, options, chapter_count, total_quiz_count)->
+															practiceCompletedQuizCount = _.getPracticeCompletedQuizCount(row['textbook_id'])
+															practiceCompletedQuizCount.done (practice_quizzes_completed)->
+
 
 																result[i] = 
 																	term_id: row["term_id"]
 																	name: row["name"]
 																	class_test_count: total_quiz_count.class_test
+																	class_test_completed : practice_quizzes_completed.class_test_completed
+																	class_test_not_started : total_quiz_count.class_test - (practice_quizzes_completed.class_test_completed + practice_quizzes_completed.class_test_in_progress)
 																	slug: row["slug"]
 																	term_group: row["term_group"]
 																	term_taxonomy_id: row["term_taxonomy_id"]
 																	taxonomy: row["taxonomy"]
 																	description: row["description"]
 																	parent: row["parent"]
-																	practice_count: total_quiz_count.practice
 																	count: row["count"]
 																	classes: _.unserialize(row["class_id"])
 																	subjects: _.unserialize(row["tags"])
@@ -68,9 +71,10 @@ define ['underscore'], ( _) ->
 																	cover_pic: options.attachmenturl
 																	filter: 'raw'
 																	chapter_count : chapter_count
-																	quizzes_completed : quizzes_completed
-																	quizzes_not_started : total_quiz_count.class_test - quizzes_completed 
-
+																	practice_count: total_quiz_count.practice
+																	practice_completed : practice_quizzes_completed.practice_completed
+																	practice_not_started : total_quiz_count.practice - (practice_quizzes_completed.practice_completed + practice_quizzes_completed.practice_in_progress )
+					
 					d.resolve(result)
 			
 			$.when(runQuery()).done (data)->
@@ -168,36 +172,71 @@ define ['underscore'], ( _) ->
 			.fail _.failureHandler			
 
 
-		
-		#get Completed quiz count for student app
-		getCompletedQuizCount : (textbook_id)->
+
+		#get Practice quiz Completed count for student app
+		getPracticeCompletedQuizCount : (textbook_id)->
 
 			pattern = '%"'+textbook_id+'"%'
 
 			runQuery =->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(distinct(qr.collection_id)) AS completed_quiz_count 
-							FROM "+_.getTblPrefix()+"quiz_response_summary qr,
-							wp_content_collection cc
-							, wp_collection_meta m WHERE 
-							qr.collection_id = cc.id 
+						tx.executeSql("SELECT cc.id, cm.meta_value as quiz_type, qr.quiz_meta 
+							FROM "+_.getTblPrefix()+"quiz_response_summary qr, 
+							wp_content_collection cc, wp_collection_meta cm 
+							WHERE qr.collection_id = cc.id 
+							AND cm.collection_id = cc.id 
+							AND cm.meta_key LIKE '%quiz_type%' 
+							AND cc.post_status IN ('publish','archive') 
 							AND qr.student_id = ? 
-							AND cc.post_status in ('publish','archive') 
-							AND qr.quiz_meta LIKE '%completed%' 
-							AND cc.term_ids LIKE '"+pattern+"' 
-							AND m.meta_value=? "
-							, [_.getUserID(), 'test']
+							AND cc.term_ids LIKE '"+pattern+"' "
+							, [_.getUserID()]
 							, onSuccess(d), _.deferredErrorHandler(d))
 
 			onSuccess =(d)->
 				(tx,data)->
-					quizzes_completed = data.rows.item(0)['completed_quiz_count']
-					console.log quizzes_completed
-					d.resolve(quizzes_completed)
+
+					practice_quizzes_completed = new Array()
+					
+					class_test_completed = new Array()
+					practice_completed = new Array()
+					class_test_in_progress = new Array()
+					practice_in_progress = new Array()
+					
+					for i in [0..data.rows.length-1] by 1
+						row = data.rows.item(i)
+						
+						quiz_meta = _.unserialize(row['quiz_meta'])
+						status = quiz_meta['status']
+
+						if status is 'completed'
+							if row['quiz_type'] is 'test'
+								class_test_completed[i] = row['id']
+							else
+								practice_completed[i] = row['id']
+						else
+							if row['quiz_type'] is 'test'
+								class_test_in_progress[i] = row['id']
+							else
+								practice_in_progress[i] = row['id']
+					
+					if practice_completed.length >0
+						count_practice_completed = _.uniq(practice_completed);
+					if practice_in_progress.length >0
+						count_practice_in_progress = _.uniq(practice_in_progress);
+					
+					
+					practice_quizzes_completed = 
+						class_test_completed : _.size(_.values(class_test_completed)),
+						practice_completed : _.size(count_practice_completed),
+						class_test_in_progress : _.size(_.values(class_test_in_progress)),
+						practice_in_progress : _.size(count_practice_in_progress)
+
+
+					d.resolve(practice_quizzes_completed)
 
 			$.when(runQuery()).done ->
-				console.log 'getCompletedQuizCount transaction completed'
+				console.log 'getPracticeCompletedQuizCount transaction completed'
 			.fail _.failureHandler
 
 		

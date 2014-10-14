@@ -325,45 +325,51 @@ define ['underscore', 'unserialize'], ( _) ->
 							data.status = 'not started'
 							data.start_date = ''
 							data.attempts = 0
+							d.resolve data
 
 						if not _.isEmpty quiz_responses
-
-							contentLayoutValue = _.unserialize(quiz_responses.quiz_meta)
-
-							if contentLayoutValue.attempts
-								data.attempts = contentLayoutValue.attempts
-
-								if moment(quiz_responses.taken_on).isValid()
-									data.start_date = quiz_responses.taken_on
-
-								else
-									date = quiz_responses.taken_on
-									data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 							
+							getQuizType = _.getCollectionMeta(collection_id)
+							getQuizType.done (collectionMetaData)->
 
-							if contentLayoutValue.status is "started"
-								data.status = 'started'
+								contentLayoutValue = _.unserialize(quiz_responses.quiz_meta)
+								console.log JSON.stringify contentLayoutValue
 
-								if moment(quiz_responses.taken_on).isValid()
-									data.start_date = quiz_responses.taken_on
+								if collectionMetaData.quizType is 'practice'
+									data.attempts = quiz_responses.attempts
+									# data.status = 'completed'
 
-								else
-									date = quiz_responses.taken_on
-									data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+									# if moment(quiz_responses.taken_on).isValid()
+									# 	data.start_date = quiz_responses.taken_on
+
+									# else
+									# 	date = quiz_responses.taken_on
+									# 	data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+								
+								
+								if contentLayoutValue.status is "started"
+									data.status = 'started'
+
+									if moment(quiz_responses.taken_on).isValid()
+										data.start_date = quiz_responses.taken_on
+
+									else
+										date = quiz_responses.taken_on
+										data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
 
-							else if contentLayoutValue.status is "completed"
-								data.status = 'completed'
+								else if contentLayoutValue.status is "completed"
+									data.status = 'completed'
 
-								if moment(quiz_responses.taken_on).isValid()
-									data.start_date = quiz_responses.taken_on
+									if moment(quiz_responses.taken_on).isValid()
+										data.start_date = quiz_responses.taken_on
 
-								else
-									date = quiz_responses.taken_on
-									data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
+									else
+										date = quiz_responses.taken_on
+										data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
-
-						d.resolve data
+								console.log JSON.stringify data
+								d.resolve data
 
 			
 			$.when(runFunc()).done ->
@@ -378,9 +384,11 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT COUNT(summary_id) AS attempts, taken_on, quiz_meta 
-							FROM "+_.getTblPrefix()+"quiz_response_summary WHERE collection_id=? 
-							AND student_id=?", [collection_id, _.getUserID()] 
+							FROM "+_.getTblPrefix()+"quiz_response_summary 
+							WHERE collection_id=? AND student_id=?"
+							, [collection_id, _.getUserID()] 
 							, onSuccess(d), _.deferredErrorHandler(d))
+			
 			onSuccess =(d)->
 				(tx,data)->
 

@@ -317,43 +317,44 @@ define(['underscore', 'unserialize'], function(_) {
           var quizResponseSummary;
           quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
-            var contentLayoutValue, date;
+            var getQuizType;
             console.log(JSON.stringify(quiz_responses));
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';
               data.attempts = 0;
+              d.resolve(data);
             }
             if (!_.isEmpty(quiz_responses)) {
-              contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
-              if (contentLayoutValue.attempts) {
-                data.attempts = contentLayoutValue.attempts;
-                if (moment(quiz_responses.taken_on).isValid()) {
-                  data.start_date = quiz_responses.taken_on;
-                } else {
-                  date = quiz_responses.taken_on;
-                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+              getQuizType = _.getCollectionMeta(collection_id);
+              return getQuizType.done(function(collectionMetaData) {
+                var contentLayoutValue, date;
+                contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
+                console.log(JSON.stringify(contentLayoutValue));
+                if (collectionMetaData.quizType === 'practice') {
+                  data.attempts = quiz_responses.attempts;
                 }
-              }
-              if (contentLayoutValue.status === "started") {
-                data.status = 'started';
-                if (moment(quiz_responses.taken_on).isValid()) {
-                  data.start_date = quiz_responses.taken_on;
-                } else {
-                  date = quiz_responses.taken_on;
-                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                if (contentLayoutValue.status === "started") {
+                  data.status = 'started';
+                  if (moment(quiz_responses.taken_on).isValid()) {
+                    data.start_date = quiz_responses.taken_on;
+                  } else {
+                    date = quiz_responses.taken_on;
+                    data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                  }
+                } else if (contentLayoutValue.status === "completed") {
+                  data.status = 'completed';
+                  if (moment(quiz_responses.taken_on).isValid()) {
+                    data.start_date = quiz_responses.taken_on;
+                  } else {
+                    date = quiz_responses.taken_on;
+                    data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                  }
                 }
-              } else if (contentLayoutValue.status === "completed") {
-                data.status = 'completed';
-                if (moment(quiz_responses.taken_on).isValid()) {
-                  data.start_date = quiz_responses.taken_on;
-                } else {
-                  date = quiz_responses.taken_on;
-                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
-                }
-              }
+                console.log(JSON.stringify(data));
+                return d.resolve(data);
+              });
             }
-            return d.resolve(data);
           });
         });
       };

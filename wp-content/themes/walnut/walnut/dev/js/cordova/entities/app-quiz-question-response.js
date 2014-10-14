@@ -46,7 +46,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END) as negative_scored, SUM(CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END) as marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };

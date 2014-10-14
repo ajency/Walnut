@@ -1,4 +1,4 @@
-define ['underscore'], ( _) ->
+define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 
 	#File download
 
@@ -30,9 +30,35 @@ define ['underscore'], ( _) ->
 						$.get AJAXURL + '?action=sync-database',
 								data,
 								(resp)=>
-									console.log 'getZipFileDownloadDetails response'
-									console.log JSON.stringify resp
-									_.downloadZipFile resp
+									
+									if resp is 0
+										
+										userInfo = _.getUserDetails(_.getUserID())
+										userInfo.done (user_Details)->
+											_.removeCordovaBackbuttonEventListener()
+											
+											_.setUserID(null)
+											_.setTblPrefix(null)
+
+											user = App.request "get:user:model"
+											user.clear()
+
+											App.leftNavRegion.close()
+											App.headerRegion.close()
+											App.mainContentRegion.close()
+											App.breadcrumbRegion.close()
+
+											bootbox.alert "Hi, your session has expired. Please log in to continue"
+											username = user_Details.username
+											setTimeout(=>
+												App.navigate "login/"+username, trigger:true
+												$('#onOffSwitch').prop
+													"disabled" : true, "checked" : true
+											,1000)
+									else
+										console.log 'getZipFileDownloadDetails response'
+										console.log JSON.stringify resp
+										_.downloadZipFile resp
 
 								,
 								'json'

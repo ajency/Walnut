@@ -1,4 +1,4 @@
-define(['underscore'], function(_) {
+define(['underscore', 'bootbox'], function(_, bootbox) {
   return _.mixin({
     getZipFileDownloadDetails: function() {
       var userDetails;
@@ -19,9 +19,39 @@ define(['underscore'], function(_) {
           console.log(JSON.stringify(data));
           return $.get(AJAXURL + '?action=sync-database', data, (function(_this) {
             return function(resp) {
-              console.log('getZipFileDownloadDetails response');
-              console.log(JSON.stringify(resp));
-              return _.downloadZipFile(resp);
+              var userInfo;
+              if (resp === 0) {
+                userInfo = _.getUserDetails(_.getUserID());
+                return userInfo.done(function(user_Details) {
+                  var user, username;
+                  _.removeCordovaBackbuttonEventListener();
+                  _.setUserID(null);
+                  _.setTblPrefix(null);
+                  user = App.request("get:user:model");
+                  user.clear();
+                  App.leftNavRegion.close();
+                  App.headerRegion.close();
+                  App.mainContentRegion.close();
+                  App.breadcrumbRegion.close();
+                  bootbox.alert("Hi, your session has expired. Please log in to continue");
+                  username = user_Details.username;
+                  return setTimeout((function(_this) {
+                    return function() {
+                      App.navigate("login/" + username, {
+                        trigger: true
+                      });
+                      return $('#onOffSwitch').prop({
+                        "disabled": true,
+                        "checked": true
+                      });
+                    };
+                  })(this), 1000);
+                });
+              } else {
+                console.log('getZipFileDownloadDetails response');
+                console.log(JSON.stringify(resp));
+                return _.downloadZipFile(resp);
+              }
             };
           })(this), 'json').fail(function() {
             return _.onDataSyncError("none", "Could not connect to server");
