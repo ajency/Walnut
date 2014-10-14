@@ -26,7 +26,7 @@ define ['app'
                 class_id= divisionsCollection.first().get 'class_id'
                 division= divisionsCollection.first().get 'id'
 
-                textbooksCollection = App.request "get:textbooks"
+                textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
 
                 App.execute "when:fetched", textbooksCollection, => 
                     App.execute "when:fetched", textbooksCollection, @_fetchQuizzes

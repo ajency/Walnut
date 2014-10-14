@@ -6,7 +6,12 @@ define ['app'
             tagName : 'tr'
             className : 'gradeX odd'
 
-            template : '<td>{{name}}</td>
+            template : '<td class="v-align-middle"><div class="checkbox check-default">
+                            <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}">
+                            <label for="checkbox{{id}}"></label>
+                          </div>
+                        </td>
+                        <td>{{name}}</td>
                         <td>{{&textbookName}}</td>
                         <td>{{&chapterName}}</td>
                         <td>{{duration}} mins</td>
@@ -16,20 +21,13 @@ define ['app'
 
             serializeData : ->
                 data = super()
-                @textbooks = Marionette.getOption @, 'textbooksCollection'
-                @chapters = Marionette.getOption @, 'chaptersCollection'
+                textbooks = Marionette.getOption @, 'textbookNamesCollection'
 
-                data.textbookName = =>
-                    textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
-                    textbook.name if textbook?
+                term_ids = data.term_ids
 
-                data.chapterName = =>
-                    if data.term_ids.chapter
-                        chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
-                        .pluck 'name'
-                            .compact()
-                            .value()
-                        chapter
+                data.textbookName = textbooks.getTextbookName term_ids
+
+                data.chapterName = textbooks.getChapterName term_ids
 
                 data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Class Test'
 
@@ -51,6 +49,6 @@ define ['app'
             tagName: 'td'
 
             onShow:->
-                @$el.attr 'colspan',6
+                @$el.attr 'colspan',7
 
         

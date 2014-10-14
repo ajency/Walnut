@@ -18,16 +18,14 @@
             itemViewContainer : '#list-content-pieces'
 
             itemViewOptions : ->
-                textbooksCollection : @textbooks
-                chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
+                textbookNamesCollection : @textbookNamesCollection
+
+            events:
+                'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#content-pieces-table'
+                'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
 
             initialize : ->
-                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
-                @textbooks = new Array()
-                @textbooksCollection.each (textbookModel, ind)=>
-                    @textbooks.push
-                        'name' : textbookModel.get('name')
-                        'id' : textbookModel.get('term_id')
+                @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
 
             onShow : ->
                 @$el.find '#content-pieces-table'
@@ -45,3 +43,18 @@
 
                 @$el.find "#content-pieces-table"
                 .tablesorterPager pagerOptions
+
+            onResetTextbookNames:(namesCollection)=>
+                @textbookNamesCollection.reset namesCollection.models
+                @collection.trigger 'reset'
+                @onUpdatePager()
+
+            showSubmitButton:->
+                if @$el.find '.tab_checkbox'
+                .is ':checked'
+                    @$el.find '#send-email, #send-sms'
+                    .show()
+
+                else
+                    @$el.find '#send-email, #send-sms'
+                    .hide()

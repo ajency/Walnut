@@ -14,35 +14,15 @@ define(['app'], function(App) {
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> <td><button class="btn btn-small btn-success view-report">view report</button></td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> <td><button class="btn btn-small btn-success view-report">view report</button></td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data;
+        var data, term_ids, textbooks;
         data = ListItemView.__super__.serializeData.call(this);
-        this.textbooks = Marionette.getOption(this, 'textbooksCollection');
-        this.chapters = Marionette.getOption(this, 'chaptersCollection');
-        data.textbookName = (function(_this) {
-          return function() {
-            var textbook;
-            textbook = _.findWhere(_this.textbooks, {
-              "id": parseInt(data.term_ids.textbook)
-            });
-            if (textbook != null) {
-              return textbook.name;
-            }
-          };
-        })(this);
-        data.chapterName = (function(_this) {
-          return function() {
-            var chapter;
-            if (data.term_ids.chapter) {
-              chapter = _.chain(_this.chapters.findWhere({
-                "id": data.term_ids.chapter
-              })).pluck('name').compact().value();
-              return chapter;
-            }
-          };
-        })(this);
+        textbooks = Marionette.getOption(this, 'textbookNamesCollection');
+        term_ids = data.term_ids;
+        data.textbookName = textbooks.getTextbookName(term_ids);
+        data.chapterName = textbooks.getChapterName(term_ids);
         data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Class Test';
         data.taken_by = (function() {
           switch (data.taken_by) {
@@ -82,7 +62,7 @@ define(['app'], function(App) {
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 6);
+        return this.$el.attr('colspan', 7);
       };
 
       return EmptyView;

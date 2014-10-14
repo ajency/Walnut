@@ -1,7 +1,6 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'], function(App, adminContentModulesTpl) {
   return App.module("AdminContentModulesApp.View.AdminModulesView", function(AdminModulesView, App) {
@@ -210,25 +209,13 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
       };
 
       ModulesView.prototype.checkAll = function() {
-        var checkbox, checkboxes, completedModules, _i, _len, _ref, _results;
+        var all_ids, completedModules, excludeIDs;
+        all_ids = this.collection.pluck('id');
         completedModules = _.chain(this.collection.where({
           'status': 'completed'
         })).pluck('id').value();
-        if (this.$el.find('#check_all').is(':checked')) {
-          checkboxes = this.$el.find('#take-class-modules .tab_checkbox');
-          _results = [];
-          for (_i = 0, _len = checkboxes.length; _i < _len; _i++) {
-            checkbox = checkboxes[_i];
-            if (_ref = parseInt(checkbox.value), __indexOf.call(completedModules, _ref) >= 0) {
-              _results.push($(checkbox).trigger('click').prop('checked', true));
-            } else {
-              _results.push(void 0);
-            }
-          }
-          return _results;
-        } else {
-          return this.$el.find('#take-class-modules .tab_checkbox').removeAttr('checked');
-        }
+        excludeIDs = _.difference(all_ids, completedModules);
+        return $.toggleCheckAll(this.$el.find('#take-class-modules'), excludeIDs);
       };
 
       ModulesView.prototype.onNewCollectionFetched = function(newCollection, textbooks) {

@@ -34,7 +34,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
         var class_id, division;
         class_id = divisionsCollection.first().get('class_id');
         division = divisionsCollection.first().get('id');
-        textbooksCollection = App.request("get:textbooks");
+        textbooksCollection = App.request("get:textbooks", {
+          'class_id': class_id
+        });
         return App.execute("when:fetched", textbooksCollection, (function(_this) {
           return function() {
             return App.execute("when:fetched", textbooksCollection, _this._fetchQuizzes);

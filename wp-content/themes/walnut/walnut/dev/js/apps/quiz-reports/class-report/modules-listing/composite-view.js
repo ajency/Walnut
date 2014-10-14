@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/outer-template.html', 'apps/quiz-reports/class-report/modules-listing/item-views'], function(App, contentListTpl) {
@@ -7,6 +8,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       __extends(ModulesListingView, _super);
 
       function ModulesListingView() {
+        this.onResetTextbookNames = __bind(this.onResetTextbookNames, this);
         return ModulesListingView.__super__.constructor.apply(this, arguments);
       }
 
@@ -22,22 +24,19 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.itemViewOptions = function() {
         return {
-          textbooksCollection: this.textbooks,
-          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
+          textbookNamesCollection: this.textbookNamesCollection
         };
       };
 
+      ModulesListingView.prototype.events = {
+        'change #check_all_div': function() {
+          return $.toggleCheckAll(this.$el.find('#content-pieces-table'));
+        },
+        'change .tab_checkbox,#check_all_div ': 'showSubmitButton'
+      };
+
       ModulesListingView.prototype.initialize = function() {
-        this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
-        this.textbooks = new Array();
-        return this.textbooksCollection.each((function(_this) {
-          return function(textbookModel, ind) {
-            return _this.textbooks.push({
-              'name': textbookModel.get('name'),
-              'id': textbookModel.get('term_id')
-            });
-          };
-        })(this));
+        return this.textbookNamesCollection = Marionette.getOption(this, 'textbookNamesCollection');
       };
 
       ModulesListingView.prototype.onShow = function() {
@@ -53,6 +52,20 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           output: '{startRow} to {endRow} of {totalRows}'
         };
         return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
+      };
+
+      ModulesListingView.prototype.onResetTextbookNames = function(namesCollection) {
+        this.textbookNamesCollection.reset(namesCollection.models);
+        this.collection.trigger('reset');
+        return this.onUpdatePager();
+      };
+
+      ModulesListingView.prototype.showSubmitButton = function() {
+        if (this.$el.find('.tab_checkbox').is(':checked')) {
+          return this.$el.find('#send-email, #send-sms').show();
+        } else {
+          return this.$el.find('#send-email, #send-sms').hide();
+        }
       };
 
       return ModulesListingView;
