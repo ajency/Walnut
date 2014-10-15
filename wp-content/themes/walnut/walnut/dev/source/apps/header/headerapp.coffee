@@ -99,14 +99,14 @@ define ['app'
 
 
 				
-				# if _.platform() is 'DEVICE'
-				# 	lastSyncOperation = _.getLastSyncOperation()
-				# 	lastSyncOperation.done (typeOfOperation)->
+				if _.platform() is 'DEVICE'
+					lastSyncOperation = _.getLastSyncOperation()
+					lastSyncOperation.done (typeOfOperation)->
 
-				# 		if typeOfOperation is 'file_import'
-				# 			$('#main-menu-toggle').css('display','block')
-				# 		else
-				# 			$('#main-menu-toggle').css('display','none')
+						if typeOfOperation is 'file_import'
+							$('#main-menu-toggle').css('display','block')
+						else
+							$('#main-menu-toggle').css('display','none')
 							
 
 			
