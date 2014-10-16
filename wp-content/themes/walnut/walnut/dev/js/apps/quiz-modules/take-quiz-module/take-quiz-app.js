@@ -226,7 +226,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype.clearMediaDataOnEndQuiz = function() {
-        _.clearMediaDirectory('videos-web');
         return _.clearMediaDirectory('audio-web');
       };
 

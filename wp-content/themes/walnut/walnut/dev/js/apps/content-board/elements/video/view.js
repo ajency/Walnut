@@ -44,7 +44,6 @@ define(['app'], function(App) {
 
       VideoView.prototype._initLocalVideos = function() {
         var heightRatio, runFunc, setHeight, widthRatio;
-        navigator.notification.activityStart("Please wait", "loading content...");
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -59,6 +58,7 @@ define(['app'], function(App) {
                 _.each(_this.videos, function(videoSource, index) {
                   return (function(videoSource) {
                     var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                    console.log("video");
                     console.log(JSON.stringify(videoSource));
                     url = videoSource.replace("media-web/", "");
                     videosWebUrl = url.substr(url.indexOf("uploads/"));
@@ -86,7 +86,6 @@ define(['app'], function(App) {
         return $.when(runFunc()).done((function(_this) {
           return function() {
             console.log('_initLocalVideos done');
-            navigator.notification.activityStop();
             _this.$el.find('video')[0].src = _this.videos[0];
             return _this.$el.find('video')[0].load();
           };
