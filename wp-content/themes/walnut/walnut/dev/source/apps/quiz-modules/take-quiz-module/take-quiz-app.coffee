@@ -218,7 +218,7 @@ define ['app'
                         display_mode                : @display_mode
 
                 clearMediaDataOnEndQuiz : =>
-                        _.clearMediaDirectory 'videos-web'
+                        # _.clearMediaDirectory 'videos-web'
                         _.clearMediaDirectory 'audio-web'
                 
                 _getUnansweredIDs:->

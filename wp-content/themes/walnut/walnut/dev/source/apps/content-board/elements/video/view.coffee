@@ -54,7 +54,7 @@ define ['app'], (App)->
 
 			_initLocalVideos : ->
 
-				navigator.notification.activityStart("Please wait", "loading content...")
+				# navigator.notification.activityStart("Please wait", "loading content...")
 
 				widthRatio = 16
 				heightRatio = 9
@@ -70,6 +70,7 @@ define ['app'], (App)->
 
 							_.each @videos , (videoSource, index)=>
 								do(videoSource)=>
+									console.log "video"
 									console.log JSON.stringify videoSource
 									
 
@@ -92,7 +93,7 @@ define ['app'], (App)->
 
 				$.when(runFunc()).done =>
 					console.log('_initLocalVideos done')
-					navigator.notification.activityStop()
+					# navigator.notification.activityStop()
 					@$el.find('video')[0].src = @videos[0]
 					@$el.find('video')[0].load()
 

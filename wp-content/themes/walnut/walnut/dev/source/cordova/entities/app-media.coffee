@@ -24,6 +24,7 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 		getMediaById : (id)->
+			alert id
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
@@ -34,6 +35,8 @@ define ['underscore', 'unserialize'], ( _) ->
 				(tx, data)->
 
 					row = data.rows.item(0)
+					console.log JSON.stringify row
+					alert "row"
 
 					attachmentData = _.getAttachmentData id
 					attachmentData.done (data)->
@@ -70,18 +73,20 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		
 
-		# get meta_value from wp_postmeta having meta_key='_wp_attachment_metadata'
+		# get meta_value from wp_postmeta having meta_key='_wp_attached_file'
 		getAttachmentData : (id)->
+			alert id
 
 			runQuery = ->
 				$.Deferred (d)->
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_key=? 
-							AND post_id=?", ['_wp_attachment_metadata', id]
+							AND post_id=?", ['_wp_attached_file', id]
 							, success(d), _.deferredErrorHandler(d))
 
 			success = (d)->
 				(tx, data)->
+					alert "data"
 					meta_value = ''
 					if data.rows.length isnt 0
 						meta_value = unserialize(data.rows.item(0)['meta_value'])

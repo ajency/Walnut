@@ -193,7 +193,7 @@ define ['underscore', 'csvparse'], ( _) ->
 			getParsedData.done (data)->
 
 				splitArray = _.groupBy data, (element, index)->
-					Math.floor(index/500)
+					Math.floor(index/2000)
 
 				splitArray = _.toArray(splitArray);
 
@@ -215,36 +215,12 @@ define ['underscore', 'csvparse'], ( _) ->
 							, 100)
 							
 						else
-							# _.ChkData()
 							_.insertIntoWpPosts()
 					)
 				
 				insertRecords(splitArray[0], 0)
 
 
-
-		ChkData : ->
-			alert "ChkData"
-
-			runQuery = ->
-
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_postmeta ", 
-							[], onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess =(d)->
-				(tx, data)->
-					alert data.rows.length
-					row = []
-					for i in [0..data.rows.length-1] by 1
-						row = data.rows.item(i)
-						console.log JSON.stringify row
-					d.resolve(row)
-
-			$.when(runQuery()).done ->
-				console.log 'getMetaValue transaction completed'
-			.fail _.failureHandler
 
 		insertIntoWpPosts : ->
 
@@ -410,7 +386,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
 			_.updateSyncDetails('file_import', _.getCurrentDateTime(2))
 
-			_.clearSynapseDataDirectory()
+			# _.clearSynapseDataDirectory()
 
 			$('#syncSuccess').css("display","block").text("File import completed")
 
