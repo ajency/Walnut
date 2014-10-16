@@ -34,7 +34,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             hasPermission:(permsission)->
                 all_permissions = @.get 'permissions'
-                if _.toBool(all_permissions[permsission]) then return true else return false
+                if _.platform() is 'DEVICE'
+                    if _.toBool(all_permissions[permsission]) then return true else return false
 
             getMessageContent:(message_type)->
                 default_messages =

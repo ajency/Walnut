@@ -44,10 +44,12 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.hasPermission = function(permsission) {
         var all_permissions;
         all_permissions = this.get('permissions');
-        if (_.toBool(all_permissions[permsission])) {
-          return true;
-        } else {
-          return false;
+        if (_.platform() === 'DEVICE') {
+          if (_.toBool(all_permissions[permsission])) {
+            return true;
+          } else {
+            return false;
+          }
         }
       };
 
