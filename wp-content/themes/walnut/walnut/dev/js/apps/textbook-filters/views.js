@@ -98,7 +98,7 @@ define(['app'], function(App) {
         this.$el.find(".select2-filters").select2({
           minimumResultsForSearch: -1
         });
-        $(document).on('click', '.select2-container .textbook-filter', function(e) {
+        $('.select2-container').on('click', function(e) {
           var field;
           alert("views");
           alert($(e.target));

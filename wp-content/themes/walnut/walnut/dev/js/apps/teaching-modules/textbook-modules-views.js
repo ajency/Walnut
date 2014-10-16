@@ -199,7 +199,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.$el.find(".select2-filters").select2({
           minimumResultsForSearch: -1
         });
-        $(document).on('click', '.select2-filters', function(e) {
+        $('.select2-filters').on('click', function(e) {
           var field;
           alert("textbooks");
           field = $(e.target);

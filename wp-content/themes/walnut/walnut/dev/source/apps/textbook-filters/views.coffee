@@ -108,6 +108,7 @@ define ['app'], (App)->
 				textbooks = Marionette.getOption @, 'textbooksCollection'
 				divisions = Marionette.getOption @, 'divisionsCollection'
 
+
 				data.textbooks= textbooks.map (m)->
 					t=[]
 					t.id = m.get 'term_id'
@@ -145,7 +146,7 @@ define ['app'], (App)->
 				@$el.find ".select2-filters"
 				.select2 minimumResultsForSearch: -1
 
-				$(document).on 'click', '.select2-container .textbook-filter', (e)->
+				$('.select2-container').on 'click',  (e)->
 					alert "views"
 					alert $(e.target)
 					field = $(e.target)

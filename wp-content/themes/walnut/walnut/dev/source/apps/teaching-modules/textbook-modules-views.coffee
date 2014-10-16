@@ -208,7 +208,7 @@ define ['app',
 				# 	console.log field.trigger('touchstart')
 				# 	field.trigger('touchend')
 
-				$(document).on 'click', '.select2-filters', (e)->
+				$('.select2-filters').on 'click', (e)->
 					alert "textbooks"
 					field = $(e.target)
 					field.trigger('touchstart')
