@@ -13,18 +13,18 @@ define ['app',
 						<td class="v-align-middle">{{quiz_type}}</td>
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-					   	<td>
-					   	{{#practice_quiz}}
-						   	{{#attempts}}
-						   		<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
-						   	{{/attempts}}
-						   	{{^attempts}}
-						   		<span class="label label-important">Not Started</span>
-						   	{{/attempts}}
-					   	{{/practice_quiz}}
-					   	{{^practice_quiz}}
+						<td>
+						{{#practice_quiz}}
+							{{#attempts}}
+								<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
+							{{/attempts}}
+							{{^attempts}}
+								<span class="label label-important">Not Started</span>
+							{{/attempts}}
+						{{/practice_quiz}}
+						{{^practice_quiz}}
 						  {{&status_str}}
-					   	{{/practice_quiz}}
+						{{/practice_quiz}}
 
 						</td>
 						<td>
@@ -199,6 +199,21 @@ define ['app',
 				@$el.find ".select2-filters"
 				.select2 minimumResultsForSearch: -1
 
+				# $(document).on 'touchcancel', '.select2-filters', (e) ->
+				# 	alert "target"
+				# 	alert $(e.target)
+				# 	console.log $(e.target)
+				# 	field = $(e.target)
+				# 	field.trigger('touchstart')
+				# 	console.log field.trigger('touchstart')
+				# 	field.trigger('touchend')
+
+				$(document).on 'click', '.select2-filters', (e)->
+					alert "textbooks"
+					field = $(e.target)
+					field.trigger('touchstart')
+					field.trigger('touchend')
+
 				$('#take-class-modules').tablesorter();
 
 				pagerOptions =
@@ -209,10 +224,10 @@ define ['app',
 
 				# Changes for cordova app
 				if _.platform() is 'DEVICE'
-				    
-				    # $('body').css('height' : '100%')
+					
+					# $('body').css('height' : '100%')
 
-				    _.disableCordovaBackbuttonNavigation()
+					_.disableCordovaBackbuttonNavigation()
 
 			onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 

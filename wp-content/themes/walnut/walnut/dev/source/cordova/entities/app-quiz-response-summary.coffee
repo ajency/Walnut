@@ -121,46 +121,17 @@ define ['underscore', 'unserialize'], ( _) ->
 					, [summary_id, model.get('collection_id'), _.getUserID()
 					, serializeQuizMetaValue, start_date], 0)
 
-				console.log "INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
-					, collection_id, student_id, quiz_meta, taken_on) 
-					VALUES ("+summary_id+","+model.get('collection_id')+","+_.getUserID()+","+serializeQuizMetaValue+","+start_date+")"
-
 			,_.transactionErrorhandler
 
 			,(tx)->
 				console.log 'Inserted data in quiz_response_summary'
 				model.set 'summary_id' :summary_id
-				# _.chkInsertData()
 			)
-
-		chkInsertData : ->
-
-			runQuery = ->
-				$.Deferred (d)->
-					
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * 
-							FROM "+_.getTblPrefix()+"quiz_response_summary ", []
-							, onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess =(d)->
-				(tx,data)->
-
-					result = data.rows.item(0)
-					console.log JSON.stringify result
-
-					d.resolve(result)
-
-			$.when(runQuery()).done ->
-				console.log 'chkInsertData transaction completed'
-			.fail _.failureHandler
 
 
 		updateIntoQuizResponseSummary : (model,quizMeta)->
 
 			serializeQuizMetaValue = serialize(quizMeta)
-
-			console.log serializeQuizMetaValue
 
 			_.db.transaction((tx)->
 

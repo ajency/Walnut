@@ -27,15 +27,21 @@ define ['underscore', 'csvparse'], ( _) ->
 									reader = new FileReader()
 									reader.onloadend = (evt)->
 										csvString = evt.target.result
+										# alert csvString
 										parsedObj = Papa.parse(csvString, {header : false, dynamicTyping : false})
+										# console.log JSON.stringify parsedObj
+										# console.log JSON.stringify parsedObj.data
 										parsedData = parsedObj.data
+										# console.log JSON.stringify parsedData
+										# alert parsedObj.data.length
 
 										do(parsedData)->
 											_.each parsedData, (outerRow, i)->
 												_.each outerRow, (innerRow, j)->
 													# Replace back slash (/) with empty quote.
-													parsedData[i][j] = _.stripslashes(parsedData[i][j]) # parsedData[i][j].replace(/\\/g,'')
-
+													parsedData[i][j] = parsedData[i][j].replace(/\\/g,'') #_.stripslashes(parsedData[i][j])
+										
+										
 										d.resolve parsedData
 
 									reader.readAsText file
@@ -187,14 +193,14 @@ define ['underscore', 'csvparse'], ( _) ->
 			getParsedData.done (data)->
 
 				splitArray = _.groupBy data, (element, index)->
-					Math.floor(index/2000)
+					Math.floor(index/500)
 
 				splitArray = _.toArray(splitArray);
 
 				insertRecords = (splitData, index)->
 					_.db.transaction((tx)->
-
 						_.each splitData, (row, i)->
+
 							tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
 								, meta_key, meta_value) VALUES (?,?,?,?)"
 								, [row[0], row[1], row[2], row[3]])
@@ -209,11 +215,36 @@ define ['underscore', 'csvparse'], ( _) ->
 							, 100)
 							
 						else
+							# _.ChkData()
 							_.insertIntoWpPosts()
 					)
 				
 				insertRecords(splitArray[0], 0)
 
+
+
+		ChkData : ->
+			alert "ChkData"
+
+			runQuery = ->
+
+				$.Deferred (d)->
+					_.db.transaction (tx)->
+						tx.executeSql("SELECT * FROM wp_postmeta ", 
+							[], onSuccess(d), _.deferredErrorHandler(d))
+
+			onSuccess =(d)->
+				(tx, data)->
+					alert data.rows.length
+					row = []
+					for i in [0..data.rows.length-1] by 1
+						row = data.rows.item(i)
+						console.log JSON.stringify row
+					d.resolve(row)
+
+			$.when(runQuery()).done ->
+				console.log 'getMetaValue transaction completed'
+			.fail _.failureHandler
 
 		insertIntoWpPosts : ->
 

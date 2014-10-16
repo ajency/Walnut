@@ -21,7 +21,6 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
-              console.log(JSON.stringify(collectionMetaData));
               return (function(row, i, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
@@ -30,7 +29,6 @@ define(['underscore', 'unserialize'], function(_) {
                   status = dateStatus.status;
                   attempts = dateStatus.attempts;
                   date = dateStatus.start_date;
-                  console.log(JSON.stringify(dateStatus));
                   return result[i] = {
                     id: row['id'],
                     name: row['name'],
@@ -318,7 +316,6 @@ define(['underscore', 'unserialize'], function(_) {
           quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
             var getQuizType;
-            console.log(JSON.stringify(quiz_responses));
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';
@@ -330,7 +327,6 @@ define(['underscore', 'unserialize'], function(_) {
               return getQuizType.done(function(collectionMetaData) {
                 var contentLayoutValue, date;
                 contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
-                console.log(JSON.stringify(contentLayoutValue));
                 if (collectionMetaData.quizType === 'practice') {
                   data.attempts = quiz_responses.attempts;
                 }
@@ -351,7 +347,6 @@ define(['underscore', 'unserialize'], function(_) {
                     data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
                   }
                 }
-                console.log(JSON.stringify(data));
                 return d.resolve(data);
               });
             }
@@ -419,12 +414,10 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
-              console.log(JSON.stringify(collectionMetaData));
               return (function(row, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
                 return dateAndStatus.done(function(dateStatus) {
-                  console.log(JSON.stringify(dateStatus.status));
                   result = {
                     id: row['id'],
                     content_pieces: collectionMetaData.contentPieces,

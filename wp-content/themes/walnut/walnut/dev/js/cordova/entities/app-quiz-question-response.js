@@ -5,8 +5,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
-            return console.log("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = " + summary_id + " ");
+            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -18,7 +17,7 @@ define(['underscore', 'unserialize'], function(_) {
             var totalMarksScoredAndTotalTimeTaken;
             totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id);
             return totalMarksScoredAndTotalTimeTaken.done(function(value) {
-              result[i] = {
+              return result[i] = {
                 content_piece_id: row['content_piece_id'],
                 marks_scored: value.total_marks_scored,
                 qr_id: row['qr_id'],
@@ -27,7 +26,6 @@ define(['underscore', 'unserialize'], function(_) {
                 summary_id: summary_id,
                 time_taken: value.total_time_taken
               };
-              return console.log(JSON.stringify(result[i]));
             });
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
@@ -64,7 +62,6 @@ define(['underscore', 'unserialize'], function(_) {
     },
     writeQuestionResponse: function(model) {
       var quizResponseSummary;
-      console.log(JSON.stringify(model));
       quizResponseSummary = _.getQuizResponseSummary(model.get('summary_id'));
       return quizResponseSummary.done(function(collection_id) {
         var collectionMeta;
@@ -104,7 +101,6 @@ define(['underscore', 'unserialize'], function(_) {
     insertIntoQuiZQuestionResponse: function(model, qr_id) {
       var question_response;
       question_response = serialize(model.get('question_response'));
-      console.log(JSON.stringify(question_response));
       return _.db.transaction(function(tx) {
         return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_question_response (qr_id , summary_id, content_piece_id, question_response , time_taken, marks_scored, status, sync) VALUES (?,?,?,?,?,?,?,?)", [qr_id, model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), 0]);
       }, _.transactionErrorhandler, function(tx) {
@@ -113,29 +109,6 @@ define(['underscore', 'unserialize'], function(_) {
           'qr_id': qr_id
         });
       });
-    },
-    chkTempInsertData: function() {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response ", [], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, _i, _ref;
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            result = data.rows.item(i);
-            console.log(JSON.stringify(result));
-          }
-          return d.resolve(result);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('chkTempInsertData transaction completed');
-      }).fail(_.failureHandler);
     },
     getOldQuizQuestionResponseData: function(model, check_permissions) {
       return _.db.transaction(function(tx) {
@@ -183,7 +156,6 @@ define(['underscore', 'unserialize'], function(_) {
       var qrId, question_response;
       qrId = model.get('qr_id');
       question_response = serialize(model.get('question_response'));
-      console.log(JSON.stringify(question_response));
       return _.db.transaction(function(tx) {
         return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET summary_id=?, content_piece_id=?, question_response=? , time_taken=?, marks_scored=?, status=?, sync=? WHERE qr_id=?", [model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), 0, model.get('qr_id')]);
       }, _.transactionErrorhandler, function(tx) {

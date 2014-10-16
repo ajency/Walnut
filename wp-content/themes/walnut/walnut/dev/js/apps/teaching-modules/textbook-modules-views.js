@@ -199,6 +199,13 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.$el.find(".select2-filters").select2({
           minimumResultsForSearch: -1
         });
+        $(document).on('click', '.select2-filters', function(e) {
+          var field;
+          alert("textbooks");
+          field = $(e.target);
+          field.trigger('touchstart');
+          return field.trigger('touchend');
+        });
         $('#take-class-modules').tablesorter();
         pagerOptions = {
           container: $(".pager"),

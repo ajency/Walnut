@@ -30,7 +30,7 @@ define(['underscore', 'csvparse'], function(_) {
                   (function(parsedData) {
                     return _.each(parsedData, function(outerRow, i) {
                       return _.each(outerRow, function(innerRow, j) {
-                        return parsedData[i][j] = _.stripslashes(parsedData[i][j]);
+                        return parsedData[i][j] = parsedData[i][j].replace(/\\/g, '');
                       });
                     });
                   })(parsedData);
@@ -146,7 +146,7 @@ define(['underscore', 'csvparse'], function(_) {
       return getParsedData.done(function(data) {
         var insertRecords, splitArray;
         splitArray = _.groupBy(data, function(element, index) {
-          return Math.floor(index / 2000);
+          return Math.floor(index / 500);
         });
         splitArray = _.toArray(splitArray);
         insertRecords = function(splitData, index) {
@@ -168,6 +168,32 @@ define(['underscore', 'csvparse'], function(_) {
         };
         return insertRecords(splitArray[0], 0);
       });
+    },
+    ChkData: function() {
+      var onSuccess, runQuery;
+      alert("ChkData");
+      runQuery = function() {
+        return $.Deferred(function(d) {
+          return _.db.transaction(function(tx) {
+            return tx.executeSql("SELECT * FROM wp_postmeta ", [], onSuccess(d), _.deferredErrorHandler(d));
+          });
+        });
+      };
+      onSuccess = function(d) {
+        return function(tx, data) {
+          var i, row, _i, _ref;
+          alert(data.rows.length);
+          row = [];
+          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
+            row = data.rows.item(i);
+            console.log(JSON.stringify(row));
+          }
+          return d.resolve(row);
+        };
+      };
+      return $.when(runQuery()).done(function() {
+        return console.log('getMetaValue transaction completed');
+      }).fail(_.failureHandler);
     },
     insertIntoWpPosts: function() {
       var getParsedData;

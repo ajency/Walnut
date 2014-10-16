@@ -29,7 +29,6 @@ define ['underscore', 'unserialize'], ( _) ->
 						do (row, i)->
 							collectionMeta = _.getCollectionMeta(row['id'])
 							collectionMeta.done (collectionMetaData)->
-								console.log JSON.stringify collectionMetaData
 
 								do(row, i, collectionMetaData)->
 									dateAndStatus = _.getStartDateAndStatus(row['id'])
@@ -37,7 +36,6 @@ define ['underscore', 'unserialize'], ( _) ->
 										status = dateStatus.status
 										attempts = dateStatus.attempts
 										date = dateStatus.start_date
-										console.log JSON.stringify dateStatus
 										
 										result[i] = 
 											id: row['id']
@@ -319,7 +317,6 @@ define ['underscore', 'unserialize'], ( _) ->
 					
 					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
 					quizResponseSummary.done (quiz_responses)->
-						console.log JSON.stringify quiz_responses
 
 						if _.isEmpty quiz_responses
 							data.status = 'not started'
@@ -333,7 +330,6 @@ define ['underscore', 'unserialize'], ( _) ->
 							getQuizType.done (collectionMetaData)->
 
 								contentLayoutValue = _.unserialize(quiz_responses.quiz_meta)
-								console.log JSON.stringify contentLayoutValue
 
 								if collectionMetaData.quizType is 'practice'
 									data.attempts = quiz_responses.attempts
@@ -368,7 +364,6 @@ define ['underscore', 'unserialize'], ( _) ->
 										date = quiz_responses.taken_on
 										data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
-								console.log JSON.stringify data
 								d.resolve data
 
 			
@@ -443,12 +438,10 @@ define ['underscore', 'unserialize'], ( _) ->
 					do (row)->
 						collectionMeta = _.getCollectionMeta(row['id'])
 						collectionMeta.done (collectionMetaData)->
-							console.log JSON.stringify collectionMetaData
 
 							do(row, collectionMetaData)->
 								dateAndStatus = _.getStartDateAndStatus(row['id'])
 								dateAndStatus.done (dateStatus)->
-									console.log JSON.stringify dateStatus.status
 
 									result = 
 										id: row['id']
