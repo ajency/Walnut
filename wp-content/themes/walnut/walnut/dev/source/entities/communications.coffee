@@ -7,7 +7,8 @@ define ["app", 'backbone'], (App, Backbone) ->
         class Communications.ItemModel extends Backbone.Model
 
             defaults:
-                message_type        : ''  # eg. registration, module completed notification etc
+                component           : ''  # eg. teaching_modules, registration etc
+                communication_type  : ''  # eg. taught_in_class_student_mail (subtype under component)
                 recipients    	    : []
                 status        	    : ''
                 date      	   	    : ''
@@ -33,7 +34,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 CommunicationsModel = new Communications.ItemModel()
                 CommunicationsModel.set data
                 CommunicationsModel.save()
-                console.log CommunicationsModel
                 CommunicationsModel
 
 

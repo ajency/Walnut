@@ -1,70 +1,59 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: ajency
- * Date: 25/06/14
- * Time: 3:36 PM
+<?php 
+
+/*
+ * Configuring the communication module
  */
 
-function save_communication($data){
+require_once "teaching_modules/functions.php";
 
-    $message_type = $data['message_type'];
+//Registering communication components
+function add_communication_components($defined_comm_components){
 
-    switch($message_type){
+    $preferences = array('preference'=>0);
 
-        case 'modules_completed':
-            $communication_id= save_modules_completed_communications($data);
-
-    }
-
-    return $communication_id;
-
-}
-
-function save_modules_completed_communications($data){
-
-    global $wpdb;
-
-    $communication_id=0;
-
-    $message_type       = $data['message_type'];
-    $communication_mode = $data['communication_mode'];
-    $moduleids         = $data['additional_data']['module_ids'];
-    $division           = $data['additional_data']['division'];
-
-    //make sure the ids are entered in db as integers
-    $module_ids= array();
-    foreach($moduleids as $id)
-        $module_ids[]= (int) $id;
-
-    $student_ids= get_students_by_division($division);
-    $parent_ids= get_parents_by_student_ids($student_ids);
-
-    $recipients= array_merge($student_ids,$parent_ids );
-
-    //$parent_emails= get_parent_emails_by_division($division);
-
-    $content_data=array(
-        message_type    => $message_type,
-        recipients      => maybe_serialize($recipients),
-        blog            => get_current_blog_id(),
-        mode            => $communication_mode
-    );
-
-    $communication= $wpdb->insert($wpdb->base_prefix . 'comm_module', $content_data);
-
-    if($communication){
-        $communication_id = $wpdb->insert_id;
-
-        $mdata= array(
-            comm_module_id=> $communication_id,
-            meta_key=> 'module_ids',
-            meta_value=> maybe_serialize($module_ids)
+    $ajcm_components['teaching_modules'] = array(
+        'taught_in_class_student_mail'=>$preferences,
+        'taught_in_class_parent_mail'=>$preferences
         );
 
-        $wpdb->insert($wpdb->base_prefix . 'comm_module_meta', $mdata);
-    }
-
-    return $communication_id;
+    return $ajcm_components;
 
 }
+add_filter('add_commponents_filter','add_communication_components',10,1);
+
+function ajax_add_communication_to_queue() {
+
+    $functionName = 'add_'.$_POST['communication_type'];
+
+    if (function_exists($functionName)){
+
+        unset($_POST['action']);
+        $data = $_POST;
+
+        $comm_data = array(
+            'component'             => $data['component'], 
+            'communication_type'    => $data['communication_type']
+        );
+
+        $comm   = $functionName($data,$comm_data);
+
+        if( is_wp_error( $comm ) ) {
+
+            $error= $comm->get_error_message();
+
+            $response=array('error'=>$error);
+        }
+        else
+            $response=array(
+                'communication_id'=>$comm,
+                'status'=>'OK'
+                ); 
+
+    }
+    else
+        $response=array('error'=>"function $functionName doesnt exist");
+
+    wp_send_json($response);
+}
+
+add_action('wp_ajax_create-communications', 'ajax_add_communication_to_queue');
