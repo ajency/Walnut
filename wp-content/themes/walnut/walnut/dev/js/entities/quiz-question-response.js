@@ -45,6 +45,37 @@ define(['app', 'backbone'], function(App, Backbone) {
         return resp.data;
       };
 
+      ResponseCollection.prototype.getTotalScored = function() {
+        var total;
+        return total = _.reduce(this.pluck('marks_scored'), function(memo, num) {
+          return _.toNumber(memo + num, 1);
+        });
+      };
+
+      ResponseCollection.prototype.getMarksScored = function() {
+        var marks, scored;
+        scored = 0;
+        marks = this.pluck('marks_scored');
+        _.each(marks, function(m) {
+          if (m > 0) {
+            return scored += m;
+          }
+        });
+        return scored.toFixed(1);
+      };
+
+      ResponseCollection.prototype.getNegativeScored = function() {
+        var marks, negative;
+        negative = 0;
+        marks = this.pluck('marks_scored');
+        _.each(marks, function(m) {
+          if (m < 0) {
+            return negative += m;
+          }
+        });
+        return negative.toFixed(1);
+      };
+
       return ResponseCollection;
 
     })(Backbone.Collection);

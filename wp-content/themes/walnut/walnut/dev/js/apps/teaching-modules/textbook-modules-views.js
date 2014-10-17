@@ -176,7 +176,6 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
 
       ContentGroupsView.prototype.onShow = function() {
         var pagerOptions, textbookFiltersHTML;
-        $('.page-content').removeClass('expand-page');
         if (Marionette.getOption(this, 'mode') === 'training') {
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }

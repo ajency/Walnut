@@ -25,12 +25,7 @@ define ['app'
 
                 newRoute = _(currRoute).strLeft '/module'
 
-#                newRoute = _.str.rtrim currRoute, removeStr + '/'
-
                 App.navigate newRoute, true
-
-#                App.execute "show:headerapp", region : App.headerRegion
-#                App.execute "show:leftnavapp", region : App.leftNavRegion
 
             _getCollectionDetailsView : ->
                 terms = @model.get 'term_ids'

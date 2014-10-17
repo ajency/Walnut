@@ -44,8 +44,7 @@ define ['app'
                         @show view,
                             loading: true
 
-                        @listenTo view, 'end:quiz', -> @region.trigger 'show:alert:popup', 'end_quiz'
-                        @listenTo view, 'quiz:time:up', -> @region.trigger 'end:quiz'
+                        @listenTo view, 'end:quiz', -> @region.trigger 'end:quiz'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0
@@ -73,21 +72,21 @@ define ['app'
                     template: '<div class="bold small-text text-center p-t-10"> Quiz Time</div>
                                 <div id="downUpTimer" timerdirection=""></div>
                                 <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> 
-                                    <div class="qstnStatus"><i class="fa fa-check-circle"></i> Completed</div> 
+                                    <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> 
                                 </div>
                                 <div class="endQuiz b-grey b-t p-t-10 p-b-10">
                                     <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> 
                                 </div>'
 
                     events:
-                        'click #end-quiz' :-> @trigger "end:quiz"
+                        'click #end-quiz' : 'endQuiz'
 
                     onShow:->
 
                         timeLeftOrElapsed =Marionette.getOption @,'timeLeftOrElapsed'
                         @display_mode = Marionette.getOption @, 'display_mode'
 
-                        if @display_mode is 'replay'
+                        if @display_mode in ['replay','quiz_report']
                             @$el.find '#completed-quiz'
                             .show()
 
@@ -108,4 +107,10 @@ define ['app'
                     quizTimedOut:=>
                         msgContent= @model.getMessageContent 'quiz_time_up'
                         bootbox.alert msgContent,=>
-                            @trigger "quiz:time:up"
+                            @trigger "end:quiz"
+
+                    endQuiz:->                        
+                        msgContent= @model.getMessageContent 'end_quiz'
+                        bootbox.confirm msgContent,(result)=>
+                            @trigger("end:quiz") if result
+                            

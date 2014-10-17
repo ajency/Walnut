@@ -39,10 +39,11 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               user = App.request("get:user:model");
               user.set(response.login_details);
               if (response.blog_details.site_url !== SITEURL) {
-                window.location = response.blog_details.site_url;
+                return window.location = response.blog_details.site_url;
+              } else {
+                _this.view.close();
+                return App.vent.trigger('show:dashboard');
               }
-              _this.view.close();
-              return App.vent.trigger('show:dashboard');
             }
           };
         })(this));

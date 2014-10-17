@@ -75,15 +75,10 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         var permName;
         permName = $(e.target).closest('.checkbox.perm').find('input').attr('id');
         switch (permName) {
-          case 'attempt':
-            this.unSelectCheckbox('resubmit');
-            return this.unSelectCheckbox('answer');
           case 'resubmit':
-            this.unSelectCheckbox('attempt');
             return this.unSelectCheckbox('answer');
           case 'answer':
-            this.unSelectCheckbox('resubmit');
-            return this.unSelectCheckbox('attempt');
+            return this.unSelectCheckbox('resubmit');
         }
       };
 
@@ -167,6 +162,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
 
       CollectionDetailsView.prototype.save_content = function(e) {
         var data, single_attempt;
+        this.$el.find('#saved-success').remove();
         e.preventDefault();
         $('#s2id_textbooks .select2-choice').removeClass('error');
         if (this.$el.find('#textbooks').val() === '') {
@@ -175,13 +171,36 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         if (this.$el.find('form').valid()) {
           this.$el.find('#save-content-collection i').addClass('fa-spin fa-spinner');
           data = Backbone.Syphon.serialize(this);
-          single_attempt = data.permissions['single_attempt'];
-          data.permissions['single_attempt'] = !single_attempt;
-          if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
-            data.negMarks = 0;
+          if (this.model.get('type') === 'quiz') {
+            single_attempt = data.permissions['single_attempt'];
+            data.permissions['single_attempt'] = !single_attempt;
+            if (data.negMarksEnable === 'true' && data.negMarks === '' && this.model.get('type') === 'quiz') {
+              data.negMarks = 0;
+            }
+          }
+          if (data.post_status === 'publish') {
+            if (this.model.get('type') === 'quiz' && _.isEmpty(this.model.get('content_layout'))) {
+              this._cannotPublish();
+              return false;
+            }
+            if (this.model.get('type') === 'teaching-module' && _.isEmpty(this.model.get('content_pieces'))) {
+              this._cannotPublish();
+              return false;
+            }
           }
           return this.trigger("save:content:collection:details", data);
         }
+      };
+
+      CollectionDetailsView.prototype._cannotPublish = function() {
+        var item, module;
+        item = this.model.get('type') === 'quiz' ? 'questions' : 'Content Pieces';
+        module = _.titleize(_.humanize(this.model.get('type')));
+        this.$el.find('.grid-title').prepend('<div id="saved-success" class="text-error"> Cannot Publish ' + module + '. No ' + item + ' Added. </div>');
+        $("html, body").animate({
+          scrollTop: 0
+        }, 700);
+        return this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner');
       };
 
       CollectionDetailsView.prototype._toggleNegativeMarks = function(el) {
@@ -240,8 +259,11 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
         }
         if (model.get('type') === 'quiz') {
-          return this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
+          this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
         }
+        return $("html, body").animate({
+          scrollTop: 0
+        }, 700);
       };
 
       return CollectionDetailsView;

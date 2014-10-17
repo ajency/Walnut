@@ -67,17 +67,9 @@ define ['app'
                 .attr 'id'
 
                 switch permName
-                    when 'attempt'          
-                        @unSelectCheckbox 'resubmit'
-                        @unSelectCheckbox 'answer'
+                    when 'resubmit' then @unSelectCheckbox 'answer'
 
-                    when 'resubmit'         
-                        @unSelectCheckbox 'attempt'
-                        @unSelectCheckbox 'answer'
-
-                    when 'answer'           
-                        @unSelectCheckbox 'resubmit'
-                        @unSelectCheckbox 'attempt'
+                    when 'answer' then @unSelectCheckbox 'resubmit'
 
             unSelectCheckbox:(checkboxID)->
                 @$el.find 'input#'+checkboxID
@@ -170,6 +162,8 @@ define ['app'
 
 
             save_content : (e)->
+
+                @$el.find('#saved-success').remove();
                 e.preventDefault()
 
                 $('#s2id_textbooks .select2-choice')
@@ -186,14 +180,40 @@ define ['app'
 
                     data = Backbone.Syphon.serialize (@)
                     #data.term_ids= _.compact(data.term_ids)
-                    single_attempt=data.permissions['single_attempt']
 
-                    #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
-                    data.permissions['single_attempt'] = !single_attempt
+                    if @model.get('type') is 'quiz'
+                        single_attempt=data.permissions['single_attempt']
 
-                    data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+                        #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
+                        data.permissions['single_attempt'] = !single_attempt
+
+                        data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+
+                    if data.post_status is 'publish'
+                        if @model.get('type') is 'quiz' and _.isEmpty @model.get 'content_layout'
+                            @_cannotPublish()
+                            return false
+
+                        if @model.get('type') is 'teaching-module' and _.isEmpty @model.get 'content_pieces'
+                            @_cannotPublish()
+                            return false
 
                     @trigger "save:content:collection:details", data
+
+            _cannotPublish:->
+
+                item = if @model.get('type') is 'quiz' then 'questions' else 'Content Pieces'
+
+                module = _.titleize _.humanize @model.get 'type'
+
+                @$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
+                        Cannot Publish '+module+'. No '+item+' Added.
+                    </div>'
+
+                $("html, body").animate scrollTop: 0 , 700
+
+                @$el.find '#save-content-collection i'
+                .removeClass 'fa-spin fa-spinner'
 
             _toggleNegativeMarks : (el)->
 
@@ -258,4 +278,5 @@ define ['app'
                         to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>'
 
 
+                $("html, body").animate({ scrollTop: 0 }, 700);
 

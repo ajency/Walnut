@@ -29,8 +29,9 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.getMarks = function() {
         var layout, marks;
         layout = this.get('layout');
-        marks = parseInt(_.compact(_.pluck(layout, 'marks')));
-        if (!marks) {
+        marks = parseFloat(_.compact(_.pluck(layout, 'marks'))).toFixed(1);
+        marks = parseFloat(marks);
+        if (!marks || _.isNaN(parseInt(marks))) {
           marks = 0;
         }
         return marks;

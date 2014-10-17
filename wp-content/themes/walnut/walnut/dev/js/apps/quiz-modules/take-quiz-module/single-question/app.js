@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/single-question/views'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/take-quiz-module/single-question/views'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
     var answer, answerData;
     answer = null;
@@ -29,8 +29,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         };
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
-        if (this.questionResponseModel) {
+        if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
           answerData = this.questionResponseModel.get('question_response');
+          if (_.isEmpty(answerData)) {
+            answerData = {};
+          }
+          answerData.status = this.questionResponseModel.get('status');
+          answerData.marks = this.questionResponseModel.get('marks_scored');
           this.answerModel = App.request("create:new:answer", answerData);
         }
         this.show(layout, {
@@ -61,9 +66,21 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           if (answerData.questionType !== 'sort') {
             switch (answerData.emptyOrIncomplete) {
               case 'empty':
-                return this.region.trigger('show:alert:popup', 'submit_without_attempting');
+                return bootbox.confirm(this.quizModel.getMessageContent('submit_without_attempting'), (function(_this) {
+                  return function(result) {
+                    if (result) {
+                      return _this._triggerSubmit();
+                    }
+                  };
+                })(this));
               case 'incomplete':
-                return this.region.trigger('show:alert:popup', 'incomplete_answer');
+                return bootbox.confirm(this.quizModel.getMessageContent('incomplete_answer'), (function(_this) {
+                  return function(result) {
+                    if (result) {
+                      return _this._triggerSubmit();
+                    }
+                  };
+                })(this));
               case 'complete':
                 return this._triggerSubmit();
             }
@@ -85,12 +102,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         this.listenTo(layout, 'show:hint:dialog', (function(_this) {
           return function() {
-            return _this.region.trigger('show:alert:popup', 'hint', 'alert');
-          };
-        })(this));
-        this.listenTo(layout, 'show:comment:dialog', (function(_this) {
-          return function() {
-            return _this.region.trigger('show:alert:popup', 'comment', 'alert');
+            return _this.answerModel.set({
+              'hint_viewed': true
+            });
           };
         })(this));
         return this.listenTo(this.region, 'trigger:submit', (function(_this) {
