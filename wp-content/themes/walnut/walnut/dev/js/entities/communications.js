@@ -12,7 +12,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       }
 
       ItemModel.prototype.defaults = {
-        message_type: '',
+        component: '',
+        communication_type: '',
         recipients: [],
         status: '',
         date: '',
@@ -52,7 +53,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         CommunicationsModel = new Communications.ItemModel();
         CommunicationsModel.set(data);
         CommunicationsModel.save();
-        console.log(CommunicationsModel);
         return CommunicationsModel;
       }
     };

@@ -61,12 +61,19 @@ define ['app'
 
                             @listenTo @view, "save:communications", (data)=>
                                 data=
-                                    message_type        : 'modules_completed'
+                                    component           : 'teaching_modules'
+                                    communication_type  : 'taught_in_class_parent_mail'
                                     communication_mode  : data.communication_mode
                                     additional_data:
                                         module_ids      : data.moduleIDs
                                         division        : data.division
 
+                                #save communication for type taught_in_class_parent_mail
+                                App.request "save:communications",data
+
+                                data.communication_type  = 'taught_in_class_student_mail'
+
+                                #save communication for type taught_in_class_student_mail
                                 App.request "save:communications",data
 
 

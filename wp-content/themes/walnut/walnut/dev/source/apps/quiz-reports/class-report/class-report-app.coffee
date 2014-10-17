@@ -1,7 +1,7 @@
 define ['app'
     'controllers/region-controller'
     'apps/quiz-reports/class-report/class-report-layout'
-    'apps/quiz-reports/class-report/listing-controller'
+    'apps/quiz-reports/class-report/modules-listing/controller'
     'apps/quiz-reports/student-filter/student-filter-app'
     'apps/quiz-reports/class-report/search-results-app'], (App, RegionController)->
 
