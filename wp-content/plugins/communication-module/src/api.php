@@ -54,6 +54,9 @@ if(is_plugin_active('json-rest-api/plugin.php')){
              $routes['/ajcm/emailpreferences/(?P<user_id>\d+)/(?P<component>\w+)/(?P<communication_type>\w+)'] = array(
                 array( array( $this, 'update_user_emailpreference'), WP_JSON_Server::EDITABLE | WP_JSON_Server::ACCEPT_JSON ),
                 ); 
+             $routes['/ajcm/communications'] = array(
+                array( array( $this, 'add_communication'), WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
+                );             
              $routes['/ajcm/mandrill/templatepreview'] = array(
                 array( array( $this, 'get_template_preview'), WP_JSON_Server::CREATABLE  | WP_JSON_Server::ACCEPT_JSON ),
                 );              
@@ -131,8 +134,56 @@ if(is_plugin_active('json-rest-api/plugin.php')){
         }
         
         public function get_template_preview($data){
+
+            $preview_data = array();
+            $preview_data['template_name'] =$data['template_name'];
+            $preview_data['template_content'] = array();
+            $preview_data['template_content'][] = array('name' => 'homeurl','content' => 'homeurllink');
+            $preview_data['template_content'][] = array('name' => 'userlogin','content' => 'userloginglink');
+            $preview_data['template_content'][] = array('name' => 'reseturl','content' => 'reseturllink');
             
-            wp_send_json($data);
+            $preview_data['merge_vars'] = array();
+            $preview_data['merge_vars'][] = array('name' => 'FNAME','content' => 'Userfirstname');
+            
+            $ajcm_plugin_options = get_option('ajcm_plugin_options'); // get the plugin options
+            
+            if(isset($ajcm_plugin_options['ajcm_mandrill_key']) && $ajcm_plugin_options['ajcm_mandrill_key'] != ''){
+                     //create an instance of Mandrill and pass the api key
+                     $mandrill = new Mandrill($ajcm_plugin_options['ajcm_mandrill_key']);
+                     $url = '/templates/render';    //the mandrill api url to call to get the temaplate preview
+                     
+                     $preview_api_call  =  $mandrill->call($url,$preview_data);
+                     
+                     if(array_key_exists('html', $preview_api_call)){
+                         wp_send_json_success($preview_api_call);
+                     }else{
+                         wp_send_json_error($preview_api_call);
+                     }
+                
+            }
+            else{
+                $response = array('msg'=>'Mandrill api key not set');
+                wp_send_json_error($response);
+            }
+            
+            
+        }
+        
+        public function add_communication($data){
+            global $aj_comm;
+            
+            $comm_args = $data['comm_args'];
+            $comm_meta = $data['comm_meta'];
+            $comm_recipients = $data['comm_recipients'];
+            
+            $add_comm_response = $aj_comm->create_communication($comm_args,$comm_meta,$comm_recipients);
+            
+            if(!is_wp_error($add_comm_response)){
+                wp_send_json_success(array('comm_id'=>$add_comm_response));
+            }else{
+                $err_msg = $add_comm_response->get_error_message();
+                wp_send_json_error(array('msg'=>$err_msg));
+            }  
         }
             
     }
