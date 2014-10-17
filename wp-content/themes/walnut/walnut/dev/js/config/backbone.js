@@ -52,16 +52,12 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'quiz-question-response') {
         data = _.getQuizQuestionResponseBySummaryID(opts.summary_id);
         data.done(function(d) {
-          console.log('quiz-question-response');
-          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
       if (collection_name === 'content-piece') {
         data = _.getContentPiecesByIDs(opts.ids);
         data.done(function(d) {
-          console.log('content-piece data');
-          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
@@ -80,8 +76,6 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'textbookName') {
         data = _.getTextBookNamesByTermIDs(opts.term_ids);
         data.done(function(d) {
-          console.log('textbookName response');
-          console.log(JSON.stringify(d));
           return collection.set(d);
         });
       }
@@ -161,15 +155,12 @@ define(["backbone"], function(Backbone) {
         if (modelname === 'textbook') {
           data = _.getTextBookByTextbookId(model.get('term_id'));
           data.done(function(d) {
-            console.log(JSON.stringify(d));
             return model.set(d);
           });
         }
         if (modelname === 'quiz') {
           data = _.getQuizById(model.get('id'));
           data.done(function(d) {
-            console.log("quiz model");
-            console.log(JSON.stringify(d));
             return model.set(d);
           });
         }

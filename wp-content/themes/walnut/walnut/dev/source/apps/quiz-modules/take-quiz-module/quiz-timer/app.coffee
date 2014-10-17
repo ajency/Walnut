@@ -142,6 +142,6 @@ define ['app'
 
 
                     clearMediaData : =>
-                        # _.clearMediaDirectory 'videos-web'
+                        _.clearMediaDirectory 'videos-web'
                         _.clearMediaDirectory 'audio-web'
                             

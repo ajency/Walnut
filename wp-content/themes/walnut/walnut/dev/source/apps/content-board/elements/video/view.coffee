@@ -70,7 +70,6 @@ define ['app'], (App)->
 
 							_.each @videos , (videoSource, index)=>
 								do(videoSource)=>
-									console.log "video"
 									console.log JSON.stringify videoSource
 									
 

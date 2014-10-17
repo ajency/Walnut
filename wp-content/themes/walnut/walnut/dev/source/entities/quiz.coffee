@@ -36,6 +36,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 all_permissions = @.get 'permissions'
                 if _.platform() is 'DEVICE'
                     if _.toBool(all_permissions[permsission]) then return true else return false
+                else
+                    if all_permissions[permsission] then return true else return false
 
             getMessageContent:(message_type)->
                 default_messages =
@@ -140,6 +142,3 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:quiz:repository",->
             quizRepository.clone()
-
-        App.reqres.setHandler "app:reset:quiz:repository", (models)->
-            quizRepository.reset models

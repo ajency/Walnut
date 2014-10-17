@@ -30,6 +30,8 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 						$.get AJAXURL + '?action=sync-database',
 								data,
 								(resp)=>
+									console.log JSON.stringify resp
+									alert "resp"
 									
 									if resp is 0
 										

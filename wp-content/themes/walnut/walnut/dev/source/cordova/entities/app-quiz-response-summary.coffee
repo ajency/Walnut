@@ -1,4 +1,4 @@
-define ['underscore', 'unserialize'], ( _) ->
+define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 
 	_.mixin
@@ -18,57 +18,63 @@ define ['underscore', 'unserialize'], ( _) ->
 
 				(tx,data)->
 
-					result = ''
-					row = data.rows.item(0)
+					result = []
+					for i in [0..data.rows.length-1] by 1
+						row = data.rows.item(i)
 
-					#if row['quiz_meta']
-					quiz_meta = _.unserialize(row['quiz_meta'])
-					quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
-					quizResponseSummary.done (quiz_responses)->
+						#if row['quiz_meta']
 						
-						countForSkippedQuestion = _.getCountForSkippedQuestion()
-						countForSkippedQuestion.done (skipped)->
+						do (row, i)->
+							quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
+							quizResponseSummary.done (quiz_responses)->
+							
+								do(row , i, quiz_responses)->
+									countForSkippedQuestion = _.getCountForSkippedQuestion(row['summary_id'])
+									countForSkippedQuestion.done (skipped)->
 
-							totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
-							totalMarksScoredAndTotalTimeTaken.done (value)->
+										do(row , i, quiz_responses,skipped)->
+											totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
+											totalMarksScoredAndTotalTimeTaken.done (value)->
+												userID = _.getUserID()
+												quiz_meta = _.unserialize(row['quiz_meta'])
 
+												result[i] = 
+													collection_id : collection_id
+													marks_scored: value.marks_scored
+													attempts:quiz_responses.attempts
+													negative_scored: value.negative_scored
+													num_skipped: skipped
+													questions_order:quiz_meta.questions_order
+													status : quiz_meta.status
+													student_id : userID
+													summary_id : row['summary_id']
+													taken_on : row['taken_on']
+													total_marks_scored : value.total_marks_scored
+													total_time_taken : value.total_time_taken
 
-								result = 
-									collection_id : collection_id
-									marks_scored: value.marks_scored
-									negative_scored: value.negative_scored
-									num_skipped: skipped
-									questions_order:quiz_meta.questions_order
-									status : quiz_meta.status
-									student_id : _.getUserID()
-									summary_id : row['summary_id']
-									taken_on : row['taken_on']
-									total_marks_scored : value.total_marks_scored
-									total_time_taken : value.total_time_taken
-
-								d.resolve(result)
+					d.resolve(result)
 
 			$.when(runQuery()).done ->
 				console.log 'getQuizResponseSummaryByCollectionIdAndUserID transaction completed'
 			.fail _.failureHandler
 
 
-		getCountForSkippedQuestion : ->
+		getCountForSkippedQuestion : (summary_id)->
 
 			runQuery = ->
 				$.Deferred (d)->
 					
 					_.db.transaction (tx)->
-						tx.executeSql("SELECT count(status) AS num_skipped
+						tx.executeSql("SELECT COUNT(status) AS num_skipped 
 							FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE status=?", ["skipped"]
+							WHERE status = ? AND summary_id = ?"
+							, ['skipped', summary_id]
 							, onSuccess(d), _.deferredErrorHandler(d))
-
+ 
 			onSuccess =(d)->
 				(tx,data)->
 
 					result = data.rows.item(0)['num_skipped']
-
 					d.resolve(result)
 
 			$.when(runQuery()).done ->
@@ -119,7 +125,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					, collection_id, student_id, quiz_meta, taken_on, sync) 
 					VALUES (?,?,?,?,?,?)"
 					, [summary_id, model.get('collection_id'), _.getUserID()
-					, serializeQuizMetaValue, start_date], 0)
+					, serializeQuizMetaValue, start_date, 0])
 
 			,_.transactionErrorhandler
 

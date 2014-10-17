@@ -98,14 +98,6 @@ define(['app'], function(App) {
         this.$el.find(".select2-filters").select2({
           minimumResultsForSearch: -1
         });
-        $('.select2-container').on('click', function(e) {
-          var field;
-          alert("views");
-          alert($(e.target));
-          field = $(e.target);
-          field.trigger('touchstart');
-          return field.trigger('touchend');
-        });
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');

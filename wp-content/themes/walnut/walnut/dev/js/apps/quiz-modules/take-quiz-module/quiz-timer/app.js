@@ -150,6 +150,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'backbone'], function
       };
 
       QuizTimerView.prototype.clearMediaData = function() {
+        _.clearMediaDirectory('videos-web');
         return _.clearMediaDirectory('audio-web');
       };
 

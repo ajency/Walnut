@@ -208,11 +208,12 @@ define ['app',
 				# 	console.log field.trigger('touchstart')
 				# 	field.trigger('touchend')
 
-				$('.select2-filters').on 'click', (e)->
-					alert "textbooks"
-					field = $(e.target)
-					field.trigger('touchstart')
-					field.trigger('touchend')
+				#code for 4.1.1
+				# $('.select2-filters').on 'click', (e)->
+				# 	alert "textbooks"
+				# 	field = $(e.target)
+				# 	field.trigger('touchstart')
+				# 	field.trigger('touchend')
 
 				$('#take-class-modules').tablesorter();
 

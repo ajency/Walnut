@@ -24,7 +24,6 @@ define(['underscore', 'unserialize'], function(_) {
     },
     getMediaById: function(id) {
       var onSuccess, runQuery;
-      alert(id);
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
@@ -36,8 +35,6 @@ define(['underscore', 'unserialize'], function(_) {
         return function(tx, data) {
           var attachmentData, row;
           row = data.rows.item(0);
-          console.log(JSON.stringify(row));
-          alert("row");
           attachmentData = _.getAttachmentData(id);
           return attachmentData.done(function(data) {
             var full, mediaUrl, result, sizes, url;
@@ -75,18 +72,16 @@ define(['underscore', 'unserialize'], function(_) {
     },
     getAttachmentData: function(id) {
       var runQuery, success;
-      alert(id);
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_key=? AND post_id=?", ['_wp_attached_file', id], success(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_key=? AND post_id=?", ['_wp_attachment_metadata', id], success(d), _.deferredErrorHandler(d));
           });
         });
       };
       success = function(d) {
         return function(tx, data) {
           var meta_value;
-          alert("data");
           meta_value = '';
           if (data.rows.length !== 0) {
             meta_value = unserialize(data.rows.item(0)['meta_value']);

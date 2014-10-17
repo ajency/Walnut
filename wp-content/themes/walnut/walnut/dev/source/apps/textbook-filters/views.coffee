@@ -146,12 +146,13 @@ define ['app'], (App)->
 				@$el.find ".select2-filters"
 				.select2 minimumResultsForSearch: -1
 
-				$('.select2-container').on 'click',  (e)->
-					alert "views"
-					alert $(e.target)
-					field = $(e.target)
-					field.trigger('touchstart')
-					field.trigger('touchend')
+				#code for 4.1.1
+				# $('.select2-container').on 'click',  (e)->
+				# 	alert "views"
+				# 	alert $(e.target)
+				# 	field = $(e.target)
+				# 	field.trigger('touchstart')
+				# 	field.trigger('touchend')
 
 				@contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 

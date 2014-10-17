@@ -31,7 +31,9 @@ define ['app'
                             answerData = {} if _.isEmpty answerData
 
                             answerData.status = @questionResponseModel.get 'status'
-                            answerData.marks = @questionResponseModel.get 'marks_scored'                            
+                            answerData.marks = @questionResponseModel.get 'marks_scored'
+                            alert "marks_scored"
+                            alert JSON.stringify answerData.marks                          
                             @answerModel = App.request "create:new:answer", answerData
 
 
@@ -112,6 +114,9 @@ define ['app'
 
                     _getAnswerStatus:(recievedMarks, totalMarks)->
                         status = 'wrong_answer'
+                        alert "recievedMarks"
+                        alert JSON.stringify recievedMarks
+
 
                         if recievedMarks is totalMarks 
                             status = 'correct_answer' 

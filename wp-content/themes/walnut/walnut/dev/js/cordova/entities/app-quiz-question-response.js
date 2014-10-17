@@ -1,4 +1,4 @@
-define(['underscore', 'unserialize'], function(_) {
+define(['underscore', 'unserialize', 'serialize'], function(_) {
   return _.mixin({
     getQuizQuestionResponseBySummaryID: function(summary_id) {
       var onSuccess, runQuery;
@@ -44,7 +44,7 @@ define(['underscore', 'unserialize'], function(_) {
       runQuery = function() {
         return $.Deferred(function(d) {
           return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END) as negative_scored, SUM(CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END) as marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
+            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END) as negative_scored, SUM(CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END) as marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ? ", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
           });
         });
       };
@@ -71,7 +71,7 @@ define(['underscore', 'unserialize'], function(_) {
           check_permissions = collectionMetaData.permission;
           if (model.get('qr_id') === "" || typeof model.get('qr_id') === 'undefined') {
             qr_id = 'CP' + model.get('content_piece_id') + model.get('summary_id');
-            return _.insertIntoQuiZQuestionResponse(model, qr_id);
+            return _.insertIntoQuizQuestionResponse(model, qr_id);
           } else {
             return _.getOldQuizQuestionResponseData(model, check_permissions);
           }
@@ -98,54 +98,67 @@ define(['underscore', 'unserialize'], function(_) {
         return console.log('getQuizResponseSummary transaction completed');
       }).fail(_.failureHandler);
     },
-    insertIntoQuiZQuestionResponse: function(model, qr_id) {
+    insertIntoQuizQuestionResponse: function(model, qr_id) {
       var question_response;
+      console.log(model.get('status'));
       question_response = serialize(model.get('question_response'));
       return _.db.transaction(function(tx) {
         return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_question_response (qr_id , summary_id, content_piece_id, question_response , time_taken, marks_scored, status, sync) VALUES (?,?,?,?,?,?,?,?)", [qr_id, model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), 0]);
       }, _.transactionErrorhandler, function(tx) {
         console.log('Inserted data in quiz question response');
-        return model.set({
+        model.set({
           'qr_id': qr_id
         });
+        return _.selectData(1);
+      });
+    },
+    selectData: function(v) {
+      return _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response ", [], function(tx, results) {
+          var i, result, _i, _ref;
+          result = new Array();
+          for (i = _i = 0, _ref = results.rows.length - 1; _i <= _ref; i = _i += 1) {
+            result[i] = results.rows.item(i);
+          }
+          return console.log(JSON.stringify(result));
+        }, _.transactionErrorHandler);
       });
     },
     getOldQuizQuestionResponseData: function(model, check_permissions) {
       return _.db.transaction(function(tx) {
         return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE qr_id = ?", [model.get('qr_id')], function(tx, results) {
-          var result;
+          var qrId, result;
+          qrId = model.get('qr_id');
           result = results.rows.item(0);
           console.log(JSON.stringify(result));
-          if (result.status === "paused" || model.get('status') === "paused") {
-            _.updatePausedQuizQuestionResponseData(model);
-          } else if (result.status !== "paused") {
-            if (check_permissions.single_attempt === "true") {
-              model.set({
-                'qr_id': qrId
-              });
-              model.set({
-                'error': 'Permissions denied'
-              });
-            }
-            if (check_permissions.allow_resubmit !== "true" && result.status !== "skipped") {
-              model.set({
-                'qr_id': qrId
-              });
-              model.set({
-                'error': 'Permissions denied'
-              });
+          console.log(result.status);
+          console.log(model.get('status'));
+          if (result.status === "paused" && model.get('status') === "paused") {
+            return _.updatePausedQuizQuestionResponseData(model);
+          } else {
+            if (result.status !== "paused") {
+              if (check_permissions.single_attempt === true) {
+                return console.log("Permissions denied");
+              } else if (check_permissions.allow_resubmit !== true && result.status !== "skipped") {
+                return console.log("Permissions denied");
+              } else {
+                return _.updateQuizQuestionResponseData(model);
+              }
+            } else {
+              return _.updateQuizQuestionResponseData(model);
             }
           }
-          return _.updateQuizQuestionResponseData(model);
-        }, _.transactionErrorHandler(error));
+        }, _.transactionErrorHandler);
       });
     },
     updatePausedQuizQuestionResponseData: function(model) {
       var qrId;
+      console.log(model);
       qrId = model.get('qr_id');
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET status=?, time_taken=?, sync=? WHERE summary_id=?", ['paused', model.get('time_taken'), 0, model.get('summary_id')]);
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET status= ?, time_taken= ?, sync= ? WHERE summary_id= ?", ['paused', model.get('time_taken'), 0, model.get('summary_id')]);
       }, _.transactionErrorhandler, function(tx) {
+        _.selectData(2);
         model.set({
           'qr_id': qrId
         });
@@ -154,11 +167,13 @@ define(['underscore', 'unserialize'], function(_) {
     },
     updateQuizQuestionResponseData: function(model) {
       var qrId, question_response;
+      console.log(model);
       qrId = model.get('qr_id');
       question_response = serialize(model.get('question_response'));
       return _.db.transaction(function(tx) {
         return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_question_response SET summary_id=?, content_piece_id=?, question_response=? , time_taken=?, marks_scored=?, status=?, sync=? WHERE qr_id=?", [model.get('summary_id'), model.get('content_piece_id'), question_response, model.get('time_taken'), model.get('marks_scored'), model.get('status'), 0, model.get('qr_id')]);
       }, _.transactionErrorhandler, function(tx) {
+        _.selectData(3);
         model.set({
           'qr_id': qrId
         });

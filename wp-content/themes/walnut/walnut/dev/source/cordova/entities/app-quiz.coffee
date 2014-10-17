@@ -252,7 +252,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							term_id = val
 
 					_.db.transaction (tx)->
-						pattern = '%"'+term_id+'"%' 
+						pattern = '%"'+term_id+'"%'
 						tx.executeSql("SELECT post_id FROM wp_postmeta 
 							WHERE post_id IN ("+difference+") 
 							AND meta_key='content_piece_meta' 

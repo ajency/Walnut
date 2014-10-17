@@ -50,6 +50,12 @@ define(["app", 'backbone'], function(App, Backbone) {
           } else {
             return false;
           }
+        } else {
+          if (all_permissions[permsission]) {
+            return true;
+          } else {
+            return false;
+          }
         }
       };
 
@@ -174,11 +180,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
       return API.getDummyQuiz(content_piece_id);
     });
-    App.reqres.setHandler("get:quiz:repository", function() {
+    return App.reqres.setHandler("get:quiz:repository", function() {
       return quizRepository.clone();
-    });
-    return App.reqres.setHandler("app:reset:quiz:repository", function(models) {
-      return quizRepository.reset(models);
     });
   });
 });
