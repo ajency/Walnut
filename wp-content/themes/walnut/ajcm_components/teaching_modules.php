@@ -3,7 +3,10 @@
 function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 
 	$template_data['name'] 		= 'taught-in-class-student-mail'; 
-	$template_data['subject'] 	= 'Taught In Class - Student';
+
+	$blog_data= get_blog_details($comm_data['blog_id']);
+
+	$template_data['subject'] 	= $blog_data->blogname.': Training module completed';
 
 	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
