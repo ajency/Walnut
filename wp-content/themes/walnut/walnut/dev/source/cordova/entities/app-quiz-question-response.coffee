@@ -1,4 +1,4 @@
-define ['underscore', 'unserialize'], ( _) ->
+define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 
 	_.mixin
@@ -13,8 +13,6 @@ define ['underscore', 'unserialize'], ( _) ->
 						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
 							WHERE summary_id = ?", [summary_id] 
 							, onSuccess(d), _.deferredErrorHandler(d))
-						console.log "SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE summary_id = "+summary_id+" "
 
 			onSuccess =(d)->
 
@@ -29,13 +27,12 @@ define ['underscore', 'unserialize'], ( _) ->
 
 								result[i] = 
 									content_piece_id : row['content_piece_id']
-									marks_scored : value.total_marks_scored
+									marks_scored: value.total_marks_scored
 									qr_id: row['qr_id']
 									question_response : _.unserialize(row['question_response'])
 									status : row['status']
 									summary_id :summary_id
 									time_taken : value.total_time_taken
-								console.log JSON.stringify result[i]
 
 					# if result.length>0
 					d.resolve(result)
@@ -55,9 +52,13 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					_.db.transaction (tx)->
 						tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, 
+							SUM(CASE WHEN status = 'wrong_answer' 
+							THEN marks_scored ELSE 0 END) as negative_scored, 
+							SUM(CASE WHEN status <> 'wrong_answer' 
+							THEN marks_scored ELSE 0 END) as marks_scored, 
 							SUM(time_taken) as total_time_taken 
 							FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE summary_id = ?", 
+							WHERE summary_id = ? ", 
 							[summary_id] 
 							, onSuccess(d), _.deferredErrorHandler(d))
 
@@ -79,8 +80,6 @@ define ['underscore', 'unserialize'], ( _) ->
 		#insert/update data in quiz question response
 		writeQuestionResponse : (model)->
 
-			console.log JSON.stringify model
-
 			quizResponseSummary = _.getQuizResponseSummary(model.get('summary_id'))
 			quizResponseSummary.done (collection_id)->
 
@@ -88,10 +87,11 @@ define ['underscore', 'unserialize'], ( _) ->
 				collectionMeta.done (collectionMetaData)->
 
 					check_permissions = collectionMetaData.permission
+					
 
 					if model.get('qr_id') is "" or typeof model.get('qr_id') is 'undefined'
 						qr_id = 'CP'+model.get('content_piece_id')+model.get('summary_id')
-						_.insertIntoQuiZQuestionResponse(model, qr_id)
+						_.insertIntoQuizQuestionResponse(model, qr_id)
 
 					else
 						_.getOldQuizQuestionResponseData(model,check_permissions)
@@ -124,10 +124,9 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 		#Insert in the table quiz_question_response if there is no qr_id
-		insertIntoQuiZQuestionResponse :(model, qr_id)->
+		insertIntoQuizQuestionResponse :(model, qr_id)->
 
 			question_response = serialize(model.get('question_response'))
-			console.log JSON.stringify question_response
 
 			_.db.transaction((tx)->
 
@@ -135,41 +134,32 @@ define ['underscore', 'unserialize'], ( _) ->
 					, summary_id, content_piece_id, question_response
 					, time_taken, marks_scored, status, sync) 
 					VALUES (?,?,?,?,?,?,?,?)"
-					, [qr_id, model.get('summary_id'), model.get('content_piece_id'), 
-					question_response, model.get('time_taken'), 
-					model.get('marks_scored'), model.get('status'), 0])
+					, [qr_id, model.get('summary_id'), model.get('content_piece_id')
+					, question_response, model.get('time_taken')
+					, model.get('marks_scored'), model.get('status'), 0])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
 				model.set 'qr_id' :qr_id
-				# _.chkTempInsertData()
+				# _.selectData(1)
 			)
 
-		chkTempInsertData : ->
+		selectData : (v)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * 
-							FROM "+_.getTblPrefix()+"quiz_question_response ", []
-							, onSuccess(d), _.deferredErrorHandler(d))
-
-			onSuccess =(d)->
-				(tx,data)->
-					for i in [0..data.rows.length-1] by 1
-					
-						result = data.rows.item(i)
+			_.db.transaction (tx)->
+				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response ", []
+					, (tx,results)->
+						result= new Array()
+						# if results.length>0
+						for i in [0..results.rows.length-1] by 1
+							result[i] = results.rows.item(i)
+						
+						# alert "final"
 						console.log JSON.stringify result
 
-					d.resolve(result)
-
-			$.when(runQuery()).done ->
-				console.log 'chkTempInsertData transaction completed'
-			.fail _.failureHandler
-
+					, _.transactionErrorHandler)
 
 
 		#Update table quiz_question_response id qr_id if present
@@ -180,27 +170,33 @@ define ['underscore', 'unserialize'], ( _) ->
 					WHERE qr_id = ?", [model.get('qr_id')]
 					, (tx,results)->
 						# if results.length>0
-
+						qrId = model.get('qr_id')
 						result = results.rows.item(0)
 						console.log JSON.stringify result
 
-						if result.status is "paused" or model.get('status') is "paused"
+						if result.status is "paused" and model.get('status') is "paused"
 							_.updatePausedQuizQuestionResponseData(model)
 
-						else if result.status isnt "paused"
+						else 
+							if result.status isnt "paused"
+								# alert "not paused"
+								if check_permissions.single_attempt is true
+									# model.set 'qr_id' : qrId
+									# model.set 'error' : 'Permissions denied'
+									console.log "Permissions denied"
 
-							if check_permissions.single_attempt is "true"
-								model.set 'qr_id' : qrId
-								model.set 'error' : 'Permissions denied'
+								else if check_permissions.allow_resubmit isnt true and result.status isnt "skipped"
+									# model.set 'qr_id' : qrId
+									# model.set 'error' : 'Permissions denied'
+									console.log "Permissions denied"
 
-							if check_permissions.allow_resubmit isnt "true" and result.status isnt "skipped"
-								model.set 'qr_id' : qrId
-								model.set 'error' : 'Permissions denied'
+								else
+									_.updateQuizQuestionResponseData(model)
 
+							else
+								_.updateQuizQuestionResponseData(model)
 
-						_.updateQuizQuestionResponseData(model)
-					, _.transactionErrorHandler(error))
-
+					, _.transactionErrorHandler)
 			# onSuccess =(d)->
 
 			# 	(tx,data)->
@@ -221,20 +217,21 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		#update the table when the question is paused
 		updatePausedQuizQuestionResponseData: (model)->
+
 			qrId = model.get('qr_id')
 			_.db.transaction((tx)->
 
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET 
-					status=?, time_taken=?, sync=? 
-					WHERE summary_id=?"
+					status= ?, time_taken= ?, sync= ? 
+					WHERE summary_id= ?"
 					, ['paused', model.get('time_taken'), 0, model.get('summary_id')])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
+				# _.selectData(2)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)'
-				# _.chkTempInsertData()
 			)
 
 
@@ -242,7 +239,6 @@ define ['underscore', 'unserialize'], ( _) ->
 		updateQuizQuestionResponseData: (model)->
 			qrId = model.get('qr_id')
 			question_response = serialize(model.get('question_response'))
-			console.log JSON.stringify question_response
 			_.db.transaction((tx)->
 
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET summary_id=?, 
@@ -254,12 +250,12 @@ define ['underscore', 'unserialize'], ( _) ->
 					model.get('marks_scored'), model.get('status'), 0
 					, model.get('qr_id')])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
+				# _.selectData(3)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updateQuizQuestionResponseData)'
-				# _.chkTempInsertData()
 			)
 
 

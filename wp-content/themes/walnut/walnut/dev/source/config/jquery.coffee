@@ -55,8 +55,6 @@ define ['jquery', 'underscore'], ($, _)->
         else
             parent = window
 
-
-
         @css
             position: "fixed"
             top: ((($(parent).height() - @outerHeight()) / 2) + $(parent).scrollTop() + "px")
@@ -103,13 +101,6 @@ define ['jquery', 'underscore'], ($, _)->
         # add ui-selected class to the elements to select
         $(elementsToSelect).not(".ui-selected").addClass("ui-selected")
 
-
-    #    # scroll to top
-    #    $.scrollTop = ->
-    #        $('html, body').animate
-    #            scrollTop: 0
-    #        , 1000
-
     # adjust the dimesion of upper content and also the left section and right section
     # Uses jquery to get window dimensions and sets min-height css property so that if height
     # is greater it will not hide the content
@@ -132,18 +123,19 @@ define ['jquery', 'underscore'], ($, _)->
     #adjust the page size and dimensions on resize
     $(window).resize adjustPageDim
 
-    # # Setup Polyglot
-    # window.pt = new Polyglot
-    # 					phrases : {}
+    # select/ unselect all checkboxes in a table/div
+    # element = DOM element that holds all the checkboxes eg. @$el.find('#take-class-modules')
+    # exclude = array of checkbox ids to be excluded from selection
+    $.toggleCheckAll = (element,exclude=[])->
 
-    # window.__ = (key, opt = {})->
+        if element.find '#check_all'
+        .is ':checked'
+            checkboxes= element.find '.tab_checkbox'
+            for checkbox in checkboxes
+                if parseInt(checkbox.value) not in exclude
+                    $(checkbox).trigger 'click'
+                    .prop 'checked', true
 
-    # 	pt.t(key, opt)
-
-
-    # $(window).scroll ()->
-    #     if ($(@).scrollTop() > 100)
-    #         $('.scrollup').fadeIn();
-    #     else
-    #         $('.scrollup').fadeOut();
-
+        else
+            element.find '.tab_checkbox'
+            .removeAttr 'checked'

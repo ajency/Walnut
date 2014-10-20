@@ -46,9 +46,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           if (this.model.hasPermission('teacher_check')) {
             this.$el.find("#teacher-check").show();
           }
+          console.log(JSON.stringify(completedResponses));
           responseQuestionIDs = _.chain(completedResponses).map(function(m) {
             return m.toJSON();
           }).pluck('content_piece_id').value();
+          console.log(responseQuestionIDs);
           if (Marionette.getOption(this, 'mode') === 'training') {
             _ref = this.$el.find('.contentPiece');
             _results = [];

@@ -39,11 +39,14 @@ define ['app'
                         @$el.find "#teacher-check"
                         .show()
 
+                    console.log JSON.stringify completedResponses
                     responseQuestionIDs = _.chain completedResponses
                                             .map (m)->m.toJSON()
                                             .pluck 'content_piece_id'
                                             .value()
 
+
+                    console.log responseQuestionIDs
                     if Marionette.getOption(@, 'mode') is 'training'
                         for question in @$el.find '.contentPiece'
                             $(question).find '.cbp_tmlabel'

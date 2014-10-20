@@ -77,14 +77,27 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       Controller.prototype._parseOptions = function(blanksArray) {
         return _.each(blanksArray, function(blank) {
-          if (blank.blank_index != null) {
-            blank.blank_index = parseInt(blank.blank_index);
+          if (_.platform() === 'BROWSER') {
+            if (blank.blank_index != null) {
+              blank.blank_index = parseInt(blank.blank_index);
+            }
+            if (blank.blank_size != null) {
+              blank.blank_size = parseInt(blank.blank_size);
+            }
+            if (blank.marks != null) {
+              blank.marks = parseInt(blank.marks);
+            }
           }
-          if (blank.blank_size != null) {
-            blank.blank_size = parseInt(blank.blank_size);
-          }
-          if (blank.marks != null) {
-            return blank.marks = parseInt(blank.marks);
+          if (_.platform() === 'DEVICE') {
+            if (blank.blank_index != null) {
+              blank.blank_index = parseFloat(blank.blank_index);
+            }
+            if (blank.blank_size != null) {
+              blank.blank_size = parseFloat(blank.blank_size);
+            }
+            if (blank.marks != null) {
+              return blank.marks = parseFloat(blank.marks);
+            }
           }
         });
       };

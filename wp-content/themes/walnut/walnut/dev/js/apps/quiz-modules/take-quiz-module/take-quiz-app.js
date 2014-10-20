@@ -181,7 +181,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._endQuiz = function() {
         var unanswered, _ref, _ref1;
-        this.clearMediaDataOnEndQuiz();
+        if (_.platform() === 'DEVICE') {
+          this.clearMediaDataOnEndQuiz();
+        }
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });

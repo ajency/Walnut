@@ -32,7 +32,6 @@ define ['underscore', 'unserialize'], ( _) ->
 										do(row, i, author_name, meta_value)->
 											contentElementsArray = _.getJsonToClone(meta_value.layout_json)
 											contentElementsArray.done (contentElements)->
-												# console.log contentElements.elements
 												excerpt_array = contentElements.excerpt
 
 												excerpt_array = _.flatten excerpt_array
@@ -84,6 +83,7 @@ define ['underscore', 'unserialize'], ( _) ->
 													question_type: meta_value.question_type
 													term_ids: meta_value.term_ids
 													to_ping: row['to_ping']
+
 
 					
 					d.resolve(result)

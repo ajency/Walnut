@@ -1,330 +1,333 @@
 define ['app'
-        'controllers/region-controller'
-        'apps/quiz-modules/take-quiz-module/quiz-description/app'
-        'apps/quiz-modules/take-quiz-module/quiz-progress/app'
-        'apps/quiz-modules/take-quiz-module/quiz-timer/app'
-        'apps/quiz-modules/take-quiz-module/single-question/app'], (App, RegionController)->
+		'controllers/region-controller'
+		'apps/quiz-modules/take-quiz-module/quiz-description/app'
+		'apps/quiz-modules/take-quiz-module/quiz-progress/app'
+		'apps/quiz-modules/take-quiz-module/quiz-timer/app'
+		'apps/quiz-modules/take-quiz-module/single-question/app'], (App, RegionController)->
 
-        App.module "TakeQuizApp", (View, App)->
+		App.module "TakeQuizApp", (View, App)->
 
-            #Single Question description and answers
-            quizModel = null
-            quizResponseSummary = null
-            questionsCollection = null
-            questionResponseModel = null
-            questionModel = null
-            questionIDs = null
-            timeBeforeCurrentQuestion = null
-            pausedQuestionTime = 0 # incase a question was paused previously. this time needs to be added to the current question
+			#Single Question description and answers
+			quizModel = null
+			quizResponseSummary = null
+			questionsCollection = null
+			questionResponseModel = null
+			questionModel = null
+			questionIDs = null
+			timeBeforeCurrentQuestion = null
+			pausedQuestionTime = 0 # incase a question was paused previously. this time needs to be added to the current question
 
-            class View.TakeQuizController extends RegionController
+			class View.TakeQuizController extends RegionController
 
-                initialize : (opts)->
-                    {quizModel,quizResponseSummary,questionsCollection,
-                    @questionResponseCollection,@textbookNames,@display_mode} = opts
+				initialize : (opts)->
+					{quizModel,quizResponseSummary,questionsCollection,
+					@questionResponseCollection,@textbookNames,@display_mode} = opts
 
-                    @_startTakeQuiz()
-                
-                _startTakeQuiz:=>
+					@_startTakeQuiz()
+				
+				_startTakeQuiz:=>
 
-                    if not @questionResponseCollection
-                        @questionResponseCollection= App.request "create:empty:question:response:collection"
-                        timeBeforeCurrentQuestion = 0
+					if not @questionResponseCollection
+						@questionResponseCollection= App.request "create:empty:question:response:collection"
+						timeBeforeCurrentQuestion = 0
 
-                    App.leftNavRegion.reset()
-                    App.headerRegion.reset()
+					App.leftNavRegion.reset()
+					App.headerRegion.reset()
 
-                    questionIDs = questionsCollection.pluck 'ID'
-                    questionIDs= _.map questionIDs, (m)-> parseInt m
+					questionIDs = questionsCollection.pluck 'ID'
+					questionIDs= _.map questionIDs, (m)-> parseInt m
 
-                    pausedQuestion= @questionResponseCollection.findWhere 'status': 'paused'
+					pausedQuestion= @questionResponseCollection.findWhere 'status': 'paused'
 
-                    if pausedQuestion 
-                        questionID = pausedQuestion.get 'content_piece_id'
-                        pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'     
+					if pausedQuestion 
+						questionID = pausedQuestion.get 'content_piece_id'
+						pausedQuestionTime = parseInt pausedQuestion.get 'time_taken'     
 
-                    else
-                        unanswered = @_getUnansweredIDs()
+					else
+						unanswered = @_getUnansweredIDs()
 
-                        if not _.isEmpty unanswered
-                            questionID =_.first @_getUnansweredIDs()
+						if not _.isEmpty unanswered
+							questionID =_.first @_getUnansweredIDs()
 
-                        else
-                            questionID = _.first(questionIDs) if not questionID
+						else
+							questionID = _.first(questionIDs) if not questionID
 
-                    if quizResponseSummary.isNew() 
-                        data = 
-                            'status' : 'started'
-                            'questions_order': questionIDs
+					if quizResponseSummary.isNew() 
+						data = 
+							'status' : 'started'
+							'questions_order': questionIDs
 
-                        quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+						quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
 
-                        quizResponseSummary.save data
+						quizResponseSummary.save data
 
-                    questionModel = questionsCollection.get questionID
-                    @layout = layout = new TakeQuizLayout
+					questionModel = questionsCollection.get questionID
+					@layout = layout = new TakeQuizLayout
 
-                    @show @layout,
-                        loading : true
+					@show @layout,
+						loading : true
 
-                    @timerObject = new Backbone.Wreqr.RequestResponse()
+					@timerObject = new Backbone.Wreqr.RequestResponse()
 
-                    @listenTo @layout, "show", @_showQuizViews
+					@listenTo @layout, "show", @_showQuizViews
 
-                    @listenTo @layout.questionDisplayRegion, "goto:next:question", @_gotoNextQuestion
+					@listenTo @layout.questionDisplayRegion, "goto:next:question", @_gotoNextQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "submit:question", @_submitQuestion
+					@listenTo @layout.questionDisplayRegion, "submit:question", @_submitQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "goto:previous:question", @_gotoPreviousQuestion
+					@listenTo @layout.questionDisplayRegion, "goto:previous:question", @_gotoPreviousQuestion
 
-                    @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
+					@listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
-                    @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
+					@listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
 
-                    @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
+					@listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
-                    setInterval =>
-                        time = @timerObject.request "get:elapsed:time"
-                        @_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
-                    ,30000
+					setInterval =>
+						time = @timerObject.request "get:elapsed:time"
+						@_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
+					,30000
 
-                _autosaveQuestionTime:=>
+				_autosaveQuestionTime:=>
 
-                    questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
-                    
-                    totalTime =@timerObject.request "get:elapsed:time"
-                    timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
-                    pausedQuestionTime =0 #reset to 0 once used
+					questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
+					
+					totalTime =@timerObject.request "get:elapsed:time"
+					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+					pausedQuestionTime =0 #reset to 0 once used
 
-                    if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
+					if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
 
-                        console.log(questionResponseModel.get('status')) if questionResponseModel
+						console.log(questionResponseModel.get('status')) if questionResponseModel
 
-                        data =
-                            'summary_id'     : quizResponseSummary.id
-                            'content_piece_id'  : questionModel.id
-                            'question_response' : []
-                            'status'            : 'paused'
-                            'marks_scored'      : 0
-                            'time_taken'        : timeTaken
+						data =
+							'summary_id'     : quizResponseSummary.id
+							'content_piece_id'  : questionModel.id
+							'question_response' : []
+							'status'            : 'paused'
+							'marks_scored'      : 0
+							'time_taken'        : timeTaken
 
-                        questionResponseModel = App.request "create:quiz:question:response:model", data
+						questionResponseModel = App.request "create:quiz:question:response:model", data
 
-                    else
-                        questionResponseModel.set 'time_taken' : timeTaken
+					else
+						questionResponseModel.set 'time_taken' : timeTaken
 
-                    @_saveQuizResponseModel questionResponseModel
+					@_saveQuizResponseModel questionResponseModel
 
-                _changeQuestion:(changeToQuestion)=>
-                    #save results here of previous question / skip the question
-                    questionModel = questionsCollection.get changeToQuestion
-                    @_showSingleQuestionApp questionModel
+				_changeQuestion:(changeToQuestion)=>
+					#save results here of previous question / skip the question
+					questionModel = questionsCollection.get changeToQuestion
+					@_showSingleQuestionApp questionModel
 
 
-                _submitQuestion:(answer)->
-                    #save results here
+				_submitQuestion:(answer)->
+					#save results here
 
-                    totalTime =@timerObject.request "get:elapsed:time"
-                    timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
-                    pausedQuestionTime =0 #reset to 0 once used
-                    timeBeforeCurrentQuestion= totalTime
+					totalTime =@timerObject.request "get:elapsed:time"
+					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
+					pausedQuestionTime =0 #reset to 0 once used
+					timeBeforeCurrentQuestion= totalTime
 
-                    data =
-                        'summary_id'     : quizResponseSummary.id
-                        'content_piece_id'  : questionModel.id
-                        'question_response' : _.omit answer.toJSON(), ['marks','status']
-                        'status'            : answer.get 'status'
-                        'marks_scored'      : answer.get 'marks'
-                        'time_taken'        : timeTaken
+					data =
+						'summary_id'     : quizResponseSummary.id
+						'content_piece_id'  : questionModel.id
+						'question_response' : _.omit answer.toJSON(), ['marks','status']
+						'status'            : answer.get 'status'
+						'marks_scored'      : answer.get 'marks'
+						'time_taken'        : timeTaken
 
-                    newResponseModel = App.request "create:quiz:question:response:model", data
+					newResponseModel = App.request "create:quiz:question:response:model", data
 
-                    @_saveQuizResponseModel newResponseModel
+					@_saveQuizResponseModel newResponseModel
 
-                _saveQuizResponseModel:(newResponseModel)=>
+				_saveQuizResponseModel:(newResponseModel)=>
 
-                    quizResponseModel = @questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
+					quizResponseModel = @questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
-                    #update existing model (incase of resubmit)
-                    if quizResponseModel
-                        quizResponseModel.set newResponseModel.toJSON()
+					#update existing model (incase of resubmit)
+					if quizResponseModel
+						quizResponseModel.set newResponseModel.toJSON()
 
-                    #add new model to collection
-                    else
-                        quizResponseModel = newResponseModel
-                        @questionResponseCollection.add newResponseModel
+					#add new model to collection
+					else
+						quizResponseModel = newResponseModel
+						@questionResponseCollection.add newResponseModel
 
-                    quizResponseModel.save()
+					quizResponseModel.save()
 
-                    if quizResponseModel.get('status') isnt 'paused'
-                        @layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+					if quizResponseModel.get('status') isnt 'paused'
+						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
-                _skipQuestion:(answer)->
-                    #save skipped status
-                    @_submitQuestion answer
-                    @_gotoNextQuestion()
+				_skipQuestion:(answer)->
+					#save skipped status
+					@_submitQuestion answer
+					@_gotoNextQuestion()
 
-                _gotoNextQuestion:->
+				_gotoNextQuestion:->
 
-                    nextQuestionID = @_getNextItemID() if questionModel?
+					nextQuestionID = @_getNextItemID() if questionModel?
 
-                    if nextQuestionID
-                        questionModel= questionsCollection.get nextQuestionID
-                        @_showSingleQuestionApp questionModel
+					if nextQuestionID
+						questionModel= questionsCollection.get nextQuestionID
+						@_showSingleQuestionApp questionModel
 
-                    else
-                        @_endQuiz()
+					else
+						@_endQuiz()
 
-                _endQuiz:->
-                    @clearMediaDataOnEndQuiz()
+				_endQuiz:->
 
-                    questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
+					if _.platform() is 'DEVICE'
+						@clearMediaDataOnEndQuiz()
 
-                    if @display_mode not in ['replay', 'quiz_report']
+					questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
-                        if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
-                            @layout.questionDisplayRegion.trigger "silent:save:question"
+					if @display_mode not in ['replay', 'quiz_report']
 
-                        unanswered = @_getUnansweredIDs()
+						if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
+							@layout.questionDisplayRegion.trigger "silent:save:question"
 
-                        if unanswered
-                            _.each unanswered, (question,index)=>
-                                questionModel = questionsCollection.get question
-                                answerModel = App.request "create:new:answer"
-                                answerModel.set 'status': 'skipped'
+						unanswered = @_getUnansweredIDs()
 
-                                @_submitQuestion answerModel
+						if unanswered
+							_.each unanswered, (question,index)=>
+								questionModel = questionsCollection.get question
+								answerModel = App.request "create:new:answer"
+								answerModel.set 'status': 'skipped'
 
-                        quizResponseSummary.set 
-                            'status'            : 'completed' 
-                            'total_time_taken'  : timeBeforeCurrentQuestion
-                            
-                            'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
+								@_submitQuestion answerModel
 
-                            'marks_scored'      : @questionResponseCollection.getMarksScored()
-                            
-                            'negative_scored'   : @questionResponseCollection.getNegativeScored()
-                            
-                            'total_marks_scored': @questionResponseCollection.getTotalScored()
+						quizResponseSummary.set 
+							'status'            : 'completed' 
+							'total_time_taken'  : timeBeforeCurrentQuestion
+							
+							'num_skipped'       : _.size @questionResponseCollection.where 'status': 'skipped'
 
-                        quizResponseSummary.save()
+							'marks_scored'      : @questionResponseCollection.getMarksScored()
+							
+							'negative_scored'   : @questionResponseCollection.getNegativeScored()
+							
+							'total_marks_scored': @questionResponseCollection.getTotalScored()
 
-                    App.execute "show:single:quiz:app",
-                        region                      : App.mainContentRegion
-                        quizModel                   : quizModel
-                        questionsCollection         : questionsCollection
-                        questionResponseCollection  : @questionResponseCollection
-                        quizResponseSummary         : quizResponseSummary
-                        display_mode                : @display_mode
+						quizResponseSummary.save()
 
-                clearMediaDataOnEndQuiz : =>
-                        _.clearMediaDirectory 'videos-web'
-                        _.clearMediaDirectory 'audio-web'
-                
-                _getUnansweredIDs:->
-                    
-                    pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
+					App.execute "show:single:quiz:app",
+						region                      : App.mainContentRegion
+						quizModel                   : quizModel
+						questionsCollection         : questionsCollection
+						questionResponseCollection  : @questionResponseCollection
+						quizResponseSummary         : quizResponseSummary
+						display_mode                : @display_mode
 
-                    answeredIDs= @questionResponseCollection.pluck 'content_piece_id'
 
-                    if pausedModel
-                        answeredIDs = _.without answeredIDs, pausedModel.get 'content_piece_id'
-                        
-                    allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
+				clearMediaDataOnEndQuiz : =>
+						_.clearMediaDirectory 'videos-web'
+						_.clearMediaDirectory 'audio-web'
 
-                    unanswered= _.difference allIDs, answeredIDs
+				
+				_getUnansweredIDs:->
+					
+					pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
 
-                _gotoPreviousQuestion:->
+					answeredIDs= @questionResponseCollection.pluck 'content_piece_id'
 
-                    prevQuestionID = @_getPrevItemID() if questionModel?
+					if pausedModel
+						answeredIDs = _.without answeredIDs, pausedModel.get 'content_piece_id'
+						
+					allIDs= _.map quizModel.get('content_pieces'), (m)-> parseInt m
 
-                    if prevQuestionID
-                        questionModel= questionsCollection.get prevQuestionID
-                        @_showSingleQuestionApp questionModel
+					unanswered= _.difference allIDs, answeredIDs
 
-                _getNextItemID : ->
-                    pieceIndex = _.indexOf(questionIDs, questionModel.id)
-                    nextIndex = pieceIndex + 1
+				_gotoPreviousQuestion:->
 
-                    if nextIndex < questionIDs.length
-                        nextID = parseInt questionIDs[nextIndex]
+					prevQuestionID = @_getPrevItemID() if questionModel?
 
-                    else 
-                        unanswered = @_getUnansweredIDs()
-                        nextID= _.first _.intersection questionIDs,unanswered if unanswered
+					if prevQuestionID
+						questionModel= questionsCollection.get prevQuestionID
+						@_showSingleQuestionApp questionModel
 
+				_getNextItemID : ->
+					pieceIndex = _.indexOf(questionIDs, questionModel.id)
+					nextIndex = pieceIndex + 1
 
-                    nextID
+					if nextIndex < questionIDs.length
+						nextID = parseInt questionIDs[nextIndex]
 
-                _getPrevItemID : ->
-                    pieceIndex = _.indexOf(questionIDs, questionModel.id)
-                    prevID = parseInt questionIDs[pieceIndex - 1] if pieceIndex>0
+					else 
+						unanswered = @_getUnansweredIDs()
+						nextID= _.first _.intersection questionIDs,unanswered if unanswered
 
 
-                _showSingleQuestionApp:->
+					nextID
 
-                    display_mode = if @display_mode is 'quiz_report' then 'replay' else @display_mode
+				_getPrevItemID : ->
+					pieceIndex = _.indexOf(questionIDs, questionModel.id)
+					prevID = parseInt questionIDs[pieceIndex - 1] if pieceIndex>0
 
-                    if questionModel
-                        new View.SingleQuestion.Controller
-                            region                  : @layout.questionDisplayRegion
-                            model                   : questionModel
-                            quizModel               : quizModel
-                            questionResponseCollection   : @questionResponseCollection
-                            display_mode            : display_mode
 
-                        @layout.quizProgressRegion.trigger "question:changed", questionModel
-                        @layout.quizDescriptionRegion.trigger "question:changed", questionModel
+				_showSingleQuestionApp:->
 
-                _showQuizViews:->
-                    new View.QuizDescription.Controller
-                        region          : @layout.quizDescriptionRegion
-                        model           : quizModel
-                        currentQuestion : questionModel
-                        textbookNames   : @textbookNames
-                        display_mode    : @display_mode
+					display_mode = if @display_mode is 'quiz_report' then 'replay' else @display_mode
 
+					if questionModel
+						new View.SingleQuestion.Controller
+							region                  : @layout.questionDisplayRegion
+							model                   : questionModel
+							quizModel               : quizModel
+							questionResponseCollection   : @questionResponseCollection
+							display_mode            : display_mode
 
-                    new View.QuizProgress.Controller
-                        region: @layout.quizProgressRegion
-                        questionsCollection         : questionsCollection
-                        currentQuestion             : questionModel
-                        quizModel                   : quizModel
-                        questionResponseCollection  : @questionResponseCollection
+						@layout.quizProgressRegion.trigger "question:changed", questionModel
+						@layout.quizDescriptionRegion.trigger "question:changed", questionModel
 
-                    new View.QuizTimer.Controller
-                        region      : @layout.quizTimerRegion
-                        model       : quizModel
-                        display_mode: @display_mode
-                        timerObject : @timerObject
-                        quizResponseSummary         : quizResponseSummary
+				_showQuizViews:->
+					new View.QuizDescription.Controller
+						region          : @layout.quizDescriptionRegion
+						model           : quizModel
+						currentQuestion : questionModel
+						textbookNames   : @textbookNames
+						display_mode    : @display_mode
 
-                    @_showSingleQuestionApp questionModel
 
-            class TakeQuizLayout extends Marionette.Layout
+					new View.QuizProgress.Controller
+						region: @layout.quizProgressRegion
+						questionsCollection         : questionsCollection
+						currentQuestion             : questionModel
+						quizModel                   : quizModel
+						questionResponseCollection  : @questionResponseCollection
 
-                template : '<div id="quiz-description-region"></div>
-                                            <div class="sidebarContainer">
-                                                <div id="quiz-timer-region"></div>
-                                                <div id="quiz-progress-region"></div>
-                                            </div>
-                                            <div id="question-display-region"></div>'
+					new View.QuizTimer.Controller
+						region      : @layout.quizTimerRegion
+						model       : quizModel
+						display_mode: @display_mode
+						timerObject : @timerObject
+						quizResponseSummary         : quizResponseSummary
 
-                regions :
-                    quizDescriptionRegion : '#quiz-description-region'
-                    quizTimerRegion : '#quiz-timer-region'
-                    quizProgressRegion : '#quiz-progress-region'
-                    questionDisplayRegion : '#question-display-region'
+					@_showSingleQuestionApp questionModel
 
-                className: 'content'
+			class TakeQuizLayout extends Marionette.Layout
 
-                onShow : ->
-                    $('.page-content').addClass 'condensed expand-page'
+				template : '<div id="quiz-description-region"></div>
+											<div class="sidebarContainer">
+												<div id="quiz-timer-region"></div>
+												<div id="quiz-progress-region"></div>
+											</div>
+											<div id="question-display-region"></div>'
 
+				regions :
+					quizDescriptionRegion : '#quiz-description-region'
+					quizTimerRegion : '#quiz-timer-region'
+					quizProgressRegion : '#quiz-progress-region'
+					questionDisplayRegion : '#question-display-region'
 
-            # set handlers
-            App.commands.setHandler "start:take:quiz:app", (opt = {})->
-                new View.TakeQuizController opt
-        
+				className: 'content'
+
+				onShow : ->
+					$('.page-content').addClass 'condensed expand-page'
+
+			# set handlers
+			App.commands.setHandler "start:take:quiz:app", (opt = {})->
+				new View.TakeQuizController opt
+		
 
 

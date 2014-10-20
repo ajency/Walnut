@@ -224,8 +224,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("empty:content:pieces:collection", function() {
       return API.emptyContentCollection();
     });
-    return App.reqres.setHandler("get:content:pieces:repository", function() {
+    App.reqres.setHandler("get:content:pieces:repository", function() {
       return contentPiecesRepository.clone();
+    });
+    return App.reqres.setHandler("app:reset:content:pieces:repository", function(models) {
+      return contentPiecesRepository.add(models);
     });
   });
 });

@@ -1,3 +1,5 @@
+var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
 define(['jquery', 'underscore'], function($, _) {
   var adjustPageDim;
   $(document).on("click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', function(e) {
@@ -121,5 +123,26 @@ define(['jquery', 'underscore'], function($, _) {
   $(document).ready(function() {
     return adjustPageDim();
   });
-  return $(window).resize(adjustPageDim);
+  $(window).resize(adjustPageDim);
+  return $.toggleCheckAll = function(element, exclude) {
+    var checkbox, checkboxes, _i, _len, _ref, _results;
+    if (exclude == null) {
+      exclude = [];
+    }
+    if (element.find('#check_all').is(':checked')) {
+      checkboxes = element.find('.tab_checkbox');
+      _results = [];
+      for (_i = 0, _len = checkboxes.length; _i < _len; _i++) {
+        checkbox = checkboxes[_i];
+        if (_ref = parseInt(checkbox.value), __indexOf.call(exclude, _ref) < 0) {
+          _results.push($(checkbox).trigger('click').prop('checked', true));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    } else {
+      return element.find('.tab_checkbox').removeAttr('checked');
+    }
+  };
 });

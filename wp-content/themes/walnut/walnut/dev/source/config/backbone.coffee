@@ -59,17 +59,15 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz-question-response'
 				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
 				data.done (d)->
-					console.log('quiz-question-response')
-					console.log JSON.stringify(d)
 					
 					collection.set d
 
 			if collection_name is 'content-piece'
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
-					console.log 'content-piece data'
-					console.log JSON.stringify d
 					collection.set d
+
+					App.request "app:reset:content:pieces:repository", d
 
 			if collection_name is 'user'
 				data = _.getStudentsByDivision(opts.division)
@@ -85,8 +83,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'textbookName'
 				data = _.getTextBookNamesByTermIDs(opts.term_ids)
 				data.done (d)->
-					console.log('textbookName response')
-					console.log JSON.stringify(d)
 					collection.set d
 
 
@@ -231,15 +227,12 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'textbook'
 					data = _.getTextBookByTextbookId(model.get('term_id'))
 					data.done (d)->
-						console.log JSON.stringify d
 						model.set d	
 
 
 				if modelname is 'quiz'
 					data = _.getQuizById(model.get('id'))
 					data.done (d)->
-						console.log "quiz model"
-						console.log JSON.stringify d
 						model.set d
 
 				if modelname is 'quiz-response-summary'

@@ -1,16 +1,17 @@
-{{#quiz_report}}
-    <div class="row tiles white grid simple">
-        <div class="col-md-4">
-            <h4><span class="bold">Student Name: {{studentName}}</span>
-            </h4>
-        </div>
-        <div class="col-md-4">
-            <h4><span class="bold">Roll Number: {{rollNumber}}</span>
-            </h4>
-        </div>
-    </div>
-{{/quiz_report}}
 <div class="teacher-app">
+    {{#quiz_report}}
+        <div class="row tiles white simple m-b-10">
+            <div class="col-md-4">
+                <h4><span class="bold">Student Name: {{studentName}}</span>
+                </h4>
+            </div>
+            <div class="col-md-4">
+                <h4><span class="bold">Roll Number: {{rollNumber}}</span>
+                </h4>
+            </div>
+        </div>
+    {{/quiz_report}}
+    
     {{^quiz_report}}
         {{#practice_mode}}
             <div class="well text-center">

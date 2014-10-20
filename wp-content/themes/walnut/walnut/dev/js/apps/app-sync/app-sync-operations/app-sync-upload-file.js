@@ -1,4 +1,4 @@
-define(['underscore'], function(_) {
+define(['underscore', 'bootbox'], function(_, bootbox) {
   return _.mixin({
     uploadGeneratedZipFile: function() {
       var userDetails;
@@ -19,10 +19,39 @@ define(['underscore'], function(_) {
         options.params = params;
         fileTransfer = new FileTransfer();
         return fileTransfer.upload(zipFilePath, uploadURI, function(success) {
-          var response;
+          var response, userInfo;
           response = JSON.parse(success.response);
-          _.setSyncRequestId(response.sync_request_id);
-          _.onFileUploadSuccess();
+          if (response === 0) {
+            userInfo = _.getUserDetails(_.getUserID());
+            userInfo.done(function(user_Details) {
+              var user, username;
+              _.removeCordovaBackbuttonEventListener();
+              _.setUserID(null);
+              _.setTblPrefix(null);
+              user = App.request("get:user:model");
+              user.clear();
+              bootbox.alert("Hi, your session has expired. Please log in to continue");
+              App.leftNavRegion.close();
+              App.headerRegion.close();
+              App.mainContentRegion.close();
+              App.breadcrumbRegion.close();
+              username = user_Details.username;
+              return setTimeout((function(_this) {
+                return function() {
+                  App.navigate("login/" + username, {
+                    trigger: true
+                  });
+                  return $('#onOffSwitch').prop({
+                    "disabled": true,
+                    "checked": true
+                  });
+                };
+              })(this), 1000);
+            });
+          } else {
+            _.setSyncRequestId(response.sync_request_id);
+            _.onFileUploadSuccess();
+          }
           console.log("CODE: " + success.responseCode);
           console.log("RESPONSE: " + success.response);
           return console.log("BYTES SENT: " + success.bytesSent);

@@ -1,4 +1,4 @@
-define ['underscore'], ( _) ->
+define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 
 	#File upload
 
@@ -31,9 +31,39 @@ define ['underscore'], ( _) ->
 					, (success)->
 
 						response = JSON.parse success.response
-						_.setSyncRequestId response.sync_request_id
+						#This condition will check if the session id has expired 
+						#and navigate the user to the log in page
+						
+						if response is 0
+							
+							userInfo = _.getUserDetails(_.getUserID())
+							userInfo.done (user_Details)->
+								_.removeCordovaBackbuttonEventListener()
+								
+								_.setUserID(null)
+								_.setTblPrefix(null)
 
-						_.onFileUploadSuccess()
+								user = App.request "get:user:model"
+								user.clear()
+								bootbox.alert "Hi, your session has expired. Please log in to continue"
+								App.leftNavRegion.close()
+								App.headerRegion.close()
+								App.mainContentRegion.close()
+								App.breadcrumbRegion.close()
+
+								username = user_Details.username
+								setTimeout(=>
+									App.navigate "login/"+username, trigger:true
+									$('#onOffSwitch').prop
+										"disabled" : true, "checked" : true
+								,1000)
+								
+
+
+						else
+							_.setSyncRequestId response.sync_request_id
+
+							_.onFileUploadSuccess()
 
 						console.log "CODE: " + success.responseCode
 						console.log "RESPONSE: " + success.response

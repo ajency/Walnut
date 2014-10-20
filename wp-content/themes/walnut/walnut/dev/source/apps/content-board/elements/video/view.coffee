@@ -70,9 +70,7 @@ define ['app'], (App)->
 
 							_.each @videos , (videoSource, index)=>
 								do(videoSource)=>
-									console.log JSON.stringify videoSource
 									
-
 									url = videoSource.replace("media-web/","")
 									videosWebUrl = url.substr(url.indexOf("uploads/"))
 									videoUrl = videosWebUrl.replace("videos-web", "videos")

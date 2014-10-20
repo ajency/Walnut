@@ -105,6 +105,10 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           if (data.negMarksEnable) {
             data.marks_scored = parseFloat(responseSummary.get('marks_scored'));
             data.negative_scored = parseFloat(responseSummary.get('negative_scored'));
+            if (_.platform() === 'DEVICE') {
+              data.negative_scored = data.negative_scored.toFixed(2);
+              data.marks_scored = data.marks_scored.toFixed(2);
+            }
           }
           data.total_marks_scored = parseFloat(responseSummary.get('total_marks_scored'));
           if (_.platform() === 'DEVICE') {

@@ -61,7 +61,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							height: data.height
 							width: data.width
 
-						d.resolve result    
+						d.resolve result
 
 			
 			$.when(runQuery()).done ->

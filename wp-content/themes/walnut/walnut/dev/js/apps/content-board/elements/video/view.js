@@ -59,7 +59,6 @@ define(['app'], function(App) {
                 _.each(_this.videos, function(videoSource, index) {
                   return (function(videoSource) {
                     var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
-                    console.log(JSON.stringify(videoSource));
                     url = videoSource.replace("media-web/", "");
                     videosWebUrl = url.substr(url.indexOf("uploads/"));
                     videoUrl = videosWebUrl.replace("videos-web", "videos");

@@ -21,7 +21,6 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
-              console.log(JSON.stringify(collectionMetaData));
               return (function(row, i, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
@@ -30,7 +29,6 @@ define(['underscore', 'unserialize'], function(_) {
                   status = dateStatus.status;
                   attempts = dateStatus.attempts;
                   date = dateStatus.start_date;
-                  console.log(JSON.stringify(dateStatus));
                   return result[i] = {
                     id: row['id'],
                     name: row['name'],
@@ -317,43 +315,41 @@ define(['underscore', 'unserialize'], function(_) {
           var quizResponseSummary;
           quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
           return quizResponseSummary.done(function(quiz_responses) {
-            var contentLayoutValue, date;
-            console.log(JSON.stringify(quiz_responses));
+            var getQuizType;
             if (_.isEmpty(quiz_responses)) {
               data.status = 'not started';
               data.start_date = '';
               data.attempts = 0;
+              d.resolve(data);
             }
             if (!_.isEmpty(quiz_responses)) {
-              contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
-              if (contentLayoutValue.attempts) {
-                data.attempts = contentLayoutValue.attempts;
-                if (moment(quiz_responses.taken_on).isValid()) {
-                  data.start_date = quiz_responses.taken_on;
-                } else {
-                  date = quiz_responses.taken_on;
-                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+              getQuizType = _.getCollectionMeta(collection_id);
+              return getQuizType.done(function(collectionMetaData) {
+                var contentLayoutValue, date;
+                contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
+                if (collectionMetaData.quizType === 'practice') {
+                  data.attempts = quiz_responses.attempts;
                 }
-              }
-              if (contentLayoutValue.status === "started") {
-                data.status = 'started';
-                if (moment(quiz_responses.taken_on).isValid()) {
-                  data.start_date = quiz_responses.taken_on;
-                } else {
-                  date = quiz_responses.taken_on;
-                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                if (contentLayoutValue.status === "started") {
+                  data.status = 'started';
+                  if (moment(quiz_responses.taken_on).isValid()) {
+                    data.start_date = quiz_responses.taken_on;
+                  } else {
+                    date = quiz_responses.taken_on;
+                    data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                  }
+                } else if (contentLayoutValue.status === "completed") {
+                  data.status = 'completed';
+                  if (moment(quiz_responses.taken_on).isValid()) {
+                    data.start_date = quiz_responses.taken_on;
+                  } else {
+                    date = quiz_responses.taken_on;
+                    data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                  }
                 }
-              } else if (contentLayoutValue.status === "completed") {
-                data.status = 'completed';
-                if (moment(quiz_responses.taken_on).isValid()) {
-                  data.start_date = quiz_responses.taken_on;
-                } else {
-                  date = quiz_responses.taken_on;
-                  data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
-                }
-              }
+                return d.resolve(data);
+              });
             }
-            return d.resolve(data);
           });
         });
       };
@@ -418,12 +414,10 @@ define(['underscore', 'unserialize'], function(_) {
             var collectionMeta;
             collectionMeta = _.getCollectionMeta(row['id']);
             return collectionMeta.done(function(collectionMetaData) {
-              console.log(JSON.stringify(collectionMetaData));
               return (function(row, collectionMetaData) {
                 var dateAndStatus;
                 dateAndStatus = _.getStartDateAndStatus(row['id']);
                 return dateAndStatus.done(function(dateStatus) {
-                  console.log(JSON.stringify(dateStatus.status));
                   result = {
                     id: row['id'],
                     content_pieces: collectionMetaData.contentPieces,

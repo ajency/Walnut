@@ -2,6 +2,7 @@ define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
     getMetaValue: function(content_piece_id) {
       var meta_value, onSuccess, runQuery;
+      content_piece_id = parseInt(content_piece_id);
       meta_value = {
         content_type: '',
         layout_json: '',
@@ -287,7 +288,7 @@ define(['underscore', 'unserialize'], function(_) {
           return meta.done(function(metaData) {
             var ele;
             if (metaData) {
-              ele = unserialize(metaData);
+              ele = _.unserialize(metaData);
               ele.meta_id = element.meta_id;
             } else {
               ele = element;

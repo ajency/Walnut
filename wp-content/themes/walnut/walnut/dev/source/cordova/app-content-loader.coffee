@@ -4,6 +4,9 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		#Get meta_value from wp_postmeta
 		getMetaValue : (content_piece_id)->
+			content_piece_id = parseInt(content_piece_id)
+
+			
 			meta_value = 
 				content_type : ''
 				layout_json : ''
@@ -59,7 +62,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								meta_value.hint_enable = content_piece_meta.hint_enable
 								meta_value.hint = content_piece_meta.hint
 								
-
+					
 					d.resolve(meta_value)
 
 			$.when(runQuery()).done ->
@@ -249,7 +252,7 @@ define ['underscore', 'unserialize'], ( _) ->
 					meta = _.getMetaValueFromMetaId element.meta_id
 					meta.done (metaData)->
 						if metaData
-							ele  =  unserialize metaData
+							ele  =  _.unserialize metaData
 							ele.meta_id = element.meta_id
 							# return false
 
@@ -293,5 +296,6 @@ define ['underscore', 'unserialize'], ( _) ->
 					d.resolve(metaValue)
 
 			$.when(runQuery()).done ->
+
 				console.log 'getMetaValueFromMetaId: '+meta_id+' transaction completed'
 			.fail _.failureHandler	
