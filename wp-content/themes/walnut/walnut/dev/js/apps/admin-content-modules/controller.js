@@ -68,13 +68,16 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                 });
                 return _this.listenTo(_this.view, "save:communications", function(data) {
                   data = {
-                    message_type: 'modules_completed',
+                    component: 'teaching_modules',
+                    communication_type: 'taught_in_class_parent_mail',
                     communication_mode: data.communication_mode,
                     additional_data: {
                       module_ids: data.moduleIDs,
                       division: data.division
                     }
                   };
+                  App.request("save:communications", data);
+                  data.communication_type = 'taught_in_class_student_mail';
                   return App.request("save:communications", data);
                 });
               });

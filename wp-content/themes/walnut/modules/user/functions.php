@@ -418,58 +418,30 @@ function get_parents_by_division($division){
 
 function get_parents_by_student_ids($student_ids){
 
-    global $wpdb;
+    $args= array(
+            'role'          => 'parent',
+            'meta_key'      => 'parent_of',
+            'meta_value'    => $student_ids,
+            'meta_compare'  => 'IN'
+        );
 
-    $students_str = join(',',$student_ids);
-    $students_str = "(".$students_str.")";
+    $parents = get_users( $args );
 
-    $parents_query =$wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
-        WHERE meta_key LIKE %s
-        AND meta_value in $students_str",
-        array('parent_of')
-    );
+    return $parents;
 
-    $parent_ids= $wpdb->get_results($parents_query);
-
-    $ids= array();
-
-    foreach($parent_ids as $id)
-        $ids[]= (int) $id->user_id;
-
-    return $ids;
 }
 
 function get_students_by_division($division){
 
-    global $wpdb;
-    
-    $blogusers = get_users( 'blog_id='.  get_current_blog_id() );
-    $blog_user_ids = array();
-    foreach ( $blogusers as $user ) {
-	$blog_user_ids[] = $user->ID;
-    }
-     
-    if(empty($blog_user_ids)){
-         $student_ids = array();
-    }
-    else{
-        $user_ids = implode(',', $blog_user_ids);   
-
-        $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
-            WHERE meta_key LIKE %s
-            AND meta_value = %d AND user_id IN (".$user_ids.")",
-            array('student_division',$division)
+    $args= array(
+            'role'      => 'student',
+            'meta_key'  => 'student_division',
+            'meta_value'=> $division
         );
 
-        $student_ids = $wpdb->get_results($students_query);
-    }
-    
-    $ids= array();
+    $students = get_users( $args );
 
-    foreach($student_ids as $id)
-        $ids[]= (int) $id->user_id;
-
-    return $ids;
+    return $students;
 }
 
 function get_class_divisions(){
