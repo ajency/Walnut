@@ -180,8 +180,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
       return API.getDummyQuiz(content_piece_id);
     });
-    return App.reqres.setHandler("get:quiz:repository", function() {
+    App.reqres.setHandler("get:quiz:repository", function() {
       return quizRepository.clone();
+    });
+    return App.reqres.setHandler("app:reset:quiz:repository", function(models) {
+      return quizRepository.reset(models);
     });
   });
 });

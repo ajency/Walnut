@@ -54,7 +54,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz-response-summary'
 				data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
 				data.done (d)->
-					console.log d
 					collection.set d
 
 			if collection_name is 'quiz-question-response'
@@ -67,6 +66,8 @@ define ["backbone"], (Backbone) ->
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
 					collection.set d
+
+					App.request "app:reset:content:pieces:repository", d
 
 			if collection_name is 'user'
 				data = _.getStudentsByDivision(opts.division)

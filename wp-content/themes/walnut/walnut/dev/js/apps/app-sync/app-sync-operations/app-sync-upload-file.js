@@ -35,7 +35,6 @@ define(['underscore', 'bootbox'], function(_, bootbox) {
               App.headerRegion.close();
               App.mainContentRegion.close();
               App.breadcrumbRegion.close();
-              bootbox.alert("Hi, your session has expired. Please log in to continue");
               username = user_Details.username;
               return setTimeout((function(_this) {
                 return function() {

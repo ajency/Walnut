@@ -143,3 +143,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:quiz:repository",->
             quizRepository.clone()
+
+        App.reqres.setHandler "app:reset:quiz:repository", (models)->
+            quizRepository.reset models

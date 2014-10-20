@@ -51,7 +51,6 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 								App.mainContentRegion.close()
 								App.breadcrumbRegion.close()
 
-								bootbox.alert "Hi, your session has expired. Please log in to continue"
 								username = user_Details.username
 								setTimeout(=>
 									App.navigate "login/"+username, trigger:true
