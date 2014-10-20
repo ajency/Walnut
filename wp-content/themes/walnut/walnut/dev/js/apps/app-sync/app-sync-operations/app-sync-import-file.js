@@ -281,6 +281,7 @@ define(['underscore', 'csvparse'], function(_) {
     },
     onFileImportSuccess: function() {
       _.updateSyncDetails('file_import', _.getCurrentDateTime(2));
+      _.clearSynapseDataDirectory();
       $('#syncSuccess').css("display", "block").text("File import completed");
       setTimeout((function(_this) {
         return function() {

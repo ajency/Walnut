@@ -19,7 +19,7 @@ define ['app'
 
 			class View.TakeQuizController extends RegionController
 
-				initialize : (opts)=>
+				initialize : (opts)->
 					{quizModel,quizResponseSummary,questionsCollection,
 					@questionResponseCollection,@textbookNames,@display_mode} = opts
 
@@ -89,6 +89,7 @@ define ['app'
 					,30000
 
 				_autosaveQuestionTime:=>
+
 					questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
 					
 					totalTime =@timerObject.request "get:elapsed:time"
@@ -120,7 +121,7 @@ define ['app'
 					@_showSingleQuestionApp questionModel
 
 
-				_submitQuestion:(answer)=>
+				_submitQuestion:(answer)->
 					#save results here
 
 					totalTime =@timerObject.request "get:elapsed:time"
@@ -141,8 +142,6 @@ define ['app'
 					@_saveQuizResponseModel newResponseModel
 
 				_saveQuizResponseModel:(newResponseModel)=>
-				   
-					# console.log quizResponseModel.get('status')         
 
 					quizResponseModel = @questionResponseCollection.findWhere 'content_piece_id' : newResponseModel.get 'content_piece_id'
 
@@ -160,12 +159,12 @@ define ['app'
 					if quizResponseModel.get('status') isnt 'paused'
 						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
-				_skipQuestion:(answer)=>
+				_skipQuestion:(answer)->
 					#save skipped status
 					@_submitQuestion answer
 					@_gotoNextQuestion()
 
-				_gotoNextQuestion:=>
+				_gotoNextQuestion:->
 
 					nextQuestionID = @_getNextItemID() if questionModel?
 
@@ -176,11 +175,11 @@ define ['app'
 					else
 						@_endQuiz()
 
-				_endQuiz:=>
+				_endQuiz:->
 
 					if _.platform() is 'DEVICE'
 						@clearMediaDataOnEndQuiz()
-					
+
 					questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
 					if @display_mode not in ['replay', 'quiz_report']
@@ -220,12 +219,13 @@ define ['app'
 						quizResponseSummary         : quizResponseSummary
 						display_mode                : @display_mode
 
+
 				clearMediaDataOnEndQuiz : =>
 						_.clearMediaDirectory 'videos-web'
 						_.clearMediaDirectory 'audio-web'
 
 				
-				_getUnansweredIDs:=>
+				_getUnansweredIDs:->
 					
 					pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
 
@@ -238,7 +238,7 @@ define ['app'
 
 					unanswered= _.difference allIDs, answeredIDs
 
-				_gotoPreviousQuestion:=>
+				_gotoPreviousQuestion:->
 
 					prevQuestionID = @_getPrevItemID() if questionModel?
 
@@ -246,7 +246,7 @@ define ['app'
 						questionModel= questionsCollection.get prevQuestionID
 						@_showSingleQuestionApp questionModel
 
-				_getNextItemID : =>
+				_getNextItemID : ->
 					pieceIndex = _.indexOf(questionIDs, questionModel.id)
 					nextIndex = pieceIndex + 1
 
@@ -260,12 +260,12 @@ define ['app'
 
 					nextID
 
-				_getPrevItemID : =>
+				_getPrevItemID : ->
 					pieceIndex = _.indexOf(questionIDs, questionModel.id)
 					prevID = parseInt questionIDs[pieceIndex - 1] if pieceIndex>0
 
 
-				_showSingleQuestionApp:=>
+				_showSingleQuestionApp:->
 
 					display_mode = if @display_mode is 'quiz_report' then 'replay' else @display_mode
 
@@ -280,7 +280,7 @@ define ['app'
 						@layout.quizProgressRegion.trigger "question:changed", questionModel
 						@layout.quizDescriptionRegion.trigger "question:changed", questionModel
 
-				_showQuizViews:=>
+				_showQuizViews:->
 					new View.QuizDescription.Controller
 						region          : @layout.quizDescriptionRegion
 						model           : quizModel
@@ -324,7 +324,6 @@ define ['app'
 
 				onShow : ->
 					$('.page-content').addClass 'condensed expand-page'
-
 
 			# set handlers
 			App.commands.setHandler "start:take:quiz:app", (opt = {})->

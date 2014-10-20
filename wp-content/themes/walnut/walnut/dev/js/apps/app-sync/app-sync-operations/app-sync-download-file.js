@@ -21,7 +21,6 @@ define(['underscore', 'bootbox'], function(_, bootbox) {
             return function(resp) {
               var userInfo;
               console.log(JSON.stringify(resp));
-              alert("resp");
               if (resp === 0) {
                 userInfo = _.getUserDetails(_.getUserID());
                 return userInfo.done(function(user_Details) {

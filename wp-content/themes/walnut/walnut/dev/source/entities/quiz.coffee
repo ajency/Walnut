@@ -34,6 +34,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             hasPermission:(permsission)->
                 all_permissions = @.get 'permissions'
+                
                 if _.platform() is 'DEVICE'
                     if _.toBool(all_permissions[permsission]) then return true else return false
                 else

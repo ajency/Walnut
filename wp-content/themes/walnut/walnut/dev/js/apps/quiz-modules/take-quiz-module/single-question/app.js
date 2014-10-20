@@ -36,8 +36,6 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
           }
           answerData.status = this.questionResponseModel.get('status');
           answerData.marks = this.questionResponseModel.get('marks_scored');
-          alert("marks_scored");
-          alert(JSON.stringify(answerData.marks));
           this.answerModel = App.request("create:new:answer", answerData);
         }
         this.show(layout, {
@@ -139,8 +137,6 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
       Controller.prototype._getAnswerStatus = function(recievedMarks, totalMarks) {
         var status;
         status = 'wrong_answer';
-        alert("recievedMarks");
-        alert(JSON.stringify(recievedMarks));
         if (recievedMarks === totalMarks) {
           status = 'correct_answer';
         }

@@ -50,6 +50,7 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
           };
           for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
             row = data.rows.item(i);
+            console.log(row['summary_id']);
             _fn(row, i);
           }
           return d.resolve(result);
@@ -84,48 +85,62 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
       quizMetaValue = '';
       quizMeta = '';
       collectionMeta = _.getCollectionMeta(model.get('collection_id'));
-      collectionMeta.done(function(collectionMetaData) {
+      return collectionMeta.done(function(collectionMetaData) {
         if (collectionMetaData.quizType === "practice") {
           quizMetaValue = model.get('status');
-          return quizMeta = {
+          quizMeta = {
             'status': quizMetaValue
           };
         } else {
           quizMetaValue = model.get('status');
-          return quizMeta = {
+          quizMeta = {
             'status': quizMetaValue
           };
         }
+        if (model.get('summary_id') === "" || typeof model.get('summary_id') === 'undefined') {
+          return _.insertIntoQuizResponseSummary(model, quizMeta, collectionMetaData);
+        } else {
+          return _.updateIntoQuizResponseSummary(model, quizMeta);
+        }
       });
-      if (model.get('summary_id') === "" || typeof model.get('summary_id') === 'undefined') {
-        return _.insertIntoQuizResponseSummary(model, quizMeta);
-      } else {
-        return _.updateIntoQuizResponseSummary(model, quizMeta);
-      }
     },
-    insertIntoQuizResponseSummary: function(model, quizMetaValue) {
+    insertIntoQuizResponseSummary: function(model, quizMetaValue, collectionMetaData) {
       var serializeQuizMetaValue, start_date, summary_id;
       summary_id = 'Q' + model.get('collection_id') + 'S' + _.getUserID();
+      if (collectionMetaData.quizType === "practice") {
+        summary_id = summary_id + '_' + _.getCurrentDateTime(0);
+      }
+      console.log(JSON.stringify(quizMetaValue));
+      model.set({
+        'summary_id': summary_id
+      });
       serializeQuizMetaValue = serialize(quizMetaValue);
       start_date = _.getCurrentDateTime(0);
       return _.db.transaction(function(tx) {
-        return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id , collection_id, student_id, quiz_meta, taken_on, sync) VALUES (?,?,?,?,?,?)", [summary_id, model.get('collection_id'), _.getUserID(), serializeQuizMetaValue, start_date, 0]);
-      }, _.transactionErrorhandler, function(tx) {
-        console.log('Inserted data in quiz_response_summary');
-        return model.set({
-          'summary_id': summary_id
-        });
+        return tx.executeSql("INSERT INTO " + _.getTblPrefix() + "quiz_response_summary (summary_id, collection_id, student_id, quiz_meta, taken_on, sync) VALUES (?,?,?,?,?,?)", [summary_id, model.get('collection_id'), _.getUserID(), serializeQuizMetaValue, start_date, 0]);
+      }, _.transactionErrorHandler, function(tx) {
+        return console.log('Inserted data in quiz_response_summary');
+      });
+    },
+    abc: function() {
+      return _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_response_summary ", [], function(tx, results) {
+          var i, result, _i, _ref;
+          result = new Array();
+          for (i = _i = 0, _ref = results.rows.length - 1; _i <= _ref; i = _i += 1) {
+            result[i] = results.rows.item(i);
+          }
+          return console.log(result);
+        }, _.transactionErrorHandler);
       });
     },
     updateIntoQuizResponseSummary: function(model, quizMeta) {
-      var serializeQuizMetaValue;
+      var serializeQuizMetaValue, summary_id;
+      summary_id = model.get('summary_id');
       serializeQuizMetaValue = serialize(quizMeta);
       return _.db.transaction(function(tx) {
-        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_response_summary SET quiz_meta=?, sync=? WHERE summary_id=?", [serializeQuizMetaValue, 0, model.get('summary_id')]);
-      }, _.transactionErrorhandler, function(tx) {
-        model.set({
-          'summary_id': summary_id
-        });
+        return tx.executeSql("UPDATE " + _.getTblPrefix() + "quiz_response_summary SET quiz_meta=?, sync=? WHERE summary_id=?", [serializeQuizMetaValue, 0, summary_id]);
+      }, _.transactionErrorHandler, function(tx) {
         return console.log('Updated data in quiz_response_summary');
       });
     }

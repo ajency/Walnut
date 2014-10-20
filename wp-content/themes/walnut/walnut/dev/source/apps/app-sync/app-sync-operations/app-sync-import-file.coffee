@@ -27,13 +27,8 @@ define ['underscore', 'csvparse'], ( _) ->
 									reader = new FileReader()
 									reader.onloadend = (evt)->
 										csvString = evt.target.result
-										# alert csvString
 										parsedObj = Papa.parse(csvString, {header : false, dynamicTyping : false})
-										# console.log JSON.stringify parsedObj
-										# console.log JSON.stringify parsedObj.data
 										parsedData = parsedObj.data
-										# console.log JSON.stringify parsedData
-										# alert parsedObj.data.length
 
 										do(parsedData)->
 											_.each parsedData, (outerRow, i)->
@@ -386,7 +381,7 @@ define ['underscore', 'csvparse'], ( _) ->
 
 			_.updateSyncDetails('file_import', _.getCurrentDateTime(2))
 
-			# _.clearSynapseDataDirectory()
+			_.clearSynapseDataDirectory()
 
 			$('#syncSuccess').css("display","block").text("File import completed")
 

@@ -21,6 +21,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					result = []
 					for i in [0..data.rows.length-1] by 1
 						row = data.rows.item(i)
+						console.log row['summary_id']
 
 						#if row['quiz_meta']
 						
@@ -32,7 +33,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 									countForSkippedQuestion = _.getCountForSkippedQuestion(row['summary_id'])
 									countForSkippedQuestion.done (skipped)->
 
-										do(row , i, quiz_responses,skipped)->
+										do(row , i, quiz_responses, skipped)->
 											totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
 											totalMarksScoredAndTotalTimeTaken.done (value)->
 												userID = _.getUserID()
@@ -103,39 +104,59 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					quizMeta = 'status' : quizMetaValue
 
 
-
 			# if typeof summary_id != 'undefined'
-			if model.get('summary_id') is "" or typeof model.get('summary_id') is 'undefined'
-				_.insertIntoQuizResponseSummary(model,quizMeta)
 
-			else
-				_.updateIntoQuizResponseSummary(model,quizMeta)
+				if model.get('summary_id') is "" or typeof model.get('summary_id') is 'undefined'
+					_.insertIntoQuizResponseSummary(model, quizMeta, collectionMetaData)
+
+				else
+					_.updateIntoQuizResponseSummary(model,quizMeta)
 
 
-		insertIntoQuizResponseSummary : (model,quizMetaValue)->
+		insertIntoQuizResponseSummary : (model,quizMetaValue, collectionMetaData)->
 
 			summary_id = 'Q'+model.get('collection_id')+'S'+_.getUserID()
+			if collectionMetaData.quizType is "practice"
+				summary_id = summary_id+'_'+_.getCurrentDateTime(0)
+
+			console.log JSON.stringify quizMetaValue
+			model.set 'summary_id' :summary_id
 
 			serializeQuizMetaValue = serialize(quizMetaValue)
 			start_date = _.getCurrentDateTime(0)
 
 			_.db.transaction((tx)->
 
-				tx.executeSql("INSERT INTO "+_.getTblPrefix()+"quiz_response_summary (summary_id
-					, collection_id, student_id, quiz_meta, taken_on, sync) 
+				tx.executeSql("INSERT INTO "+_.getTblPrefix()+"quiz_response_summary 
+					(summary_id, collection_id, student_id, quiz_meta, taken_on, sync) 
 					VALUES (?,?,?,?,?,?)"
 					, [summary_id, model.get('collection_id'), _.getUserID()
 					, serializeQuizMetaValue, start_date, 0])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
 				console.log 'Inserted data in quiz_response_summary'
-				model.set 'summary_id' :summary_id
 			)
+
+		abc : ()->
+
+			_.db.transaction (tx)->
+				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_response_summary ", []
+					, (tx,results)->
+						result = new Array()
+						# if results.length>0
+						for i in [0..results.rows.length-1] by 1
+							result[i] = results.rows.item(i)
+						
+						# alert "final"
+						console.log result
+
+					, _.transactionErrorHandler)
 
 
 		updateIntoQuizResponseSummary : (model,quizMeta)->
+			summary_id = model.get('summary_id')
 
 			serializeQuizMetaValue = serialize(quizMeta)
 
@@ -144,12 +165,11 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_response_summary SET 
 					quiz_meta=?, sync=? 
 					WHERE summary_id=?"
-					, [serializeQuizMetaValue, 0, model.get('summary_id')])
+					, [serializeQuizMetaValue, 0, summary_id])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
-				model.set 'summary_id' :summary_id
 				console.log 'Updated data in quiz_response_summary'
 			)
 

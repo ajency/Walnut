@@ -54,6 +54,7 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz-response-summary'
 				data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
 				data.done (d)->
+					console.log d
 					collection.set d
 
 			if collection_name is 'quiz-question-response'

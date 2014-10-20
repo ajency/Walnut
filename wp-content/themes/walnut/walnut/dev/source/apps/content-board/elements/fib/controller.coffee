@@ -82,9 +82,15 @@ define ['app'
 
             _parseOptions:(blanksArray)->
                 _.each blanksArray,(blank)->
-                    blank.blank_index = parseInt blank.blank_index if blank.blank_index?
-                    blank.blank_size = parseInt blank.blank_size if blank.blank_size?
-                    blank.marks = parseInt blank.marks if blank.marks?
+                    if _.platform() is 'BROWSER'
+                        blank.blank_index = parseInt blank.blank_index if blank.blank_index?
+                        blank.blank_size = parseInt blank.blank_size if blank.blank_size?
+                        blank.marks = parseInt blank.marks if blank.marks?
+                        
+                    if _.platform() is 'DEVICE'
+                        blank.blank_index = parseFloat blank.blank_index if blank.blank_index?
+                        blank.blank_size = parseFloat blank.blank_size if blank.blank_size?
+                        blank.marks = parseFloat blank.marks if blank.marks?
 
 
             _submitAnswer :(displayAnswer=true) ->

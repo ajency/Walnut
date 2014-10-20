@@ -46,6 +46,7 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'quiz-response-summary') {
         data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id);
         data.done(function(d) {
+          console.log(d);
           return collection.set(d);
         });
       }

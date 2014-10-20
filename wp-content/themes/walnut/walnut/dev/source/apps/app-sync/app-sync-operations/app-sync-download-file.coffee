@@ -14,59 +14,53 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 
 				lastDownloadTimestamp = _.getLastDownloadTimeStamp()
 				lastDownloadTimestamp.done (time_stamp)->
-					# if _.isEmpty time_stamp
-					
-					
-					# textbookIdsByClassID = _.getTextbookIdsByClassID()
-					# textbookIdsByClassID.done (textbook_ids)->
 
 					data = blog_id: blog_id, last_sync: time_stamp
 						, user_id: _.getUserID()
 						, sync_type : "student_app"
 
-						console.log JSON.stringify data
+					console.log JSON.stringify data
 
-						#TODO: Change action name for import.
-						$.get AJAXURL + '?action=sync-database',
-								data,
-								(resp)=>
-									console.log JSON.stringify resp
-									alert "resp"
+					#TODO: Change action name for import.
+					$.get AJAXURL + '?action=sync-database',
+							data,
+							(resp)=>
+								
+								console.log JSON.stringify resp
+								if resp is 0
 									
-									if resp is 0
+									userInfo = _.getUserDetails(_.getUserID())
+									userInfo.done (user_Details)->
+										_.removeCordovaBackbuttonEventListener()
 										
-										userInfo = _.getUserDetails(_.getUserID())
-										userInfo.done (user_Details)->
-											_.removeCordovaBackbuttonEventListener()
-											
-											_.setUserID(null)
-											_.setTblPrefix(null)
+										_.setUserID(null)
+										_.setTblPrefix(null)
 
-											user = App.request "get:user:model"
-											user.clear()
+										user = App.request "get:user:model"
+										user.clear()
 
-											App.leftNavRegion.close()
-											App.headerRegion.close()
-											App.mainContentRegion.close()
-											App.breadcrumbRegion.close()
+										App.leftNavRegion.close()
+										App.headerRegion.close()
+										App.mainContentRegion.close()
+										App.breadcrumbRegion.close()
 
-											bootbox.alert "Hi, your session has expired. Please log in to continue"
-											username = user_Details.username
-											setTimeout(=>
-												App.navigate "login/"+username, trigger:true
-												$('#onOffSwitch').prop
-													"disabled" : true, "checked" : true
-											,1000)
-									else
-										console.log 'getZipFileDownloadDetails response'
-										console.log JSON.stringify resp
-										_.downloadZipFile resp
+										bootbox.alert "Hi, your session has expired. Please log in to continue"
+										username = user_Details.username
+										setTimeout(=>
+											App.navigate "login/"+username, trigger:true
+											$('#onOffSwitch').prop
+												"disabled" : true, "checked" : true
+										,1000)
+								else
+									console.log 'getZipFileDownloadDetails response'
+									console.log JSON.stringify resp
+									_.downloadZipFile resp
 
-								,
-								'json'
+							,
+							'json'
 
-						.fail ->
-							_.onDataSyncError("none", "Could not connect to server")
+					.fail ->
+						_.onDataSyncError("none", "Could not connect to server")
 
 
 		

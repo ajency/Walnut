@@ -125,8 +125,6 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 		#Insert in the table quiz_question_response if there is no qr_id
 		insertIntoQuizQuestionResponse :(model, qr_id)->
-			# alert "insert"
-			console.log model.get('status')
 
 			question_response = serialize(model.get('question_response'))
 
@@ -140,16 +138,16 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					, question_response, model.get('time_taken')
 					, model.get('marks_scored'), model.get('status'), 0])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
 				model.set 'qr_id' :qr_id
-				_.selectData(1)
+				# _.selectData(1)
 			)
 
 		selectData : (v)->
-			# alert v
+
 			_.db.transaction (tx)->
 				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response ", []
 					, (tx,results)->
@@ -163,6 +161,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 					, _.transactionErrorHandler)
 
+
 		#Update table quiz_question_response id qr_id if present
 		getOldQuizQuestionResponseData :(model,check_permissions)->
 
@@ -174,8 +173,6 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 						qrId = model.get('qr_id')
 						result = results.rows.item(0)
 						console.log JSON.stringify result
-						console.log result.status
-						console.log model.get('status')
 
 						if result.status is "paused" and model.get('status') is "paused"
 							_.updatePausedQuizQuestionResponseData(model)
@@ -198,7 +195,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 							else
 								_.updateQuizQuestionResponseData(model)
-						# model.set 'qr_id' : qrId
+
 					, _.transactionErrorHandler)
 			# onSuccess =(d)->
 
@@ -220,8 +217,6 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 		#update the table when the question is paused
 		updatePausedQuizQuestionResponseData: (model)->
-			# alert "update"
-			console.log model
 
 			qrId = model.get('qr_id')
 			_.db.transaction((tx)->
@@ -231,10 +226,10 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					WHERE summary_id= ?"
 					, ['paused', model.get('time_taken'), 0, model.get('summary_id')])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
-				_.selectData(2)
+				# _.selectData(2)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)'
 			)
@@ -242,7 +237,6 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 
 		updateQuizQuestionResponseData: (model)->
-			console.log model      
 			qrId = model.get('qr_id')
 			question_response = serialize(model.get('question_response'))
 			_.db.transaction((tx)->
@@ -256,10 +250,10 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					model.get('marks_scored'), model.get('status'), 0
 					, model.get('qr_id')])
 
-			,_.transactionErrorhandler
+			,_.transactionErrorHandler
 
 			,(tx)->
-				_.selectData(3)
+				# _.selectData(3)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updateQuizQuestionResponseData)'
 			)

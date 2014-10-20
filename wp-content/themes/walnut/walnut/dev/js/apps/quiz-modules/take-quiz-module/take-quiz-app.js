@@ -17,22 +17,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       __extends(TakeQuizController, _super);
 
       function TakeQuizController() {
-        this._showQuizViews = __bind(this._showQuizViews, this);
-        this._showSingleQuestionApp = __bind(this._showSingleQuestionApp, this);
-        this._getPrevItemID = __bind(this._getPrevItemID, this);
-        this._getNextItemID = __bind(this._getNextItemID, this);
-        this._gotoPreviousQuestion = __bind(this._gotoPreviousQuestion, this);
-        this._getUnansweredIDs = __bind(this._getUnansweredIDs, this);
         this.clearMediaDataOnEndQuiz = __bind(this.clearMediaDataOnEndQuiz, this);
-        this._endQuiz = __bind(this._endQuiz, this);
-        this._gotoNextQuestion = __bind(this._gotoNextQuestion, this);
-        this._skipQuestion = __bind(this._skipQuestion, this);
         this._saveQuizResponseModel = __bind(this._saveQuizResponseModel, this);
-        this._submitQuestion = __bind(this._submitQuestion, this);
         this._changeQuestion = __bind(this._changeQuestion, this);
         this._autosaveQuestionTime = __bind(this._autosaveQuestionTime, this);
         this._startTakeQuiz = __bind(this._startTakeQuiz, this);
-        this.initialize = __bind(this.initialize, this);
         return TakeQuizController.__super__.constructor.apply(this, arguments);
       }
 
