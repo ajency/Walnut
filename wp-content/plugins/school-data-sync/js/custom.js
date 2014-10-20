@@ -20,14 +20,14 @@ jQuery(document).ready(function() {
 	    }); 
     });
 
-    jQuery("#validate-blog-user").on('click',function(){
+    jQuery("#validate-blog-sync-user").on('click',function(){
 
         data ={}
-        data['txtusername'] = jQuery.trim(jQuery('#validate_school_user #validate_uname').val())
-        data['txtpassword'] = jQuery('#validate_school_user #validate_pwd').val()
+        data['txt_blog_id'] = jQuery.trim(jQuery('#validate_sync_school_user #validate_blog_id').val())
+        data['txtpassword'] = jQuery('#validate_sync_school_user #validate_pwd').val()
 
-        if(data['txtusername']=='' || data['txtpassword']==''){
-          jQuery('#validate_school_user .error_msg').html('Invalid username or password');
+        if(data['txtpassword']==''){
+          jQuery('#validate_sync_school_user .error_msg').html('Invalid password');
           return false
         }
 
@@ -37,15 +37,15 @@ jQuery(document).ready(function() {
 
         jQuery.ajax({
             type: 'POST',
-            url: SERVER_AJAXURL+'?action=get-user-profile',
+            url: ajaxurl+'?action=sds-auth-sync-user',
             data: formData,
             success: function(data, textStatus, XMLHttpRequest){
-              if(data.error){
-                jQuery('#validate_school_user .error_msg').html('Invalid username or password');
+                data = jQuery.parseJSON(data);
+              if(! data.status){
+                jQuery('#validate_sync_school_user .error_msg').html('Invalid password');
               }
               else{
-                blog_id = data.blog_details.blog_id
-                insert_blogid_in_options_table(blog_id);
+                insert_sync_cookies_in_options_table(data);
               }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -73,6 +73,24 @@ jQuery(document).ready(function() {
     });
     
 
+    function insert_sync_cookies_in_options_table(response_data){
+
+      jQuery.post( ajaxurl,
+        {
+            action          : 'save_standalone_school_sync_cookies',
+            cookie_name     : response_data.logged_in_cookie_key,
+            cookie_value    : response_data.logged_in_cookie_value,
+        },
+        function(data) {           
+            if(data.success)
+                location.reload();
+            else 
+              console.log('error saving cookie data in database');
+                        
+        },'json');
+
+    }
+
     function insert_blogid_in_options_table(blog_id){
 
       jQuery.post( ajaxurl,
@@ -89,7 +107,7 @@ jQuery(document).ready(function() {
         },'json');
 
     }
-
+    
     function init_school_data_sync(referer,lastsync_id,syncstatus,blog_id,last_sync){
       console.log(referer);
        jQuery('#sync-media').prop('disabled', true);

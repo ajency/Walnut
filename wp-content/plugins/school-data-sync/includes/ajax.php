@@ -378,3 +378,38 @@ function ajax_sds_delete_blog_content(){
     wp_send_json($respcode);
 }
 add_action ('wp_ajax_sds_delete_blog_content', 'ajax_sds_delete_blog_content');
+
+function ajax_sds_auth_sync_user(){
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_URL, $remote_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    $post = array(
+        'action' => 'auth-sync-user',       
+        'blog_id' => $_REQUEST['data']['txt_blog_id'],
+        'passwd' => $_REQUEST['data']['txtpassword']
+    );
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    //$resp_decode = json_decode($response,true);
+    echo $response;
+    exit;  
+}
+add_action ('wp_ajax_sds-auth-sync-user', 'ajax_sds_auth_sync_user');
+
+function ajax_save_standalone_school_sync_cookies(){
+
+    $cookie_name = $_REQUEST['cookie_name'];
+    $cookie_value = $_REQUEST['cookie_value'];
+    update_option('sync_user_cookie_name', $cookie_name);
+    update_option('sync_user_cookie_value', $cookie_value);
+
+    wp_send_json (array('success'=>true));
+
+}
+
+add_action ('wp_ajax_save_standalone_school_sync_cookies', 'ajax_save_standalone_school_sync_cookies');
