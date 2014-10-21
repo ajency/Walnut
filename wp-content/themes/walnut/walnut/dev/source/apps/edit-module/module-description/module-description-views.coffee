@@ -251,7 +251,7 @@ define ['app'
                         time += parseInt m.get 'avg_duration'
 
                     else
-                        marks+= parseInt m.getMarks()
+                        marks+= parseInt m.get 'marks'
                         time += parseInt m.get 'duration'
 
                 @$el.find('#total-marks').val marks

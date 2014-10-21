@@ -6,10 +6,6 @@
  * Time: 12:21 PM
  */
 
-use Goodby\CSV\Import\Standard\Lexer;
-use Goodby\CSV\Import\Standard\Interpreter;
-use Goodby\CSV\Import\Standard\LexerConfig;
-
 /**
  * @param $sync_data
  * @return WP_Error | Int Wp error or sync request id
@@ -44,6 +40,11 @@ function insert_sync_request_record( $sync_data ) {
 
 function sync_app_data_to_db( $sync_request_id ) {
 
+    require_once "import_question_response.php";
+    require_once "import_question_response_meta.php";
+    require_once "import_quiz_question_response.php";
+    require_once "import_quiz_response_summary.php";
+
     if (validate_file_exists( $sync_request_id ) === false)
         return false;
 
@@ -68,6 +69,12 @@ function sync_app_data_to_db( $sync_request_id ) {
 
         if(strpos($stat['name'],'question_response_meta.csv') !== false)
             read_question_response_meta_csv_file( $extract_path . '/' . $stat['name'] );
+
+        if(strpos($stat['name'],'quiz_question_response.csv') !== false)
+            read_quiz_question_response_csv_file( $extract_path . '/' . $stat['name'] );
+
+        if(strpos($stat['name'],'quiz_response_summary.csv') !== false)
+            read_quiz_response_summary_csv_file( $extract_path . '/' . $stat['name'] );
     }
 
     mark_sync_as_complete( $sync_request_id );
@@ -94,246 +101,6 @@ function mark_sync_as_complete( $sync_request_id ) {
     );
 
 }
-
-function read_question_response_csv_file( $file_path ) {
-
-    $lexer = new Lexer(new LexerConfig());
-    $interpreter = new Interpreter();
-
-    // TODO: move this function out from here. use named function instead of anonymous function
-    $interpreter->addObserver( function ( array $question_response_data ) {
-
-        if (validate_csv_row( $question_response_data ) === true) {
-
-            $question_response_data = convert_csv_row_to_question_response_format( $question_response_data );
-            sync_question_response( $question_response_data );
-
-        } else {
-            write_to_question_response_import_error_log( $question_response_data );
-        }
-
-    } );
-
-    $lexer->parse( $file_path, $interpreter );
-}
-
-/**
- * @param $question_response_data
- * @return bool|WP_Error
- * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
- */
-function validate_csv_row( $question_response_data ) {
-
-    if (!is_array( $question_response_data ))
-        return new WP_Error("", "Not a valid record");
-
-    if($question_response_data [0] == 'ref_id')
-        return false;
-        
-    // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $question_response_data ) !== 10)
-        return new WP_Error("", "Column count for csv row not proper");
-
-    // TODO: add more validation checks here/ May be for each column to be valid
-
-    return true;
-}
-
-/**
- * @param $question_response_data Expected array = array(CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0)
- * @return array(
- * 'ref_id' => 'CP143C59D123456011',
- * 'teacher_id' => 78,
- * 'content_piece_id' => 143,
- * 'collection_id' => 59,
- * 'division' => '123456011,
- * 'status' => $status
- * );
- */
- 
-function convert_csv_row_to_question_response_format( $question_response_data ) {
-
-    // it can be string or array; hence, sanitize if serialize string
-    $question_response = sanitize_question_response( $question_response_data[5] );
-
-    return array(
-        'ref_id' => $question_response_data[0],
-        'teacher_id' => $question_response_data[1],
-        'content_piece_id' => $question_response_data[2],
-        'collection_id' => $question_response_data[3],
-        'division' => $question_response_data[4],
-        'question_response' => wp_unslash($question_response),
-        'time_taken' => $question_response_data[6],
-        'start_date' => $question_response_data[7],
-        'end_date' => $question_response_data[8],
-        'status' => $question_response_data[9]
-    );
-}
-
-function sanitize_question_response( $question_response ) {
-    //NOTE: Might have some logic here
-    return $question_response;
-}
-
-function sync_question_response( $question_response_data ) {
-
-    if (question_response_exists( $question_response_data['ref_id'] )) {
-        sync_update_question_response( $question_response_data );
-    } else {
-        sync_insert_question_response( $question_response_data );
-    }
-}
-
-function sync_insert_question_response( $question_response_data ) {
-
-    global $wpdb;
-
-    $wpdb->insert( $wpdb->prefix . "question_response",
-        $question_response_data );
-
-    return $wpdb->insert_id;
-}
-
-function sync_update_question_response( $question_response_data ) {
-
-    global $wpdb;
-
-    $wpdb->update( $wpdb->prefix . "question_response",
-        $question_response_data,
-        array( 'ref_id' => $question_response_data['ref_id'] ) );
-
-    return true;
-}
-
-function question_response_exists( $reference_id ) {
-
-    global $wpdb;
-
-    $query = $wpdb->prepare( "SELECT ref_id FROM {$wpdb->prefix}question_response WHERE ref_id like %s", $reference_id );
-    $record = $wpdb->get_var( $query );
-
-    return is_string( $record );
-}
-
-
-
-
-function read_question_response_meta_csv_file( $file_path ) {
-
-    $lexer = new Lexer(new LexerConfig());
-    $interpreter = new Interpreter();
-
-    // TODO: move this function out from here. use named function instead of anonymous function
-    $interpreter->addObserver( function ( array $question_response_meta_data ) {
-
-        if (validate_meta_csv_row( $question_response_meta_data ) === true) {
-            $question_response_meta_data = convert_csv_row_to_question_response_meta_format( $question_response_meta_data );
-
-            sync_question_response_meta( $question_response_meta_data );
-
-        } else {
-            write_to_question_response_import_error_log( $question_response_meta_data );
-        }
-
-    } );
-
-    $lexer->parse( $file_path, $interpreter );
-}
-/**
- * @param $question_response_data
- * @return bool|WP_Error
- * Expected array = [CP143C59D123456011,78,143,59,123456011,(few||[]),75.69400024414062,2014-06-10,2014-6-6,completed,0]
- */
-function validate_meta_csv_row( $question_response_meta_data ) {
-
-    if (!is_array( $question_response_meta_data ))
-        return new WP_Error("", "Not a valid record");
-    
-    if($question_response_meta_data [0] == 'qr_ref_id')
-        return false;
-
-    // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $question_response_meta_data ) !== 3)
-        return new WP_Error("", "Column count for csv row not proper");
-
-    // TODO: add more validation checks here/ May be for each column to be valid
-
-    return true;
-}
-
-
-
-function convert_csv_row_to_question_response_meta_format( $question_response_meta_data ) {
-
-    // it can be string or array; hence, sanitize if serialize string
-    //$question_response_meta_data = sanitize_question_response( $question_response_meta_data[3] );
-
-    return array(
-        'qr_ref_id' => $question_response_meta_data[0],
-        'meta_key' => $question_response_meta_data[1],
-        'meta_value' => wp_unslash($question_response_meta_data[2])
-    );
-}
-
-function sync_question_response_meta( $question_response_meta_data ) {
-
-    if (question_response_meta_exists( $question_response_meta_data ))
-        sync_update_question_response_meta( $question_response_meta_data );
-
-    else
-        sync_insert_question_response_meta( $question_response_meta_data );
-
-}
-
-function sync_insert_question_response_meta( $question_response_meta_data ) {
-
-    global $wpdb;
-
-    $insert = $wpdb->insert( $wpdb->prefix . "question_response_meta",
-        $question_response_meta_data );
-
-    return $wpdb->insert_id;
-}
-
-function sync_update_question_response_meta( $question_response_meta_data ) {
-
-    global $wpdb;
-
-    $ref_id     = $question_response_meta_data['qr_ref_id'];
-    $meta_key   = $question_response_meta_data['meta_key'];
-    $meta_value   = $question_response_meta_data['meta_value'];
-
-
-    $update_query= $wpdb->prepare( "UPDATE {$wpdb->prefix}question_response_meta
-        SET meta_value = %s
-        WHERE qr_ref_id like %s AND meta_key like %s",
-        array($meta_value, $ref_id, $meta_key ) );
-
-    $wpdb->query($update_query);
-
-    return true;
-}
-
-function question_response_meta_exists( $question_response_meta_data ) {
-
-    global $wpdb;
-
-    $ref_id= $question_response_meta_data['qr_ref_id'];
-    $meta_key= $question_response_meta_data['meta_key'];
-
-    $query = $wpdb->prepare( "SELECT qr_ref_id FROM {$wpdb->prefix}question_response_meta
-        WHERE qr_ref_id like %s AND meta_key like %s",
-        array($ref_id, $meta_key)
-    );
-    $record = $wpdb->get_var( $query );
-
-    return is_string( $record );
-}
-
-function write_to_question_response_import_error_log( $question_response_data ) {
-    //TODO: Handle failed import records here
-}
-
 
 /**
  * @param $sync_request_id
@@ -581,11 +348,6 @@ function get_sync_log_devices(){
     
 }
 
-
-
-
-
-
 function cron_send_site_expiry_notification(){
     global $wpdb;
     
@@ -642,7 +404,3 @@ function send_user_notification_email($device_type,$blog_id,$device_meta,$days_r
     $subject = "Site Content Delete Notification";
     wp_mail($recipient, $subject, $msgcontent, $headers);
 }
-
-
-
-

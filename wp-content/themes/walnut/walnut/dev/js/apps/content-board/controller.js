@@ -84,6 +84,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
             }
             itemsDeferred.promise();
             if (i === _.size(section) - 1) {
+              console.log('testing _.size(section)');
               return itemsDeferred.done(function() {
                 return allItemsDeferred.resolve();
               });
@@ -119,6 +120,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
             });
             nestedDef.promise();
             if (index === _.size(element.elements) - 1) {
+              console.log('nested nestedDef');
               return nestedDef.done(function() {
                 return defer.resolve();
               });

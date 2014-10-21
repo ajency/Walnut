@@ -84,7 +84,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         });
         type = data.content_type === 'student_question' ? 'quiz' : 'teaching-module';
         if (data.content_type === 'student_question') {
-          data.marks = this.model.getMarks();
+          data.marks = this.model.get('marks');
         }
         data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : "Not added to a " + type + " yet";
         return data;

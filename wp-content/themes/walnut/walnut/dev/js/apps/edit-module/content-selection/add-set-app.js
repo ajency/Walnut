@@ -179,8 +179,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             'difficulty_level': lev
           });
           _.each(models, function(m, ele) {
-            if (m.getMarks()) {
-              marks += parseInt(m.getMarks());
+            if (m.get('marks')) {
+              marks += parseInt(m.get('marks'));
             }
             return time += parseInt(m.get('duration'));
           });

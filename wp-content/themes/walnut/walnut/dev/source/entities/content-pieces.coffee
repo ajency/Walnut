@@ -16,19 +16,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 order : ''
 
             name : 'content-piece'
-            
-            getMarks:->
-
-                layout= @.get 'layout'
-                
-                marks = parseFloat _.compact _.pluck(layout,'marks')
-                        .toFixed 1
-
-                marks = parseFloat marks # removes the unnecessary decimal incase of 40.0 
-
-                marks=0 if not marks or _.isNaN parseInt marks
-
-                marks
 
             setMarks:(multiplicationFactor)->
 

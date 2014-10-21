@@ -38,7 +38,7 @@ require.config
         jquerycolor: 'plugins/jquery.minicolors.min'
         jqueryknob: 'plugins/jquery.knob'
         ckeditor: 'plugins/ckeditor/ckeditor'
-        select2: 'plugins/select2.min'
+        select2: 'plugins/select2'
         tagsinput: 'plugins/bootstrap-tagsinput.min'
         screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
         panzer: 'plugins/panzer'
