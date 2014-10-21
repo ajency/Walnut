@@ -51,6 +51,10 @@ add_action( 'wp_ajax_sync-app-data', 'ajax_sync_app_data' );
 
 function cron_school_app_data_sync() {
 
+	global $wpdb; 
+	$date = date('d-m-y h:i:s');
+	$wpdb->query("insert into {$wpdb->prefix}sync_local_data values('','$date','','','','')");
+	exit;
     $pending_sync_request_ids = get_pending_app_sync_request_ids();
 
     if (empty($pending_sync_request_ids))
