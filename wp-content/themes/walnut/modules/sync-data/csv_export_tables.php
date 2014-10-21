@@ -25,11 +25,12 @@
 if (!defined('ABSPATH'))
     exit;
 
-/*
+
 function debug_export(){
     $args= array(
-            'user_id'     => 6,
-            'blog_id'      => 35
+            'sync_type' => 'student_app',
+            'user_id'     => 5,
+            'blog_id'      => 8
         );
 
     $exObject = new ExportTables($args);
@@ -38,9 +39,9 @@ function debug_export(){
     exit;
 }
 
-add_action('init', 'debug_export');
+#add_action('init', 'debug_export');
 
-$br='<br><br>';*/
+#$br='<br><br>';
 
 class ExportTables {
 
@@ -70,11 +71,14 @@ class ExportTables {
             $blog = get_active_blog_for_user( $user_id );
             $blog_id=$blog->blog_id;            
         }
+        
+        
+        switch_to_blog($blog_id);
 
+        $textbook_ids=get_assigned_textbooks($user_id);
+        
         switch_to_blog($blog_id);
         
-        $textbook_ids=get_assigned_textbooks($user_id);
-
         $this->user_id      = $user_id;
         $this->blog_id      = $blog_id;
         $this->textbook_ids = $textbook_ids;
@@ -289,12 +293,14 @@ class ExportTables {
         if($this->sync_type === 'student_app'){
 
             $posts_table_query=$wpdb->prepare(
-                "SELECT * FROM {$wpdb->base_prefix}posts p,  {$wpdb->base_prefix}postmeta pm
-                        WHERE  post_type <> %s 
+                "SELECT p.* FROM {$wpdb->base_prefix}posts p,  {$wpdb->base_prefix}postmeta pm
+                        WHERE  post_type LIKE %s 
                         AND p.ID = pm.post_id 
                         AND pm.meta_key LIKE %s 
-                        AND pm.meta_value LIKE %s",
-                array('page', 'content_type', 'student_question')
+                        AND pm.meta_value LIKE %s
+                UNION SELECT * FROM {$wpdb->base_prefix}posts
+                        WHERE post_type LIKE %s",
+                array('content-piece', 'content_type', 'student_question', 'attachment')
             );
         }
 
@@ -475,18 +481,20 @@ class ExportTables {
     private function get_collection_ids_for_user(){
 
         global $wpdb;
-
+        
         $collection_ids=array();
-
-        foreach ($this->textbook_ids as $term_id) {
+        
+        if(is_array($this->textbook_ids) and sizeof($this->textbook_ids)>0){
+            foreach ($this->textbook_ids as $term_id) {
             
-            $collection_table_query = $wpdb->prepare(
-                "SELECT id FROM
-                    {$wpdb->base_prefix}content_collection cc
-                    WHERE term_ids LIKE %s",
-                '%"'.$term_id.'";%'
-            );
-            $collection_ids[]= $wpdb->get_col($collection_table_query);
+                $collection_table_query = $wpdb->prepare(
+                    "SELECT id FROM
+                       {$wpdb->base_prefix}content_collection cc
+                       WHERE term_ids LIKE %s",
+                    '%"'.$term_id.'";%'
+                );
+                $collection_ids[]= $wpdb->get_col($collection_table_query);
+            }
         }
 
         $collection_ids= __u::flatten($collection_ids);
