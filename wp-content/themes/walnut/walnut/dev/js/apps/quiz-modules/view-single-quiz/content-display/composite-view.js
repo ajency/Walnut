@@ -26,10 +26,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             "content_piece_id": model.get('ID')
           });
         }
-        return data = responseModel != null ? {
-          display_answer: this.model.hasPermission('display_answer'),
-          responseModel: responseModel
-        } : void 0;
+        return data = {
+          quizModel: this.model,
+          responseModel: responseModel != null ? responseModel : void 0
+        };
       };
 
       View.prototype.events = {

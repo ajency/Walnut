@@ -4,26 +4,35 @@ function fetch_single_division($id){
     
     global $wpdb;
     global $classids;
-
+      
     $divisions_qry="select * from {$wpdb->prefix}class_divisions where id=".$id;
 
     $division_data = $wpdb->get_results($divisions_qry);
 
     foreach($division_data as $division){
-        
-        $student_count_qry="select count(umeta_id) from {$wpdb->base_prefix}usermeta 
-            where meta_key='student_division' and meta_value='".$id."'";
-        
-        $student_count=$wpdb->get_var($student_count_qry);
-        
         $data['id']             = $division->id;
         $data['division']       = $division->division;
         $data['class_id']       = (int) $division->class_id;
         $data['class_label']    = $classids[$division->class_id]['label'];
-        $data['students_count'] = $student_count;
+        $data['students_count'] = get_student_count_in_division($id);
     }
     
     return $data;
+}
+
+function get_student_count_in_division($division){
+
+    global $wpdb;
+    
+    $args = array(
+        'role' => 'student',
+        'meta_key' => 'student_division',
+        'meta_value' => $division,
+        );
+
+    $students = get_users($args);
+
+    return sizeof($students);
 }
 
 function get_all_divisions($user_id=''){

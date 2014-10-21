@@ -11,4 +11,5 @@ define [
 		'apps/content-board/elements/teacherquestion/controller'
 		'apps/content-board/elements/video/controller'
         'apps/content-board/elements/audio/controller'
+        'apps/content-board/elements/table/controller'
 		],->

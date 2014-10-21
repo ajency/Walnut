@@ -80,6 +80,12 @@ define(['app', 'backbone'], function(App, Backbone) {
         });
         quizResponseSummary.fetch();
         return quizResponseSummary;
+      },
+      createQuizResponseSummaryCollection: function(data) {
+        var QuizResponseSummaryCollection;
+        QuizResponseSummaryCollection = new QuizResponseSummary.SummaryCollection;
+        QuizResponseSummaryCollection.set(data);
+        return QuizResponseSummaryCollection;
       }
     };
     App.reqres.setHandler("create:quiz:response:summary", function(data) {
@@ -88,8 +94,11 @@ define(['app', 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:quiz:response:summary:by:id", function(summary_id) {
       return API.getQuizResponseSummaryByID(summary_id);
     });
-    return App.reqres.setHandler("get:quiz:response:summary", function(data) {
+    App.reqres.setHandler("get:quiz:response:summary", function(data) {
       return API.getQuizResponseSummary(data);
+    });
+    return App.reqres.setHandler("create:quiz:response:summary:collection", function(data) {
+      return API.createQuizResponseSummaryCollection(data);
     });
   });
 });

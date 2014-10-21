@@ -15,16 +15,17 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.tagName = 'li';
 
       View.prototype.mixinTemplateHelpers = function(data) {
-        var all_marks, marks_obtained, responseModel, total_marks;
+        var all_marks, marks_obtained, quizModel, responseModel, total_marks;
         responseModel = Marionette.getOption(this, 'responseModel');
+        quizModel = Marionette.getOption(this, 'quizModel');
         data.dateCompleted = 'N/A';
         if (responseModel) {
           data.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
           data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
-          data.display_answer = Marionette.getOption(this, 'display_answer');
-          marks_obtained = responseModel.get('question_response').marks;
-          data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(2));
+          data.display_answer = quizModel.hasPermission('display_answer');
+          marks_obtained = responseModel.get('marks_scored');
+          data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(1));
           all_marks = _.compact(_.pluck(this.model.get('layout'), 'marks'));
           total_marks = 0;
           if (all_marks.length > 0) {
@@ -32,24 +33,28 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
               return parseInt(memo) + parseInt(num);
             });
           }
-          data.total_marks = parseFloat(total_marks.toFixed(2));
+          data.total_marks = parseFloat(total_marks.toFixed(1));
+          data.hint_viewed = responseModel.get('question_response').hint_viewed ? 'Yes' : 'No';
+          if (!quizModel.hasPermission('allow_hint')) {
+            data.hint = false;
+          }
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':
                 return {
-                  divClass: 'text-right',
+                  divClass: 'text-success',
                   text: 'Correct',
                   icon: 'fa-check'
                 };
               case 'partially_correct':
                 return {
-                  divClass: 'text-right',
-                  text: 'Partially<br>Correct',
+                  divClass: 'text-success',
+                  text: 'Partially Correct',
                   icon: 'fa-check-square'
                 };
               case 'skipped':
                 return {
-                  divClass: 'text-error',
+                  divClass: 'text-warning',
                   text: 'Skipped',
                   icon: 'fa-share-square'
                 };

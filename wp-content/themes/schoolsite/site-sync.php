@@ -212,6 +212,8 @@
                         <?php if(is_user_logged_in()):?>
                         <?php 
                                     $blog_id = get_option('blog_id'); 
+                                    $sync_user_cookie_name = get_option('sync_user_cookie_name');
+                                    $sync_user_cookie_value = get_option('sync_user_cookie_value');
                                     $sync_form_html = get_web_data_sync_html($blog_id); 
                                     //echo $sync_form_html;
                         ?>                    
@@ -219,7 +221,23 @@
                         <div class="col-md-12 m-t-25">
                                   <div class="tiles white">
                                           <div class="tiles-body">
+                                        <?php if($sync_user_cookie_name && $sync_user_cookie_value) :?>
+                                              
+                                            <div class="row">
 
+                                              <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
+                                                <!-- <h3 id="userName"class="semi-bold text-center"></h3> -->
+                                                <h3 class="semi-bold text-center">Reset Sync Password</h3>
+                                                      <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden"> 
+                                                      <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>   
+                                                      <br/>
+                                                      <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block">
+                                                      <span id="syncResetPasswordButtonText" class="bold">Reset</span></button>
+                                                      <h5 class="m-t-5 semi-bold text-center text-error status-msg error_msg"></h5>
+
+                                              </div>
+
+                                              </div>                                              
                                             <div class="row">
 
                                               <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
@@ -250,7 +268,31 @@
 
                                               </div>
 
+                                        <?php else :?>
+                                              <div class="row">
 
+                                              <div class="col-sm-12">
+                                                <h3 class="semi-bold text-center">Validate Sync User</h3>
+
+                                                <div class="row">
+                                                  <div class="col-sm-12  m-b-10 m-t-10">
+                                                    <div class="">
+                                                     <form id="validate_sync_school_user"  autocomplete="off">
+                                                      <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden">
+                                                      <label class="text-center">Sync Password: </label>  
+                                                      <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>   
+                                                      <br/>
+                                                      <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block"><span id="syncValidateButtonText" class="bold">Validate</span></button>
+                                                      <h5 class="m-t-5 semi-bold text-center text-error status-msg error_msg"></h5>
+                                                      </form>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                                </div>
+
+                                              </div>                                              
+                                        <?php endif ;?>     
                                       </div>
 
                               </div>
@@ -300,6 +342,62 @@ global $chorus_options; ?>
 <script type="text/javascript">  
 jQuery(document).ready(function() {
 
+    jQuery("#validate-blog-sync-user").on('click',function(){
+        data ={}
+        data['txt_blog_id'] = jQuery.trim(jQuery('#validate_blog_id').val())
+        data['txtpassword'] = jQuery('#validate_pwd').val()
+
+        if(data['txtpassword']==''){
+          jQuery('.error_msg').html('Invalid password');
+          return false
+        }
+
+
+        formData= {}
+        formData['data'] = data
+
+        jQuery.ajax({
+            type: 'POST',
+            url: AJAXURL+'?action=sds-auth-sync-user',
+            data: formData,
+            success: function(data, textStatus, XMLHttpRequest){
+                data = jQuery.parseJSON(data);
+              if(! data.status){
+                jQuery('.error_msg').html('Invalid password');
+              }
+              else{
+                insert_sync_cookies_in_options_table(data);
+              }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+
+            }
+        });
+
+    });
+
+    function insert_sync_cookies_in_options_table(response_data){
+
+      jQuery.post( AJAXURL,
+        {
+            action          : 'save_standalone_school_sync_cookies',
+            cookie_name     : response_data.logged_in_cookie_key,
+            cookie_value    : response_data.logged_in_cookie_value,
+        },
+        function(data) {           
+            if(data.success){
+                jQuery('.error_msg').removeClass('text-error');
+                jQuery('.error_msg').addClass('text-success');
+                jQuery('.error_msg').html('Password validated');
+                location.reload();
+            }
+            else 
+              console.log('error saving cookie data in database');
+                        
+        },'json');
+
+    }
+    
     jQuery("#sync-data").on('click',function(){
         var lastsync = jQuery(this).attr('data-lastsync');
         var lastsync_id = jQuery(this).attr('data-lastsync-id');
@@ -317,26 +415,10 @@ jQuery(document).ready(function() {
  
     });
     
-
-    function insert_blogid_in_options_table(blog_id){
-
-      jQuery.post( AJAXURL,
-        {
-            action    : 'save_standalone_school_blogid',
-            blog_id  : blog_id
-        },
-        function(data) {           
-            if(data.blog_id)
-                location.reload();
-            else 
-              console.log('error inserting blogid in database');
-                        
-        },'json');
-
-    }
-
     function init_school_data_sync(referer,lastsync_id,syncstatus,blog_id,last_sync){
       console.log(referer);
+      var login_cookie_name = jQuery('#login_cookie_name').val();
+      var login_cookie_value = jQuery('#login_cookie_value').val();      
        jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
                 type: 'POST',  
@@ -345,7 +427,9 @@ jQuery(document).ready(function() {
                     action: 'sync-local-database',
                     blog_id: blog_id,
                     last_sync: last_sync,
-                    device_type: 'standalone'
+                    device_type: 'standalone',
+                    login_cookie_name: login_cookie_name,
+                    login_cookie_value: login_cookie_value
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
@@ -512,11 +596,16 @@ jQuery(document).ready(function() {
     }
     
     function school_data_local_upload(referer,sync_request_id,blog_id,last_sync){
+
+      var login_cookie_name = jQuery('#login_cookie_name').val();
+      var login_cookie_value = jQuery('#login_cookie_value').val();
         jQuery.post( AJAXURL,
         {
             action    : 'sds_data_sync_local_upload',
             sync_request_id : sync_request_id,
-            blog_id         : blog_id
+            blog_id         : blog_id,
+            login_cookie_name : login_cookie_name,
+            login_cookie_value : login_cookie_value
         },
         function(data) {           
                    if(data.code === 'OK'){ 
@@ -539,13 +628,18 @@ jQuery(document).ready(function() {
         referer.next().text('Checking server...');
         var syncstatus = referer.attr('data-syncstatus');
         var server_sync_id = referer.attr('data-server-sync-id');
+        var login_cookie_name = jQuery('#login_cookie_name').val();
+        var login_cookie_value = jQuery('#login_cookie_value').val();
+        
         check_server_sync = setInterval(function()
                                 {
                                   jQuery.get( AJAXURL,
                                   {
                                     action    : 'check-server-app-data-sync-completion',
                                     blog_id :blog_id,
-                                    sync_request_id:server_sync_id
+                                    sync_request_id:server_sync_id,
+                                    login_cookie_name : login_cookie_name,
+                                    login_cookie_value : login_cookie_value
                                   },
                                     function(data) { 
                                         var data = jQuery.parseJSON( data );
@@ -569,10 +663,14 @@ jQuery(document).ready(function() {
                 jQuery('#sync-data').prop('disabled', true);
                 jQuery(this).next().text('Downloading images...');     
                 var referer = jQuery(this);
+                var login_cookie_name = jQuery('#login_cookie_name').val();
+                var login_cookie_value = jQuery('#login_cookie_value').val();
                 jQuery.post( AJAXURL,
                 {
                     action    : 'sds_media_sync',
-                    type : 'images'
+                    type : 'images',
+                    login_cookie_name : login_cookie_name,
+                    login_cookie_value : login_cookie_value
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 
@@ -596,10 +694,14 @@ jQuery(document).ready(function() {
         
         function sync_media_audios(referer){
             referer.next().text('Downloading Audio files...');
+                var login_cookie_name = jQuery('#login_cookie_name').val();
+                var login_cookie_value = jQuery('#login_cookie_value').val();
                 jQuery.post( AJAXURL,
                 {
                     action    : 'sds_media_sync',
-                    type : 'audios'
+                    type : 'audios',
+                    login_cookie_name : login_cookie_name,
+                    login_cookie_value : login_cookie_value
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 
@@ -622,10 +724,14 @@ jQuery(document).ready(function() {
         
         function sync_media_videos(referer){
             referer.next().text('Downloading Video files...');
+                var login_cookie_name = jQuery('#login_cookie_name').val();
+                var login_cookie_value = jQuery('#login_cookie_value').val();
                 jQuery.post( AJAXURL,
                 {
                     action : 'sds_media_sync',
-                    type : 'videos'
+                    type : 'videos',
+                    login_cookie_name : login_cookie_name,
+                    login_cookie_value : login_cookie_value
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 

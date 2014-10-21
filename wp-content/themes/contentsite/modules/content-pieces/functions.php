@@ -81,6 +81,8 @@ function save_content_piece($data){
 
     update_post_meta ($content_id, 'content_piece_meta',$content_piece_meta);
 
+    update_post_meta ($content_id, 'term_ids',$data['term_ids']);
+    
     if(isset($data['clone_id'])){
         clone_json_of_content_piece($content_id, $data['clone_id']);
     }

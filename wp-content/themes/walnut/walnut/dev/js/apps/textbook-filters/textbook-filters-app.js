@@ -14,13 +14,24 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
       }
 
       Controller.prototype.initialize = function(opts) {
-        this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType;
+        var class_id, data;
+        this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType, this.divisionsCollection = opts.divisionsCollection;
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
-        this.textbooksCollection = App.request("get:textbooks", {
-          "fetch_all": true
-        });
+        if (this.divisionsCollection) {
+          class_id = this.divisionsCollection.first().get('class_id');
+          if (class_id) {
+            data = {
+              'class_id': class_id
+            };
+          }
+        } else {
+          data = {
+            'fetch_all': true
+          };
+        }
+        this.textbooksCollection = App.request("get:textbooks", data);
         this.selectedFilterParamsObject.setHandler("get:selected:parameters", (function(_this) {
           return function() {
             var ele, term_id, textbook_filters, _i, _len, _results;
@@ -42,7 +53,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         })(this));
         this.selectedFilterParamsObject.setHandler("get:parameters:for:search", (function(_this) {
           return function() {
-            var content_type, data, ele, post_status, term_id;
+            var content_type, division, ele, post_status, term_id;
             ele = $(_this.view.el).find('#textbooks-filter');
             if ($(ele).val()) {
               term_id = $(ele).val();
@@ -63,10 +74,13 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             post_status = $(ele).val();
             ele = $(_this.view.el).find('#content-type-filter');
             content_type = $(ele).val();
+            ele = $(_this.view.el).find('#divisions-filter');
+            division = $(ele).val();
             return data = {
               'term_id': term_id,
               'post_status': post_status,
-              'content_type': content_type
+              'content_type': content_type,
+              'division': division
             };
           };
         })(this));
@@ -115,11 +129,13 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
               }
             });
             _this.listenTo(_this.view, "fetch:chapters:or:sections", _this.fetchSectionOrSubsection);
-            return _this.listenTo(_this.view, "fetch:new:content", function(textbook_id, post_status) {
-              var data, newContent;
+            _this.listenTo(_this.view, "fetch:new:content", function(textbook_id, post_status) {
+              var division, newContent;
+              division = this.view.$el.find('#divisions-filter').val();
               data = {
                 'textbook': textbook_id,
-                'post_status': 'any'
+                'post_status': 'any',
+                'division': division ? division : void 0
               };
               if (this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
@@ -138,6 +154,19 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                   return _this.view.triggerMethod("new:content:fetched");
                 };
               })(this));
+            });
+            return _this.listenTo(_this.view, "fetch:textbooks:by:division", function(division) {
+              var divisionModel, tCollection;
+              divisionModel = _this.divisionsCollection.get(division);
+              class_id = divisionModel.get('class_id');
+              tCollection = App.request("get:textbooks", {
+                'class_id': class_id
+              });
+              return App.execute("when:fetched", tCollection, function() {
+                _this.view.triggerMethod("fetch:chapters:or:sections:completed", tCollection, 'divisions-filter');
+                _this.view.$el.find('#textbooks-filter').trigger('change');
+                return _this.region.trigger("division:changed", division);
+              });
             });
           };
         })(this));
@@ -161,9 +190,9 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
       Controller.prototype._getTextbookFiltersView = function(collection) {
         return new TextbookFilters.Views.TextbookFiltersView({
           collection: collection,
-          fullCollection: collection.clone(),
           contentGroupModel: this.model,
           textbooksCollection: this.textbooksCollection,
+          divisionsCollection: this.divisionsCollection,
           filters: this.filters,
           dataType: this.dataType
         });

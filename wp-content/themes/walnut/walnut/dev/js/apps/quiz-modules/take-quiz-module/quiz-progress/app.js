@@ -23,8 +23,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.listenTo(view, "change:question", function(id) {
           return this.region.trigger("change:question", id);
         });
-        this.listenTo(this.region, "question:changed", function(model) {
-          return this.view.triggerMethod("question:change", model);
+        this.listenTo(this.region, "question:changed", function(selectedQID) {
+          return this.view.triggerMethod("question:change", selectedQID);
         });
         return this.listenTo(this.region, "question:submitted", function(responseModel) {
           return this.view.triggerMethod("question:submitted", responseModel);
@@ -89,6 +89,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       QuizProgressView.prototype.mixinTemplateHelpers = function(data) {
         data.totalQuestions = this.collection.length;
+        if (this.quizModel.hasPermission('single_attempt')) {
+          data.showSkipped = true;
+        }
         return data;
       };
 
@@ -109,10 +112,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           midRange: 15,
           links: "blank"
         });
+        if (this.collection.length < 10) {
+          this.$el.find('.customButtons').remove();
+        }
         currentQuestion = Marionette.getOption(this, 'currentQuestion');
         this.questionResponseCollection.each((function(_this) {
           return function(response) {
-            if (_this.quizModel.hasPermission('display_answer')) {
+            if (_this.quizModel.hasPermission('display_answer') || response.get('status') === 'skipped') {
               return _this.changeClassName(response);
             }
           };
@@ -125,7 +131,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeQuestion = function(e) {
         var selectedQID;
         selectedQID = parseInt($(e.target).attr('id'));
-        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || this.quizModel.hasPermission('allow_skip')) {
+        if (_.contains(this.questionResponseCollection.pluck('content_piece_id'), selectedQID) || !this.quizModel.hasPermission('single_attempt')) {
           return this.trigger("change:question", selectedQID);
         }
       };
@@ -136,18 +142,20 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.onQuestionSubmitted = function(responseModel) {
-        if (this.quizModel.hasPermission('display_answer')) {
-          this.changeClassName(responseModel);
-        }
         this.updateProgressBar();
-        return this.updateSkippedCount();
+        this.updateSkippedCount();
+        if (responseModel.get('status') === 'skipped' && !this.quizModel.hasPermission('single_attempt')) {
+          return false;
+        } else if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
+          return this.changeClassName(responseModel);
+        }
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {
-        var answer, className;
-        answer = responseModel.get('question_response');
+        var className, status;
+        status = responseModel.get('status');
         className = (function() {
-          switch (answer.status) {
+          switch (status) {
             case 'correct_answer':
               return 'right';
             case 'partially_correct':
@@ -162,27 +170,24 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.updateProgressBar = function() {
-        var answeredQuestions, progressPercentage, responses;
-        responses = this.questionResponseCollection.pluck('question_response');
-        answeredQuestions = _.chain(responses).map(function(m) {
-          if (m.status !== 'skipped') {
-            return m;
-          }
-        }).compact().size().value();
+        var answeredQuestions, progressPercentage, skipped;
+        skipped = _.size(this.questionResponseCollection.where({
+          'status': 'skipped'
+        }));
+        answeredQuestions = this.questionResponseCollection.length - skipped;
         progressPercentage = (answeredQuestions / this.collection.length) * 100;
-        this.$el.find("#quiz-progress-bar").attr("data-percentage", progressPercentage + '%').css({
+        this.$el.find("#quiz-progress-bar").attr("data-percentage", progressPercentage + '%').attr("aria-valuenow", progressPercentage).css({
           "width": progressPercentage + '%'
         });
         return this.$el.find("#answered-questions").html(answeredQuestions);
       };
 
       QuizProgressView.prototype.updateSkippedCount = function() {
-        var answers, skipped;
-        answers = this.questionResponseCollection.pluck('question_response');
-        skipped = _.where(answers, {
+        var skipped;
+        skipped = _.size(this.questionResponseCollection.where({
           'status': 'skipped'
-        });
-        return this.$el.find("#skipped-questions").html(_.size(skipped));
+        }));
+        return this.$el.find("#skipped-questions").html(skipped);
       };
 
       return QuizProgressView;

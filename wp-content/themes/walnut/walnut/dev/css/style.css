@@ -1177,11 +1177,6 @@ body {
   overflow: auto;
   position: relative;
   min-height: 911px;
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
 }
 .page-content.condensed {
   margin-left: 50px;
@@ -3071,6 +3066,13 @@ textarea[class*="span"] {
   font-family: 'FontAwesome';
   content: "\F00C";
 }
+.checkbox.radioCheck input[type=checkbox]:checked + label {
+  color: #4d5056;
+}
+.checkbox.radioCheck input[type=checkbox]:checked + label::after {
+  font-family: 'FontAwesome';
+  content: "\f111";
+}
 .checkbox input[type=checkbox][disabled] + label {
   opacity: 0.65;
 }
@@ -3097,6 +3099,14 @@ textarea[class*="span"] {
 }
 .checkbox.check-info input[type=checkbox]:checked + label::after {
   color: #ffffff;
+}
+.checkbox.check-info.radioCheck input[type=checkbox]:checked + label:before {
+  background-color: #ffffff;
+  border: 1px solid #8b91a0;
+}
+.checkbox.check-info.radioCheck input[type=checkbox]:checked + label::after {
+  color: #0090d9;
+  font-size: 13px;
 }
 .checkbox.check-warning input[type=checkbox]:checked + label:before {
   background-color: #fdd01c;

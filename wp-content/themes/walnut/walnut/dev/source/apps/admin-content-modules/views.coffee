@@ -182,15 +182,15 @@ define ['app',
                 $("#pager").remove()
 
                 pagerDiv = '<div id="pager" class="pager">
-                                                              <i class="fa fa-chevron-left prev"></i>
-                                                              <span style="padding:0 15px"  class="pagedisplay"></span>
-                                                              <i class="fa fa-chevron-right next"></i>
-                                                              <select class="pagesize">
-                                                                  <option value="25" selected>25</option>
-                                                                  <option value="50">50</option>
-                                                                  <option value="100">100</option>
-                                                              </select>
-                                                            </div>'
+                              <i class="fa fa-chevron-left prev"></i>
+                              <span style="padding:0 15px"  class="pagedisplay"></span>
+                              <i class="fa fa-chevron-right next"></i>
+                              <select class="pagesize">
+                                  <option value="25" selected>25</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                              </select>
+                            </div>'
                 @$el.find('#take-class-modules').after(pagerDiv)
                 pagerOptions =
                     container : $(".pager"),
@@ -202,21 +202,15 @@ define ['app',
 
             checkAll: ->
 
+                all_ids = @collection.pluck 'id'
+
                 completedModules= _.chain @collection.where 'status': 'completed'
                 .pluck 'id'
-                    .value()
+                .value()
 
-                if @$el.find '#check_all'
-                .is ':checked'
-                    checkboxes= @$el.find '#take-class-modules .tab_checkbox'
-                    for checkbox in checkboxes
-                        if parseInt(checkbox.value) in completedModules
-                            $(checkbox).trigger 'click'
-                            .prop 'checked', true
+                excludeIDs = _.difference all_ids,completedModules
 
-                else
-                    @$el.find '#take-class-modules .tab_checkbox'
-                    .removeAttr 'checked'
+                $.toggleCheckAll @$el.find('#take-class-modules'), excludeIDs
 
             onNewCollectionFetched: (newCollection,textbooks)=>
                 @textbooksCollection.reset textbooks.models

@@ -84,27 +84,35 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         var data, display_mode, elapsed, responseSummary, total;
         data = QuizDetailsView.__super__.serializeData.call(this, data);
         display_mode = Marionette.getOption(this, 'display_mode');
-        if (this.model.hasPermission('answer_printing') && display_mode === 'replay') {
-          data.answer_printing = true;
+        if (display_mode === 'quiz_report') {
+          data.quiz_report = true;
         }
         if (this.model.get('quiz_type') === 'practice') {
           data.practice_mode = true;
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
+        data.negMarksEnable = _.toBool(data.negMarksEnable);
+        if (!_.isEmpty(data.content_pieces)) {
+          data.hasQuestions = true;
+        }
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
           if (this.model.hasPermission('display_answer')) {
             data.display_marks = true;
           }
-          data.total_marks_scored = responseSummary.get('total_marks_scored');
+          if (data.negMarksEnable) {
+            data.marks_scored = parseFloat(responseSummary.get('marks_scored'));
+            data.negative_scored = parseFloat(responseSummary.get('negative_scored'));
+          }
+          data.total_marks_scored = parseFloat(responseSummary.get('total_marks_scored'));
           if (responseSummary.get('taken_on')) {
             data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY");
           } else {
             data.taken_on_date = moment().format("Do MMM YYYY");
           }
-          if (data.practice_mode) {
+          if (data.practice_mode && display_mode !== 'quiz_report') {
             data.try_again = true;
           }
         }
@@ -114,17 +122,16 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           elapsed = responseSummary.get('total_time_taken');
           data.time_remaining = $.timeMinSecs(total - elapsed);
         }
-        data.negMarksEnable = _.toBool(data.negMarksEnable);
         return data;
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        var responseSummary;
+        var responseSummary, _ref;
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
           this.$el.find("#take-quiz").html('Continue');
         }
-        if (Marionette.getOption(this, 'display_mode') === 'replay') {
+        if ((_ref = Marionette.getOption(this, 'display_mode')) === 'replay' || _ref === 'quiz_report') {
           if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {

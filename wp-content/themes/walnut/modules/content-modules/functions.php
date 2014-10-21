@@ -35,7 +35,7 @@ function get_all_content_modules($args=array()){
         $content_modules = $wpdb->get_results($modules_query, ARRAY_A);
         
         if(!$content_modules)
-            return false;
+            return array();
 
         $content_modules_ids_array = __u::flatten($content_modules);
 
@@ -135,11 +135,11 @@ function get_modules_by_search_string($search_string, $all_module_ids){
 
             }
         }
-
         $module_ids = __u::flatten($module_ids);
-
     }
 
+    $module_ids = __u::compact($module_ids);
+    
     return $module_ids;
 
 

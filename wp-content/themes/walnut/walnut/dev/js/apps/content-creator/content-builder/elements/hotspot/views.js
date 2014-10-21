@@ -93,7 +93,7 @@ define(['app'], function(App) {
         if (this.$el.height() > 0) {
           this.stage.setSize({
             width: this.$el.width(),
-            height: this.$el.height() - 7
+            height: this.$el.height() - 8
           });
         }
         this.model.set('height', this.stage.height());

@@ -16,14 +16,17 @@ define ["app", 'backbone'], (App, Backbone) ->
                 order : ''
 
             name : 'content-piece'
-
+            
             getMarks:->
 
                 layout= @.get 'layout'
                 
-                marks = parseInt _.compact _.pluck(layout,'marks')
+                marks = parseFloat _.compact _.pluck(layout,'marks')
+                        .toFixed 1
 
-                marks=0 if not marks
+                marks = parseFloat marks # removes the unnecessary decimal incase of 40.0 
+
+                marks=0 if not marks or _.isNaN parseInt marks
 
                 marks
 

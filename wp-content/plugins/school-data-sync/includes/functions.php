@@ -11,10 +11,12 @@ function school_data_sync_screen(){
 
 	<?php
 
-        $blog_id = get_option('blog_id');
 
-        if($blog_id){
-            $sync_form_html = get_sync_form_html($blog_id); 
+        $sync_user_cookie_name = get_option('sync_user_cookie_name');
+        $sync_user_cookie_value = get_option('sync_user_cookie_value');
+        $blog_id = get_option('blog_id');
+        if($sync_user_cookie_name){
+            $sync_form_html = get_sync_form_html($blog_id,$sync_user_cookie_name,$sync_user_cookie_value); 
             echo $sync_form_html;
         }
 
@@ -25,7 +27,7 @@ function school_data_sync_screen(){
 
 }
 
-function get_sync_form_html($blog_id){
+function get_sync_form_html($blog_id,$cookiename,$cookievalue){
 
     global $wpdb;
     $last_sync_status = get_last_sync_status();
@@ -47,6 +49,9 @@ function get_sync_form_html($blog_id){
     $sync_form_html= '<form>
          <fieldset>
          <h3>School Data Sync</h3>';
+    $sync_form_html .= '<p id="reset-passwrd-block">Reset Sync Password: <input type="password" name="reset-sync-password" id="reset-sync-password"> 
+                        <input type="button" name="reset-passwrd-button" value="Reset" id="reset-passwrd-button"/>
+                                 <span class="status-msg"></span></p>';
     if($last_sync_imported->last_sync)
         $sync_form_html .= '<p>Last Data Sync:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
         
@@ -54,12 +59,14 @@ function get_sync_form_html($blog_id){
         
         $sync_form_html .= '<p>Records To Be Upsyncd:'.$upsyncount.'</p>';
         
-        $sync_form_html .= '<label>Data Sync </label> ->
+        $sync_form_html .= '<input type="hidden" name="login_cookie_name" id ="login_cookie_name" value='.$cookiename.' />
+                            <input type="hidden" name="login_cookie_value" id ="login_cookie_value" value='.$cookievalue.' />
+                        <label>Data Sync </label> ->
                         <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
             . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
             . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
             . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
-            . 'data-blog-id='.$blog_id.' '
+            . 'data-blog-id="'.$blog_id.'" '
             . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
                             <span class="status-msg"></span>
                          <br/><br/>
@@ -76,14 +83,15 @@ function get_sync_form_html($blog_id){
 }
 
 function get_sync_user_validation_form(){
+    $blog_id = get_option('blog_id');
+    
+    $html ='<h3>Validate Sync User</h3>';
 
-    $html ='<h3>Validate Blog User</h3>';
-
-    $html .= '<form id="validate_school_user"  autocomplete="off">
+    $html .= '<form id="validate_sync_school_user"  autocomplete="off">
                 <div class="error_msg" style="color:red; padding:10px 0"></div>
-                Username: <input id="validate_uname" value=" " type="text"><br>
-                Password: <input id="validate_pwd" value=""  type="password"><br>
-                <input type="button" id="validate-blog-user" value="Validate User">
+                <input id="validate_blog_id" value="'.$blog_id.'" type="hidden">
+                Sync Password: <input id="validate_pwd" value=""  type="password"><br>
+                <input type="button" id="validate-blog-sync-user" value="Validate">
             </form>';
 
     return $html;
@@ -583,6 +591,9 @@ function get_web_data_sync_html($blog_id){
     global $wpdb;
     $last_sync_status = get_last_sync_status();
     $last_sync_imported = get_last_sync_imported();
+    $sync_user_cookie_name = get_option('sync_user_cookie_name');
+    $sync_user_cookie_value = get_option('sync_user_cookie_value');
+    
     $sync_defaults = array('label' =>'Start','lastsync'=>'','syncstatus' =>'','filepath' =>'','sync_id' => '','server_sync_id'=>'');
     if(!empty($last_sync_status)){
         $sync_defaults['sync_id'] = $last_sync_status->id;
@@ -623,6 +634,8 @@ function get_web_data_sync_html($blog_id){
         $sync_form_html .= '<div class="row">
                                 <div class="col-sm-12  m-b-10 m-t-10">
                                   <div class="">
+                                  <input type="hidden" name="login_cookie_name" id ="login_cookie_name" value='.$sync_user_cookie_name.' />
+                                  <input type="hidden" name="login_cookie_value" id ="login_cookie_value" value='.$sync_user_cookie_value.' />
                                     <button name="sync-data" '
             . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
             . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '

@@ -12,6 +12,8 @@ define(['app'], function(App) {
 
       ContentBoardView.prototype.id = 'myCanvas';
 
+      ContentBoardView.prototype.className = 'animated fadeIn';
+
       ContentBoardView.prototype.template = ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1> <div class="vHidden" id="question-area"></div> <div id="feedback-area"> <div id="correct" class="alert alert-success text-center answrMsg"> <h3 class="bold">{{correct_answer_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="wrong" class="alert alert-error text-center answrMsg"> <h3 class="bold">{{incorrect_answer_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="partially-correct" class="alert alert-info text-center answrMsg"> <h3 class="bold">{{partial_correct_answers_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold"><span class="marks"></span>/<span class="total-marks"></span></span></h4> </div> <div id="skipped" class="alert alert-error text-center answrMsg"> <h3 class="bold">{{skipped_msg}}</h3> <h4 class="semi-bold">You scored: <span class="bold">0/<span class="total-marks"></span></span></h4> </div> </div>';
 
       ContentBoardView.prototype.mixinTemplateHelpers = function(data) {
@@ -35,6 +37,9 @@ define(['app'], function(App) {
 
       ContentBoardView.prototype.onShowResponse = function(marks, total) {
         var answerModel, display_marks, quizModel;
+        marks = parseFloat(marks);
+        total = parseFloat(total);
+        display_marks = parseFloat(display_marks);
         quizModel = Marionette.getOption(this, 'quizModel');
         if (marks === 0 && _.toBool(quizModel.get('negMarksEnable'))) {
           display_marks = -total * quizModel.get('negMarks') / 100;
@@ -48,13 +53,13 @@ define(['app'], function(App) {
         if (answerModel && answerModel.get('status') === 'skipped') {
           return this.$el.find('#skipped').show();
         } else {
-          if (parseFloat(marks) === 0) {
+          if (marks === 0) {
             this.$el.find('#wrong').show();
           }
-          if (parseFloat(marks) === parseFloat(total)) {
+          if (marks === total) {
             this.$el.find('#correct').show();
           }
-          if (parseFloat(marks) > 0 && parseFloat(marks) < parseFloat(total)) {
+          if (marks > 0 && marks < total) {
             return this.$el.find('#partially-correct').show();
           }
         }

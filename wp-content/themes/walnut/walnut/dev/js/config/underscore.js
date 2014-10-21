@@ -55,6 +55,15 @@ define(['underscore', 'underscorestring'], function(_) {
       g = parseInt(hex.substring(2, 4), 16);
       b = parseInt(hex.substring(4, 6), 16);
       return result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+    },
+    getOrdinal: function(n) {
+      var s, v;
+      if (parseFloat(n) === parseInt(n) && !_.isNaN(n)) {
+        s = ["th", "st", "nd", "rd"];
+        v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+      }
+      return n;
     }
   });
 });
