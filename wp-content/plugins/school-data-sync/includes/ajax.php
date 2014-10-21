@@ -211,6 +211,9 @@ function ajax_sds_local_upload_to_server(){
     
     $sync_request_id = $_POST['sync_request_id'];
     $blog_id         = $_POST['blog_id'];
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
 
     $filetoupload = get_local_uploaded_file($sync_request_id);
     
@@ -229,6 +232,7 @@ function ajax_sds_local_upload_to_server(){
         'blog_id' =>$blog_id,
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     $resp_decode = json_decode($response,true);
@@ -267,6 +271,9 @@ function ajax_sds_media_sync(){
                                 'audios'=>'get-site-audio-resources-data',
                                 'videos'=>'get-site-video-resources-data');
     $media_type = $_POST['type'];
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
     
     if(!array_key_exists($media_type, $mediafetchactions))
             wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Invalid action') ) );
@@ -286,6 +293,7 @@ function ajax_sds_media_sync(){
         'action' => $mediafetchactions[$media_type]
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     $resp_decode = json_decode($response,true);
@@ -308,8 +316,6 @@ function ajax_sds_media_sync(){
 }
 add_action( 'wp_ajax_sds_media_sync', 'ajax_sds_media_sync' );
 
-add_action( 'wp_ajax_nopriv_sds_media_sync', 'ajax_sds_media_sync' );
-
 
 function ajax_save_standalone_school_blogid(){
 
@@ -319,12 +325,14 @@ function ajax_save_standalone_school_blogid(){
     wp_send_json (array('blog_id'=>$blog_id));
 
 }
-
 add_action ('wp_ajax_save_standalone_school_blogid', 'ajax_save_standalone_school_blogid');
 
 function ajax_sync_local_database(){
 
     $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -338,10 +346,12 @@ function ajax_sync_local_database(){
         'device_type' => $_POST['device_type']
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     //$resp_decode = json_decode($response,true);
     echo $response;
+    
     exit;
 
 }
@@ -350,6 +360,9 @@ add_action ('wp_ajax_sync-local-database', 'ajax_sync_local_database');
 function ajax_check_server_app_data_sync_completion(){
 
     $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -362,6 +375,7 @@ function ajax_check_server_app_data_sync_completion(){
         'sync_request_id' => $_REQUEST['sync_request_id']
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     //$resp_decode = json_decode($response,true);
@@ -411,5 +425,4 @@ function ajax_save_standalone_school_sync_cookies(){
     wp_send_json (array('success'=>true));
 
 }
-
 add_action ('wp_ajax_save_standalone_school_sync_cookies', 'ajax_save_standalone_school_sync_cookies');
