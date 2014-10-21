@@ -343,7 +343,7 @@ jQuery(document).ready(function() {
         
         check_server_sync = setInterval(function()
                                 {
-                                  jQuery.get( ajaxurl,
+                                  jQuery.post( ajaxurl,
                                   {
                                     action    : 'check-server-app-data-sync-completion',
                                     blog_id :blog_id,
