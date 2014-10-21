@@ -241,7 +241,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
             marks += parseInt(m.get('avg_marks'));
             return time += parseInt(m.get('avg_duration'));
           } else {
-            marks += parseInt(m.getMarks());
+            marks += parseInt(m.get('marks'));
             return time += parseInt(m.get('duration'));
           }
         });

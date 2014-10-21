@@ -88,7 +88,7 @@ define ['app'
 
                 type = if data.content_type is 'student_question' then 'quiz' else 'teaching-module'
 
-                data.marks = @model.getMarks() if data.content_type is 'student_question'
+                data.marks = @model.get('marks') if data.content_type is 'student_question'
 
                 data.present_in_str=
                     if _.size(modules)>0

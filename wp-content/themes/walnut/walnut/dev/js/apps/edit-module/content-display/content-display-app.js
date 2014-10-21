@@ -161,7 +161,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
           data.isModule = true;
         }
         if (this.groupType === 'quiz' && data.post_type === 'content-piece') {
-          data.marks = this.model.getMarks();
+          data.marks = this.model.get('marks');
         }
         return data;
       };

@@ -178,7 +178,7 @@ define ['app'
                     models= @collection.where 'difficulty_level': lev
 
                     _.each models, (m,ele)-> 
-                        marks+=parseInt(m.getMarks()) if m.getMarks()
+                        marks+=parseInt(m.get('marks')) if m.get('marks')
                         time +=parseInt m.get 'duration'
 
                     numQuestions = parseInt @$el.find("#lvl#{lev} input").val() 

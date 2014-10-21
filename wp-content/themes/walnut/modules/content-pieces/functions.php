@@ -256,6 +256,11 @@ function get_single_content_piece($id){
 
     if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
+        $content_piece->marks = 0; 
+        
+        if($content_elements['marks'] > 0)
+           $content_piece->marks = $content_elements['marks'];
+
         $content_piece->layout = $content_elements['elements'];
         $excerpt_array = $content_elements['excerpt'];
     }
@@ -364,6 +369,8 @@ function get_json_to_clone($elements, $content_id=0, $create=FALSE)
 {
     $d = array();
     $excerpt= array();
+    $marks = 0;
+
     $row_elements = array('Row','TeacherQuestion','TeacherQuestRow');
 
     if($content_id !=0){
@@ -379,6 +386,7 @@ function get_json_to_clone($elements, $content_id=0, $create=FALSE)
                 $d[]                    = $d2['element'];
 
                 $excerpt[]= $d2['excerpt'];
+                $marks += $d2['marks'];
 
             } else {
                 $meta = get_meta_values($element, $create);
@@ -388,12 +396,15 @@ function get_json_to_clone($elements, $content_id=0, $create=FALSE)
                         $excerpt []= $meta['content'];
                     if($meta['element']=='Fib')
                         $excerpt []= $meta['text'];
+
+                    $marks += $meta['marks'];
                 }
             }
         }
     }
     $content['elements']= $d;
     $content['excerpt']= $excerpt;
+    $content['marks']= $marks;
 
     return $content;
 }
@@ -417,6 +428,7 @@ function get_row_elements($element, $create=FALSE)
                     $data['element']['position']= (int) $data['element']['position'];
                     $ele = $data['element'];
                     $excerpt []= $data['excerpt'];
+                    $marks += $data['marks'];
                 } else {
                     $meta = get_meta_values($ele, $create);
                     if ($meta !== FALSE){
@@ -425,6 +437,7 @@ function get_row_elements($element, $create=FALSE)
                             $excerpt []= $ele['content'];
                         if($ele['element']=='Fib')
                             $excerpt []= $ele['text'];
+                        $marks += $ele['marks'];
                     }
                 }
             }
@@ -433,6 +446,7 @@ function get_row_elements($element, $create=FALSE)
 
     $element['element']= $element;
     $element['excerpt']= $excerpt;
+    $element['marks']= $marks;
 
     return $element;
 }

@@ -101,7 +101,7 @@ define ['app'
                 data.isModule = true if @groupType is 'teaching-module'
 
                 if @groupType is 'quiz' and data.post_type is  'content-piece'
-                    data.marks = @model.getMarks() 
+                    data.marks = @model.get 'marks' 
 
                 data
 
