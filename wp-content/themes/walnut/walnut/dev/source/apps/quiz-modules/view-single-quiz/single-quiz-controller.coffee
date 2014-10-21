@@ -83,7 +83,7 @@ define ['app'
             _setMarks:->
 
                 actualMarks= 0
-                questionsCollection.each (m)-> actualMarks += m.getMarks() if m.getMarks()
+                questionsCollection.each (m)-> actualMarks += m.get('marks') if m.get('marks')
                 
                 multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
 
