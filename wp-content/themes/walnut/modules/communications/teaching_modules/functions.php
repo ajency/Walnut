@@ -1,5 +1,15 @@
 <?php
 
+function test_comm(){
+    global $aj_comm;
+
+    $aj_comm->cron_process_communication_queue();
+    echo "test";
+    exit;
+}
+
+#add_action('init', 'test_comm');
+
 //Invoking the communication plugin
 function add_taught_in_class_student_mail($data, $comm_data){
 
@@ -42,44 +52,50 @@ function add_taught_in_class_parent_mail($data,$comm_data){
 
 }
 
-function get_student_recipients($division){
+function cron_teaching_modules_report_mail(){
 
-    $students=get_students_by_division( $division );
+    global $aj_comm;
 
-    $recipients= array();
+    $comm_data = array(
+        'component'             => 'teaching_modules',
+        'communication_type'    => 'teaching_modules_report'
+        );
 
-    foreach($students as $student){
-        $recipients[] = array(                
-                'user_id'   => $student->ID,
-                'type'      => 'email',
-                'value'     => $student->user_email
-            );
+    $meta_data = array();
+
+    $args = array(
+        'archived'  => 0,
+        'deleted'   => 0
+        );
+ 
+    $blogs = wp_get_sites($args);
+
+    foreach($blogs as $blog) {
+        
+        $comm_data['blog_id'] = $blog['blog_id'];
+        
+        $user_args= array(
+            'blog_id' => $blog['blog_id'],
+            'role' => 'school-admin'
+        );
+
+        $users = get_users($user_args);
+
+        $recipients = array();
+
+        foreach($users as $user){
+
+            $recipients[] = array(                
+                    'user_id'   => $user->ID,
+                    'type'      => 'email',
+                    'value'     => $user->user_email
+                );
+        }
+
+        $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
     }
 
-    return $recipients;
+    return $comm;
 }
 
-function get_parent_recipients($division){
-
-    $students = get_students_by_division($division);
-
-    $parents = array();
-
-    if(is_array($students)){
-        $studentIDs = __u::pluck($students, 'ID');
-        $parents = get_parents_by_student_ids($studentIDs);
-    }
-
-    $recipients= array();
-
-    foreach($parents as $parent){
-
-        $recipients[] = array(                
-                'user_id'   => $parent->ID,
-                'type'      => 'email',
-                'value'     => $parent->user_email
-            );
-    }
-
-    return $recipients;
-}
+add_action('queue_teaching_modules_report','cron_teaching_modules_report_mail');
