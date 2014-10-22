@@ -36,7 +36,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                   return _this.view.triggerMethod("reset:textbook:names", newNamesCollection);
                 });
               });
-              return _this.listenTo(_this.view, 'itemview:view:quiz:report', _this._showQuizReportApp);
+              _this.listenTo(_this.view, 'itemview:view:quiz:report', _this._showQuizReportApp);
+              return _this.listenTo(_this.view, "save:communications", function(data) {
+                return _this.region.trigger("save:communications", data);
+              });
             });
           };
         })(this));

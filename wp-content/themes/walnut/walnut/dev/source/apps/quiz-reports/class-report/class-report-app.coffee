@@ -91,6 +91,18 @@ define ['app'
                     @listenTo @layout.allContentRegion, "show:quiz:report", @_showQuiz
                     @listenTo @layout.searchResultsRegion, "show:quiz:report", @_showQuiz
 
+                    @listenTo @layout.allContentRegion, "save:communications", (data)=>
+                        
+                            data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_completed_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    division        : @division
+
+                            App.request "save:communications",data
+
 
 
             _showQuiz:(quizModel)->

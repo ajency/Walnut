@@ -1,9 +1,12 @@
 <?php
 
-function fetch_single_division($id){
+function fetch_single_division($id, $blog_id=0){
     
     global $wpdb;
     global $classids;
+
+    if($blog_id)
+        switch_to_blog($blog_id);
       
     $divisions_qry="select * from {$wpdb->prefix}class_divisions where id=".$id;
 
@@ -16,6 +19,8 @@ function fetch_single_division($id){
         $data['class_label']    = $classids[$division->class_id]['label'];
         $data['students_count'] = get_student_count_in_division($id);
     }
+
+    restore_current_blog();
     
     return $data;
 }

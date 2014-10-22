@@ -23,6 +23,7 @@
             events:
                 'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#content-pieces-table'
                 'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
+                'click #send-email, #send-sms'          : 'saveCommunications'
 
             initialize : ->
                 @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
@@ -58,3 +59,31 @@
                 else
                     @$el.find '#send-email, #send-sms'
                     .hide()
+
+            saveCommunications:(e)->
+
+                data = []
+                data.quizIDs= _.chain @$el.find('.tab_checkbox')
+                                .map (checkbox)->
+                                    if $(checkbox).is ':checked'
+                                        $(checkbox).val()
+                                .compact()
+                                .value()
+
+                data.division = @$el.find '#divisions-filter'
+                        .val()
+
+                if e.target.id is 'send-email'
+                    data.communication_mode = 'email'
+                else
+                    data.communication_mode = 'sms'
+
+                if data.quizIDs
+                    @trigger "save:communications", data
+
+                    @$el.find '#communication_sent'
+                    .remove()
+
+                    @$el.find '#send-email'
+                    .after '<span class="m-l-40 small" id="communication_sent">
+                            Your '+data.communication_mode+' has been queued successfully</span>'

@@ -36,6 +36,9 @@ define ['app'
 
                         @listenTo @view, 'itemview:view:quiz:report', @_showQuizReportApp
 
+                        @listenTo @view, "save:communications", (data)=> @region.trigger "save:communications",data
+
+
             _getAllTermIDs:=>
                 _.chain @contentModulesCollection.pluck 'term_ids'
                 .map (m)-> _.values m

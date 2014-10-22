@@ -100,7 +100,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               });
             });
             _this.listenTo(_this.layout.allContentRegion, "show:quiz:report", _this._showQuiz);
-            return _this.listenTo(_this.layout.searchResultsRegion, "show:quiz:report", _this._showQuiz);
+            _this.listenTo(_this.layout.searchResultsRegion, "show:quiz:report", _this._showQuiz);
+            return _this.listenTo(_this.layout.allContentRegion, "save:communications", function(data) {
+              data = {
+                component: 'quiz',
+                communication_type: 'quiz_completed_parent_mail',
+                communication_mode: data.communication_mode,
+                additional_data: {
+                  quiz_ids: data.quizIDs,
+                  division: _this.division
+                }
+              };
+              return App.request("save:communications", data);
+            });
           };
         })(this));
       };
