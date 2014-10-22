@@ -50,6 +50,7 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 	$template_data['from_name'] = 'Synapse Learning';
 
 	$template_data['global_merge_vars'] = get_taught_in_class_template_data($comm_data);
+
 	$template_data['merge_vars'] = array();
 
 	foreach($recipients_email as $user_value){
@@ -99,8 +100,6 @@ function get_taught_in_class_template_data($comm_data){
 
 	$module_details= get_single_content_module($module_id);
 
-    $module_data['module_name'] = $module_details->name;
-
     $module_end_date = get_module_end_date($module_id, $comm_data['blog_id']);
 
     $terms= $module_details->term_ids;
@@ -131,6 +130,9 @@ function get_taught_in_class_template_data($comm_data){
 	$data[] = array('name' => 'DATE_COMPLETED',	'content' => $module_end_date);
 	$data[] = array('name' => 'TAKEN_BY',		'content' => $taken_by);
 
+	$data[] = get_mail_header($comm_data['blog_id']);
+	$data[] = get_mail_footer($comm_data['blog_id']);
+
 	return $data;
 
 }
@@ -154,14 +156,12 @@ function getvars_teaching_modules_report($recipients_email,$comm_data){
 	);
 
 	$template_data['global_merge_vars'][]=array(
-		'name' 		=> 'SUPPORT_MAIL',
-		'content' 	=> '<a href="mailto:support@synapsedu.info">support@synapsedu.info</a>'
-	);
-
-	$template_data['global_merge_vars'][]=array(
 		'name'		=> 'TRAINING_MODULES_TABLE',
 		'content' 	=> get_training_modules_report_data($comm_data['blog_id'])
 	);
+
+	$template_data['global_merge_vars'][] = get_mail_header($comm_data['blog_id']);
+	$template_data['global_merge_vars'][] = get_mail_footer($comm_data['blog_id']);
 
 	return $template_data;
 
@@ -175,7 +175,7 @@ function get_training_modules_report_data($blog_id){
     
     $tbody = '';
 
-    $style= " style='border:1px solid #000'; color:#000; padding: 5px; font-size:14px";
+    $style= " style='border:1px solid #000; color:#000; padding: 5px; font-size:14px'";
 
     $today = date('Y-m-d');
 

@@ -5,6 +5,7 @@
  */
 
 require_once "teaching_modules/functions.php";
+require_once "quiz/functions.php";
 
 //Registering communication components
 function add_communication_components($defined_comm_components){
@@ -15,7 +16,13 @@ function add_communication_components($defined_comm_components){
         'taught_in_class_student_mail'  => $preferences,
         'taught_in_class_parent_mail'   => $preferences,
         'teaching_modules_report'        => $preferences,
-        );
+    );
+
+    $ajcm_components['quiz'] = array(
+        'quizzes_taken_report' => $preferences,
+        'quiz_completed_student_mail' => $preferences,
+        'quiz_completed_parent_mail' => $preferences,
+    );
 
     return $ajcm_components;
 
@@ -99,4 +106,37 @@ function get_parent_recipients($division){
     }
 
     return $recipients;
+}
+
+function get_mail_header($blog_id){
+
+    $header_img = 'http://synapsedu.info/wp-content/themes/walnut/images/synapse-logo-main.png';
+
+    $blog= get_blog_details($blog_id, true);
+
+    $site_url = $blog->siteurl;
+
+    $header = "<a href='$site_url'><img src='$header_img'/></a>";
+
+    return array(
+        'name'      => 'HEADER',
+        'content'   => $header
+    );
+
+}
+
+
+function get_mail_footer($blog_id){
+
+    $support_mail = "<a href='mailto:support@synapsedu.info'>support@synapsedu.info</a>";
+
+    $footer = "If you are facing any difficulty in accessing the site simply mail us at $support_mail.<br><br>
+                Regards,<br>
+                Synapse Learning";
+
+    return array(
+        'name'      => 'FOOTER',
+        'content'   => $footer
+    );
+
 }

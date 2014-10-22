@@ -1,5 +1,6 @@
 <?php
 
+#function to test communication processing
 function test_comm(){
     global $aj_comm;
 

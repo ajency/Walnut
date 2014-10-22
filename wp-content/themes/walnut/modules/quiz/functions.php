@@ -331,6 +331,24 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
 }
 
+function get_latest_quiz_response_summary($quiz_id, $user_id){
+
+    global $wpdb;
+
+    if(!$quiz_id || !$user_id)
+        return false;
+
+    $query = $wpdb->prepare("select summary_id from {$wpdb->prefix}quiz_response_summary
+            where student_id = %d and collection_id = %d order by taken_on desc limit 1", $user_id,$quiz_id);
+
+    $summary_id = $wpdb->get_var($query);
+
+    $summary = read_quiz_response_summary($summary_id);
+
+    return $summary;
+
+}
+
 function read_quiz_response_summary($summary_id){
 
     global $wpdb;

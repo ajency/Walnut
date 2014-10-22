@@ -32,7 +32,8 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         'change #check_all_div': function() {
           return $.toggleCheckAll(this.$el.find('#content-pieces-table'));
         },
-        'change .tab_checkbox,#check_all_div ': 'showSubmitButton'
+        'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
+        'click #send-email, #send-sms': 'saveCommunications'
       };
 
       ModulesListingView.prototype.initialize = function() {
@@ -65,6 +66,27 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           return this.$el.find('#send-email, #send-sms').show();
         } else {
           return this.$el.find('#send-email, #send-sms').hide();
+        }
+      };
+
+      ModulesListingView.prototype.saveCommunications = function(e) {
+        var data;
+        data = [];
+        data.quizIDs = _.chain(this.$el.find('.tab_checkbox')).map(function(checkbox) {
+          if ($(checkbox).is(':checked')) {
+            return $(checkbox).val();
+          }
+        }).compact().value();
+        data.division = this.$el.find('#divisions-filter').val();
+        if (e.target.id === 'send-email') {
+          data.communication_mode = 'email';
+        } else {
+          data.communication_mode = 'sms';
+        }
+        if (data.quizIDs) {
+          this.trigger("save:communications", data);
+          this.$el.find('#communication_sent').remove();
+          return this.$el.find('#send-email').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
         }
       };
 

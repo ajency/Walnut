@@ -208,6 +208,8 @@ define ['app'
 
                         quizResponseSummary.save()
 
+                        @_queueStudentMail()
+
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
                         quizModel                   : quizModel
@@ -215,6 +217,16 @@ define ['app'
                         questionResponseCollection  : @questionResponseCollection
                         quizResponseSummary         : quizResponseSummary
                         display_mode                : @display_mode
+
+                _queueStudentMail:->
+                    data=
+                        component           : 'quiz'
+                        communication_type  : 'quiz_completed_student_mail'
+                        communication_mode  : 'email'
+                        additional_data:
+                            quiz_id         : quizModel.id
+
+                    App.request "save:communications", data
 
                 _getUnansweredIDs:->
                     
