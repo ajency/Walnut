@@ -12,6 +12,7 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
       }
 
       TeachersDashboardRouter.prototype.appRoutes = {
+        '': 'dashboardRedirect',
         'teachers/dashboard': 'teachersDashboard',
         'teachers/take-class/:classID/:div': 'takeClass',
         'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules',
@@ -25,6 +26,21 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
 
     })(Marionette.AppRouter);
     Controller = {
+      dashboardRedirect: function() {
+        var user;
+        user = App.request("get:user:model");
+        if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+          App.navigate('textbooks', {
+            trigger: true
+          });
+        }
+        if (user.current_user_can('teacher')) {
+          this.teachersDashboard();
+        }
+        if (user.current_user_can('student')) {
+          return this.studentsDashboard();
+        }
+      },
       teachersDashboard: function() {
         return new TeachersDashboardApp.View.DashboardController({
           region: App.mainContentRegion
