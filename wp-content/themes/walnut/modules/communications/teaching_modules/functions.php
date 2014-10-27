@@ -4,6 +4,8 @@
 function test_comm(){
     global $aj_comm;
 
+    #cron_quizzes_taken_report();
+    
     $aj_comm->cron_process_communication_queue();
     echo "test";
     exit;
