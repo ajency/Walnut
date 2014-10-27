@@ -28,6 +28,9 @@ define ['app',
 
                 'change #comment_enable' : '_commentEnable'
 
+            modelEvents:
+                'change:ID' :-> @$el.find('#preview-question').show()
+
             mixinTemplateHelpers : (data)->
                 data = super data
                 data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
@@ -134,13 +137,9 @@ define ['app',
                     @trigger 'close:grading:parameter'
 
             saveQuestionSettings:->
-                _.delay =>
-                    if @$el.find('form').valid()
-                        data = Backbone.Syphon.serialize (@)
-                        @trigger "save:data:to:model", data
-                        @$el.find '#preview-question'
-                        .show()
-                ,500
+                if @$el.find('form').valid()
+                    data = Backbone.Syphon.serialize (@)
+                    @trigger "save:data:to:model", data
 
             previewQuestion:->
                 if @model.get('content_type') is 'student_question'
