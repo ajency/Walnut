@@ -13,25 +13,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/s
       }
 
       Controller.prototype.initialize = function(opts) {
-        var data;
-        this.students = opts.students, this.quizModel = opts.quizModel;
-        data = {
-          'student_ids': this.students.pluck('ID'),
-          'collection_id': this.quizModel.id
-        };
-        this.quizResponseSummaries = App.request("get:quiz:response:summary", data);
-        return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
-          return function() {
-            var view;
-            _this.quizResponseSummaries.remove(_this.quizResponseSummaries.where({
-              'status': 'started'
-            }));
-            _this.view = view = _this._getStudentsListView(_this.students, _this.quizModel, _this.quizResponseSummaries);
-            _this.show(view);
-            _this.listenTo(_this.view, 'itemview:replay:quiz', _this._replay_quiz);
-            return _this.listenTo(_this.view, 'itemview:view:attempts', _this._show_attempts_popup);
-          };
-        })(this));
+        var view;
+        this.students = opts.students, this.quizModel = opts.quizModel, this.quizResponseSummaries = opts.quizResponseSummaries;
+        this.view = view = this._getStudentsListView(this.students, this.quizModel, this.quizResponseSummaries);
+        this.show(view);
+        this.listenTo(this.view, 'itemview:replay:quiz', this._replay_quiz);
+        return this.listenTo(this.view, 'itemview:view:attempts', this._show_attempts_popup);
       };
 
       Controller.prototype._show_attempts_popup = function(itemview, student_id) {

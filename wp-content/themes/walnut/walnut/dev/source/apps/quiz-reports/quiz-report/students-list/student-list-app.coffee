@@ -8,25 +8,15 @@ define ['app'
 
             initialize : (opts)->
 
-                {@students,@quizModel}= opts
-
-                data=
-                    'student_ids'   : @students.pluck 'ID'
-                    'collection_id' : @quizModel.id 
-
-                @quizResponseSummaries = App.request "get:quiz:response:summary", data
-
-                App.execute "when:fetched", @quizResponseSummaries, =>
-
-                    @quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
+                {@students,@quizModel, @quizResponseSummaries}= opts
                     
-                    @view = view = @_getStudentsListView @students, @quizModel,@quizResponseSummaries
+                @view = view = @_getStudentsListView @students, @quizModel,@quizResponseSummaries
 
-                    @show view
+                @show view
 
-                    @listenTo @view, 'itemview:replay:quiz', @_replay_quiz
+                @listenTo @view, 'itemview:replay:quiz', @_replay_quiz
 
-                    @listenTo @view, 'itemview:view:attempts', @_show_attempts_popup
+                @listenTo @view, 'itemview:view:attempts', @_show_attempts_popup
 
             _show_attempts_popup:(itemview, student_id)=>
 

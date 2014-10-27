@@ -32,39 +32,54 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
       };
 
       Controller.prototype._showViews = function(students) {
-        this.layout = this._getQuizReportLayout(students);
-        this.show(this.layout, {
-          loading: true
-        });
-        return this.listenTo(this.layout, "show", (function(_this) {
+        var data;
+        data = {
+          'student_ids': this.students.pluck('ID'),
+          'collection_id': this.quizModel.id
+        };
+        this.quizResponseSummaries = App.request("get:quiz:response:summary", data);
+        return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
           return function() {
-            var textbook_termIDs;
-            App.execute("show:student:filter:app", {
-              region: _this.layout.studentFilterRegion,
-              students: students
+            var takenBy;
+            _this.quizResponseSummaries.remove(_this.quizResponseSummaries.where({
+              'status': 'started'
+            }));
+            takenBy = _.size(_.uniq(_this.quizResponseSummaries.pluck('student_id')));
+            _this.layout = _this._getQuizReportLayout(students, takenBy);
+            _this.show(_this.layout, {
+              loading: true
             });
-            textbook_termIDs = _.flatten(_this.quizModel.get('term_ids'));
-            _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
-            App.execute("when:fetched", _this.textbookNames, function() {
-              return new QuizReportApp.QuizDetails.Controller({
-                region: _this.layout.quizDetailsRegion,
-                model: _this.quizModel,
-                textbookNames: _this.textbookNames,
-                divisionModel: _this.divisionModel
+            return _this.listenTo(_this.layout, "show", function() {
+              var textbook_termIDs;
+              App.execute("show:student:filter:app", {
+                region: _this.layout.studentFilterRegion,
+                students: students
               });
-            });
-            return new QuizReportApp.StudentsList.Controller({
-              region: _this.layout.studentsListRegion,
-              students: students,
-              quizModel: _this.quizModel
+              textbook_termIDs = _.flatten(_this.quizModel.get('term_ids'));
+              _this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
+              App.execute("when:fetched", _this.textbookNames, function() {
+                return new QuizReportApp.QuizDetails.Controller({
+                  region: _this.layout.quizDetailsRegion,
+                  model: _this.quizModel,
+                  textbookNames: _this.textbookNames,
+                  divisionModel: _this.divisionModel
+                });
+              });
+              return new QuizReportApp.StudentsList.Controller({
+                region: _this.layout.studentsListRegion,
+                students: students,
+                quizModel: _this.quizModel,
+                quizResponseSummaries: _this.quizResponseSummaries
+              });
             });
           };
         })(this));
       };
 
-      Controller.prototype._getQuizReportLayout = function(students) {
+      Controller.prototype._getQuizReportLayout = function(students, takenBy) {
         return new QuizReportApp.Layout.QuizReportLayout({
-          students: students
+          students: students,
+          takenBy: takenBy
         });
       };
 
