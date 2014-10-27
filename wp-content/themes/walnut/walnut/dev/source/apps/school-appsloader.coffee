@@ -21,6 +21,9 @@ define [
 
     'apps/quiz-reports/app'
 
+    #list of all textbooks -> list of chapters
+    'apps/textbooks/app'
+    
     #redirect here if user doesnt have permissions
     'apps/no-permissions/app'
 ], ->
