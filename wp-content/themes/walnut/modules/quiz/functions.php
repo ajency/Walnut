@@ -557,13 +557,13 @@ function quiz_status_for_textbook($book_id,$student_id){
             WHERE qr.collection_id = cc.id
                 AND cm.collection_id = cc.id 
                 AND cm.meta_key like %s
-                AND cc.post_status in ('publish','archive')
+                AND cc.post_status LIKE %s 
                 AND qr.student_id = %d
                 AND cc.term_ids like %s",
 
-        array('quiz_type',$student_id, '%"'.$book_id.'";%' )
+        array('quiz_type','publish',$student_id, '%"'.$book_id.'";%' )
     );
-
+    
     $result= $wpdb->get_results($query);
 
     $class_test_completed = $practice_completed =$class_test_in_progress = $practice_in_progress = array();
@@ -575,14 +575,21 @@ function quiz_status_for_textbook($book_id,$student_id){
         if($status === 'completed'){
             if($res->quiz_type==='test')
                 $class_test_completed[]=$res->id;
-            else
-                $practice_completed[]=$res->id;
+            else{
+                #add practice quiz in completed array only if it isnt in progress
+                if(!in_array($res->id, $practice_in_progress))
+                    $practice_completed[]=$res->id;
+           }
         }
         else{
             if($res->quiz_type==='test')
                 $class_test_in_progress[]=$res->id;
-            else
+            else{
                 $practice_in_progress[]=$res->id;
+                #if practice quiz has one attempt in progress remove it from completed array
+                if(in_array($res->id, $practice_completed))
+                    $practice_completed= __u::without($res->id,$practice_completed);
+            }
         }
     }
 
