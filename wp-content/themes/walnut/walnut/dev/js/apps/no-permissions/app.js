@@ -11,14 +11,18 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return NoPermissionsController.__super__.constructor.apply(this, arguments);
       }
 
-      NoPermissionsController.prototype.initialize = function() {
+      NoPermissionsController.prototype.initialize = function(opts) {
         var view;
+        this.error_msg = opts.error_msg, this.error_header = opts.error_header;
         this.view = view = this._getNoPermissionsView();
         return this.show(view);
       };
 
-      NoPermissionsController.prototype._getNoPermissionsView = function(items) {
-        return new NoPermissionsView();
+      NoPermissionsController.prototype._getNoPermissionsView = function() {
+        return new NoPermissionsView({
+          error_header: this.error_header,
+          error_msg: this.error_msg
+        });
       };
 
       return NoPermissionsController;
@@ -31,7 +35,16 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return NoPermissionsView.__super__.constructor.apply(this, arguments);
       }
 
-      NoPermissionsView.prototype.template = '<div class="tiles white grid simple vertical green animated slideInRight"> <div class="grid-title no-border"> FORBIDDEN ACCESS </div> <div style="overflow: hidden; display: block;" class="grid-body no-border"> <div class="row "> <div class="col-md-4"> You do not have access to this section </div> </div> </div> </div>';
+      NoPermissionsView.prototype.template = '<div class="tiles white grid simple vertical green animated slideInRight"> <div class="grid-title no-border"> {{error_header}} </div> <div style="overflow: hidden; display: block;" class="grid-body no-border"> <div class="row "> <div class="col-md-8"> {{error_msg}} </div> </div> </div> </div>';
+
+      NoPermissionsView.prototype.mixinTemplateHelpers = function(data) {
+        var error_header, error_msg;
+        error_msg = Marionette.getOption(this, 'error_msg');
+        error_header = Marionette.getOption(this, 'error_header');
+        data.error_header = error_header ? error_header : 'Forbidden Access';
+        data.error_msg = error_msg ? error_msg : 'You do not have access to this section';
+        return data;
+      };
 
       return NoPermissionsView;
 

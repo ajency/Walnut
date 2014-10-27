@@ -224,9 +224,16 @@ function get_single_content_module($id, $division=''){
 
     $data = $wpdb->get_row($query);
 
+    $terms = maybe_unserialize($data->term_ids);
+    $textbook = $terms['textbook'];
+    
+    if (!user_has_access_to_textbook($textbook,$user_id)){
+        return new WP_Error('No Access', __('You do not have access to this training module') );
+    }
+
     $data->id               = (int) $data->id;
     $data->name             = wp_unslash($data->name);
-    $data->term_ids         = maybe_unserialize ($data->term_ids);
+    $data->term_ids         = terms;
     $duration               = $data->duration;
     $data->minshours        ='mins';
     $data->total_minutes    = $data->duration; // only used for sorting accoring to time

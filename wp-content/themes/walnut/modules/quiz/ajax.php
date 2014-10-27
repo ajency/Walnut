@@ -13,7 +13,10 @@ function ajax_fetch_single_quiz ()
     $id = $_GET['id'];
     $quiz_module = get_single_quiz_module ($id);
 
-    wp_send_json (array('code' => 'OK', 'data' => $quiz_module));
+    if(!is_wp_error($quiz_module))
+        wp_send_json (array('code' => 'OK', 'data' => $quiz_module));
+    else
+        wp_send_json (array('code' => 'ERROR', 'error_msg' =>$quiz_module->get_error_message()));
 }
 
 add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');

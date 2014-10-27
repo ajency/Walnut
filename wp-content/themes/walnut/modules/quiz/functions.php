@@ -14,11 +14,20 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $id);
     $data = $wpdb->get_row ($select_query);
+
+    $terms = maybe_unserialize($data->term_ids);
+    $textbook = $terms['textbook'];
+    
+    if (!user_has_access_to_textbook($textbook,$user_id)){
+        return new WP_Error('No Access', __('You do not have access to this quiz') );
+    }
+
     $data->id = (int)$data->id;
     $data->name = wp_unslash($data->name);
 
     $duration = (int)$data->duration;
-    $data->term_ids = maybe_unserialize($data->term_ids);
+    $data->term_ids = $terms;
+
     $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;
