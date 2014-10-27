@@ -588,7 +588,7 @@ function quiz_status_for_textbook($book_id,$student_id){
                 $practice_in_progress[]=$res->id;
                 #if practice quiz has one attempt in progress remove it from completed array
                 if(in_array($res->id, $practice_completed))
-                    $practice_completed= __u::without($res->id,$practice_completed);
+                    $practice_completed= __u::without($practice_completed,$res->id);
             }
         }
     }
