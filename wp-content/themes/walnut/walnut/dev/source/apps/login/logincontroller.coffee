@@ -1,6 +1,9 @@
 define ['app'
     'controllers/region-controller'
-    'text!apps/login/templates/login.html'], (App, RegionController, loginTpl)->
+    'text!apps/login/templates/login.html'
+    'bootbox'
+    'apps/login/resetpasswordapp'
+    ], (App, RegionController, loginTpl,bootbox)->
 
     App.module "LoginApp.Controller", (Controller, App)->
         class Controller.LoginController extends RegionController
@@ -10,6 +13,11 @@ define ['app'
 
                 # listen to authenticate:user event from the view.
                 @listenTo view, 'authenticate:user', @authenticateUser
+
+                @listenTo view, 'reset:password', ->
+                    App.execute "show:reset:password:popup",
+                        region      : App.dialogRegion
+                            
 
                 @show view, (loading: true)
 
@@ -45,7 +53,8 @@ define ['app'
             className: ''
 
             events:
-                'click #login-submit': 'submitLogin'
+                'click #login-submit'       : 'submitLogin'
+                'click .reset-password'     :-> @trigger "reset:password"
 
             onShow: ->
                 $('body').addClass 'error-body no-top'
@@ -75,7 +84,3 @@ define ['app'
 
                 @$el.find('#login-form')
                 .before '<div id="invalid_login" class="alert alert-error">' + error_msg + '</div>';
-
-
-
-

@@ -6,6 +6,7 @@
 
 require_once "teaching_modules/functions.php";
 require_once "quiz/functions.php";
+require_once "user/functions.php";
 
 //Registering communication components
 function add_communication_components($defined_comm_components){
@@ -22,6 +23,10 @@ function add_communication_components($defined_comm_components){
         'quizzes_taken_report' => $preferences,
         'quiz_completed_student_mail' => $preferences,
         'quiz_completed_parent_mail' => $preferences,
+    );
+
+    $ajcm_components['user'] = array(
+        'reset_password' => $preferences
     );
 
     return $ajcm_components;
