@@ -29,6 +29,12 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
       dashboardRedirect: function() {
         var user;
         user = App.request("get:user:model");
+        if (!user.ID) {
+          App.navigate('login', {
+            trigger: true
+          });
+          return false;
+        }
         if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
           App.navigate('textbooks', {
             trigger: true

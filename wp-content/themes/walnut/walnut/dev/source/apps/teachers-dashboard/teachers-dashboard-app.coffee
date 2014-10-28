@@ -25,6 +25,10 @@ define ['app'
             dashboardRedirect:->
                 user = App.request "get:user:model"
 
+                if not user.ID
+                    App.navigate 'login', trigger:true
+                    return false
+
                 if user.current_user_can('administrator') or user.current_user_can('school-admin')
                     App.navigate('textbooks', trigger: true)
 
