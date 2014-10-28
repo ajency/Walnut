@@ -174,13 +174,17 @@ function reset_user_password(){
 
     $email = $_REQUEST['email'];
 
-    if(!$email)
+    if(!$email){
+        wp_send_json(array('error'=>'Please Enter Email Address'));
         return false;
+    }
 
     $user = get_user_by('email', $email);
 
-    if(!$user)
+    if(!$user){
+        wp_send_json(array('error'=>$email.' is not a registered email address'));
         return false;
+    }
 
     $comm = add_user_reset_password_mail($user);
 

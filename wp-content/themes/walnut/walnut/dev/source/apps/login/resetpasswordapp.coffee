@@ -24,7 +24,7 @@ define ['app'
                     'email': email
                     (response) =>
                         if response.error
-                            @view.triggerMethod 'email:doesnt:exist', response
+                            @view.triggerMethod 'reset:error', response.error
                         else
                             @view.triggerMethod "reset:mail:sent",email
                 );
@@ -92,6 +92,12 @@ define ['app'
 
                 @$el.find '#success_msg'
                 .html 'Successfully sent password reset link to '+ email
+
+            onResetError:(error_msg)->
+
+                @$el.find '.error'
+                .html error_msg
+
 
 
                     

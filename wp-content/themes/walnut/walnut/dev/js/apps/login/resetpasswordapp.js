@@ -31,7 +31,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         }, (function(_this) {
           return function(response) {
             if (response.error) {
-              return _this.view.triggerMethod('email:doesnt:exist', response);
+              return _this.view.triggerMethod('reset:error', response.error);
             } else {
               return _this.view.triggerMethod("reset:mail:sent", email);
             }
@@ -87,6 +87,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         this.$el.find('#reset-password-form').remove();
         this.$el.find('#success-div').show();
         return this.$el.find('#success_msg').html('Successfully sent password reset link to ' + email);
+      };
+
+      RestPasswordView.prototype.onResetError = function(error_msg) {
+        return this.$el.find('.error').html(error_msg);
       };
 
       return RestPasswordView;
