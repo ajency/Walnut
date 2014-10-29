@@ -305,7 +305,10 @@ function get_all_quiz_modules($args){
 
     foreach ($quiz_ids as $id){
         $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
-        $result[] = $quiz_data;
+        
+        if(!is_wp_error($quiz_data))
+            $result[] = $quiz_data;
+        
     }
 
     return $result;

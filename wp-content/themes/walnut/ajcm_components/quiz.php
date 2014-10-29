@@ -2,6 +2,8 @@
 
 function getvars_quizzes_taken_report($recipients_email,$comm_data){
 
+	global $aj_comm;
+
 	$template_data['name'] 		= 'quizzes-taken-report'; 
 
 	$template_data['subject'] 	= 'Synapse Notification: Quiz report for today';
@@ -21,171 +23,15 @@ function getvars_quizzes_taken_report($recipients_email,$comm_data){
 	$template_data['global_merge_vars'][] = get_mail_header($comm_data['blog_id']);
 	$template_data['global_merge_vars'][] = get_mail_footer($comm_data['blog_id']);
 
-	$template_data['attachments'][]= array(
-		"type" 		=> "text/plain",
-        "name" 		=> "myfile.txt",
-        "content" 	=> "ZXhhbXBsZSBmaWxl"
-    );
+	$zipfile   		= $aj_comm->get_communication_meta($comm_data['id'],'filepath');
 
-	$zipfile= get_quiz_report_zip($comm_data['blog_id']);
-	
 	$template_data['attachments'][]= array(
 		"type" 		=> "application/zip",
-        "name" 		=> "csv.zip",
-        "content" 	=> base64_encode($zipfile)
+        "name" 		=> "quiz_reports.zip",
+        "content" 	=> base64_encode(file_get_contents($zipfile))
     );
 
 	return $template_data;
-
-}
-
-if(!function_exists('str_putcsv'))
-{
-    function str_putcsv($input, $delimiter = ',', $enclosure = '"')
-    {
-        // Open a memory "file" for read/write...
-        $fp = fopen('php://temp', 'r+');
-        // ... write the $input array to the "file" using fputcsv()...
-        fputcsv($fp, $input, $delimiter, $enclosure);
-        // ... rewind the "file" so we can read what we just wrote...
-        rewind($fp);
-        // ... read the entire line into a variable...
-        $data = fread($fp, 1048576);
-        // ... close the "file"...
-        fclose($fp);
-        // ... and return the $data to the caller, with the trailing newline from fgets() removed.
-        return $data;
-    }
-}
-
-function get_quiz_report_zip($blog_id){
-
-	$files= get_quiz_report_csv($blog_id);
-	
-	$uploads_dir=wp_upload_dir();
-
-    $upload_directory = str_replace('/images', '', $uploads_dir['basedir']);
-    $upload_url = str_replace('/images', '', $uploads_dir['baseurl']);
-
-    $random= rand(9999,99999);
-
-    $upload_path= '/tmp/quiz-report-csvs-'.$random.date('Ymdhis').'.zip';
-
-	create_zip($files,$upload_directory.$upload_path);
-
-	#echo $upload_url.$upload_path; exit;
-
-	return $upload_url.$upload_path;
-
-}
-
-function get_quiz_report_csv($blog_id){
-
-	global $wpdb;
-
-	$files = array();
-
-	switch_to_blog($blog_id);
-
-	$divisions= get_all_divisions();
-
-	$headers = array('Student Name',
-	    		'Roll Number',
-	    		'Quiz Name',
-	    		'Quiz Type',
-	    		'Total Quiz Marks',
-	    		'Total Scored',
-	    		'Negative Marks',
-	    		'Total Marks',
-	    		'Quiz Time',
-	    		'Time Taken by Student'
-	    	);
-
-	if($divisions){
-
-		foreach($divisions as $div){
-
-			switch_to_blog($blog_id);
-
-			$students = get_students_by_division($div['id']);
-
-			if(!$students)
-				continue;
-
-			$student_ids = __u::pluck($students, 'ID');
-			$student_ids = join($student_ids, ',');
-
-			$quizIDs_query= $wpdb->prepare("SELECT collection_id FROM {$wpdb->prefix}quiz_response_summary WHERE 
-						DATE(taken_on) LIKE %s AND student_id in ($student_ids)",
-						date('Y-m-d')
-				);
-
-			$quizIDs = $wpdb->get_col($quizIDs_query);
-
-			// output the column headings
-		    $output= str_putcsv($headers);
-
-			if($quizIDs && sizeof($quizIDs)>0){
-
-			    foreach($quizIDs as $quizID){
-
-			    	if($students && sizeof($students)>0){
-
-				    	foreach($students as $student){
-
-				    		$row = get_quiz_report_data($quizID, $student);
-
-				    		if($row)
-								$output .= str_putcsv($row);
-					    	
-					    }
-					}
-			    }
-			}
-
-			$files[]= array(
-			    	'name' 	=> $div['division'],
-			    	'data' 	=> $output
-			    );
-		}
-	}
-
-    restore_current_blog();
-
-    return $files;
-
-}
-
-function get_quiz_report_data($quizID, $student){
-
-	$quizData = get_single_quiz_module($quizID, $student->ID);
-	$roll_number = get_user_meta($student->ID, 'student_rollno', true);
-	$summary = get_latest_quiz_response_summary($quizID, $student->ID);
-
-	if($quizData->quiz_type == 'practice')
-		$quiz_type = 'Practice Quiz';
-	else
-		$quiz_type = 'Class Test';
-
-	if($summary){
-
-    	$row = array($student->display_name,
-    		$roll_number,
-    		$quizData->name,
-    		$quiz_type,
-    		$quizData->marks,
-    		$summary->marks_scored,
-    		$summary->negative_scored,
-    		$summary->total_marks_scored,
-    		$quizData->duration,
-    		$summary->total_time_taken
-    	);
-    }
-
-    else 
-    	return false;
-
-    return $row;
 
 }
 
