@@ -7,7 +7,14 @@ define ['app'
             tagName : 'tr'
             className: 'gradeX odd'
 
-            template:   '<td>{{name}}</td>
+            template:   '{{#allowResetQuiz}}
+                        <td class="v-align-middle"><div class="checkbox check-default">
+                            <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}">
+                            <label for="checkbox{{id}}"></label>
+                          </div>
+                        </td>
+                        {{/allowResetQuiz}}
+                        <td>{{name}}</td>
                         <td>{{textbookName}}</td>
                         <td>{{chapterName}}</td>
                         <td>Quiz Time: {{total_minutes}}m<br>
@@ -39,6 +46,9 @@ define ['app'
                 
                 data.textbookName = textbookNames.getTextbookName data.term_ids
                 data.chapterName = textbookNames.getChapterName data.term_ids
+
+                data.allowResetQuiz = true if Marionette.getOption @, 'allowResetQuiz'
+
                 data
 
             events:
@@ -47,6 +57,11 @@ define ['app'
                     @trigger 'replay:quiz',@model.id, summary_id
 
                 'click .view-attempts' :(e)-> @trigger "view:attempts", @model.id
+
+            onShow:->
+                if @model.get('quiz_type') isnt 'test'
+                    @$el.find '.tab_checkbox'
+                    .attr 'disabled',true
 
         class Views.EmptyView extends Marionette.ItemView
 

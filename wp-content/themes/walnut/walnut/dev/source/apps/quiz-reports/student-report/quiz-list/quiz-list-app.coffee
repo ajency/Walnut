@@ -12,6 +12,11 @@ define ['app'
 
                 @quizResponseSummaries = App.request "get:quiz:response:summary", 'student_id'   : @student_id
 
+                loggedInUser = App.request "get:user:model"
+
+                if loggedInUser.current_user_can('school-admin') or loggedInUser.current_user_can('teacher')  
+                    @allowResetQuiz = true
+
                 App.execute "when:fetched", @quizResponseSummaries, =>
                     
                     @quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
@@ -80,3 +85,4 @@ define ['app'
                     collection              : quizzes
                     quizResponseSummaries   : @quizResponseSummaries
                     textbookNames           : textbookNames
+                    allowResetQuiz          : @allowResetQuiz

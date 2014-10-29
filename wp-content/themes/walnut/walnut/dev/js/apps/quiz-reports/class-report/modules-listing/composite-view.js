@@ -72,11 +72,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       ModulesListingView.prototype.saveCommunications = function(e) {
         var data;
         data = [];
-        data.quizIDs = _.chain(this.$el.find('.tab_checkbox')).map(function(checkbox) {
-          if ($(checkbox).is(':checked')) {
-            return $(checkbox).val();
-          }
-        }).compact().value();
+        data.quizIDs = $.getCheckedItems(this.$el.find('#content-pieces-table'));
         data.division = this.$el.find('#divisions-filter').val();
         if (e.target.id === 'send-email') {
           data.communication_mode = 'email';

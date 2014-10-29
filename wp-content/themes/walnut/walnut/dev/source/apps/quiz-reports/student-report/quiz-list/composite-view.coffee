@@ -9,6 +9,14 @@ define ['app'
                             <table class="table table-bordered m-t-15" id="quiz-table" >                                
                                 <thead>
                                     <tr>
+                                        {{#allowResetQuiz}}
+                                        <th style="width:4%">
+                                            <div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
+                                                <input id="check_all" type="checkbox">
+                                                <label for="check_all"></label>
+                                            </div>
+                                        </th>
+                                        {{/allowResetQuiz}}
                                         <th>Quiz Name</th>
                                         <th>Textbook</th>
                                         <th>Chapter</th>
@@ -32,6 +40,9 @@ define ['app'
                                     <option value="100">100</option>
                                 </select>
                             </div>
+                            <button id="reset-quiz" class="none btn btn-success btn-cons2 right pull-left m-t-10 m-r-10" type="submit">
+                                <i class="fa fa-check"></i> Reset Quiz
+                            </button>
                         </div>'
 
             className: 'row'
@@ -50,6 +61,19 @@ define ['app'
                 data=
                     summaries       : summaries
                     textbookNames   : textbookNames
+                    allowResetQuiz  : Marionette.getOption @, 'allowResetQuiz'
+
+            mixinTemplateHelpers:(data)->
+
+                data.allowResetQuiz = true if Marionette.getOption @, 'allowResetQuiz'
+
+                data
+
+
+            events:
+                'change #check_all_div'                 : 'checkAll'
+                'change .tab_checkbox,#check_all_div '  : 'showClearResponseButton'
+                'click #reset-quiz'                     : 'clearQuizResponse'
 
             onShow:->
                 pagerOptions =
@@ -59,3 +83,68 @@ define ['app'
                 @$el.find '#quiz-table'
                 .tablesorter()
                 .tablesorterPager pagerOptions
+
+            checkAll:->
+
+                all_ids = @collection.pluck 'id'
+
+                classTestModules= _.chain @collection.where 'quiz_type': 'test'
+                .pluck 'id'
+                .value()
+
+                excludeIDs = _.difference all_ids,classTestModules
+
+                $.toggleCheckAll @$el.find('#quiz-table'), excludeIDs
+
+            showClearResponseButton:->
+
+                if @$el.find '.tab_checkbox'
+                .is ':checked'
+                    @$el.find '#reset-quiz'
+                    .show()
+
+                else
+                    @$el.find '#reset-quiz'
+                    .hide()
+
+            clearQuizResponse:->
+
+                quizIDs= $.getCheckedItems @$el.find '#quiz-table'
+
+                @deleteResponse(quizID) for quizID in quizIDs if not _.isEmpty quizIDs
+
+                @$el.find '#check_all'
+                .attr 'checked', false
+
+                @$el.find '#reset-quiz'
+                .hide()
+
+
+            deleteResponse:(quizID)->
+
+                quizResponseSummaries = Marionette.getOption @,'quizResponseSummaries'
+
+                summary= quizResponseSummaries.findWhere 'collection_id' : parseInt quizID
+                summary.destroy()
+
+                @collection.remove quizID
+
+                @updateTableSorter()
+
+                @showResetSuccessMsg()
+
+            updateTableSorter:->
+                @$el.find "#quiz-table"
+                .trigger "update"
+
+                @$el.find "#quiz-table"
+                .trigger "updateCache"
+
+            showResetSuccessMsg:->
+
+                @$el.find '.reset-success-msg'
+                .remove()
+
+                @$el.find '#pager'
+                .after '<div class="reset-success-msg text-success small">Quiz Reset Successful</div>'
+            

@@ -11,10 +11,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
       }
 
       Controller.prototype.initialize = function(opts) {
+        var loggedInUser;
         this.student_id = opts.student_id;
         this.quizResponseSummaries = App.request("get:quiz:response:summary", {
           'student_id': this.student_id
         });
+        loggedInUser = App.request("get:user:model");
+        if (loggedInUser.current_user_can('school-admin') || loggedInUser.current_user_can('teacher')) {
+          this.allowResetQuiz = true;
+        }
         return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
           return function() {
             var quiz_ids;
@@ -84,7 +89,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
         return new QuizList.Views.QuizListView({
           collection: quizzes,
           quizResponseSummaries: this.quizResponseSummaries,
-          textbookNames: textbookNames
+          textbookNames: textbookNames,
+          allowResetQuiz: this.allowResetQuiz
         });
       };
 

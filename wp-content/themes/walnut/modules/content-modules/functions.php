@@ -233,7 +233,7 @@ function get_single_content_module($id, $division=''){
 
     $data->id               = (int) $data->id;
     $data->name             = wp_unslash($data->name);
-    $data->term_ids         = terms;
+    $data->term_ids         = $terms;
     $duration               = $data->duration;
     $data->minshours        ='mins';
     $data->total_minutes    = $data->duration; // only used for sorting accoring to time

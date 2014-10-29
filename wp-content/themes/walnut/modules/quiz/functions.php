@@ -619,4 +619,28 @@ function quiz_status_for_textbook($book_id,$student_id){
         
 }
 
+function delete_quiz_response_summary($summary_id){
+
+    global $wpdb;
+
+    if(!$summary_id)
+        return false;
+
+    $summary_delete_qry = $wpdb->prepare("
+        DELETE FROM {$wpdb->prefix}quiz_response_summary WHERE summary_id LIKE %s",
+        $summary_id
+    );
+
+    $wpdb->query($summary_delete_qry);
+
+    $responses_delete_qry = $wpdb->prepare("
+        DELETE FROM {$wpdb->prefix}quiz_question_response WHERE summary_id LIKE %s",
+        $summary_id
+    );
+
+    $wpdb->query($responses_delete_qry);
+
+    return true;
+
+}
 

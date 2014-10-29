@@ -124,3 +124,22 @@ function ajax_get_all_quiz_question_responses(){
 }
 
 add_action('wp_ajax_get-all-quiz-question-responses','ajax_get_all_quiz_question_responses');
+
+function ajax_delete_quiz_response_summary(){
+
+    $summary_id = $_POST['summary_id'];
+
+    $delete = delete_quiz_response_summary($summary_id);
+
+    if($delete)
+        wp_send_json(array('code' => 'OK','summary_id' => $summary_id));
+
+    else
+        wp_send_json(array('code' => 'ERROR','error_msg' => 'Some error occurred'));
+
+
+
+}
+add_action('wp_ajax_delete-quiz-response-summary','ajax_delete_quiz_response_summary');
+
+

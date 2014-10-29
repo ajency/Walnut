@@ -63,12 +63,7 @@
             saveCommunications:(e)->
 
                 data = []
-                data.quizIDs= _.chain @$el.find('.tab_checkbox')
-                                .map (checkbox)->
-                                    if $(checkbox).is ':checked'
-                                        $(checkbox).val()
-                                .compact()
-                                .value()
+                data.quizIDs= $.getCheckedItems @$el.find '#content-pieces-table'
 
                 data.division = @$el.find '#divisions-filter'
                         .val()
