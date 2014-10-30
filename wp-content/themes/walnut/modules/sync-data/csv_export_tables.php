@@ -112,7 +112,7 @@ class ExportTables {
 
         $upload_path= '/tmp/downsync/csvs-'.$random.date('Ymdhis').'.zip';
 
-        $result = $this->create_zip($exported_tables, $upload_directory.$upload_path);
+        $result = create_zip($exported_tables, $upload_directory.$upload_path);
 
         restore_current_blog();
 
@@ -649,33 +649,7 @@ class ExportTables {
 
     }
 
-    /* creates a compressed zip file */
-    private function create_zip($files = array(),$destination = '',$overwrite = false) {
-
-        //if the zip file already exists and overwrite is false, return false
-        if(file_exists($destination) && !$overwrite) { return false; }
-
-        //create the archive
-        $zip = new ZipArchive();
-        if($zip->open($destination,$overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
-            return false;
-        }
-        //add the files
-
-        foreach($files as $file) {
-            if(isset($file['name']) &&  ($file['name'] != '') && isset($file['data']) && ($file['data'] !=''))
-                $zip->addFromString ($file['name'].'.csv',$file['data']);
-
-        }
-        //debug
-        //echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
-
-        //close the zip -- done!
-        $zip->close();
-
-        return $destination;
-
-    }
+    
 
     function is_blog_expired(){
        $current_blog= get_current_blog_id(); 
@@ -705,4 +679,32 @@ class ExportTables {
         $wpdb->insert( $wpdb->base_prefix . "sync_device_log", $record_data );
         
     }
+}
+
+/* creates a compressed zip file */
+function create_zip($files = array(),$destination = '',$overwrite = false) {
+
+    //if the zip file already exists and overwrite is false, return false
+    if(file_exists($destination) && !$overwrite) { return false; }
+
+    //create the archive
+    $zip = new ZipArchive();
+    if($zip->open($destination,$overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
+        return false;
+    }
+    //add the files
+
+    foreach($files as $file) {
+        if(isset($file['name']) &&  ($file['name'] != '') && isset($file['data']) && ($file['data'] !=''))
+            $zip->addFromString ($file['name'].'.csv',$file['data']);
+
+    }
+    //debug
+    //echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
+
+    //close the zip -- done!
+    $zip->close();
+
+    return $destination;
+
 }

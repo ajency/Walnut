@@ -16,7 +16,7 @@ define ['app'
                             {{/answered}}
                             {{^answered}}N/A{{/answered}}
                         </td>
-                        <td>{{#answered}}{{total_time_taken}}{{/answered}}
+                        <td>{{#answered}}{{time_taken}}{{/answered}}
                             {{^answered}}N/A{{/answered}}
                         </td>
                         <td>{{#answered}}Attempted: {{attempts}} <span class="view-attempts fa fa-plus-circle"></span>{{/answered}}
@@ -36,7 +36,8 @@ define ['app'
                     completed_summaries = _.map summaries, (m)-> m.toJSON() if m.get('status') is 'completed'
                     data.answered = true
                     data =_.extend data, _.last completed_summaries
-                    data.attempts = _.size summaries
+                    data.attempts = _.size summaries                    
+                    data.time_taken = $.timeMinSecs data.total_time_taken
                 data
 
             events:

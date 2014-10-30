@@ -42,15 +42,18 @@ define ['app'
 
                 quizzes = App.request "get:quizes", data
 
-                App.execute "when:fetched", quizzes, @_showViews 
+                students = App.request "get:students:by:division", divisionsCollection.first().get 'id'
+                App.execute "when:fetched", [quizzes,students], @_showViews 
 
             _showViews:=>
                 #wreqr object to get the selected filter parameters so that search can be done using them
                 @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
-                @layout = @_getContentPiecesLayout students
-                @show @layout,
-                    loading: true
+                @layout = @_getContentPiecesLayout()
+
+                App.execute "when:fetched", students, =>
+                    @show @layout,
+                        loading: true
 
                 @listenTo @layout, "show", =>
                     App.execute "show:textbook:filters:app",
@@ -62,7 +65,7 @@ define ['app'
                         dataType : 'quiz'
                         filters : ['divisions','textbooks', 'chapters']
 
-                        students = App.request "get:students:by:division", divisionsCollection.first().get 'id'
+                        
 
                         App.execute "when:fetched", students, =>
                             App.execute "show:student:filter:app",
@@ -91,6 +94,18 @@ define ['app'
                     @listenTo @layout.allContentRegion, "show:quiz:report", @_showQuiz
                     @listenTo @layout.searchResultsRegion, "show:quiz:report", @_showQuiz
 
+                    @listenTo @layout.allContentRegion, "save:communications", (data)=>
+                        
+                            data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_completed_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    division        : @division
+
+                            App.request "save:communications",data
+
 
 
             _showQuiz:(quizModel)->
@@ -102,7 +117,7 @@ define ['app'
                     students    : students
                     quiz        : quizModel
 
-            _getContentPiecesLayout:(students)->
+            _getContentPiecesLayout:->
                 new ClassReportApp.Layout.ContentPiecesLayout
                     students : students
 

@@ -553,3 +553,24 @@ function get_textbook_subject($textbook_id){
     return $subject;
 
 }
+
+function user_has_access_to_textbook($textbook,$user_id=0){
+
+    if(!$user_id)
+        $user_id = get_current_user_id();
+
+    if(!$textbook)
+        return false;
+
+    $has_access = false;
+
+    $assigned = get_assigned_textbooks($user_id);
+
+    if($assigned && sizeof($assigned)>0)
+
+        if(in_array($textbook, $assigned))
+            $has_access = true;
+    
+    return $has_access;
+
+}

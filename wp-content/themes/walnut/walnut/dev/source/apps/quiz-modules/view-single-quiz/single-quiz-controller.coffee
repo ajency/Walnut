@@ -39,6 +39,14 @@ define ['app'
                 fetchQuestionResponseCollection.done =>
                     App.execute "when:fetched", quizModel, =>
 
+                        if quizModel.get('code') is 'ERROR'
+                            App.execute "show:no:permissions:app",
+                                region          : App.mainContentRegion
+                                error_header    : 'Unauthorized Quiz'
+                                error_msg       : quizModel.get 'error_msg'
+
+                            return false
+
                         if display_mode isnt 'quiz_report'
                             display_mode = if quizResponseSummary.get('status') is 'completed' 
                                                 'replay' 

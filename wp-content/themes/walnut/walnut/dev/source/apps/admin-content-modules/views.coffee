@@ -259,12 +259,7 @@ define ['app',
             saveCommunications:(e)->
 
                 data = []
-                data.moduleIDs= _.chain @$el.find('.tab_checkbox')
-                                .map (checkbox)->
-                                    if $(checkbox).is ':checked'
-                                        $(checkbox).val()
-                                .compact()
-                                .value()
+                data.moduleIDs= $.getCheckedItems @$el.find '#take-class-modules'
 
                 data.division = @$el.find '#divisions-filter'
                         .val()

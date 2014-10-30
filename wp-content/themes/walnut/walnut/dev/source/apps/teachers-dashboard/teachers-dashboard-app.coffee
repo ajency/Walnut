@@ -10,16 +10,34 @@ define ['app'
         class TeachersDashboardRouter extends Marionette.AppRouter
 
             appRoutes:
-                'teachers/dashboard': 'teachersDashboard'
-                'teachers/take-class/:classID/:div': 'takeClass'
+                ''                                  : 'dashboardRedirect'
+                'teachers/dashboard'                : 'teachersDashboard'
+                'teachers/take-class/:classID/:div' : 'takeClass'
                 'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules'
-                'teachers/start-training/:classID': 'startTraining'
+                'teachers/start-training/:classID'  : 'startTraining'
                 'teachers/start-training/:classID/textbook/:tID': 'startTrainingTextbookModules'
 
-                'students/dashboard': 'studentsDashboard'
-                'students/dashboard/textbook/:tID': 'studentsQuizModules'
+                'students/dashboard'                : 'studentsDashboard'
+                'students/dashboard/textbook/:tID'  : 'studentsQuizModules'
 
         Controller =
+
+            dashboardRedirect:->
+                user = App.request "get:user:model"
+
+                if not user.ID
+                    App.navigate 'login', trigger:true
+                    return false
+
+                if user.current_user_can('administrator') or user.current_user_can('school-admin')
+                    App.navigate('textbooks', trigger: true)
+
+                if user.current_user_can 'teacher'
+                    @teachersDashboard()  
+
+                if user.current_user_can 'student'
+                    @studentsDashboard()
+
             teachersDashboard: ->
                 new TeachersDashboardApp.View.DashboardController
                     region: App.mainContentRegion

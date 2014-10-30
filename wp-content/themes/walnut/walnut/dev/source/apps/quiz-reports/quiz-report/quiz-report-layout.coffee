@@ -23,7 +23,7 @@ define ['app'
 
                                 <div class="row m-t-20 small">
                                     <div class="col-md-4">
-                                        Taken By 0 out of {{totalStudents}} students
+                                        Taken By {{takenBy}} out of {{totalStudents}} students
                                     </div>
                                     <div class="col-md-8" id="students-filter-region"></div>
                                 </div>
@@ -44,6 +44,7 @@ define ['app'
 
             mixinTemplateHelpers:(data)->
 
-                data.totalStudents = _.size Marionette.getOption @,'students'
+                data.totalStudents  = _.size Marionette.getOption @,'students'
+                data.takenBy        = Marionette.getOption @, 'takenBy'
 
                 data

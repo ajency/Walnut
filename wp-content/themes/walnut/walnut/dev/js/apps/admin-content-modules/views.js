@@ -268,11 +268,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
       ModulesView.prototype.saveCommunications = function(e) {
         var data;
         data = [];
-        data.moduleIDs = _.chain(this.$el.find('.tab_checkbox')).map(function(checkbox) {
-          if ($(checkbox).is(':checked')) {
-            return $(checkbox).val();
-          }
-        }).compact().value();
+        data.moduleIDs = $.getCheckedItems(this.$el.find('#take-class-modules'));
         data.division = this.$el.find('#divisions-filter').val();
         if (e.target.id === 'send-email') {
           data.communication_mode = 'email';

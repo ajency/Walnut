@@ -14,11 +14,20 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $id);
     $data = $wpdb->get_row ($select_query);
+
+    $terms = maybe_unserialize($data->term_ids);
+    $textbook = $terms['textbook'];
+    
+    if (!user_has_access_to_textbook($textbook,$user_id)){
+        return new WP_Error('No Access', __('You do not have access to this quiz') );
+    }
+
     $data->id = (int)$data->id;
     $data->name = wp_unslash($data->name);
 
     $duration = (int)$data->duration;
-    $data->term_ids = maybe_unserialize($data->term_ids);
+    $data->term_ids = $terms;
+
     $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;
@@ -296,7 +305,10 @@ function get_all_quiz_modules($args){
 
     foreach ($quiz_ids as $id){
         $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
-        $result[] = $quiz_data;
+        
+        if(!is_wp_error($quiz_data))
+            $result[] = $quiz_data;
+        
     }
 
     return $result;
@@ -328,6 +340,24 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
     }
     
     return $data;
+
+}
+
+function get_latest_quiz_response_summary($quiz_id, $user_id){
+
+    global $wpdb;
+
+    if(!$quiz_id || !$user_id)
+        return false;
+
+    $query = $wpdb->prepare("select summary_id from {$wpdb->prefix}quiz_response_summary
+            where student_id = %d and collection_id = %d order by taken_on desc limit 1", $user_id,$quiz_id);
+
+    $summary_id = $wpdb->get_var($query);
+
+    $summary = read_quiz_response_summary($summary_id);
+
+    return $summary;
 
 }
 
@@ -539,13 +569,13 @@ function quiz_status_for_textbook($book_id,$student_id){
             WHERE qr.collection_id = cc.id
                 AND cm.collection_id = cc.id 
                 AND cm.meta_key like %s
-                AND cc.post_status in ('publish','archive')
+                AND cc.post_status LIKE %s 
                 AND qr.student_id = %d
                 AND cc.term_ids like %s",
 
-        array('quiz_type',$student_id, '%"'.$book_id.'";%' )
+        array('quiz_type','publish',$student_id, '%"'.$book_id.'";%' )
     );
-
+    
     $result= $wpdb->get_results($query);
 
     $class_test_completed = $practice_completed =$class_test_in_progress = $practice_in_progress = array();
@@ -557,14 +587,21 @@ function quiz_status_for_textbook($book_id,$student_id){
         if($status === 'completed'){
             if($res->quiz_type==='test')
                 $class_test_completed[]=$res->id;
-            else
-                $practice_completed[]=$res->id;
+            else{
+                #add practice quiz in completed array only if it isnt in progress
+                if(!in_array($res->id, $practice_in_progress))
+                    $practice_completed[]=$res->id;
+           }
         }
         else{
             if($res->quiz_type==='test')
                 $class_test_in_progress[]=$res->id;
-            else
+            else{
                 $practice_in_progress[]=$res->id;
+                #if practice quiz has one attempt in progress remove it from completed array
+                if(in_array($res->id, $practice_completed))
+                    $practice_completed= __u::without($practice_completed,$res->id);
+            }
         }
     }
 
@@ -585,4 +622,28 @@ function quiz_status_for_textbook($book_id,$student_id){
         
 }
 
+function delete_quiz_response_summary($summary_id){
+
+    global $wpdb;
+
+    if(!$summary_id)
+        return false;
+
+    $summary_delete_qry = $wpdb->prepare("
+        DELETE FROM {$wpdb->prefix}quiz_response_summary WHERE summary_id LIKE %s",
+        $summary_id
+    );
+
+    $wpdb->query($summary_delete_qry);
+
+    $responses_delete_qry = $wpdb->prepare("
+        DELETE FROM {$wpdb->prefix}quiz_question_response WHERE summary_id LIKE %s",
+        $summary_id
+    );
+
+    $wpdb->query($responses_delete_qry);
+
+    return true;
+
+}
 

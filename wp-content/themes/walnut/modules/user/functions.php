@@ -145,12 +145,12 @@ function user_extend_profile_fields($user){
     
     <table class="form-table">
 
-    <tr>
+    <tr id="textbooks-tr"  <?=$hide_textbooks?>>
         <th><label for="tax_input[document_folders]">Textbooks</label></th>
 
         <td>
             <div>
-            <ul class="textbooks-list" <?=$hide_textbooks?>>
+            <ul class="textbooks-list">
     <?php
 
 

@@ -33,6 +33,12 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         'change #comment_enable': '_commentEnable'
       };
 
+      OptionsBarView.prototype.modelEvents = {
+        'change:ID': function() {
+          return this.$el.find('#preview-question').show();
+        }
+      };
+
       OptionsBarView.prototype.mixinTemplateHelpers = function(data) {
         data = OptionsBarView.__super__.mixinTemplateHelpers.call(this, data);
         data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
@@ -131,16 +137,11 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.saveQuestionSettings = function() {
-        return _.delay((function(_this) {
-          return function() {
-            var data;
-            if (_this.$el.find('form').valid()) {
-              data = Backbone.Syphon.serialize(_this);
-              _this.trigger("save:data:to:model", data);
-              return _this.$el.find('#preview-question').show();
-            }
-          };
-        })(this), 500);
+        var data;
+        if (this.$el.find('form').valid()) {
+          data = Backbone.Syphon.serialize(this);
+          return this.trigger("save:data:to:model", data);
+        }
       };
 
       OptionsBarView.prototype.previewQuestion = function() {

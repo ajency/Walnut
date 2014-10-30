@@ -5,13 +5,13 @@ define ['app'
         class StudentsFilterApp.StudentsFilterView extends Marionette.ItemView
 
             template: 'View quizzes taken by :
-                        <select id="student-name" class="select-student">
+                        <select id="student-name" class="textbook-filter select-student">
                             <option value="">-student name-</option>
                             {{#students}}
                                 <option value="{{ID}}">{{display_name}}</option>
                             {{/students}}
                         </select> or : 
-                        <select class="select-student">
+                        <select class="textbook-filter select-student">
                             <option value="">-roll number-</option>
                             {{#students}}
                                 <option value="{{ID}}">{{roll_no}}</option>

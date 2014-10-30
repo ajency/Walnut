@@ -42,6 +42,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
         return App.execute("when:fetched", model, (function(_this) {
           return function() {
             var layout;
+            if (model.get('code') === 'ERROR') {
+              App.execute("show:no:permissions:app", {
+                region: App.mainContentRegion,
+                error_header: 'Unauthorized Training Module',
+                error_msg: model.get('error_msg')
+              });
+              return false;
+            }
             groupContentCollection = App.request("get:content:pieces:by:ids", model.get('content_pieces'));
             _this.layout = layout = _this._getContentGroupViewLayout();
             _this.show(_this.layout, {

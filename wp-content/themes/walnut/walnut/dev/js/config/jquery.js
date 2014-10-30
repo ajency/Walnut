@@ -124,7 +124,7 @@ define(['jquery', 'underscore'], function($, _) {
     return adjustPageDim();
   });
   $(window).resize(adjustPageDim);
-  return $.toggleCheckAll = function(element, exclude) {
+  $.toggleCheckAll = function(element, exclude) {
     var checkbox, checkboxes, _i, _len, _ref, _results;
     if (exclude == null) {
       exclude = [];
@@ -144,5 +144,14 @@ define(['jquery', 'underscore'], function($, _) {
     } else {
       return element.find('.tab_checkbox').removeAttr('checked');
     }
+  };
+  return $.getCheckedItems = function(element) {
+    var items;
+    items = _.chain(element.find('.tab_checkbox')).map(function(checkbox) {
+      if ($(checkbox).is(':checked')) {
+        return $(checkbox).val();
+      }
+    }).compact().value();
+    return items;
   };
 });

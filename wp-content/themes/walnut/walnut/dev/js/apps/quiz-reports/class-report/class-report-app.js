@@ -53,15 +53,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
           'division': this.division
         };
         quizzes = App.request("get:quizes", data);
-        return App.execute("when:fetched", quizzes, this._showViews);
+        students = App.request("get:students:by:division", divisionsCollection.first().get('id'));
+        return App.execute("when:fetched", [quizzes, students], this._showViews);
       };
 
       Controller.prototype._showViews = function() {
         this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
-        this.layout = this._getContentPiecesLayout(students);
-        this.show(this.layout, {
-          loading: true
-        });
+        this.layout = this._getContentPiecesLayout();
+        App.execute("when:fetched", students, (function(_this) {
+          return function() {
+            return _this.show(_this.layout, {
+              loading: true
+            });
+          };
+        })(this));
         return this.listenTo(this.layout, "show", (function(_this) {
           return function() {
             App.execute("show:textbook:filters:app", {
@@ -72,7 +77,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               divisionsCollection: divisionsCollection,
               dataType: 'quiz',
               filters: ['divisions', 'textbooks', 'chapters']
-            }, students = App.request("get:students:by:division", divisionsCollection.first().get('id')), App.execute("when:fetched", students, function() {
+            }, App.execute("when:fetched", students, function() {
               App.execute("show:student:filter:app", {
                 region: _this.layout.studentFilterRegion,
                 students: students
@@ -100,7 +105,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               });
             });
             _this.listenTo(_this.layout.allContentRegion, "show:quiz:report", _this._showQuiz);
-            return _this.listenTo(_this.layout.searchResultsRegion, "show:quiz:report", _this._showQuiz);
+            _this.listenTo(_this.layout.searchResultsRegion, "show:quiz:report", _this._showQuiz);
+            return _this.listenTo(_this.layout.allContentRegion, "save:communications", function(data) {
+              data = {
+                component: 'quiz',
+                communication_type: 'quiz_completed_parent_mail',
+                communication_mode: data.communication_mode,
+                additional_data: {
+                  quiz_ids: data.quizIDs,
+                  division: _this.division
+                }
+              };
+              return App.request("save:communications", data);
+            });
           };
         })(this));
       };
@@ -115,7 +132,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
         });
       };
 
-      Controller.prototype._getContentPiecesLayout = function(students) {
+      Controller.prototype._getContentPiecesLayout = function() {
         return new ClassReportApp.Layout.ContentPiecesLayout({
           students: students
         });

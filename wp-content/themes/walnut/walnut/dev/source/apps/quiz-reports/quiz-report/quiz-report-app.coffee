@@ -20,6 +20,8 @@ define ['app'
                                 quiz
                             else App.request "get:quiz:by:id", quiz
 
+                
+
                 App.execute "when:fetched", [@divisionModel,@quizModel], =>
 
                     if @students instanceof Backbone.Collection
@@ -32,35 +34,49 @@ define ['app'
 
             _showViews:(students)=>
 
-                @layout = @_getQuizReportLayout students
-                        
-                @show @layout,
-                    loading: true
+                data=
+                    'student_ids'   : @students.pluck 'ID'
+                    'collection_id' : @quizModel.id 
 
-                @listenTo @layout, "show",=>
-                    App.execute "show:student:filter:app",
-                        region: @layout.studentFilterRegion
-                        students: students
+                @quizResponseSummaries = App.request "get:quiz:response:summary", data
 
-                    textbook_termIDs = _.flatten @quizModel.get 'term_ids'
+                App.execute "when:fetched", @quizResponseSummaries, =>
 
-                    @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+                    @quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
 
-                    App.execute "when:fetched", @textbookNames, =>
-                        new QuizReportApp.QuizDetails.Controller
-                            region: @layout.quizDetailsRegion
-                            model : @quizModel
-                            textbookNames: @textbookNames
-                            divisionModel : @divisionModel
+                    takenBy = _.size _.uniq @quizResponseSummaries.pluck 'student_id'
 
-                    new QuizReportApp.StudentsList.Controller
-                        region      : @layout.studentsListRegion
-                        students    : students
-                        quizModel   : @quizModel
+                    @layout = @_getQuizReportLayout students,takenBy
+                            
+                    @show @layout,
+                        loading: true
 
-            _getQuizReportLayout:(students)->
+                    @listenTo @layout, "show",=>
+                        App.execute "show:student:filter:app",
+                            region: @layout.studentFilterRegion
+                            students: students
+
+                        textbook_termIDs = _.flatten @quizModel.get 'term_ids'
+
+                        @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+
+                        App.execute "when:fetched", @textbookNames, =>
+                            new QuizReportApp.QuizDetails.Controller
+                                region: @layout.quizDetailsRegion
+                                model : @quizModel
+                                textbookNames: @textbookNames
+                                divisionModel : @divisionModel
+
+                        new QuizReportApp.StudentsList.Controller
+                            region      : @layout.studentsListRegion
+                            students    : students
+                            quizModel   : @quizModel
+                            quizResponseSummaries : @quizResponseSummaries
+
+            _getQuizReportLayout:(students,takenBy)->
                 new QuizReportApp.Layout.QuizReportLayout
                     students : students
+                    takenBy  : takenBy
 
         # set handlers
         App.commands.setHandler "show:quiz:report:app", (opt = {})->

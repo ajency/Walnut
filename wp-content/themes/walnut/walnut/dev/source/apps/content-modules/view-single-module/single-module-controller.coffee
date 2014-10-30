@@ -28,6 +28,15 @@ define ['app'
                         @studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
                 App.execute "when:fetched", model, =>
+
+                    if model.get('code') is 'ERROR'
+                        App.execute "show:no:permissions:app",
+                            region          : App.mainContentRegion
+                            error_header    : 'Unauthorized Training Module'
+                            error_msg       : model.get 'error_msg'
+
+                        return false
+
                     groupContentCollection = App.request "get:content:pieces:by:ids", model.get 'content_pieces'
 
                     @layout = layout = @_getContentGroupViewLayout()
