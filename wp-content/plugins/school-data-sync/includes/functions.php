@@ -204,6 +204,9 @@ function sds_get_tables_to_export($last_sync=''){
 
     $question_response_table = "{$wpdb->prefix}question_response";
     $response_meta_table = "{$wpdb->prefix}question_response_meta";
+    
+    $quiz_question_response_table = "{$wpdb->prefix}quiz_question_response";
+    $quiz_response_summary_table = "{$wpdb->prefix}quiz_response_summary";
 
     $tables_list[]= array(
         'query'=> "SELECT * FROM $question_response_table WHERE sync = 0",
@@ -213,7 +216,17 @@ function sds_get_tables_to_export($last_sync=''){
     $tables_list[]= array(
         'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
         'table_name'=> $response_meta_table);
-
+    
+    $tables_list[]= array(
+        'query'=> "SELECT * FROM $quiz_question_response_table WHERE sync = 0",
+        'table_name'=> $quiz_question_response_table
+        );
+    
+    $tables_list[]= array(
+        'query'=> "SELECT * FROM $quiz_response_summary_table WHERE sync = 0",
+        'table_name'=> $quiz_response_summary_table
+        );
+    
     return $tables_list;
 }
 

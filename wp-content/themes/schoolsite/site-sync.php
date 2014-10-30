@@ -222,22 +222,7 @@
                                   <div class="tiles white">
                                           <div class="tiles-body">
                                         <?php if($sync_user_cookie_name && $sync_user_cookie_value) :?>
-                                              
-                                            <div class="row">
-
-                                              <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
-                                                <!-- <h3 id="userName"class="semi-bold text-center"></h3> -->
-                                                <h3 class="semi-bold text-center">Reset Sync Password</h3>
-                                                      <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden"> 
-                                                      <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>   
-                                                      <br/>
-                                                      <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block">
-                                                      <span id="syncResetPasswordButtonText" class="bold">Reset</span></button>
-                                                      <h5 class="m-t-5 semi-bold text-center text-error status-msg error_msg"></h5>
-
-                                              </div>
-
-                                              </div>                                              
+                                                                                       
                                             <div class="row">
 
                                               <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
@@ -252,7 +237,7 @@
 
                                               <div class="row">
 
-                                              <div class="col-sm-12">
+                                              <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
                                                 <h3 class="semi-bold text-center">Media Sync</h3>
 
                                                 <div class="row">
@@ -267,7 +252,27 @@
                                                 </div>
 
                                               </div>
+                                              
+                                        <?php if(current_user_can('school-admin') || current_user_can('administrator')) :?> 
+                                              <div class="row">
 
+                                              <div class="col-sm-12 b-b b-grey p-b-10 m-b-5">
+                                                <!-- <h3 id="userName"class="semi-bold text-center"></h3> -->
+                                                <h4 class="semi-bold text-center">Reset Sync Password</h4>
+                                                      <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden"> 
+                                                      <label class="text-center">Enter Sync Password: </label> 
+                                                      <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>  
+                                                      <h4>If you have been provided a new sync password by Network Admin, please enter the same in the reset sync box else you can ignore this. For assistance and support contact us at <a href="mailto:support@synapselearning.net">support@synapselearning.net</a></h4>
+                                                      <br/>
+                                                      <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block">
+                                                      <span id="syncResetPasswordButtonText" class="bold">Reset</span></button>
+                                                      <h5 class="m-t-5 semi-bold text-center text-error status-msg error_msg"></h5>
+
+                                              </div>
+
+                                              </div>    
+                                        <?php endif ;?>
+                                              
                                         <?php else :?>
                                               <div class="row">
 
@@ -279,8 +284,9 @@
                                                     <div class="">
                                                      <form id="validate_sync_school_user"  autocomplete="off">
                                                       <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden">
-                                                      <label class="text-center">Sync Password: </label>  
+                                                      <label class="text-center">Enter Sync Password: </label>  
                                                       <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>   
+                                                      <h4>This is not the password you use to log in, it is the sync password provided by the Network Admin. If you are unable to use it please contact us at <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> to send you a new sync password</h4>
                                                       <br/>
                                                       <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block"><span id="syncValidateButtonText" class="bold">Validate</span></button>
                                                       <h5 class="m-t-5 semi-bold text-center text-error status-msg error_msg"></h5>
