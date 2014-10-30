@@ -1412,45 +1412,11 @@ p.mcq-option-text {
   position: absolute;
 }
 .qstnInfo {
-  max-width: 760px;
-  margin: auto;
-  margin-bottom: 5px;
   padding: 10px 10px 10px 20px;
 }
 #eval-parameters {
   max-width: 760px;
   margin: 0 auto;
-}
-@media (min-width: 1020px) and (max-width: 1295px) {
-  #content-board {
-    margin: 0;
-  }
-  #myCanvas,
-  #eval-parameters {
-    margin: 0;
-    margin-left: auto;
-  }
-  #eval-parameters {
-    max-width: 755px;
-  }
-  #top-panel {
-    float: left;
-    margin-left: 2px;
-  }
-  .contentTime,
-  .contentInfo {
-    position: static;
-    float: none;
-    margin: 0 1.5%;
-  }
-  .contentTime {
-    margin-bottom: 8px;
-  }
-  .qstnInfo {
-    margin: 0;
-    margin-bottom: 5px;
-    margin-left: auto;
-  }
 }
 .answrMsg.alert-success h3 {
   color: #006800;
@@ -2076,13 +2042,17 @@ input#duration {
 .timerBox,
 .quizProgress {
   width: 235px;
-  background: #f3f3f3;
-  box-shadow: #dadada 0 0 0 3px inset;
   margin: 0 1.5%;
   padding: 5px;
 }
+.timerStrip,
+.progressStrip {
+  display: none;
+}
 .quizProgress {
   float: left;
+  background: #f3f3f3;
+  box-shadow: #dadada 0 0 0 3px inset;
 }
 .quizSteps ul {
   list-style-type: none;
@@ -2237,46 +2207,60 @@ input#duration {
 .holder a.jp-disabled:hover {
   background-color: #c8d0d6;
 }
-@media (min-width: 1020px) and (max-width: 1295px) {
+@media (max-width: 1295px) {
+  .timerStrip,
+  .progressStrip {
+    display: block;
+    position: fixed;
+    right: 0px;
+    height: 60px;
+    width: 50px;
+    font-size: 28px;
+    text-align: center;
+    padding-top: 8px;
+    color: #ffffff;
+    background: #259b24;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .progressStrip {
+    right: auto;
+    left: 0px;
+    background: #0090d9;
+  }
   .timerBox,
   .quizProgress {
-    margin: 0 1.5%;
+    margin: 0;
     float: none;
-    position: static;
+    position: fixed;
+    left: -235px;
+    z-index: 5;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .quizProgress:hover {
+    left: 0;
+  }
+  .quizProgress:hover .progressStrip {
+    left: 235px;
   }
   .timerBox {
-    margin-bottom: 8px;
+    right: -235px;
+    left: auto;
   }
-  .quizActions {
-    margin: 0;
-    margin-bottom: 10px;
-    margin-left: auto;
+  .timerBox:hover {
+    right: 0;
+  }
+  .timerBox:hover .timerStrip {
+    right: 235px;
   }
   .sidebarContainer {
     position: relative;
     float: left;
-  }
-}
-@media (max-width: 1019px) {
-  .sidebarContainer {
-    bottom: 0;
-    z-index: 999;
-    width: 100%;
-  }
-  .sidebarContainer .timerBox {
-    float: none;
-    width: 100%;
-    max-width: 760px;
-    margin: 10px auto;
-  }
-  .sidebarContainer .quizProgress {
-    float: none;
-    width: 100%;
-    max-width: 760px;
-    margin: 10px auto;
-  }
-  .sidebarContainer .quizProgress .quizSteps ul li a {
-    width: 15%;
   }
 }
 .quizSummRespnse {
