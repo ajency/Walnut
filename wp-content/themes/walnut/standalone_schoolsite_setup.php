@@ -150,6 +150,7 @@ function create_custom_tables(){
         `student_id` bigint(20) NOT NULL,
         `taken_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         `quiz_meta` text NOT NULL,
+        `sync` int(1),
         PRIMARY KEY (`summary_id`)
       )";
 
@@ -164,6 +165,7 @@ function create_custom_tables(){
         `time_taken` int(11) NOT NULL,
         `marks_scored` decimal(10,1) NOT NULL DEFAULT '0.0',
         `status` varchar(30) NOT NULL,
+        `sync` int(1),
         PRIMARY KEY (`qr_id`)
       )";
 
