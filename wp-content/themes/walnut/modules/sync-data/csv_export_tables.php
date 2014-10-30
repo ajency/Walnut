@@ -156,13 +156,23 @@ class ExportTables {
 
         );
 
-        if($this->sync_type=='student_app'){
+        #if a standalone site is requesting data
+        if($this->device_type == 'standalone'){
+            $tables_list[]="{$wpdb->prefix}question_response";
+            $tables_list[]="{$wpdb->prefix}question_response_meta";
             $tables_list[]="{$wpdb->prefix}quiz_question_response";
             $tables_list[]="{$wpdb->prefix}quiz_response_summary";
         }
-        else{
-            $tables_list[]="{$wpdb->prefix}question_response";
-            $tables_list[]="{$wpdb->prefix}question_response_meta";
+        #if a student/teacher app device is requesting data
+        else {
+            if($this->sync_type=='student_app'){
+                $tables_list[]="{$wpdb->prefix}quiz_question_response";
+                $tables_list[]="{$wpdb->prefix}quiz_response_summary";
+            }
+            else{
+                $tables_list[]="{$wpdb->prefix}question_response";
+                $tables_list[]="{$wpdb->prefix}question_response_meta";
+            }
         }
 
         // ONLY THE RECORDS REGARDING TEXTBOOKS ADDITIONAL DATA

@@ -122,25 +122,6 @@ function add_quiz_completed_parent_mail($data, $comm_data){
 
 }
 
-if(!function_exists('str_putcsv'))
-{
-    function str_putcsv($input, $delimiter = ',', $enclosure = '"')
-    {
-        // Open a memory "file" for read/write...
-        $fp = fopen('php://temp', 'r+');
-        // ... write the $input array to the "file" using fputcsv()...
-        fputcsv($fp, $input, $delimiter, $enclosure);
-        // ... rewind the "file" so we can read what we just wrote...
-        rewind($fp);
-        // ... read the entire line into a variable...
-        $data = fread($fp, 1048576);
-        // ... close the "file"...
-        fclose($fp);
-        // ... and return the $data to the caller, with the trailing newline from fgets() removed.
-        return $data;
-    }
-}
-
 function get_quiz_report_zip($blog_id){
 
     $files= get_quiz_report_csv($blog_id);
@@ -150,15 +131,18 @@ function get_quiz_report_zip($blog_id){
     $upload_directory = str_replace('/images', '', $uploads_dir['basedir']);
     $upload_url = str_replace('/images', '', $uploads_dir['baseurl']);
 
+    if(!file_exists($upload_directory.'/tmp/reports'))
+        mkdir($upload_directory.'/tmp/reports',0755);
+
     $random= rand(9999,99999);
 
-    $upload_path= '/tmp/quiz-report-csvs-'.$random.date('Ymdhis').'.zip';
+    $upload_path= '/tmp/reports/quiz-report-'.$random.date('Ymdhis').'.zip';
 
     create_zip($files,$upload_directory.$upload_path);
 
     #echo $upload_url.$upload_path; exit;
 
-    return $upload_url.$upload_path;
+    return $upload_directory.$upload_path;
 
 }
 

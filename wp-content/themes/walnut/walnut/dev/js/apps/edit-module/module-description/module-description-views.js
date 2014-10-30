@@ -96,6 +96,10 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         }
         this.$el.find('select:not(#qType,#status)').select2();
         this.$el.find("#secs,#subsecs").val([]).select2();
+        if (this.model.isNew()) {
+          this.$el.find('select#status option[value="publish"]').prop('disabled', true);
+          this.$el.find('select#status option[value="archive"]').prop('disabled', true);
+        }
         this.statusChanged();
         if (this.model.get('type') === 'quiz') {
           return this._changeLayout();
@@ -161,14 +165,20 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.save_content = function(e) {
-        var data, single_attempt;
+        var data, required_fields, single_attempt;
         this.$el.find('#saved-success').remove();
         e.preventDefault();
-        $('#s2id_textbooks .select2-choice').removeClass('error');
-        if (this.$el.find('#textbooks').val() === '') {
+        $('#s2id_textbooks .select2-choice,#s2id_chapters .select2-choice').removeClass('error');
+        required_fields = true;
+        if (_.isEmpty(this.$el.find('#textbooks').val())) {
           $('#s2id_textbooks .select2-choice').addClass('error');
+          required_fields = false;
         }
-        if (this.$el.find('form').valid()) {
+        if (_.isEmpty(this.$el.find('#chapters').val())) {
+          $('#s2id_chapters .select2-choice').addClass('error');
+          required_fields = false;
+        }
+        if (this.$el.find('form').valid() && required_fields) {
           this.$el.find('#save-content-collection i').addClass('fa-spin fa-spinner');
           data = Backbone.Syphon.serialize(this);
           if (this.model.get('type') === 'quiz') {
@@ -250,8 +260,12 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
-        var attrs, msg;
+        var attrs, msg, _ref;
         this.$el.find('#saved-success').remove();
+        this.$el.find('select#status option').prop('disabled', false);
+        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
+          this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
+        }
         this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner').addClass('fa-check');
         attrs = model.changedAttributes();
         msg = attrs.id ? 'saved' : 'updated';

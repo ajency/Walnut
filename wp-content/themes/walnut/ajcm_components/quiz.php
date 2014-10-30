@@ -25,11 +25,16 @@ function getvars_quizzes_taken_report($recipients_email,$comm_data){
 
 	$zipfile   		= $aj_comm->get_communication_meta($comm_data['id'],'filepath');
 
-	$template_data['attachments'][]= array(
-		"type" 		=> "application/zip",
-        "name" 		=> "quiz_reports.zip",
-        "content" 	=> base64_encode(file_get_contents($zipfile))
-    );
+	if(file_exists($zipfile)){
+		
+		$template_data['attachments'][]= array(
+			"type" 		=> "application/zip",
+	        "name" 		=> "quiz_reports.zip",
+	        "content" 	=> base64_encode(file_get_contents($zipfile))
+	    );
+
+	    #unlink($zipfile);
+	}
 
 	return $template_data;
 

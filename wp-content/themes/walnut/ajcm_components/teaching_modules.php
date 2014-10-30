@@ -115,12 +115,14 @@ function get_taught_in_class_template_data($comm_data){
    	else
    		$chapter_name = ' -- ';
 
-    $taken_by = get_module_taken_by($module_id, $comm_data['blog_id']);
-
     $subject = get_textbook_subject($textbook_id);
 
     $division_data = fetch_single_division($division,$comm_data['blog_id']);
     $division  = $division_data['division'];
+
+    switch_to_blog($comm_data['blog_id']);
+    $taken_by = get_module_taken_by($module_id, $division_data['id']);
+    restore_current_blog();
 
 	$data[] = array('name' => 'MODULE',			'content' => $module_details->name);
 	$data[] = array('name' => 'DIVISION',		'content' => $division);
@@ -138,6 +140,8 @@ function get_taught_in_class_template_data($comm_data){
 }
 
 function getvars_teaching_modules_report($recipients_email,$comm_data){
+
+	global $aj_comm;
 
 	$template_data['name'] 		= 'training-modules-report'; 
 
@@ -159,6 +163,20 @@ function getvars_teaching_modules_report($recipients_email,$comm_data){
 		'name'		=> 'TRAINING_MODULES_TABLE',
 		'content' 	=> get_training_modules_report_data($comm_data['blog_id'])
 	);
+	restore_current_blog();
+
+	$zipfile   		= $aj_comm->get_communication_meta($comm_data['id'],'filepath');
+
+	if(file_exists($zipfile)){
+
+		$template_data['attachments'][]= array(
+			"type" 		=> "application/zip",
+	        "name" 		=> "training-modules-report.zip",
+	        "content" 	=> base64_encode(file_get_contents($zipfile))
+	    );
+
+	    #unlink($zipfile);
+	}
 
 	$template_data['global_merge_vars'][] = get_mail_header($comm_data['blog_id']);
 	$template_data['global_merge_vars'][] = get_mail_footer($comm_data['blog_id']);
