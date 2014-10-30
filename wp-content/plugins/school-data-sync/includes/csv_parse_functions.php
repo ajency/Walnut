@@ -195,7 +195,7 @@ function sds_sanitize_question_response( $question_response ) {
 
 function sds_sync_question_response( $question_response_data ) {
 
-    if (question_response_exists( $question_response_data['ref_id'] )) {
+    if (sds_question_response_exists( $question_response_data['ref_id'] )) {
         sds_sync_update_question_response( $question_response_data );
     } else {
         sds_sync_insert_question_response( $question_response_data );
