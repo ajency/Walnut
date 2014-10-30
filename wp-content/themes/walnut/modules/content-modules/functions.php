@@ -334,11 +334,9 @@ function get_content_piece_ids_by_module_id($id){
 
 }
 
-function get_module_taken_by($module_id, $blog_id){
+function get_module_taken_by($module_id, $division){
 
     global $wpdb;
-
-    switch_to_blog($blog_id);
 
     $teachers = '';
     $teacher_names= array();
@@ -347,13 +345,12 @@ function get_module_taken_by($module_id, $blog_id){
 
     $taken_by_query = $wpdb->prepare(
         "SELECT teacher_id FROM $question_response_table
-                WHERE collection_id = %d",
-        array($module_id)
+        WHERE collection_id = %d AND division = %s",
+        array($module_id, $division)
     );
 
     $taken_by_result=$wpdb->get_results($taken_by_query, ARRAY_A);
 
-    switch_to_blog(1);
     if(sizeof($taken_by_result>0)){
         $taken_by= (__u::unique(__u::flatten($taken_by_result)));
 
@@ -364,7 +361,6 @@ function get_module_taken_by($module_id, $blog_id){
         if($teacher_names)
             $teachers= join(',', $teacher_names);
     }
-
 
     return $teachers;
 }

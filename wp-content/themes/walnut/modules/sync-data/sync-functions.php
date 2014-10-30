@@ -85,6 +85,9 @@ function sync_app_data_to_db( $sync_request_id ) {
             unlink($file); // delete file
     }
 
+    #delete the zip file
+    unlink($file_path);
+
     $zip->close();
 }
 
