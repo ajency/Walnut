@@ -33,8 +33,8 @@ function sds_validate_quiz_response_csv_row( $quiz_response_data ) {
     if($quiz_response_data [0] == 'qr_id')
         return false;
         
-    // Total columns for each row MUST be 8. else its a improper CSV row
-    if (count( $quiz_response_data ) !== 8)
+    // Total columns for each row MUST be 7. else its a improper CSV row
+    if (count( $quiz_response_data ) !== 7)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid

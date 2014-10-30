@@ -61,6 +61,13 @@ function ajax_sds_data_sync_import() {
 
     for ($i = 0; $i < $zip->numFiles; $i++) {
         $stat = $zip->statIndex( $i );
+
+        if(strpos($stat['name'],'quiz_question_response.csv') !== false)
+            sds_read_quiz_question_response_csv_file( $extract_path . '/' . $stat['name'] ); 
+        
+        if(strpos($stat['name'],'quiz_response_summary.csv') !== false)
+            sds_read_quiz_response_summary_csv_file( $extract_path . '/' . $stat['name'] ); 
+        
         if(strpos($stat['name'],'class_divisions.csv') !== false)
             sds_read_class_divisions_csv_file( $extract_path . '/' . $stat['name'] );
 
@@ -96,12 +103,7 @@ function ajax_sds_data_sync_import() {
 
         if(strpos($stat['name'],'textbook_relationships.csv') !== false)
             sds_read_textbook_relationships_csv_file( $extract_path . '/' . $stat['name'] );     
-        
-       if(strpos($stat['name'],'quiz_question_response.csv') !== false)
-            sds_read_quiz_question_response_csv_file( $extract_path . '/' . $stat['name'] ); 
 
-       if(strpos($stat['name'],'quiz_response_summary.csv') !== false)
-            sds_read_quiz_response_summary_csv_file( $extract_path . '/' . $stat['name'] ); 
         
         if(strpos($stat['name'],'users.csv') !== false){
             $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}users`");
