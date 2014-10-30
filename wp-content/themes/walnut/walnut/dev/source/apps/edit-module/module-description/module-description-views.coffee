@@ -91,6 +91,15 @@ define ['app'
                 #Multi Select
                 @$el.find("#secs,#subsecs").val([]).select2()
 
+                if @model.isNew()
+
+                    @$el.find 'select#status option[value="publish"]'
+                    .prop 'disabled', true
+
+                    @$el.find 'select#status option[value="archive"]'
+                    .prop 'disabled', true
+
+
                 @statusChanged()
                 @_changeLayout() if @model.get('type') is 'quiz'
 
@@ -166,14 +175,25 @@ define ['app'
                 @$el.find('#saved-success').remove();
                 e.preventDefault()
 
-                $('#s2id_textbooks .select2-choice')
+                $('#s2id_textbooks .select2-choice,#s2id_chapters .select2-choice')
                 .removeClass 'error'
 
-                if @$el.find('#textbooks').val() is ''
+                required_fields = true
+
+                if _.isEmpty @$el.find('#textbooks').val()
                     $('#s2id_textbooks .select2-choice')
                     .addClass 'error'
 
-                if @$el.find('form').valid()
+                    required_fields= false
+
+                if _.isEmpty @$el.find('#chapters').val()
+                    $('#s2id_chapters .select2-choice')
+                    .addClass 'error'
+
+                    required_fields= false
+                
+
+                if @$el.find('form').valid() and required_fields
 
                     @$el.find '#save-content-collection i'
                     .addClass 'fa-spin fa-spinner'
@@ -260,6 +280,13 @@ define ['app'
 
             onSavedContentGroup : (model) ->
                 @$el.find('#saved-success').remove();
+
+                @$el.find 'select#status option'
+                .prop 'disabled', false
+
+                if @model.get('post_status') in ['publish', 'archive']
+                    @$el.find 'select#status option[value="underreview"]'
+                    .prop 'disabled', true
 
                 @$el.find '#save-content-collection i'
                 .removeClass 'fa-spin fa-spinner' 
