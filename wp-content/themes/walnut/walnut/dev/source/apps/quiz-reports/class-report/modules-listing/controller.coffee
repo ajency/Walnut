@@ -35,6 +35,12 @@ define ['app'
                                 @view.triggerMethod "reset:textbook:names", newNamesCollection
 
                         @listenTo @view, 'itemview:view:quiz:report', @_showQuizReportApp
+                        
+                        @listenTo @view, 'itemview:clear:schedule', (itemview,quiz_id)->
+                            @region.trigger 'clear:schedule', @contentModulesCollection.get quiz_id
+
+                        @listenTo @view, 'itemview:schedule:quiz', (itemview,quiz_id)->
+                            @region.trigger 'schedule:quiz', @contentModulesCollection.get quiz_id
 
                         @listenTo @view, "save:communications", (data)=> @region.trigger "save:communications",data
 

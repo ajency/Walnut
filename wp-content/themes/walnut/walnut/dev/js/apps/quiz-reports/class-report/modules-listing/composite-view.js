@@ -40,6 +40,15 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         return this.textbookNamesCollection = Marionette.getOption(this, 'textbookNamesCollection');
       };
 
+      ModulesListingView.prototype.mixinTemplateHelpers = function(data) {
+        var user;
+        user = App.request("get:user:model");
+        if (user.current_user_can('school-admin') || user.current_user_can('teacher')) {
+          data.can_schedule = true;
+        }
+        return data;
+      };
+
       ModulesListingView.prototype.onShow = function() {
         this.$el.find('#content-pieces-table').tablesorter();
         return this.onUpdatePager();

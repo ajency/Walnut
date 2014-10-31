@@ -120,6 +120,36 @@ define ["app", 'backbone'], (App, Backbone) ->
                         allow_hint: true
 
                 dummyQuiz
+
+            saveQuizSchedule:(data)->
+
+                defer = $.Deferred()
+
+                @result = 0
+
+                connection_resp = $.middle_layer AJAXURL + '?action=save-quiz-schedule',
+                    data
+                    (response) =>
+                        defer.resolve response         
+
+                defer.promise()
+
+            clearQuizSchedule:(quiz_id, division)->
+
+                defer= $.Deferred()
+
+                data=
+                    'quiz_id'  : quiz_id
+                    'division' : division
+
+                connection_resp = $.middle_layer AJAXURL + '?action=clear-quiz-schedule',
+                    data
+                    (response) =>
+                        defer.resolve response         
+
+                defer.promise()
+
+
                 
         # request handler to get all content groups
         App.reqres.setHandler "get:quizes", (opt) ->
@@ -134,6 +164,11 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "new:quiz",->
             API.newQuiz()
 
+        App.reqres.setHandler "save:quiz:schedule",(data)->
+            API.saveQuizSchedule data
+
+        App.reqres.setHandler "clear:quiz:schedule",(quiz_id, division)->
+            API.clearQuizSchedule quiz_id, division
 
         App.reqres.setHandler "create:dummy:quiz:module", (content_piece_id)->
             API.getDummyQuiz content_piece_id

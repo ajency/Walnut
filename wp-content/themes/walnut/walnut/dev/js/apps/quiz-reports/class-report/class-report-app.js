@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/modules-listing/controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/modules-listing/controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app', 'apps/quiz-reports/class-report/schedule-quiz-app'], function(App, RegionController) {
   return App.module("ClassReportApp", function(ClassReportApp, App) {
     ClassReportApp.Controller = (function(_super) {
       var divisionsCollection, quizzes, students, textbooksCollection;
@@ -106,7 +106,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
             });
             _this.listenTo(_this.layout.allContentRegion, "show:quiz:report", _this._showQuiz);
             _this.listenTo(_this.layout.searchResultsRegion, "show:quiz:report", _this._showQuiz);
-            return _this.listenTo(_this.layout.allContentRegion, "save:communications", function(data) {
+            _this.listenTo(_this.layout.allContentRegion, "save:communications", function(data) {
               data = {
                 component: 'quiz',
                 communication_type: 'quiz_completed_parent_mail',
@@ -118,8 +118,30 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               };
               return App.request("save:communications", data);
             });
+            _this.listenTo(_this.layout.allContentRegion, "schedule:quiz", _this._showScheduleQuizApp);
+            return _this.listenTo(_this.layout.allContentRegion, "clear:schedule", function(quizModel) {
+              var clearSchedule;
+              clearSchedule = App.request("clear:quiz:schedule", quizModel.id, _this.division);
+              return clearSchedule.done(function(response) {
+                if (response.code === 'OK') {
+                  quizModel.set({
+                    'schedule_from': false,
+                    'schedule_to': false
+                  });
+                  return console.log(quizModel);
+                }
+              });
+            });
           };
         })(this));
+      };
+
+      Controller.prototype._showScheduleQuizApp = function(quizModel) {
+        return App.execute("show:schedule:quiz:popup", {
+          region: App.dialogRegion,
+          division: this.division,
+          quizModel: quizModel
+        });
       };
 
       Controller.prototype._showQuiz = function(quizModel) {

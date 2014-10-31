@@ -142,4 +142,31 @@ function ajax_delete_quiz_response_summary(){
 }
 add_action('wp_ajax_delete-quiz-response-summary','ajax_delete_quiz_response_summary');
 
+function ajax_save_quiz_schedule(){
 
+    if(!isset($_POST['quiz_id']) || !isset($_POST['division']) || !isset($_POST['schedule_from']) || !isset($_POST['schedule_to']))
+        wp_send_json(array('code' => 'ERROR','error_msg' => 'Invalid Data Passed'));
+
+    else{
+        $schedule = save_quiz_schedule($_POST);
+        wp_send_json(array('code' => 'OK','data' => $schedule)); 
+    }
+
+}
+add_action('wp_ajax_save-quiz-schedule','ajax_save_quiz_schedule');
+
+function ajax_clear_quiz_schedule(){
+
+    if(!isset($_POST['quiz_id']) || !isset($_POST['division']))
+        wp_send_json(array('code' => 'ERROR','error_msg' => 'Invalid Data Passed'));
+    else{
+        $delete = clear_quiz_schedule($_POST['quiz_id'], $_POST['division']);
+
+        if($delete)
+            wp_send_json(array('code' => 'OK','data' => true));
+        else
+            wp_send_json(array('code' => 'ERROR','error_msg' => 'Some error occured'));
+
+    }
+}
+add_action('wp_ajax_clear-quiz-schedule', 'ajax_clear_quiz_schedule');
