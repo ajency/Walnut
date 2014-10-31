@@ -51,7 +51,8 @@ function sds_convert_csv_row_to_quiz_response_format( $quiz_response_data ) {
         'question_response' => wp_unslash($quiz_response_data[3]),
         'time_taken'        => $quiz_response_data[4],
         'marks_scored'      => $quiz_response_data[5],
-        'status'            => wp_unslash($quiz_response_data[6])
+        'status'            => wp_unslash($quiz_response_data[6]),
+        'sync' => 1
     );
 }
 
@@ -145,7 +146,8 @@ function sds_convert_csv_row_to_quiz_summary_format( $quiz_summary_data ) {
         'collection_id' => $quiz_summary_data[1],
         'student_id'    => $quiz_summary_data[2],
         'taken_on'      => $quiz_summary_data[3],
-        'quiz_meta'     => wp_unslash($quiz_summary_data[4])
+        'quiz_meta'     => wp_unslash($quiz_summary_data[4]),
+        'sync' => 1
     );
 }
 
