@@ -38,10 +38,10 @@ define ['app'
 
 
                 @layout = layout = @_getTrainingModuleLayout()
-
-                @show layout, (loading: true, entities: [textbooks, divisionModel])
-
+                
                 @listenTo layout, "show", @_showTextbooksListView
+                
+                @show layout, (loading: true, entities: [textbooks, divisionModel])
 
 
 

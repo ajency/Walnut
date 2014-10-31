@@ -104,7 +104,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 textbookCollection.fetch
                     reset: true
                     data: param
-
+                    
                 textbookCollection
 
 

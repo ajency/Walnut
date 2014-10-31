@@ -16,17 +16,14 @@ define ["backbone"], (Backbone) ->
 			collection_name = collection.name
 			opts = options.data
 			console.log 'Collection name: '+collection_name
-			console.log 'options: '+JSON.stringify opts
 
 			if collection_name is 'textbook'
-				data = _.getTextbooksForStudent()
-				data.done (d)->
-					collection.set d
-			
-			# if collection_name is 'menu-item'
-			# 	data = _.getAppMenuItems()
-			# 	data.done (d)->
-			# 		collection.set d
+
+				_.cordovaTextbookCollection()
+				.done (data)->
+					console.log 'cordovaTextbookCollection done'
+					console.log  data
+					collection.set data
 
 			if collection_name is 'chapter'
 
@@ -217,7 +214,6 @@ define ["backbone"], (Backbone) ->
 				modelname = model.name
 				console.log "model"
 				console.log 'Model name: '+modelname
-				console.log JSON.stringify model
 
 				if modelname is 'division'
 					data = _.fetchSingleDivision model.get('id')

@@ -43,17 +43,38 @@ define ['underscore'], ( _) ->
 		# Get the total count of chapters assigned to a textbook.
 		getChapterCount : (parentId)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(term_id) AS chapter_count FROM wp_term_taxonomy
-							WHERE parent=?", [parentId], onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
-					chapter_count = data.rows.item(0)['chapter_count']
-					d.resolve chapter_count
+			onSuccess = (tx, data)->
 
-			$.when(runQuery()).done ->
-				console.log 'getChapterCount transaction completed'
-			.fail _.failureHandler
+				chapter_count = data.rows.item(0)['chapter_count']
+				defer.resolve chapter_count
+
+
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT COUNT(term_id) AS chapter_count FROM wp_term_taxonomy 
+					WHERE parent=?", [parentId]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
+
+
+			# runQuery = ->
+			# 	$.Deferred (d)->
+			# 		_.db.transaction (tx)->
+			# 			tx.executeSql("SELECT COUNT(term_id) AS chapter_count FROM wp_term_taxonomy
+			# 				WHERE parent=?", [parentId], onSuccess(d), _.deferredErrorHandler(d))
+
+			# onSuccess = (d)->
+			# 	(tx, data)->
+			# 		chapter_count = data.rows.item(0)['chapter_count']
+			# 		d.resolve chapter_count
+
+			# $.when(runQuery()).done ->
+			# 	console.log 'getChapterCount transaction completed'
+			# .fail _.failureHandler
+
+

@@ -11,11 +11,11 @@ define(["backbone"], function(Backbone) {
       collection_name = collection.name;
       opts = options.data;
       console.log('Collection name: ' + collection_name);
-      console.log('options: ' + JSON.stringify(opts));
       if (collection_name === 'textbook') {
-        data = _.getTextbooksForStudent();
-        data.done(function(d) {
-          return collection.set(d);
+        _.cordovaTextbookCollection().done(function(data) {
+          console.log('cordovaTextbookCollection done');
+          console.log(data);
+          return collection.set(data);
         });
       }
       if (collection_name === 'chapter') {
@@ -146,7 +146,6 @@ define(["backbone"], function(Backbone) {
         modelname = model.name;
         console.log("model");
         console.log('Model name: ' + modelname);
-        console.log(JSON.stringify(model));
         if (modelname === 'division') {
           data = _.fetchSingleDivision(model.get('id'));
           data.done(function(d) {

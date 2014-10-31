@@ -34,24 +34,17 @@ define(['underscore'], function(_) {
       }).fail(_.failureHandler);
     },
     getChapterCount: function(parentId) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(term_id) AS chapter_count FROM wp_term_taxonomy WHERE parent=?", [parentId], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var chapter_count;
+        chapter_count = data.rows.item(0)['chapter_count'];
+        return defer.resolve(chapter_count);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var chapter_count;
-          chapter_count = data.rows.item(0)['chapter_count'];
-          return d.resolve(chapter_count);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getChapterCount transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT COUNT(term_id) AS chapter_count FROM wp_term_taxonomy WHERE parent=?", [parentId], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

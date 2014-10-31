@@ -49,11 +49,11 @@ define(['app', 'controllers/region-controller', 'text!apps/students-dashboard/te
           });
         }
         this.layout = layout = this._getTrainingModuleLayout();
-        this.show(layout, {
+        this.listenTo(layout, "show", this._showTextbooksListView);
+        return this.show(layout, {
           loading: true,
           entities: [textbooks, divisionModel]
         });
-        return this.listenTo(layout, "show", this._showTextbooksListView);
       };
 
       TakeClassController.prototype._showTextbooksListView = function() {
