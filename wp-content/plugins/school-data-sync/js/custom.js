@@ -236,7 +236,7 @@ jQuery(document).ready(function() {
         },
         function(data) {           
                    if(data.code === 'OK'){ 
-                               jQuery(referer).next().text('Data Imported successfully!!');
+                               jQuery(referer).next().text('Sync completed! You now have all the recent updates');
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
                                jQuery(referer).val('Start');

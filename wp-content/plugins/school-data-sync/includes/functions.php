@@ -504,8 +504,10 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
 
 function get_upsync_data_count(){
     global $wpdb;
-    $upsynccount = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
-    return $upsynccount[0];
+    $upsynccount_question_r = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
+    $upsynccount_quiz_qr = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}quiz_question_response where sync = 0" );
+    $upsynccount_quiz_sr = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}quiz_response_summary where sync = 0" );
+    return $upsynccount_question_r[0]+$upsynccount_quiz_qr[0]+$upsynccount_quiz_sr[0];
 }
 
 function sds_update_data_imported(){
