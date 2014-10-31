@@ -85,19 +85,27 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.className = 'timerBox';
 
-      QuizTimerView.prototype.template = ' <div class="container-grey"> <div class="timerStrip"><span class="fa fa-clock-o"></span></div> <div class="bold small-text text-center p-t-10"> Quiz Time</div> <div id="downUpTimer" timerdirection=""></div> <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div> </div> <div class="container-grey m-b-5 m-t-5 p-t-10 p-r-10 p-b-10 p-l-20"> <label class="form-label bold small-text muted no-margin inline">Question Info: </label> <p class="inline text-grey small">Testing Question instruction. with hints and comment.</p> </div>';
+      QuizTimerView.prototype.template = '<div class="container-grey"> <div class="timerStrip"><span class="fa fa-clock-o"></span></div> <div class="bold small-text text-center p-t-10"> Quiz Time</div> {{#completed_quiz}} <div class="b-grey m-b-10 p-b-5" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-replay" class="btn btn-white block h-center"> End Replay </button> </div> {{/completed_quiz}} {{^completed_quiz}} <div id="downUpTimer" timerdirection=""></div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div> {{/completed_quiz}} </div> <div class="container-grey m-b-5 m-t-5 p-t-10 p-r-10 p-b-10 p-l-20"> <label class="form-label bold small-text muted no-margin inline">Question Info: </label> <p class="inline text-grey small">Testing Question instruction. with hints and comment.</p> </div>';
 
       QuizTimerView.prototype.events = {
-        'click #end-quiz': 'endQuiz'
+        'click #end-quiz': 'endQuiz',
+        'click #end-replay': 'endReplay'
+      };
+
+      QuizTimerView.prototype.mixinTemplateHelpers = function(data) {
+        var _ref;
+        this.display_mode = Marionette.getOption(this, 'display_mode');
+        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
+          data.completed_quiz = true;
+        }
+        return data;
       };
 
       QuizTimerView.prototype.onShow = function() {
         var timeLeftOrElapsed, _ref;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
-          return this.$el.find('#completed-quiz').show();
-        } else {
+        if ((_ref = this.display_mode) !== 'replay' && _ref !== 'quiz_report') {
           if (timeLeftOrElapsed >= 0) {
             return this.countDown(timeLeftOrElapsed);
           }
@@ -132,6 +140,10 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
             }
           };
         })(this));
+      };
+
+      QuizTimerView.prototype.endReplay = function() {
+        return this.trigger("end:quiz");
       };
 
       return QuizTimerView;

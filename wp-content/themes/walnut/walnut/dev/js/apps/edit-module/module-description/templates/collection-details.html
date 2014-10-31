@@ -44,7 +44,7 @@
 	            </select>
 			</div>
 			<div class="col-md-6">
-				<label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>
+				<label class="form-label">Chapter<span class="text-error">*</span> <span class="muted small pull-right"> Select a Textbook first</span></label>
 				<select name="term_ids[chapter]" id="chapters" class="form-control select2" >
 					<option value="">--select chapters--</option>
 	            </select>
@@ -72,8 +72,8 @@
                 </select>
             </div>
 			<div class="col-md-6">
-				<label class="form-label">Duration</label>
-		    	<input id="duration" name="duration" value="{{duration}}" class="pull-left" placeholder="Enter Duration" type="text" required="required" /> &nbsp; mins
+				<label class="form-label">Duration<span class="text-error">*</span></label>
+		    	<input id="duration" name="duration" value="{{duration}}" class="pull-left" placeholder="Enter Duration" type="text" min="1" /> &nbsp; mins
 		    	<!-- <select style="width:120px; margin-left:10px" name="minshours" id="minshours" class="form-control select2 pull-left">
 		    		<option value="mins" selected="selected">mins</option>
 		    		<option value="hrs">hour(s)</option>
@@ -118,7 +118,7 @@
                 </select>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Chapter <span class="muted small pull-right"> Select a Textbook first</span></label>
+                <label class="form-label">Chapter<span class="text-error">*</span> <span class="muted small pull-right"> Select a Textbook first</span></label>
                 <select name="term_ids[chapter]" id="chapters" class="form-control select2" >
                     <option value="">--select chapters--</option>
                 </select>
@@ -139,7 +139,7 @@
         <div class="row m-b-10">
             <div class="col-md-6">
                 <label class="form-label">Marks<span class="text-error">*</span></label>
-                <input id="" name="marks" class="pull-left" placeholder="Enter Marks" type="text" required="required"/>
+                <input id="" name="marks" class="pull-left" placeholder="Enter Marks" type="text" min="1" />
             </div>
             <div class="col-md-6">
                 <label class="form-label">Total Marks</label>
@@ -150,7 +150,7 @@
             <div class="col-md-6">
                 <label class="form-label">Duration<span class="text-error">*</span></label>
                 <input name="duration" class="pull-left" placeholder="Enter Duration" type="text"
-                       required="required"/> &nbsp;{{minshours}}
+                       min="1" /> &nbsp;{{minshours}}
                 <div class="clearfix"></div>
             </div>
             <div class="col-md-6">

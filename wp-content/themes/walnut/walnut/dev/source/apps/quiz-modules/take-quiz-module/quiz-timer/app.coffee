@@ -69,35 +69,51 @@ define ['app'
 
                     className: 'timerBox'
 
-                    template: ' <div class="container-grey">
+                    template: '<div class="container-grey">
                                     <div class="timerStrip"><span class="fa fa-clock-o"></span></div>
+
                                     <div class="bold small-text text-center p-t-10"> Quiz Time</div>
-                                    <div id="downUpTimer" timerdirection=""></div>
-                                    <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> 
-                                        <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> 
-                                    </div>
-                                    <div class="endQuiz b-grey b-t p-t-10 p-b-10">
-                                        <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> 
-                                    </div>
+                                
+                                    {{#completed_quiz}}
+                                        <div class="b-grey m-b-10 p-b-5" id="completed-quiz"> 
+                                            <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> 
+                                        </div>
+                                        <div class="endQuiz b-grey b-t p-t-10 p-b-10">
+                                            <button type="button" id="end-replay" class="btn btn-white block h-center"> End Replay </button> 
+                                        </div>
+                                    {{/completed_quiz}}
+
+                                    {{^completed_quiz}}
+                                        <div id="downUpTimer" timerdirection=""></div>
+                                        <div class="endQuiz b-grey b-t p-t-10 p-b-10">
+                                            <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> 
+                                        </div>
+                                    {{/completed_quiz}}
                                 </div>
+
                                 <div class="container-grey m-b-5 m-t-5 p-t-10 p-r-10 p-b-10 p-l-20">
                                     <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
                                     <p class="inline text-grey small">Testing Question instruction. with hints and comment.</p>
                                 </div>'
 
                     events:
-                        'click #end-quiz' : 'endQuiz'
+                        'click #end-quiz'   : 'endQuiz'
+                        'click #end-replay' : 'endReplay'
+
+                    mixinTemplateHelpers:(data)->
+                        @display_mode = Marionette.getOption @, 'display_mode'
+
+                        if @display_mode in ['replay','quiz_report']
+                            data.completed_quiz = true
+
+                        data
 
                     onShow:->
 
                         timeLeftOrElapsed =Marionette.getOption @,'timeLeftOrElapsed'
                         @display_mode = Marionette.getOption @, 'display_mode'
 
-                        if @display_mode in ['replay','quiz_report']
-                            @$el.find '#completed-quiz'
-                            .show()
-
-                        else
+                        if @display_mode not in ['replay','quiz_report']
                             if timeLeftOrElapsed >= 0
                                 @countDown timeLeftOrElapsed
 
@@ -120,4 +136,7 @@ define ['app'
                         msgContent= @model.getMessageContent 'end_quiz'
                         bootbox.confirm msgContent,(result)=>
                             @trigger("end:quiz") if result
+
+                    endReplay:->                        
+                        @trigger "end:quiz"
                             

@@ -305,7 +305,10 @@ function get_all_quiz_modules($args){
 
     foreach ($quiz_ids as $id){
         $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
-        $result[] = $quiz_data;
+        
+        if(!is_wp_error($quiz_data))
+            $result[] = $quiz_data;
+        
     }
 
     return $result;
@@ -446,11 +449,20 @@ function write_quiz_response_summary($args){
             'quiz_meta' => maybe_serialize($quiz_meta)
             );
 
+        //handling sync status for standalone sites. 
+        if (!is_multisite()) 
+            $data['sync']=0;
+
         $wpdb->insert(($wpdb->prefix).'quiz_response_summary', $data );
     }
     else{
         $summary_id = $args['summary_id'];
         $data = array('quiz_meta' => maybe_serialize($quiz_meta));
+        
+        //handling sync status for standalone sites. 
+        if (!is_multisite()) 
+            $data['sync']=0;
+
         $where_array = array('summary_id' => $summary_id);
         $wpdb->update(($wpdb->prefix).'quiz_response_summary', $data ,$where_array);
     }
@@ -474,8 +486,12 @@ function write_quiz_question_response($args){
             'time_taken' => $args['time_taken'],
             'marks_scored' => $args['marks_scored'],
             'status' => $args['status']    );
-    // save
 
+    //handling sync status for standalone sites. 
+    if (!is_multisite()) 
+        $data['sync']=0;
+    
+    // save
     if(!isset($args['qr_id'])){
         $qr_id = 'CP'.$args['content_piece_id'].$args['summary_id'];
         $data['qr_id'] = $qr_id;
@@ -487,7 +503,6 @@ function write_quiz_question_response($args){
 
         $where_array = array('qr_id' => $args['qr_id']);
 
-
         //get old question response data
         $check_qry = $wpdb->prepare("select * from {$wpdb->prefix}quiz_question_response
                     where qr_id = %s",$args['qr_id']);
@@ -495,6 +510,10 @@ function write_quiz_question_response($args){
         $question_response = $wpdb->get_row($check_qry);
         
         if($question_response->status == 'paused' && $args['status'] == 'paused'){
+
+            //handling sync status for standalone sites. 
+            if (!is_multisite()) 
+                $paused_data['sync']=0;
 
             $paused_data = array('status'=>'paused','time_taken' => $args['time_taken']);
             $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
@@ -506,8 +525,7 @@ function write_quiz_question_response($args){
                 //check for single attempt permission
                 if ($quiz_module->permissions['single_attempt']){
                     return false;
-                }
-                
+                }                
 
                 if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')            
                     return false;
