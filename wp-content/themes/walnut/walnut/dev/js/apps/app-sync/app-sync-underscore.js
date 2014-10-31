@@ -19,27 +19,20 @@ define(['underscore', 'unserialize'], function(_) {
       return $('#syncMediaError').css("display", "block").text("" + message);
     },
     getLastSyncOperation: function() {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT type_of_operation FROM sync_details ORDER BY id DESC LIMIT 1", [], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var last_operation;
+        last_operation = 'none';
+        if (data.rows.length !== 0) {
+          last_operation = data.rows.item(0)['type_of_operation'];
+        }
+        return defer.resolve(last_operation);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var last_operation;
-          last_operation = 'none';
-          if (data.rows.length !== 0) {
-            last_operation = data.rows.item(0)['type_of_operation'];
-          }
-          return d.resolve(last_operation);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getLastSyncOperation transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT type_of_operation FROM sync_details ORDER BY id DESC LIMIT 1", [], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getTotalRecordsTobeSynced: function() {
       var onSuccess, runQuery;

@@ -39,24 +39,35 @@ define ['underscore'], ( _) ->
 
 		getNamesOfAllOfflineUsers : ->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT username FROM USERS", []
-							, onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess =(d)->
-				(tx, data)->
+			onSuccess = (tx, data)->
 
-					result = []
+				result = []
 
-					for i in [0..data.rows.length-1] by 1
+				forEach = (row, i)->
 
-						result[i] = 
-							username: data.rows.item(i)['username']
+					result[i] = username: row['username']
 
-					d.resolve(result)
+					i = i + 1
 
-			$.when(runQuery()).done ->
-				console.log 'getNamesOfAllOfflineUsers transaction completed'
-			.fail _.failureHandler
+					if i < data.rows.length
+						forEach data.rows.item(i), i
+					else
+						defer.resolve result
+						console.log 'getNamesOfAllOfflineUsers done'
+
+				forEach data.rows.item(0), 0
+
+
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT username 
+								FROM USERS", []
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
+
+			

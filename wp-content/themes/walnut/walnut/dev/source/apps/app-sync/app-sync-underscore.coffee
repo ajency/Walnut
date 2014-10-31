@@ -34,24 +34,28 @@ define ['underscore', 'unserialize'], ( _) ->
 		#Get the last sync operation from table 'sync_details'
 		getLastSyncOperation : ->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT type_of_operation FROM sync_details 
-							ORDER BY id DESC LIMIT 1", []
-							, onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
-					last_operation = 'none'
-					if data.rows.length isnt 0
-						last_operation = data.rows.item(0)['type_of_operation']
-					
-					d.resolve last_operation
+			onSuccess = (tx, data)->
 
-			$.when(runQuery()).done ->
-				console.log 'getLastSyncOperation transaction completed'
-			.fail _.failureHandler
+				last_operation = 'none'
+				if data.rows.length isnt 0
+					last_operation = data.rows.item(0)['type_of_operation']
+				
+				defer.resolve last_operation
+
+
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT type_of_operation 
+								FROM sync_details 
+								ORDER BY id 
+								DESC LIMIT 1", []
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
 			
 
 		

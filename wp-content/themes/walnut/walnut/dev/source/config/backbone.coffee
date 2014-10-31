@@ -18,17 +18,11 @@ define ["backbone"], (Backbone) ->
 			opts = options.data
 
 			if collection_name is 'textbook'
-				if typeof opts.class_id isnt 'undefined'
-					data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division)
-					data.done (d)->
-						console.log 'textbook by class id and division data'
-						console.log d
-						collection.set d
-			
-			# if collection_name is 'menu-item'
-			# 	data = _.getAppMenuItems()
-			# 	data.done (d)->
-			# 		collection.set d
+				_.cordovaTextbookCollection(opts.class_id, opts.division)
+				.done (textbooks)->
+					console.log 'cordovaTextbookCollection done'
+					console.log textbooks
+					collection.set textbooks
 
 			if collection_name is 'chapter'
 				data = _.getChaptersByParentId(opts.parent)
@@ -36,9 +30,9 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'division'
-				data = _.getAllDivisions()
-				data.done (d)->
-					collection.set d
+				_.cordovaDivisionCollection().done (divisions)->
+					console.log 'cordovaDivisionCollection done'
+					collection.set divisions
 
 			if collection_name is 'content-group'
 				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)
@@ -66,9 +60,8 @@ define ["backbone"], (Backbone) ->
 					collection.set d
 
 			if collection_name is 'offlineUsers'
-				data = _.getNamesOfAllOfflineUsers()
-				data.done (d)->
-					collection.set d
+				_.getNamesOfAllOfflineUsers().done (users)->
+					collection.set users
 
 			if collection_name is 'media'
 				data = _.getListOfMediaByID(opts.ids)
@@ -197,9 +190,9 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
-					data = _.fetchSingleDivision model.get('id')
-					data.done (d)->
-						model.set d
+					_.fetchSingleDivision(model.get('id')).done (division)->
+						console.log 'fetchSingleDivision done'
+						model.set division
 
 				if modelname is 'textbook'
 					data = _.getTextBookByTextbookId(model.get('term_id'))

@@ -37,9 +37,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				_.disableCordovaBackbuttonNavigation()
 				
-				#Display The User name
-				# $('#userName').text("Username: "+_.getUserName())
-				
 				# Display app version number
 				cordova.getAppVersion().then((version)-> 
 					$('#app-version').text("Version: "+version)

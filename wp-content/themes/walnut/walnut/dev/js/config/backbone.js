@@ -12,14 +12,11 @@ define(["backbone"], function(Backbone) {
       console.log('Collection name: ' + collection_name);
       opts = options.data;
       if (collection_name === 'textbook') {
-        if (typeof opts.class_id !== 'undefined') {
-          data = _.getTextbooksByClassIdAndDivision(opts.class_id, opts.division);
-          data.done(function(d) {
-            console.log('textbook by class id and division data');
-            console.log(d);
-            return collection.set(d);
-          });
-        }
+        _.cordovaTextbookCollection(opts.class_id, opts.division).done(function(textbooks) {
+          console.log('cordovaTextbookCollection done');
+          console.log(textbooks);
+          return collection.set(textbooks);
+        });
       }
       if (collection_name === 'chapter') {
         data = _.getChaptersByParentId(opts.parent);
@@ -28,9 +25,9 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'division') {
-        data = _.getAllDivisions();
-        data.done(function(d) {
-          return collection.set(d);
+        _.cordovaDivisionCollection().done(function(divisions) {
+          console.log('cordovaDivisionCollection done');
+          return collection.set(divisions);
         });
       }
       if (collection_name === 'content-group') {
@@ -64,9 +61,8 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'offlineUsers') {
-        data = _.getNamesOfAllOfflineUsers();
-        data.done(function(d) {
-          return collection.set(d);
+        _.getNamesOfAllOfflineUsers().done(function(users) {
+          return collection.set(users);
         });
       }
       if (collection_name === 'media') {
@@ -129,9 +125,9 @@ define(["backbone"], function(Backbone) {
         modelname = model.name;
         console.log('Model name: ' + modelname);
         if (modelname === 'division') {
-          data = _.fetchSingleDivision(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          _.fetchSingleDivision(model.get('id')).done(function(division) {
+            console.log('fetchSingleDivision done');
+            return model.set(division);
           });
         }
         if (modelname === 'textbook') {

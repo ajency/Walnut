@@ -46,22 +46,46 @@ define ['marionette'], (Marionette)->
 
 		if _.platform() is 'DEVICE'
 
-			# If the UserId is null or 'null' i.e id not set in local storage then the app
-			# is either installed for the first time or user has logged out.
+			onDeviceReady = =>
 
-			if _.isNull(_.getUserID()) or _.getUserID() is 'null'
-				# If the blog_id is not set then the app is installed for the very first time.
-				# Navigate to main login screen if blog id is null, else show list of users view.
-				@rootRoute = 'app-login'
-				@rootRoute = 'login' if _.isNull _.getBlogID()
-				App.navigate(@rootRoute, trigger: true)
+				# Open pre-populated SQLite database file.
+				_.cordovaOpenPrepopulatedDatabase()
 
-			else
-				#If User ID is set, then navigate to dashboard.
-				user = App.request "get:user:model"
-				user.set 'ID' : ''+_.getUserID()
-				App.vent.trigger "show:dashboard"
-				App.loginRegion.close() 
+				# Cordova local storage
+				_.cordovaLocalStorage()
+
+				# 'FastClick' helps to reduce the 400ms click delay.
+				FastClick.attach(document.body)
+
+				# Change 'AJAXURL' based on version name
+				cordova.getAppVersion().then((version)->
+
+					if version.indexOf('Production') is 0
+						`AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";`
+
+					if version.indexOf('Staging') is 0
+						`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
+				)
+
+				# If the UserId is null or 'null' i.e id not set in local storage then the app
+				# is either installed for the first time or user has logged out.
+
+				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
+					# If the blog_id is not set then the app is installed for the very first time.
+					# Navigate to main login screen if blog id is null, else show list of users view.
+					@rootRoute = 'app-login'
+					@rootRoute = 'login' if _.isNull _.getBlogID()
+					App.navigate(@rootRoute, trigger: true)
+
+				else
+					#If User ID is set, then navigate to dashboard.
+					user = App.request "get:user:model"
+					user.set 'ID' : ''+_.getUserID()
+					App.vent.trigger "show:dashboard"
+					App.loginRegion.close() 
+
+
+			document.addEventListener("deviceready", onDeviceReady, false)
 
 			return
 
@@ -88,8 +112,9 @@ define ['marionette'], (Marionette)->
 			# not be allowed to navigate else where in the app and only the sync screen should be visible
 			# to the user.
 
-			lastSyncOperation = _.getLastSyncOperation()
-			lastSyncOperation.done (typeOfOperation)->
+			_.getLastSyncOperation().done (typeOfOperation)->
+
+				console.log 'getLastSyncOperation done [walnut-app.coffee]'
 				
 				if typeOfOperation is 'none' or typeOfOperation isnt 'file_import'
 					App.navigate('sync', trigger: true)

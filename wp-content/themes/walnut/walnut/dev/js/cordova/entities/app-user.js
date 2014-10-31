@@ -30,29 +30,29 @@ define(['underscore'], function(_) {
       }).fail(_.failureHandler);
     },
     getNamesOfAllOfflineUsers: function() {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT username FROM USERS", [], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, _i, _ref;
-          result = [];
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            result[i] = {
-              username: data.rows.item(i)['username']
-            };
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var forEach, result;
+        result = [];
+        forEach = function(row, i) {
+          result[i] = {
+            username: row['username']
+          };
+          i = i + 1;
+          if (i < data.rows.length) {
+            return forEach(data.rows.item(i), i);
+          } else {
+            defer.resolve(result);
+            return console.log('getNamesOfAllOfflineUsers done');
           }
-          return d.resolve(result);
         };
+        return forEach(data.rows.item(0), 0);
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getNamesOfAllOfflineUsers transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT username FROM USERS", [], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

@@ -229,3 +229,5 @@ define ['underscore', 'unserialize'], ( _) ->
 			if duration > 60
 				'hrs'
 			else 'mins'	
+
+			

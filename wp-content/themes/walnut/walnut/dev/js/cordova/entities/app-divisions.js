@@ -1,56 +1,47 @@
 define(['underscore'], function(_) {
   return _.mixin({
-    getAllDivisions: function() {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var divisionIds;
-          divisionIds = _.getDivisionIds();
-          return divisionIds.done(function(ids) {
-            var results;
-            results = [];
-            _.each(ids, function(id, i) {
-              return (function(id, i) {
-                var singleDivision;
-                singleDivision = _.fetchSingleDivision(id);
-                return singleDivision.done(function(data) {
-                  return results[i] = data;
-                });
-              })(id, i);
-            });
-            return d.resolve(results);
+    cordovaDivisionCollection: function() {
+      var defer;
+      defer = $.Deferred();
+      _.getDivisionIds().then(function(ids) {
+        var forEach, results;
+        console.log('getDivisionIds done');
+        results = [];
+        forEach = function(id, i) {
+          return _.fetchSingleDivision(id).then(function(divisionData) {
+            console.log('fetchSingleDivision done');
+            results[i] = divisionData;
+            i = i + 1;
+            if (i < ids.length) {
+              return forEach(ids[i], i);
+            } else {
+              return defer.resolve(results);
+            }
           });
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log('getAllDivisions done');
-      }).fail(_.failureHandler);
+        };
+        return forEach(ids[0], 0);
+      });
+      return defer.promise();
     },
     getDivisionIds: function() {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? AND meta_key=?", [_.getUserID(), 'divisions'], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var ids;
+        ids = '';
+        if (data.rows.length !== 0) {
+          ids = _.unserialize(data.rows.item(0)['meta_value']);
+        }
+        return defer.resolve(ids);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var ids;
-          ids = '';
-          if (data.rows.length !== 0) {
-            ids = _.unserialize(data.rows.item(0)['meta_value']);
-          }
-          return d.resolve(ids);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getDivisionIds transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? AND meta_key=?", [_.getUserID(), 'divisions'], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     fetchSingleDivision: function(id) {
-      var divisionData, onSuccess, runQuery;
+      var defer, divisionData, onSuccess;
+      defer = $.Deferred();
       divisionData = {
         id: '',
         division: '',
@@ -58,55 +49,40 @@ define(['underscore'], function(_) {
         class_label: '',
         students_count: ''
       };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "class_divisions WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+      onSuccess = function(tx, data) {
+        var row;
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          return _.getStudentsCount(row['id']).then(function(students_count) {
+            console.log('getStudentsCount done');
+            divisionData = {
+              id: row['id'],
+              division: row['division'],
+              class_id: row['class_id'],
+              class_label: CLASS_LABEL[row['class_id']],
+              students_count: students_count
+            };
+            return defer.resolve(divisionData);
           });
-        });
+        }
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var row, studentsCount;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            studentsCount = _.getStudentsCount(row['id']);
-            return studentsCount.done(function(students_count) {
-              divisionData = {
-                id: row['id'],
-                division: row['division'],
-                class_id: row['class_id'],
-                class_label: CLASS_LABEL[row['class_id']],
-                students_count: students_count
-              };
-              return d.resolve(divisionData);
-            });
-          }
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('fetchSingleDivision transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "class_divisions WHERE id=?", [id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getStudentsCount: function(id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta WHERE meta_key=? AND meta_value=?", ['student_division', id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var students_count;
+        students_count = data.rows.item(0)['students_count'];
+        return defer.resolve(students_count);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var students_count;
-          students_count = data.rows.item(0)['students_count'];
-          return d.resolve(students_count);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getStudentsCount transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT COUNT(umeta_id) AS students_count FROM wp_usermeta WHERE meta_key=? AND meta_value=?", ['student_division', id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

@@ -7,7 +7,7 @@ define ['underscore', 'jquery'], (_, $)->
         
         cordovaOpenPrepopulatedDatabase : ->
 
-            _.db = window.sqlitePlugin.openDatabase({name: "synapseAppData"})
+            _.db = window.sqlitePlugin.openDatabase({name: "synapseTeacherApp"})
 
             console.log 'Local database object: '+_.db
 
