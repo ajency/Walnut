@@ -165,7 +165,8 @@
   margin-bottom: 50px;
   overflow-x: auto;
 }
-#myCanvas {
+#content-board #myCanvas,
+#content-board.quizContent #myCanvas {
   background: #ffffff;
   max-width: 760px;
   margin: 0 auto;
@@ -173,7 +174,8 @@
   padding: 15px 10px;
   font-weight: normal;
 }
-#myCanvas li.ui-sortable-placeholder {
+#content-board #myCanvas li.ui-sortable-placeholder,
+#content-board.quizContent #myCanvas li.ui-sortable-placeholder {
   list-style: none;
   padding: 20px 0;
   background: #d0d0d0;
@@ -1411,12 +1413,47 @@ p.mcq-option-text {
   box-shadow: #dadada 0 0 0 3px inset;
   position: absolute;
 }
-.qstnInfo {
+.qstnInfo,
+.quizComment {
+  max-width: 760px;
+  margin: auto;
+  margin-bottom: 5px;
   padding: 10px 10px 10px 20px;
 }
 #eval-parameters {
   max-width: 760px;
   margin: 0 auto;
+}
+@media (min-width: 1020px) and (max-width: 1295px) {
+  #content-board {
+    margin: 0;
+  }
+  #content-board #myCanvas,
+  #content-board #eval-parameters {
+    margin: 0;
+    margin-left: auto;
+  }
+  #eval-parameters {
+    max-width: 755px;
+  }
+  #top-panel {
+    float: left;
+    margin-left: 2px;
+  }
+  .contentTime,
+  .contentInfo {
+    position: static;
+    float: none;
+    margin: 0 1.5%;
+  }
+  .contentTime {
+    margin-bottom: 8px;
+  }
+  .qstnInfo {
+    margin: 0;
+    margin-bottom: 5px;
+    margin-left: auto;
+  }
 }
 .answrMsg.alert-success h3 {
   color: #006800;
@@ -2029,6 +2066,9 @@ input#duration {
 .practiceNote + div {
   padding-top: 80px;
 }
+#content-board.quizContent {
+  margin: auto;
+}
 .quizTimer {
   margin: 0 auto 0;
 }
@@ -2036,17 +2076,19 @@ input#duration {
   max-width: 760px;
   box-shadow: #dadada 0px 3px 0 0px inset;
 }
-.timerBox {
-  float: right;
-}
 .timerBox,
 .quizProgress {
   width: 235px;
   margin: 0 1.5%;
-  padding: 5px;
+  padding: 0 5px;
+}
+.timerBox {
+  float: right;
+  padding: 0;
 }
 .timerStrip,
-.progressStrip {
+.progressStrip,
+.detailsStrip {
   display: none;
 }
 .quizProgress {
@@ -2208,10 +2250,15 @@ input#duration {
   background-color: #c8d0d6;
 }
 @media (max-width: 1295px) {
+  #content-board.quizContent {
+    margin-top: 60px;
+  }
   .timerStrip,
-  .progressStrip {
+  .progressStrip,
+  .detailsStrip {
     display: block;
     position: fixed;
+    top: 150px;
     right: 0px;
     height: 60px;
     width: 50px;
@@ -2230,13 +2277,40 @@ input#duration {
     left: 0px;
     background: #0090d9;
   }
+  .detailsStrip {
+    width: 150px;
+    height: 40px;
+    top: 0;
+    left: 40%;
+    right: auto;
+    background-color: #e74c30;
+    font-size: 16px;
+  }
+  .quizHeader {
+    position: fixed;
+    top: -112px;
+    margin-bottom: 0;
+    width: 100%;
+    z-index: 5;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .quizHeader:hover {
+    top: 0;
+  }
+  .quizHeader:hover .detailsStrip {
+    top: 112px;
+  }
   .timerBox,
   .quizProgress {
     margin: 0;
     float: none;
     position: fixed;
+    top: 150px;
     left: -235px;
-    z-index: 5;
+    z-index: 9999;
     -webkit-transition-duration: 0.3s;
     -moz-transition-duration: 0.3s;
     -o-transition-duration: 0.3s;

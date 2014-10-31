@@ -80,7 +80,7 @@ define ['app'
                                         <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> 
                                     </div>
                                 </div>
-                                <div class="container-grey m-b-5 m-t-10 qstnInfo">
+                                <div class="container-grey m-b-5 m-t-5 p-t-10 p-r-10 p-b-10 p-l-20">
                                     <label class="form-label bold small-text muted no-margin inline">Question Info: </label>
                                     <p class="inline text-grey small">Testing Question instruction. with hints and comment.</p>
                                 </div>'
