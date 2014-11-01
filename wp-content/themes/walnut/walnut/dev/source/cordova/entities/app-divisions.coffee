@@ -104,8 +104,7 @@ define ['underscore'], ( _) ->
 
 			_.db.transaction (tx)->
 				
-				tx.executeSql "SELECT * FROM 
-								"+_.getTblPrefix()+"class_divisions 
+				tx.executeSql "SELECT * FROM "+_.getTblPrefix()+"class_divisions 
 								WHERE id=?", [id]
 				,onSuccess, _.transactionErrorHandler
 

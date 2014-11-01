@@ -10,6 +10,7 @@ define(["backbone"], function(Backbone) {
       var collection_name, data, opts;
       collection_name = collection.name;
       opts = options.data;
+      alert("collection_name");
       console.log('Collection name: ' + collection_name);
       if (collection_name === 'textbook') {
         _.cordovaTextbookCollection().done(function(data) {
@@ -36,10 +37,11 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz') {
-        data = _.getQuizByTextbookId(opts.textbook);
-        data.done(function(d) {
-          collection.set(d);
-          return App.request("app:reset:quiz:repository", d);
+        _.getQuizByTextbookId(opts.textbook).then(function(data) {
+          alert("quiz");
+          console.log(JSON.stringify(data));
+          collection.set(data);
+          return App.request("app:reset:quiz:repository", data);
         });
       }
       if (collection_name === 'quiz-response-summary') {

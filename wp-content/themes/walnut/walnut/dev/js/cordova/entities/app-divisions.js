@@ -62,7 +62,7 @@ define(['underscore'], function(_) {
         }
       };
       _.db.transaction(function(tx) {
-        return tx.executeSql("SELECT * FROM" + _.getTblPrefix() + "class_divisions WHERE id=?", [id], onSuccess, _.transactionErrorHandler);
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "class_divisions WHERE id=?", [id], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
     },
