@@ -40,6 +40,24 @@ define ['app',
 								{{#training_date}}
 									<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div>
 								{{/training_date}}
+
+								{{#schedule}}
+									{{#schedule.is_active}}										
+										<div class="alert alert-info inline pull-left m-b-0 m-r-10">
+											Scheduled<br>
+											From: {{scheduleFrom}}<br>
+											To: {{scheduleTo}}
+										</div>
+									{{/schedule.is_active}}
+
+									{{^schedule.is_active}}
+										<div class="alert alert-info inline pull-left m-b-0 m-r-10">
+											Scheduled<br>
+											From: {{scheduleFrom}}<br>
+											To: {{scheduleTo}}
+										</div>
+									{{/schedule.is_active}}
+								{{/schedule}}
 							{{/schedule_button}}
 						</td>'
 
@@ -49,6 +67,10 @@ define ['app',
 			onShow : ->
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
+
+				if(@model.get('quiz_type') is 'class_test' and @model.get('schedule') and not @model.get('schedule')['is_active'])
+					@$el.find '.start-training'
+					.hide()
 
 			serializeData : ->
 				data = super()
@@ -96,12 +118,15 @@ define ['app',
 						if Marionette.getOption(@, 'mode') isnt 'take-quiz'
 							data.schedule_button = true
 
-
 				data.training_date= training_date
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
 					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Quiz'
+
+					if data.schedule
+						data.scheduleFrom = moment(data.schedule.from).format("Do MMM YYYY")
+						data.scheduleTo = moment(data.schedule.to).format("Do MMM YYYY")
 
 				if @model.get('quiz_type') is 'practice'
 					data.practice_quiz = true

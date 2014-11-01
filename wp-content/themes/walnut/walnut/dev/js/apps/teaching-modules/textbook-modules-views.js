@@ -12,13 +12,16 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} <span class="label label-info">Attempts: <strong>{{attempts}}</strong></span> {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{training_date}} </button> {{/schedule_button}} {{^schedule_button}} {{#training_date}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div> {{/training_date}} {{/schedule_button}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} <span class="label label-info">Attempts: <strong>{{attempts}}</strong></span> {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{training_date}} </button> {{/schedule_button}} {{^schedule_button}} {{#training_date}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div> {{/training_date}} {{#schedule}} {{#schedule.is_active}} <div class="alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule.is_active}} {{^schedule.is_active}} <div class="alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule.is_active}} {{/schedule}} {{/schedule_button}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
       ContentGroupsItemView.prototype.onShow = function() {
         this.$el.attr('id', 'row-' + this.model.get('id'));
-        return this.$el.attr('data-id', this.model.get('id'));
+        this.$el.attr('data-id', this.model.get('id'));
+        if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule') && !this.model.get('schedule')['is_active']) {
+          return this.$el.find('.start-training').hide();
+        }
       };
 
       ContentGroupsItemView.prototype.serializeData = function() {
@@ -71,6 +74,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         if (Marionette.getOption(this, 'mode') === 'take-quiz') {
           data.take_quiz = true;
           data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Quiz';
+          if (data.schedule) {
+            data.scheduleFrom = moment(data.schedule.from).format("Do MMM YYYY");
+            data.scheduleTo = moment(data.schedule.to).format("Do MMM YYYY");
+          }
         }
         if (this.model.get('quiz_type') === 'practice') {
           data.practice_quiz = true;

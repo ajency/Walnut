@@ -19,14 +19,18 @@ define ['app'
                 @listenTo @view, 'save:quiz:schedule', (from,to)->
 
                     @quizModel.set
-                        'schedule_from' : from
-                        'schedule_to'   : to   
+                        'schedule':
+                            'from' : from
+                            'to'   : to
 
                     data = 
-                        quiz_id         : @quizModel.id
-                        division        : @division
-                        schedule_from   : from
-                        schedule_to     : to   
+                        quiz_id     : @quizModel.id
+                        division    : @division
+                        schedule    :
+                            from    : from
+                            to      : to
+
+                    console.log data
 
                     schedule = App.request "save:quiz:schedule", data
 
@@ -47,14 +51,14 @@ define ['app'
                                 <div class="col-md-6">
                                     From: <br>
                                     <div class="input-append success date">
-                                      <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule_from}}" placeholder="Select Date" class="input-small span12">
+                                      <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
                                       <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     To:  <br>
                                     <div class="input-append success date">
-                                      <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule_to}}" placeholder="Select Date" class="input-small span12">
+                                      <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date" class="input-small span12">
                                       <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>

@@ -144,7 +144,7 @@ add_action('wp_ajax_delete-quiz-response-summary','ajax_delete_quiz_response_sum
 
 function ajax_save_quiz_schedule(){
 
-    if(!isset($_POST['quiz_id']) || !isset($_POST['division']) || !isset($_POST['schedule_from']) || !isset($_POST['schedule_to']))
+    if(!isset($_POST['quiz_id']) || !isset($_POST['division']) ||  !isset($_POST['schedule']) || !isset($_POST['schedule']['from']) || !isset($_POST['schedule']['to']))
         wp_send_json(array('code' => 'ERROR','error_msg' => 'Invalid Data Passed'));
 
     else{

@@ -49,10 +49,10 @@ define(['app', 'bootbox'], function(App, bootbox) {
               }
           }
         })();
-        if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule_from')) {
-          schedule = true;
-          data.scheduleFrom = moment(data.schedule_from).format("Do MMM YYYY");
-          data.scheduleTo = moment(data.schedule_to).format("Do MMM YYYY");
+        if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule')) {
+          schedule = this.model.get('schedule');
+          data.scheduleFrom = moment(schedule['from']).format("Do MMM YYYY");
+          data.scheduleTo = moment(schedule['to']).format("Do MMM YYYY");
         }
         user = App.request("get:user:model");
         if (user.current_user_can('school-admin') || user.current_user_can('teacher')) {
@@ -72,20 +72,22 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       ListItemView.prototype.modelEvents = {
-        'change:schedule_from, change:schedule_to': 'changeScheduleDates'
+        'change:schedule': 'changeScheduleDates'
       };
 
       ListItemView.prototype.onShow = function() {
-        if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule_from')) {
+        if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule')) {
           this.$el.find('.schedule_dates').show();
           return this.$el.find('#schedule-button').hide();
         }
       };
 
       ListItemView.prototype.changeScheduleDates = function() {
-        var from, fromDate, to, toDate;
-        from = this.model.get('schedule_from');
-        to = this.model.get('schedule_to');
+        var from, fromDate, schedule, to, toDate;
+        schedule = this.model.get('schedule');
+        from = schedule['from'];
+        to = schedule['to'];
+        console.log(schedule);
         fromDate = moment(from).format("Do MMM YYYY");
         toDate = moment(to).format("Do MMM YYYY");
         if (from && to) {
