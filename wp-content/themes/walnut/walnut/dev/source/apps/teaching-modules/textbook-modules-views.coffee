@@ -73,9 +73,11 @@ define ['app',
 				if(@model.get('quiz_type') is 'class_test' and @model.get('schedule') and not @model.get('schedule')['is_active'])
 					@$el.find '.start-training'
 					.hide()
-					@$el.find '.schedule_dates'
-					.removeClass 'alert-info'
-					.addClass 'alert-error'
+
+					if @model.get 'is_expired'
+						@$el.find '.schedule_dates'
+						.removeClass 'alert-info'
+						.addClass 'alert-error'
 
 			serializeData : ->
 				data = super()
@@ -130,7 +132,7 @@ define ['app',
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
-					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Quiz'
+					data.quiz_type =  @model.getQuizTypeLabel()
 
 					if data.schedule
 						data.scheduleFrom = moment(data.schedule.from).format("Do MMM YYYY")

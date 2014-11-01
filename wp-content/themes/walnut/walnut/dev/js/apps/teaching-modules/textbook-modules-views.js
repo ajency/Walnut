@@ -21,7 +21,9 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.$el.attr('data-id', this.model.get('id'));
         if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule') && !this.model.get('schedule')['is_active']) {
           this.$el.find('.start-training').hide();
-          return this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
+          if (this.model.get('is_expired')) {
+            return this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
+          }
         }
       };
 
@@ -77,7 +79,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         data.taken_on = taken_on;
         if (Marionette.getOption(this, 'mode') === 'take-quiz') {
           data.take_quiz = true;
-          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Quiz';
+          data.quiz_type = this.model.getQuizTypeLabel();
           if (data.schedule) {
             data.scheduleFrom = moment(data.schedule.from).format("Do MMM YYYY");
             data.scheduleTo = moment(data.schedule.to).format("Do MMM YYYY");

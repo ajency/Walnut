@@ -25,16 +25,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
         if (data.quiz_type === 'class_test') {
           data.class_test = true;
         }
-        data.quiz_type = (function() {
-          switch (data.quiz_type) {
-            case 'practice':
-              return 'Practice';
-            case 'test':
-              return 'Take at Home';
-            default:
-              return 'Class Test';
-          }
-        })();
+        data.quiz_type = this.model.getQuizTypeLabel();
         data.taken_by = (function() {
           switch (data.taken_by) {
             case 0:

@@ -28,7 +28,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           });
           data.answered = true;
           data = _.extend(data, _.last(completed_summaries));
-          data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Class Test';
+          data.quiz_type = this.model.getQuizTypeLabel();
           data.time_taken = $.timeMinSecs(data.total_time_taken);
           data.attempts = _.size(summaries);
         }

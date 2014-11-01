@@ -72,6 +72,21 @@ define(["app", 'backbone'], function(App, Backbone) {
         return message_content;
       };
 
+      ItemModel.prototype.getQuizTypeLabel = function() {
+        var quiz_type;
+        quiz_type = (function() {
+          switch (this.get('quiz_type')) {
+            case 'practice':
+              return 'Practice';
+            case 'test':
+              return 'Take at Home';
+            case 'class_test':
+              return 'Class Test';
+          }
+        }).call(this);
+        return quiz_type;
+      };
+
       return ItemModel;
 
     })(Backbone.Model);

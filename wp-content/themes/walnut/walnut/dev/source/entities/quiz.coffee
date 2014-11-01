@@ -54,6 +54,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 message_content
 
+            getQuizTypeLabel:->
+                quiz_type = switch @.get 'quiz_type'
+                                when 'practice'     then 'Practice'
+                                when 'test'         then 'Take at Home'
+                                when 'class_test'   then 'Class Test'
+
+                quiz_type
+
 
 
         # collection of group of content pieces eg. quizzes, teacher training modules etc.

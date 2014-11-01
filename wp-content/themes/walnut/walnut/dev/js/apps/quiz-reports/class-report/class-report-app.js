@@ -124,11 +124,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               clearSchedule = App.request("clear:quiz:schedule", quizModel.id, _this.division);
               return clearSchedule.done(function(response) {
                 if (response.code === 'OK') {
-                  quizModel.set({
-                    'schedule_from': false,
-                    'schedule_to': false
+                  return quizModel.set({
+                    'schedule': false
                   });
-                  return console.log(quizModel);
                 }
               });
             });

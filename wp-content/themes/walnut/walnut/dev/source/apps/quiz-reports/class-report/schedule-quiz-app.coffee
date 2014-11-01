@@ -30,8 +30,6 @@ define ['app'
                             from    : from
                             to      : to
 
-                    console.log data
-
                     schedule = App.request "save:quiz:schedule", data
 
                     schedule.done (response)=>

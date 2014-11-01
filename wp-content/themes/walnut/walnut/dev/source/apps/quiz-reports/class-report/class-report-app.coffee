@@ -116,9 +116,7 @@ define ['app'
                         clearSchedule.done (response)->
                             if response.code is 'OK'
                                 quizModel.set
-                                    'schedule_from' : false
-                                    'schedule_to'   : false
-                                console.log quizModel
+                                    'schedule': false
 
             _showScheduleQuizApp:(quizModel)->
                 App.execute "show:schedule:quiz:popup",

@@ -40,7 +40,7 @@ define ['app'
                     completed_summaries = _.map summaries, (m)-> m.toJSON() if m.get('status') is 'completed'
                     data.answered = true
                     data =_.extend data, _.last completed_summaries
-                    data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Class Test'
+                    data.quiz_type = @model.getQuizTypeLabel()
                     data.time_taken = $.timeMinSecs data.total_time_taken
                     data.attempts = _.size summaries
                 

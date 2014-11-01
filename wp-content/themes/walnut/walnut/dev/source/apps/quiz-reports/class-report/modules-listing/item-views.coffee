@@ -50,10 +50,7 @@ define ['app','bootbox'], (App,bootbox)->
 
                 data.class_test = true if data.quiz_type is 'class_test'
 
-                data.quiz_type = switch data.quiz_type
-                                when 'practice' then 'Practice'
-                                when 'test'     then 'Take at Home'
-                                else 'Class Test'
+                data.quiz_type = @model.getQuizTypeLabel()
 
                 data.taken_by = switch data.taken_by
                     when 0 then 'None'

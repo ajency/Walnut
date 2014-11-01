@@ -36,7 +36,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
               to: to
             }
           };
-          console.log(data);
           schedule = App.request("save:quiz:schedule", data);
           return schedule.done((function(_this) {
             return function(response) {
