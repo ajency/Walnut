@@ -42,23 +42,28 @@ define ['app',
 								{{/taken_on}}
 
 								{{^taken_on}}
-									{{#schedule}}
-										{{#schedule.is_active}}										
-											<div class="alert alert-info inline pull-left m-b-0 m-r-10">
-												Scheduled<br>
-												From: {{scheduleFrom}}<br>
-												To: {{scheduleTo}}
-											</div>
-										{{/schedule.is_active}}
+									{{#classTest}}
+										{{#schedule}}
+											{{#schedule.is_active}}										
+												<div class="alert alert-info inline pull-left m-b-0 m-r-10">
+													Scheduled<br>
+													From: {{scheduleFrom}}<br>
+													To: {{scheduleTo}}
+												</div>
+											{{/schedule.is_active}}
 
-										{{^schedule.is_active}}
-											<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
-												Scheduled<br>
-												From: {{scheduleFrom}}<br>
-												To: {{scheduleTo}}
-											</div>
-										{{/schedule.is_active}}
-									{{/schedule}}
+											{{^schedule.is_active}}
+												<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
+													Scheduled<br>
+													From: {{scheduleFrom}}<br>
+													To: {{scheduleTo}}
+												</div>
+											{{/schedule.is_active}}
+										{{/schedule}}
+										{{^schedule}}
+											Not Scheduled
+										{{/schedule}}
+									{{/classTest}}
 								{{/taken_on}}
 							{{/schedule_button}}
 						</td>'
@@ -70,14 +75,20 @@ define ['app',
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
 
-				if(@model.get('quiz_type') is 'class_test' and @model.get('schedule') and not @model.get('schedule')['is_active'])
-					@$el.find '.start-training'
-					.hide()
+				if @model.get('quiz_type') is 'class_test'
 
-					if @model.get 'is_expired'
-						@$el.find '.schedule_dates'
-						.removeClass 'alert-info'
-						.addClass 'alert-error'
+					if @model.get 'schedule'
+						if not @model.get('schedule')['is_active']
+							@$el.find '.start-training'
+							.hide()
+
+						if @model.get 'is_expired'
+							@$el.find '.schedule_dates'
+							.removeClass 'alert-info'
+							.addClass 'alert-error'
+					else
+						@$el.find '.start-training'
+						.hide()
 
 			serializeData : ->
 				data = super()
@@ -99,6 +110,7 @@ define ['app',
 
 				else
 					data.moduleType = 'Quiz'
+					data.classTest = true if data.quiz_type is 'class_test'
 					taken_on = @model.get('taken_on')
 					if not taken_on
 						taken_on = null
