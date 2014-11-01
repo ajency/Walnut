@@ -48,7 +48,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'quiz'
 				_.getQuizByTextbookId(opts.textbook)
 				.then (data)->
-					alert "quiz"
 					console.log JSON.stringify data
 
 					collection.set data
@@ -224,10 +223,10 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
+					_.fetchSingleDivision model.get('id')
+					.then (data)->
+						model.set data
 
-					data = _.fetchSingleDivision model.get('id')
-					data.done (d)->
-						model.set d
 
 				if modelname is 'textbook'
 					data = _.getTextBookByTextbookId(model.get('term_id'))
@@ -236,9 +235,10 @@ define ["backbone"], (Backbone) ->
 
 
 				if modelname is 'quiz'
-					data = _.getQuizById(model.get('id'))
-					data.done (d)->
-						model.set d
+					_.getQuizById(model.get('id'))
+					.then (data)->
+						console.log JSON.stringify data
+						model.set data
 
 				if modelname is 'quiz-response-summary'
 					_.writeQuizResponseSummary(model)

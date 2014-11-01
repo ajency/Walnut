@@ -363,64 +363,49 @@ define(['underscore', 'unserialize'], function(_) {
       }
     },
     getQuizById: function(id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_content_collection WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var result, row;
+        result = '';
+        row = data.rows.item(0);
+        return _.getCollectionMeta(row['id']).then(function(collectionMetaData) {
+          return _.getStartDateAndStatus(row['id']).then(function(dateStatus) {
+            result = {
+              id: row['id'],
+              content_pieces: collectionMetaData.contentPieces,
+              created_by: row['created_by'],
+              created_on: row['created_on'],
+              duration: row['duration'],
+              instructions: collectionMetaData.instructions,
+              last_modified_by: row['last_modified_by'],
+              last_modified_on: row['last_modified_on'],
+              marks: collectionMetaData.marks,
+              message: collectionMetaData.message,
+              minshours: _.getMinsHours(row['duration']),
+              name: row['name'],
+              negMarks: collectionMetaData.negMarks,
+              negMarksEnable: collectionMetaData.negMarksEnable,
+              permissions: collectionMetaData.permission,
+              post_status: row['post_status'],
+              published_by: row['published_by'],
+              published_on: row['published_on'],
+              quiz_type: collectionMetaData.quizType,
+              status: dateStatus.status,
+              attempts: dateStatus.attempts,
+              taken_on: dateStatus.start_date,
+              term_ids: _.unserialize(row['term_ids']),
+              total_minutes: row['duration'],
+              type: row['type']
+            };
+            return defer.resolve(result);
           });
         });
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var result, row;
-          result = '';
-          row = data.rows.item(0);
-          return (function(row) {
-            var collectionMeta;
-            collectionMeta = _.getCollectionMeta(row['id']);
-            return collectionMeta.done(function(collectionMetaData) {
-              return (function(row, collectionMetaData) {
-                var dateAndStatus;
-                dateAndStatus = _.getStartDateAndStatus(row['id']);
-                return dateAndStatus.done(function(dateStatus) {
-                  result = {
-                    id: row['id'],
-                    content_pieces: collectionMetaData.contentPieces,
-                    created_by: row['created_by'],
-                    created_on: row['created_on'],
-                    duration: row['duration'],
-                    instructions: collectionMetaData.instructions,
-                    last_modified_by: row['last_modified_by'],
-                    last_modified_on: row['last_modified_on'],
-                    marks: collectionMetaData.marks,
-                    message: collectionMetaData.message,
-                    minshours: _.getMinsHours(row['duration']),
-                    name: row['name'],
-                    negMarks: collectionMetaData.negMarks,
-                    negMarksEnable: collectionMetaData.negMarksEnable,
-                    permissions: collectionMetaData.permission,
-                    post_status: row['post_status'],
-                    published_by: row['published_by'],
-                    published_on: row['published_on'],
-                    quiz_type: collectionMetaData.quizType,
-                    status: dateStatus.status,
-                    attempts: dateStatus.attempts,
-                    taken_on: dateStatus.start_date,
-                    term_ids: _.unserialize(row['term_ids']),
-                    total_minutes: row['duration'],
-                    type: row['type']
-                  };
-                  return d.resolve(result);
-                });
-              })(row, collectionMetaData);
-            });
-          })(row);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getQuizById done');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM wp_content_collection WHERE id=?", [id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

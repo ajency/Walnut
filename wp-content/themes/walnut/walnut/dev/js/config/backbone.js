@@ -38,7 +38,6 @@ define(["backbone"], function(Backbone) {
       }
       if (collection_name === 'quiz') {
         _.getQuizByTextbookId(opts.textbook).then(function(data) {
-          alert("quiz");
           console.log(JSON.stringify(data));
           collection.set(data);
           return App.request("app:reset:quiz:repository", data);
@@ -146,9 +145,8 @@ define(["backbone"], function(Backbone) {
         console.log("model");
         console.log('Model name: ' + modelname);
         if (modelname === 'division') {
-          data = _.fetchSingleDivision(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          _.fetchSingleDivision(model.get('id')).then(function(data) {
+            return model.set(data);
           });
         }
         if (modelname === 'textbook') {
@@ -158,9 +156,9 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'quiz') {
-          data = _.getQuizById(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          _.getQuizById(model.get('id')).then(function(data) {
+            console.log(JSON.stringify(data));
+            return model.set(data);
           });
         }
         if (modelname === 'quiz-response-summary') {

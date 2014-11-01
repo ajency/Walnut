@@ -521,57 +521,56 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		getQuizById : (id)->
 			
+			defer = $.Deferred()
 
-			runQuery = ->
+			onSuccess = (tx,data)->
+				
+				result = ''
+				row = data.rows.item(0)
 
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_content_collection WHERE 
-							id=?", [id], onSuccess(d), _.deferredErrorHandler(d))
+				
+				_.getCollectionMeta(row['id'])
+				.then (collectionMetaData)->
+
+					_.getStartDateAndStatus(row['id'])
+					.then (dateStatus)->
 
 
-			onSuccess =(d)->
-				(tx,data)->
-					result = ''
-					row = data.rows.item(0)
+						result = 
+							id: row['id']
+							content_pieces : collectionMetaData.contentPieces
+							created_by: row['created_by']
+							created_on: row['created_on']
+							duration: row['duration']
+							instructions : collectionMetaData.instructions
+							last_modified_by: row['last_modified_by']
+							last_modified_on: row['last_modified_on']
+							marks : collectionMetaData.marks
+							message : collectionMetaData.message
+							minshours: _.getMinsHours(row['duration'])
+							name: row['name']
+							negMarks : collectionMetaData.negMarks
+							negMarksEnable : collectionMetaData.negMarksEnable
+							permissions : collectionMetaData.permission
+							post_status: row['post_status']
+							published_by: row['published_by']
+							published_on: row['published_on']
+							quiz_type : collectionMetaData.quizType
+							status : dateStatus.status
+							attempts: dateStatus.attempts
+							taken_on : dateStatus.start_date
+							term_ids: _.unserialize(row['term_ids'])
+							total_minutes: row['duration']
+							type: row['type']
+						
+						defer.resolve result
 
-					do (row)->
-						collectionMeta = _.getCollectionMeta(row['id'])
-						collectionMeta.done (collectionMetaData)->
 
-							do(row, collectionMetaData)->
-								dateAndStatus = _.getStartDateAndStatus(row['id'])
-								dateAndStatus.done (dateStatus)->
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT * FROM wp_content_collection 
+								WHERE id=?"
+								, [id]
+				, onSuccess, _.transactionErrorHandler
 
-									result = 
-										id: row['id']
-										content_pieces : collectionMetaData.contentPieces
-										created_by: row['created_by']
-										created_on: row['created_on']
-										duration: row['duration']
-										instructions : collectionMetaData.instructions
-										last_modified_by: row['last_modified_by']
-										last_modified_on: row['last_modified_on']
-										marks : collectionMetaData.marks
-										message : collectionMetaData.message
-										minshours: _.getMinsHours(row['duration'])
-										name: row['name']
-										negMarks : collectionMetaData.negMarks
-										negMarksEnable : collectionMetaData.negMarksEnable
-										permissions : collectionMetaData.permission
-										post_status: row['post_status']
-										published_by: row['published_by']
-										published_on: row['published_on']
-										quiz_type : collectionMetaData.quizType
-										status : dateStatus.status
-										attempts: dateStatus.attempts
-										taken_on : dateStatus.start_date
-										term_ids: _.unserialize(row['term_ids'])
-										total_minutes: row['duration']
-										type: row['type']
-									
-									d.resolve(result)
-			
-			$.when(runQuery()).done ->
-				console.log 'getQuizById done'
-			.fail _.failureHandler
+			defer.promise()
