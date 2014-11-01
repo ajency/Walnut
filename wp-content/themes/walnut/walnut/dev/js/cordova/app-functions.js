@@ -175,7 +175,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }
     },
     getUserDetails: function(userID) {
-      var onSuccess, runQuery, userDetails;
+      var defer, onSuccess, userDetails;
       userDetails = {
         user_id: '',
         username: '',
@@ -188,38 +188,31 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         user_email: '',
         division: ''
       };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM USERS WHERE user_id=?", [userID], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var row;
+        userDetails = '';
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          userDetails = {
+            user_id: row['user_id'],
+            username: row['username'],
+            display_name: row['display_name'],
+            password: row['password'],
+            user_capabilities: row['user_capabilities'],
+            user_role: row['user_role'],
+            cookie: row['cookie'],
+            blog_id: row['blog_id'],
+            user_email: row['user_email'],
+            division: row['division']
+          };
+        }
+        return defer.resolve(userDetails);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var row;
-          userDetails = '';
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            userDetails = {
-              user_id: row['user_id'],
-              username: row['username'],
-              display_name: row['display_name'],
-              password: row['password'],
-              user_capabilities: row['user_capabilities'],
-              user_role: row['user_role'],
-              cookie: row['cookie'],
-              blog_id: row['blog_id'],
-              user_email: row['user_email'],
-              division: row['division']
-            };
-          }
-          return d.resolve(userDetails);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getUserDetails transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM USERS WHERE user_id=?", [userID], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

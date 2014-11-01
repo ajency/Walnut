@@ -116,8 +116,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# save new user or update existing user 
 		saveUpdateUserDetails : (userDetails)->
 
-			existingUser = @isExistingUser(@data.data.txtusername)
-			existingUser.done (user)=>
+			@isExistingUser(@data.data.txtusername)
+			.then (user)=>
 
 				if user.exists then @updateExistingUser(userDetails)
 				else @inputNewUser(userDetails)
@@ -168,8 +168,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		offlineDeviceAuth : -> 
 
-			existingUser = @isExistingUser(@data.txtusername)
-			existingUser.done (user)=>
+			@isExistingUser(@data.txtusername)
+			.then (user)=>
 				if user.exists 
 					if user.password is @data.txtpassword
 
@@ -185,8 +185,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		setUserModelForOfflineLogin : ->
 			
-			userDetails = _.getUserDetails(_.getUserID())
-			userDetails.done (userDetails)=>
+			_.getUserDetails(_.getUserID())
+			.then (userDetails)=>
 
 				_.setTblPrefix(userDetails.blog_id)
 
@@ -210,31 +210,30 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			user = exists: false, userID: '', password: ''
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT user_id, password FROM USERS WHERE username=?"
-						, [userName], onSuccess(d), _.deferredErrorHandler(d))
-			
-			onSuccess = (d)->
-				(tx, data)->
+			defer = $.Deferred()
 
-					if data.rows.length isnt 0
+			onSuccess = (tx, data)->
 
-						row = data.rows.item(0)
-						user = 
-							exists: true
-							userID: row['user_id']
-							password: row['password']
+				if data.rows.length isnt 0
 
-					d.resolve(user)
+					row = data.rows.item(0)
+					user = 
+						exists: true
+						userID: row['user_id']
+						password: row['password']
 
-			$.when(runQuery()).done ->
-				console.log 'isExistingUser transaction completed'
-			.fail _.failureHandler
+				defer.resolve user
 
 
-		
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT user_id, password FROM USERS WHERE username=?"
+					, [userName]
+				, onSuccess, _.transactionErrorhandler
+
+			defer.promise()
+
+
 		onConnectionError :->
 
 			response = 

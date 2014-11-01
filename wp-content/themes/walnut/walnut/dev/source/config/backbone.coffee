@@ -31,10 +31,13 @@ define ["backbone"], (Backbone) ->
 				data.done (d)->
 					collection.set d                                   
 
+
 			if collection_name is 'division'
-				data = _.getAllDivisions()
-				data.done (d)->
+				_.getAllDivisions()
+				.done (d)->
+					
 					collection.set d
+
 
 			if collection_name is 'content-group'
 				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)
@@ -66,10 +69,11 @@ define ["backbone"], (Backbone) ->
 
 					App.request "app:reset:content:pieces:repository", d
 
+			#not required for student App
 			if collection_name is 'user'
-				data = _.getStudentsByDivision(opts.division)
-				data.done (d)->
-					collection.set d
+				_.getStudentsByDivision(opts.division)
+				.done (data)->
+					collection.set data
 
 			if collection_name is 'question-response'
 				data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division)
@@ -84,9 +88,9 @@ define ["backbone"], (Backbone) ->
 
 
 			if collection_name is 'offlineUsers'
-				data = _.getNamesOfAllOfflineUsers()
-				data.done (d)->
-					collection.set d
+				_.getNamesOfAllOfflineUsers()
+				.done (data)->
+					collection.set data
 
 			if collection_name is 'media'
 				data = _.getListOfMediaByID(opts.ids)
@@ -216,6 +220,7 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
+
 					data = _.fetchSingleDivision model.get('id')
 					data.done (d)->
 						model.set d

@@ -89,8 +89,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         var actualMarks, multiplicationFactor;
         actualMarks = 0;
         questionsCollection.each(function(m) {
-          if (m.getMarks()) {
-            return actualMarks += m.getMarks();
+          if (m.get('marks')) {
+            return actualMarks += m.get('marks');
           }
         });
         if (actualMarks > 0) {

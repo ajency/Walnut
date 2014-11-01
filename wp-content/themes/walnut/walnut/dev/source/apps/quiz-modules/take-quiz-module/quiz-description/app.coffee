@@ -30,7 +30,7 @@ define ['app'
 
                             templateHelpers :
                                 getQuestionDuration: currentQuestion.get 'duration'
-                                getQuestionMarks: currentQuestion.getMarks()
+                                getQuestionMarks: currentQuestion.get 'marks'
                                 getClass :=> @textbookModel.getClasses()
                                 getTextbookName :=> @textbookNames.getTextbookName terms
                                 getChapterName :=> @textbookNames.getChapterName terms
@@ -60,5 +60,5 @@ define ['app'
                         .html model.get 'duration'
 
                         @$el.find "#marks-for-question"
-                        .html model.getMarks()
+                        .html model.get 'marks'
                     

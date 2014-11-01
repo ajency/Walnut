@@ -75,10 +75,12 @@ define ['underscore', 'unserialize'], ( _) ->
 		getJsonToClone : (elements)->
 
 			runFunc = ->
+
 				$.Deferred (d)->
 					content = 
 						elements : elements
 						excerpt : new Array
+						marks 	: 0
 
 					if _.isArray elements  
 						total = 0
@@ -89,6 +91,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									insideElement = _.getRowElements(element)
 									insideElement.done (columnElement)->
 										content.excerpt.push columnElement.excerpt
+										content.marks += columnElement.marks if columnElement.marks
 										total--
 										if not total
 											d.resolve content
@@ -103,6 +106,7 @@ define ['underscore', 'unserialize'], ( _) ->
 											if meta isnt false
 												_.defaults element, meta
 											content.excerpt.push columnElement.excerpt
+											content.marks += columnElement.marks if columnElement.marks
 											total--
 											if not total
 												d.resolve content
@@ -128,7 +132,9 @@ define ['underscore', 'unserialize'], ( _) ->
 												element.image_id = parseInt element.image_id
 											if element.element is 'Video'
 												element.video_id = parseInt element.video_id
-										
+
+											content.marks += element.marks if element.marks
+											
 										total--
 										if not total
 											d.resolve content
@@ -149,6 +155,8 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					content = 
 						excerpt : new Array
+						marks : 0
+
 					total = 0
 					_.each rowElements.elements, (column)->
 						if column.elements
@@ -160,6 +168,8 @@ define ['underscore', 'unserialize'], ( _) ->
 									insideElement.done (columnElement)->
 
 										content.excerpt.push columnElement.excerpt
+										content.marks += columnElement.marks if columnElement.marks
+
 										total--
 										if not total
 											d.resolve content
@@ -182,6 +192,9 @@ define ['underscore', 'unserialize'], ( _) ->
 												element.image_id = parseInt element.image_id
 											if element.element is 'Video'
 												element.video_id = parseInt element.video_id
+
+											content.marks += element.marks if element.marks
+
 										total--
 										if not total
 											d.resolve content
@@ -198,6 +211,7 @@ define ['underscore', 'unserialize'], ( _) ->
 				$.Deferred (d)->
 					content = 
 						excerpt : new Array
+						marks : 0
 					total = 0
 					_.each rowElements.elements, (column)->
 						if column
@@ -209,6 +223,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									insideElement.done (columnElement)->
 
 										content.excerpt.push columnElement.excerpt
+										content.marks += columnElement.marks if columnElement.marks
 										total--
 										if not total
 											d.resolve content
@@ -231,6 +246,9 @@ define ['underscore', 'unserialize'], ( _) ->
 												element.image_id = parseInt element.image_id
 											if element.element is 'Video'
 												element.video_id = parseInt element.video_id
+
+											content.marks += element.marks if element.marks
+											
 										total--
 										if not total
 											d.resolve content

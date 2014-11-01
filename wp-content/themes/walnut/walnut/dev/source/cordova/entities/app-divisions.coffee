@@ -7,51 +7,59 @@ define ['underscore'], ( _) ->
 
 		# Get all division details based on division ids assigned to the logged in user.
 		getAllDivisions : ->
+			
+			defer = $.Deferred()
 
-			runFunc = ->
-				$.Deferred (d)->
+			_.getDivisionIds()
+			.then (ids)->
+				
+				results = []
 
-					divisionIds = _.getDivisionIds()
-					divisionIds.done (ids)->
+				_.each ids,(id, i)->
 
-						results = []
-
-						_.each ids,(id, i)->
-							do(id, i)->
-								singleDivision = _.fetchSingleDivision(id)
-								singleDivision.done (data)->
-									results[i] = data
+					_.fetchSingleDivision id
+					.then (data)->
 						
-						d.resolve results
+						results[i] = data
+					
+						defer.resolve results
 
-			$.when(runFunc()).done ->
-				console.log 'getAllDivisions done'
-			.fail _.failureHandler
+			defer.promise()
+
 
 
 
 		# Get meta_value i.e serialized string containing division ids assigned to the logged in user
 		# and return the unserialized array.
+		
 		getDivisionIds : ->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? 
-							AND meta_key=?", [_.getUserID(), 'divisions']
-							,onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
-					ids = ''
-					if data.rows.length isnt 0
-						ids = _.unserialize(data.rows.item(0)['meta_value'])
+			onSuccess = (tx,data)->
 
-					d.resolve ids
+				ids = ''
+				
 
-			$.when(runQuery()).done ->
-				console.log 'getDivisionIds transaction completed'
-			.fail _.failureHandler
+				if data.rows.length isnt 0
+					ids = _.unserialize(data.rows.item(0))['meta_value']
+				
+
+				defer.resolve ids
+
+			
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT meta_value 
+								FROM wp_usermeta 
+								WHERE user_id=? 
+								AND meta_key=?"
+								, [_.getUserID(), 'divisions']
+				,onSuccess, _.transactionErrorHandler
+
+			
+			defer.promise()
+
 
 
 
@@ -60,62 +68,92 @@ define ['underscore'], ( _) ->
 
 			divisionData = id:'', division:'', class_id:'', class_label:'', students_count:''
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"class_divisions 
-							WHERE id=?", [id], onSuccess(d), _.deferredErrorHandler(d))
 
-			onSuccess = (d)->
-				(tx, data)->
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
+			defer = $.Deferred()
 
-						userDetailsInfo = _.getUserDetails(_.getUserID())
-						userDetailsInfo.done (userDetails)->
 
-							studentsCountClassIdValue = _.getStudentsCountForBlogId(userDetails.blog_id)
-							studentsCountClassIdValue.done (students_count_classid_value)->
+			onSuccess = (tx,data)->
 
-								studentsCount = _.getStudentsCount(row['id'], students_count_classid_value)
-								studentsCount.done (students_count)->
-							
-									divisionData = id: row['id'], division: row['division']
-													, class_id: row['class_id']
-													, class_label: CLASS_LABEL[row['class_id']]
-													, students_count: students_count	
+				
+				if data.rows.length isnt 0
+					row = data.rows.item(0)
 
-									d.resolve divisionData
 
-			$.when(runQuery()).done ->
-				console.log 'fetchSingleDivision transaction completed'
-			.fail _.failureHandler
+					_.getUserDetails(_.getUserID())
+					.then (userDetails)->
+
+
+						_.getStudentsCountForBlogId(userDetails.blog_id)
+						.then (students_count_classid_value)->
+
+
+							_.getStudentsCount(row['id'], students_count_classid_value)
+							.then (students_count)->
+
+
+								divisionData = id: row['id']
+												, division: row['division']
+												, class_id: row['class_id']
+												, class_label: CLASS_LABEL[row['class_id']]
+												, students_count: students_count	
+
+								
+								defer.resolve divisionData
+				
+
+
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT * FROM 
+								"+_.getTblPrefix()+"class_divisions 
+								WHERE id=?", [id]
+				,onSuccess, _.transactionErrorHandler
+
+			defer.promise()
+
+
 
 
 		getStudentsCountForBlogId : (blog_id)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT user_id FROM wp_usermeta 
-							WHERE meta_key=? AND meta_value=?", ['primary_blog', blog_id]
-							,onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
+
+			onSuccess = (tx,data)->
+
+
+				students_count_classid_value = []
+
+
+				forEach = (row, i)->
+
+					students_count_classid_value.push row['user_id']
+
+
+					i = i + 1
 					
-					students_count_classid_value = []
-					
-					for i in [0..data.rows.length-1] by 1
-						students_count_classid_value.push data.rows.item(i)['user_id']
+					if (i < data.rows.length)
+						forEach data.rows.item(i), i
+					else 
+						defer.resolve students_count_classid_value
+				
+				
+				forEach data.rows.item(0), 0
+			
 
-					console.log JSON.stringify students_count_classid_value
-					d.resolve students_count_classid_value
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT user_id FROM wp_usermeta 
+								WHERE meta_key=? 
+								AND meta_value=?"
+								, ['primary_blog', blog_id]
+				,onSuccess, _.transactionErrorHandler
 
-			$.when(runQuery()).done ->
-				console.log 'getStudentsCountClassIdValue transaction completed'
-			.fail _.failureHandler
-		
+
+			defer.promise()
+
+
+
 
 
 		# Get the count of number of students assigned to each division.
@@ -123,21 +161,22 @@ define ['underscore'], ( _) ->
 
 			ids = ids.join()
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(user_id) AS students_count FROM wp_usermeta 
-							WHERE meta_key=? AND meta_value=? AND user_id IN ("+ids+")"
-							, ['student_division',division_id ]
-							,onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
-					students_count = data.rows.item(0)['students_count']
-					d.resolve students_count
+			onSuccess = (tx,data)->
+				students_count = data.rows.item(0)['students_count']
+				defer.resolve students_count
 
-			$.when(runQuery()).done ->
-				console.log 'getStudentsCount transaction completed'
-			.fail _.failureHandler
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT COUNT(user_id) AS students_count 
+								FROM wp_usermeta 
+								WHERE meta_key=? 
+								AND meta_value=? 
+								AND user_id IN ("+ids+")"
+								, ['student_division',division_id]
+				
+				,onSuccess, _.transactionErrorHandler
+			
 
-
+			defer.promise()

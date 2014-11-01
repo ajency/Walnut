@@ -75,7 +75,8 @@ define(['underscore', 'unserialize'], function(_) {
           var content, total;
           content = {
             elements: elements,
-            excerpt: new Array
+            excerpt: new Array,
+            marks: 0
           };
           if (_.isArray(elements)) {
             total = 0;
@@ -86,6 +87,9 @@ define(['underscore', 'unserialize'], function(_) {
                 insideElement = _.getRowElements(element);
                 return insideElement.done(function(columnElement) {
                   content.excerpt.push(columnElement.excerpt);
+                  if (columnElement.marks) {
+                    content.marks += columnElement.marks;
+                  }
                   total--;
                   if (!total) {
                     return d.resolve(content);
@@ -102,6 +106,9 @@ define(['underscore', 'unserialize'], function(_) {
                       _.defaults(element, meta);
                     }
                     content.excerpt.push(columnElement.excerpt);
+                    if (columnElement.marks) {
+                      content.marks += columnElement.marks;
+                    }
                     total--;
                     if (!total) {
                       return d.resolve(content);
@@ -132,6 +139,9 @@ define(['underscore', 'unserialize'], function(_) {
                     if (element.element === 'Video') {
                       element.video_id = parseInt(element.video_id);
                     }
+                    if (element.marks) {
+                      content.marks += element.marks;
+                    }
                   }
                   total--;
                   if (!total) {
@@ -155,7 +165,8 @@ define(['underscore', 'unserialize'], function(_) {
         return $.Deferred(function(d) {
           var content, total;
           content = {
-            excerpt: new Array
+            excerpt: new Array,
+            marks: 0
           };
           total = 0;
           return _.each(rowElements.elements, function(column) {
@@ -167,6 +178,9 @@ define(['underscore', 'unserialize'], function(_) {
                   insideElement = _.getRowElements(element);
                   return insideElement.done(function(columnElement) {
                     content.excerpt.push(columnElement.excerpt);
+                    if (columnElement.marks) {
+                      content.marks += columnElement.marks;
+                    }
                     total--;
                     if (!total) {
                       return d.resolve(content);
@@ -195,6 +209,9 @@ define(['underscore', 'unserialize'], function(_) {
                       }
                       if (element.element === 'Video') {
                         element.video_id = parseInt(element.video_id);
+                      }
+                      if (element.marks) {
+                        content.marks += element.marks;
                       }
                     }
                     total--;
@@ -220,7 +237,8 @@ define(['underscore', 'unserialize'], function(_) {
         return $.Deferred(function(d) {
           var content, total;
           content = {
-            excerpt: new Array
+            excerpt: new Array,
+            marks: 0
           };
           total = 0;
           return _.each(rowElements.elements, function(column) {
@@ -232,6 +250,9 @@ define(['underscore', 'unserialize'], function(_) {
                   insideElement = _.getRowElements(element);
                   return insideElement.done(function(columnElement) {
                     content.excerpt.push(columnElement.excerpt);
+                    if (columnElement.marks) {
+                      content.marks += columnElement.marks;
+                    }
                     total--;
                     if (!total) {
                       return d.resolve(content);
@@ -260,6 +281,9 @@ define(['underscore', 'unserialize'], function(_) {
                       }
                       if (element.element === 'Video') {
                         element.video_id = parseInt(element.video_id);
+                      }
+                      if (element.marks) {
+                        content.marks += element.marks;
                       }
                     }
                     total--;

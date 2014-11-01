@@ -206,33 +206,31 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					, user_capabilities: '', user_role: '', cookie: '', blog_id: ''
 					, user_email: '', division: ''
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM USERS WHERE user_id=?"
-						, [userID], onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 			
-			onSuccess = (d)->
-				(tx, data)->
-					userDetails = ''
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
+			onSuccess = (tx, data)->
+				userDetails = ''
+				if data.rows.length isnt 0
+					row = data.rows.item(0)
 
-						userDetails =
-							user_id : row['user_id']
-							username: row['username']
-							display_name: row['display_name']
-							password : row['password']
-							user_capabilities: row['user_capabilities']
-							user_role : row['user_role']
-							cookie: row['cookie']
-							blog_id: row['blog_id']
-							user_email: row['user_email']
-							division: row['division']
+					userDetails =
+						user_id : row['user_id']
+						username: row['username']
+						display_name: row['display_name']
+						password : row['password']
+						user_capabilities: row['user_capabilities']
+						user_role : row['user_role']
+						cookie: row['cookie']
+						blog_id: row['blog_id']
+						user_email: row['user_email']
+						division: row['division']
 
 
-					d.resolve(userDetails)
+				defer.resolve userDetails
 
-			$.when(runQuery()).done ->
-				console.log 'getUserDetails transaction completed'
-			.fail _.failureHandler
+			_.db.transaction (tx)->
+				tx.executeSql "SELECT * FROM USERS WHERE user_id=?"
+					, [userID]
+				, onSuccess, _.transactionErrorHandler
+
+			defer.promise()

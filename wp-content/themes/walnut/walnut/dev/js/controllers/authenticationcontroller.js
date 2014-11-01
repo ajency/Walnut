@@ -123,9 +123,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.saveUpdateUserDetails = function(userDetails) {
-      var existingUser;
-      existingUser = this.isExistingUser(this.data.data.txtusername);
-      return existingUser.done((function(_this) {
+      return this.isExistingUser(this.data.data.txtusername).then((function(_this) {
         return function(user) {
           if (user.exists) {
             return _this.updateExistingUser(userDetails);
@@ -167,9 +165,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.offlineDeviceAuth = function() {
-      var existingUser;
-      existingUser = this.isExistingUser(this.data.txtusername);
-      return existingUser.done((function(_this) {
+      return this.isExistingUser(this.data.txtusername).then((function(_this) {
         return function(user) {
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
@@ -187,9 +183,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.setUserModelForOfflineLogin = function() {
-      var userDetails;
-      userDetails = _.getUserDetails(_.getUserID());
-      return userDetails.done((function(_this) {
+      return _.getUserDetails(_.getUserID()).then((function(_this) {
         return function(userDetails) {
           var data, user;
           _.setTblPrefix(userDetails.blog_id);
@@ -210,36 +204,29 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     };
 
     AuthenticationController.prototype.isExistingUser = function(userName) {
-      var onSuccess, runQuery, user;
+      var defer, onSuccess, user;
       user = {
         exists: false,
         userID: '',
         password: ''
       };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT user_id, password FROM USERS WHERE username=?", [userName], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var row;
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          user = {
+            exists: true,
+            userID: row['user_id'],
+            password: row['password']
+          };
+        }
+        return defer.resolve(user);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var row;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            user = {
-              exists: true,
-              userID: row['user_id'],
-              password: row['password']
-            };
-          }
-          return d.resolve(user);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('isExistingUser transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT user_id, password FROM USERS WHERE username=?", [userName], onSuccess, _.transactionErrorhandler);
+      });
+      return defer.promise();
     };
 
     AuthenticationController.prototype.onConnectionError = function() {

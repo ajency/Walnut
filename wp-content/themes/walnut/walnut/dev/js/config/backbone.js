@@ -25,8 +25,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'division') {
-        data = _.getAllDivisions();
-        data.done(function(d) {
+        _.getAllDivisions().done(function(d) {
           return collection.set(d);
         });
       }
@@ -63,9 +62,8 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'user') {
-        data = _.getStudentsByDivision(opts.division);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getStudentsByDivision(opts.division).done(function(data) {
+          return collection.set(data);
         });
       }
       if (collection_name === 'question-response') {
@@ -81,9 +79,8 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'offlineUsers') {
-        data = _.getNamesOfAllOfflineUsers();
-        data.done(function(d) {
-          return collection.set(d);
+        _.getNamesOfAllOfflineUsers().done(function(data) {
+          return collection.set(data);
         });
       }
       if (collection_name === 'media') {
