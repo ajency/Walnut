@@ -748,7 +748,7 @@ function save_quiz_schedule($data){
         'schedule_to'   => $to
         );
 
-    $check_query = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}quiz_schedules 
+    $check_query = $wpdb->prepare("SELECT quiz_id FROM {$wpdb->prefix}quiz_schedules 
                                         WHERE quiz_id = %d AND division_id = %d",
                                     array($data['quiz_id'],$data['division'])
                                 );
@@ -761,7 +761,10 @@ function save_quiz_schedule($data){
         $save = $wpdb->update(
             $wpdb->prefix.'quiz_schedules', 
             $scheduledata, 
-            array('id'=>$schedule_id),
+            array(
+                'quiz_id'       => $data['quiz_id'],
+                'division_id'   => $data['division']
+            ),
             array('%d','%d','%s','%s')
         );
     }
