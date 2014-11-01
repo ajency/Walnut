@@ -3,17 +3,19 @@
 #function to test communication processing
 function test_comm(){
     global $aj_comm;
-
-    #cron_quizzes_taken_report();
-
-    #cron_teaching_modules_report_mail();
     
-    $aj_comm->cron_process_communication_queue();
-    echo "test";
-    exit;
+    if(isset($_GET['testing'])){
+        #cron_quizzes_taken_report();
+
+        cron_teaching_modules_report_mail();
+    
+        $aj_comm->cron_process_communication_queue();
+        echo "test";
+        exit;
+    }
 }
 
-#add_action('init', 'test_comm');
+add_action('init', 'test_comm');
 
 //Invoking the communication plugin
 function add_taught_in_class_student_mail($data, $comm_data){
@@ -77,31 +79,34 @@ function cron_teaching_modules_report_mail(){
 
     foreach($blogs as $blog) {
         
-        $comm_data['blog_id'] = $blog['blog_id'];
-        
-        $filepath= get_teaching_modules_report_zip($blog['blog_id']);
+        if($blog['blog_id'] != 1){
 
-        $meta_data = array('filepath'=>$filepath);
+            $comm_data['blog_id'] = $blog['blog_id'];
+            
+            $filepath= get_teaching_modules_report_zip($blog['blog_id']);
 
-        $user_args= array(
-            'blog_id' => $blog['blog_id'],
-            'role' => 'school-admin'
-        );
+            $meta_data = array('filepath'=>$filepath);
 
-        $users = get_users($user_args);
+            $user_args= array(
+                'blog_id' => $blog['blog_id'],
+                'role' => 'school-admin'
+            );
 
-        $recipients = array();
+            $users = get_users($user_args);
 
-        foreach($users as $user){
+            $recipients = array();
 
-            $recipients[] = array(                
-                    'user_id'   => $user->ID,
-                    'type'      => 'email',
-                    'value'     => $user->user_email
-                );
+            foreach($users as $user){
+
+                $recipients[] = array(                
+                        'user_id'   => $user->ID,
+                        'type'      => 'email',
+                        'value'     => $user->user_email
+                    );
+            }
+
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
         }
-
-        $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
     
     }
 

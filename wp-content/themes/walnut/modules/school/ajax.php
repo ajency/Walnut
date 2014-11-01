@@ -29,3 +29,19 @@ function new_school_setup( $blog_id ){
 
 }
 add_action('wpmu_new_blog', 'new_school_setup');
+
+function delete_blog_custom_tables(){
+
+    global $wpdb;
+
+    $wpdb->query("DROP TABLE {$wpdb->prefix}class_divisions");
+    $wpdb->query("DROP TABLE {$wpdb->prefix}question_response");
+    $wpdb->query("DROP TABLE {$wpdb->prefix}question_response_meta");
+    $wpdb->query("DROP TABLE {$wpdb->prefix}quiz_question_response");
+    $wpdb->query("DROP TABLE {$wpdb->prefix}quiz_response_summary");
+    $wpdb->query("DROP TABLE {$wpdb->prefix}quiz_schedules");
+    $wpdb->query("DROP TABLE {$wpdb->prefix}sync_apps_data");
+
+}
+
+add_action('delete_blog', 'delete_blog_custom_tables');
