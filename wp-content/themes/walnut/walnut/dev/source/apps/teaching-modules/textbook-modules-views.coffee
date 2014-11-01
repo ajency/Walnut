@@ -33,31 +33,33 @@ define ['app',
 							</button>
 							{{#schedule_button}}
 								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
-									<i class="fa fa-calendar"></i> {{training_date}}
+									<i class="fa fa-calendar"></i> {{taken_on}}
 								</button>
 							{{/schedule_button}}
 							{{^schedule_button}}
-								{{#training_date}}
-									<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{training_date}}</div>
-								{{/training_date}}
+								{{#taken_on}}
+									<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{taken_on}}</div>
+								{{/taken_on}}
 
-								{{#schedule}}
-									{{#schedule.is_active}}										
-										<div class="alert alert-info inline pull-left m-b-0 m-r-10">
-											Scheduled<br>
-											From: {{scheduleFrom}}<br>
-											To: {{scheduleTo}}
-										</div>
-									{{/schedule.is_active}}
+								{{^taken_on}}
+									{{#schedule}}
+										{{#schedule.is_active}}										
+											<div class="alert alert-info inline pull-left m-b-0 m-r-10">
+												Scheduled<br>
+												From: {{scheduleFrom}}<br>
+												To: {{scheduleTo}}
+											</div>
+										{{/schedule.is_active}}
 
-									{{^schedule.is_active}}
-										<div class="alert alert-info inline pull-left m-b-0 m-r-10">
-											Scheduled<br>
-											From: {{scheduleFrom}}<br>
-											To: {{scheduleTo}}
-										</div>
-									{{/schedule.is_active}}
-								{{/schedule}}
+										{{^schedule.is_active}}
+											<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
+												Scheduled<br>
+												From: {{scheduleFrom}}<br>
+												To: {{scheduleTo}}
+											</div>
+										{{/schedule.is_active}}
+									{{/schedule}}
+								{{/taken_on}}
 							{{/schedule_button}}
 						</td>'
 
@@ -71,6 +73,9 @@ define ['app',
 				if(@model.get('quiz_type') is 'class_test' and @model.get('schedule') and not @model.get('schedule')['is_active'])
 					@$el.find '.start-training'
 					.hide()
+					@$el.find '.schedule_dates'
+					.removeClass 'alert-info'
+					.addClass 'alert-error'
 
 			serializeData : ->
 				data = super()
@@ -83,18 +88,21 @@ define ['app',
 					chapter
 
 				if @model.get('type') is 'teaching-module'
-					training_date = @model.get('training_date')
-					if not training_date
-						training_date = 'Schedule'
+					taken_on = @model.get('training_date')
+					if not taken_on
+						taken_on = 'Schedule'
 					else
-						training_date = moment(training_date).format("Do MMM YYYY")
+						taken_on = moment(taken_on).format("Do MMM YYYY")
 
 				else
-					training_date = @model.get('taken_on')
-					if not training_date
-						training_date = null
+					taken_on = @model.get('taken_on')
+					if not taken_on
+						taken_on = null
 					else
-						training_date = moment(training_date).format("Do MMM YYYY")
+						taken_on = moment(taken_on).format("Do MMM YYYY")
+
+					if data.quiz_type is 'class_test' and data.status isnt 'completed'
+						taken_on = null
 
 				status = @model.get 'status'
 
@@ -118,7 +126,7 @@ define ['app',
 						if Marionette.getOption(@, 'mode') isnt 'take-quiz'
 							data.schedule_button = true
 
-				data.training_date= training_date
+				data.taken_on= taken_on
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true

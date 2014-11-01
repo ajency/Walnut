@@ -191,10 +191,17 @@ function get_quiz_schedule($quiz_id, $division){
     else
         $active = false;
 
+    if($today > $to)
+        $expired = true;
+    
+    else
+        $expired = false;
+
     return array(
         'from'      => $from,
         'to'        => $to,
-        'is_active' => $active
+        'is_active' => $active,
+        'is_expired'=> $expired
         );
 }
 
