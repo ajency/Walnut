@@ -29,7 +29,7 @@ define ['app',
 						</td>
 						<td>
 							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
-							{{&action_str}}
+							View {{moduleType}}
 							</button>
 							{{#schedule_button}}
 								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
@@ -90,6 +90,7 @@ define ['app',
 					chapter
 
 				if @model.get('type') is 'teaching-module'
+					data.moduleType = 'Module'
 					taken_on = @model.get('training_date')
 					if not taken_on
 						taken_on = 'Schedule'
@@ -97,6 +98,7 @@ define ['app',
 						taken_on = moment(taken_on).format("Do MMM YYYY")
 
 				else
+					data.moduleType = 'Quiz'
 					taken_on = @model.get('taken_on')
 					if not taken_on
 						taken_on = null
@@ -110,20 +112,16 @@ define ['app',
 
 				if @model.get('post_status')? and @model.get('post_status') is 'archive'
 					data.status_str = '<span class="label label-success">Archived</span>'
-					data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
 				else
 					if status is 'started' or status is 'resumed'
 						data.status_str = '<span class="label label-info">In Progress</span>'
-						data.action_str = '<i class="fa fa-pause"></i> Resume'
 
 					else if status is 'completed'
 						data.status_str = '<span class="label label-success">Completed</span>'
-						data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
 					else
 						data.status_str = '<span class="label label-important">Not Started</span>'
-						data.action_str = '<i class="fa fa-play"></i> Start'
 
 						if Marionette.getOption(@, 'mode') isnt 'take-quiz'
 							data.schedule_button = true
