@@ -17,6 +17,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/ajax.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/csv_parse_functions.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/csv_import_quiz_functions.php');
+require_once( plugin_dir_path( __FILE__ ) . 'includes/csv_import_quiz_schedules.php');
 
 function set_sds_plugin_options() {
 	global $wpdb;

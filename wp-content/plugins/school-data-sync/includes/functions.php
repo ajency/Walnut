@@ -207,6 +207,8 @@ function sds_get_tables_to_export($last_sync=''){
     
     $quiz_question_response_table = "{$wpdb->prefix}quiz_question_response";
     $quiz_response_summary_table = "{$wpdb->prefix}quiz_response_summary";
+    
+    $quiz_schedules_table = "{$wpdb->prefix}quiz_schedules";
 
     $tables_list[]= array(
         'query'=> "SELECT * FROM $question_response_table WHERE sync = 0",
@@ -226,6 +228,11 @@ function sds_get_tables_to_export($last_sync=''){
         'query'=> "SELECT * FROM $quiz_response_summary_table WHERE sync = 0",
         'table_name'=> $quiz_response_summary_table
         );
+
+    $tables_list[]= array(
+        'query'=> "SELECT * FROM $quiz_schedules_table",
+        'table_name'=> $quiz_schedules_table
+        );    
     
     return $tables_list;
 }

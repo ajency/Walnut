@@ -67,6 +67,9 @@ function ajax_sds_data_sync_import() {
         
         if(strpos($stat['name'],'quiz_response_summary.csv') !== false)
             sds_read_quiz_response_summary_csv_file( $extract_path . '/' . $stat['name'] ); 
+ 
+        if(strpos($stat['name'],'quiz_schedules.csv') !== false)
+            sds_read_quiz_schedules_csv_file( $extract_path . '/' . $stat['name'] );         
         
         if(strpos($stat['name'],'class_divisions.csv') !== false)
             sds_read_class_divisions_csv_file( $extract_path . '/' . $stat['name'] );
