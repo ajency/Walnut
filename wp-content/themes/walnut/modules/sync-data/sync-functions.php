@@ -44,6 +44,7 @@ function sync_app_data_to_db( $sync_request_id ) {
     require_once "import_question_response_meta.php";
     require_once "import_quiz_question_response.php";
     require_once "import_quiz_response_summary.php";
+    require_once "import_quiz_schedules.php";
 
     if (validate_file_exists( $sync_request_id ) === false)
         return false;
@@ -75,9 +76,12 @@ function sync_app_data_to_db( $sync_request_id ) {
 
         if(strpos($stat['name'],'quiz_response_summary.csv') !== false)
             read_quiz_response_summary_csv_file( $extract_path . '/' . $stat['name'] );
+
+        if(strpos($stat['name'],'quiz_schedules.csv') !== false)
+            read_quiz_schedules_csv_file( $extract_path . '/' . $stat['name'] );
     }
 
-    mark_sync_as_complete( $sync_request_id );
+    #mark_sync_as_complete( $sync_request_id );
 
     $files = glob($extract_path.'/*'); // get all file names from .tmp folder
     foreach($files as $file){ // iterate files
@@ -86,7 +90,7 @@ function sync_app_data_to_db( $sync_request_id ) {
     }
 
     #delete the zip file
-    unlink($file_path);
+    #unlink($file_path);
 
     $zip->close();
 }
