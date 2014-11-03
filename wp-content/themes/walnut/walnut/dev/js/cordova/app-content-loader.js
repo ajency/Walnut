@@ -1,7 +1,7 @@
 define(['underscore', 'unserialize'], function(_) {
   return _.mixin({
     getMetaValue: function(content_piece_id) {
-      var meta_value, onSuccess, runQuery;
+      var defer, meta_value, onSuccess;
       content_piece_id = parseInt(content_piece_id);
       meta_value = {
         content_type: '',
@@ -19,17 +19,13 @@ define(['underscore', 'unserialize'], function(_) {
         hint_enable: '',
         hint: ''
       };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?", [content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, row, _fn, _i, _ref;
-          _fn = function(row) {
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var forEach;
+        if (data.rows.length === 0) {
+          return defer.resolve(meta_value);
+        } else {
+          forEach = function(row, i) {
             var content_piece_meta;
             if (row['meta_key'] === 'content_type') {
               meta_value.content_type = row['meta_value'];
@@ -54,302 +50,282 @@ define(['underscore', 'unserialize'], function(_) {
               meta_value.comment_enable = content_piece_meta.comment_enable;
               meta_value.comment = content_piece_meta.comment;
               meta_value.hint_enable = content_piece_meta.hint_enable;
-              return meta_value.hint = content_piece_meta.hint;
+              meta_value.hint = content_piece_meta.hint;
+            }
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              return defer.resolve(meta_value);
             }
           };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            _fn(row);
-          }
-          return d.resolve(meta_value);
-        };
+          return forEach(data.rows.item(0), 0);
+        }
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getMetaValue transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?", [content_piece_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getJsonToClone: function(elements) {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var content, total;
-          content = {
-            elements: elements,
-            excerpt: new Array,
-            marks: 0
-          };
-          if (_.isArray(elements)) {
-            total = 0;
-            return _.each(elements, function(element) {
-              var insideElement, metaData;
-              total++;
-              if (element.element === 'Row') {
-                insideElement = _.getRowElements(element);
-                return insideElement.done(function(columnElement) {
-                  content.excerpt.push(columnElement.excerpt);
-                  if (columnElement.marks) {
-                    content.marks += columnElement.marks;
-                  }
-                  total--;
-                  if (!total) {
-                    return d.resolve(content);
-                  }
-                });
-              } else if (element.element === 'Mcq') {
-                insideElement = _.getMcqElements(element);
-                return insideElement.done(function(columnElement) {
-                  var metaData;
-                  metaData = _.getElementMetaValues(element);
-                  return metaData.done(function(meta) {
-                    element.meta_id = parseInt(element.meta_id);
-                    if (meta !== false) {
-                      _.defaults(element, meta);
-                    }
-                    content.excerpt.push(columnElement.excerpt);
-                    if (columnElement.marks) {
-                      content.marks += columnElement.marks;
-                    }
-                    total--;
-                    if (!total) {
-                      return d.resolve(content);
-                    }
-                  });
-                });
-              } else {
-                metaData = _.getElementMetaValues(element);
-                return metaData.done(function(meta) {
-                  element.meta_id = parseInt(element.meta_id);
-                  if (meta !== false) {
-                    _.defaults(element, meta);
-                    if (element.element === 'Text') {
-                      content.excerpt.push(meta.content);
-                    }
-                    if (element.element === 'Fib') {
-                      content.excerpt.push(element.text);
-                    }
-                    if (element.element === 'Hotspot') {
-                      content.excerpt.push(element.textCollection[0].text);
-                    }
-                    if (element.element === 'Image') {
-                      element.image_id = parseInt(element.image_id);
-                    }
-                    if (element.element === 'ImageWithText') {
-                      element.image_id = parseInt(element.image_id);
-                    }
-                    if (element.element === 'Video') {
-                      element.video_id = parseInt(element.video_id);
-                    }
-                    if (element.marks) {
-                      content.marks += element.marks;
-                    }
-                  }
-                  total--;
-                  if (!total) {
-                    return d.resolve(content);
-                  }
-                });
+      var content, defer, forEach, total;
+      defer = $.Deferred();
+      content = {
+        elements: elements,
+        excerpt: new Array,
+        marks: 0
+      };
+      if (_.isArray(elements)) {
+        total = 0;
+        forEach = function(element, i) {
+          total++;
+          if (element.element === 'Row') {
+            _.getRowElements(element).then(function(columnElement) {
+              content.excerpt.push(columnElement.excerpt);
+              if (columnElement.marks) {
+                content.marks += columnElement.marks;
+              }
+              total--;
+              if (!total) {
+                return defer.resolve(content);
               }
             });
+          } else if (element.element === 'Mcq') {
+            _.getMcqElements(element).then(function(columnElement) {
+              return _.getElementMetaValues(element).then(function(meta) {
+                element.meta_id = parseInt(element.meta_id);
+                if (meta !== false) {
+                  _.defaults(element, meta);
+                }
+                content.excerpt.push(columnElement.excerpt);
+                if (columnElement.marks) {
+                  content.marks += columnElement.marks;
+                }
+                total--;
+                if (!total) {
+                  return defer.resolve(content);
+                }
+              });
+            });
           } else {
-            return d.resolve(elements);
+            _.getElementMetaValues(element).then(function(meta) {
+              element.meta_id = parseInt(element.meta_id);
+              if (meta !== false) {
+                _.defaults(element, meta);
+                if (element.element === 'Text') {
+                  content.excerpt.push(meta.content);
+                }
+                if (element.element === 'Fib') {
+                  content.excerpt.push(element.text);
+                }
+                if (element.element === 'Hotspot') {
+                  content.excerpt.push(element.textCollection[0].text);
+                }
+                if (element.element === 'Image') {
+                  element.image_id = parseInt(element.image_id);
+                }
+                if (element.element === 'ImageWithText') {
+                  element.image_id = parseInt(element.image_id);
+                }
+                if (element.element === 'Video') {
+                  element.video_id = parseInt(element.video_id);
+                }
+                if (element.marks) {
+                  content.marks += element.marks;
+                }
+              }
+              total--;
+              if (!total) {
+                return defer.resolve(content);
+              }
+            });
           }
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log("get getJsonToClone done");
-      }).fail(_.failureHandler);
+          i = i + 1;
+          if (i < elements.length) {
+            return forEach(elements[i], i);
+          } else {
+            return defer.resolve(content);
+          }
+        };
+        forEach(elements[0], 0);
+      } else {
+        defer.resolve(elements);
+      }
+      return defer.promise();
     },
     getRowElements: function(rowElements) {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var content, total;
-          content = {
-            excerpt: new Array,
-            marks: 0
-          };
-          total = 0;
-          return _.each(rowElements.elements, function(column) {
-            if (column.elements) {
-              return _.each(column.elements, function(element) {
-                var insideElement, metaData;
-                total++;
-                if (element.element === 'Row') {
-                  insideElement = _.getRowElements(element);
-                  return insideElement.done(function(columnElement) {
-                    content.excerpt.push(columnElement.excerpt);
-                    if (columnElement.marks) {
-                      content.marks += columnElement.marks;
-                    }
-                    total--;
-                    if (!total) {
-                      return d.resolve(content);
-                    }
-                  });
-                } else {
-                  metaData = _.getElementMetaValues(element);
-                  return metaData.done(function(meta) {
-                    element.meta_id = parseInt(element.meta_id);
-                    if (meta !== false) {
-                      _.defaults(element, meta);
-                      if (element.element === 'Text') {
-                        content.excerpt.push(element.content);
-                      }
-                      if (element.element === 'Fib') {
-                        content.excerpt.push(element.text);
-                      }
-                      if (element.element === 'Hotspot') {
-                        content.excerpt.push(element.textCollection[0].text);
-                      }
-                      if (element.element === 'Image') {
-                        element.image_id = parseInt(element.image_id);
-                      }
-                      if (element.element === 'ImageWithText') {
-                        element.image_id = parseInt(element.image_id);
-                      }
-                      if (element.element === 'Video') {
-                        element.video_id = parseInt(element.video_id);
-                      }
-                      if (element.marks) {
-                        content.marks += element.marks;
-                      }
-                    }
-                    total--;
-                    if (!total) {
-                      return d.resolve(content);
-                    }
-                  });
+      var content, defer, forEach, total;
+      defer = $.Deferred();
+      content = {
+        excerpt: new Array,
+        marks: 0
+      };
+      total = 0;
+      forEach = function(column, i) {
+        if (column.elements) {
+          return _.each(column.elements, function(element) {
+            total++;
+            if (element.element === 'Row') {
+              _.getRowElements(element).then(function(columnElement) {
+                content.excerpt.push(columnElement.excerpt);
+                if (columnElement.marks) {
+                  content.marks += columnElement.marks;
+                }
+                total--;
+                if (!total) {
+                  return defer.resolve(content);
                 }
               });
             } else {
-              return d.resolve(content);
+              _.getElementMetaValues(element).then(function(meta) {
+                element.meta_id = parseInt(element.meta_id);
+                if (meta !== false) {
+                  _.defaults(element, meta);
+                  if (element.element === 'Text') {
+                    content.excerpt.push(element.content);
+                  }
+                  if (element.element === 'Fib') {
+                    content.excerpt.push(element.text);
+                  }
+                  if (element.element === 'Hotspot') {
+                    content.excerpt.push(element.textCollection[0].text);
+                  }
+                  if (element.element === 'Image') {
+                    element.image_id = parseInt(element.image_id);
+                  }
+                  if (element.element === 'ImageWithText') {
+                    element.image_id = parseInt(element.image_id);
+                  }
+                  if (element.element === 'Video') {
+                    element.video_id = parseInt(element.video_id);
+                  }
+                  if (element.marks) {
+                    content.marks += element.marks;
+                  }
+                }
+                total--;
+                if (!total) {
+                  return defer.resolve(content);
+                }
+              });
+            }
+            i = i + 1;
+            if (i < rowElements.elements.length) {
+              return forEach(rowElements.elements[i], i);
+            } else {
+              return defer.resolve(content);
             }
           });
-        });
+        } else {
+          return defer.resolve(content);
+        }
       };
-      return $.when(runFunc()).done(function() {
-        return console.log("get getRowElements done");
-      }).fail(_.failureHandler);
+      forEach(rowElements.elements[0], 0);
+      return defer.promise();
     },
     getMcqElements: function(rowElements) {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var content, total;
-          content = {
-            excerpt: new Array,
-            marks: 0
-          };
-          total = 0;
-          return _.each(rowElements.elements, function(column) {
-            if (column) {
-              return _.each(column, function(element) {
-                var insideElement, metaData;
-                total++;
-                if (element.element === 'Row') {
-                  insideElement = _.getRowElements(element);
-                  return insideElement.done(function(columnElement) {
-                    content.excerpt.push(columnElement.excerpt);
-                    if (columnElement.marks) {
-                      content.marks += columnElement.marks;
-                    }
-                    total--;
-                    if (!total) {
-                      return d.resolve(content);
-                    }
-                  });
-                } else {
-                  metaData = _.getElementMetaValues(element);
-                  return metaData.done(function(meta) {
-                    element.meta_id = parseInt(element.meta_id);
-                    if (meta !== false) {
-                      _.defaults(element, meta);
-                      if (element.element === 'Text') {
-                        content.excerpt.push(element.content);
-                      }
-                      if (element.element === 'Fib') {
-                        content.excerpt.push(element.text);
-                      }
-                      if (element.element === 'Hotspot') {
-                        content.excerpt.push(element.textCollection[0].text);
-                      }
-                      if (element.element === 'Image') {
-                        element.image_id = parseInt(element.image_id);
-                      }
-                      if (element.element === 'ImageWithText') {
-                        element.image_id = parseInt(element.image_id);
-                      }
-                      if (element.element === 'Video') {
-                        element.video_id = parseInt(element.video_id);
-                      }
-                      if (element.marks) {
-                        content.marks += element.marks;
-                      }
-                    }
-                    total--;
-                    if (!total) {
-                      return d.resolve(content);
-                    }
-                  });
+      var content, defer, forEach, total;
+      defer = $.Deferred();
+      content = {
+        excerpt: new Array,
+        marks: 0
+      };
+      total = 0;
+      forEach = function(column, i) {
+        if (column) {
+          return _.each(column, function(element) {
+            total++;
+            if (element.element === 'Row') {
+              _.getRowElements(element).then(function(columnElement) {
+                content.excerpt.push(columnElement.excerpt);
+                if (columnElement.marks) {
+                  content.marks += columnElement.marks;
+                }
+                total--;
+                if (!total) {
+                  return defer.resolve(content);
                 }
               });
             } else {
-              return d.resolve(content);
+              _.getElementMetaValues(element).then(function(meta) {
+                element.meta_id = parseInt(element.meta_id);
+                if (meta !== false) {
+                  _.defaults(element, meta);
+                  if (element.element === 'Text') {
+                    content.excerpt.push(element.content);
+                  }
+                  if (element.element === 'Fib') {
+                    content.excerpt.push(element.text);
+                  }
+                  if (element.element === 'Hotspot') {
+                    content.excerpt.push(element.textCollection[0].text);
+                  }
+                  if (element.element === 'Image') {
+                    element.image_id = parseInt(element.image_id);
+                  }
+                  if (element.element === 'ImageWithText') {
+                    element.image_id = parseInt(element.image_id);
+                  }
+                  if (element.element === 'Video') {
+                    element.video_id = parseInt(element.video_id);
+                  }
+                  if (element.marks) {
+                    content.marks += element.marks;
+                  }
+                }
+                total--;
+                if (!total) {
+                  return defer.resolve(content);
+                }
+              });
+            }
+            i = i + 1;
+            if (i < rowElements.elements.length) {
+              return forEach(rowElements.elements[i], i);
+            } else {
+              return defer.resolve(content);
             }
           });
-        });
+        } else {
+          return defer.resolve(content);
+        }
       };
-      return $.when(runFunc()).done(function() {
-        return console.log("get getMcqElements done");
-      }).fail(_.failureHandler);
+      forEach(rowElements.elements[0], 0);
+      return defer.promise();
     },
     getElementMetaValues: function(element) {
-      var runFunc;
-      runFunc = function() {
-        return $.Deferred(function(d) {
-          var meta;
-          meta = _.getMetaValueFromMetaId(element.meta_id);
-          return meta.done(function(metaData) {
-            var ele;
-            if (metaData) {
-              ele = _.unserialize(metaData);
-              ele.meta_id = element.meta_id;
-            } else {
-              ele = element;
-            }
-            return d.resolve(ele);
-          });
-        });
-      };
-      return $.when(runFunc()).done(function() {
-        return console.log("get getElementMetaValues done");
-      }).fail(_.failureHandler);
+      var defer;
+      defer = $.Deferred();
+      _.getMetaValueFromMetaId(element.meta_id).then(function(metaData) {
+        var ele;
+        if (metaData) {
+          ele = _.unserialize(metaData);
+          ele.meta_id = element.meta_id;
+        } else {
+          ele = element;
+        }
+        return defer.resolve(ele);
+      });
+      return defer.promise();
     },
     getMetaValueFromMetaId: function(meta_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_id=?", [meta_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var metaValue, row;
-          metaValue = null;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            if (row['meta_key'] === 'content_element') {
-              metaValue = row['meta_value'];
-            }
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var metaValue, row;
+        metaValue = null;
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          if (row['meta_key'] === 'content_element') {
+            metaValue = row['meta_value'];
           }
-          return d.resolve(metaValue);
-        };
+        }
+        return defer.resolve(metaValue);
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getMetaValueFromMetaId: ' + meta_id + ' transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_id=?", [meta_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

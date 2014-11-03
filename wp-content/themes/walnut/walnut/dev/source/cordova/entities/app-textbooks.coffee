@@ -291,65 +291,78 @@ define ['underscore'], ( _) ->
 
 		getTextBookByTextbookId : (id)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt 
-							LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id  
-							WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 
-							AND tt.term_id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
-						
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
+			onSuccess = (tx,data)->
+				row = data.rows.item(0)
+				
+				result =
+					term_id: row["term_id"]
+					name: row["name"]
+					slug: row["slug"]
+					term_group: row["term_group"]
+					term_order: row["term_order"]
+					term_taxonomy_id: row["term_taxonomy_id"]
+					taxonomy: row["taxonomy"]
+					description: row["description"]
+					parent: row["parent"]
+					count: row["count"]
+					classes: _.unserialize(row["class_id"])
+					subjects: _.unserialize(row["tags"])
 
-					row = data.rows.item(0)
-					
-					result =
-						term_id: row["term_id"]
-						name: row["name"]
-						slug: row["slug"]
-						term_group: row["term_group"]
-						term_order: row["term_order"]
-						term_taxonomy_id: row["term_taxonomy_id"]
-						taxonomy: row["taxonomy"]
-						description: row["description"]
-						parent: row["parent"]
-						count: row["count"]
-						classes: _.unserialize(row["class_id"])
-						subjects: _.unserialize(row["tags"])
+				defer.resolve result
 
-					d.resolve(result)
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT * FROM wp_terms t, wp_term_taxonomy tt 
+								LEFT OUTER JOIN wp_textbook_relationships wtr 
+								ON t.term_id=wtr.textbook_id 
+								WHERE t.term_id=tt.term_id 
+								AND tt.taxonomy='textbook' 
+								AND tt.parent=0 
+								AND tt.term_id=?"
+								, [id]
+				, onSuccess, _.transactionErrorHandler
 
-			$.when(runQuery()).done (data)->
-				console.log 'getTextBookByTextbookId transaction completed'
-			.fail _.failureHandler
+			defer.promise()
 
 
 
 		getTextBookNamesByTermIDs : (ids)->
 				
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT term_id, name FROM wp_terms WHERE 
-							term_id IN ("+ids+")", [], onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess =(d)->
-				(tx, data)->
+			onSuccess = (tx,data)->
+				result = []
 
-					result = []
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
 
-					for i in [0..data.rows.length-1] by 1
-
-						row = data.rows.item(i)
-
+					forEach = (row, i)->
+						
 						result[i] =
 							id: row['term_id']
 							name: row['name']
 
-					d.resolve(result)
 
-			$.when(runQuery()).done ->
-				console.log 'getTextBookNamesByTermIDs transaction completed'
-			.fail _.failureHandler
+						i = i + 1
+
+						if ( i < data.rows.length)
+							forEach data.rows.item(i), i
+
+						else
+							defer.resolve result
+
+					forEach data.rows.item(0), 0
+
+
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT term_id, name FROM wp_terms 
+								WHERE term_id IN ("+ids+")"
+								, []
+				, onSuccess, _.transactionErrorHandler
+
+			defer.promise()

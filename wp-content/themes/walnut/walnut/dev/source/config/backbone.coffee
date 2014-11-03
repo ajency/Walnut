@@ -15,7 +15,6 @@ define ["backbone"], (Backbone) ->
 
 			collection_name = collection.name
 			opts = options.data
-			alert "collection_name"
 			console.log 'Collection name: '+collection_name
 
 			if collection_name is 'textbook'
@@ -23,7 +22,6 @@ define ["backbone"], (Backbone) ->
 				_.cordovaTextbookCollection()
 				.done (data)->
 					console.log 'cordovaTextbookCollection done'
-					console.log  data
 					collection.set data
 
 			if collection_name is 'chapter'
@@ -36,6 +34,7 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'division'
 				_.getAllDivisions()
 				.done (d)->
+					console.log 'getAllDivisions done'
 
 					collection.set d
 
@@ -47,27 +46,29 @@ define ["backbone"], (Backbone) ->
 
 			if collection_name is 'quiz'
 				_.getQuizByTextbookId(opts.textbook)
-				.then (data)->
-					console.log JSON.stringify data
+				.done (data)->
+					console.log 'getQuizByTextbookId done'
 
 					collection.set data
 
 					App.request "app:reset:quiz:repository", data
 
 			if collection_name is 'quiz-response-summary'
-				data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
-				data.done (d)->
+				_.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
+				.done (d)->
+					console.log 'getQuizResponseSummaryByCollectionIdAndUserID done'
 					collection.set d
 
 			if collection_name is 'quiz-question-response'
-				data = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
-				data.done (d)->
-					
+				_.getQuizQuestionResponseBySummaryID(opts.summary_id)
+				.done (d)->
+					console.log 'getQuizQuestionResponseBySummaryID done'
 					collection.set d
 
 			if collection_name is 'content-piece'
 				data = _.getContentPiecesByIDs(opts.ids)
 				data.done (d)->
+					console.log 'getContentPiecesByIDs done'
 					collection.set d
 
 					App.request "app:reset:content:pieces:repository", d
@@ -85,9 +86,9 @@ define ["backbone"], (Backbone) ->
 
 
 			if collection_name is 'textbookName'
-				data = _.getTextBookNamesByTermIDs(opts.term_ids)
-				data.done (d)->
-					collection.set d
+				_.getTextBookNamesByTermIDs(opts.term_ids)
+				.done (data)->
+					collection.set data
 
 
 			if collection_name is 'offlineUsers'
@@ -223,22 +224,22 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
-					_.fetchSingleDivision model.get('id')
-					.then (data)->
+					xhr = _.fetchSingleDivision model.get('id')
+					.done (data)->
 						model.set data
 
 
 				if modelname is 'textbook'
-					data = _.getTextBookByTextbookId(model.get('term_id'))
-					data.done (d)->
+					xhr = _.getTextBookByTextbookId(model.get('term_id'))
+					.done (d)->
 						model.set d	
 
 
 				if modelname is 'quiz'
-					_.getQuizById(model.get('id'))
-					.then (data)->
-						console.log JSON.stringify data
+					xhr = _.getQuizById(model.get('id'))
+					.done (data)->
 						model.set data
+						console.log JSON.stringify data
 
 				if modelname is 'quiz-response-summary'
 					_.writeQuizResponseSummary(model)
@@ -249,16 +250,16 @@ define ["backbone"], (Backbone) ->
 
 
 				if modelname is 'content-group'
-					data = _.getContentGroupById(model.get('id'))
-					data.done (d)->
+					xhr = _.getContentGroupById(model.get('id'))
+					.done (d)->
 						model.set d
 
 				if modelname is 'question-response'
 					data = _.saveUpdateQuestionResponse(model)
 
 				if modelname is 'media'
-					data = _.getMediaById(model.get('id'))
-					data.done (d)->
+					xhr = _.getMediaById(model.get('id'))
+					.done (d)->
 						model.set d	
 
 			

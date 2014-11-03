@@ -48,6 +48,7 @@ define(['underscore', 'unserialize'], function(_) {
                 if (i < data.rows.length) {
                   return forEach(data.rows.item(i), i);
                 } else {
+                  console.log("getQuizByTextbookId done");
                   return defer.resolve(result);
                 }
               });
@@ -116,6 +117,7 @@ define(['underscore', 'unserialize'], function(_) {
                   _.each(content_pieces, function(contentPiece) {
                     return result.contentPieces = contentPiece;
                   });
+                  console.log("getCollectionMeta done");
                   return defer.resolve(result);
                 });
               }
@@ -161,6 +163,7 @@ define(['underscore', 'unserialize'], function(_) {
                 _.each(content_set_ids, function(contentSetId, key) {
                   return content_pieces = content_pieces.concat(contentSetId);
                 });
+                console.log("getContentPiecesFromContentLayout done");
                 return defer.resolve(content_pieces);
               });
             }
@@ -210,6 +213,7 @@ define(['underscore', 'unserialize'], function(_) {
             if (i < data.rows.length) {
               return forEach(data.rows.item(i), i);
             } else {
+              console.log("getIdFromPostMeta done");
               return defer.resolve(postId);
             }
           };
@@ -244,6 +248,7 @@ define(['underscore', 'unserialize'], function(_) {
             if (i < data.rows.length) {
               return forEach(data.rows.item(i), i);
             } else {
+              console.log("getUniqueIdFromPostMeta done");
               return defer.resolve(uniquePostId);
             }
           };
@@ -272,6 +277,7 @@ define(['underscore', 'unserialize'], function(_) {
             if (i < data.rows.length) {
               return forEach(data.rows.item(i), i);
             } else {
+              console.log("getUniqueIdFromPostMeta done");
               return defer.resolve(complete_ids_for_each_level);
             }
           };
@@ -292,7 +298,6 @@ define(['underscore', 'unserialize'], function(_) {
       };
       defer = $.Deferred();
       _.getQuizResponseSummaryByCollectionId(collection_id).then(function(quiz_responses) {
-        var getQuizType;
         if (_.isEmpty(quiz_responses)) {
           data.status = 'not started';
           data.start_date = '';
@@ -300,8 +305,7 @@ define(['underscore', 'unserialize'], function(_) {
           defer.resolve(data);
         }
         if (!_.isEmpty(quiz_responses)) {
-          getQuizType = _.getCollectionMeta(collection_id);
-          return getQuizType.done(function(collectionMetaData) {
+          return _.getCollectionMeta(collection_id).then(function(collectionMetaData) {
             var contentLayoutValue, date;
             contentLayoutValue = _.unserialize(quiz_responses.quiz_meta);
             if (collectionMetaData.quizType === 'practice') {
@@ -324,6 +328,7 @@ define(['underscore', 'unserialize'], function(_) {
                 data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
               }
             }
+            console.log("getStartDateAndStatus done");
             return defer.resolve(data);
           });
         }
@@ -340,11 +345,12 @@ define(['underscore', 'unserialize'], function(_) {
           result = '';
           return defer.resolve(result);
         } else {
+          console.log("getStartDateAndStatus done");
           return defer.resolve(result);
         }
       };
       _.db.transaction(function(tx) {
-        return tx.executeSql("SELECT COUNT(summary_id) AS attempts, taken_on, quiz_meta FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess, _.deferredErrorHandler);
+        return tx.executeSql("SELECT COUNT(summary_id) AS attempts, taken_on, quiz_meta FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
     },
@@ -398,6 +404,7 @@ define(['underscore', 'unserialize'], function(_) {
               total_minutes: row['duration'],
               type: row['type']
             };
+            console.log("getStartDateAndStatus done");
             return defer.resolve(result);
           });
         });

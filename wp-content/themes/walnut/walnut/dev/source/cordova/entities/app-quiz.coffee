@@ -62,11 +62,10 @@ define ['underscore', 'unserialize'], ( _) ->
 
 								i = i + 1
 								if (i < data.rows.length)
-									
 									forEach data.rows.item(i), i
 								
 								else
-
+									console.log "getQuizByTextbookId done"
 									defer.resolve result
 					
 
@@ -148,6 +147,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									_.each content_pieces, (contentPiece)->
 										result.contentPieces = contentPiece
 
+									console.log "getCollectionMeta done"
 									defer.resolve result
 
 					
@@ -161,7 +161,6 @@ define ['underscore', 'unserialize'], ( _) ->
 								WHERE collection_id = ?"
 								, [collection_id]
 				, onSuccess, _.transactionErrorHandler
-
 
 
 			defer.promise()
@@ -215,6 +214,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									
 									content_pieces = content_pieces.concat(contentSetId)
 
+								console.log "getContentPiecesFromContentLayout done"
 								defer.resolve content_pieces
 
 				
@@ -285,6 +285,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							forEach data.rows.item(i), i
 
 						else
+							console.log "getIdFromPostMeta done"
 						
 							defer.resolve postId
 
@@ -345,6 +346,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							forEach data.rows.item(i), i
 
 						else
+							console.log "getUniqueIdFromPostMeta done"
 							defer.resolve uniquePostId
 
 					forEach data.rows.item(0), 0
@@ -394,6 +396,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							forEach data.rows.item(i), i
 
 						else
+							console.log "getUniqueIdFromPostMeta done"
 							defer.resolve complete_ids_for_each_level
 
 
@@ -432,8 +435,8 @@ define ['underscore', 'unserialize'], ( _) ->
 
 				if not _.isEmpty quiz_responses
 					
-					getQuizType = _.getCollectionMeta(collection_id)
-					getQuizType.done (collectionMetaData)->
+					_.getCollectionMeta(collection_id)
+					.then (collectionMetaData)->
 
 						contentLayoutValue = _.unserialize(quiz_responses.quiz_meta)
 
@@ -470,6 +473,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								date = quiz_responses.taken_on
 								data.start_date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
 
+						console.log "getStartDateAndStatus done"
 						defer.resolve data
 
 			defer.promise()
@@ -488,6 +492,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						result = ''
 						defer.resolve(result)
 					else
+						console.log "getStartDateAndStatus done"
 						defer.resolve(result)
 
 			_.db.transaction (tx)->
@@ -497,7 +502,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								WHERE collection_id=? 
 								AND student_id=?"
 								, [collection_id, _.getUserID()] 
-				, onSuccess, _.deferredErrorHandler
+				, onSuccess, _.transactionErrorHandler
 
 		
 			defer.promise()
@@ -563,6 +568,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							total_minutes: row['duration']
 							type: row['type']
 						
+						console.log "getStartDateAndStatus done"
 						defer.resolve result
 
 

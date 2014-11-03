@@ -1,91 +1,73 @@
 define(['underscore', 'unserialize', 'serialize'], function(_) {
   return _.mixin({
     getQuizResponseSummaryByCollectionIdAndUserID: function(collection_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT taken_on, quiz_meta, summary_id FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, row, _fn, _i, _ref;
-          result = [];
-          _fn = function(row, i) {
-            var quizResponseSummary;
-            quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id);
-            return quizResponseSummary.done(function(quiz_responses) {
-              return (function(row, i, quiz_responses) {
-                var countForSkippedQuestion;
-                countForSkippedQuestion = _.getCountForSkippedQuestion(row['summary_id']);
-                return countForSkippedQuestion.done(function(skipped) {
-                  return (function(row, i, quiz_responses, skipped) {
-                    var totalMarksScoredAndTotalTimeTaken;
-                    totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id']);
-                    return totalMarksScoredAndTotalTimeTaken.done(function(value) {
-                      var quiz_meta, userID;
-                      userID = _.getUserID();
-                      quiz_meta = _.unserialize(row['quiz_meta']);
-                      return result[i] = {
-                        collection_id: collection_id,
-                        marks_scored: value.marks_scored,
-                        attempts: quiz_responses.attempts,
-                        negative_scored: value.negative_scored,
-                        num_skipped: skipped,
-                        questions_order: quiz_meta.questions_order,
-                        status: quiz_meta.status,
-                        student_id: userID,
-                        summary_id: row['summary_id'],
-                        taken_on: row['taken_on'],
-                        total_marks_scored: value.total_marks_scored,
-                        total_time_taken: value.total_time_taken
-                      };
-                    });
-                  })(row, i, quiz_responses, skipped);
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var forEach, result;
+        result = [];
+        if (data.rows.length === 0) {
+          return defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
+            return _.getQuizResponseSummaryByCollectionId(collection_id).then(function(quiz_responses) {
+              return _.getCountForSkippedQuestion(row['summary_id']).then(function(skipped) {
+                return _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id']).then(function(value) {
+                  var quiz_meta, userID;
+                  userID = _.getUserID();
+                  quiz_meta = _.unserialize(row['quiz_meta']);
+                  result[i] = {
+                    collection_id: collection_id,
+                    marks_scored: value.marks_scored,
+                    attempts: quiz_responses.attempts,
+                    negative_scored: value.negative_scored,
+                    num_skipped: skipped,
+                    questions_order: quiz_meta.questions_order,
+                    status: quiz_meta.status,
+                    student_id: userID,
+                    summary_id: row['summary_id'],
+                    taken_on: row['taken_on'],
+                    total_marks_scored: value.total_marks_scored,
+                    total_time_taken: value.total_time_taken
+                  };
+                  i = i + 1;
+                  if (i < data.rows.length) {
+                    return forEach(data.rows.item(i), i);
+                  } else {
+                    console.log("getQuizResponseSummaryByCollectionIdAndUserID done");
+                    return defer.resolve(result);
+                  }
                 });
-              })(row, i, quiz_responses);
+              });
             });
           };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            console.log(row['summary_id']);
-            _fn(row, i);
-          }
-          return d.resolve(result);
-        };
+          return forEach(data.rows.item(0), 0);
+        }
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getQuizResponseSummaryByCollectionIdAndUserID transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT taken_on, quiz_meta, summary_id FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getCountForSkippedQuestion: function(summary_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT COUNT(status) AS num_skipped FROM " + _.getTblPrefix() + "quiz_question_response WHERE status = ? AND summary_id = ?", ['skipped', summary_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var result;
+        result = data.rows.item(0)['num_skipped'];
+        console.log("getCountForSkippedQuestion done");
+        return defer.resolve(result);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var result;
-          result = data.rows.item(0)['num_skipped'];
-          return d.resolve(result);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getCountForSkippedQuestion transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT COUNT(status) AS num_skipped FROM " + _.getTblPrefix() + "quiz_question_response WHERE status = ? AND summary_id = ?", ['skipped', summary_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     writeQuizResponseSummary: function(model) {
-      var collectionMeta, quizMeta, quizMetaValue;
+      var quizMeta, quizMetaValue;
       quizMetaValue = '';
       quizMeta = '';
-      collectionMeta = _.getCollectionMeta(model.get('collection_id'));
-      return collectionMeta.done(function(collectionMetaData) {
+      return _.getCollectionMeta(model.get('collection_id')).then(function(collectionMetaData) {
         if (collectionMetaData.quizType === "practice") {
           quizMetaValue = model.get('status');
           quizMeta = {

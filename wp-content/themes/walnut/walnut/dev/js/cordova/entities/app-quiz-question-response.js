@@ -1,22 +1,16 @@
 define(['underscore', 'unserialize', 'serialize'], function(_) {
   return _.mixin({
     getQuizQuestionResponseBySummaryID: function(summary_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, row, _fn, _i, _ref;
-          result = [];
-          _fn = function(row, i) {
-            var totalMarksScoredAndTotalTimeTaken;
-            totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id);
-            return totalMarksScoredAndTotalTimeTaken.done(function(value) {
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var forEach, result;
+        result = [];
+        if (data.rows.length === 0) {
+          return defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
+            _.getTotalMarksScoredAndTotalTimeTaken(summary_id).then(function(value) {
               return result[i] = {
                 content_piece_id: row['content_piece_id'],
                 marks_scored: value.total_marks_scored,
@@ -27,46 +21,40 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
                 time_taken: value.total_time_taken
               };
             });
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              console.log("getQuizQuestionResponseBySummaryID done");
+              return defer.resolve(result);
+            }
           };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            _fn(row, i);
-          }
-          return d.resolve(result);
-        };
+          return forEach(data.rows.item(0), 0);
+        }
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getQuizQuestionResponseBySummaryID transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ?", [summary_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getTotalMarksScoredAndTotalTimeTaken: function(summary_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END) as negative_scored, SUM(CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END) as marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ? ", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var result;
+        result = '';
+        result = data.rows.item(0);
+        console.log("getTotalMarksScoredAndTotalTimeTaken done");
+        return defer.resolve(result);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var result;
-          result = '';
-          result = data.rows.item(0);
-          return d.resolve(result);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getTotalMarksScoredAndTotalTimeTaken transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, SUM(CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END) as negative_scored, SUM(CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END) as marks_scored, SUM(time_taken) as total_time_taken FROM " + _.getTblPrefix() + "quiz_question_response WHERE summary_id = ? ", [summary_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     writeQuestionResponse: function(model) {
-      var quizResponseSummary;
-      quizResponseSummary = _.getQuizResponseSummary(model.get('summary_id'));
-      return quizResponseSummary.done(function(collection_id) {
-        var collectionMeta;
-        collectionMeta = _.getCollectionMeta(collection_id);
-        return collectionMeta.done(function(collectionMetaData) {
+      return _.getQuizResponseSummary(model.get('summary_id')).then(function(collection_id) {
+        return _.getCollectionMeta(collection_id).then(function(collectionMetaData) {
           var check_permissions, qr_id;
           check_permissions = collectionMetaData.permission;
           if (model.get('qr_id') === "" || typeof model.get('qr_id') === 'undefined') {
@@ -79,24 +67,17 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
       });
     },
     getQuizResponseSummary: function(summary_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_response_summary WHERE summary_id = ?", [summary_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var result;
+        result = data.rows.item(0)['collection_id'];
+        return defer.resolve(result);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var result;
-          result = data.rows.item(0)['collection_id'];
-          return d.resolve(result);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getQuizResponseSummary transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_response_summary WHERE summary_id = ?", [summary_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     insertIntoQuizQuestionResponse: function(model, qr_id) {
       var question_response;
