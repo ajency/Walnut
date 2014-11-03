@@ -152,7 +152,8 @@ class ExportTables {
             "{$wpdb->base_prefix}textbook_relationships",
 
             //CHILD SITE TABLE QUERIES
-            "{$wpdb->prefix}class_divisions"
+            "{$wpdb->prefix}class_divisions",
+            "{$wpdb->prefix}quiz_schedules"
 
         );
 
