@@ -11,9 +11,12 @@ define(['underscore', 'unserialize'], function(_) {
         } else {
           forEach = function(row, i) {
             return _.getPostAuthorName(row['post_author']).then(function(author_name) {
+              console.log(author_name);
               return _.getMetaValue(row['ID']).then(function(meta_value) {
+                console.log(meta_value);
                 return _.getJsonToClone(meta_value.layout_json).then(function(contentElements) {
                   var excerpt, excerpt_array, taglessArray;
+                  console.log(contentElements);
                   excerpt_array = contentElements.excerpt;
                   excerpt_array = _.flatten(excerpt_array);
                   taglessArray = new Array;

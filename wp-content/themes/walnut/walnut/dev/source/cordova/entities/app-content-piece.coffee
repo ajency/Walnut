@@ -21,12 +21,15 @@ define ['underscore', 'unserialize'], ( _) ->
 						
 						_.getPostAuthorName(row['post_author'])
 						.then (author_name)->
+							console.log author_name
 								
 							_.getMetaValue(row['ID'])
 							.then (meta_value)->
+								console.log meta_value
 									
 								_.getJsonToClone(meta_value.layout_json)
 								.then (contentElements)->
+									console.log contentElements
 									excerpt_array = contentElements.excerpt
 
 									excerpt_array = _.flatten excerpt_array
@@ -80,11 +83,9 @@ define ['underscore', 'unserialize'], ( _) ->
 										to_ping: row['to_ping']
 
 									i = i + 1
-
-									if ( i < data.rows.length)
+									if(i < data.rows.length)
 										forEach data.rows.item(i), i
-
-									else
+									else 
 										defer.resolve result
 
 

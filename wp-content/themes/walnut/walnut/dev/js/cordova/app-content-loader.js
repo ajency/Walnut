@@ -82,9 +82,6 @@ define(['underscore', 'unserialize'], function(_) {
           if (element.element === 'Row') {
             _.getRowElements(element).then(function(columnElement) {
               content.excerpt.push(columnElement.excerpt);
-              if (columnElement.marks) {
-                content.marks += columnElement.marks;
-              }
               total--;
               if (!total) {
                 return defer.resolve(content);
@@ -98,9 +95,6 @@ define(['underscore', 'unserialize'], function(_) {
                   _.defaults(element, meta);
                 }
                 content.excerpt.push(columnElement.excerpt);
-                if (columnElement.marks) {
-                  content.marks += columnElement.marks;
-                }
                 total--;
                 if (!total) {
                   return defer.resolve(content);
@@ -130,9 +124,6 @@ define(['underscore', 'unserialize'], function(_) {
                 if (element.element === 'Video') {
                   element.video_id = parseInt(element.video_id);
                 }
-                if (element.marks) {
-                  content.marks += element.marks;
-                }
               }
               total--;
               if (!total) {
@@ -141,10 +132,8 @@ define(['underscore', 'unserialize'], function(_) {
             });
           }
           i = i + 1;
-          if (i < elements.length) {
+          if (i < _.size(elements)) {
             return forEach(elements[i], i);
-          } else {
-            return defer.resolve(content);
           }
         };
         forEach(elements[0], 0);
@@ -154,23 +143,21 @@ define(['underscore', 'unserialize'], function(_) {
       return defer.promise();
     },
     getRowElements: function(rowElements) {
-      var content, defer, forEach, total;
+      var content, defer, forEachRowElement, total;
       defer = $.Deferred();
       content = {
         excerpt: new Array,
         marks: 0
       };
       total = 0;
-      forEach = function(column, i) {
+      forEachRowElement = function(column, i) {
+        var forEachColumnElement;
         if (column.elements) {
-          return _.each(column.elements, function(element) {
+          forEachColumnElement = function(element, j) {
             total++;
             if (element.element === 'Row') {
               _.getRowElements(element).then(function(columnElement) {
                 content.excerpt.push(columnElement.excerpt);
-                if (columnElement.marks) {
-                  content.marks += columnElement.marks;
-                }
                 total--;
                 if (!total) {
                   return defer.resolve(content);
@@ -199,9 +186,6 @@ define(['underscore', 'unserialize'], function(_) {
                   if (element.element === 'Video') {
                     element.video_id = parseInt(element.video_id);
                   }
-                  if (element.marks) {
-                    content.marks += element.marks;
-                  }
                 }
                 total--;
                 if (!total) {
@@ -209,38 +193,39 @@ define(['underscore', 'unserialize'], function(_) {
                 }
               });
             }
-            i = i + 1;
-            if (i < rowElements.elements.length) {
-              return forEach(rowElements.elements[i], i);
-            } else {
-              return defer.resolve(content);
+            j = j + 1;
+            if (j < _.size(column.elements)) {
+              return forEachColumnElement(column.elements[j], j);
             }
-          });
+          };
+          forEachColumnElement(column.elements[0], 0);
         } else {
-          return defer.resolve(content);
+          defer.resolve(content);
+        }
+        i = i + 1;
+        if (i < _.size(rowElements.elements)) {
+          return forEachRowElement(rowElements.elements[i], i);
         }
       };
-      forEach(rowElements.elements[0], 0);
+      forEachRowElement(rowElements.elements[0], 0);
       return defer.promise();
     },
     getMcqElements: function(rowElements) {
-      var content, defer, forEach, total;
+      var content, defer, forEachRowElement, total;
       defer = $.Deferred();
       content = {
         excerpt: new Array,
         marks: 0
       };
       total = 0;
-      forEach = function(column, i) {
+      forEachRowElement = function(column, i) {
+        var forEachColumnElement;
         if (column) {
-          return _.each(column, function(element) {
+          forEachColumnElement = function(element, j) {
             total++;
             if (element.element === 'Row') {
               _.getRowElements(element).then(function(columnElement) {
                 content.excerpt.push(columnElement.excerpt);
-                if (columnElement.marks) {
-                  content.marks += columnElement.marks;
-                }
                 total--;
                 if (!total) {
                   return defer.resolve(content);
@@ -269,9 +254,6 @@ define(['underscore', 'unserialize'], function(_) {
                   if (element.element === 'Video') {
                     element.video_id = parseInt(element.video_id);
                   }
-                  if (element.marks) {
-                    content.marks += element.marks;
-                  }
                 }
                 total--;
                 if (!total) {
@@ -279,18 +261,21 @@ define(['underscore', 'unserialize'], function(_) {
                 }
               });
             }
-            i = i + 1;
-            if (i < rowElements.elements.length) {
-              return forEach(rowElements.elements[i], i);
-            } else {
-              return defer.resolve(content);
+            j = j + 1;
+            if (j < _.size(column)) {
+              return forEachColumnElement(column[j], j);
             }
-          });
+          };
+          forEachColumnElement(column[0], 0);
         } else {
-          return defer.resolve(content);
+          defer.resolve(content);
+        }
+        i = i + 1;
+        if (i < _.size(rowElements.elements)) {
+          return forEachRowElement(rowElements.elements[i], i);
         }
       };
-      forEach(rowElements.elements[0], 0);
+      forEachRowElement(rowElements.elements[0], 0);
       return defer.promise();
     },
     getElementMetaValues: function(element) {

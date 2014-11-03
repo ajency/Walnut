@@ -47,14 +47,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           return function() {
             return App.execute("when:fetched", quizModel, function() {
               var textbook_termIDs;
-              if (quizModel.get('code') === 'ERROR') {
-                App.execute("show:no:permissions:app", {
-                  region: App.mainContentRegion,
-                  error_header: 'Unauthorized Quiz',
-                  error_msg: quizModel.get('error_msg')
-                });
-                return false;
-              }
               if (display_mode !== 'quiz_report') {
                 display_mode = quizResponseSummary.get('status') === 'completed' ? 'replay' : 'class_mode';
               }

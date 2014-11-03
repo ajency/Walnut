@@ -55,34 +55,30 @@ define ["backbone"], (Backbone) ->
 
 			if collection_name is 'quiz-response-summary'
 				_.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
-				.done (d)->
+				.done (data)->
 					console.log 'getQuizResponseSummaryByCollectionIdAndUserID done'
-					collection.set d
+					collection.set data
 
 			if collection_name is 'quiz-question-response'
 				_.getQuizQuestionResponseBySummaryID(opts.summary_id)
-				.done (d)->
+				.done (data)->
 					console.log 'getQuizQuestionResponseBySummaryID done'
-					collection.set d
+					collection.set data
 
 			if collection_name is 'content-piece'
-				data = _.getContentPiecesByIDs(opts.ids)
-				data.done (d)->
+				_.getContentPiecesByIDs(opts.ids)
+				.done (data)->
+					console.log data
 					console.log 'getContentPiecesByIDs done'
-					collection.set d
+					collection.set data
 
-					App.request "app:reset:content:pieces:repository", d
+					App.request "app:reset:content:pieces:repository", data
 
 			#not required for student App
 			if collection_name is 'user'
 				_.getStudentsByDivision(opts.division)
 				.done (data)->
 					collection.set data
-
-			if collection_name is 'question-response'
-				data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division)
-				data.done (d)->
-					collection.set d
 
 
 			if collection_name is 'textbookName'
@@ -97,9 +93,9 @@ define ["backbone"], (Backbone) ->
 					collection.set data
 
 			if collection_name is 'media'
-				data = _.getListOfMediaByID(opts.ids)
-				data.done (d)->
-					collection.set d	
+				_.getListOfMediaByID(opts.ids)
+				.done (d)->
+					collection.set d
 
 			return true
 

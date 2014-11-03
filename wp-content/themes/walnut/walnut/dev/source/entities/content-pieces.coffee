@@ -17,18 +17,18 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name : 'content-piece'
             
-            # getMarks:->
+            getMarks:->
 
-            #     layout= @.get 'layout'
+                layout= @.get 'layout'
                 
-            #     marks = parseFloat _.compact _.pluck(layout,'marks')
-            #             .toFixed 1
+                marks = parseFloat _.compact _.pluck(layout,'marks')
+                        .toFixed 1
 
-            #     marks = parseFloat marks # removes the unnecessary decimal incase of 40.0 
+                marks = parseFloat marks # removes the unnecessary decimal incase of 40.0 
 
-            #     marks=0 if not marks or _.isNaN parseInt marks
+                marks=0 if not marks or _.isNaN parseInt marks
 
-            #     marks
+                marks
 
             setMarks:(multiplicationFactor)->
 

@@ -65,9 +65,9 @@ define ['underscore', 'unserialize'], ( _) ->
 
 						if ( i < data.rows.length)
 							forEach data.rows.item(i), i
-
 						else
 							defer.resolve meta_value
+
 
 					forEach data.rows.item(0), 0
 
@@ -99,33 +99,27 @@ define ['underscore', 'unserialize'], ( _) ->
 					total++ 
 					if element.element is 'Row'
 						# element.columncount = element.elements.length
-						_.getRowElements(element)
-						.then (columnElement)->
+						_.getRowElements(element).then (columnElement)->
 							content.excerpt.push columnElement.excerpt
-							content.marks += columnElement.marks if columnElement.marks
 							total--
 							if not total
 								defer.resolve content
 
 					else if element.element is 'Mcq'
 						# element.columncount = element.elements.length
-						_.getMcqElements(element)
-						.then (columnElement)->
-							_.getElementMetaValues(element)
-							.then (meta)->
+						_.getMcqElements(element).then (columnElement)->
+							_.getElementMetaValues(element).then (meta)->
 								element.meta_id = parseInt element.meta_id
 								if meta isnt false
 									_.defaults element, meta
 								content.excerpt.push columnElement.excerpt
-								content.marks += columnElement.marks if columnElement.marks
 								total--
 								if not total
 									defer.resolve content
 
 
 					else 
-						_.getElementMetaValues(element)
-						.then (meta)->
+						_.getElementMetaValues(element).then (meta)->
 							element.meta_id = parseInt element.meta_id
 							
 							if meta isnt false
@@ -144,7 +138,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								if element.element is 'Video'
 									element.video_id = parseInt element.video_id
 
-								content.marks += element.marks if element.marks
+								# content.marks += element.marks if element.marks
 								
 							total--
 							if not total
@@ -152,11 +146,8 @@ define ['underscore', 'unserialize'], ( _) ->
 					
 					i = i + 1
 
-					if ( i < elements.length)
+					if i < _.size(elements)
 						forEach elements[i], i
-
-					else
-						defer.resolve content
 
 				
 				forEach elements[0], 0
@@ -178,9 +169,12 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			total = 0
 
-			forEach = (column, i)->
+			forEachRowElement = (column, i)->
+				
 				if column.elements
-					_.each column.elements, (element)->
+
+					forEachColumnElement = (element, j)->
+
 						total++
 						if element.element is 'Row'
 							# ele.columncount = ele.elements.length;
@@ -188,7 +182,6 @@ define ['underscore', 'unserialize'], ( _) ->
 							.then (columnElement)->
 
 								content.excerpt.push columnElement.excerpt
-								content.marks += columnElement.marks if columnElement.marks
 
 								total--
 								if not total
@@ -213,29 +206,36 @@ define ['underscore', 'unserialize'], ( _) ->
 									if element.element is 'Video'
 										element.video_id = parseInt element.video_id
 
-									content.marks += element.marks if element.marks
+									# content.marks += element.marks if element.marks
 
 								total--
 								if not total
+						
 									defer.resolve content
 
-						i = i + 1
+						j = j + 1
+						if j < _.size(column.elements)
+							forEachColumnElement column.elements[j], j
 
-						if ( i < rowElements.elements.length)
-							forEach rowElements.elements[i], i
+					#inside For each
+					forEachColumnElement column.elements[0], 0
 
-						else
-						
-							defer.resolve content
+				
 				
 				else
 					defer.resolve content
 
+				i = i + 1
+				if i < _.size(rowElements.elements)
+					forEachRowElement rowElements.elements[i], i
+
 			
-			forEach rowElements.elements[0], 0
+			forEachRowElement rowElements.elements[0], 0
 
 			defer.promise()
 			
+
+		
 
 		getMcqElements : (rowElements)->
 
@@ -246,10 +246,11 @@ define ['underscore', 'unserialize'], ( _) ->
 			total = 0
 			
 
-			forEach = (column, i)->
+			forEachRowElement = (column, i)->
 				
 				if column
-					_.each column, (element)->
+
+					forEachColumnElement = (element, j)->
 						total++
 						if element.element is 'Row'
 							# ele.columncount = ele.elements.length;
@@ -257,7 +258,6 @@ define ['underscore', 'unserialize'], ( _) ->
 							.then (columnElement)->
 
 								content.excerpt.push columnElement.excerpt
-								content.marks += columnElement.marks if columnElement.marks
 								total--
 								if not total
 									defer.resolve content
@@ -281,25 +281,31 @@ define ['underscore', 'unserialize'], ( _) ->
 									if element.element is 'Video'
 										element.video_id = parseInt element.video_id
 
-									content.marks += element.marks if element.marks
+									# content.marks += element.marks if element.marks
 									
 								total--
 								if not total
 						
 									defer.resolve content
-						i = i + 1
 
-						if ( i < rowElements.elements.length)
-							forEach rowElements.elements[i], i
+						j = j + 1
+						if j < _.size(column)
+							forEachColumnElement column[j], j
+					
+					forEachColumnElement column[0], 0
 
-						else
-						
-							defer.resolve content
+
+
 
 				else
 					defer.resolve content
 
-			forEach rowElements.elements[0], 0
+				i = i + 1
+
+				if i < _.size(rowElements.elements)
+					forEachRowElement rowElements.elements[i], i
+
+			forEachRowElement rowElements.elements[0], 0
 
 			defer.promise()
 

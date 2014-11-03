@@ -43,34 +43,28 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz-response-summary') {
-        _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id).done(function(d) {
+        _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id).done(function(data) {
           console.log('getQuizResponseSummaryByCollectionIdAndUserID done');
-          return collection.set(d);
+          return collection.set(data);
         });
       }
       if (collection_name === 'quiz-question-response') {
-        _.getQuizQuestionResponseBySummaryID(opts.summary_id).done(function(d) {
+        _.getQuizQuestionResponseBySummaryID(opts.summary_id).done(function(data) {
           console.log('getQuizQuestionResponseBySummaryID done');
-          return collection.set(d);
+          return collection.set(data);
         });
       }
       if (collection_name === 'content-piece') {
-        data = _.getContentPiecesByIDs(opts.ids);
-        data.done(function(d) {
+        _.getContentPiecesByIDs(opts.ids).done(function(data) {
+          console.log(data);
           console.log('getContentPiecesByIDs done');
-          collection.set(d);
-          return App.request("app:reset:content:pieces:repository", d);
+          collection.set(data);
+          return App.request("app:reset:content:pieces:repository", data);
         });
       }
       if (collection_name === 'user') {
         _.getStudentsByDivision(opts.division).done(function(data) {
           return collection.set(data);
-        });
-      }
-      if (collection_name === 'question-response') {
-        data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division);
-        data.done(function(d) {
-          return collection.set(d);
         });
       }
       if (collection_name === 'textbookName') {
@@ -84,8 +78,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'media') {
-        data = _.getListOfMediaByID(opts.ids);
-        data.done(function(d) {
+        _.getListOfMediaByID(opts.ids).done(function(d) {
           return collection.set(d);
         });
       }
