@@ -60,41 +60,38 @@ define ['underscore', 'jquery'], ( _ , $) ->
 					uri = encodeURI file
 					localPath = _.getSynapseMediaDirectoryPath() + directoryPath
 
-					directoryStructure = _.createDirectoryStructure directoryPath
-					directoryStructure.done ->
+					fileTransfer = new FileTransfer()
 
-						fileTransfer = new FileTransfer()
-
-						# fileTransfer.onprogress = (progressEvent)->
-						# 	if progressEvent.lengthComputable
-						# 		percentage = Math.floor(progressEvent.loaded / progressEvent.total * 100)
-						# 		$('#mediaProgressUpdate').css("width",""+percentage+"%")
-						# 	else
-						# 		$('#mediaProgressUpdate').css("width","100%")
+					# fileTransfer.onprogress = (progressEvent)->
+					# 	if progressEvent.lengthComputable
+					# 		percentage = Math.floor(progressEvent.loaded / progressEvent.total * 100)
+					# 		$('#mediaProgressUpdate').css("width",""+percentage+"%")
+					# 	else
+					# 		$('#mediaProgressUpdate').css("width","100%")
 
 
-						fileTransfer.download(uri, localPath 
-							,(file)->
-								if index < filesTobeDownloaded.length-1
-									_.downloadMediaFiles(filesTobeDownloaded, (index + 1), file_type)
+					fileTransfer.download(uri, localPath 
+						,(file)->
+							if index < filesTobeDownloaded.length-1
+								_.downloadMediaFiles(filesTobeDownloaded, (index + 1), file_type)
 
-								else
-									_.syncFiles 'Audio' if file_type is 'Image'
+							else
+								_.syncFiles 'Audio' if file_type is 'Image'
 
-									_.syncFiles 'Video' if file_type is 'Audio'
+								_.syncFiles 'Video' if file_type is 'Audio'
 
-									if file_type is 'Video'
-										$('#syncMediaSuccess').css("display","block").text("Media sync completed")
+								if file_type is 'Video'
+									$('#syncMediaSuccess').css("display","block").text("Media sync completed")
 
-										setTimeout(=>
-											App.navigate('teachers/dashboard', trigger: true)
-										,2000)
+									setTimeout(=>
+										App.navigate('teachers/dashboard', trigger: true)
+									,2000)
 
 
-							,(error)->
-								_.onMediaSyncError(error, "An error occurred during file download")
+						,(error)->
+							_.onMediaSyncError(error, "An error occurred during file download")
 
-							, true)
+						, true)
 
 
 

@@ -55,9 +55,12 @@ define ['app'
 
                 videoCollection = @_getVideoCollection()
 
-                App.execute "when:fetched", videoCollection, =>
+                # App.execute "when:fetched", videoCollection, =>
+                videoCollection.p.done =>
                     @layout.model.set 'videoUrl' : _.first videoCollection.pluck 'url'
                     @layout.model.set 'videoUrls' : videoCollection.pluck 'url'
                     view = @_getVideoView()
 
                     @layout.elementRegion.show view
+
+                    

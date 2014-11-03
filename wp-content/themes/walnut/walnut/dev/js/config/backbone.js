@@ -7,7 +7,7 @@ define(["backbone"], function(Backbone) {
   };
   _.extend(Backbone.Collection.prototype, {
     sync: function(method, collection, options) {
-      var collection_name, data, opts;
+      var collection_name, opts;
       collection_name = collection.name;
       console.log('Collection name: ' + collection_name);
       opts = options.data;
@@ -38,7 +38,6 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-piece') {
         _.cordovaContentPieceCollection(opts.ids).done(function(contentPieces) {
           console.log('cordovaContentPieceCollection done');
-          console.log(contentPieces);
           return collection.set(contentPieces);
         });
       }
@@ -67,9 +66,10 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'media') {
-        data = _.getListOfMediaByID(opts.ids);
-        data.done(function(d) {
-          return collection.set(d);
+        this.p = _.getListOfMediaByID(opts.ids);
+        this.p.done(function(mediaList) {
+          console.log('getListOfMediaByID done');
+          return collection.set(mediaList);
         });
       }
       return true;
@@ -77,7 +77,7 @@ define(["backbone"], function(Backbone) {
   });
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
-      var allData, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
+      var allData, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
       if (!this.name) {
         throw new Error("'name' property not set for the model");
       }
@@ -147,9 +147,9 @@ define(["backbone"], function(Backbone) {
           _.saveUpdateQuestionResponse(model);
         }
         if (modelname === 'media') {
-          data = _.getMediaById(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          xhr = _.getMediaById(model.get('id')).done(function(media) {
+            console.log('getMediaById done');
+            return model.set(media);
           });
         }
       }

@@ -42,7 +42,6 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'content-piece'
 				_.cordovaContentPieceCollection(opts.ids).done (contentPieces)->
 					console.log 'cordovaContentPieceCollection done'
-					console.log contentPieces
 					collection.set contentPieces
 
 			if collection_name is 'user'
@@ -67,9 +66,11 @@ define ["backbone"], (Backbone) ->
 					collection.set users
 
 			if collection_name is 'media'
-				data = _.getListOfMediaByID(opts.ids)
-				data.done (d)->
-					collection.set d	
+				@p = _.getListOfMediaByID(opts.ids)
+				@p.done (mediaList)->
+					console.log 'getListOfMediaByID done'
+					collection.set mediaList
+					
 
 			return true
 
@@ -211,9 +212,9 @@ define ["backbone"], (Backbone) ->
 					_.saveUpdateQuestionResponse(model)
 
 				if modelname is 'media'
-					data = _.getMediaById(model.get('id'))
-					data.done (d)->
-						model.set d	
+					xhr = _.getMediaById(model.get('id')).done (media)->
+						console.log 'getMediaById done'
+						model.set media
 
 			
 			# trigger the request event of the model

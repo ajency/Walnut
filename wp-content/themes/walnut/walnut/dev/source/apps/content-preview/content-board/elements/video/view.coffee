@@ -62,12 +62,12 @@ define ['app'], (App)->
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
 				@$el.find('video').attr 'height', setHeight
 
+
 				runFunc = =>
 					$.Deferred (d)=>
 						deferreds = []
 
-						videosWebDirectory = _.createVideosWebDirectory()
-						videosWebDirectory.done =>
+						_.createVideosWebDirectory().done =>
 
 							_.each @videos , (videoSource, index)=>
 								do(videoSource)=>
@@ -88,6 +88,7 @@ define ['app'], (App)->
 										@videos[index] = 'file:///mnt/sdcard/'+localVideoPath
 
 								d.resolve @videos
+								
 
 				$.when(runFunc()).done =>
 					console.log('_initLocalVideos done')

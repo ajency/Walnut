@@ -64,16 +64,17 @@ define ['app'
 						else @_getLocalAudioCollection()
 
 
+					
 					#Get the encrypted audio and decrypt it and play it from local path 
 					_getLocalAudioCollection :=>
 
 						runFunc = =>
 							$.Deferred (d)=>
+
 								localAudioPaths = []
 								deferreds = []
 
-								audiosWebDirectory = _.createAudiosWebDirectory()
-								audiosWebDirectory.done =>
+								_.createAudioWebDirectory().done =>
 
 									allAudioUrls = @layout.model.get('audioUrls')
 
@@ -104,3 +105,5 @@ define ['app'
 							@layout.elementRegion.show @view
 
 						.fail _.failureHandler
+
+

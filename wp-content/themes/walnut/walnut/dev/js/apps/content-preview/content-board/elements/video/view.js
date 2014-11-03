@@ -52,10 +52,9 @@ define(['app'], function(App) {
         runFunc = (function(_this) {
           return function() {
             return $.Deferred(function(d) {
-              var deferreds, videosWebDirectory;
+              var deferreds;
               deferreds = [];
-              videosWebDirectory = _.createVideosWebDirectory();
-              return videosWebDirectory.done(function() {
+              return _.createVideosWebDirectory().done(function() {
                 _.each(_this.videos, function(videoSource, index) {
                   return (function(videoSource) {
                     var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;

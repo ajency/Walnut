@@ -163,3 +163,5 @@ define ['underscore', 'unserialize'], ( _) ->
 			$.when(runFunc()).done ->
 				console.log('getDeviceAvailableStorageSize done')
 			.fail _.failureHandler
+
+			

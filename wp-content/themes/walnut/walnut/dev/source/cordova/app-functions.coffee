@@ -196,20 +196,50 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		# Decrypt local files
 		decryptLocalFile : (source, destination)->
 
-			$.Deferred (d)->
+			defer = $.Deferred()
 
-				decrypt.startDecryption(source, destination
-					, ->
-						d.resolve destination
+			decrypt.startDecryption(source, destination
+				, ->
+					console.log 'Decrypted File: '+destination
+					defer.resolve destination
 
-					, (message) ->
-						console.log 'FILE DECRYPTION ERROR: '+message
-				)
+				, (message) ->
+					defer.reject(console.log('FILE DECRYPTION ERROR: '+message))
+			)
+
+
+			defer.promise()
+
+
+
+		downloadSchoolLogo  : (logo_url)->
+
+			window.requestFileSystem(LocalFileSystem.TEMPORARY, 0 ,(fileSystem)->
+				fileSystem.root.getFile("logo.jpg", {create: true, exclusive:false} 
+					,(fileEntry)->
+						
+						filePath = fileEntry.toURL().replace("logo.jpg", "")
+						fileEntry.remove()
+						uri = encodeURI(logo_url)
+
+						fileTransfer = new FileTransfer()
+						fileTransfer.download(uri, filePath+"logo.jpg" 
+							,(file)->
+								console.log 'School logo download successful'
+								console.log 'Logo file source: '+file.toURL()
+								_.setSchoolLogoSrc(file.toURL())
+
+							,_.fileTransferErrorHandler, true)
+					
+					,_.fileErrorHandler)
+
+			,_.fileSystemErrorHandler)
 
 		
 		
 		clearMediaDirectory : (directory_name)->
-			# Delete all video files from 'videos-web' folder
+
+			# Delete all video files from 'videos-web' and 'audio-web' folder
 			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
 				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
 					, {create: false, exclusive: false}
@@ -227,26 +257,11 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							,_.directoryErrorHandler)
 					, _.directoryErrorHandler)
 			, _.fileSystemErrorHandler)
-			
-
-
-		#Get current date
-		getCurrentDateTime : (bit)->
-			# bit = 0 - date
-			# 	  = 1 - time 
-			# 	  = 2 - date and time
-
-			d = new Date()
-			date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
-			time = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
-
-			return date if bit is 0
-			return time if bit is 1
-			return date+' '+time if bit is 2
 
 		
 		
 		audioQueuesSelection : (selectedAction)->
+
 			#TODO: Change if condition
 			if not _.isNull(_.getAudioCues())
 				if _.getAudioCues() isnt 'false'
@@ -292,7 +307,26 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 		
 		setAudioCuesToggle : ->
+
 			if _.getAudioCues() is 'true'
 				$('#onOffSwitchToggle').prop "checked" : true
 			else
 				$('#onOffSwitchToggle').prop "checked" : false
+
+
+
+		#Get current date and time
+		getCurrentDateTime : (bit)->
+			# bit = 0 - date
+			# 	  = 1 - time 
+			# 	  = 2 - date and time
+
+			d = new Date()
+			date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
+			time = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
+
+			return date if bit is 0
+			return time if bit is 1
+			return date+' '+time if bit is 2
+
+

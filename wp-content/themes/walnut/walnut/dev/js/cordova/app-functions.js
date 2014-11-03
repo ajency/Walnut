@@ -157,13 +157,34 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       return defer.promise();
     },
     decryptLocalFile: function(source, destination) {
-      return $.Deferred(function(d) {
-        return decrypt.startDecryption(source, destination, function() {
-          return d.resolve(destination);
-        }, function(message) {
-          return console.log('FILE DECRYPTION ERROR: ' + message);
-        });
+      var defer;
+      defer = $.Deferred();
+      decrypt.startDecryption(source, destination, function() {
+        console.log('Decrypted File: ' + destination);
+        return defer.resolve(destination);
+      }, function(message) {
+        return defer.reject(console.log('FILE DECRYPTION ERROR: ' + message));
       });
+      return defer.promise();
+    },
+    downloadSchoolLogo: function(logo_url) {
+      return window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fileSystem) {
+        return fileSystem.root.getFile("logo.jpg", {
+          create: true,
+          exclusive: false
+        }, function(fileEntry) {
+          var filePath, fileTransfer, uri;
+          filePath = fileEntry.toURL().replace("logo.jpg", "");
+          fileEntry.remove();
+          uri = encodeURI(logo_url);
+          fileTransfer = new FileTransfer();
+          return fileTransfer.download(uri, filePath + "logo.jpg", function(file) {
+            console.log('School logo download successful');
+            console.log('Logo file source: ' + file.toURL());
+            return _.setSchoolLogoSrc(file.toURL());
+          }, _.fileTransferErrorHandler, true);
+        }, _.fileErrorHandler);
+      }, _.fileSystemErrorHandler);
     },
     clearMediaDirectory: function(directory_name) {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
@@ -188,21 +209,6 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           }, _.directoryErrorHandler);
         }, _.directoryErrorHandler);
       }, _.fileSystemErrorHandler);
-    },
-    getCurrentDateTime: function(bit) {
-      var d, date, time;
-      d = new Date();
-      date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-      time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-      if (bit === 0) {
-        return date;
-      }
-      if (bit === 1) {
-        return time;
-      }
-      if (bit === 2) {
-        return date + ' ' + time;
-      }
     },
     audioQueuesSelection: function(selectedAction) {
       var audioCues, filepath, filepathForIndividualAudio;
@@ -253,6 +259,21 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return $('#onOffSwitchToggle').prop({
           "checked": false
         });
+      }
+    },
+    getCurrentDateTime: function(bit) {
+      var d, date, time;
+      d = new Date();
+      date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+      time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+      if (bit === 0) {
+        return date;
+      }
+      if (bit === 1) {
+        return time;
+      }
+      if (bit === 2) {
+        return date + ' ' + time;
       }
     }
   });

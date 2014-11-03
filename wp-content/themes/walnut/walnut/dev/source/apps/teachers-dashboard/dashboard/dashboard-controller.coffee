@@ -65,12 +65,11 @@ define ['app'
 			onShow : ->
 
 				if _.platform() is "DEVICE"
-
-					# Set 'SynapseMedia' directory path to local storage
-					_.setSynapseMediaDirectoryPathToLocalStorage()
 					
 					_.cordovaHideSplashscreen()
 
 					_.removeCordovaBackbuttonEventListener()
 					
 					_.enableCordovaBackbuttonNavigation()
+
+

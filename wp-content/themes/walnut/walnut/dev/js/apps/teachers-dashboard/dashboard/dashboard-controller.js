@@ -80,7 +80,6 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
 
       TeachersDashboardLayout.prototype.onShow = function() {
         if (_.platform() === "DEVICE") {
-          _.setSynapseMediaDirectoryPathToLocalStorage();
           _.cordovaHideSplashscreen();
           _.removeCordovaBackbuttonEventListener();
           return _.enableCordovaBackbuttonNavigation();

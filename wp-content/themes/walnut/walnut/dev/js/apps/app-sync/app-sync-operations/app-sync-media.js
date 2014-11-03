@@ -41,7 +41,7 @@ define(['underscore', 'jquery'], function(_, $) {
       var availableMemory;
       availableMemory = _.getAvailableDeviceStorageSize();
       return availableMemory.done(function(deviceSize) {
-        var directoryPath, directoryStructure, esc, file, fileName, fileSize, localPath, uri;
+        var directoryPath, esc, file, fileName, fileSize, fileTransfer, localPath, uri;
         fileSize = filesTobeDownloaded[index].size;
         if (deviceSize < fileSize) {
           return _.onMediaSyncError('none', "Can't download file. There is not enough free space on the device");
@@ -53,35 +53,31 @@ define(['underscore', 'jquery'], function(_, $) {
           $('#syncMediaSuccess').css("display", "block").html(esc.replace(/\n/g, '<br />'));
           uri = encodeURI(file);
           localPath = _.getSynapseMediaDirectoryPath() + directoryPath;
-          directoryStructure = _.createDirectoryStructure(directoryPath);
-          return directoryStructure.done(function() {
-            var fileTransfer;
-            fileTransfer = new FileTransfer();
-            return fileTransfer.download(uri, localPath, function(file) {
-              if (index < filesTobeDownloaded.length - 1) {
-                return _.downloadMediaFiles(filesTobeDownloaded, index + 1, file_type);
-              } else {
-                if (file_type === 'Image') {
-                  _.syncFiles('Audio');
-                }
-                if (file_type === 'Audio') {
-                  _.syncFiles('Video');
-                }
-                if (file_type === 'Video') {
-                  $('#syncMediaSuccess').css("display", "block").text("Media sync completed");
-                  return setTimeout((function(_this) {
-                    return function() {
-                      return App.navigate('teachers/dashboard', {
-                        trigger: true
-                      });
-                    };
-                  })(this), 2000);
-                }
+          fileTransfer = new FileTransfer();
+          return fileTransfer.download(uri, localPath, function(file) {
+            if (index < filesTobeDownloaded.length - 1) {
+              return _.downloadMediaFiles(filesTobeDownloaded, index + 1, file_type);
+            } else {
+              if (file_type === 'Image') {
+                _.syncFiles('Audio');
               }
-            }, function(error) {
-              return _.onMediaSyncError(error, "An error occurred during file download");
-            }, true);
-          });
+              if (file_type === 'Audio') {
+                _.syncFiles('Video');
+              }
+              if (file_type === 'Video') {
+                $('#syncMediaSuccess').css("display", "block").text("Media sync completed");
+                return setTimeout((function(_this) {
+                  return function() {
+                    return App.navigate('teachers/dashboard', {
+                      trigger: true
+                    });
+                  };
+                })(this), 2000);
+              }
+            }
+          }, function(error) {
+            return _.onMediaSyncError(error, "An error occurred during file download");
+          }, true);
         }
       });
     },

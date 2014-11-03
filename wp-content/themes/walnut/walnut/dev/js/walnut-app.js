@@ -35,7 +35,6 @@ define(['marionette'], function(Marionette) {
     if (_.platform() === 'DEVICE') {
       onDeviceReady = (function(_this) {
         return function() {
-          var user;
           _.cordovaOpenPrepopulatedDatabase();
           _.cordovaLocalStorage();
           FastClick.attach(document.body);
@@ -47,22 +46,26 @@ define(['marionette'], function(Marionette) {
               return AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";;
             }
           });
-          if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
-            _this.rootRoute = 'app-login';
-            if (_.isNull(_.getBlogID())) {
-              _this.rootRoute = 'login';
+          return _.setSynapseMediaDirectoryPathToLocalStorage().done(function() {
+            var user;
+            console.log('setSynapseMediaDirectoryPathToLocalStorage done');
+            if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
+              this.rootRoute = 'app-login';
+              if (_.isNull(_.getBlogID())) {
+                this.rootRoute = 'login';
+              }
+              return App.navigate(this.rootRoute, {
+                trigger: true
+              });
+            } else {
+              user = App.request("get:user:model");
+              user.set({
+                'ID': '' + _.getUserID()
+              });
+              App.vent.trigger("show:dashboard");
+              return App.loginRegion.close();
             }
-            return App.navigate(_this.rootRoute, {
-              trigger: true
-            });
-          } else {
-            user = App.request("get:user:model");
-            user.set({
-              'ID': '' + _.getUserID()
-            });
-            App.vent.trigger("show:dashboard");
-            return App.loginRegion.close();
-          }
+          });
         };
       })(this);
       document.addEventListener("deviceready", onDeviceReady, false);

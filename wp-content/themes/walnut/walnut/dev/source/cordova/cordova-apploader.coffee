@@ -6,7 +6,6 @@ define ['cordova/app-error-handlers'
 		'cordova/storage/app-persistent-filesystem-storage'
 
 		'cordova/app-functions'
-		'cordova/app-file-download'
 		'cordova/app-content-loader'
 
 		#cordova app entities

@@ -77,3 +77,5 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 					,1000)
 
 				else $('#syncInternetConnection').css("display", "none")
+
+				

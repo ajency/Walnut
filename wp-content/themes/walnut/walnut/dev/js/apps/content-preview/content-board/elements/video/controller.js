@@ -55,7 +55,7 @@ define(['app', 'apps/content-preview/content-board/element/controller', 'apps/co
         var videoCollection;
         this._parseInt();
         videoCollection = this._getVideoCollection();
-        return App.execute("when:fetched", videoCollection, (function(_this) {
+        return videoCollection.p.done((function(_this) {
           return function() {
             var view;
             _this.layout.model.set({

@@ -86,10 +86,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			# Disable media sync button
 			$('#syncMediaStart').prop("disabled",true)
 
-
-			# Create 'SynapseData' inside 'SynapseAssets' directory
-			synapseDataDirectory = _.createSynapseDataDirectory()
-			synapseDataDirectory.done ->
+			_.createSynapseDataDirectory().done ->
 
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->
@@ -158,10 +155,12 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			$('#syncMediaStart').css("display","none")
 			
 			$('#syncMediaSuccess').css("display","block").text("Started media sync...")
+
+			_.createDirectoriesForMediaSync().done ->
 			
-			setTimeout(=>
-				_.startMediaSync()
-			,2000)
+				setTimeout(=>
+					_.startMediaSync()
+				,2000)
 
 
 	

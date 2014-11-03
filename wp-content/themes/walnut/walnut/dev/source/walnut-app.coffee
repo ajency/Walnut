@@ -67,22 +67,25 @@ define ['marionette'], (Marionette)->
 						`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
 				)
 
-				# If the UserId is null or 'null' i.e id not set in local storage then the app
-				# is either installed for the first time or user has logged out.
+				_.setSynapseMediaDirectoryPathToLocalStorage().done ->
+					console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
 
-				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
-					# If the blog_id is not set then the app is installed for the very first time.
-					# Navigate to main login screen if blog id is null, else show list of users view.
-					@rootRoute = 'app-login'
-					@rootRoute = 'login' if _.isNull _.getBlogID()
-					App.navigate(@rootRoute, trigger: true)
+					# If the UserId is null or 'null' i.e id not set in local storage then the app
+					# is either installed for the first time or user has logged out.
 
-				else
-					#If User ID is set, then navigate to dashboard.
-					user = App.request "get:user:model"
-					user.set 'ID' : ''+_.getUserID()
-					App.vent.trigger "show:dashboard"
-					App.loginRegion.close() 
+					if _.isNull(_.getUserID()) or _.getUserID() is 'null'
+						# If the blog_id is not set then the app is installed for the very first time.
+						# Navigate to main login screen if blog id is null, else show list of users view.
+						@rootRoute = 'app-login'
+						@rootRoute = 'login' if _.isNull _.getBlogID()
+						App.navigate(@rootRoute, trigger: true)
+
+					else
+						#If User ID is set, then navigate to dashboard.
+						user = App.request "get:user:model"
+						user.set 'ID' : ''+_.getUserID()
+						App.vent.trigger "show:dashboard"
+						App.loginRegion.close() 
 
 
 			document.addEventListener("deviceready", onDeviceReady, false)
@@ -113,7 +116,6 @@ define ['marionette'], (Marionette)->
 			# to the user.
 
 			_.getLastSyncOperation().done (typeOfOperation)->
-
 				console.log 'getLastSyncOperation done [walnut-app.coffee]'
 				
 				if typeOfOperation is 'none' or typeOfOperation isnt 'file_import'
