@@ -8,6 +8,7 @@ define ['underscore'], (_)->
 			,(fileSystem)->
 				fileSystem.root.getFile("logo.jpg", {create: true, exclusive:false} 
 					,(fileEntry)->
+						
 						filePath = fileEntry.toURL().replace("logo.jpg", "")
 						fileEntry.remove()
 						uri = encodeURI(logo_url)

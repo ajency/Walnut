@@ -6,34 +6,50 @@ define ['underscore'], ( _) ->
 
 		getStudentsByDivision : (division)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
-							ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?"
-							, [division], onSuccess(d), _.deferredErrorHandler(d));
-						
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
+			onSuccess = (tx, data)->
 
-					result = []
+				result = []
 
-					for i in [0..data.rows.length-1] by 1
+				length = data.rows.length
 
-						row = data.rows.item(i)
-						
+				if length is 0
+					defer.resolve result
+				else
+					forEach = (row, i)->
+
 						result[i] = 
 							ID: row['ID']
 							display_name: row['display_name']
 							user_email: row['user_email']
 							profile_pic: '/images/avtar.png'
 
-					d.resolve(result)
 
-			$.when(runQuery()).done (data)->
-				console.log 'getStudentsByDivision transaction completed'
-			.fail _.failureHandler
+						i = i + 1
+						if i < length
+							forEach data.rows.item(i), i
+						else 
+							defer.resolve result
+
+
+					forEach data.rows.item(0), 0
+
+
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT * 
+								FROM wp_users u 
+								INNER JOIN wp_usermeta um 
+								ON u.ID=um.user_id 
+								AND um.meta_key='student_division' 
+								AND um.meta_value=?"
+								, [division]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
 
 
 
@@ -45,19 +61,23 @@ define ['underscore'], ( _) ->
 
 				result = []
 
-				forEach = (row, i)->
+				length = data.rows.length
 
-					result[i] = username: row['username']
+				if length is 0
+					defer.resolve result
+				else
+					forEach = (row, i)->
 
-					i = i + 1
+						result[i] = username: row['username']
 
-					if i < data.rows.length
-						forEach data.rows.item(i), i
-					else
-						defer.resolve result
-						console.log 'getNamesOfAllOfflineUsers done'
+						i = i + 1
 
-				forEach data.rows.item(0), 0
+						if i < length
+							forEach data.rows.item(i), i
+						else
+							defer.resolve result
+
+					forEach data.rows.item(0), 0
 
 
 			_.db.transaction (tx)->

@@ -75,41 +75,35 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }
     },
     getUserDetails: function(username) {
-      var onSuccess, runQuery, userData;
+      var defer, onSuccess, userData;
+      defer = $.Deferred();
       userData = {
         user_id: '',
         password: '',
         role: '',
         exists: false
       };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      onSuccess = function(tx, data) {
+        var row;
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          userData = {
+            user_id: row['user_id'],
+            password: row['password'],
+            role: row['user_role'],
+            exists: true
+          };
+        }
+        return defer.resolve(userData);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var row;
-          if (data.rows.length !== 0) {
-            row = data.rows.item(0);
-            userData = {
-              user_id: row['user_id'],
-              password: row['password'],
-              role: row['user_role'],
-              exists: true
-            };
-          }
-          return d.resolve(userData);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getUserDetails transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM USERS WHERE username=?", [username], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getMetaValue: function(content_piece_id) {
-      var meta_value, onSuccess, runQuery;
+      var defer, meta_value, onSuccess;
+      defer = $.Deferred();
       meta_value = {
         content_type: '',
         layout_json: '',
@@ -121,17 +115,13 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         term_ids: '',
         instructions: ''
       };
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?", [content_piece_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, row, _fn, _i, _ref;
-          _fn = function(row) {
+      onSuccess = function(tx, data) {
+        var forEach, length;
+        length = data.rows.length;
+        if (length === 0) {
+          return defer.resolve(meta_value);
+        } else {
+          forEach = function(row, i) {
             var content_piece_meta;
             if (row['meta_key'] === 'content_type') {
               meta_value.content_type = row['meta_value'];
@@ -149,19 +139,22 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               meta_value.last_modified_by = content_piece_meta.last_modified_by;
               meta_value.published_by = content_piece_meta.published_by;
               meta_value.term_ids = content_piece_meta.term_ids;
-              return meta_value.instructions = content_piece_meta.instructions;
+              meta_value.instructions = content_piece_meta.instructions;
+            }
+            i = i + 1;
+            if (i < length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              return defer.resolve(meta_value);
             }
           };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            _fn(row);
-          }
-          return d.resolve(meta_value);
-        };
+          return forEach(data.rows.item(0), 0);
+        }
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getMetaValue transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?", [content_piece_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     decryptLocalFile: function(source, destination) {
       return $.Deferred(function(d) {

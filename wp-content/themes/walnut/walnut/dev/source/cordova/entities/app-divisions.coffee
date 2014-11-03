@@ -15,21 +15,26 @@ define ['underscore'], ( _) ->
 
 				results = []
 
-				forEach = (id, i)->
+				length = ids.length
 
-					_.fetchSingleDivision(id)
-					.then (divisionData)->
-						console.log 'fetchSingleDivision done'
+				if length is 0
+					defer.resolve results
+				else
+					forEach = (id, i)->
 
-						results[i] = divisionData
+						_.fetchSingleDivision(id)
+						.then (divisionData)->
+							console.log 'fetchSingleDivision done'
 
-						i = i + 1
-						if i < ids.length
-							forEach ids[i], i
-						else
-							defer.resolve results
+							results[i] = divisionData
 
-				forEach ids[0], 0
+							i = i + 1
+							if i < ids.length
+								forEach ids[i], i
+							else
+								defer.resolve results
+
+					forEach ids[0], 0
 
 
 			defer.promise()

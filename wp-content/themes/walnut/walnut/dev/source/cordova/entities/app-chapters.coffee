@@ -8,31 +8,36 @@ define ['underscore'], ( _) ->
 
 			defer = $.Deferred()
 
-			result = []
-
 			onSuccess = (tx, data)->
 
-				forEach = (row, i)->
+				result = []
 
-					result[i]=
-						term_id: row['term_id']
-						name: row['name']
-						slug: row['slug']
-						term_group: row['term_group']
-						term_taxonomy_id: row['term_taxonomy_id']
-						taxonomy: row['taxonomy']
-						description: row['description']
-						parent: row['parent']
+				length = data.rows.length
 
-					
-					i = i + 1
-					if i < data.rows.length
-						forEach data.rows.item(i), i
-					else
-						defer.resolve result
+				if length is 0
+					defer.resolve result
+				else
+					forEach = (row, i)->
+
+						result[i]=
+							term_id: row['term_id']
+							name: row['name']
+							slug: row['slug']
+							term_group: row['term_group']
+							term_taxonomy_id: row['term_taxonomy_id']
+							taxonomy: row['taxonomy']
+							description: row['description']
+							parent: row['parent']
+
+						
+						i = i + 1
+						if i < length
+							forEach data.rows.item(i), i
+						else
+							defer.resolve result
 
 
-				forEach data.rows.item(0), 0
+					forEach data.rows.item(0), 0
 
 
 			_.db.transaction (tx)->

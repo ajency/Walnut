@@ -14,14 +14,13 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'textbook') {
         _.cordovaTextbookCollection(opts.class_id, opts.division).done(function(textbooks) {
           console.log('cordovaTextbookCollection done');
-          console.log(textbooks);
           return collection.set(textbooks);
         });
       }
       if (collection_name === 'chapter') {
-        data = _.getChaptersByParentId(opts.parent);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getChaptersByParentId(opts.parent).done(function(chapters) {
+          console.log('getChaptersByParentId done');
+          return collection.set(chapters);
         });
       }
       if (collection_name === 'division') {
@@ -31,37 +30,39 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'content-group') {
-        data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division);
-        data.done(function(d) {
-          return collection.set(d.reverse());
+        _.cordovaContentGroupCollection(opts.textbook, opts.division).done(function(contentGroups) {
+          console.log('cordovaContentGroupCollection done');
+          return collection.set(contentGroups.reverse());
         });
       }
       if (collection_name === 'content-piece') {
-        data = _.getContentPiecesByIDs(opts.ids);
-        data.done(function(d) {
-          return collection.set(d);
+        _.cordovaContentPieceCollection(opts.ids).done(function(contentPieces) {
+          console.log('cordovaContentPieceCollection done');
+          console.log(contentPieces);
+          return collection.set(contentPieces);
         });
       }
       if (collection_name === 'user') {
-        data = _.getStudentsByDivision(opts.division);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getStudentsByDivision(opts.division).done(function(students) {
+          console.log('getStudentsByDivision done');
+          return collection.set(students);
         });
       }
       if (collection_name === 'question-response') {
-        data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division);
-        data.done(function(d) {
-          return collection.set(d);
+        _.cordovaQuestionResponseCollection(opts.collection_id, opts.division).done(function(questionResponse) {
+          console.log('cordovaQuestionResponseCollection done');
+          return collection.set(questionResponse);
         });
       }
       if (collection_name === 'textbookName') {
-        data = _.getTextBookNamesByTermIDs(opts.term_ids);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getTextBookNamesByTermIDs(opts.term_ids).done(function(textbookNames) {
+          console.log('getTextBookNamesByTermIDs done');
+          return collection.set(textbookNames);
         });
       }
       if (collection_name === 'offlineUsers') {
         _.getNamesOfAllOfflineUsers().done(function(users) {
+          console.log('getNamesOfAllOfflineUsers done');
           return collection.set(users);
         });
       }
@@ -125,25 +126,25 @@ define(["backbone"], function(Backbone) {
         modelname = model.name;
         console.log('Model name: ' + modelname);
         if (modelname === 'division') {
-          _.fetchSingleDivision(model.get('id')).done(function(division) {
+          xhr = _.fetchSingleDivision(model.get('id')).done(function(division) {
             console.log('fetchSingleDivision done');
             return model.set(division);
           });
         }
         if (modelname === 'textbook') {
-          data = _.getTextBookByTextbookId(model.get('term_id'));
-          data.done(function(d) {
-            return model.set(d);
+          xhr = _.getTextBookByTextbookId(model.get('term_id')).done(function(textbook) {
+            console.log('getTextBookByTextbookId done');
+            return model.set(textbook);
           });
         }
         if (modelname === 'content-group') {
-          data = _.getContentGroupById(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          xhr = _.getContentGroupById(model.get('id')).done(function(contentGroup) {
+            console.log('getContentGroupById done');
+            return model.set(contentGroup);
           });
         }
         if (modelname === 'question-response') {
-          data = _.saveUpdateQuestionResponse(model);
+          _.saveUpdateQuestionResponse(model);
         }
         if (modelname === 'media') {
           data = _.getMediaById(model.get('id'));

@@ -1,62 +1,90 @@
 define(['underscore', 'unserialize'], function(_) {
-  var getElementMetaValues, getMetaValueFromMetaId, getRowElements;
-  getMetaValueFromMetaId = function(meta_id) {
-    var onSuccess, runQuery;
-    runQuery = function() {
-      return $.Deferred(function(d) {
-        return _.db.transaction(function(tx) {
-          return tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_id=?", [meta_id], onSuccess(d), _.deferredErrorHandler(d));
-        });
-      });
-    };
-    onSuccess = function(d) {
-      return function(tx, data) {
-        var metaValue, row;
-        metaValue = null;
-        if (data.rows.length !== 0) {
-          row = data.rows.item(0);
-          if (row['meta_key'] === 'content_element') {
-            metaValue = row['meta_value'];
-          }
-        }
-        return d.resolve(metaValue);
+  return _.mixin({
+    getJsonToClone: function(elements) {
+      var content, defer, forEach, total;
+      defer = $.Deferred();
+      content = {
+        elements: elements,
+        excerpt: new Array
       };
-    };
-    return $.when(runQuery()).done(function() {
-      return console.log('getMetaValueFromMetaId: ' + meta_id + ' transaction completed');
-    }).fail(_.failureHandler);
-  };
-  _.getJsonToClone = function(elements) {
-    var runFunc;
-    runFunc = function() {
-      return $.Deferred(function(d) {
-        var content, total;
-        content = {
-          elements: elements,
-          excerpt: new Array
+      if (_.isArray(elements)) {
+        total = 0;
+        forEach = function(element, i) {
+          total++;
+          if (element.element === 'Row' || element.element === 'TeacherQuestion') {
+            _.getRowElements(element).then(function(columnElement) {
+              console.log('getRowElements done');
+              content.excerpt.push(columnElement.excerpt);
+              total--;
+              if (!total) {
+                return defer.resolve(content);
+              }
+            });
+          } else {
+            _.getElementMetaValues(element).done(function(meta) {
+              console.log('getElementMetaValues done');
+              element.meta_id = parseInt(element.meta_id);
+              if (meta !== false) {
+                _.defaults(element, meta);
+                if (element.element === 'Text') {
+                  content.excerpt.push(meta.content);
+                }
+                if (element.element === 'Image') {
+                  element.image_id = parseInt(element.image_id);
+                }
+                if (element.element === 'ImageWithText') {
+                  element.image_id = parseInt(element.image_id);
+                }
+                if (element.element === 'Video') {
+                  element.video_id = parseInt(element.video_id);
+                }
+              }
+              total--;
+              if (!total) {
+                return defer.resolve(content);
+              }
+            });
+          }
+          i = i + 1;
+          if (i < _.size(elements)) {
+            return forEach(elements[i], i);
+          }
         };
-        if (_.isArray(elements)) {
-          total = 0;
-          return _.each(elements, function(element) {
-            var insideElement, metaData;
+        forEach(elements[0], 0);
+      } else {
+        defer.resolve(elements);
+      }
+      return defer.promise();
+    },
+    getRowElements: function(rowElements) {
+      var content, defer, forEachRowElement, total;
+      defer = $.Deferred();
+      content = {
+        excerpt: new Array
+      };
+      total = 0;
+      forEachRowElement = function(column, i) {
+        var forEachColumnElement;
+        if (column.elements) {
+          forEachColumnElement = function(element, j) {
             total++;
             if (element.element === 'Row' || element.element === 'TeacherQuestion') {
-              insideElement = getRowElements(element);
-              return insideElement.done(function(columnElement) {
+              _.getRowElements(element).then(function(columnElement) {
+                console.log('getRowElements done');
                 content.excerpt.push(columnElement.excerpt);
                 total--;
                 if (!total) {
-                  return d.resolve(content);
+                  return defer.resolve(content);
                 }
               });
             } else {
-              metaData = getElementMetaValues(element);
-              return metaData.done(function(meta) {
+              _.getElementMetaValues(element).then(function(meta) {
+                console.log('getElementMetaValues done');
                 element.meta_id = parseInt(element.meta_id);
                 if (meta !== false) {
                   _.defaults(element, meta);
                   if (element.element === 'Text') {
-                    content.excerpt.push(meta.content);
+                    content.excerpt.push(element.content);
                   }
                   if (element.element === 'Image') {
                     element.image_id = parseInt(element.image_id);
@@ -70,99 +98,62 @@ define(['underscore', 'unserialize'], function(_) {
                 }
                 total--;
                 if (!total) {
-                  return d.resolve(content);
+                  return defer.resolve(content);
                 }
               });
             }
-          });
+            j = j + 1;
+            if (j < _.size(column.elements)) {
+              return forEachColumnElement(column.elements[j], j);
+            }
+          };
+          forEachColumnElement(column.elements[0], 0);
         } else {
-          return d.resolve(elements);
+          defer.resolve(content);
         }
+        i = i + 1;
+        if (i < _.size(rowElements.elements)) {
+          return forEachRowElement(rowElements.elements[i], i);
+        }
+      };
+      forEachRowElement(rowElements.elements[0], 0);
+      return defer.promise();
+    },
+    getElementMetaValues: function(element) {
+      var defer, metaID;
+      defer = $.Deferred();
+      metaID = element.meta_id;
+      _.getMetaValueFromMetaId(metaID).then(function(metaData) {
+        var ele;
+        console.log('getMetaValueFromMetaId: ' + metaID + ' done');
+        if (metaData) {
+          ele = _.unserialize(metaData);
+          ele.meta_id = metaID;
+        } else {
+          ele = element;
+        }
+        return defer.resolve(ele);
       });
-    };
-    return $.when(runFunc()).done(function() {
-      return console.log("get getJsonToClone done");
-    }).fail(_.failureHandler);
-  };
-  getRowElements = function(rowElements) {
-    var runFunc;
-    runFunc = function() {
-      return $.Deferred(function(d) {
-        var content, total;
-        content = {
-          excerpt: new Array
-        };
-        total = 0;
-        return _.each(rowElements.elements, function(column) {
-          if (column.elements) {
-            return _.each(column.elements, function(element) {
-              var insideElement, metaData;
-              total++;
-              if (element.element === 'Row' || element.element === 'TeacherQuestion') {
-                insideElement = getRowElements(element);
-                return insideElement.done(function(columnElement) {
-                  content.excerpt.push(columnElement.excerpt);
-                  total--;
-                  if (!total) {
-                    return d.resolve(content);
-                  }
-                });
-              } else {
-                metaData = getElementMetaValues(element);
-                return metaData.done(function(meta) {
-                  element.meta_id = parseInt(element.meta_id);
-                  if (meta !== false) {
-                    _.defaults(element, meta);
-                    if (element.element === 'Text') {
-                      content.excerpt.push(element.content);
-                    }
-                    if (element.element === 'Image') {
-                      element.image_id = parseInt(element.image_id);
-                    }
-                    if (element.element === 'ImageWithText') {
-                      element.image_id = parseInt(element.image_id);
-                    }
-                    if (element.element === 'Video') {
-                      element.video_id = parseInt(element.video_id);
-                    }
-                  }
-                  total--;
-                  if (!total) {
-                    return d.resolve(content);
-                  }
-                });
-              }
-            });
-          } else {
-            return d.resolve(content);
+      return defer.promise();
+    },
+    getMetaValueFromMetaId: function(meta_id) {
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var metaValue, row;
+        metaValue = null;
+        if (data.rows.length !== 0) {
+          row = data.rows.item(0);
+          if (row['meta_key'] === 'content_element') {
+            metaValue = row['meta_value'];
           }
-        });
+        }
+        return defer.resolve(metaValue);
+      };
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM wp_postmeta WHERE meta_id=?", [meta_id], onSuccess, _.transactionErrorHandler);
       });
-    };
-    return $.when(runFunc()).done(function() {
-      return console.log("get getRowElements done");
-    }).fail(_.failureHandler);
-  };
-  return getElementMetaValues = function(element) {
-    var runFunc;
-    runFunc = function() {
-      return $.Deferred(function(d) {
-        var meta;
-        meta = getMetaValueFromMetaId(element.meta_id);
-        return meta.done(function(metaData) {
-          var ele;
-          if (metaData) {
-            ele = unserialize(metaData);
-            ele.meta_id = element.meta_id;
-          } else {
-            ele = element;
-          }
-          return d.resolve(ele);
-        });
-      });
-    };
-    return $.when(runFunc()).done(function() {
-      return console.log("get getElementMetaValues done");
-    }).fail(_.failureHandler);
-  };
+      return defer.promise();
+    }
+  });
 });

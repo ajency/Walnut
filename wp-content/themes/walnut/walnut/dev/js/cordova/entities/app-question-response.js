@@ -1,27 +1,24 @@
 define(['underscore', 'serialize'], function(_) {
   return _.mixin({
-    getQuestionResponseByCollectionIdAndDivision: function(collection_id, division) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, row, _fn, _i, _ref;
-          result = [];
-          _fn = function(row, i) {
-            var questionType;
-            questionType = _.getMetaValue(row['content_piece_id']);
-            return questionType.done(function(meta_value) {
-              return (function(row, i, meta_value) {
-                var questionResponseMeta;
-                questionResponseMeta = _.getQuestionResponseMetaData(row['ref_id']);
-                return questionResponseMeta.done(function(multipleEvalQuestionResponse) {
+    cordovaQuestionResponseCollection: function(collection_id, division) {
+      var defer, result;
+      defer = $.Deferred();
+      result = [];
+      _.getQuestionResponseByCollectionIdAndDivision(collection_id, division).then(function(questionResponseData) {
+        var forEach, length;
+        console.log('getQuestionResponseByCollectionIdAndDivision done');
+        length = questionResponseData.rows.length;
+        if (length === 0) {
+          return defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
+            return _.getMetaValue(row['content_piece_id']).then(function(meta_value) {
+              console.log('getMetaValue done');
+              return _.getQuestionResponseMetaData(row['ref_id']).then(function(multipleEvalQuestionResponse) {
+                console.log('getQuestionResponseMetaData done');
+                return _.getTeacherName(row['teacher_id']).then(function(teacher_name) {
                   var question_response;
+                  console.log('getTeacherName done');
                   if (meta_value.question_type === 'individual') {
                     question_response = _.unserialize(row['question_response']);
                     question_response = _.map(question_response, function(num) {
@@ -32,101 +29,97 @@ define(['underscore', 'serialize'], function(_) {
                   } else {
                     question_response = multipleEvalQuestionResponse;
                   }
-                  return (function(row, i, question_response) {
-                    var teacherName;
-                    teacherName = _.getTeacherName(row['teacher_id']);
-                    return teacherName.done(function(teacher_name) {
-                      return result[i] = {
-                        ref_id: row['ref_id'],
-                        teacher_id: row['teacher_id'],
-                        teacher_name: teacher_name,
-                        content_piece_id: row['content_piece_id'],
-                        collection_id: row['collection_id'],
-                        division: row['division'],
-                        question_response: question_response,
-                        time_taken: row['time_taken'],
-                        start_date: row['start_date'],
-                        end_date: row['end_date'],
-                        status: row['status']
-                      };
-                    });
-                  })(row, i, question_response);
+                  result[i] = {
+                    ref_id: row['ref_id'],
+                    teacher_id: row['teacher_id'],
+                    teacher_name: teacher_name,
+                    content_piece_id: row['content_piece_id'],
+                    collection_id: row['collection_id'],
+                    division: row['division'],
+                    question_response: question_response,
+                    time_taken: row['time_taken'],
+                    start_date: row['start_date'],
+                    end_date: row['end_date'],
+                    status: row['status']
+                  };
+                  i = i + 1;
+                  if (i < length) {
+                    return forEach(questionResponseData.rows.item(i), i);
+                  } else {
+                    return defer.resolve(result);
+                  }
                 });
-              })(row, i, meta_value);
+              });
             });
           };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            _fn(row, i);
-          }
-          return d.resolve(result);
-        };
+          return forEach(questionResponseData.rows.item(0), 0);
+        }
+      });
+      return defer.promise();
+    },
+    getQuestionResponseByCollectionIdAndDivision: function(collection_id, division) {
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        return defer.resolve(data);
       };
-      return $.when(runQuery()).done(function(data) {
-        return console.log('getQuestionResponseByCollectionIdAndDivision transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response WHERE collection_id=? AND division=?", [collection_id, division], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getQuestionResponseMetaData: function(ref_id) {
-      var onSuccess, question_response, runQuery;
-      question_response = '';
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql('SELECT * FROM ' + _.getTblPrefix() + 'question_response_meta WHERE qr_ref_id=?', [ref_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, row, _fn, _i, _ref;
-          question_response = [];
-          _fn = function(row, i) {
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var forEach, length, question_response;
+        question_response = [];
+        length = data.rows.length;
+        if (length === 0) {
+          return defer.resolve(question_response);
+        } else {
+          forEach = function(row, i) {
             var meta_key, meta_value;
             meta_key = parseInt(row['meta_key']);
             meta_value = _.unserialize(row['meta_value']);
-            return question_response[i] = _.extend(meta_value, {
+            question_response[i] = _.extend(meta_value, {
               'id': meta_key
             });
+            i = i + 1;
+            if (i < length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              return defer.resolve(question_response);
+            }
           };
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
-            _fn(row, i);
-          }
-          return d.resolve(question_response);
-        };
+          return forEach(data.rows.item(0), 0);
+        }
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getQuestionResponseMetaData transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "question_response_meta WHERE qr_ref_id=?", [ref_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getTeacherName: function(teacher_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [teacher_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var display_name;
+        display_name = '';
+        if (data.rows.length !== 0) {
+          display_name = data.rows.item(0)['display_name'];
+        }
+        return defer.resolve(display_name);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var display_name;
-          display_name = '';
-          if (data.rows.length !== 0) {
-            display_name = data.rows.item(0)['display_name'];
-          }
-          return d.resolve(display_name);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('getTeacherName transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?", [teacher_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     saveUpdateQuestionResponse: function(model) {
-      var questionType;
-      questionType = _.getMetaValue(model.get('content_piece_id'));
-      return questionType.done(function(meta_value) {
+      return _.getMetaValue(model.get('content_piece_id')).done(function(meta_value) {
         var question_response;
+        console.log('getMetaValue done');
         if (meta_value.question_type === 'individual') {
           question_response = serialize(model.get('question_response'));
         } else if (meta_value.question_type === 'chorus') {
@@ -142,7 +135,7 @@ define(['underscore', 'serialize'], function(_) {
       });
     },
     insertQuestionResponse: function(model, question_response) {
-      var C, CP, D, record_exists, ref_id, start_date;
+      var C, CP, D, ref_id, start_date;
       CP = model.get('content_piece_id');
       C = model.get('collection_id');
       D = model.get('division');
@@ -152,8 +145,8 @@ define(['underscore', 'serialize'], function(_) {
       } else {
         start_date = model.get('start_date');
       }
-      record_exists = _.checkIfRecordExistsInQuestionResponse(ref_id);
-      return record_exists.done(function(exists) {
+      return _.checkIfRecordExistsInQuestionResponse(ref_id).done(function(exists) {
+        console.log('checkIfRecordExistsInQuestionResponse done');
         if (exists) {
           _.db.transaction(function(tx) {
             return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET start_date=?, sync=? WHERE ref_id=?', [_.getCurrentDateTime(0), 0, ref_id]);
@@ -196,9 +189,8 @@ define(['underscore', 'serialize'], function(_) {
             qR = _.omit(qR, 'id');
             meta_value = serialize(qR);
             return (function(student_id, meta_value) {
-              var record_exists;
-              record_exists = _.checkIfRecordExistsInQuestionResponseMeta(model.get('ref_id'), student_id);
-              return record_exists.done(function(exists) {
+              return _.checkIfRecordExistsInQuestionResponseMeta(model.get('ref_id'), student_id).done(function(exists) {
+                console.log('checkIfRecordExistsInQuestionResponseMeta done');
                 if (exists) {
                   return _.db.transaction(function(tx) {
                     return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response_meta SET meta_value=?, sync=? WHERE qr_ref_id=? AND meta_key=?', [meta_value, 0, model.get('ref_id'), student_id]);
@@ -219,50 +211,36 @@ define(['underscore', 'serialize'], function(_) {
       }
     },
     checkIfRecordExistsInQuestionResponse: function(ref_id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT ref_id FROM " + _.getTblPrefix() + "question_response WHERE ref_id=?", [ref_id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var exists;
+        exists = false;
+        if (data.rows.length > 0) {
+          exists = true;
+        }
+        return defer.resolve(exists);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var exists;
-          exists = false;
-          if (data.rows.length > 0) {
-            exists = true;
-          }
-          return d.resolve(exists);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('checkIfRecordExistsInQuestionResponse transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT ref_id FROM " + _.getTblPrefix() + "question_response WHERE ref_id=?", [ref_id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     checkIfRecordExistsInQuestionResponseMeta: function(qr_ref_id, meta_key) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT qr_ref_id FROM " + _.getTblPrefix() + "question_response_meta WHERE qr_ref_id=? AND meta_key=?", [qr_ref_id, meta_key], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var exists;
+        exists = false;
+        if (data.rows.length > 0) {
+          exists = true;
+        }
+        return defer.resolve(exists);
       };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var exists;
-          exists = false;
-          if (data.rows.length > 0) {
-            exists = true;
-          }
-          return d.resolve(exists);
-        };
-      };
-      return $.when(runQuery()).done(function() {
-        return console.log('checkIfRecordExistsInQuestionResponseMeta transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT qr_ref_id FROM " + _.getTblPrefix() + "question_response_meta WHERE qr_ref_id=? AND meta_key=?", [qr_ref_id, meta_key], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

@@ -21,13 +21,12 @@ define ["backbone"], (Backbone) ->
 				_.cordovaTextbookCollection(opts.class_id, opts.division)
 				.done (textbooks)->
 					console.log 'cordovaTextbookCollection done'
-					console.log textbooks
 					collection.set textbooks
 
 			if collection_name is 'chapter'
-				data = _.getChaptersByParentId(opts.parent)
-				data.done (d)->
-					collection.set d
+				_.getChaptersByParentId(opts.parent).done (chapters)->
+					console.log 'getChaptersByParentId done'
+					collection.set chapters
 
 			if collection_name is 'division'
 				_.cordovaDivisionCollection().done (divisions)->
@@ -35,32 +34,36 @@ define ["backbone"], (Backbone) ->
 					collection.set divisions
 
 			if collection_name is 'content-group'
-				data = _.getContentGroupByTextbookIdAndDivision(opts.textbook, opts.division)
-				data.done (d)->
-					collection.set d.reverse()
+				_.cordovaContentGroupCollection(opts.textbook, opts.division)
+				.done (contentGroups)->
+					console.log 'cordovaContentGroupCollection done'
+					collection.set contentGroups.reverse()
 
 			if collection_name is 'content-piece'
-				data = _.getContentPiecesByIDs(opts.ids)
-				data.done (d)->
-					collection.set d
+				_.cordovaContentPieceCollection(opts.ids).done (contentPieces)->
+					console.log 'cordovaContentPieceCollection done'
+					console.log contentPieces
+					collection.set contentPieces
 
 			if collection_name is 'user'
-				data = _.getStudentsByDivision(opts.division)
-				data.done (d)->
-					collection.set d
+				_.getStudentsByDivision(opts.division).done (students)->
+					console.log 'getStudentsByDivision done'
+					collection.set students
 
 			if collection_name is 'question-response'
-				data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division)
-				data.done (d)->
-					collection.set d
+				_.cordovaQuestionResponseCollection(opts.collection_id, opts.division)
+				.done (questionResponse)->
+					console.log 'cordovaQuestionResponseCollection done'
+					collection.set questionResponse
 
 			if collection_name is 'textbookName'
-				data = _.getTextBookNamesByTermIDs(opts.term_ids)
-				data.done (d)->
-					collection.set d
+				_.getTextBookNamesByTermIDs(opts.term_ids).done (textbookNames)->
+					console.log 'getTextBookNamesByTermIDs done'
+					collection.set textbookNames
 
 			if collection_name is 'offlineUsers'
 				_.getNamesOfAllOfflineUsers().done (users)->
+					console.log 'getNamesOfAllOfflineUsers done'
 					collection.set users
 
 			if collection_name is 'media'
@@ -190,22 +193,22 @@ define ["backbone"], (Backbone) ->
 				console.log 'Model name: '+modelname
 
 				if modelname is 'division'
-					_.fetchSingleDivision(model.get('id')).done (division)->
+					xhr = _.fetchSingleDivision(model.get('id')).done (division)->
 						console.log 'fetchSingleDivision done'
 						model.set division
 
 				if modelname is 'textbook'
-					data = _.getTextBookByTextbookId(model.get('term_id'))
-					data.done (d)->
-						model.set d	
+					xhr = _.getTextBookByTextbookId(model.get('term_id')).done (textbook)->
+						console.log 'getTextBookByTextbookId done'
+						model.set textbook
 
 				if modelname is 'content-group'
-					data = _.getContentGroupById(model.get('id'))
-					data.done (d)->
-						model.set d
+					xhr = _.getContentGroupById(model.get('id')).done (contentGroup)->
+						console.log 'getContentGroupById done'
+						model.set contentGroup
 
 				if modelname is 'question-response'
-					data = _.saveUpdateQuestionResponse(model)
+					_.saveUpdateQuestionResponse(model)
 
 				if modelname is 'media'
 					data = _.getMediaById(model.get('id'))

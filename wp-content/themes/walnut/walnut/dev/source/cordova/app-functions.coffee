@@ -99,85 +99,97 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		#Get all user details from local database
 		getUserDetails : (username)->
 
+			defer = $.Deferred()
+
 			userData = user_id : '', password: '', role : '', exists : false
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-							tx.executeSql("SELECT * FROM USERS WHERE username=?"
-								, [username], onSuccess(d), _.deferredErrorHandler(d))	
+			onSuccess = (tx, data)->
+
+				if data.rows.length isnt 0
+
+					row = data.rows.item(0)
+
+					userData =
+						user_id : row['user_id']
+						password : row['password']
+						role : row['user_role']
+						exists : true
+
+				defer.resolve userData
+
+
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT * 
+								FROM USERS 
+								WHERE username=?"
+								, [username]
+
+				, onSuccess, _.transactionErrorHandler
+
 			
-			onSuccess = (d)->
-				(tx, data)->
-
-					if data.rows.length isnt 0
-						row = data.rows.item(0)
-						userData =
-							user_id : row['user_id']
-							password : row['password']
-							role : row['user_role']
-							exists : true
-
-					d.resolve(userData)
-
-			$.when(runQuery()).done ->
-				console.log 'getUserDetails transaction completed'
-			.fail _.failureHandler
+			defer.promise()
 
 
 		
 		#Get meta_value from wp_postmeta
 		getMetaValue : (content_piece_id)->
 
-			meta_value = 
-				content_type : ''
-				layout_json : ''
-				question_type : ''
-				post_tags : ''
-				duration : ''
-				last_modified_by : ''
-				published_by : ''
-				term_ids : ''
-				instructions: ''
+			defer = $.Deferred()
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_postmeta WHERE post_id=?"
-							, [content_piece_id], onSuccess(d), _.deferredErrorHandler(d))
+			meta_value = content_type : '', layout_json : '', question_type : ''
+						, post_tags : '', duration : '', last_modified_by : ''
+						, published_by : '', term_ids : '', instructions: ''
 
-			onSuccess = (d)->
-				(tx, data)->
-					for i in [0..data.rows.length-1] by 1
-						row = data.rows.item(i)
-						
-						do(row)->
+			onSuccess = (tx, data)->
 
-							if row['meta_key'] is 'content_type'
-								meta_value.content_type = row['meta_value']
+				length = data.rows.length
+				
+				if length is 0
+					defer.resolve meta_value
+				else
+					forEach = (row, i)->
 
-							if row['meta_key'] is 'layout_json'
-								meta_value.layout_json = _.unserialize(row['meta_value'])
+						if row['meta_key'] is 'content_type'
+							meta_value.content_type = row['meta_value']
 
-							if row['meta_key'] is 'question_type'
-								meta_value.question_type = row['meta_value']	
+						if row['meta_key'] is 'layout_json'
+							meta_value.layout_json = _.unserialize(row['meta_value'])
 
-							if row['meta_key'] is 'content_piece_meta'
-								content_piece_meta = _.unserialize(row['meta_value'])
+						if row['meta_key'] is 'question_type'
+							meta_value.question_type = row['meta_value']	
 
-								meta_value.post_tags = content_piece_meta.post_tags
-								meta_value.duration = content_piece_meta.duration
-								meta_value.last_modified_by = content_piece_meta.last_modified_by
-								meta_value.published_by = content_piece_meta.published_by
-								meta_value.term_ids = content_piece_meta.term_ids
-								meta_value.instructions = content_piece_meta.instructions
-								
+						if row['meta_key'] is 'content_piece_meta'
+							content_piece_meta = _.unserialize(row['meta_value'])
 
-					d.resolve(meta_value)
+							meta_value.post_tags = content_piece_meta.post_tags
+							meta_value.duration = content_piece_meta.duration
+							meta_value.last_modified_by = content_piece_meta.last_modified_by
+							meta_value.published_by = content_piece_meta.published_by
+							meta_value.term_ids = content_piece_meta.term_ids
+							meta_value.instructions = content_piece_meta.instructions
 
-			$.when(runQuery()).done ->
-				console.log 'getMetaValue transaction completed'
-			.fail _.failureHandler
+						i = i + 1
+						if i < length
+							forEach data.rows.item(i), i
+						else
+							defer.resolve meta_value
+
+
+					forEach data.rows.item(0), 0
+
+			
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT * 
+								FROM wp_postmeta 
+								WHERE post_id=?"
+								, [content_piece_id]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
 
 
 		

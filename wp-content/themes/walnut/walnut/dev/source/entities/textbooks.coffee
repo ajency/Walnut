@@ -40,7 +40,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         # textbooks collection class
         class Textbooks.ItemCollection extends Backbone.Collection
             model: Textbooks.ItemModel
-            comparator: 'name'
+            comparator: 'term_order'
             name: 'textbook'
 
             url: ->
@@ -149,7 +149,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:textbook:name:by:id", (id)->
             API.getTextBookNameByID id
-
 
         App.reqres.setHandler "get:textbook:names:by:ids", (ids)->
             API.getTextBookNamesByIDs ids

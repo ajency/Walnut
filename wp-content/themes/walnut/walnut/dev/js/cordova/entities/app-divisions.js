@@ -4,22 +4,27 @@ define(['underscore'], function(_) {
       var defer;
       defer = $.Deferred();
       _.getDivisionIds().then(function(ids) {
-        var forEach, results;
+        var forEach, length, results;
         console.log('getDivisionIds done');
         results = [];
-        forEach = function(id, i) {
-          return _.fetchSingleDivision(id).then(function(divisionData) {
-            console.log('fetchSingleDivision done');
-            results[i] = divisionData;
-            i = i + 1;
-            if (i < ids.length) {
-              return forEach(ids[i], i);
-            } else {
-              return defer.resolve(results);
-            }
-          });
-        };
-        return forEach(ids[0], 0);
+        length = ids.length;
+        if (length === 0) {
+          return defer.resolve(results);
+        } else {
+          forEach = function(id, i) {
+            return _.fetchSingleDivision(id).then(function(divisionData) {
+              console.log('fetchSingleDivision done');
+              results[i] = divisionData;
+              i = i + 1;
+              if (i < ids.length) {
+                return forEach(ids[i], i);
+              } else {
+                return defer.resolve(results);
+              }
+            });
+          };
+          return forEach(ids[0], 0);
+        }
       });
       return defer.promise();
     },

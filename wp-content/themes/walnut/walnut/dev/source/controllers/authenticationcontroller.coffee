@@ -56,6 +56,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				(resp)=>
 					console.log 'Login Response'
 					console.log resp
+					
 					if resp.error
 						@onErrorResponse(resp.error)
 					else
@@ -74,9 +75,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		offlineDeviceAuth : ->
 
-			offlineUser = _.getUserDetails(@data.txtusername)
+			_.getUserDetails(@data.txtusername).done (user)=>
 
-			offlineUser.done (user)=>
 				if user.exists
 					if user.password is @data.txtpassword
 
@@ -135,9 +135,8 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 		# save new user or update existing user 
 		saveUpdateUserDetails : (resp)->
 
-			offlineUser = _.getUserDetails(@data.txtusername)
-			
-			offlineUser.done (user)=>
+			_.getUserDetails(@data.txtusername).done (user)=>
+				
 				if user.exists then @updateExistingUser(resp)
 				else @inputNewUser(resp)
 		

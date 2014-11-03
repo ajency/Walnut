@@ -5,122 +5,172 @@ define ['underscore', 'serialize'], ( _) ->
 	_.mixin
 
 		# Question response get functions
+		cordovaQuestionResponseCollection : (collection_id, division)->
+
+			defer = $.Deferred()
+
+			result = []
+
+			_.getQuestionResponseByCollectionIdAndDivision(collection_id, division)
+			.then (questionResponseData)->
+				console.log 'getQuestionResponseByCollectionIdAndDivision done'
+
+				length = questionResponseData.rows.length
+
+				if length is 0
+					defer.resolve result
+				else
+					forEach = (row, i)->
+
+						_.getMetaValue(row['content_piece_id'])
+						.then (meta_value)->
+							console.log 'getMetaValue done'
+
+							_.getQuestionResponseMetaData(row['ref_id'])
+							.then (multipleEvalQuestionResponse)->
+								console.log 'getQuestionResponseMetaData done'
+
+								_.getTeacherName(row['teacher_id'])
+								.then (teacher_name)->
+									console.log 'getTeacherName done'
+
+									if meta_value.question_type is 'individual'
+										question_response = _.unserialize(row['question_response'])
+										question_response = _.map(question_response, (num)->
+												parseInt(num)
+											)
+									
+									else if meta_value.question_type is 'chorus'
+										question_response = row['question_response']
+
+									else
+										# when question_type is 'multiple_eval'
+										question_response = multipleEvalQuestionResponse
+
+									result[i] = 
+										ref_id: row['ref_id']
+										teacher_id: row['teacher_id']
+										teacher_name: teacher_name
+										content_piece_id: row['content_piece_id']
+										collection_id: row['collection_id']
+										division: row['division']
+										question_response: question_response
+										time_taken: row['time_taken']
+										start_date: row['start_date']
+										end_date: row['end_date']
+										status: row['status']
+
+									
+									i = i + 1
+									if i < length
+										forEach questionResponseData.rows.item(i), i
+									else
+										defer.resolve result
+
+
+					forEach questionResponseData.rows.item(0), 0
+				
+
+			defer.promise()
+
+
+
+		
 		getQuestionResponseByCollectionIdAndDivision : (collection_id, division)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"question_response 
-							WHERE collection_id=? AND division=?", [collection_id, division]
-							, onSuccess(d), _.deferredErrorHandler(d));
-					
-			onSuccess = (d)->
-				(tx, data)->
+			defer = $.Deferred()
 
-					result = []
+			onSuccess = (tx, data)->
 
-					for i in [0..data.rows.length-1] by 1
-						row = data.rows.item(i)
+				defer.resolve data
+				
 
-						do(row, i)->
-							questionType = _.getMetaValue(row['content_piece_id'])
-							questionType.done (meta_value)->
+			_.db.transaction (tx)->
 
-								do(row, i, meta_value)->
-									questionResponseMeta = _.getQuestionResponseMetaData(row['ref_id'])
-									questionResponseMeta.done (multipleEvalQuestionResponse)->
+				tx.executeSql "SELECT * 
+								FROM "+_.getTblPrefix()+"question_response 
+								WHERE collection_id=? 
+								AND division=?"
+								, [collection_id, division]
 
-										if meta_value.question_type is 'individual'
-											question_response = _.unserialize(row['question_response'])
-											question_response = _.map(question_response, (num)->
-													parseInt(num)
-												)
-										
-										else if meta_value.question_type is 'chorus'
-											question_response = row['question_response']
+				, onSuccess, _.transactionErrorHandler
+				
 
-										else
-											# when question_type is 'multiple_eval'
-											question_response = multipleEvalQuestionResponse
-
-										do(row, i, question_response)->
-											teacherName = _.getTeacherName(row['teacher_id'])
-											teacherName.done (teacher_name)->
-
-												result[i] = 
-													ref_id: row['ref_id']
-													teacher_id: row['teacher_id']
-													teacher_name: teacher_name
-													content_piece_id: row['content_piece_id']
-													collection_id: row['collection_id']
-													division: row['division']
-													question_response: question_response
-													time_taken: row['time_taken']
-													start_date: row['start_date']
-													end_date: row['end_date']
-													status: row['status']
-	
-					d.resolve result          
-
-			$.when(runQuery()).done (data)->
-				console.log 'getQuestionResponseByCollectionIdAndDivision transaction completed'
-			.fail _.failureHandler
+			defer.promise()
 
 
 
 		getQuestionResponseMetaData : (ref_id)->
 
-			question_response = ''
+			defer = $.Deferred()
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql('SELECT * FROM '+_.getTblPrefix()+'question_response_meta 
-							WHERE qr_ref_id=?', [ref_id], onSuccess(d), _.deferredErrorHandler(d))
+			onSuccess = (tx, data)->
 
+				question_response = []
 
-			onSuccess = (d)->
-				(tx, data)->
+				length = data.rows.length
 
-					question_response = []
+				if length is 0
+					defer.resolve question_response
 
-					for i in [0..data.rows.length-1] by 1
+				else
+					forEach = (row, i)->
 
-						row = data.rows.item(i)
+						meta_key = parseInt(row['meta_key'])
+						meta_value = _.unserialize(row['meta_value'])
 
-						do(row , i)->
-							meta_key = parseInt(row['meta_key'])
-							meta_value = _.unserialize(row['meta_value'])
+						question_response[i] = _.extend(meta_value, 'id':meta_key)
 
-							question_response[i] = _.extend(meta_value, 'id':meta_key)
-
-					d.resolve question_response
-
-			$.when(runQuery()).done ->
-				console.log 'getQuestionResponseMetaData transaction completed'
-			.fail _.failureHandler
+						i = i + 1
+						if i < length
+							forEach data.rows.item(i), i
+						else
+							defer.resolve question_response
 
 
+					forEach data.rows.item(0), 0
 
+			
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT * 
+								FROM "+_.getTblPrefix()+"question_response_meta 
+								WHERE qr_ref_id=?"
+								, [ref_id]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
+
+
+
+		
 		getTeacherName : (teacher_id)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT display_name FROM wp_users WHERE ID=?"
-							, [teacher_id], onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
-					display_name = ''
-					if data.rows.length isnt 0
-						display_name = data.rows.item(0)['display_name']
+			onSuccess = (tx, data)->
 
-					d.resolve display_name
+				display_name = ''
 
-			$.when(runQuery()).done ->
-				console.log 'getTeacherName transaction completed'
-			.fail _.failureHandler
+				if data.rows.length isnt 0
+					display_name = data.rows.item(0)['display_name']
+
+				defer.resolve display_name
+
+
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT display_name 
+								FROM wp_users 
+								WHERE ID=?"
+								, [teacher_id]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
 
 
 
@@ -128,8 +178,9 @@ define ['underscore', 'serialize'], ( _) ->
 		# Question response save functions
 		saveUpdateQuestionResponse : (model)->
 
-			questionType = _.getMetaValue(model.get('content_piece_id'))
-			questionType.done (meta_value)->
+			_.getMetaValue(model.get('content_piece_id'))
+			.done (meta_value)->
+				console.log 'getMetaValue done'
 
 				if meta_value.question_type is 'individual'
 					question_response = serialize(model.get('question_response'))
@@ -163,8 +214,10 @@ define ['underscore', 'serialize'], ( _) ->
 			else 
 				start_date = model.get('start_date')
 
-			record_exists = _.checkIfRecordExistsInQuestionResponse(ref_id)
-			record_exists.done (exists)->
+			_.checkIfRecordExistsInQuestionResponse(ref_id)
+			.done (exists)->
+				console.log 'checkIfRecordExistsInQuestionResponse done'
+
 				if exists
 					_.db.transaction((tx)->
 						tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response 
@@ -233,9 +286,10 @@ define ['underscore', 'serialize'], ( _) ->
 
 						do(student_id, meta_value)->
 
-							record_exists = 
 							_.checkIfRecordExistsInQuestionResponseMeta(model.get('ref_id'), student_id)
-							record_exists.done (exists)->
+							.done (exists)->
+								console.log 'checkIfRecordExistsInQuestionResponseMeta done'
+
 								if exists
 									_.db.transaction((tx)->
 										tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response_meta 
@@ -262,44 +316,54 @@ define ['underscore', 'serialize'], ( _) ->
 
 		checkIfRecordExistsInQuestionResponse : (ref_id)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT ref_id FROM "+_.getTblPrefix()+"question_response 
-							WHERE ref_id=?", [ref_id], onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
+			onSuccess = (tx, data)->
 
-					exists = false
-					exists = true if data.rows.length > 0
+				exists = false
+				exists = true if data.rows.length > 0
 
-					d.resolve exists
+				defer.resolve exists
+				
 
-			$.when(runQuery()).done ->
-				console.log 'checkIfRecordExistsInQuestionResponse transaction completed'
-			.fail _.failureHandler
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT ref_id 
+								FROM "+_.getTblPrefix()+"question_response 
+								WHERE ref_id=?"
+								, [ref_id]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
 
 
 		
 		checkIfRecordExistsInQuestionResponseMeta : (qr_ref_id, meta_key)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT qr_ref_id
-							FROM "+_.getTblPrefix()+"question_response_meta 
-							WHERE qr_ref_id=? AND meta_key=?", [qr_ref_id, meta_key]
-							, onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess = (d)->
-				(tx, data)->
+			onSuccess = (tx, data)->
 
-					exists = false
-					exists = true if data.rows.length > 0
+				exists = false
+				exists = true if data.rows.length > 0
 
-					d.resolve exists
+				defer.resolve exists
+				
 
-			$.when(runQuery()).done ->
-				console.log 'checkIfRecordExistsInQuestionResponseMeta transaction completed'
-			.fail _.failureHandler
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT qr_ref_id 
+								FROM "+_.getTblPrefix()+"question_response_meta 
+								WHERE qr_ref_id=? 
+								AND meta_key=?"
+								, [qr_ref_id, meta_key]
+
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
+
+
+			
