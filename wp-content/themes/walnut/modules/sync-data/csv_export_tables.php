@@ -128,7 +128,7 @@ class ExportTables {
         else{
             $uploaded_url= $upload_url.$upload_path;
             $export_details['exported_csv_url'] = $uploaded_url;
-            $export_details['last_sync']=date('Y-m-d h:i:s',strtotime('+5 hours 30 minutes',current_time( 'timestamp', 0 )));  // adding +5.30 hours as current_time function returns same result 
+            $export_details['last_sync']=date('Y-m-d H:i:s',strtotime('+5 hours 30 minutes',current_time( 'timestamp', 0 )));  // adding +5.30 hours as current_time function returns same result 
             $this->create_sync_device_log($export_details['last_sync']);
         }
 
