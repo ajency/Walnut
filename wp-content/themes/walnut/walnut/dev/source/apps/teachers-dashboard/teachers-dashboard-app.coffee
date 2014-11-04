@@ -24,14 +24,18 @@ define ['app'
 
             dashboardRedirect:->
                 
+                user = App.request "get:user:model"
+
                 if $.allowRoute 'dashboard'
                     if user.current_user_can('administrator') or user.current_user_can('school-admin')
                         App.navigate('textbooks', trigger: true)
 
                     if user.current_user_can 'teacher'
+                        App.navigate 'teachers/dashboard'
                         @teachersDashboard()  
 
                     if user.current_user_can 'student'
+                        App.navigate 'students/dashboard'
                         @studentsDashboard()
 
             teachersDashboard: ->
@@ -86,7 +90,7 @@ define ['app'
 
 
             studentsQuizModules: (tID) ->
-                
+
                 if $.allowRoute 'dashboard'
 
                     division = App.request "get:user:data","division"
