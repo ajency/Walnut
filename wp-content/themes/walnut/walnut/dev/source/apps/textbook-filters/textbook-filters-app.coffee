@@ -6,7 +6,8 @@ define ['app'
         class TextbookFilters.Controller extends RegionController
             initialize: (opts) ->
 
-                {@collection,@model,@filters,@selectedFilterParamsObject, @dataType, @contentSelectionType, @divisionsCollection}=opts
+                {@collection,@model,@filters,@selectedFilterParamsObject, 
+                @dataType, @contentSelectionType, @divisionsCollection,@post_status}=opts
 
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
 
@@ -95,14 +96,18 @@ define ['app'
                                         @fetchSectionOrSubsection(section_id, 'sections-filter',subsection_id) if section_id?
 
                     @listenTo @view, "fetch:chapters:or:sections", @fetchSectionOrSubsection
-                    @listenTo @view, "fetch:new:content", (textbook_id, post_status)-> 
+                    @listenTo @view, "fetch:new:content", (textbook_id, post_status)=>
+
+                        console.log post_status
+                        
+                        post_status = @post_status if not post_status  
                         
                         division = @view.$el.find '#divisions-filter'
                                     .val()
 
                         data = 
                             'textbook'      : textbook_id
-                            'post_status'   : 'any'
+                            'post_status'   : post_status if post_status
                             'division'      : division if division
 
                         if @contentSelectionType is 'quiz'

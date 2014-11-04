@@ -48,6 +48,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
                   textbooksCollection: _this.textbooksCollection,
                   selectedFilterParamsObject: _this.selectedFilterParamsObject,
                   dataType: dataType,
+                  post_status: 'any',
                   filters: ['textbooks', 'chapters', 'sections', 'subsections', 'module_status']
                 });
                 App.execute("show:list:all:modules:app", {

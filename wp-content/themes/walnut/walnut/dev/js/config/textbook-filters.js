@@ -197,6 +197,9 @@ define(['jquery', 'underscore'], function($, _) {
     content_type = _this.$el.find('#content-type-filter').val();
     content_status = _this.$el.find('#content-status-filter').val();
     content_post_status = _this.$el.find('#content-post-status-filter').val();
+    if (content_post_status === 'any') {
+      content_post_status = '';
+    }
     quiz_type = _this.$el.find('#quiz-type-filter').val();
     difficulty_level = parseInt(_this.$el.find('#difficulty-level-filter').val());
     if (content_type) {

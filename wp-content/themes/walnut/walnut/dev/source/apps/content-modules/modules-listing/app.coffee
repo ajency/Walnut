@@ -46,6 +46,7 @@ define ['app'
                                 textbooksCollection: @textbooksCollection
                                 selectedFilterParamsObject: @selectedFilterParamsObject
                                 dataType : dataType
+                                post_status: 'any'
                                 filters : ['textbooks', 'chapters','sections','subsections','module_status']
 
                             App.execute "show:list:all:modules:app",
