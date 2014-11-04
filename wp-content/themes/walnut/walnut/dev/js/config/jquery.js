@@ -157,7 +157,7 @@ define(['jquery', 'underscore'], function($, _) {
   return $.allowRoute = function(route) {
     var userdata;
     userdata = App.request("get:user:model");
-    if (route === 'textbooks' || route === 'content-pieces' || route === 'add-module' || route === 'edit-module' || route === 'view-module' || route === 'module-list' || route === 'dummy-module' || route === 'view-quiz' || route === 'create-quiz' || route === 'edit-quiz' || route === 'quiz-list' || route === 'dummy-quiz') {
+    if (route === 'textbooks' || route === 'content-pieces' || route === 'add-module' || route === 'edit-module' || route === 'view-module' || route === 'module-list' || route === 'dummy-module' || route === 'view-quiz' || route === 'create-quiz' || route === 'edit-quiz' || route === 'quiz-list' || route === 'dummy-quiz' || route === 'quiz-report' || route === 'dashboard') {
       if (userdata.get('ID')) {
         return true;
       } else {

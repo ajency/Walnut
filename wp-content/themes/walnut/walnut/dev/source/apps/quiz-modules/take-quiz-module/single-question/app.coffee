@@ -121,6 +121,9 @@ define ['app'
                     _getAnswerStatus:(recievedMarks, totalMarks)->
                         status = 'wrong_answer'
 
+                        recievedMarks = parseFloat recievedMarks
+                        totalMarks = parseFloat totalMarks
+
                         if recievedMarks is totalMarks 
                             status = 'correct_answer' 
 

@@ -36,7 +36,9 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/module-edit-vi
         return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
           return function() {
             _this.contentGroupCollection = _this._getContentGroupCollection();
-            return _this.showContentGroupView();
+            return App.execute("when:fetched", _this.contentGroupCollection, function() {
+              return _this.showContentGroupView();
+            });
           };
         })(this));
       };

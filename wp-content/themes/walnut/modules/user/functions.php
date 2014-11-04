@@ -357,7 +357,14 @@ function user_extend_profile_fields_save($user_id) {
              if(isset($_POST['parent_email_'.$i]) && $_POST['parent_email_'.$i] !=''){
                  if( $parent_id = email_exists( $_POST['parent_email_'.$i] )) {
                      update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
-                     update_user_meta( $parent_id, 'parent_of', $user_id );
+                     
+                     $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
+                     if($parent_of_meta == ''){
+                        $parent_of_meta= array();
+                     }
+                     array_push($parent_of_meta, $user_id);
+                     $parent_of_meta = array_unique($parent_of_meta);                     
+                     update_user_meta( $parent_id, 'parent_of', $parent_of_meta );
                     }
                  elseif(is_email($_POST['parent_email_'.$i])){
                      $password = wp_generate_password( 12, true );
@@ -374,7 +381,14 @@ function user_extend_profile_fields_save($user_id) {
                      
                      //$parent_user->set_role( 'parent' );
                      update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
-                     update_user_meta( $new_parent_id, 'parent_of', $user_id );
+                     
+                     $parent_of_meta = get_user_meta($new_parent_id,'parent_of',true);
+                     if($parent_of_meta == ''){
+                        $parent_of_meta= array();
+                     }
+                     array_push($parent_of_meta, $user_id);
+                     $parent_of_meta = array_unique($parent_of_meta);                     
+                     update_user_meta( $new_parent_id, 'parent_of', $parent_of_meta );
 
                  }             
             }  
@@ -571,8 +585,15 @@ function set_meta_user_activation($user_id, $password, $meta)
     }
     
     foreach($updateparentof as $field => $value){
-        if(isset($user_meta[$value]))
-            update_usermeta( $user_meta[$value], 'parent_of', $user_id );
+        if(isset($user_meta[$value])){
+            $parent_of_meta = get_user_meta($user_meta[$value],'parent_of',true);
+            if($parent_of_meta == ''){
+                $parent_of_meta= array();
+            }
+            array_push($parent_of_meta, $user_id);
+            $parent_of_meta = array_unique($parent_of_meta);            
+            update_usermeta( $user_meta[$value], 'parent_of', $parent_of_meta );
+        }
     }
 
 }

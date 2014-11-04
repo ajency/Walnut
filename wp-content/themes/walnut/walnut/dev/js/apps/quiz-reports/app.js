@@ -23,28 +23,34 @@ define(['app', 'apps/quiz-reports/class-report/class-report-app', 'apps/quiz-rep
     })(Marionette.AppRouter);
     Controller = {
       classReports: function() {
-        return App.execute("show:class:report:app", {
-          region: App.mainContentRegion
-        });
+        if ($.allowRoute('quiz-report')) {
+          return App.execute("show:class:report:app", {
+            region: App.mainContentRegion
+          });
+        }
       },
       quizReport: function(div, quiz) {
-        return App.execute("show:quiz:report:app", {
-          region: App.mainContentRegion,
-          division: div,
-          quiz: quiz
-        });
+        if ($.allowRoute('quiz-report')) {
+          return App.execute("show:quiz:report:app", {
+            region: App.mainContentRegion,
+            division: div,
+            quiz: quiz
+          });
+        }
       },
       studentReport: function(id) {
         var display_mode;
-        if (!id) {
-          id = App.request("get:loggedin:user:id");
-          display_mode = 'ownReport';
+        if ($.allowRoute('quiz-report')) {
+          if (!id) {
+            id = App.request("get:loggedin:user:id");
+            display_mode = 'ownReport';
+          }
+          return App.execute("show:student:report:app", {
+            region: App.mainContentRegion,
+            student_id: id,
+            display_mode: display_mode
+          });
         }
-        return App.execute("show:student:report:app", {
-          region: App.mainContentRegion,
-          student_id: id,
-          display_mode: display_mode
-        });
       }
     };
     return QuizReportsApp.on("start", function() {

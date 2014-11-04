@@ -26,7 +26,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/s
           region: App.dialogRegion,
           student: this.students.get(student_id),
           quiz: this.quizModel,
-          summaries: this.quizResponseSummaries
+          summaries: this.quizResponseSummaries.where({
+            'student_id': student_id
+          })
         });
       };
 
