@@ -209,7 +209,13 @@ function add_update_student_parents($user_id,$parent_emails = array()){
         
         if( $parent_id = email_exists( $email_address )) {
             update_user_meta( $user_id, $key, $email_address );
-            update_user_meta( $parent_id, 'parent_of', $user_id );
+            $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
+            if($parent_of_meta == ''){
+                $parent_of_meta= array();
+            }
+            array_push($parent_of_meta, $user_id);
+            $parent_of_meta = array_unique($parent_of_meta);
+            update_user_meta( $parent_id, 'parent_of', $parent_of_meta );
            }
         elseif(is_email($email_address)){
             $password = wp_generate_password( 12, true );
@@ -224,7 +230,14 @@ function add_update_student_parents($user_id,$parent_emails = array()){
             //wp_new_user_notification($new_parent_id, $password);
 
             update_user_meta( $user_id, $key, $email_address  );
-            update_user_meta( $new_parent_id, 'parent_of', $user_id );
+            
+            $parent_of_meta = get_user_meta($new_parent_id,'parent_of',true);
+            if($parent_of_meta == ''){
+                $parent_of_meta= array();
+            }
+            array_push($parent_of_meta, $user_id);
+            $parent_of_meta = array_unique($parent_of_meta);           
+            update_user_meta( $new_parent_id, 'parent_of', $parent_of_meta );
 
         }
         
