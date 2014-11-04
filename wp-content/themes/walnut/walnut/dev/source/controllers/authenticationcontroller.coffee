@@ -49,23 +49,16 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		
 		
-		onlineDeviceAuth:-> 
+		onlineDeviceAuth : -> 
 
 			$.post AJAXURL + '?action=get-user-app-profile',
 				data: @data,
 				(resp)=>
-					console.log 'Login Response'
-					console.log resp
 					
 					if resp.error
 						@onErrorResponse(resp.error)
 					else
-						@onDeviceLoginSuccessOperation(resp.login_details.ID, @data.txtusername)
-
-						# if the blog id is null, then the app is installed
-						# for the first time.
-						if _.isNull(_.getBlogID()) then @initialAppLogin(resp)
-						else @authenticateUserBlogId(resp)
+						@onlineDeviceAuthSuccess(resp)
 				,
 				'json'
 
@@ -73,6 +66,27 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				@onErrorResponse('Could not connect to server')
 
 
+		
+		onlineDeviceAuthSuccess : (resp)->
+
+			user_role = resp.blog_details.blog_roles[0]
+
+			if user_role is 'teacher'
+							
+				@setUserDetails(resp.login_details.ID, @data.txtusername)
+
+				# if the blog id is null, then the app is installed
+				# for the first time.
+				if _.isNull(_.getBlogID()) then @initialAppLogin(resp)
+				else @authenticateUserBlogId(resp)
+
+			else if user_role is 'student'
+				@onErrorResponse('Sorry this is not a valid teacher login. 
+					If you are a student please download Student training 
+					app from Google Playstore.')
+
+
+		
 		offlineDeviceAuth : ->
 
 			_.getUserDetails(@data.txtusername).done (user)=>
@@ -80,23 +94,24 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				if user.exists
 					if user.password is @data.txtpassword
 
-						@onDeviceLoginSuccessOperation(user.user_id, @data.txtusername)
+						@setUserDetails(user.user_id, @data.txtusername)
 						@onSuccessResponse()
 
 					else @onErrorResponse('Invalid Password')       
 
 				else @onErrorResponse('No such user has previously logged in')
 
-
 		
-		onDeviceLoginSuccessOperation : (id, username)->    
-
-			# set user model for back button navigation
-			@setUserModel() 
+		
+		setUserDetails : (id, username)-> 
 
 			# save logged in user id and username
 			_.setUserID(id)
 			_.setUserName(username)
+
+			# set user model
+			userModel = App.request "get:user:model"
+			userModel.set 'ID' : ''+_.getUserID()
 
 
 		
@@ -190,14 +205,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				error : ''+msg
 			@success response
 
-		
-		# user model set for back button navigation
-		setUserModel : ->
-			
-			user = App.request "get:user:model"
-			user.set 'ID' : ''+_.getUserID()
 
 
 	# request handler
 	App.reqres.setHandler "get:auth:controller",(options)->
 		new AuthenticationController options
+

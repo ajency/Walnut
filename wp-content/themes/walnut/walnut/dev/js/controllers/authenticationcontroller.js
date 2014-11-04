@@ -64,17 +64,10 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         data: this.data
       }, (function(_this) {
         return function(resp) {
-          console.log('Login Response');
-          console.log(resp);
           if (resp.error) {
             return _this.onErrorResponse(resp.error);
           } else {
-            _this.onDeviceLoginSuccessOperation(resp.login_details.ID, _this.data.txtusername);
-            if (_.isNull(_.getBlogID())) {
-              return _this.initialAppLogin(resp);
-            } else {
-              return _this.authenticateUserBlogId(resp);
-            }
+            return _this.onlineDeviceAuthSuccess(resp);
           }
         };
       })(this), 'json').fail((function(_this) {
@@ -84,12 +77,27 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
+    AuthenticationController.prototype.onlineDeviceAuthSuccess = function(resp) {
+      var user_role;
+      user_role = resp.blog_details.blog_roles[0];
+      if (user_role === 'teacher') {
+        this.setUserDetails(resp.login_details.ID, this.data.txtusername);
+        if (_.isNull(_.getBlogID())) {
+          return this.initialAppLogin(resp);
+        } else {
+          return this.authenticateUserBlogId(resp);
+        }
+      } else if (user_role === 'student') {
+        return this.onErrorResponse('Sorry this is not a valid teacher login. If you are a student please download Student training app from Google Playstore.');
+      }
+    };
+
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       return _.getUserDetails(this.data.txtusername).done((function(_this) {
         return function(user) {
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
-              _this.onDeviceLoginSuccessOperation(user.user_id, _this.data.txtusername);
+              _this.setUserDetails(user.user_id, _this.data.txtusername);
               return _this.onSuccessResponse();
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -101,10 +109,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
-    AuthenticationController.prototype.onDeviceLoginSuccessOperation = function(id, username) {
-      this.setUserModel();
+    AuthenticationController.prototype.setUserDetails = function(id, username) {
+      var userModel;
       _.setUserID(id);
-      return _.setUserName(username);
+      _.setUserName(username);
+      userModel = App.request("get:user:model");
+      return userModel.set({
+        'ID': '' + _.getUserID()
+      });
     };
 
     AuthenticationController.prototype.initialAppLogin = function(server_resp) {
@@ -187,14 +199,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         error: '' + msg
       };
       return this.success(response);
-    };
-
-    AuthenticationController.prototype.setUserModel = function() {
-      var user;
-      user = App.request("get:user:model");
-      return user.set({
-        'ID': '' + _.getUserID()
-      });
     };
 
     return AuthenticationController;

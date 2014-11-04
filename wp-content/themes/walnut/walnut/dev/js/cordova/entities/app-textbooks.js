@@ -171,9 +171,11 @@ define(['underscore'], function(_) {
             chapterId = chapter.term_id;
             return _.getStatusForChapter(chapterId, division).then(function(result) {
               console.log('getStatusForChapter done');
-              if (_.size(result.all_modules) === _.size(result.completed)) {
+              if (_.size(result.all_modules) === 0) {
+                textbookStatus.not_started.push(chapterId);
+              } else if (_.size(result.all_modules) === _.size(result.completed)) {
                 textbookStatus.completed.push(chapterId);
-              } else if (_.size(result.in_progress) > 0) {
+              } else if (_.size(result.in_progress) > 0 || _.size(result.completed) > 0) {
                 textbookStatus.in_progress.push(chapterId);
               } else {
                 textbookStatus.not_started.push(chapterId);
@@ -238,7 +240,7 @@ define(['underscore'], function(_) {
       _.db.transaction(function(tx) {
         var pattern;
         pattern = '%"' + chapter_id + '"%';
-        return tx.executeSql("SELECT id FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status=?", ['publish'], onSuccess, _.transactionErrorHandler);
+        return tx.executeSql("SELECT id FROM wp_content_collection WHERE term_ids LIKE '" + pattern + "' AND status=? AND type=?", ['publish', 'teaching-module'], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
     },

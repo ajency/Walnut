@@ -104,7 +104,7 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
 function get_textbooks( $args = array() ) {
     // set defaults
     $defaults = array(
-        'hide_empty'    => false,
+        'hide_empty'    => false
         'parent'        => 0,
         'fetch_all'     => false,
         'orderby'       => 'name',

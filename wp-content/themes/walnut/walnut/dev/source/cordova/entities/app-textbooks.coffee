@@ -256,10 +256,13 @@ define ['underscore'], ( _) ->
 						.then (result)->
 							console.log 'getStatusForChapter done'
 
-							if _.size(result.all_modules) is _.size(result.completed)
+							if _.size(result.all_modules) is 0
+								textbookStatus.not_started.push(chapterId)
+
+							else if _.size(result.all_modules) is _.size(result.completed)
 								textbookStatus.completed.push(chapterId)
 
-							else if _.size(result.in_progress) > 0
+							else if _.size(result.in_progress) > 0 or _.size(result.completed) > 0
 								textbookStatus.in_progress.push(chapterId)
 
 							else textbookStatus.not_started.push(chapterId)
@@ -335,8 +338,9 @@ define ['underscore'], ( _) ->
 								FROM wp_content_collection 
 								WHERE term_ids 
 								LIKE '"+pattern+"' 
-								AND status=?"
-								, ['publish']
+								AND status=?
+								AND type=?"
+								, ['publish', 'teaching-module']
 
 				, onSuccess, _.transactionErrorHandler
 
