@@ -55,7 +55,8 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
         if ($value->meta_key == 'description'){
             $description = maybe_unserialize($value->meta_value);
-            $data->instructions = wp_unslash($description['instruction']);
+            if(isset($description['instruction']))
+                $data->instructions = wp_unslash($description['instruction']);
         }
 
         if ($value->meta_key == 'quiz_type')

@@ -19,38 +19,48 @@ define ['app'
 
         Controller =
             addModule: ->
-                App.execute 'show:edit:module:controller',
-                    region : App.mainContentRegion
-                    groupType : 'teaching-module'
+
+                if $.allowRoute 'add-module'
+                    App.execute 'show:edit:module:controller',
+                        region : App.mainContentRegion
+                        groupType : 'teaching-module'
 
 
             editModule:(id) ->
-                App.execute 'show:edit:module:controller',
-                    region: App.mainContentRegion
-                    group_id: id
-                    groupType : 'teaching-module'
+
+                if $.allowRoute 'edit-module'
+                    App.execute 'show:edit:module:controller',
+                        region: App.mainContentRegion
+                        group_id: id
+                        groupType : 'teaching-module'
 
 
             viewModule: (id)->
-                @contentGroupModel = App.request "get:content:group:by:id", id
 
-                breadcrumb_items =
-                    'items': [
-                        {'label': 'Dashboard', 'link': 'javascript://'},
-                        {'label': 'Content Management', 'link': 'javascript:;'},
-                        {'label': 'View Content Group', 'link': 'javascript:;', 'active': 'active'}
-                    ]
+                if $.allowRoute 'view-module'
 
-                App.execute "update:breadcrumb:model", breadcrumb_items
+                    @contentGroupModel = App.request "get:content:group:by:id", id
 
-                new ContentModulesApp.View.GroupController
-                    region: App.mainContentRegion
-                    model: @contentGroupModel
+                    breadcrumb_items =
+                        'items': [
+                            {'label': 'Dashboard', 'link': 'javascript://'},
+                            {'label': 'Content Management', 'link': 'javascript:;'},
+                            {'label': 'View Content Group', 'link': 'javascript:;', 'active': 'active'}
+                        ]
+
+                    App.execute "update:breadcrumb:model", breadcrumb_items
+
+                    new ContentModulesApp.View.GroupController
+                        region: App.mainContentRegion
+                        model: @contentGroupModel
 
             modulesListing: ->
-                new ContentModulesApp.ModulesListing.ListController
-                    region: App.mainContentRegion
-                    groupType : 'teaching-module'
+
+                if $.allowRoute 'module-list'
+
+                    new ContentModulesApp.ModulesListing.ListController
+                        region: App.mainContentRegion
+                        groupType : 'teaching-module'
 
 
             takeClassSingleModule: (classID, div, tID, mID)->
@@ -100,25 +110,28 @@ define ['app'
 
             showDummyModule:(content_piece_id)->
 
-                @contentPiece = App.request "get:content:piece:by:id", content_piece_id
-                App.execute "when:fetched", @contentPiece, =>
-                    questionsCollection = App.request "empty:content:pieces:collection"
-                    questionsCollection.add @contentPiece
+                
+                if $.allowRoute 'dummy-module'
 
-                    if @contentPiece.get('content_type') isnt 'student_question'
-                        
-                        dummyGroupModel= App.request "create:dummy:content:module", content_piece_id
+                    @contentPiece = App.request "get:content:piece:by:id", content_piece_id
+                    App.execute "when:fetched", @contentPiece, =>
+                        questionsCollection = App.request "empty:content:pieces:collection"
+                        questionsCollection.add @contentPiece
 
-                        App.execute "start:teacher:teaching:app",
-                            region: App.mainContentRegion
-                            division: 3
-                            contentPiece: @contentPiece
-                            questionResponseCollection: App.request "get:empty:question:response:collection"
-                            contentGroupModel: dummyGroupModel
-                            questionsCollection: questionsCollection
-                            classID: 2
-                            studentCollection: App.request "get:dummy:students"
-                            display_mode: 'class_mode'
+                        if @contentPiece.get('content_type') isnt 'student_question'
+                            
+                            dummyGroupModel= App.request "create:dummy:content:module", content_piece_id
+
+                            App.execute "start:teacher:teaching:app",
+                                region: App.mainContentRegion
+                                division: 3
+                                contentPiece: @contentPiece
+                                questionResponseCollection: App.request "get:empty:question:response:collection"
+                                contentGroupModel: dummyGroupModel
+                                questionsCollection: questionsCollection
+                                classID: 2
+                                studentCollection: App.request "get:dummy:students"
+                                display_mode: 'class_mode'
 
         ContentModulesApp.on "start", ->
             new  ContentModulesRouter

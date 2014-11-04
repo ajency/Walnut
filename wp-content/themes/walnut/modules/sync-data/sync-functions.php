@@ -81,7 +81,7 @@ function sync_app_data_to_db( $sync_request_id ) {
             read_quiz_schedules_csv_file( $extract_path . '/' . $stat['name'] );
     }
 
-    #mark_sync_as_complete( $sync_request_id );
+    mark_sync_as_complete( $sync_request_id );
 
     $files = glob($extract_path.'/*'); // get all file names from .tmp folder
     foreach($files as $file){ // iterate files

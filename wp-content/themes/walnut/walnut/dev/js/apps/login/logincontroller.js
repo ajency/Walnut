@@ -16,6 +16,10 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginController.prototype.initialize = function() {
         var view;
         this.view = view = this._getLoginView();
+        App.leftNavRegion.close();
+        App.headerRegion.close();
+        App.mainContentRegion.close();
+        App.breadcrumbRegion.close();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
         this.listenTo(view, 'reset:password', function() {
           return App.execute("show:reset:password:popup", {

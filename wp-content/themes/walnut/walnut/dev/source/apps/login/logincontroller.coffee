@@ -11,6 +11,11 @@ define ['app'
             initialize: ->
                 @view = view = @_getLoginView()
 
+                App.leftNavRegion.close()
+                App.headerRegion.close()
+                App.mainContentRegion.close()
+                App.breadcrumbRegion.close()
+
                 # listen to authenticate:user event from the view.
                 @listenTo view, 'authenticate:user', @authenticateUser
 
