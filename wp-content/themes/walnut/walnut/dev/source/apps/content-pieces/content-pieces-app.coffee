@@ -11,9 +11,9 @@ define ['app'
 
         Controller =
             listContentPieces: ->
-                console.log "content"
-                new ContentPiecesApp.ContentList.ListController
-                    region: App.mainContentRegion
+                if $.allowRoute 'content-pieces'
+                    new ContentPiecesApp.ContentList.ListController
+                        region: App.mainContentRegion
 
 
         ContentPiecesApp.on "start", ->

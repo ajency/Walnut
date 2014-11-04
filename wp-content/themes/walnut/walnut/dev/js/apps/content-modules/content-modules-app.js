@@ -26,47 +26,55 @@ define(['app', 'apps/content-modules/view-single-module/single-module-controller
     })(Marionette.AppRouter);
     Controller = {
       addModule: function() {
-        return App.execute('show:edit:module:controller', {
-          region: App.mainContentRegion,
-          groupType: 'teaching-module'
-        });
+        if ($.allowRoute('add-module')) {
+          return App.execute('show:edit:module:controller', {
+            region: App.mainContentRegion,
+            groupType: 'teaching-module'
+          });
+        }
       },
       editModule: function(id) {
-        return App.execute('show:edit:module:controller', {
-          region: App.mainContentRegion,
-          group_id: id,
-          groupType: 'teaching-module'
-        });
+        if ($.allowRoute('edit-module')) {
+          return App.execute('show:edit:module:controller', {
+            region: App.mainContentRegion,
+            group_id: id,
+            groupType: 'teaching-module'
+          });
+        }
       },
       viewModule: function(id) {
         var breadcrumb_items;
-        this.contentGroupModel = App.request("get:content:group:by:id", id);
-        breadcrumb_items = {
-          'items': [
-            {
-              'label': 'Dashboard',
-              'link': 'javascript://'
-            }, {
-              'label': 'Content Management',
-              'link': 'javascript:;'
-            }, {
-              'label': 'View Content Group',
-              'link': 'javascript:;',
-              'active': 'active'
-            }
-          ]
-        };
-        App.execute("update:breadcrumb:model", breadcrumb_items);
-        return new ContentModulesApp.View.GroupController({
-          region: App.mainContentRegion,
-          model: this.contentGroupModel
-        });
+        if ($.allowRoute('view-module')) {
+          this.contentGroupModel = App.request("get:content:group:by:id", id);
+          breadcrumb_items = {
+            'items': [
+              {
+                'label': 'Dashboard',
+                'link': 'javascript://'
+              }, {
+                'label': 'Content Management',
+                'link': 'javascript:;'
+              }, {
+                'label': 'View Content Group',
+                'link': 'javascript:;',
+                'active': 'active'
+              }
+            ]
+          };
+          App.execute("update:breadcrumb:model", breadcrumb_items);
+          return new ContentModulesApp.View.GroupController({
+            region: App.mainContentRegion,
+            model: this.contentGroupModel
+          });
+        }
       },
       modulesListing: function() {
-        return new ContentModulesApp.ModulesListing.ListController({
-          region: App.mainContentRegion,
-          groupType: 'teaching-module'
-        });
+        if ($.allowRoute('module-list')) {
+          return new ContentModulesApp.ModulesListing.ListController({
+            region: App.mainContentRegion,
+            groupType: 'teaching-module'
+          });
+        }
       },
       takeClassSingleModule: function(classID, div, tID, mID) {
         var opts;
@@ -131,28 +139,30 @@ define(['app', 'apps/content-modules/view-single-module/single-module-controller
         });
       },
       showDummyModule: function(content_piece_id) {
-        this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
-        return App.execute("when:fetched", this.contentPiece, (function(_this) {
-          return function() {
-            var dummyGroupModel, questionsCollection;
-            questionsCollection = App.request("empty:content:pieces:collection");
-            questionsCollection.add(_this.contentPiece);
-            if (_this.contentPiece.get('content_type') !== 'student_question') {
-              dummyGroupModel = App.request("create:dummy:content:module", content_piece_id);
-              return App.execute("start:teacher:teaching:app", {
-                region: App.mainContentRegion,
-                division: 3,
-                contentPiece: _this.contentPiece,
-                questionResponseCollection: App.request("get:empty:question:response:collection"),
-                contentGroupModel: dummyGroupModel,
-                questionsCollection: questionsCollection,
-                classID: 2,
-                studentCollection: App.request("get:dummy:students"),
-                display_mode: 'class_mode'
-              });
-            }
-          };
-        })(this));
+        if ($.allowRoute('dummy-module')) {
+          this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
+          return App.execute("when:fetched", this.contentPiece, (function(_this) {
+            return function() {
+              var dummyGroupModel, questionsCollection;
+              questionsCollection = App.request("empty:content:pieces:collection");
+              questionsCollection.add(_this.contentPiece);
+              if (_this.contentPiece.get('content_type') !== 'student_question') {
+                dummyGroupModel = App.request("create:dummy:content:module", content_piece_id);
+                return App.execute("start:teacher:teaching:app", {
+                  region: App.mainContentRegion,
+                  division: 3,
+                  contentPiece: _this.contentPiece,
+                  questionResponseCollection: App.request("get:empty:question:response:collection"),
+                  contentGroupModel: dummyGroupModel,
+                  questionsCollection: questionsCollection,
+                  classID: 2,
+                  studentCollection: App.request("get:dummy:students"),
+                  display_mode: 'class_mode'
+                });
+              }
+            };
+          })(this));
+        }
       }
     };
     return ContentModulesApp.on("start", function() {

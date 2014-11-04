@@ -20,10 +20,11 @@ define(['app', 'apps/content-pieces/list-content-pieces/app'], function(App) {
     })(Marionette.AppRouter);
     Controller = {
       listContentPieces: function() {
-        console.log("content");
-        return new ContentPiecesApp.ContentList.ListController({
-          region: App.mainContentRegion
-        });
+        if ($.allowRoute('content-pieces')) {
+          return new ContentPiecesApp.ContentList.ListController({
+            region: App.mainContentRegion
+          });
+        }
       }
     };
     return ContentPiecesApp.on("start", function() {

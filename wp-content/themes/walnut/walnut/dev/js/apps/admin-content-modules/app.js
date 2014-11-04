@@ -20,9 +20,7 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/cont
     })(Marionette.AppRouter);
     Controller = {
       adminViewModules: function() {
-        var user;
-        user = App.request("get:user:model");
-        if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+        if ($.allowRoute('admin/view-all-modules')) {
           return new AdminContentModulesApp.View.AdminModulesController({
             region: App.mainContentRegion
           });

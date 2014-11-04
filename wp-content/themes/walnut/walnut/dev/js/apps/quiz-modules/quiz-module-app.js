@@ -26,75 +26,89 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
     })(Marionette.AppRouter);
     Controller = {
       viewQuiz: function(id) {
-        return new QuizModuleApp.ViewQuiz.Controller({
-          region: App.mainContentRegion,
-          quiz_id: id
-        });
+        if ($.allowRoute('view-quiz')) {
+          return new QuizModuleApp.ViewQuiz.Controller({
+            region: App.mainContentRegion,
+            quiz_id: id
+          });
+        }
       },
       viewStudentsQuiz: function(student_id, quiz_id) {
-        return new QuizModuleApp.ViewQuiz.Controller({
-          region: App.mainContentRegion,
-          quiz_id: quiz_id,
-          student: student_id,
-          d_mode: 'quiz_report'
-        });
+        if ($.allowRoute('view-quiz')) {
+          return new QuizModuleApp.ViewQuiz.Controller({
+            region: App.mainContentRegion,
+            quiz_id: quiz_id,
+            student: student_id,
+            d_mode: 'quiz_report'
+          });
+        }
       },
       startQuizClassMode: function(tID, qID) {
-        return new QuizModuleApp.ViewQuiz.Controller({
-          region: App.mainContentRegion,
-          quiz_id: qID
-        });
+        if ($.allowRoute('view-quiz')) {
+          return new QuizModuleApp.ViewQuiz.Controller({
+            region: App.mainContentRegion,
+            quiz_id: qID
+          });
+        }
       },
       createQuiz: function() {
-        return App.execute('show:edit:module:controller', {
-          region: App.mainContentRegion,
-          groupType: 'quiz'
-        });
+        if ($.allowRoute('create-quiz')) {
+          return App.execute('show:edit:module:controller', {
+            region: App.mainContentRegion,
+            groupType: 'quiz'
+          });
+        }
       },
       editQuiz: function(id) {
-        return App.execute('show:edit:module:controller', {
-          region: App.mainContentRegion,
-          group_id: id,
-          groupType: 'quiz'
-        });
+        if ($.allowRoute('edit-quiz')) {
+          return App.execute('show:edit:module:controller', {
+            region: App.mainContentRegion,
+            group_id: id,
+            groupType: 'quiz'
+          });
+        }
       },
       showQuizList: function() {
-        return App.execute('show:module:listing:app', {
-          region: App.mainContentRegion,
-          groupType: 'quiz'
-        });
+        if ($.allowRoute('quiz-list')) {
+          return App.execute('show:module:listing:app', {
+            region: App.mainContentRegion,
+            groupType: 'quiz'
+          });
+        }
       },
       showDummyQuiz: function(content_piece_id) {
         var questionsCollection;
-        this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
-        questionsCollection = App.request("empty:content:pieces:collection");
-        return App.execute("when:fetched", this.contentPiece, (function(_this) {
-          return function() {
-            var data, dummyQuizModel, quizResponseSummary, term_ids, textbookNames;
-            questionsCollection.add(_this.contentPiece);
-            dummyQuizModel = App.request("create:dummy:quiz:module", content_piece_id);
-            term_ids = _this.contentPiece.get('term_ids');
-            dummyQuizModel.set({
-              'term_ids': term_ids
-            });
-            textbookNames = App.request("get:textbook:names:by:ids", term_ids);
-            data = {
-              'student_id': 5,
-              'collection_id': 152
-            };
-            quizResponseSummary = App.request("create:quiz:response:summary", data);
-            return App.execute("when:fetched", textbookNames, function() {
-              return App.execute("start:take:quiz:app", {
-                region: App.mainContentRegion,
-                quizModel: dummyQuizModel,
-                quizResponseSummary: quizResponseSummary,
-                questionsCollection: questionsCollection,
-                display_mode: 'class-mode',
-                textbookNames: textbookNames
+        if ($.allowRoute('dummy-quiz')) {
+          this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
+          questionsCollection = App.request("empty:content:pieces:collection");
+          return App.execute("when:fetched", this.contentPiece, (function(_this) {
+            return function() {
+              var data, dummyQuizModel, quizResponseSummary, term_ids, textbookNames;
+              questionsCollection.add(_this.contentPiece);
+              dummyQuizModel = App.request("create:dummy:quiz:module", content_piece_id);
+              term_ids = _this.contentPiece.get('term_ids');
+              dummyQuizModel.set({
+                'term_ids': term_ids
               });
-            });
-          };
-        })(this));
+              textbookNames = App.request("get:textbook:names:by:ids", term_ids);
+              data = {
+                'student_id': 5,
+                'collection_id': 152
+              };
+              quizResponseSummary = App.request("create:quiz:response:summary", data);
+              return App.execute("when:fetched", textbookNames, function() {
+                return App.execute("start:take:quiz:app", {
+                  region: App.mainContentRegion,
+                  quizModel: dummyQuizModel,
+                  quizResponseSummary: quizResponseSummary,
+                  questionsCollection: questionsCollection,
+                  display_mode: 'class-mode',
+                  textbookNames: textbookNames
+                });
+              });
+            };
+          })(this));
+        }
       }
     };
     return QuizModuleApp.on('start', function() {

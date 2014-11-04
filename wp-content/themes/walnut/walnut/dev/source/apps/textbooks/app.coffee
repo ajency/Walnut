@@ -14,13 +14,15 @@ define ['app'
 
         Controller =
             showTextbooks: ->
-                new TextbooksApp.List.ListController
-                    region: App.mainContentRegion
+                if $.allowRoute 'textbooks'
+                    new TextbooksApp.List.ListController
+                        region: App.mainContentRegion
 
             showSingleTextbook: (term_id)->
-                new TextbooksApp.Single.SingleTextbook
-                    region: App.mainContentRegion
-                    model_id: term_id
+                if $.allowRoute 'textbooks'
+                    new TextbooksApp.Single.SingleTextbook
+                        region: App.mainContentRegion
+                        model_id: term_id
 
         TextbooksApp.on "start", ->
             new TextbooksRouter

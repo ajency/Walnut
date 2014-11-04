@@ -10,9 +10,8 @@ define ['app'
 
         Controller =
             adminViewModules:  ->
-                user = App.request "get:user:model"
+                if $.allowRoute 'admin/view-all-modules'
 
-                if user.current_user_can('administrator') or user.current_user_can('school-admin')
                     new AdminContentModulesApp.View.AdminModulesController
                         region: App.mainContentRegion
 
