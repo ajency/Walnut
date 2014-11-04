@@ -222,7 +222,7 @@ define ['underscore', 'serialize'], ( _) ->
 					_.db.transaction((tx)->
 						tx.executeSql('UPDATE '+_.getTblPrefix()+'question_response 
 							SET start_date=?, sync=? WHERE ref_id=?'
-							, [_.getCurrentDateTime(0), 0, ref_id])
+							, [start_date, 0, ref_id])
 
 					,_.transactionErrorHandler
 					,(tx)->

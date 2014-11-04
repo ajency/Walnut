@@ -149,7 +149,7 @@ define(['underscore', 'serialize'], function(_) {
         console.log('checkIfRecordExistsInQuestionResponse done');
         if (exists) {
           _.db.transaction(function(tx) {
-            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET start_date=?, sync=? WHERE ref_id=?', [_.getCurrentDateTime(0), 0, ref_id]);
+            return tx.executeSql('UPDATE ' + _.getTblPrefix() + 'question_response SET start_date=?, sync=? WHERE ref_id=?', [start_date, 0, ref_id]);
           }, _.transactionErrorHandler, function(tx) {
             return console.log('SUCCESS: Record exists. Updated record in wp_question_response');
           });
