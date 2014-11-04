@@ -88,7 +88,7 @@ function sds_sync_update_quiz_schedule( $quiz_schedule ) {
     $wpdb->update( $wpdb->prefix . "quiz_schedules",
 	        $quiz_schedule,
 	        array( 
-	        	'quiz_id' => $quiz_schedule['ref_id'],
+	        	'quiz_id' => $quiz_schedule['quiz_id'],
 	        	'division_id' => $quiz_schedule['division_id']
 	        	)
         	);
