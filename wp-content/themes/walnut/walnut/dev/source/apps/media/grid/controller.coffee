@@ -48,6 +48,7 @@ define ['app', 'controllers/region-controller', 'apps/media/grid/views'], (App, 
 
                 App.commands.setHandler "new:media:added",(media)=>
                     @mediaCollection.add media
+                    @mediaCollection.trigger 'media:uploaded', @mediaCollection.get(media.id)
 
                 @listenTo @view, "search:media", @_searchMedia
 

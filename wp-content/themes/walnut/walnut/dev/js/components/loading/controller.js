@@ -42,7 +42,7 @@ define(['app', 'controllers/region-controller', 'components/loading/view'], func
               _this.region.currentView.$el.removeAttr("style");
               break;
             case "spinner":
-              if (_this.region.currentView !== loadingView) {
+              if (_this.region && _this.region.currentView !== loadingView) {
                 return realView.close();
               }
           }

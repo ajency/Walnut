@@ -9,7 +9,7 @@ define ['app'],(App)->
 
 			className : 'hotspot-elements hotspotable'
 
-			template : '<a href="#" class="drag builder-element">
+			template : '<a class="drag builder-element">
 							<i class="fa {{icon}}"></i>
 						</a>'
 
@@ -21,11 +21,12 @@ define ['app'],(App)->
 		class Views.HotspotElementBoxView extends Marionette.CompositeView
 
 			template : '<div class="tile-more-content no-padding">
-							<div class="tiles green">
+							<div class="tiles blue">
 								<div class="tile-footer drag">
 									Hotspot Properties 
 								</div>
 								<div class="docket-body">
+									<p class="text-center">Drag the below elements to your hotspot screen</p>
 									<ul class="hotspot-elements-container">
 										
 										

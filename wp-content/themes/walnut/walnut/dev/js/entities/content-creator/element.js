@@ -40,17 +40,17 @@ define(["app", 'backbone'], function(App, Backbone) {
     elementsCollection = new Elements.ElementCollection;
     API = {
       createElement: function(data) {
-        var element;
+        var element, _ref, _ref1;
         if (data == null) {
           data = {};
         }
-        if ((data.meta_id != null) && data.element !== 'Row' && (elementsCollection.get(data.meta_id) != null)) {
+        if ((data.meta_id != null) && ((_ref = data.element) !== 'Row' && _ref !== 'TeacherQuestion') && (elementsCollection.get(data.meta_id) != null)) {
           element = elementsCollection.get(data.meta_id);
         } else {
           element = new Elements.ElementModel;
           element.set(data);
         }
-        if (element.get('element') !== 'Row' && element.get('element') !== 'Column') {
+        if (((_ref1 = element.get('element')) !== 'Row' && _ref1 !== 'TeacherQuestion') && element.get('element') !== 'Column') {
           if (element.isNew()) {
             element.save(null, {
               wait: true

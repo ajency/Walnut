@@ -590,7 +590,7 @@
 	}
 	img{
 		position: relative;
-		z-index: 2;
+		z-index: 99;
 		margin-right: 10px;
 		cursor: pointer;
 	}
@@ -606,11 +606,38 @@
 		//border: 3px dashed @preview-grey;
 		cursor: pointer;
 		position: relative;
-		z-index: 2;
+		// z-index: 99;
 		color: @dash-grey;
 		.bicon{
 			font-size: 40px;
 			display: block;
+		}
+	}
+}
+
+.image{
+	img{
+		// z-index: 99;
+		height: inherit;
+	}
+	.ui-resizable-handle.ui-resizable-s{
+		height: 15px;
+		bottom: -5px;
+		text-align: center;
+
+		&:hover{
+			// background-color: lighten(@color-grey, 20%);
+			background-color: @color-info;
+			&:after{
+				color: @color-white;
+				font-family: FontAwesome;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 12px;
+				font-size: 20px;
+				-webkit-font-smoothing: antialiased;
+				content: "\f141";
+			}
 		}
 	}
 }
@@ -832,4 +859,19 @@
 }
 #slides-info{
 	font-size: 16px;
+}
+
+/*Big Answer*/
+textarea{
+	&.underline{
+		background: url(../../../images/underline.gif) repeat-x 100% 100%;
+		border: none;
+	}
+
+	&.border{
+		border:15px solid transparent;
+		-webkit-border-image:url(../../../images/border.gif) 20 20 stretch; /* Safari 5 */
+		     -o-border-image:url(../../../images/border.gif) 20 20 stretch; /* Opera */
+				border-image:url(../../../images/border.gif) 20 20 stretch;
+	}
 }

@@ -17,16 +17,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name : 'content-piece'
 
-            getMarks:->
-
-                layout= @.get 'layout'
-                
-                marks = parseInt _.compact _.pluck(layout,'marks')
-
-                marks=0 if not marks
-
-                marks
-
             setMarks:(multiplicationFactor)->
 
                 layout= @.get 'layout'
@@ -52,6 +42,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             url : ->
                 AJAXURL + '?action=get-content-pieces'
 
+        contentPiecesRepository= new ContentPiece.ItemCollection
 
         # collection of content pieces in a content group. eg. questions in a quiz
         class ContentPiece.GroupItemCollection extends Backbone.Collection
@@ -75,11 +66,16 @@ define ["app", 'backbone'], (App, Backbone) ->
         # get all content pieces
             getContentPieces : (param = {})->
                 contentPieceCollection = new ContentPiece.ItemCollection
+                
                 contentPieceCollection.fetch
-                    reset : true
                     add : true
                     remove : false
                     data : param
+                    type : 'post'
+                    success:(resp)-> 
+                        if not param.search_str
+                            contentPiecesRepository.reset resp.models
+
                 contentPieceCollection
 
         # get all content pieces belonging to particular group
@@ -100,19 +96,32 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
             getContentPieceByID : (id)->
-                contentPiece = contentPieceCollection.get id if contentPieceCollection?
+                contentPiece = contentPiecesRepository.get id
 
                 if not contentPiece
                     contentPiece = new ContentPiece.ItemModel ID : id
-                    contentPiece.fetch()
+                    contentPiece.fetch
+                        success:(resp)->contentPiecesRepository.add resp
+
                 contentPiece
 
             getContentPiecesByIDs : (ids = [])->
+                
                 contentPieces = new ContentPiece.ItemCollection
+                
+                for id in ids
+                    model= contentPiecesRepository.get id
+                    if model
+                        contentPieces.add model
+                        ids = _.without ids, id
+
                 if _.size(ids) > 0
                     contentPieces.fetch
+                        add : true
+                        remove : false
                         data :
                             ids : ids
+
                 contentPieces
 
             newContentPiece:->
@@ -142,3 +151,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "empty:content:pieces:collection",->
             API.emptyContentCollection()
+
+        App.reqres.setHandler "get:content:pieces:repository",->
+            contentPiecesRepository.clone()

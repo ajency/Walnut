@@ -1,70 +1,147 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: ajency
- * Date: 25/06/14
- * Time: 3:36 PM
+<?php 
+
+/*
+ * Configuring the communication module
  */
 
-function save_communication($data){
+require_once "teaching_modules/functions.php";
+require_once "quiz/functions.php";
+require_once "user/functions.php";
 
-    $message_type = $data['message_type'];
+//Registering communication components
+function add_communication_components($defined_comm_components){
 
-    switch($message_type){
+    $preferences = array('preference'=>0);
 
-        case 'modules_completed':
-            $communication_id= save_modules_completed_communications($data);
+    $ajcm_components['teaching_modules'] = array(
+        'taught_in_class_student_mail'  => $preferences,
+        'taught_in_class_parent_mail'   => $preferences,
+        'teaching_modules_report'        => $preferences,
+    );
+
+    $ajcm_components['quiz'] = array(
+        'quizzes_taken_report' => $preferences,
+        'quiz_completed_student_mail' => $preferences,
+        'quiz_completed_parent_mail' => $preferences,
+    );
+
+    $ajcm_components['user'] = array(
+        'reset_password' => $preferences
+    );
+
+    return $ajcm_components;
+
+}
+add_filter('add_commponents_filter','add_communication_components',10,1);
+
+function ajax_add_communication_to_queue() {
+
+    $functionName = 'add_'.$_POST['communication_type'];
+
+    if (function_exists($functionName)){
+
+        unset($_POST['action']);
+        $data = $_POST;
+
+        $comm_data = array(
+            'component'             => $data['component'], 
+            'communication_type'    => $data['communication_type']
+        );
+
+        $comm   = $functionName($data,$comm_data);
+
+        if( is_wp_error( $comm ) ) {
+
+            $error= $comm->get_error_message();
+
+            $response=array('error'=>$error);
+        }
+        else
+            $response=array(
+                'communication_id'=>$comm,
+                'status'=>'OK'
+                ); 
 
     }
+    else
+        $response=array('error'=>"function $functionName doesnt exist");
 
-    return $communication_id;
+    wp_send_json($response);
+}
+
+add_action('wp_ajax_create-communications', 'ajax_add_communication_to_queue');
+
+function get_student_recipients($division){
+
+    $students=get_students_by_division( $division );
+
+    $recipients= array();
+
+    foreach($students as $student){
+        $recipients[] = array(                
+                'user_id'   => $student->ID,
+                'type'      => 'email',
+                'value'     => $student->user_email
+            );
+    }
+
+    return $recipients;
+}
+
+function get_parent_recipients($division){
+
+    $students = get_students_by_division($division);
+
+    $parents = array();
+
+    if(is_array($students)){
+        $studentIDs = __u::pluck($students, 'ID');
+        $parents = get_parents_by_student_ids($studentIDs);
+    }
+
+    $recipients= array();
+
+    foreach($parents as $parent){
+
+        $recipients[] = array(                
+                'user_id'   => $parent->ID,
+                'type'      => 'email',
+                'value'     => $parent->user_email
+            );
+    }
+
+    return $recipients;
+}
+
+function get_mail_header($blog_id){
+
+    $header_img = 'http://synapsedu.info/wp-content/themes/walnut/images/synapse-logo-main.png';
+
+    $blog= get_blog_details($blog_id, true);
+
+    $site_url = $blog->siteurl;
+
+    $header = "<a href='$site_url'><img src='$header_img'/></a>";
+
+    return array(
+        'name'      => 'HEADER',
+        'content'   => $header
+    );
 
 }
 
-function save_modules_completed_communications($data){
 
-    global $wpdb;
+function get_mail_footer($blog_id){
 
-    $communication_id=0;
+    $support_mail = "<a href='mailto:support@synapsedu.info'>support@synapsedu.info</a>";
 
-    $message_type       = $data['message_type'];
-    $communication_mode = $data['communication_mode'];
-    $moduleids         = $data['additional_data']['module_ids'];
-    $division           = $data['additional_data']['division'];
+    $footer = "If you are facing any difficulty in accessing the site simply mail us at $support_mail.<br><br>
+                Regards,<br>
+                Synapse Learning";
 
-    //make sure the ids are entered in db as integers
-    $module_ids= array();
-    foreach($moduleids as $id)
-        $module_ids[]= (int) $id;
-
-    $student_ids= get_students_by_division($division);
-    $parent_ids= get_parents_by_student_ids($student_ids);
-
-    $recipients= array_merge($student_ids,$parent_ids );
-
-    //$parent_emails= get_parent_emails_by_division($division);
-
-    $content_data=array(
-        message_type    => $message_type,
-        recipients      => maybe_serialize($recipients),
-        blog            => get_current_blog_id(),
-        mode            => $communication_mode
+    return array(
+        'name'      => 'FOOTER',
+        'content'   => $footer
     );
-
-    $communication= $wpdb->insert($wpdb->base_prefix . 'comm_module', $content_data);
-
-    if($communication){
-        $communication_id = $wpdb->insert_id;
-
-        $mdata= array(
-            comm_module_id=> $communication_id,
-            meta_key=> 'module_ids',
-            meta_value=> maybe_serialize($module_ids)
-        );
-
-        $wpdb->insert($wpdb->base_prefix . 'comm_module_meta', $mdata);
-    }
-
-    return $communication_id;
 
 }

@@ -16,8 +16,8 @@ define ['app'
 
                         @listenTo view, "change:question", (id)-> @region.trigger "change:question", id
 
-                        @listenTo @region, "question:changed", (model)->
-                            @view.triggerMethod "question:change", model
+                        @listenTo @region, "question:changed", (selectedQID)->
+                            @view.triggerMethod "question:change", selectedQID
 
                         @listenTo @region, "question:submitted", (responseModel)->
                             @view.triggerMethod "question:submitted", responseModel
@@ -58,11 +58,16 @@ define ['app'
                         itemNumber: index+1
 
                     events:
-                        'click #quiz-items a' :(e)-> @trigger "change:question", $(e.target).attr 'id'
+                        'click #quiz-items a' : 'changeQuestion'
 
                     mixinTemplateHelpers:(data)->
                         data.totalQuestions = @collection.length
+                        data.showSkipped = true if @quizModel.hasPermission('single_attempt')
                         data
+
+                    initialize:->
+                        @questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
+                        @quizModel = Marionette.getOption @,'quizModel'
 
                     onShow:->
                         @$el.find "div.holder"
@@ -76,17 +81,24 @@ define ['app'
                             midRange: 15
                             links : "blank"
 
-                        currentQuestion = Marionette.getOption @,'currentQuestion'
+                        @$el.find('.customButtons').remove() if @collection.length <10
 
-                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
-                        quizModel = Marionette.getOption @,'quizModel'
-                        questionResponseCollection.each (response)=> @changeClassName(response)  if quizModel.hasPermission 'display_answer'
+                        currentQuestion = Marionette.getOption @,'currentQuestion'
+                        
+                        @questionResponseCollection.each (response)=> 
+                            if @quizModel.hasPermission('display_answer') or response.get('status') is 'skipped'
+                                @changeClassName(response) 
 
                         @onQuestionChange currentQuestion
 
                         @updateProgressBar()
 
                         @updateSkippedCount()
+
+                    changeQuestion:(e)->
+                        selectedQID = parseInt $(e.target).attr 'id'
+                        if _.contains(@questionResponseCollection.pluck('content_piece_id'),selectedQID) or not @quizModel.hasPermission('single_attempt')
+                            @trigger "change:question", selectedQID
 
                     onQuestionChange:(model)->
                         @$el.find "#quiz-items li"
@@ -98,19 +110,21 @@ define ['app'
 
                     onQuestionSubmitted:(responseModel)->
 
-                        quizModel = Marionette.getOption @,'quizModel'
-
-                        @changeClassName responseModel if quizModel.hasPermission 'display_answer'
-
                         @updateProgressBar()
 
                         @updateSkippedCount()
 
+                        if responseModel.get('status') is 'skipped' and not @quizModel.hasPermission('single_attempt')
+                            return false
+
+                        else if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
+                            @changeClassName responseModel
+
                     changeClassName:(responseModel)->
                         
-                        answer = responseModel.get 'question_response'
+                        status = responseModel.get 'status'
                         
-                        className = switch answer.status
+                        className = switch status
                             when 'correct_answer'       then 'right'
                             when 'partially_correct'    then 'partiallyCorrect'
                             when 'wrong_answer'         then 'wrong'
@@ -122,34 +136,26 @@ define ['app'
                         .addClass className
 
                     updateProgressBar:->
-                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
 
-                        responses = questionResponseCollection.pluck 'question_response'
+                        skipped = _.size @questionResponseCollection.where 'status' : 'skipped'
 
-                        answeredQuestions = _.chain responses
-                                    .map (m)->m if m.status isnt 'skipped'
-                                    .compact()
-                                    .size()
-                                    .value()
+                        answeredQuestions = @questionResponseCollection.length - skipped
 
                         progressPercentage = (answeredQuestions / @collection.length) * 100
 
                         @$el.find "#quiz-progress-bar"
                         .attr "data-percentage", progressPercentage + '%'
+                        .attr "aria-valuenow", progressPercentage
                         .css "width" : progressPercentage + '%'
 
                         @$el.find "#answered-questions"
                         .html answeredQuestions
 
-
-
                     updateSkippedCount:->
-                        questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
-                        answers = questionResponseCollection.pluck 'question_response'
-                        skipped = _.where answers, 'status': 'skipped'
+                        skipped = _.size @questionResponseCollection.where 'status' : 'skipped'
 
                         @$el.find "#skipped-questions"
-                        .html _.size skipped
+                        .html skipped
 
 
                     

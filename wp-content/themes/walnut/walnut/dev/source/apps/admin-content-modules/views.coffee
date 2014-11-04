@@ -170,8 +170,6 @@ define ['app',
 
                 textbookFiltersHTML= $.showTextbookFilters textbooks: @textbooksCollection
 
-                @fullCollection = Marionette.getOption @, 'fullCollection'
-
                 @$el.find '#textbook-filters'
                 .html textbookFiltersHTML
 
@@ -184,15 +182,15 @@ define ['app',
                 $("#pager").remove()
 
                 pagerDiv = '<div id="pager" class="pager">
-                                                              <i class="fa fa-chevron-left prev"></i>
-                                                              <span style="padding:0 15px"  class="pagedisplay"></span>
-                                                              <i class="fa fa-chevron-right next"></i>
-                                                              <select class="pagesize">
-                                                                  <option value="25" selected>25</option>
-                                                                  <option value="50">50</option>
-                                                                  <option value="100">100</option>
-                                                              </select>
-                                                            </div>'
+                              <i class="fa fa-chevron-left prev"></i>
+                              <span style="padding:0 15px"  class="pagedisplay"></span>
+                              <i class="fa fa-chevron-right next"></i>
+                              <select class="pagesize">
+                                  <option value="25" selected>25</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                              </select>
+                            </div>'
                 @$el.find('#take-class-modules').after(pagerDiv)
                 pagerOptions =
                     container : $(".pager"),
@@ -204,26 +202,19 @@ define ['app',
 
             checkAll: ->
 
+                all_ids = @collection.pluck 'id'
+
                 completedModules= _.chain @collection.where 'status': 'completed'
                 .pluck 'id'
-                    .value()
+                .value()
 
-                if @$el.find '#check_all'
-                .is ':checked'
-                    checkboxes= @$el.find '#take-class-modules .tab_checkbox'
-                    for checkbox in checkboxes
-                        if checkbox.value in completedModules
-                            $(checkbox).trigger 'click'
-                            .prop 'checked', true
+                excludeIDs = _.difference all_ids,completedModules
 
-                else
-                    @$el.find '#take-class-modules .tab_checkbox'
-                    .removeAttr 'checked'
+                $.toggleCheckAll @$el.find('#take-class-modules'), excludeIDs
 
-            onNewCollectionFetched: (newCollection,fullCollection,textbooks)=>
+            onNewCollectionFetched: (newCollection,textbooks)=>
                 @textbooksCollection.reset textbooks.models
                 @collection.reset newCollection.models
-                @fullCollection.reset fullCollection.models
                 $("#take-class-modules").trigger "updateCache"
                 pagerOptions =
                     container : $(".pager")
@@ -244,7 +235,7 @@ define ['app',
 
 
             setFilteredContent:->
-                filtered_data= $.filterTableByTextbooks(@)
+                filtered_data= $.filterTableByTextbooks(@, 'teaching-modules')
 
                 @collection.set filtered_data
 
@@ -268,12 +259,7 @@ define ['app',
             saveCommunications:(e)->
 
                 data = []
-                data.moduleIDs= _.chain @$el.find('.tab_checkbox')
-                                .map (checkbox)->
-                                    if $(checkbox).is ':checked'
-                                        $(checkbox).val()
-                                .compact()
-                                .value()
+                data.moduleIDs= $.getCheckedItems @$el.find '#take-class-modules'
 
                 data.division = @$el.find '#divisions-filter'
                         .val()
@@ -289,6 +275,6 @@ define ['app',
                     @$el.find '#communication_sent'
                     .remove()
 
-                    @$el.find '#send-sms'
+                    @$el.find '#send-email'
                     .after '<span class="m-l-40 small" id="communication_sent">
                             Your '+data.communication_mode+' has been queued successfully</span>'

@@ -23,7 +23,7 @@ define ['app'
                     responseModel= responseCollection.findWhere "content_piece_id": model.get 'ID'
 
                 data = 
-                    display_answer: @model.hasPermission 'display_answer'
+                    quizModel: @model
                     responseModel: responseModel if responseModel?
 
             events:

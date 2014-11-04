@@ -32,7 +32,7 @@
         tablesorter: 'plugins/jquery.tablesorter',
         tablesorter_pager: 'plugins/jquery.tablesorter.pager',
         moment: 'plugins/moment.min',
-        select2             : 'plugins/select2.min',
+        select2             : 'plugins/select2',
         datepicker          : 'plugins/bootstrap-datepicker',
         timepicker          : 'plugins/bootstrap-timepicker.min',
         timecircles         : 'plugins/TimeCircles',
@@ -50,6 +50,8 @@
         timerplugin         : 'plugins/jquery.countdown_plugin.min',
         countdowntimer      : 'plugins/jquery.countdown.min',
         spinedit            : 'plugins/bootstrap-spinedit',
+        resizablecolumns : 'plugins/jquery.resizableColumns.min',
+        bootbox : 'plugins/bootbox.min',
         jPages: 'plugins/jPages.min'
     },
     shim: {
@@ -95,6 +97,8 @@
         timerplugin: ['jquery'],
         countdowntimer: ['jquery','timerplugin'],
         spinedit            : ['jquery','bootstrap'],
+        resizablecolumns : ['jquery'],
+        bootbox : ['jquery','bootstrap'],
         jPages: ['jquery'],
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
     }

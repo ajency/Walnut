@@ -13,13 +13,59 @@ define ['app',
 						<td class="v-align-middle">{{quiz_type}}</td>
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-					   <td>
-						  <span class="muted status_label">{{&status_str}}</span>
+					   	<td>
+					   	{{#practice_quiz}}
+						   	{{#attempts}}
+						   		<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
+						   	{{/attempts}}
+						   	{{^attempts}}
+						   		<span class="label label-important">Not Started</span>
+						   	{{/attempts}}
+					   	{{/practice_quiz}}
+					   	{{^practice_quiz}}
+						  {{&status_str}}
+					   	{{/practice_quiz}}
 
-						  <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
-							{{&action_str}}
-						  </button>
-						  {{&training_date}}
+						</td>
+						<td>
+							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
+							View {{moduleType}}
+							</button>
+							{{#schedule_button}}
+								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
+									<i class="fa fa-calendar"></i> {{taken_on}}
+								</button>
+							{{/schedule_button}}
+							{{^schedule_button}}
+								{{#taken_on}}
+									<div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{taken_on}}</div>
+								{{/taken_on}}
+
+								{{^taken_on}}
+									{{#classTest}}
+										{{#schedule}}
+											{{#schedule.is_active}}										
+												<div class="alert alert-info inline pull-left m-b-0 m-r-10">
+													Scheduled<br>
+													From: {{scheduleFrom}}<br>
+													To: {{scheduleTo}}
+												</div>
+											{{/schedule.is_active}}
+
+											{{^schedule.is_active}}
+												<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
+													Scheduled<br>
+													From: {{scheduleFrom}}<br>
+													To: {{scheduleTo}}
+												</div>
+											{{/schedule.is_active}}
+										{{/schedule}}
+										{{^schedule}}
+											Not Scheduled
+										{{/schedule}}
+									{{/classTest}}
+								{{/taken_on}}
+							{{/schedule_button}}
 						</td>'
 
 			tagName : 'tr'
@@ -28,6 +74,21 @@ define ['app',
 			onShow : ->
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
+
+				if @model.get('quiz_type') is 'class_test'
+
+					if @model.get 'schedule'
+						if not @model.get('schedule')['is_active']
+							@$el.find '.start-training'
+							.hide()
+
+						if @model.get 'is_expired'
+							@$el.find '.schedule_dates'
+							.removeClass 'alert-info'
+							.addClass 'alert-error'
+					else
+						@$el.find '.start-training'
+						.hide()
 
 			serializeData : ->
 				data = super()
@@ -46,48 +107,56 @@ define ['app',
 						else chapter.get('name')
 					
 
-				training_date = @model.get 'training_date'
-				taken_on      = moment(@model.get('taken_on')).format("Do MMM YYYY")
+				if @model.get('type') is 'teaching-module'
+					data.moduleType = 'Module'
+					taken_on = @model.get('training_date')
+					if not taken_on
+						taken_on = 'Schedule'
+					else
+						taken_on = moment(taken_on).format("Do MMM YYYY")
 
-				if training_date is ''
-					training_date = 'Schedule'
+				else
+					data.moduleType = 'Quiz'
+					data.classTest = true if data.quiz_type is 'class_test'
+					taken_on = @model.get('taken_on')
+					if not taken_on
+						taken_on = null
+					else
+						taken_on = moment(taken_on).format("Do MMM YYYY")
 
-				else training_date = moment(training_date).format("Do MMM YYYY")
+					if data.quiz_type is 'class_test' and data.status isnt 'completed'
+						taken_on = null
 
 				status = @model.get 'status'
 
 				if @model.get('post_status')? and @model.get('post_status') is 'archive'
-					data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 					data.status_str = '<span class="label label-success">Archived</span>'
-					data.action_str = '<i class="fa fa-repeat"></i> Replay'
 
 				else
 					if status is 'started' or status is 'resumed'
-						data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
 						data.status_str = '<span class="label label-info">In Progress</span>'
-						data.action_str = '<i class="fa fa-pause"></i> Resume'
 
 					else if status is 'completed'
 						data.status_str = '<span class="label label-success">Completed</span>'
-						data.action_str = '<i class="fa fa-repeat"></i> Replay'
-
-						if Marionette.getOption(@, 'mode') is 'take-quiz'
-							data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>'
-						else 
-							data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>'
-						
 
 					else
 						data.status_str = '<span class="label label-important">Not Started</span>'
-						data.action_str = '<i class="fa fa-play"></i> Start'
 
 						if Marionette.getOption(@, 'mode') isnt 'take-quiz'
-							data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date">
-																		<i class="fa fa-calendar"></i> ' + training_date + '</button>'
+							data.schedule_button = true
+
+				data.taken_on= taken_on
 
 				if Marionette.getOption(@, 'mode') is 'take-quiz'
 					data.take_quiz = true
-					data.quiz_type = if @model.get('quiz_type') is 'practice' then 'Practice' else 'Class Test'
+					data.quiz_type =  @model.getQuizTypeLabel()
+
+					if data.schedule
+						data.scheduleFrom = moment(data.schedule.from).format("Do MMM YYYY")
+						data.scheduleTo = moment(data.schedule.to).format("Do MMM YYYY")
+
+				if @model.get('quiz_type') is 'practice'
+					data.practice_quiz = true
 
 				data
 
@@ -161,7 +230,6 @@ define ['app',
 				@trigger "schedule:training", dataID
 
 			onShow : =>
-				$('.page-content').removeClass 'expand-page'
 				if Marionette.getOption(@, 'mode') is 'training'
 					@$el.find '.status_label, .training-date, #status_header, .dateInfo'
 					.remove();
@@ -194,8 +262,12 @@ define ['app',
 
 
 			setFilteredContent:->
-
-				filtered_data= $.filterTableByTextbooks(@)
+				if Marionette.getOption(@, 'mode') is 'take-quiz'
+					dataType = 'quiz'
+				else
+					dataType = 'teaching-modules'
+					
+				filtered_data= $.filterTableByTextbooks(@, dataType)
 
 				@collection.set filtered_data
 

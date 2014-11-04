@@ -87,7 +87,7 @@ define ['app'], (App)->
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
-				$ ".students"
+				@$el.find ".students"
 				.listnav
 				#filterSelector: '.last-name'
 					includeNums: false
@@ -122,7 +122,7 @@ define ['app'], (App)->
 						_.audioQueuesSelection 'Click-Select'
 					else
 						_.audioQueuesSelection 'Click-Unselect'
-
+						
 
 			addToCorrectList: =>
 
@@ -141,7 +141,6 @@ define ['app'], (App)->
 				if Marionette.getOption(@, 'display_mode') is 'class_mode'
 					@trigger "save:question:response", @correctAnswers
 
-
 			markAsCorrectAnswer: (student)->
 				$(student).removeClass 'selected'
 				.find '.unselected'
@@ -152,7 +151,7 @@ define ['app'], (App)->
 									.addClass 'fa-check-circle'
 
 			removeFromCorrectList: ->
-
+				
 				if _.platform() is "DEVICE"
 					_.audioQueuesSelection 'Click-Unselect'
 					navigator.notification.vibrate(50)

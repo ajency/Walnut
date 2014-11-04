@@ -132,3 +132,5 @@ define ['app'
         # set handlers
         App.commands.setHandler "show:single:module:app", (opt = {})->
             new View.GroupController opt
+
+            

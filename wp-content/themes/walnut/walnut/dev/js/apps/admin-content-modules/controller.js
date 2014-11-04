@@ -14,7 +14,6 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
 
       AdminModulesController.prototype.initialize = function() {
         this.contentGroupsCollection = null;
-        this.fullCollection = null;
         this.allChaptersCollection = null;
         this.textbooksCollection = null;
         this.divisionsCollection = App.request("get:divisions");
@@ -37,7 +36,6 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
               _this.allChaptersCollection = App.request("get:textbook:names:by:ids", chapter_ids);
               return App.execute("when:fetched", [_this.allChaptersCollection, _this.textbooksCollection], function() {
                 var view;
-                _this.fullCollection = _this.contentGroupsCollection.clone();
                 _this.view = view = _this._getContentGroupsListingView(_this.contentGroupsCollection);
                 _this.show(_this.view, {
                   loading: true
@@ -65,20 +63,21 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                     'class_id': class_id
                   });
                   return App.execute("when:fetched", [newModulesCollection, _this.textbooksCollection], function() {
-                    var fullCollection;
-                    fullCollection = newModulesCollection.clone();
-                    return _this.view.triggerMethod("new:collection:fetched", newModulesCollection, fullCollection, _this.textbooksCollection);
+                    return _this.view.triggerMethod("new:collection:fetched", newModulesCollection, _this.textbooksCollection);
                   });
                 });
                 return _this.listenTo(_this.view, "save:communications", function(data) {
                   data = {
-                    message_type: 'modules_completed',
+                    component: 'teaching_modules',
+                    communication_type: 'taught_in_class_parent_mail',
                     communication_mode: data.communication_mode,
                     additional_data: {
                       module_ids: data.moduleIDs,
                       division: data.division
                     }
                   };
+                  App.request("save:communications", data);
+                  data.communication_type = 'taught_in_class_student_mail';
                   return App.request("save:communications", data);
                 });
               });
@@ -90,7 +89,6 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
       AdminModulesController.prototype._getContentGroupsListingView = function(collection) {
         return new View.AdminModulesView.ModulesView({
           collection: collection,
-          fullCollection: this.fullCollection,
           textbooksCollection: this.textbooksCollection,
           chaptersCollection: this.allChaptersCollection,
           divisionsCollection: this.divisionsCollection

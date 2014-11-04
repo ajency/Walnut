@@ -10,7 +10,6 @@ define ['app'
             initialize: ->
 
                 @contentGroupsCollection    = null
-                @fullCollection             = null
                 @allChaptersCollection      = null
                 @textbooksCollection        = null
 
@@ -38,7 +37,6 @@ define ['app'
 
                         App.execute "when:fetched", [@allChaptersCollection,@textbooksCollection], =>
 
-                            @fullCollection= @contentGroupsCollection.clone()
                             @view = view = @_getContentGroupsListingView @contentGroupsCollection
 
                             @show @view,(loading: true)
@@ -59,24 +57,29 @@ define ['app'
 
                                 @textbooksCollection = App.request "get:textbooks", ('class_id': class_id)
                                 App.execute "when:fetched", [newModulesCollection,@textbooksCollection ], =>
-                                    fullCollection = newModulesCollection.clone()
-                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,fullCollection,@textbooksCollection
+                                    @view.triggerMethod "new:collection:fetched", newModulesCollection,@textbooksCollection
 
                             @listenTo @view, "save:communications", (data)=>
                                 data=
-                                    message_type        : 'modules_completed'
+                                    component           : 'teaching_modules'
+                                    communication_type  : 'taught_in_class_parent_mail'
                                     communication_mode  : data.communication_mode
                                     additional_data:
                                         module_ids      : data.moduleIDs
                                         division        : data.division
 
+                                #save communication for type taught_in_class_parent_mail
+                                App.request "save:communications",data
+
+                                data.communication_type  = 'taught_in_class_student_mail'
+
+                                #save communication for type taught_in_class_student_mail
                                 App.request "save:communications",data
 
 
             _getContentGroupsListingView: (collection)=>
                 new View.AdminModulesView.ModulesView
                     collection          : collection
-                    fullCollection      : @fullCollection
                     textbooksCollection : @textbooksCollection
                     chaptersCollection  : @allChaptersCollection
                     divisionsCollection : @divisionsCollection

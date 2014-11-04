@@ -28,8 +28,16 @@ define ['app'], (App)->
                     url : AJAXURL
                     data : data
 
+                valid_content = true
 
-                if @_checkIfMarksEntered()
+                if data.content_type is 'student_question'
+                    if @_questionExists() and @_checkIfMarksEntered()
+                        valid_content = true
+                    else
+                        valid_content = false
+
+
+                if valid_content
                     $.ajax(options).done (response)->
                         contentPieceModel.set 'ID' : response.ID
 
@@ -42,8 +50,26 @@ define ['app'], (App)->
                     .fail (resp)->
                             console.log 'error'
 
+            _questionExists:->
+                elements = App.mainContentRegion.$el.find('#myCanvas').find 'form input[name="element"]'
+
+                question_exists = false
+
+                _.each elements, (element,index)->
+                    if $(element).val() in ['Fib','Mcq','Sort','Hotspot','BigAnswer']
+                        question_exists = true
+
+                if not question_exists
+                    @_showNoQuestionExistsError()
+                    return false
+
+                else
+                    return true
+
             _checkIfMarksEntered :->
+
                 elements = App.mainContentRegion.$el.find('#myCanvas').find '.element-wrapper'
+                
                 _.every elements, (element)->
                     if $(element).find('form input[name="element"]').val() in ['Fib','Mcq','Sort','Hotspot','BigAnswer'] and $(element).find('form input[name="complete"]').val() is 'false'
                         $('#saved-successfully').remove()
@@ -54,6 +80,12 @@ define ['app'], (App)->
                     else
                         return true
 
+            _showNoQuestionExistsError:->
+
+                $('#saved-successfully,#save-failure').remove()
+                $(".page-title").before '<div id="save-failure" style="text-align:center;"
+                    class="alert alert-failure">To save, at least 1 question element must be included in the question area</div>'
+                        
 
             # get the json
             _getPageJson : ($site)->

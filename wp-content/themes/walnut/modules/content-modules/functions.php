@@ -33,6 +33,10 @@ function get_all_content_modules($args=array()){
             array('%\"'.$args['textbook'].'\";%')
         );
         $content_modules = $wpdb->get_results($modules_query, ARRAY_A);
+        
+        if(!$content_modules)
+            return array();
+
         $content_modules_ids_array = __u::flatten($content_modules);
 
     }
@@ -131,11 +135,11 @@ function get_modules_by_search_string($search_string, $all_module_ids){
 
             }
         }
-
         $module_ids = __u::flatten($module_ids);
-
     }
 
+    $module_ids = __u::compact($module_ids);
+    
     return $module_ids;
 
 
@@ -220,9 +224,16 @@ function get_single_content_module($id, $division=''){
 
     $data = $wpdb->get_row($query);
 
+    $terms = maybe_unserialize($data->term_ids);
+    $textbook = $terms['textbook'];
+    
+    if (!user_has_access_to_textbook($textbook,$user_id)){
+        return new WP_Error('No Access', __('You do not have access to this training module') );
+    }
+
     $data->id               = (int) $data->id;
     $data->name             = wp_unslash($data->name);
-    $data->term_ids         = maybe_unserialize ($data->term_ids);
+    $data->term_ids         = $terms;
     $duration               = $data->duration;
     $data->minshours        ='mins';
     $data->total_minutes    = $data->duration; // only used for sorting accoring to time
@@ -323,11 +334,9 @@ function get_content_piece_ids_by_module_id($id){
 
 }
 
-function get_module_taken_by($module_id, $blog_id){
+function get_module_taken_by($module_id, $division){
 
     global $wpdb;
-
-    switch_to_blog($blog_id);
 
     $teachers = '';
     $teacher_names= array();
@@ -336,13 +345,12 @@ function get_module_taken_by($module_id, $blog_id){
 
     $taken_by_query = $wpdb->prepare(
         "SELECT teacher_id FROM $question_response_table
-                WHERE collection_id = %d",
-        array($module_id)
+        WHERE collection_id = %d AND division = %s",
+        array($module_id, $division)
     );
 
     $taken_by_result=$wpdb->get_results($taken_by_query, ARRAY_A);
 
-    switch_to_blog(1);
     if(sizeof($taken_by_result>0)){
         $taken_by= (__u::unique(__u::flatten($taken_by_result)));
 
@@ -353,7 +361,6 @@ function get_module_taken_by($module_id, $blog_id){
         if($teacher_names)
             $teachers= join(',', $teacher_names);
     }
-
 
     return $teachers;
 }
@@ -419,4 +426,24 @@ function get_module_name($module_id){
 
     return wp_unslash($module_name);
 
+}
+
+//get any meta value from table wp_collection_meta giving the module id and meta key
+
+function get_module_meta($module_id, $meta_key=''){
+
+    if(!$module_id || !trim($meta_key))
+        return false;
+
+    global $wpdb;
+    
+    $query = $wpdb->prepare(
+        "SELECT meta_value from {$wpdb->base_prefix}collection_meta 
+        WHERE collection_id = %d AND meta_key LIKE %s",
+        array($module_id,$meta_key)
+        );
+    $meta = $wpdb->get_var($query);
+    
+
+    return $meta;
 }

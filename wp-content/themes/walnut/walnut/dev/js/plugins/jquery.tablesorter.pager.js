@@ -78,7 +78,7 @@
 
 			// remove rows from the table to speed up the sort of large tables.
 			// setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-			removeRows: false, // removing rows in larger tables speeds up the sort
+			removeRows: true, // removing rows in larger tables speeds up the sort
 
 			// css class names of pager arrows
 			cssFirst: '.first', // go to first page arrow

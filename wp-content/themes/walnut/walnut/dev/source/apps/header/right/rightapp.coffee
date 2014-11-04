@@ -27,6 +27,13 @@ define ['app'
                 'click #user_logout': ->
                     @trigger "user:logout"
 
+            mixinTemplateHelpers:(data)->
+                data = super data
+
+                data.syncUrl= SITEURL + '/sync-site-content' if IS_STANDALONE_SITE? and IS_STANDALONE_SITE is true
+
+                data
+
         # set handlers
         App.commands.setHandler "show:rightheaderapp", (opt = {})->
             new Controller.RightHeaderController opt

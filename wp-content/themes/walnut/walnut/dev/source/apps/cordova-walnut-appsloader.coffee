@@ -2,15 +2,17 @@ define [
     'apps/login/loginapp'
     'apps/header/headerapp'
     'apps/left-nav/leftnavapp'
-    'apps/textbooks/app'
-    #'apps/breadcrumb/app'
-    'apps/content-modules/content-modules-app'
     'apps/teachers-dashboard/teachers-dashboard-app'
+
+    'apps/content-modules/content-modules-app'
+
+    'apps/content-board/controller'
+
     'apps/take-module-item/take-module-item-app'
-    'apps/content-preview/controller'
-    # 'apps/content-pieces/content-pieces-app'
-    # 'apps/admin-content-modules/app'
-    # 'apps/quiz-modules/quiz-module-app'
+
+    'apps/textbooks/app'
+    
     'apps/popup-dialog/single-edit-popup/single-edit-popup-controller'
+
     'apps/app-sync/app'
 ], ->

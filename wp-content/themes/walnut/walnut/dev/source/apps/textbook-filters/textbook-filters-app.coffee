@@ -6,10 +6,18 @@ define ['app'
         class TextbookFilters.Controller extends RegionController
             initialize: (opts) ->
 
-                {@collection,@model,@filters,@selectedFilterParamsObject}=opts
+                {@collection,@model,@filters,@selectedFilterParamsObject, @dataType, @contentSelectionType, @divisionsCollection}=opts
 
                 @filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
-                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
+
+                if @divisionsCollection
+                    class_id= @divisionsCollection.first().get('class_id') 
+                    
+                    data = 'class_id': class_id if class_id
+                else
+                    data = 'fetch_all' : true
+                    
+                @textbooksCollection = App.request "get:textbooks", data
 
                 @selectedFilterParamsObject.setHandler "get:selected:parameters", =>
                     textbook_filters= $(@view.el).find 'select.textbook-filter'
@@ -43,11 +51,15 @@ define ['app'
 
                     ele= $(@view.el).find '#content-type-filter'
                     content_type= $(ele).val()
+
+                    ele= $(@view.el).find '#divisions-filter'
+                    division= $(ele).val()
                     
                     data=
                       'term_id': term_id
                       'post_status': post_status
                       'content_type': content_type
+                      'division'    : division
 
 
                 App.execute "when:fetched", @textbooksCollection,=>
@@ -83,10 +95,48 @@ define ['app'
                                         @fetchSectionOrSubsection(section_id, 'sections-filter',subsection_id) if section_id?
 
                     @listenTo @view, "fetch:chapters:or:sections", @fetchSectionOrSubsection
+                    @listenTo @view, "fetch:new:content", (textbook_id, post_status)-> 
+                        
+                        division = @view.$el.find '#divisions-filter'
+                                    .val()
+
+                        data = 
+                            'textbook'      : textbook_id
+                            'post_status'   : 'any'
+                            'division'      : division if division
+
+                        if @contentSelectionType is 'quiz'
+                            data.content_type= ['student_question']
+                            
+                        else if @contentSelectionType is 'teaching-module'
+                            data.content_type= ['teacher_question','content_piece']
+
+
+                        if @dataType is 'teaching-modules'
+                            newContent= App.request "get:content:groups", data
+
+                        else if @dataType is 'quiz'
+                            newContent= App.request "get:quizes", data
+                            
+                        else
+                            newContent= App.request "get:content:pieces", data
+
+                        App.execute "when:fetched", newContent, =>
+                            @view.triggerMethod "new:content:fetched"
+
+                    @listenTo @view, "fetch:textbooks:by:division",(division) =>
+                        divisionModel = @divisionsCollection.get division
+                        class_id= divisionModel.get 'class_id'
+
+                        tCollection = App.request "get:textbooks", 'class_id' : class_id
+                        App.execute "when:fetched", tCollection, =>
+                            @view.triggerMethod "fetch:chapters:or:sections:completed", tCollection, 'divisions-filter'
+                            @view.$el.find '#textbooks-filter'
+                            .trigger 'change';
+                            @region.trigger "division:changed", division
 
             fetchSectionOrSubsection:(parentID, filterType, currItem) =>
                 defer = $.Deferred()
-
                 chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
                 App.execute "when:fetched", chaptersOrSections, =>
                     @view.triggerMethod "fetch:chapters:or:sections:completed", chaptersOrSections,filterType,currItem
@@ -97,12 +147,11 @@ define ['app'
             _getTextbookFiltersView: (collection)=>
                 new TextbookFilters.Views.TextbookFiltersView
                     collection: collection
-                    fullCollection : collection.clone()
                     contentGroupModel : @model
                     textbooksCollection : @textbooksCollection
+                    divisionsCollection : @divisionsCollection
                     filters             : @filters
-
-
+                    dataType            : @dataType
 
         # set handlers
         App.commands.setHandler "show:textbook:filters:app", (opt = {})->

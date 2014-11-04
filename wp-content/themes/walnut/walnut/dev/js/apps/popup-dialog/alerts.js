@@ -51,10 +51,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       AlertBoxView.prototype.template = '{{message_content}} <div class="clearfix"> {{#confirm}} <button class="btn btn-primary comment-close">No</button> <button id="confirm-yes" class="btn btn-info comment-close m-r-10">Yes</button> {{/confirm}} {{#alert}} <button id="alert-ok" class="btn btn-info comment-close m-r-10">Ok</button> {{/alert}} </div>';
 
-      AlertBoxView.prototype.dialogOptions = {
-        modal_title: 'ALERT'
-      };
-
       AlertBoxView.prototype.events = {
         'click #confirm-yes': function() {
           return this.trigger('confirm:yes');
@@ -77,6 +73,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           data.confirm = true;
         }
         return data;
+      };
+
+      AlertBoxView.prototype.onShow = function() {
+        return this.$el.closest('.modal-dialog').find('.modal-header h4').html(_.humanize(Marionette.getOption(this, 'alert_type')));
       };
 
       AlertBoxView.prototype._closeComment = function() {

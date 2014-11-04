@@ -6,7 +6,7 @@ define ['app'],(App)->
 		class Views.PropertyView extends Marionette.ItemView
 
 			template : '<div class="tile-more-content no-padding">
-								<div class="tiles green">
+								<div class="tiles blue">
 									<div class="tile-footer drag">
 										BigAnswer<i class="fa fa-chevron-right"></i> <span class="semi-bold">Big Answer Properties</span>
 									</div>
@@ -109,7 +109,7 @@ define ['app'],(App)->
 							        
 											<div class="textProp slider success">
 												Font Size 
-												<input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="60" data-slider-min="6" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before">
+												<input type="text" id="biganswer-fontsize" class="fontSize" data-slider-max="60" data-slider-min="6" data-slider-step="1" data-slider-value="{{font_size}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
 
 											</div>
 
@@ -126,7 +126,12 @@ define ['app'],(App)->
 
 										<div class="form-group inline colors">
 											Blank Background
-											<input type="hidden" id="bg-color" data-opacity="{{bg_opacity}}" class="color-picker" value={{bg_color}}>
+											<input type="hidden" id="bg-color" class="color-picker" value={{bg_color}}>
+										</div>
+
+										<div class="textProp slider success">
+											Backgroung Transparency
+											<input type="text" id="bg-opacity" class="opacity" data-slider-max="1" data-slider-min="0" data-slider-step="0.01" data-slider-value="{{bg_opacity}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
 										</div>
 
 										<div>
@@ -209,10 +214,17 @@ define ['app'],(App)->
 							control: 'hue'
 							position: 'top right'
 							showSpeed: 200
-							opacity :true
+							# opacity :true
 							change :(hex,opacity)=>
 									@model.set 'bg_color', hex
-									@model.set 'bg_opacity', opacity
+									# @model.set 'bg_opacity', opacity
+
+					@$el.find('#bg-opacity').slider()
+					@$el.find('#bg-opacity').slider().on 'slide', =>
+						# on click of slider , value set to null
+						# resolved with this
+						# size = @model.get 'bg_opacity'
+						@model.set 'bg_opacity', @$el.find('#bg-opacity').slider('getValue').val() 
 
 			# # function for changing the correct answer array						
 			# _changeCorrectAnswers:(evt)->

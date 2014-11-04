@@ -9,12 +9,8 @@ define ['app'
 			initialize: (opts) ->
 				{textbookID,@classID,@division,@mode} = opts
 
-				#in teaching/ training mode take-an-item the header & left nav are removed
-				#so on browser back, on reaching this page we need to call them again.
-				#hence the following two lines
-
-				App.execute "show:headerapp", region : App.headerRegion
-				App.execute "show:leftnavapp", region : App.leftNavRegion
+				#get the header and left nav back incase it was hidden for quiz view
+				$.showHeaderAndLeftNav()
 
 				@textbook = App.request "get:textbook:by:id", textbookID
 
@@ -84,7 +80,7 @@ define ['app'
 
 						showModulesHeading:=>
 
-							headingString = '<span class="semi-bold">All</span> Modules'
+							headingString= '<span class="semi-bold">All</span> Modules'
 
 							if @mode is 'training'
 								headingString = '<span class="semi-bold">Practice</span> Modules'

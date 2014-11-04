@@ -16,7 +16,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 last_modified_by: ''
                 published_on: ''
                 published_by: ''
-                post_status: ''  # eg. underreview, publish, archive
+                post_status: 'underreview'  # eg. underreview, publish, archive
                 type: 'teaching-module'
                 total_minutes: 0
                 duration: 0
@@ -40,6 +40,8 @@ define ["app", 'backbone'], (App, Backbone) ->
             parse: (resp)->
                 resp.data.reverse()
 
+        contentModulesRepository= new ContentGroup.ItemCollection
+
         # API
         API =
         # get all content groups
@@ -48,8 +50,13 @@ define ["app", 'backbone'], (App, Backbone) ->
                 contentGroupCollection = new ContentGroup.ItemCollection
 
                 contentGroupCollection.fetch
-                    reset: true
-                    data: param
+                    add : true
+                    remove : false
+                    data : param
+                    type : 'post'
+                    success:(resp)-> 
+                        if not param.search_str
+                            contentModulesRepository.reset resp.models
 
                 contentGroupCollection
 
@@ -128,3 +135,5 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "create:dummy:content:module", (content_piece_id)->
             API.getDummyModules content_piece_id
 
+        App.reqres.setHandler "get:content:modules:repository",->
+            contentModulesRepository.clone()

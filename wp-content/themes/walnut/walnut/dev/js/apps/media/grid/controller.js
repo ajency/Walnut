@@ -61,7 +61,8 @@ define(['app', 'controllers/region-controller', 'apps/media/grid/views'], functi
         })(this));
         App.commands.setHandler("new:media:added", (function(_this) {
           return function(media) {
-            return _this.mediaCollection.add(media);
+            _this.mediaCollection.add(media);
+            return _this.mediaCollection.trigger('media:uploaded', _this.mediaCollection.get(media.id));
           };
         })(this));
         return this.listenTo(this.view, "search:media", this._searchMedia);

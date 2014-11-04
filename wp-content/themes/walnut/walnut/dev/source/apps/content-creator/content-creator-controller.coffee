@@ -55,6 +55,7 @@ define ['app'
                         contentPieceModel : @contentPieceModel
                         eventObj : @eventObj
 
+                    # if @contentPieceModel.get('content_type') is 'student_question'
                     App.execute "show:property:dock",
                         region : @layout.PropertyRegion
                         contentPieceModel : @contentPieceModel
@@ -99,7 +100,7 @@ define ['app'
                                     <div class="tiles" id="toolbox"></div>
                                     <div class="" id="content-builder"></div>
                                     <div id="grading-parameter"></div>
-                                    <div class="dock tiles" id="property-dock"></div>
+                                    <div id="property-dock"></div>
                                     </div>'
 
             regions :

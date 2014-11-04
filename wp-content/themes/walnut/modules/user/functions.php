@@ -19,7 +19,11 @@ function authenticate_login( $data ) {
             $login_check = get_userdata($login_check->ID);
         }
 
-        $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+        if(in_array('student',$login_check->allcaps))
+            $login_check->division = get_user_meta($login_check->ID,'student_division',true);
+
+        elseif(in_array('teacher',$login_check->allcaps))
+            $login_check->division = get_user_meta($login_check->ID,'division',true);
 
         $response_data['login_details'] = $login_check;
 
@@ -41,7 +45,7 @@ function get_primary_blog_details( $user_id = '' ) {
     switch_to_blog( $blog->blog_id );
 
     $blog_user_data = new WP_User($user_id);
-  	
+
     $blog_logo = wp_get_attachment_thumb_url( $blog_logo_id );
 
     $blog_data = array(
@@ -54,7 +58,9 @@ function get_primary_blog_details( $user_id = '' ) {
     
     if (!is_multisite()) 
         $blog_data['site_url']=get_site_url();
-    
+
+    restore_current_blog();
+
     return $blog_data;
 }
 
@@ -71,7 +77,7 @@ function get_user_list( $data ) {
     }
 
     $users = get_users( $args );
-
+    
     $user_data = array();
     foreach ($users as $user) {
         $user_data[] = get_user_by_id( $user->id );
@@ -85,12 +91,20 @@ function get_user_by_id( $id ) {
 
     $user = get_userdata( $id );
 
-    $user_data['ID'] = $user->ID;
-    $user_data['display_name'] = $user->display_name;
-    $user_data['role'] = $user->roles;
-    $user_data['user_email'] = $user->user_email;
-    $user_data['user_email'] = $user->user_email;
-    $user_data['profile_pic'] = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
+    $user_data['ID']            = $user->ID;
+    $user_data['display_name']  = $user->display_name;
+    $user_data['role']          = $user->roles;
+    $user_data['user_email']    = $user->user_email;
+    $user_data['user_email']    = $user->user_email;
+    $user_data['roll_no']       = get_user_meta($id, 'student_rollno', true);
+
+    $user_data['profile_pic']   = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
+
+    if(in_array('student', $user->roles))
+        $user_data['division'] = get_user_meta($user->ID,'student_division',true);
+    
+    if(in_array('teacher', $user->roles))
+        $user_data['division'] = get_user_meta($user->ID,'division',true);
 
     return $user_data;
 
@@ -131,12 +145,12 @@ function user_extend_profile_fields($user){
     
     <table class="form-table">
 
-    <tr>
+    <tr id="textbooks-tr"  <?=$hide_textbooks?>>
         <th><label for="tax_input[document_folders]">Textbooks</label></th>
 
         <td>
             <div>
-            <ul class="textbooks-list" <?=$hide_textbooks?>>
+            <ul class="textbooks-list">
     <?php
 
 
@@ -404,45 +418,30 @@ function get_parents_by_division($division){
 
 function get_parents_by_student_ids($student_ids){
 
-    global $wpdb;
+    $args= array(
+            'role'          => 'parent',
+            'meta_key'      => 'parent_of',
+            'meta_value'    => $student_ids,
+            'meta_compare'  => 'IN'
+        );
 
-    $students_str = join(',',$student_ids);
-    $students_str = "(".$students_str.")";
+    $parents = get_users( $args );
 
-    $parents_query =$wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
-        WHERE meta_key LIKE %s
-        AND meta_value in $students_str",
-        array('parent_of')
-    );
+    return $parents;
 
-    $parent_ids= $wpdb->get_results($parents_query);
-
-    $ids= array();
-
-    foreach($parent_ids as $id)
-        $ids[]= (int) $id->user_id;
-
-    return $ids;
 }
 
 function get_students_by_division($division){
 
-    global $wpdb;
+    $args= array(
+            'role'      => 'student',
+            'meta_key'  => 'student_division',
+            'meta_value'=> $division
+        );
 
-    $students_query= $wpdb->prepare("SELECT user_id FROM {$wpdb->base_prefix}usermeta
-        WHERE meta_key LIKE %s
-        AND meta_value = %d",
-        array('student_division',$division)
-    );
+    $students = get_users( $args );
 
-    $student_ids = $wpdb->get_results($students_query);
-
-    $ids= array();
-
-    foreach($student_ids as $id)
-        $ids[]= (int) $id->user_id;
-
-    return $ids;
+    return $students;
 }
 
 function get_class_divisions(){
@@ -518,7 +517,7 @@ function add_user_meta_signups($user, $user_email, $key, $meta){
                      wp_new_user_notification($new_parent_id, $password);
 
                      $usermeta['parent_email'.$i] = $_POST['parent_email_'.$i];
-                     $usermeta['child_of'.$i] = $parent_id;
+                     $usermeta['child_of'.$i] = $new_parent_id;
                      //update_user_meta( $new_parent_id, 'parent_of', $user_id );
 
                  }             
@@ -594,6 +593,18 @@ add_filter( 'bulk_actions-users','user_bulk_actions_admin',10,1);
 
 /* functions to disable users delete option in admin dashboard end*/
 
+
+function login_footer_custom_display(){
+    echo '<br/><div style="width: 320px;margin:auto">For further assistance please mail us at <a href="mailto:support@synapse.com">support@synapse.com</a> and we will get back to you immediately</div>';
+}
+add_action('login_footer','login_footer_custom_display',10);
+
+function login_message_custom($message){
+    $message = '<p>Login as a school admin to access the school</p>'.$message;
+    return $message;
+}
+add_filter('login_message','login_message_custom',10,1);
+
 function getLoggedInUserModel(){
     $user_data = get_userdata( get_current_user_id() );
     $userModel='';
@@ -628,3 +639,21 @@ function getLoggedInUserModel(){
     return $userModel;
     
 }
+
+//////custom logo on login page//////
+function custom_login_logo() {
+    ?>
+    <style type="text/css">
+        body.login div#login h1 a {
+            background-image: url(./wp-content/themes/walnut/images/synapse-logo-main.png);
+            padding-bottom: 0px;
+            margin-bottom:10px;
+            height:100px;
+            background-size:220px auto;
+            width:250px;
+        }
+    </style>
+    <?php
+}
+
+add_action('login_enqueue_scripts', 'custom_login_logo');

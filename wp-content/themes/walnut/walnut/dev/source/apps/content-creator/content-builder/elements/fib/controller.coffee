@@ -13,7 +13,7 @@ define ['app'
                     font: 'Arial'
                     color: '#000000'
                     bg_color: '#ffffff'
-                    bg_opacity: 0
+                    bg_opacity: 0.5
                     font_size: 12
                     case_sensitive: false
                     enableIndividualMarks: false

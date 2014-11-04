@@ -4,7 +4,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, contentPiecesRepository;
     ContentPiece.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -25,16 +25,6 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemModel.prototype.name = 'content-piece';
-
-      ItemModel.prototype.getMarks = function() {
-        var layout, marks;
-        layout = this.get('layout');
-        marks = parseInt(_.compact(_.pluck(layout, 'marks')));
-        if (!marks) {
-          marks = 0;
-        }
-        return marks;
-      };
 
       ItemModel.prototype.setMarks = function(multiplicationFactor) {
         var layout;
@@ -87,6 +77,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
+    contentPiecesRepository = new ContentPiece.ItemCollection;
     ContentPiece.GroupItemCollection = (function(_super) {
       __extends(GroupItemCollection, _super);
 
@@ -125,10 +116,15 @@ define(["app", 'backbone'], function(App, Backbone) {
         }
         contentPieceCollection = new ContentPiece.ItemCollection;
         contentPieceCollection.fetch({
-          reset: true,
           add: true,
           remove: false,
-          data: param
+          data: param,
+          type: 'post',
+          success: function(resp) {
+            if (!param.search_str) {
+              return contentPiecesRepository.reset(resp.models);
+            }
+          }
         });
         return contentPieceCollection;
       },
@@ -150,25 +146,37 @@ define(["app", 'backbone'], function(App, Backbone) {
       },
       getContentPieceByID: function(id) {
         var contentPiece;
-        if (typeof contentPieceCollection !== "undefined" && contentPieceCollection !== null) {
-          contentPiece = contentPieceCollection.get(id);
-        }
+        contentPiece = contentPiecesRepository.get(id);
         if (!contentPiece) {
           contentPiece = new ContentPiece.ItemModel({
             ID: id
           });
-          contentPiece.fetch();
+          contentPiece.fetch({
+            success: function(resp) {
+              return contentPiecesRepository.add(resp);
+            }
+          });
         }
         return contentPiece;
       },
       getContentPiecesByIDs: function(ids) {
-        var contentPieces;
+        var contentPieces, id, model, _i, _len;
         if (ids == null) {
           ids = [];
         }
         contentPieces = new ContentPiece.ItemCollection;
+        for (_i = 0, _len = ids.length; _i < _len; _i++) {
+          id = ids[_i];
+          model = contentPiecesRepository.get(id);
+          if (model) {
+            contentPieces.add(model);
+            ids = _.without(ids, id);
+          }
+        }
         if (_.size(ids) > 0) {
           contentPieces.fetch({
+            add: true,
+            remove: false,
             data: {
               ids: ids
             }
@@ -200,8 +208,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("new:content:piece", function() {
       return API.newContentPiece();
     });
-    return App.reqres.setHandler("empty:content:pieces:collection", function() {
+    App.reqres.setHandler("empty:content:pieces:collection", function() {
       return API.emptyContentCollection();
+    });
+    return App.reqres.setHandler("get:content:pieces:repository", function() {
+      return contentPiecesRepository.clone();
     });
   });
 });

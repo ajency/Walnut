@@ -14,7 +14,7 @@ define(['app'], function(App) {
 
       HotspotElementView.prototype.className = 'hotspot-elements hotspotable';
 
-      HotspotElementView.prototype.template = '<a href="#" class="drag builder-element"> <i class="fa {{icon}}"></i> </a>';
+      HotspotElementView.prototype.template = '<a class="drag builder-element"> <i class="fa {{icon}}"></i> </a>';
 
       HotspotElementView.prototype.onRender = function() {
         return this.$el.attr('data-element', this.model.get('element'));
@@ -30,7 +30,7 @@ define(['app'], function(App) {
         return HotspotElementBoxView.__super__.constructor.apply(this, arguments);
       }
 
-      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles green"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <ul class="hotspot-elements-container"> </ul> <div class="clearfix"></div> </div> </div> </div>';
+      HotspotElementBoxView.prototype.template = '<div class="tile-more-content no-padding"> <div class="tiles blue"> <div class="tile-footer drag"> Hotspot Properties </div> <div class="docket-body"> <p class="text-center">Drag the below elements to your hotspot screen</p> <ul class="hotspot-elements-container"> </ul> <div class="clearfix"></div> </div> </div> </div>';
 
       HotspotElementBoxView.prototype.itemView = Views.HotspotElementView;
 

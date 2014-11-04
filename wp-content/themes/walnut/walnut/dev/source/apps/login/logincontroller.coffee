@@ -1,6 +1,9 @@
 define ['app'
 	'controllers/region-controller'
-	'text!apps/login/templates/login.html'], (App, RegionController, loginTpl)->
+	'text!apps/login/templates/login.html'
+	'bootbox'
+	'apps/login/resetpasswordapp'
+	], (App, RegionController, loginTpl,bootbox)->
 
 	App.module "LoginApp.Controller", (Controller, App)->
 		class Controller.LoginController extends RegionController
@@ -12,6 +15,19 @@ define ['app'
 
 				_.app_username = @username
 
+				App.leftNavRegion.close()
+				App.headerRegion.close()
+				App.mainContentRegion.close()
+				App.breadcrumbRegion.close()
+
+				# listen to authenticate:user event from the view.
+				@listenTo view, 'authenticate:user', @authenticateUser
+
+				@listenTo view, 'reset:password', ->
+					App.execute "show:reset:password:popup",
+						region      : App.dialogRegion
+
+
 				@view = view = @_getLoginView()
 
 				# listen to authenticate:user event from the view.
@@ -20,12 +36,12 @@ define ['app'
 				# listen to prepopulate:username event from the view for mobile
 				@listenTo view, 'prepopulate:username', @prepopulateUsername
 
+
 				# listen to disable:offline:login:type event from the view for mobile
 				@listenTo view, 'enable:disable:offline:login:type', @enableDisableOfflineLoginType
 
 				if _.platform() is 'BROWSER' then @show view, (loading: true)
 				else @show view
-
 			
 
 			_getLoginView: ->
@@ -47,7 +63,6 @@ define ['app'
 							App.vent.trigger 'show:dashboard'
 
 				authController = App.request "get:auth:controller", authOptions
-
 				authController.authenticate()
 
 
@@ -81,6 +96,7 @@ define ['app'
 
 			events:
 				'click #login-submit': 'submitLogin'
+				'click .reset-password' :-> @trigger "reset:password"
 
 			onShow: ->
 				$('body').addClass 'error-body no-top'

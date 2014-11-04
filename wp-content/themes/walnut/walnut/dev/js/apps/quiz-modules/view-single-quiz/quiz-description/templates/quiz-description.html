@@ -1,23 +1,16 @@
-{{#practice_mode}}
-    <div class="well text-center">
-        <h4><span class="bold">This is a practise quiz.
-            It is designed to help you train for the class tests.</span></h4>
-    </div>
-{{/practice_mode}}
-
 <div class="tiles white grid simple animated fadeIn'">
     <div class="grid-title">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 b-r b-grey">
                 <h3 class="no-margin semi-bold">
                     <label class="form-label text-grey">Quiz Name</label>
                     {{name}} 
                     {{#responseSummary}} 
-                        <span class="small text-success semi-bold no-margin inline">(Taken On: {{taken_on_date}})</span>
+                        <span class="small text-info semi-bold block m-t-5">Taken on: <span class="bold">{{taken_on_date}}</span></span>
                     {{/responseSummary}} 
                 </h3>
             </div>
-            <div class="col-md-6 b-l b-grey small-text">
+            <div class="col-md-6 small-text">
                 <div class="row">
                     <div class="col-md-6">
                         <label class="form-label text-grey">Textbook</label>
@@ -35,30 +28,51 @@
     <div class="grid-body" style="overflow: hidden; display: block;">
         <div class="row m-b-10">
             <div class="col-md-3">
-                    <label class="form-label">No. of Questions</label>
-                    {{getQuestionsCount}} 
+                    <label class="form-label no-margin">No. of Questions: <h4 class="inline semi-bold no-margin">{{getQuestionsCount}}</h4> </label>
+                    
                     {{#responseSummary}} 
-                        <h4 class="text-success semi-bold no-margin inline">(You attempted: <span class="bold">{{num_questions_answered}}</span>)</h4>
-                    {{/responseSummary}}
-            </div>
-            <div class="col-md-3 b-r b-grey">
-                    <label class="form-label">Duration</label>
-                    {{total_minutes}} mins
-                    {{#responseSummary}} 
-                        <h4 class="text-success semi-bold no-margin inline">(Completed in: <span class="bold">{{total_time_taken}}</span>)</h4>
+                        <h3 class="semi-bold no-margin quizSummRespnse">
+                            <span class="text-info small no-margin inline">You attempted: <span class="bold">{{num_questions_answered}}</span></span></h3>
                     {{/responseSummary}}
             </div>
             <div class="col-md-3">
-                    <label class="form-label">Marks</label>
-                    {{marks}}
+                    <label class="form-label no-margin">Duration: <h4 class="inline semi-bold no-margin">{{total_minutes}} mins</h4></label>
+                    
+                    {{#incompleteQuiz}}
+                        <h3 class="semi-bold no-margin quizSummRespnse">
+                            <span class="text-info small no-margin inline">Current Elapsed Time: 
+                            <span class="bold">
+                                {{total_time_taken}}
+                            </span></span><br> 
+                            <span class="text-info small no-margin inline">Time remaining: 
+                            <span class="bold">
+                                {{time_remaining}}
+                            </span></span>
+                        </h3>
+                    {{/incompleteQuiz}}
+                    {{#responseSummary}} 
+                        <h3 class="semi-bold no-margin quizSummRespnse"><span class="text-info small no-margin">Completed in: <span class="bold">{{total_time_taken}}</span></span></h3>
+                    {{/responseSummary}}
+            </div>
+            <div class="col-md-3">
+                    <label class="form-label no-margin">Marks: <h4 class="inline semi-bold no-margin">{{marks}}</h4></label>
+                    
                     {{#display_marks}} 
-                        <h4 class="text-success semi-bold no-margin inline">(You scored: <span class="bold">{{total_marks_scored}}</span>)</h4>
+                        <h3 class="semi-bold no-margin quizSummRespnse">
+                            {{#negMarksEnable}}
+                                <span class="text-success small no-margin">You scored: <span class="bold">{{marks_scored}}</span></span><br>
+                                <span class="text-error small no-margin">Negative marks: <span class="bold">{{negative_scored}}</span></span><br> 
+                                <span class="text-info small no-margin">Total scored: <span class="bold">{{total_marks_scored}}</span></span>
+                            {{/negMarksEnable}}
+                            {{^negMarksEnable}}
+                                <span class="text-info small no-margin">You scored: <span class="bold">{{total_marks_scored}}</span></span>
+                            {{/negMarksEnable}}
+                        </h3>
                     {{/display_marks}}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 ">
                 {{#negMarksEnable}}
-                    <label class="form-label">Negative Marks</label>
-                    {{negMarks}}%
+                    <label class="form-label no-margin">Negative Marking: <h4 class="inline semi-bold no-margin">{{negMarks}}%</h4> </label>
                 {{/negMarksEnable}}
             </div>
         </div>
@@ -72,7 +86,7 @@
                 <h5 class="bold">Quiz Instructions</h5>
                     {{&instructions}}
                     {{^instructions}}
-                        This quiz has no instructions
+                        This quiz has no instructions.
                     {{/instructions}}
             </div>
         </div>
@@ -80,5 +94,14 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-success btn-lg btn-large btn-cons2 h-center block" id="take-quiz"> Start Quiz</button>
-{{#answer_printing}} <button type="button" class="btn btn-info btn-lg btn-large btn-cons2 h-center block" id="print-quiz"> Print Quiz Answers</button> {{/answer_printing}}
+<div class="text-center">
+    {{#hasQuestions}}
+        <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 m-r-10" id="take-quiz"> Start Quiz</button>
+        {{#try_again}}
+            <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 m-r-10" id="try-again"> Try Again</button>
+        {{/try_again}}
+    {{/hasQuestions}}
+    {{^hasQuestions}}
+        Sorry this quiz has no questions in it.
+    {{/hasQuestions}}
+</div>

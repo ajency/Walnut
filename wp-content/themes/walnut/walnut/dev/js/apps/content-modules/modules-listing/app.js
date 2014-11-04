@@ -16,46 +16,56 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         this.textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        if (this.groupType === 'teaching-module') {
-          this.contentModulesCollection = App.request("get:content:groups", {
-            'post_status': 'any'
-          });
-        }
-        if (this.groupType === 'quiz') {
-          this.contentModulesCollection = App.request("get:quizes", {
-            'post_status': 'any'
-          });
-        }
-        this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
-        this.layout = this._getContentPiecesLayout();
-        return App.execute("when:fetched", [this.contentModulesCollection, this.textbooksCollection], (function(_this) {
+        return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
           return function() {
-            _this.show(_this.layout, {
-              loading: true
-            });
-            _this.listenTo(_this.layout, "show", function() {
-              App.execute("show:textbook:filters:app", {
-                region: _this.layout.filtersRegion,
-                collection: _this.contentModulesCollection,
-                textbooksCollection: _this.textbooksCollection,
-                selectedFilterParamsObject: _this.selectedFilterParamsObject,
-                filters: ['textbooks', 'chapters', 'sections', 'subsections', 'module_status']
+            var data, textbook;
+            textbook = _this.textbooksCollection.first();
+            data = {
+              'post_status': 'any',
+              'textbook': textbook.id
+            };
+            if (_this.groupType === 'teaching-module') {
+              _this.contentModulesCollection = App.request("get:content:groups", data);
+            } else {
+              _this.contentModulesCollection = App.request("get:quizes", data);
+            }
+            _this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
+            _this.layout = _this._getContentPiecesLayout();
+            return App.execute("when:fetched", [_this.contentModulesCollection, _this.textbooksCollection], function() {
+              _this.show(_this.layout, {
+                loading: true
               });
-              App.execute("show:list:all:modules:app", {
-                region: _this.layout.allContentRegion,
-                contentModulesCollection: _this.contentModulesCollection,
-                textbooksCollection: _this.textbooksCollection,
-                groupType: _this.groupType
+              _this.listenTo(_this.layout, "show", function() {
+                var dataType;
+                if (_this.groupType === 'teaching-module') {
+                  dataType = 'teaching-modules';
+                } else {
+                  dataType = 'quiz';
+                }
+                App.execute("show:textbook:filters:app", {
+                  region: _this.layout.filtersRegion,
+                  collection: _this.contentModulesCollection,
+                  textbooksCollection: _this.textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                  dataType: dataType,
+                  filters: ['textbooks', 'chapters', 'sections', 'subsections', 'module_status']
+                });
+                App.execute("show:list:all:modules:app", {
+                  region: _this.layout.allContentRegion,
+                  contentModulesCollection: _this.contentModulesCollection,
+                  textbooksCollection: _this.textbooksCollection,
+                  groupType: _this.groupType
+                });
+                return new ModulesListing.SearchResults.Controller({
+                  region: _this.layout.searchResultsRegion,
+                  textbooksCollection: _this.textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                  groupType: _this.groupType
+                });
               });
-              return new ModulesListing.SearchResults.Controller({
-                region: _this.layout.searchResultsRegion,
-                textbooksCollection: _this.textbooksCollection,
-                selectedFilterParamsObject: _this.selectedFilterParamsObject,
-                groupType: _this.groupType
+              return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
+                return _this.layout.allContentRegion.trigger("update:pager");
               });
-            });
-            return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
-              return _this.layout.allContentRegion.trigger("update:pager");
             });
           };
         })(this));

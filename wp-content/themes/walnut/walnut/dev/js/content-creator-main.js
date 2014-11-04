@@ -29,14 +29,14 @@ require.config({
     jquerycolor: 'plugins/jquery.minicolors.min',
     jqueryknob: 'plugins/jquery.knob',
     ckeditor: 'plugins/ckeditor/ckeditor',
-    select2: 'plugins/select2.min',
+    select2: 'plugins/select2',
     tagsinput: 'plugins/bootstrap-tagsinput.min',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
-    videojs: 'plugins/video',
-    videojsplaylist: 'plugins/videojs-playlists.min',
     panzer: 'plugins/panzer',
     panzerlist: 'plugins/panzerlist',
     sidr: 'plugins/jquery.sidr.min',
+    resizablecolumns: 'plugins/jquery.resizableColumns.min',
+    bootbox: 'plugins/bootbox.min',
     imageareaselect: '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min',
     imageedit: '../../../../../../wp-admin/js/image-edit',
     json2: '../../../../../../wp-includes/js/json2',
@@ -80,7 +80,8 @@ require.config({
     screwbuttons: ['jquery'],
     panzer: ['jquery'],
     panzerlist: ['jquery'],
-    videojsplaylist: ['videojs'],
+    resizablecolumns: ['jquery'],
+    bootbox: ['jquery', 'bootstrap'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });

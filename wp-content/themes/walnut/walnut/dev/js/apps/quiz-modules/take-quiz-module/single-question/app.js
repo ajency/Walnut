@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/single-question/views', 'apps/content-preview/dialogs/hint-dialog/hint-dialog-controller', 'apps/content-preview/dialogs/comment-dialog/comment-dialog-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/take-quiz-module/single-question/views'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
     var answer, answerData;
     answer = null;
@@ -29,23 +29,63 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         };
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
-        if (this.questionResponseModel) {
+        if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
+          if (this.display_mode === 'class_mode' && !this.quizModel.hasPermission('single_attempt')) {
+            this.answerWreqrObject.options = {
+              'displayAnswer': false
+            };
+          }
           answerData = this.questionResponseModel.get('question_response');
+          if (_.isEmpty(answerData)) {
+            answerData = {};
+          }
+          answerData.status = this.questionResponseModel.get('status');
+          answerData.marks = this.questionResponseModel.get('marks_scored');
           this.answerModel = App.request("create:new:answer", answerData);
         }
         this.show(layout, {
           loading: true
         });
         this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject));
+        this.listenTo(this.region, "silent:save:question", (function(_this) {
+          return function() {
+            var answer_status;
+            answerData = _this.answerWreqrObject.request("get:question:answer");
+            answer = answerData.answerModel;
+            _this.answerWreqrObject.request("submit:answer");
+            answer_status = _this._getAnswerStatus(answer.get('marks'), answerData.totalMarks);
+            answer.set({
+              'status': answer_status
+            });
+            if ((answer.get('status') === 'wrong_answer') && _.toBool(_this.quizModel.get('negMarksEnable'))) {
+              answer.set({
+                'marks': -answerData.totalMarks * _this.quizModel.get('negMarks') / 100
+              });
+            }
+            return _this.region.trigger("submit:question", answer);
+          };
+        })(this));
         this.listenTo(layout, "validate:answer", function() {
           answerData = this.answerWreqrObject.request("get:question:answer");
           answer = answerData.answerModel;
           if (answerData.questionType !== 'sort') {
             switch (answerData.emptyOrIncomplete) {
               case 'empty':
-                return this.region.trigger('show:alert:popup', 'submit_without_attempting');
+                return bootbox.confirm(this.quizModel.getMessageContent('submit_without_attempting'), (function(_this) {
+                  return function(result) {
+                    if (result) {
+                      return _this._triggerSubmit();
+                    }
+                  };
+                })(this));
               case 'incomplete':
-                return this.region.trigger('show:alert:popup', 'incomplete_answer');
+                return bootbox.confirm(this.quizModel.getMessageContent('incomplete_answer'), (function(_this) {
+                  return function(result) {
+                    if (result) {
+                      return _this._triggerSubmit();
+                    }
+                  };
+                })(this));
               case 'complete':
                 return this._triggerSubmit();
             }
@@ -67,15 +107,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         this.listenTo(layout, 'show:hint:dialog', (function(_this) {
           return function() {
-            return App.execute('show:hint:dialog', {
-              hint: _this.model.get('hint')
-            });
-          };
-        })(this));
-        this.listenTo(layout, 'show:comment:dialog', (function(_this) {
-          return function() {
-            return App.execute('show:comment:dialog', {
-              comment: _this.model.get('comment')
+            return _this.answerModel.set({
+              'hint_viewed': true
             });
           };
         })(this));

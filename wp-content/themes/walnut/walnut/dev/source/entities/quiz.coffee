@@ -48,11 +48,19 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 message_content = default_messages[message_type]
 
-                if @.hasPermission('customize_messages') and not _.isEmpty @.get 'message'
+                if not _.isEmpty @.get 'message'
                     custom_messages= @.get 'message'
                     message_content = custom_messages[message_type] if custom_messages[message_type]
 
                 message_content
+
+            getQuizTypeLabel:->
+                quiz_type = switch @.get 'quiz_type'
+                                when 'practice'     then 'Practice'
+                                when 'test'         then 'Take at Home'
+                                when 'class_test'   then 'Class Test'
+
+                quiz_type
 
 
 
@@ -65,7 +73,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-quizes'
 
             parse: (resp)->
-                resp.data
+                resp.data.reverse()
+        
+        quizRepository= new Quiz.ItemCollection
 
         # API
         API =
@@ -77,6 +87,9 @@ define ["app", 'backbone'], (App, Backbone) ->
                 quizCollection.fetch
                     reset: true
                     data: param
+                    success:(resp)-> 
+                        if not param.search_str
+                            quizRepository.reset resp.models
 
                 quizCollection
 
@@ -87,6 +100,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if not quiz
                     quiz = new Quiz.ItemModel 'id': id
                     quiz.fetch()
+
                 quiz
 
 
@@ -114,6 +128,36 @@ define ["app", 'backbone'], (App, Backbone) ->
                         allow_hint: true
 
                 dummyQuiz
+
+            saveQuizSchedule:(data)->
+
+                defer = $.Deferred()
+
+                @result = 0
+
+                connection_resp = $.middle_layer AJAXURL + '?action=save-quiz-schedule',
+                    data
+                    (response) =>
+                        defer.resolve response         
+
+                defer.promise()
+
+            clearQuizSchedule:(quiz_id, division)->
+
+                defer= $.Deferred()
+
+                data=
+                    'quiz_id'  : quiz_id
+                    'division' : division
+
+                connection_resp = $.middle_layer AJAXURL + '?action=clear-quiz-schedule',
+                    data
+                    (response) =>
+                        defer.resolve response         
+
+                defer.promise()
+
+
                 
         # request handler to get all content groups
         App.reqres.setHandler "get:quizes", (opt) ->
@@ -128,6 +172,14 @@ define ["app", 'backbone'], (App, Backbone) ->
         App.reqres.setHandler "new:quiz",->
             API.newQuiz()
 
+        App.reqres.setHandler "save:quiz:schedule",(data)->
+            API.saveQuizSchedule data
+
+        App.reqres.setHandler "clear:quiz:schedule",(quiz_id, division)->
+            API.clearQuizSchedule quiz_id, division
 
         App.reqres.setHandler "create:dummy:quiz:module", (content_piece_id)->
             API.getDummyQuiz content_piece_id
+
+        App.reqres.setHandler "get:quiz:repository",->
+            quizRepository.clone()

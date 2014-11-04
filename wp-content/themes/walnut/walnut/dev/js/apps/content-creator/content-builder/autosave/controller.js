@@ -17,7 +17,7 @@ define(['app'], function(App) {
       };
 
       Controller.prototype.autoSave = function(contentPieceModel) {
-        var data, options, siteRegion, _json;
+        var data, options, siteRegion, valid_content, _json;
         siteRegion = App.mainContentRegion.$el;
         _json = this._getPageJson(siteRegion);
         if (!_.isObject(_json)) {
@@ -32,7 +32,15 @@ define(['app'], function(App) {
           url: AJAXURL,
           data: data
         };
-        if (this._checkIfMarksEntered()) {
+        valid_content = true;
+        if (data.content_type === 'student_question') {
+          if (this._questionExists() && this._checkIfMarksEntered()) {
+            valid_content = true;
+          } else {
+            valid_content = false;
+          }
+        }
+        if (valid_content) {
           return $.ajax(options).done(function(response) {
             contentPieceModel.set({
               'ID': response.ID
@@ -43,6 +51,24 @@ define(['app'], function(App) {
           }).fail(function(resp) {
             return console.log('error');
           });
+        }
+      };
+
+      Controller.prototype._questionExists = function() {
+        var elements, question_exists;
+        elements = App.mainContentRegion.$el.find('#myCanvas').find('form input[name="element"]');
+        question_exists = false;
+        _.each(elements, function(element, index) {
+          var _ref;
+          if ((_ref = $(element).val()) === 'Fib' || _ref === 'Mcq' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') {
+            return question_exists = true;
+          }
+        });
+        if (!question_exists) {
+          this._showNoQuestionExistsError();
+          return false;
+        } else {
+          return true;
         }
       };
 
@@ -60,6 +86,11 @@ define(['app'], function(App) {
             return true;
           }
         });
+      };
+
+      Controller.prototype._showNoQuestionExistsError = function() {
+        $('#saved-successfully,#save-failure').remove();
+        return $(".page-title").before('<div id="save-failure" style="text-align:center;" class="alert alert-failure">To save, at least 1 question element must be included in the question area</div>');
       };
 
       Controller.prototype._getPageJson = function($site) {

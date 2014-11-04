@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Quiz", function(Quiz, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, quizRepository;
     Quiz.ItemModel = (function(_super) {
       __extends(ItemModel, _super);
 
@@ -63,13 +63,28 @@ define(["app", 'backbone'], function(App, Backbone) {
           quiz_time_up: 'Sorry, your time is up'
         };
         message_content = default_messages[message_type];
-        if (this.hasPermission('customize_messages') && !_.isEmpty(this.get('message'))) {
+        if (!_.isEmpty(this.get('message'))) {
           custom_messages = this.get('message');
           if (custom_messages[message_type]) {
             message_content = custom_messages[message_type];
           }
         }
         return message_content;
+      };
+
+      ItemModel.prototype.getQuizTypeLabel = function() {
+        var quiz_type;
+        quiz_type = (function() {
+          switch (this.get('quiz_type')) {
+            case 'practice':
+              return 'Practice';
+            case 'test':
+              return 'Take at Home';
+            case 'class_test':
+              return 'Class Test';
+          }
+        }).call(this);
+        return quiz_type;
       };
 
       return ItemModel;
@@ -89,12 +104,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemCollection.prototype.parse = function(resp) {
-        return resp.data;
+        return resp.data.reverse();
       };
 
       return ItemCollection;
 
     })(Backbone.Collection);
+    quizRepository = new Quiz.ItemCollection;
     API = {
       getQuizes: function(param) {
         var quizCollection;
@@ -104,7 +120,12 @@ define(["app", 'backbone'], function(App, Backbone) {
         quizCollection = new Quiz.ItemCollection;
         quizCollection.fetch({
           reset: true,
-          data: param
+          data: param,
+          success: function(resp) {
+            if (!param.search_str) {
+              return quizRepository.reset(resp.models);
+            }
+          }
         });
         return quizCollection;
       },
@@ -147,6 +168,31 @@ define(["app", 'backbone'], function(App, Backbone) {
           }
         });
         return dummyQuiz;
+      },
+      saveQuizSchedule: function(data) {
+        var connection_resp, defer;
+        defer = $.Deferred();
+        this.result = 0;
+        connection_resp = $.middle_layer(AJAXURL + '?action=save-quiz-schedule', data, (function(_this) {
+          return function(response) {
+            return defer.resolve(response);
+          };
+        })(this));
+        return defer.promise();
+      },
+      clearQuizSchedule: function(quiz_id, division) {
+        var connection_resp, data, defer;
+        defer = $.Deferred();
+        data = {
+          'quiz_id': quiz_id,
+          'division': division
+        };
+        connection_resp = $.middle_layer(AJAXURL + '?action=clear-quiz-schedule', data, (function(_this) {
+          return function(response) {
+            return defer.resolve(response);
+          };
+        })(this));
+        return defer.promise();
       }
     };
     App.reqres.setHandler("get:quizes", function(opt) {
@@ -161,8 +207,17 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("new:quiz", function() {
       return API.newQuiz();
     });
-    return App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
+    App.reqres.setHandler("save:quiz:schedule", function(data) {
+      return API.saveQuizSchedule(data);
+    });
+    App.reqres.setHandler("clear:quiz:schedule", function(quiz_id, division) {
+      return API.clearQuizSchedule(quiz_id, division);
+    });
+    App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
       return API.getDummyQuiz(content_piece_id);
+    });
+    return App.reqres.setHandler("get:quiz:repository", function() {
+      return quizRepository.clone();
     });
   });
 });

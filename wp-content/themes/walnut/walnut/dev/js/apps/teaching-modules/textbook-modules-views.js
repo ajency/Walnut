@@ -12,17 +12,29 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <span class="muted status_label">{{&status_str}}</span> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> {{&action_str}} </button> {{&training_date}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} <span class="label label-info">Attempts: <strong>{{attempts}}</strong></span> {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> View {{moduleType}} </button> {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{taken_on}} </button> {{/schedule_button}} {{^schedule_button}} {{#taken_on}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{taken_on}}</div> {{/taken_on}} {{^taken_on}} {{#classTest}} {{#schedule}} {{#schedule.is_active}} <div class="alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule.is_active}} {{^schedule.is_active}} <div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule.is_active}} {{/schedule}} {{^schedule}} Not Scheduled {{/schedule}} {{/classTest}} {{/taken_on}} {{/schedule_button}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
       ContentGroupsItemView.prototype.onShow = function() {
         this.$el.attr('id', 'row-' + this.model.get('id'));
-        return this.$el.attr('data-id', this.model.get('id'));
+        this.$el.attr('data-id', this.model.get('id'));
+        if (this.model.get('quiz_type') === 'class_test') {
+          if (this.model.get('schedule')) {
+            if (!this.model.get('schedule')['is_active']) {
+              this.$el.find('.start-training').hide();
+            }
+            if (this.model.get('is_expired')) {
+              return this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
+            }
+          } else {
+            return this.$el.find('.start-training').hide();
+          }
+        }
       };
 
       ContentGroupsItemView.prototype.serializeData = function() {
-        var data, status, taken_on, training_date;
+        var data, status, taken_on;
         data = ContentGroupsItemView.__super__.serializeData.call(this);
         data.chapterName = (function(_this) {
           return function() {
@@ -44,42 +56,55 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
             }
           };
         })(this);
-        training_date = this.model.get('training_date');
-        taken_on = moment(this.model.get('taken_on')).format("Do MMM YYYY");
-        if (training_date === '') {
-          training_date = 'Schedule';
+        if (this.model.get('type') === 'teaching-module') {
+          data.moduleType = 'Module';
+          taken_on = this.model.get('training_date');
+          if (!taken_on) {
+            taken_on = 'Schedule';
+          } else {
+            taken_on = moment(taken_on).format("Do MMM YYYY");
+          }
         } else {
-          training_date = moment(training_date).format("Do MMM YYYY");
+          data.moduleType = 'Quiz';
+          if (data.quiz_type === 'class_test') {
+            data.classTest = true;
+          }
+          taken_on = this.model.get('taken_on');
+          if (!taken_on) {
+            taken_on = null;
+          } else {
+            taken_on = moment(taken_on).format("Do MMM YYYY");
+          }
+          if (data.quiz_type === 'class_test' && data.status !== 'completed') {
+            taken_on = null;
+          }
         }
         status = this.model.get('status');
         if ((this.model.get('post_status') != null) && this.model.get('post_status') === 'archive') {
-          data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
           data.status_str = '<span class="label label-success">Archived</span>';
-          data.action_str = '<i class="fa fa-repeat"></i> Replay';
         } else {
           if (status === 'started' || status === 'resumed') {
-            data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
             data.status_str = '<span class="label label-info">In Progress</span>';
-            data.action_str = '<i class="fa fa-pause"></i> Resume';
           } else if (status === 'completed') {
             data.status_str = '<span class="label label-success">Completed</span>';
-            data.action_str = '<i class="fa fa-repeat"></i> Replay';
-            if (Marionette.getOption(this, 'mode') === 'take-quiz') {
-              data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + taken_on + '</div>';
-            } else {
-              data.training_date = '<div class="alert alert-success inline pull-right m-b-0 m-r-10 dateInfo"> ' + training_date + '</div>';
-            }
           } else {
             data.status_str = '<span class="label label-important">Not Started</span>';
-            data.action_str = '<i class="fa fa-play"></i> Start';
             if (Marionette.getOption(this, 'mode') !== 'take-quiz') {
-              data.training_date = '<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-right m-r-10 training-date"> <i class="fa fa-calendar"></i> ' + training_date + '</button>';
+              data.schedule_button = true;
             }
           }
         }
+        data.taken_on = taken_on;
         if (Marionette.getOption(this, 'mode') === 'take-quiz') {
           data.take_quiz = true;
-          data.quiz_type = this.model.get('quiz_type') === 'practice' ? 'Practice' : 'Class Test';
+          data.quiz_type = this.model.getQuizTypeLabel();
+          if (data.schedule) {
+            data.scheduleFrom = moment(data.schedule.from).format("Do MMM YYYY");
+            data.scheduleTo = moment(data.schedule.to).format("Do MMM YYYY");
+          }
+        }
+        if (this.model.get('quiz_type') === 'practice') {
+          data.practice_quiz = true;
         }
         return data;
       };
@@ -182,7 +207,6 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
 
       ContentGroupsView.prototype.onShow = function() {
         var pagerOptions, textbookFiltersHTML;
-        $('.page-content').removeClass('expand-page');
         if (Marionette.getOption(this, 'mode') === 'training') {
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }
@@ -216,8 +240,13 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       };
 
       ContentGroupsView.prototype.setFilteredContent = function() {
-        var filtered_data, pagerOptions;
-        filtered_data = $.filterTableByTextbooks(this);
+        var dataType, filtered_data, pagerOptions;
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          dataType = 'quiz';
+        } else {
+          dataType = 'teaching-modules';
+        }
+        filtered_data = $.filterTableByTextbooks(this, dataType);
         this.collection.set(filtered_data);
         $("#take-class-modules").trigger("updateCache");
         pagerOptions = {

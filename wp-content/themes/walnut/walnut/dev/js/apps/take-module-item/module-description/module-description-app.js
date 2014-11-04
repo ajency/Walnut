@@ -137,7 +137,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         if (this.model.get('post_status') === 'archive') {
           this.$el.find("#question-done").remove();
         }
-        stickyHeaderTop = $("#module-details-region").height();
+        stickyHeaderTop = this.$el.find("#module-details-region").height();
         $(window).scroll(function() {
           if ($(window).scrollTop() > stickyHeaderTop) {
             $("#module-details-region").addClass("condensed animated slideInDown");

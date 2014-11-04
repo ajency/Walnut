@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       ImageView.prototype.className = 'image';
 
-      ImageView.prototype.template = '{{#image}} <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive" width="100%"/> <div class="clearfix"></div> {{/image}} {{#placeholder}} <div class="image-placeholder" style="height:100%;"><span class="bicon icon-uniF10E"></span>Add Image</div> {{/placeholder}}';
+      ImageView.prototype.template = '{{#image}} <img src="{{imageurl}}" alt="{{title}}" class="{{alignclass}} img-responsive" width="100%"/> <div class="clearfix"></div> {{/image}} {{#placeholder}} <div class="image-placeholder" ><span class="bicon icon-uniF10E"></span>Add Image</div> {{/placeholder}}';
 
       ImageView.prototype.modelEvents = {
         'change': 'render'
@@ -50,7 +50,6 @@ define(['app'], function(App) {
       ImageView.prototype.onShow = function() {
         if (this.model.isNew()) {
           this.$el.resizable({
-            helper: "ui-image-resizable-helper",
             handles: "s",
             stop: (function(_this) {
               return function(evt, ui) {
@@ -67,7 +66,6 @@ define(['app'], function(App) {
           this.$el.find('img').css('top', "" + (this.positionTopRatio * this.$el.width()) + "px");
         }
         this.$el.resizable({
-          helper: "ui-image-resizable-helper",
           handles: "s",
           stop: (function(_this) {
             return function(evt, ui) {

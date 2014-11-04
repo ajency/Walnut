@@ -16,7 +16,7 @@ require_once 'modules/media/ajax.php';
 require_once 'modules/divisions/ajax.php';
 require_once 'modules/question-response/ajax.php';
 require_once 'modules/sync-data/sync-data-ajax.php';
-require_once 'modules/communications/ajax.php';
+require_once 'modules/communications/functions.php';
 require_once 'modules/quiz/ajax.php';
 require_once 'custom_configs.php';
 require_once 'modules/school/school_data_import.php';
@@ -45,6 +45,25 @@ function upload_attachment( $file_handler, $post_id, $set_thumb = 'false' ) {
     return $attach_id;
 }
 
+
+if(!function_exists('str_putcsv'))
+{
+    function str_putcsv($input, $delimiter = ',', $enclosure = '"')
+    {
+        // Open a memory "file" for read/write...
+        $fp = fopen('php://temp', 'r+');
+        // ... write the $input array to the "file" using fputcsv()...
+        fputcsv($fp, $input, $delimiter, $enclosure);
+        // ... rewind the "file" so we can read what we just wrote...
+        rewind($fp);
+        // ... read the entire line into a variable...
+        $data = fread($fp, 1048576);
+        // ... close the "file"...
+        fclose($fp);
+        // ... and return the $data to the caller, with the trailing newline from fgets() removed.
+        return $data;
+    }
+}
 
 if (!is_multisite()) {
 

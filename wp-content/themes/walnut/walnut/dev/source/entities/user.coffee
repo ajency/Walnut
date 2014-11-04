@@ -7,6 +7,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				name: 'user'
 
+				idAttribute : 'ID'
+
 				defaults : ->
 					display_name 	: ''
 					user_email 		: ''
@@ -33,7 +35,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			# declare a user collection instance
 
-
 			# offline user collection instance
 			class OfflineUserCollection extends Backbone.Collection
 
@@ -51,6 +52,26 @@ define ["app", 'backbone'], (App, Backbone) ->
 						data : params
 
 					userCollection
+
+				getUserByID:(id)-> #returns a collection of users
+					
+					user = new Users.UserModel ('ID': id)
+					user.fetch()
+					
+					user
+
+
+				getStudentsByDivision:(division)-> #returns a collection of users
+					
+					stud_data = 
+						'role' : 'student'
+						'division' : division
+
+					students = new UserCollection
+					students.fetch
+						data : stud_data
+
+					students
 
 				getUserData:(key)->
 					data=loggedInUser.get 'data'
@@ -102,10 +123,13 @@ define ["app", 'backbone'], (App, Backbone) ->
 				loggedInUser	
 
 			App.reqres.setHandler "get:loggedin:user:id", ->
-				loggedInUser.get 'ID'
+				parseInt loggedInUser.get 'ID'
 
 			App.reqres.setHandler "get:user:collection",(opts) ->
 				API.getUsers opts
+
+			App.reqres.setHandler "get:students:by:division",(division)->
+				API.getStudentsByDivision division
 
 			App.reqres.setHandler "get:user:data",(key)->
 				API.getUserData key
@@ -113,6 +137,11 @@ define ["app", 'backbone'], (App, Backbone) ->
 			App.reqres.setHandler "get:dummy:students",->
 				API.getDummyStudents()
 
+			App.reqres.setHandler "get:user:by:id",(id) ->
+				API.getUserByID id
+
 			# Request handler to get logged-in users from local database
 			App.reqres.setHandler "get:offline:user:collection", ->
 				API.getOfflineUsers()
+
+				

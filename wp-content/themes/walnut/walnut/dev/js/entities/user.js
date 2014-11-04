@@ -13,6 +13,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       UserModel.prototype.name = 'user';
 
+      UserModel.prototype.idAttribute = 'ID';
+
       UserModel.prototype.defaults = function() {
         return {
           display_name: '',
@@ -83,6 +85,26 @@ define(["app", 'backbone'], function(App, Backbone) {
         });
         return userCollection;
       },
+      getUserByID: function(id) {
+        var user;
+        user = new Users.UserModel({
+          'ID': id
+        });
+        user.fetch();
+        return user;
+      },
+      getStudentsByDivision: function(division) {
+        var stud_data, students;
+        stud_data = {
+          'role': 'student',
+          'division': division
+        };
+        students = new UserCollection;
+        students.fetch({
+          data: stud_data
+        });
+        return students;
+      },
       getUserData: function(key) {
         var data;
         data = loggedInUser.get('data');
@@ -129,16 +151,22 @@ define(["app", 'backbone'], function(App, Backbone) {
       return loggedInUser;
     });
     App.reqres.setHandler("get:loggedin:user:id", function() {
-      return loggedInUser.get('ID');
+      return parseInt(loggedInUser.get('ID'));
     });
     App.reqres.setHandler("get:user:collection", function(opts) {
       return API.getUsers(opts);
+    });
+    App.reqres.setHandler("get:students:by:division", function(division) {
+      return API.getStudentsByDivision(division);
     });
     App.reqres.setHandler("get:user:data", function(key) {
       return API.getUserData(key);
     });
     App.reqres.setHandler("get:dummy:students", function() {
       return API.getDummyStudents();
+    });
+    App.reqres.setHandler("get:user:by:id", function(id) {
+      return API.getUserByID(id);
     });
     return App.reqres.setHandler("get:offline:user:collection", function() {
       return API.getOfflineUsers();

@@ -1,0 +1,49 @@
+<div class="col-lg-12">
+    <table class="table table-bordered m-t-10" id="content-pieces-table" >
+        <thead>
+            <tr>
+                <th style="width:4%">
+                    <div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
+                        <input id="check_all" type="checkbox">
+                        <label for="check_all"></label>
+                    </div>
+                </th>
+                <th>Quiz Name</th>
+                <th>Textbook</th>
+                <th>Chapter</th>
+                <th>Duration</th>
+                <th>Type</th>
+                <th>Taken By</th>
+                {{#can_schedule}}
+                    <th>Schedule</th>
+                {{/can_schedule}}
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody id="list-content-pieces" aria-relevant="all" aria-live="polite" role="alert" data-link="row" class="rowlink">
+
+
+        </tbody>
+    </table>
+    <div id="pager" class="pager">
+        <i class="cursor fa fa-chevron-left prev"></i>
+        <span style="padding:0 15px"  class="pagedisplay"></span>
+        <i class="cursor fa fa-chevron-right next"></i>
+        <select class="pagesize">
+            <option selected value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+
+    <button id="send-email" class="none btn btn-success btn-cons2 right pull-left m-t-10 m-r-10" type="submit">
+        <i class="fa fa-check"></i> Send Email
+    </button>
+
+    <!--
+    <button id="send-sms" class="none btn btn-info btn-cons2 right pull-left m-t-10" type="submit">
+        <i class="fa fa-check"></i> Send SMS
+    </button>-->
+
+</div>
