@@ -5,59 +5,83 @@ define ['underscore'], ( _) ->
 	_.mixin
 
 		getStudentsByDivision : (division)->
+			
+			defer = $.Deferred()
+			
+			onSuccess = (tx, data)->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
-							ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?"
-							, [division], onSuccess(d), _.deferredErrorHandler(d));
-						
+				result = []
+				
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
 
-			onSuccess = (d)->
-				(tx, data)->
+					forEach = (row,i)->
 
-					result = []
 
-					for i in [0..data.rows.length-1] by 1
-
-						row = data.rows.item(i)
-						
 						result[i] = 
 							ID: row['ID']
 							display_name: row['display_name']
 							user_email: row['user_email']
 							profile_pic: '/images/avtar.png'
 
-					d.resolve(result)
 
-			$.when(runQuery()).done (data)->
-				console.log 'getStudentsByDivision transaction completed'
-			.fail _.failureHandler
+						i = i + 1
+						if (i < data.rows.length)
+							forEach data.rows.item(i), i
+						else
+							defer.resolve result
+
+
+				forEach data.rows.item(0), 0
+
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
+								ON u.ID=um.user_id 
+								AND um.meta_key='student_division' 
+								AND um.meta_value=?"
+								, [division]
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
 
 
 
 		getNamesOfAllOfflineUsers : ->
 
-			runQuery = ->
-				$.Deferred (d)->
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT username FROM USERS", []
-							, onSuccess(d), _.deferredErrorHandler(d))
+			defer = $.Deferred()
 
-			onSuccess =(d)->
-				(tx, data)->
+			onSuccess =(tx, data)->
 
-					result = []
 
-					for i in [0..data.rows.length-1] by 1
+				result = []
 
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
+
+					forEach = (row,i)->
+						
 						result[i] = 
 							username: data.rows.item(i)['username']
-						console.log result[i]
+						
+						console.log JSON.stringify result[i]
 
-					d.resolve(result)
+						i = i + 1
+						if (i < data.rows.length)
+							forEach data.rows.item(i), i
+						else
+							defer.resolve result
 
-			$.when(runQuery()).done ->
-				console.log 'getNamesOfAllOfflineUsers transaction completed'
-			.fail _.failureHandler
+					forEach data.rows.item(0), 0
+			
+			_.db.transaction (tx)->
+				tx.executeSql "SELECT username FROM USERS"
+								, []
+				, onSuccess, _.transactionErrorHandler
+
+			defer.promise()

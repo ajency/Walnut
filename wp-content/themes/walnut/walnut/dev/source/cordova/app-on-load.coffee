@@ -16,12 +16,12 @@ define ['underscore', 'jquery', 'fastclick'], (_, $, FastClick)->
 
 		# Change 'AJAXURL' based on version name
 		cordova.getAppVersion().then((version)->
+			`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
+			# if version.indexOf('Production') is 0
+			# 	`AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";`
 
-			if version.indexOf('Production') is 0
-				`AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";`
-
-			if version.indexOf('Staging') is 0
-				`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
+			# if version.indexOf('Staging') is 0
+			# 	`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
 		)
 	   
 

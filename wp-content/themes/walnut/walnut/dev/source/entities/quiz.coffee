@@ -85,6 +85,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                     data: param
                     success:(resp)-> 
                         if not param.search_str
+                            
                             quizRepository.reset resp.models
 
                 quizCollection

@@ -5,86 +5,96 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 		getQuizQuestionResponseBySummaryID : (summary_id)->
 
-			runQuery = ->
+			defer = $.Deferred()
 
-				$.Deferred (d)->
+			onSuccess = (tx,data)->
+				
+				result = []
 
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE summary_id = ?", [summary_id] 
-							, onSuccess(d), _.deferredErrorHandler(d))
+				if data.rows.length is 0
+					
+					defer.resolve result
+				
+				else
 
-			onSuccess =(d)->
+					forEach = (row, i)->
+						
+						_.getTotalMarksScoredAndTotalTimeTaken(summary_id)
+						.then (value)->
+							console.log value
 
-				(tx,data)->
+							result[i] = 
+								content_piece_id : row['content_piece_id']
+								marks_scored: value.total_marks_scored
+								qr_id: row['qr_id']
+								question_response : _.unserialize(row['question_response'])
+								status : row['status']
+								summary_id :summary_id
+								time_taken : value.total_time_taken
+						
+						
 
-					result = []
-					for i in [0..data.rows.length-1] by 1
-						row = data.rows.item(i)
-						do (row, i)->
-							totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(summary_id)
-							totalMarksScoredAndTotalTimeTaken.done (value)->
+							i = i + 1
 
-								result[i] = 
-									content_piece_id : row['content_piece_id']
-									marks_scored: value.total_marks_scored
-									qr_id: row['qr_id']
-									question_response : _.unserialize(row['question_response'])
-									status : row['status']
-									summary_id :summary_id
-									time_taken : value.total_time_taken
+							if ( i < data.rows.length)
+								forEach data.rows.item(i), i
 
-					# if result.length>0
-					d.resolve(result)
+							else
+								console.log "getQuizQuestionResponseBySummaryID done"
+								defer.resolve result
 
-			$.when(runQuery()).done ->
-				console.log 'getQuizQuestionResponseBySummaryID transaction completed'
-			.fail _.failureHandler
+					forEach data.rows.item(0), 0
+
+			_.db.transaction (tx)->
+				tx.executeSql "SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
+								WHERE summary_id = ?"
+								, [summary_id]
+				, onSuccess, _.transactionErrorHandler
+
+			defer.promise()
 
 
 
 
 		getTotalMarksScoredAndTotalTimeTaken : (summary_id)->
+			
+			defer = $.Deferred()
 
-			runQuery = ->
+			onSuccess = (tx,data)->
+				
+				result = ''
+				
+				result = data.rows.item(0)
+				
+				console.log "getTotalMarksScoredAndTotalTimeTaken done"
+				defer.resolve result
 
-				$.Deferred (d)->
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT SUM(marks_scored) as total_marks_scored, 
+								SUM(CASE WHEN status = 'wrong_answer' 
+								THEN marks_scored ELSE 0 END) as negative_scored, 
+								SUM(CASE WHEN status <> 'wrong_answer' 
+								THEN marks_scored ELSE 0 END) as marks_scored, 
+								SUM(time_taken) as total_time_taken 
+								FROM "+_.getTblPrefix()+"quiz_question_response 
+								WHERE summary_id = ? "
+								, [summary_id] 
+				, onSuccess, _.transactionErrorHandler
 
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT SUM(marks_scored) as total_marks_scored, 
-							SUM(CASE WHEN status = 'wrong_answer' 
-							THEN marks_scored ELSE 0 END) as negative_scored, 
-							SUM(CASE WHEN status <> 'wrong_answer' 
-							THEN marks_scored ELSE 0 END) as marks_scored, 
-							SUM(time_taken) as total_time_taken 
-							FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE summary_id = ? ", 
-							[summary_id] 
-							, onSuccess(d), _.deferredErrorHandler(d))
 
-			onSuccess =(d)->
-
-				(tx,data)->
-					result = ''
-					result = data.rows.item(0)
-
-					d.resolve(result)
-
-			$.when(runQuery()).done ->
-				console.log 'getTotalMarksScoredAndTotalTimeTaken transaction completed'
-			.fail _.failureHandler
-
+			defer.promise()
 
 
 
 		#insert/update data in quiz question response
 		writeQuestionResponse : (model)->
 
-			quizResponseSummary = _.getQuizResponseSummary(model.get('summary_id'))
-			quizResponseSummary.done (collection_id)->
+			_.getQuizResponseSummary(model.get('summary_id'))
+			.then (collection_id)->
 
-				collectionMeta = _.getCollectionMeta(collection_id)
-				collectionMeta.done (collectionMetaData)->
+				_.getCollectionMeta(collection_id)
+				.then (collectionMetaData)->
 
 					check_permissions = collectionMetaData.permission
 					
@@ -101,25 +111,20 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 		#Based on the collection_id get the permisions
 		getQuizResponseSummary : (summary_id)->
 
-			runQuery = ->
+			defer = $.Deferred()
 
-				$.Deferred (d)->
+			onSuccess = (tx,data)->
+				result = data.rows.item(0)['collection_id']
+				defer.resolve result
 
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_response_summary 
-							WHERE summary_id = ?", [summary_id] 
-							, onSuccess(d), _.deferredErrorHandler(d))
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT * FROM "+_.getTblPrefix()+"quiz_response_summary 
+								WHERE summary_id = ?"
+								, [summary_id] 
+				, onSuccess, _.transactionErrorHandler
 
-			onSuccess =(d)->
-
-				(tx,data)->
-
-					result = data.rows.item(0)['collection_id']
-					d.resolve(result)
-
-			$.when(runQuery()).done ->
-				console.log 'getQuizResponseSummary transaction completed'
-			.fail _.failureHandler
+			defer.promise()
 
 
 

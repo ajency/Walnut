@@ -123,6 +123,8 @@ define ['jquery', 'underscore'], ($, _)->
     #adjust the page size and dimensions on resize
     $(window).resize adjustPageDim
 
+    ##
+    # --SELECT ALL CHECKBOX FUNCTIONS START--
     # select/ unselect all checkboxes in a table/div
     # element = DOM element that holds all the checkboxes eg. @$el.find('#take-class-modules')
     # exclude = array of checkbox ids to be excluded from selection
@@ -139,3 +141,18 @@ define ['jquery', 'underscore'], ($, _)->
         else
             element.find '.tab_checkbox'
             .removeAttr 'checked'
+
+    # get all checked values in a table/div
+    # element = DOM element that holds all the checkboxes eg. @$el.find('#take-class-modules')
+    $.getCheckedItems = (element)->
+
+        items= _.chain element.find('.tab_checkbox')
+                    .map (checkbox)->
+                        if $(checkbox).is ':checked'
+                            $(checkbox).val()
+                    .compact()
+                    .value()
+
+        items
+
+    # --SELECT ALL CHECKBOX FUNCTIONS END --

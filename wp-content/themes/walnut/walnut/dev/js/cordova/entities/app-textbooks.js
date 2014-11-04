@@ -191,65 +191,60 @@ define(['underscore'], function(_) {
       return defer.promise();
     },
     getTextBookByTextbookId: function(id) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND tt.term_id=?", [id], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var result, row;
-          row = data.rows.item(0);
-          result = {
-            term_id: row["term_id"],
-            name: row["name"],
-            slug: row["slug"],
-            term_group: row["term_group"],
-            term_order: row["term_order"],
-            term_taxonomy_id: row["term_taxonomy_id"],
-            taxonomy: row["taxonomy"],
-            description: row["description"],
-            parent: row["parent"],
-            count: row["count"],
-            classes: _.unserialize(row["class_id"]),
-            subjects: _.unserialize(row["tags"])
-          };
-          return d.resolve(result);
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var result, row;
+        row = data.rows.item(0);
+        result = {
+          term_id: row["term_id"],
+          name: row["name"],
+          slug: row["slug"],
+          term_group: row["term_group"],
+          term_order: row["term_order"],
+          term_taxonomy_id: row["term_taxonomy_id"],
+          taxonomy: row["taxonomy"],
+          description: row["description"],
+          parent: row["parent"],
+          count: row["count"],
+          classes: _.unserialize(row["class_id"]),
+          subjects: _.unserialize(row["tags"])
         };
+        return defer.resolve(result);
       };
-      return $.when(runQuery()).done(function(data) {
-        return console.log('getTextBookByTextbookId transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM wp_terms t, wp_term_taxonomy tt LEFT OUTER JOIN wp_textbook_relationships wtr ON t.term_id=wtr.textbook_id WHERE t.term_id=tt.term_id AND tt.taxonomy='textbook' AND tt.parent=0 AND tt.term_id=?", [id], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     },
     getTextBookNamesByTermIDs: function(ids) {
-      var onSuccess, runQuery;
-      runQuery = function() {
-        return $.Deferred(function(d) {
-          return _.db.transaction(function(tx) {
-            return tx.executeSql("SELECT term_id, name FROM wp_terms WHERE term_id IN (" + ids + ")", [], onSuccess(d), _.deferredErrorHandler(d));
-          });
-        });
-      };
-      onSuccess = function(d) {
-        return function(tx, data) {
-          var i, result, row, _i, _ref;
-          result = [];
-          for (i = _i = 0, _ref = data.rows.length - 1; _i <= _ref; i = _i += 1) {
-            row = data.rows.item(i);
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var forEach, result;
+        result = [];
+        if (data.rows.length === 0) {
+          return defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
             result[i] = {
               id: row['term_id'],
               name: row['name']
             };
-          }
-          return d.resolve(result);
-        };
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              return defer.resolve(result);
+            }
+          };
+          return forEach(data.rows.item(0), 0);
+        }
       };
-      return $.when(runQuery()).done(function() {
-        return console.log('getTextBookNamesByTermIDs transaction completed');
-      }).fail(_.failureHandler);
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT term_id, name FROM wp_terms WHERE term_id IN (" + ids + ")", [], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

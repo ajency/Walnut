@@ -5,82 +5,98 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 		getQuizResponseSummaryByCollectionIdAndUserID : (collection_id)->
 
-			runQuery = ->
-				$.Deferred (d)->
+			defer = $.Deferred()
 
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT taken_on, quiz_meta, summary_id 
-							FROM "+_.getTblPrefix()+"quiz_response_summary WHERE collection_id=? 
-							AND student_id=?", [collection_id, _.getUserID()] 
-							, onSuccess(d), _.deferredErrorHandler(d))
+			onSuccess = (tx,data)->
 
-			onSuccess =(d)->
+				result = []
 
-				(tx,data)->
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
+					
+					forEach = (row, i)->
+						_.getQuizResponseSummaryByCollectionId(collection_id)
+						.then (quiz_responses)->
 
-					result = []
-					for i in [0..data.rows.length-1] by 1
-						row = data.rows.item(i)
-						console.log row['summary_id']
-
-						#if row['quiz_meta']
-						
-						do (row, i)->
-							quizResponseSummary = _.getQuizResponseSummaryByCollectionId(collection_id)
-							quizResponseSummary.done (quiz_responses)->
+							console.log quiz_responses
 							
-								do(row , i, quiz_responses)->
-									countForSkippedQuestion = _.getCountForSkippedQuestion(row['summary_id'])
-									countForSkippedQuestion.done (skipped)->
+							_.getCountForSkippedQuestion(row['summary_id'])
+							.then (skipped)->
+								console.log skipped
+										
+								_.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
+								.then (value)->
+									console.log value
+									userID = _.getUserID()
+									quiz_meta = _.unserialize(row['quiz_meta'])
 
-										do(row , i, quiz_responses, skipped)->
-											totalMarksScoredAndTotalTimeTaken = _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
-											totalMarksScoredAndTotalTimeTaken.done (value)->
-												userID = _.getUserID()
-												quiz_meta = _.unserialize(row['quiz_meta'])
+									result[i] = 
+										collection_id : collection_id
+										marks_scored: value.marks_scored
+										attempts:quiz_responses.attempts
+										negative_scored: value.negative_scored
+										num_skipped: skipped
+										questions_order:quiz_meta.questions_order
+										status : quiz_meta.status
+										student_id : userID
+										summary_id : row['summary_id']
+										taken_on : row['taken_on']
+										total_marks_scored : value.total_marks_scored
+										total_time_taken : value.total_time_taken
 
-												result[i] = 
-													collection_id : collection_id
-													marks_scored: value.marks_scored
-													attempts:quiz_responses.attempts
-													negative_scored: value.negative_scored
-													num_skipped: skipped
-													questions_order:quiz_meta.questions_order
-													status : quiz_meta.status
-													student_id : userID
-													summary_id : row['summary_id']
-													taken_on : row['taken_on']
-													total_marks_scored : value.total_marks_scored
-													total_time_taken : value.total_time_taken
 
-					d.resolve(result)
 
-			$.when(runQuery()).done ->
-				console.log 'getQuizResponseSummaryByCollectionIdAndUserID transaction completed'
-			.fail _.failureHandler
+									i = i + 1
+
+									if ( i < data.rows.length)
+										forEach data.rows.item(i), i
+
+									else
+										console.log "getQuizResponseSummaryByCollectionIdAndUserID done"
+										defer.resolve result
+
+
+					forEach data.rows.item(0), 0
+
+
+
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT taken_on, quiz_meta, summary_id 
+								FROM "+_.getTblPrefix()+"quiz_response_summary 
+								WHERE collection_id=? 
+								AND student_id=?"
+								, [collection_id, _.getUserID()] 
+				,onSuccess, _.transactionErrorHandler
+
+
+
+			defer.promise()
+
+
 
 
 		getCountForSkippedQuestion : (summary_id)->
 
-			runQuery = ->
-				$.Deferred (d)->
+			defer = $.Deferred()
+
+			onSuccess = (tx,data)->
+				
+				result = data.rows.item(0)['num_skipped']
+				console.log "getCountForSkippedQuestion done"
+				defer.resolve result
 					
-					_.db.transaction (tx)->
-						tx.executeSql("SELECT COUNT(status) AS num_skipped 
-							FROM "+_.getTblPrefix()+"quiz_question_response 
-							WHERE status = ? AND summary_id = ?"
-							, ['skipped', summary_id]
-							, onSuccess(d), _.deferredErrorHandler(d))
- 
-			onSuccess =(d)->
-				(tx,data)->
+			_.db.transaction (tx)->
+				tx.executeSql "SELECT COUNT(status) AS num_skipped 
+								FROM "+_.getTblPrefix()+"quiz_question_response 
+								WHERE status = ? AND summary_id = ?"
+								, ['skipped', summary_id]
+				, onSuccess, _.transactionErrorHandler
 
-					result = data.rows.item(0)['num_skipped']
-					d.resolve(result)
+			defer.promise()
 
-			$.when(runQuery()).done ->
-				console.log 'getCountForSkippedQuestion transaction completed'
-			.fail _.failureHandler
 
 
 
@@ -88,8 +104,8 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 		writeQuizResponseSummary : (model)->
 			quizMetaValue= ''
 			quizMeta = ''
-			collectionMeta = _.getCollectionMeta(model.get('collection_id'))
-			collectionMeta.done (collectionMetaData)->
+			_.getCollectionMeta(model.get('collection_id'))
+			.then (collectionMetaData)->
 
 				if collectionMetaData.quizType is "practice"
 					# quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'))

@@ -14,7 +14,6 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'textbook') {
         _.cordovaTextbookCollection().done(function(data) {
           console.log('cordovaTextbookCollection done');
-          console.log(data);
           return collection.set(data);
         });
       }
@@ -25,8 +24,8 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'division') {
-        data = _.getAllDivisions();
-        data.done(function(d) {
+        _.getAllDivisions().done(function(d) {
+          console.log('getAllDivisions done');
           return collection.set(d);
         });
       }
@@ -37,58 +36,50 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz') {
-        data = _.getQuizByTextbookId(opts.textbook);
-        data.done(function(d) {
-          collection.set(d);
-          return App.request("app:reset:quiz:repository", d);
+        _.getQuizByTextbookId(opts.textbook).done(function(data) {
+          console.log('getQuizByTextbookId done');
+          collection.set(data);
+          return App.request("app:reset:quiz:repository", data);
         });
       }
       if (collection_name === 'quiz-response-summary') {
-        data = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id);
-        data.done(function(d) {
-          return collection.set(d);
+        this.p = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id);
+        this.p.done(function(data) {
+          console.log('getQuizResponseSummaryByCollectionIdAndUserID done');
+          return collection.set(data);
         });
       }
       if (collection_name === 'quiz-question-response') {
-        data = _.getQuizQuestionResponseBySummaryID(opts.summary_id);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getQuizQuestionResponseBySummaryID(opts.summary_id).done(function(data) {
+          console.log('getQuizQuestionResponseBySummaryID done');
+          return collection.set(data);
         });
       }
       if (collection_name === 'content-piece') {
-        data = _.getContentPiecesByIDs(opts.ids);
-        data.done(function(d) {
-          collection.set(d);
-          return App.request("app:reset:content:pieces:repository", d);
+        _.getContentPiecesByIDs(opts.ids).done(function(data) {
+          console.log(data);
+          console.log('getContentPiecesByIDs done');
+          collection.set(data);
+          return App.request("app:reset:content:pieces:repository", data);
         });
       }
       if (collection_name === 'user') {
-        data = _.getStudentsByDivision(opts.division);
-        data.done(function(d) {
-          return collection.set(d);
-        });
-      }
-      if (collection_name === 'question-response') {
-        data = _.getQuestionResponseByCollectionIdAndDivision(opts.collection_id, opts.division);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getStudentsByDivision(opts.division).done(function(data) {
+          return collection.set(data);
         });
       }
       if (collection_name === 'textbookName') {
-        data = _.getTextBookNamesByTermIDs(opts.term_ids);
-        data.done(function(d) {
-          return collection.set(d);
+        _.getTextBookNamesByTermIDs(opts.term_ids).done(function(data) {
+          return collection.set(data);
         });
       }
       if (collection_name === 'offlineUsers') {
-        data = _.getNamesOfAllOfflineUsers();
-        data.done(function(d) {
-          return collection.set(d);
+        _.getNamesOfAllOfflineUsers().done(function(data) {
+          return collection.set(data);
         });
       }
       if (collection_name === 'media') {
-        data = _.getListOfMediaByID(opts.ids);
-        data.done(function(d) {
+        _.getListOfMediaByID(opts.ids).done(function(d) {
           return collection.set(d);
         });
       }
@@ -147,21 +138,19 @@ define(["backbone"], function(Backbone) {
         console.log("model");
         console.log('Model name: ' + modelname);
         if (modelname === 'division') {
-          data = _.fetchSingleDivision(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          xhr = _.fetchSingleDivision(model.get('id')).done(function(data) {
+            return model.set(data);
           });
         }
         if (modelname === 'textbook') {
-          data = _.getTextBookByTextbookId(model.get('term_id'));
-          data.done(function(d) {
+          xhr = _.getTextBookByTextbookId(model.get('term_id')).done(function(d) {
             return model.set(d);
           });
         }
         if (modelname === 'quiz') {
-          data = _.getQuizById(model.get('id'));
-          data.done(function(d) {
-            return model.set(d);
+          xhr = _.getQuizById(model.get('id')).done(function(data) {
+            console.log(JSON.stringify(data));
+            return model.set(data);
           });
         }
         if (modelname === 'quiz-response-summary') {
@@ -171,8 +160,7 @@ define(["backbone"], function(Backbone) {
           _.writeQuestionResponse(model);
         }
         if (modelname === 'content-group') {
-          data = _.getContentGroupById(model.get('id'));
-          data.done(function(d) {
+          xhr = _.getContentGroupById(model.get('id')).done(function(d) {
             return model.set(d);
           });
         }
@@ -180,8 +168,7 @@ define(["backbone"], function(Backbone) {
           data = _.saveUpdateQuestionResponse(model);
         }
         if (modelname === 'media') {
-          data = _.getMediaById(model.get('id'));
-          data.done(function(d) {
+          xhr = _.getMediaById(model.get('id')).done(function(d) {
             return model.set(d);
           });
         }
