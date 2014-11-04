@@ -23,72 +23,79 @@ define ['app'
         Controller =
 
             dashboardRedirect:->
-                user = App.request "get:user:model"
+                
+                if $.allowRoute 'dashboard'
+                    if user.current_user_can('administrator') or user.current_user_can('school-admin')
+                        App.navigate('textbooks', trigger: true)
 
-                if not user.ID
-                    App.navigate 'login', trigger:true
-                    return false
+                    if user.current_user_can 'teacher'
+                        @teachersDashboard()  
 
-                if user.current_user_can('administrator') or user.current_user_can('school-admin')
-                    App.navigate('textbooks', trigger: true)
-
-                if user.current_user_can 'teacher'
-                    @teachersDashboard()  
-
-                if user.current_user_can 'student'
-                    @studentsDashboard()
+                    if user.current_user_can 'student'
+                        @studentsDashboard()
 
             teachersDashboard: ->
-                new TeachersDashboardApp.View.DashboardController
-                    region: App.mainContentRegion
+                if $.allowRoute 'dashboard'
+                    new TeachersDashboardApp.View.DashboardController
+                        region: App.mainContentRegion
 
             takeClass: (classID, div) ->
-                new TeachersDashboardApp.View.TakeClassController
-                    region: App.mainContentRegion
-                    classID: classID
-                    division: div
-                    mode: 'take-class'
+
+                if $.allowRoute 'dashboard'
+                    new TeachersDashboardApp.View.TakeClassController
+                        region: App.mainContentRegion
+                        classID: classID
+                        division: div
+                        mode: 'take-class'
 
             startTraining: (classID) ->
-                new TeachersDashboardApp.View.TakeClassController
-                    region      : App.mainContentRegion
-                    classID     : classID
-                    mode        : 'training'
+                if $.allowRoute 'dashboard'
+                    new TeachersDashboardApp.View.TakeClassController
+                        region      : App.mainContentRegion
+                        classID     : classID
+                        mode        : 'training'
 
             takeClassTextbookModules: (classID, div, tID) ->
-                new TeachersDashboardApp.View.textbookModulesController
-                    region      : App.mainContentRegion
-                    textbookID  : tID
-                    classID     : classID
-                    division    : div
-                    mode        : 'take-class'
+
+                if $.allowRoute 'dashboard'
+                    new TeachersDashboardApp.View.textbookModulesController
+                        region      : App.mainContentRegion
+                        textbookID  : tID
+                        classID     : classID
+                        division    : div
+                        mode        : 'take-class'
 
             startTrainingTextbookModules: (classID, tID) ->
-                new TeachersDashboardApp.View.textbookModulesController
-                    region      : App.mainContentRegion
-                    textbookID  : tID
-                    classID     : classID
-                    mode        : 'training'
+
+                if $.allowRoute 'dashboard'
+                    new TeachersDashboardApp.View.textbookModulesController
+                        region      : App.mainContentRegion
+                        textbookID  : tID
+                        classID     : classID
+                        mode        : 'training'
 
             studentsDashboard: ->
 
-                division = App.request "get:user:data","division"
+                if $.allowRoute 'dashboard'
+                    division = App.request "get:user:data","division"
 
-                App.execute "show:take:class:textbooks:app",
-                    region: App.mainContentRegion,
-                    division: division
-                    mode        : 'take-quiz'
+                    App.execute "show:take:class:textbooks:app",
+                        region: App.mainContentRegion,
+                        division: division
+                        mode        : 'take-quiz'
 
 
             studentsQuizModules: (tID) ->
+                
+                if $.allowRoute 'dashboard'
 
-                division = App.request "get:user:data","division"
+                    division = App.request "get:user:data","division"
 
-                new TeachersDashboardApp.View.textbookModulesController
-                    region      : App.mainContentRegion
-                    textbookID  : tID
-                    division    : division
-                    mode        : 'take-quiz'
+                    new TeachersDashboardApp.View.textbookModulesController
+                        region      : App.mainContentRegion
+                        textbookID  : tID
+                        division    : division
+                        mode        : 'take-quiz'
 
         TeachersDashboardApp.on "start", ->
             new TeachersDashboardRouter
