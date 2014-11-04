@@ -95,7 +95,9 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.onShow = function() {
         var term_ids;
-        $(".filters select").select2();
+        this.$el.find(".select2-filters").select2({
+          minimumResultsForSearch: -1
+        });
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');

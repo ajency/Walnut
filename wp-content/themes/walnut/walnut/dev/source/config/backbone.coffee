@@ -37,7 +37,10 @@ define ["backbone"], (Backbone) ->
 				_.cordovaContentGroupCollection(opts.textbook, opts.division)
 				.done (contentGroups)->
 					console.log 'cordovaContentGroupCollection done'
-					collection.set contentGroups.reverse()
+					contentGroups = contentGroups.reverse()
+					collection.set contentGroups
+
+					App.request "app:reset:content:modules:repo", contentGroups
 
 			if collection_name is 'content-piece'
 				_.cordovaContentPieceCollection(opts.ids).done (contentPieces)->

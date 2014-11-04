@@ -32,7 +32,9 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-group') {
         _.cordovaContentGroupCollection(opts.textbook, opts.division).done(function(contentGroups) {
           console.log('cordovaContentGroupCollection done');
-          return collection.set(contentGroups.reverse());
+          contentGroups = contentGroups.reverse();
+          collection.set(contentGroups);
+          return App.request("app:reset:content:modules:repo", contentGroups);
         });
       }
       if (collection_name === 'content-piece') {

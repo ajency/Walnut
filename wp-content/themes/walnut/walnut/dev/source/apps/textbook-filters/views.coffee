@@ -142,8 +142,11 @@ define ['app'], (App)->
 
             onShow:->
 
-                $ ".filters select"
-                .select2();
+                # $ ".filters select"
+                # .select2();
+
+                @$el.find ".select2-filters"
+                .select2 minimumResultsForSearch: -1
 
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 

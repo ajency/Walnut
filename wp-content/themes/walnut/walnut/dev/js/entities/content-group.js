@@ -157,8 +157,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("create:dummy:content:module", function(content_piece_id) {
       return API.getDummyModules(content_piece_id);
     });
-    return App.reqres.setHandler("get:content:modules:repository", function() {
+    App.reqres.setHandler("get:content:modules:repository", function() {
       return contentModulesRepository.clone();
+    });
+    return App.reqres.setHandler("app:reset:content:modules:repo", function(contentGroups) {
+      return contentModulesRepository.reset(contentGroups);
     });
   });
 });

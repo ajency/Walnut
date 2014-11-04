@@ -216,7 +216,9 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         console.log(this.fullCollection);
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
-        this.$el.find(".select2-filters").select2();
+        this.$el.find(".select2-filters").select2({
+          minimumResultsForSearch: -1
+        });
         $('#take-class-modules').tablesorter();
         pagerOptions = {
           container: $(".pager"),

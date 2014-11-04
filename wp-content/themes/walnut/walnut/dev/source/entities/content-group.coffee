@@ -137,3 +137,9 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:content:modules:repository",->
             contentModulesRepository.clone()
+
+        App.reqres.setHandler "app:reset:content:modules:repo", (contentGroups)->
+            contentModulesRepository.reset contentGroups
+
+
+

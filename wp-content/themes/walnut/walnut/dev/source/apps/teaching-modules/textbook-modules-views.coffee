@@ -240,8 +240,11 @@ define ['app',
 				@$el.find '#textbook-filters'
 				.html textbookFiltersHTML
 
+				# @$el.find ".select2-filters"
+				# .select2()
+
 				@$el.find ".select2-filters"
-				.select2()
+				.select2 minimumResultsForSearch: -1
 
 				$('#take-class-modules').tablesorter();
 
