@@ -142,6 +142,8 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
       Controller.prototype._getAnswerStatus = function(recievedMarks, totalMarks) {
         var status;
         status = 'wrong_answer';
+        recievedMarks = parseFloat(recievedMarks);
+        totalMarks = parseFloat(totalMarks);
         if (recievedMarks === totalMarks) {
           status = 'correct_answer';
         }
