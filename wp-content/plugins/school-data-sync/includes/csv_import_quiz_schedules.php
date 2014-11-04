@@ -28,11 +28,11 @@ function sds_validate_quiz_schedule_csv_row( $quiz_schedule ) {
     if (!is_array( $quiz_schedule ))
         return new WP_Error("", "Not a valid record");
 
-    if($quiz_schedule [0] == 'id')
+    if($quiz_schedule [0] == 'quiz_id')
         return false;
         
     // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $quiz_schedule ) !== 5)
+    if (count( $quiz_schedule ) !== 4)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid
@@ -57,7 +57,8 @@ function sds_convert_csv_row_to_quiz_schedule_format( $quiz_schedule ) {
         'quiz_id' 		=> $quiz_schedule[0],
         'division_id' 	=> $quiz_schedule[1],
         'schedule_from' => $quiz_schedule[2],
-        'schedule_to' 	=> $quiz_schedule[3]
+        'schedule_to' 	=> $quiz_schedule[3],
+        'sync'          => 1
     );
 }
 

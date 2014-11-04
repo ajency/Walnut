@@ -175,7 +175,8 @@ function create_custom_tables(){
       `quiz_id` int(11) NOT NULL,
       `division_id` int(11) NOT NULL,
       `schedule_from` date NOT NULL,
-      `schedule_to` date NOT NULL
+      `schedule_to` date NOT NULL,              
+      `sync` int(1)
     )";
 
   $wpdb->query( $quiz_schedules_table );

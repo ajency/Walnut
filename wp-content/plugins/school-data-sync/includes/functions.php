@@ -230,7 +230,7 @@ function sds_get_tables_to_export($last_sync=''){
         );
 
     $tables_list[]= array(
-        'query'=> "SELECT * FROM $quiz_schedules_table",
+        'query'=> "SELECT * FROM $quiz_schedules_table WHERE sync = 0",
         'table_name'=> $quiz_schedules_table
         );    
     
