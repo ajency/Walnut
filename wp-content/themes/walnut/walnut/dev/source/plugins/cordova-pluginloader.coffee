@@ -39,5 +39,6 @@ define [
     'json2csvparse'
     'jszip'
     'fastclick'
+    'bootbox'
     'walnutGlobal'
 ], ->

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/login/templates/login.html', 'bootbox', 'apps/login/resetpasswordapp'], function(App, RegionController, loginTpl, bootbox) {
+define(['app', 'controllers/region-controller', 'text!apps/login/templates/login.html'], function(App, RegionController, loginTpl) {
   return App.module("LoginApp.Controller", function(Controller, App) {
     var LoginView;
     Controller.LoginController = (function(_super) {
@@ -21,12 +21,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         App.headerRegion.close();
         App.mainContentRegion.close();
         App.breadcrumbRegion.close();
-        this.listenTo(view, 'authenticate:user', this.authenticateUser);
-        this.listenTo(view, 'reset:password', function() {
-          return App.execute("show:reset:password:popup", {
-            region: App.dialogRegion
-          });
-        });
         this.view = view = this._getLoginView();
         this.listenTo(view, 'authenticate:user', this.authenticateUser);
         this.listenTo(view, 'prepopulate:username', this.prepopulateUsername);
@@ -109,10 +103,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       LoginView.prototype.className = '';
 
       LoginView.prototype.events = {
-        'click #login-submit': 'submitLogin',
-        'click .reset-password': function() {
-          return this.trigger("reset:password");
-        }
+        'click #login-submit': 'submitLogin'
       };
 
       LoginView.prototype.onShow = function() {

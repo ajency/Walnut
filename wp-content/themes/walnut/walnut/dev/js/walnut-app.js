@@ -29,7 +29,7 @@ define(['marionette'], function(Marionette) {
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
   });
-  App.on("initialize:after", function(options) {
+  App.addInitializer(function(options) {
     var onDeviceReady, user;
     App.startHistory();
     if (_.platform() === 'DEVICE') {

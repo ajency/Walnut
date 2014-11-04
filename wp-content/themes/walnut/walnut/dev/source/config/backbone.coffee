@@ -42,6 +42,7 @@ define ["backbone"], (Backbone) ->
 			if collection_name is 'content-piece'
 				_.cordovaContentPieceCollection(opts.ids).done (contentPieces)->
 					console.log 'cordovaContentPieceCollection done'
+					console.log contentPieces
 					collection.set contentPieces
 
 			if collection_name is 'user'

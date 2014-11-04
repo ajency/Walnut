@@ -30,7 +30,7 @@
 		tablesorter: 'plugins/jquery.tablesorter',
 		tablesorter_pager: 'plugins/jquery.tablesorter.pager',
 		moment: 'plugins/moment.min',
-		select2             : 'plugins/select2.min',
+		select2             : 'plugins/select2',
 		datepicker          : 'plugins/bootstrap-datepicker',
 		timepicker          : 'plugins/bootstrap-timepicker.min',
 		jquery_listnav      : 'plugins/jquery-listnav',
@@ -51,7 +51,8 @@
 		json2csvparse       : 'plugins/json2csv',
 		jszip               : 'plugins/jszip',
 		fastclick           : 'plugins/fastclick',
-		walnutGlobal        : 'plugins/walnutapp-global'
+		walnutGlobal        : 'plugins/walnutapp-global',
+		bootbox 			: 'plugins/bootbox.min'
 	},
 	shim: {
 		underscore: {
@@ -94,6 +95,7 @@
 		countdowntimer: ['jquery','timerplugin'],
 		spinedit        : ['jquery','bootstrap'],
 		json2csvparse   : ['jquery'],
+		bootbox : ['jquery','bootstrap'],
 		app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
 	}
 })

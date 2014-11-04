@@ -12,7 +12,7 @@ define [
     'entities/question-response'
     'entities/content-creator/element'
     'entities/content-creator/media'
-    'entities/content-creator/hotspotelement'
+    # 'entities/content-creator/hotspotelement'
     'entities/content-creator/questionelement'
     'entities/content-creator/option'
     'entities/content-creator/json'

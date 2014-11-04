@@ -38,6 +38,7 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'content-piece') {
         _.cordovaContentPieceCollection(opts.ids).done(function(contentPieces) {
           console.log('cordovaContentPieceCollection done');
+          console.log(contentPieces);
           return collection.set(contentPieces);
         });
       }

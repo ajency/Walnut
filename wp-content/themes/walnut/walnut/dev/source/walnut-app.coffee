@@ -40,7 +40,7 @@ define ['marionette'], (Marionette)->
 	App.commands.setHandler "unregister:instance", (instance, id) ->
 		App.unregister instance, id
 
-	App.on "initialize:after", (options) ->
+	App.addInitializer (options) ->
 
 		App.startHistory()
 

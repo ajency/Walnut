@@ -26,7 +26,7 @@ require.config({
     unveil: 'plugins/jquery.unveil.min',
     detect: 'plugins/detect',
     moment: 'plugins/moment.min',
-    select2: 'plugins/select2.min',
+    select2: 'plugins/select2',
     datepicker: 'plugins/bootstrap-datepicker',
     timepicker: 'plugins/bootstrap-timepicker.min',
     jquery_listnav: 'plugins/jquery-listnav',
@@ -45,6 +45,7 @@ require.config({
     json2csvparse: 'plugins/json2csv',
     jszip: 'plugins/jszip',
     fastclick: 'plugins/fastclick',
+    bootbox: 'plugins/bootbox.min',
     walnutGlobal: 'plugins/walnutapp-global'
   },
   shim: {
@@ -87,6 +88,7 @@ require.config({
     countdowntimer: ['jquery', 'timerplugin'],
     spinedit: ['jquery', 'bootstrap'],
     json2csvparse: ['jquery'],
+    bootbox: ['jquery', 'bootstrap'],
     app: ['plugins/cordova-pluginloader', 'config/walnut-configloader']
   }
 });
