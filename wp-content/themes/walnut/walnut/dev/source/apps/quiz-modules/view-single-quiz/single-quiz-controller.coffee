@@ -125,7 +125,7 @@ define ['app'
 
                 @summary_data= 
                     'collection_id' : quizModel.get 'id'
-                    'student_id'    : App.request "get:loggedin:user:id"
+                    'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
                     'taken_on'      : moment().format("YYYY-MM-DD")
 
                 quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
@@ -188,13 +188,16 @@ define ['app'
                     defer.resolve()
                     return defer.promise()
 
+                #userid fetched from LS and when fetched changed for student app DEVICE
+
                 @summary_data= 
                     'collection_id' : quizModel.get 'id'
-                    'student_id'    : App.request "get:loggedin:user:id"
+                    'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
                     'taken_on'      : moment().format("YYYY-MM-DD")
 
                 quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
-                App.execute "when:fetched", quizResponseSummaryCollection, =>
+                # App.execute "when:fetched", quizResponseSummaryCollection, =>
+                quizResponseSummaryCollection.p.done =>
 
                     if quizResponseSummaryCollection.length>0
                         quizResponseSummary= quizResponseSummaryCollection.last()

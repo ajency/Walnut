@@ -296,7 +296,6 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 
-
 				else
 					defer.resolve content
 

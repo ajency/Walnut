@@ -43,7 +43,8 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz-response-summary') {
-        _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id).done(function(data) {
+        this.p = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id);
+        this.p.done(function(data) {
           console.log('getQuizResponseSummaryByCollectionIdAndUserID done');
           return collection.set(data);
         });
@@ -148,8 +149,8 @@ define(["backbone"], function(Backbone) {
         }
         if (modelname === 'quiz') {
           xhr = _.getQuizById(model.get('id')).done(function(data) {
-            model.set(data);
-            return console.log(JSON.stringify(data));
+            console.log(JSON.stringify(data));
+            return model.set(data);
           });
         }
         if (modelname === 'quiz-response-summary') {

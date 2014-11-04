@@ -11,9 +11,12 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
         } else {
           forEach = function(row, i) {
             return _.getQuizResponseSummaryByCollectionId(collection_id).then(function(quiz_responses) {
+              console.log(quiz_responses);
               return _.getCountForSkippedQuestion(row['summary_id']).then(function(skipped) {
+                console.log(skipped);
                 return _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id']).then(function(value) {
                   var quiz_meta, userID;
+                  console.log(value);
                   userID = _.getUserID();
                   quiz_meta = _.unserialize(row['quiz_meta']);
                   result[i] = {

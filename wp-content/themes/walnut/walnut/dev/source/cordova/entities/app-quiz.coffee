@@ -492,7 +492,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						result = ''
 						defer.resolve(result)
 					else
-						console.log "getStartDateAndStatus done"
+						console.log "getQuizResponseSummaryByCollectionId done"
 						defer.resolve(result)
 
 			_.db.transaction (tx)->
@@ -568,7 +568,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							total_minutes: row['duration']
 							type: row['type']
 						
-						console.log "getStartDateAndStatus done"
+						console.log "getQuizById done"
 						defer.resolve result
 
 

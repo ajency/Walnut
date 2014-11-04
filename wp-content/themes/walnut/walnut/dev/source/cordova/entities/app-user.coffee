@@ -11,21 +11,27 @@ define ['underscore'], ( _) ->
 			onSuccess = (tx, data)->
 
 				result = []
+				
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
 
-				forEach = (row,i)->
-
-					result[i] = 
-						ID: row['ID']
-						display_name: row['display_name']
-						user_email: row['user_email']
-						profile_pic: '/images/avtar.png'
+					forEach = (row,i)->
 
 
-					i = i + 1
-					if (i < data.rows.length)
-						forEach data.rows.item(i), i
-					else
-						defer.resolve result
+						result[i] = 
+							ID: row['ID']
+							display_name: row['display_name']
+							user_email: row['user_email']
+							profile_pic: '/images/avtar.png'
+
+
+						i = i + 1
+						if (i < data.rows.length)
+							forEach data.rows.item(i), i
+						else
+							defer.resolve result
 
 
 				forEach data.rows.item(0), 0
@@ -33,8 +39,10 @@ define ['underscore'], ( _) ->
 			_.db.transaction (tx)->
 				
 				tx.executeSql "SELECT * FROM wp_users u INNER JOIN wp_usermeta um 
-					ON u.ID=um.user_id AND um.meta_key='student_division' AND um.meta_value=?"
-					, [division]
+								ON u.ID=um.user_id 
+								AND um.meta_key='student_division' 
+								AND um.meta_value=?"
+								, [division]
 				, onSuccess, _.transactionErrorHandler
 
 
@@ -48,7 +56,13 @@ define ['underscore'], ( _) ->
 
 			onSuccess =(tx, data)->
 
-					result = []
+
+				result = []
+
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
 
 					forEach = (row,i)->
 						
@@ -67,7 +81,7 @@ define ['underscore'], ( _) ->
 			
 			_.db.transaction (tx)->
 				tx.executeSql "SELECT username FROM USERS"
-					, []
+								, []
 				, onSuccess, _.transactionErrorHandler
 
 			defer.promise()

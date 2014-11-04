@@ -19,13 +19,16 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					forEach = (row, i)->
 						_.getQuizResponseSummaryByCollectionId(collection_id)
 						.then (quiz_responses)->
+
+							console.log quiz_responses
 							
 							_.getCountForSkippedQuestion(row['summary_id'])
 							.then (skipped)->
-
+								console.log skipped
 										
 								_.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
 								.then (value)->
+									console.log value
 									userID = _.getUserID()
 									quiz_meta = _.unserialize(row['quiz_meta'])
 
@@ -66,7 +69,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 								WHERE collection_id=? 
 								AND student_id=?"
 								, [collection_id, _.getUserID()] 
-				, onSuccess, _.transactionErrorHandler
+				,onSuccess, _.transactionErrorHandler
 
 
 
@@ -87,9 +90,9 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					
 			_.db.transaction (tx)->
 				tx.executeSql "SELECT COUNT(status) AS num_skipped 
-					FROM "+_.getTblPrefix()+"quiz_question_response 
-					WHERE status = ? AND summary_id = ?"
-					, ['skipped', summary_id]
+								FROM "+_.getTblPrefix()+"quiz_question_response 
+								WHERE status = ? AND summary_id = ?"
+								, ['skipped', summary_id]
 				, onSuccess, _.transactionErrorHandler
 
 			defer.promise()

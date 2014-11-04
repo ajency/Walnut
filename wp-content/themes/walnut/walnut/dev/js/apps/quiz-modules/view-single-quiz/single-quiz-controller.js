@@ -143,7 +143,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         });
         this.summary_data = {
           'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id"),
+          'student_id': _.getUserID(),
           'taken_on': moment().format("YYYY-MM-DD")
         };
         quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
@@ -204,11 +204,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         }
         this.summary_data = {
           'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id"),
+          'student_id': _.getUserID(),
           'taken_on': moment().format("YYYY-MM-DD")
         };
         quizResponseSummaryCollection = App.request("get:quiz:response:summary", this.summary_data);
-        App.execute("when:fetched", quizResponseSummaryCollection, (function(_this) {
+        quizResponseSummaryCollection.p.done((function(_this) {
           return function() {
             if (quizResponseSummaryCollection.length > 0) {
               quizResponseSummary = quizResponseSummaryCollection.last();

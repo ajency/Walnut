@@ -21,6 +21,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 						
 						_.getTotalMarksScoredAndTotalTimeTaken(summary_id)
 						.then (value)->
+							console.log value
 
 							result[i] = 
 								content_piece_id : row['content_piece_id']
@@ -33,14 +34,14 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 						
 						
 
-						i = i + 1
+							i = i + 1
 
-						if ( i < data.rows.length)
-							forEach data.rows.item(i), i
+							if ( i < data.rows.length)
+								forEach data.rows.item(i), i
 
-						else
-							console.log "getQuizQuestionResponseBySummaryID done"
-							defer.resolve result
+							else
+								console.log "getQuizQuestionResponseBySummaryID done"
+								defer.resolve result
 
 					forEach data.rows.item(0), 0
 

@@ -54,8 +54,8 @@ define ["backbone"], (Backbone) ->
 					App.request "app:reset:quiz:repository", data
 
 			if collection_name is 'quiz-response-summary'
-				_.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
-				.done (data)->
+				@p = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)
+				@p.done (data)->
 					console.log 'getQuizResponseSummaryByCollectionIdAndUserID done'
 					collection.set data
 
@@ -234,8 +234,9 @@ define ["backbone"], (Backbone) ->
 				if modelname is 'quiz'
 					xhr = _.getQuizById(model.get('id'))
 					.done (data)->
-						model.set data
 						console.log JSON.stringify data
+						model.set data
+						
 
 				if modelname is 'quiz-response-summary'
 					_.writeQuizResponseSummary(model)

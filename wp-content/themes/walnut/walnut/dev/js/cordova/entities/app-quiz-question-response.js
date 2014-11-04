@@ -10,8 +10,9 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
           return defer.resolve(result);
         } else {
           forEach = function(row, i) {
-            _.getTotalMarksScoredAndTotalTimeTaken(summary_id).then(function(value) {
-              return result[i] = {
+            return _.getTotalMarksScoredAndTotalTimeTaken(summary_id).then(function(value) {
+              console.log(value);
+              result[i] = {
                 content_piece_id: row['content_piece_id'],
                 marks_scored: value.total_marks_scored,
                 qr_id: row['qr_id'],
@@ -20,14 +21,14 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
                 summary_id: summary_id,
                 time_taken: value.total_time_taken
               };
+              i = i + 1;
+              if (i < data.rows.length) {
+                return forEach(data.rows.item(i), i);
+              } else {
+                console.log("getQuizQuestionResponseBySummaryID done");
+                return defer.resolve(result);
+              }
             });
-            i = i + 1;
-            if (i < data.rows.length) {
-              return forEach(data.rows.item(i), i);
-            } else {
-              console.log("getQuizQuestionResponseBySummaryID done");
-              return defer.resolve(result);
-            }
           };
           return forEach(data.rows.item(0), 0);
         }

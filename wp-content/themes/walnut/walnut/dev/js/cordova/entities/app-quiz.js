@@ -345,7 +345,7 @@ define(['underscore', 'unserialize'], function(_) {
           result = '';
           return defer.resolve(result);
         } else {
-          console.log("getStartDateAndStatus done");
+          console.log("getQuizResponseSummaryByCollectionId done");
           return defer.resolve(result);
         }
       };
@@ -404,7 +404,7 @@ define(['underscore', 'unserialize'], function(_) {
               total_minutes: row['duration'],
               type: row['type']
             };
-            console.log("getStartDateAndStatus done");
+            console.log("getQuizById done");
             return defer.resolve(result);
           });
         });

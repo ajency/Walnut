@@ -6,20 +6,24 @@ define(['underscore'], function(_) {
       onSuccess = function(tx, data) {
         var forEach, result;
         result = [];
-        forEach = function(row, i) {
-          result[i] = {
-            ID: row['ID'],
-            display_name: row['display_name'],
-            user_email: row['user_email'],
-            profile_pic: '/images/avtar.png'
+        if (data.rows.length === 0) {
+          defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
+            result[i] = {
+              ID: row['ID'],
+              display_name: row['display_name'],
+              user_email: row['user_email'],
+              profile_pic: '/images/avtar.png'
+            };
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              return defer.resolve(result);
+            }
           };
-          i = i + 1;
-          if (i < data.rows.length) {
-            return forEach(data.rows.item(i), i);
-          } else {
-            return defer.resolve(result);
-          }
-        };
+        }
         return forEach(data.rows.item(0), 0);
       };
       _.db.transaction(function(tx) {
@@ -33,19 +37,23 @@ define(['underscore'], function(_) {
       onSuccess = function(tx, data) {
         var forEach, result;
         result = [];
-        forEach = function(row, i) {
-          result[i] = {
-            username: data.rows.item(i)['username']
+        if (data.rows.length === 0) {
+          return defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
+            result[i] = {
+              username: data.rows.item(i)['username']
+            };
+            console.log(JSON.stringify(result[i]));
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              return defer.resolve(result);
+            }
           };
-          console.log(JSON.stringify(result[i]));
-          i = i + 1;
-          if (i < data.rows.length) {
-            return forEach(data.rows.item(i), i);
-          } else {
-            return defer.resolve(result);
-          }
-        };
-        return forEach(data.rows.item(0), 0);
+          return forEach(data.rows.item(0), 0);
+        }
       };
       _.db.transaction(function(tx) {
         return tx.executeSql("SELECT username FROM USERS", [], onSuccess, _.transactionErrorHandler);
