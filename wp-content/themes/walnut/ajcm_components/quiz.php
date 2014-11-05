@@ -118,8 +118,9 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
 
             'rcpt'=>$user->value,
             'vars' => $overwrite_vars
-        ) ;			
-    }
+        ) ;	
+        
+        }
 
 	restore_current_blog();
 

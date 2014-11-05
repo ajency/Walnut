@@ -21,7 +21,7 @@ define ['app', 'controllers/element-controller'
 
                 # # on show disable all question elements in d element box
                 @eventObj.vent.trigger "question:element:added" if modelData.element in
-                  ['Mcq', 'Fib', 'Sort', 'Hotspot', 'BigAnswer', 'TeacherQuestion']
+                  ['Mcq', 'Fib', 'Sort', 'Hotspot', 'BigAnswer']
 
                 element = App.request "create:new:element", modelData
 

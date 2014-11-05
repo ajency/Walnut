@@ -39,6 +39,7 @@ function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 }
 
 function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
+        global $aj_comm;
     
 	$template_data['name'] 		= 'taught-in-class-parent-mail';
 
@@ -74,6 +75,12 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 	        if(!empty($child)){
                     foreach($child as $child_val){
 	        	$studentdata 	= get_userdata($child_val);
+                        $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
+                        $student_division = get_user_meta($studentdata->ID,'student_division', true);
+                        
+                        if($division != $student_division)
+                            continue;
+                        
                         if($student_name != ''){
                             $student_name .= ',';
                         }
