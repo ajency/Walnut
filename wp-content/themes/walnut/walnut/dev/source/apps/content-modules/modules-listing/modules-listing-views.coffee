@@ -46,7 +46,7 @@ define ['app'
                         data.duration
 
                 if @groupType is 'quiz'
-                    data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Quiz'
+                    data.quiz_type = @model.getQuizTypeLabel()
                     data.view_url = SITEURL + "/#view-quiz/#{data.id}"
                     data.edit_url = SITEURL + "/#edit-quiz/#{data.id}"
 
