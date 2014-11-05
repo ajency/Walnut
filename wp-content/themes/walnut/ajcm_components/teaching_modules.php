@@ -61,6 +61,15 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 
 	        $child = get_user_meta($user_value->user_id, 'parent_of', true);
 
+                if(! is_array($child)){
+                    $temp = $child;
+                    $child= array();
+                    if($temp != ''){
+                       array_push($child, (string)$temp);
+                   }
+
+                }      
+                
                 $student_name = '';
 	        if(!empty($child)){
                     foreach($child as $child_val){
