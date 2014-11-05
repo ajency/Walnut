@@ -41,7 +41,7 @@ define ['app'], (App)->
 
                                     {{#post_status_filter}}
                                     <select class="select2-filters selectFilter" id="content-post-status-filter">
-                                        <option value="">All Status</option>
+                                        <option value="any">All Status</option>
                                         <option value="pending">Under Review</option>
                                         <option value="publish">Published</option>
                                         <option value="archive">Archived</option>
@@ -50,7 +50,7 @@ define ['app'], (App)->
 
                                     {{#module_status_filter}}
                                     <select class="select2-filters selectFilter" id="content-post-status-filter">
-                                        <option value="">All Status</option>
+                                        <option value="any">All Status</option>
                                         <option value="underreview">Under Review</option>
                                         <option value="publish">Published</option>
                                         <option value="archive">Archived</option>
