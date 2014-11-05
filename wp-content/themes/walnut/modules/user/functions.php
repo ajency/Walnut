@@ -96,7 +96,7 @@ function get_user_by_id( $id ) {
     $user_data['role']          = $user->roles;
     $user_data['user_email']    = $user->user_email;
     $user_data['user_email']    = $user->user_email;
-    $user_data['roll_no']       = get_user_meta($id, 'student_rollno', true);
+    $user_data['roll_no']       = get_user_meta($id, 'roll_no', true);
 
     $user_data['profile_pic']   = get_site_url( 1 ) . '/wp-content/themes/walnut/images/avtar.png';
 
@@ -116,7 +116,7 @@ function user_extend_profile_fields($user){
     $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
     $user_divisions = maybe_unserialize(get_user_meta( $user->ID, 'divisions',true));
     $user_student_division = maybe_unserialize(get_user_meta( $user->ID, 'student_division',true));
-    $user_student_rollno = get_user_meta( $user->ID, 'student_rollno',true);
+    $user_student_rollno = get_user_meta( $user->ID, 'roll_no',true);
     $user_student_parentemail1 = get_user_meta( $user->ID, 'parent_email1',true);
     $user_student_parentemail2 = get_user_meta( $user->ID, 'parent_email2',true);
     $user_student_parentemail3 = get_user_meta( $user->ID, 'parent_email3',true);
@@ -341,7 +341,7 @@ function user_extend_profile_fields_save($user_id) {
     }
     
     if(isset($_POST['student_rollno']) && $_POST['student_rollno'] !=''){
-        update_user_meta( $user_id, 'student_rollno', intval($_POST['student_rollno']) );
+        update_user_meta( $user_id, 'roll_no', intval($_POST['student_rollno']) );
     }
    
     for($i=1;$i<=2;$i++){

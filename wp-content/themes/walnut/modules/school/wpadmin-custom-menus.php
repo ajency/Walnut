@@ -115,7 +115,7 @@ function import_student_csv($file_path){
             continue;
         }
         
-	$user_table = $wpdb->prefix ."users";
+	$user_table = $wpdb->base_prefix ."users";
         $user_pass = "ajency";
         $user_login = $csvData[$i][0];
         $first_name = $csvData[$i][1];
@@ -134,7 +134,7 @@ function import_student_csv($file_path){
 
         //Check if $user_email is present in users table
         $userExists = $wpdb->get_row( "select * from $user_table where user_email ='" . $user_email . "' OR user_login ='" . $user_login . "' "  );
-		
+	
 		if( $userExists != null ){ 
 		
 			$user_id = $userExists->ID; 
