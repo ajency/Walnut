@@ -102,12 +102,15 @@ function get_parent_recipients($division){
     $recipients= array();
 
     foreach($parents as $parent){
-
-        $recipients[] = array(                
-                'user_id'   => $parent->ID,
-                'type'      => 'email',
-                'value'     => $parent->user_email
-            );
+                foreach($parents as $student_parents){
+                    foreach($student_parents as $user){
+                        $recipients[] = array(                
+                                'user_id'   => $user->ID,
+                                'type'      => 'email',
+                                'value'     => $user->user_email
+                            ); 
+                    }
+                }
     }
 
     return $recipients;
