@@ -347,8 +347,14 @@ function user_extend_profile_fields_save($user_id) {
     for($i=1;$i<=2;$i++){
              if(isset($_POST['parent_email_'.$i]) && $_POST['parent_email_'.$i] !=''){
                  if( $parent_id = email_exists( $_POST['parent_email_'.$i] )) {
-                     update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
                      
+                     $saved_parent_email = get_user_meta($user_id, 'parent_email'.$i,true);
+                     if($saved_parent_email != '' && $saved_parent_email != $_POST['parent_email_'.$i]){
+                         unset_userid_parent_of_meta($saved_parent_email,$user_id);
+                     }
+                     
+                     update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
+                         
                      $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
                      
                         if(! is_array($parent_of_meta)){
@@ -360,7 +366,7 @@ function user_extend_profile_fields_save($user_id) {
 
                         }
                         
-                     array_push($parent_of_meta, $user_id);
+                     array_push($parent_of_meta, (string)$user_id);
                      $parent_of_meta = array_unique($parent_of_meta);                     
                      update_user_meta( $parent_id, 'parent_of', $parent_of_meta );
                     }
@@ -391,7 +397,7 @@ function user_extend_profile_fields_save($user_id) {
 
                         }
                         
-                     array_push($parent_of_meta, $user_id);
+                     array_push($parent_of_meta, (string)$user_id);
                      $parent_of_meta = array_unique($parent_of_meta);                     
                      update_user_meta( $new_parent_id, 'parent_of', $parent_of_meta );
 
@@ -612,7 +618,7 @@ function set_meta_user_activation($user_id, $password, $meta)
                }
                 
             }
-            array_push($parent_of_meta, $user_id);
+            array_push($parent_of_meta, (string)$user_id);
             $parent_of_meta = array_unique($parent_of_meta);            
             update_usermeta( $user_meta[$value], 'parent_of', $parent_of_meta );
         }
@@ -681,6 +687,26 @@ function getLoggedInUserModel(){
 
     return $userModel;
     
+}
+
+function unset_userid_parent_of_meta($parent_email,$user_id){
+    $parent_id = email_exists($parent_email);
+    if($parent_id){
+        $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
+        if(! is_array($parent_of_meta)){
+            $temp = $parent_of_meta;
+            $parent_of_meta= array();
+            if($temp != ''){
+               array_push($parent_of_meta, (string)$temp);
+           }
+
+        }
+        
+        if(($key = array_search($user_id, $parent_of_meta)) !== false) {
+            unset($parent_of_meta[$key]);
+        }
+        update_usermeta( $parent_id, 'parent_of', $parent_of_meta );
+    }
 }
 
 //////custom logo on login page//////
