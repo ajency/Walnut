@@ -27,7 +27,7 @@ define ['app'
                 user = App.request "get:user:model"
 
                 if $.allowRoute 'dashboard'
-                    if user.current_user_can('administrator') or user.current_user_can('school-admin')
+                    if user.current_user_can('administrator') or user.current_user_can('school-admin') or user.current_user_can('content-creator')
                         App.navigate('textbooks', trigger: true)
 
                     if user.current_user_can 'teacher'
