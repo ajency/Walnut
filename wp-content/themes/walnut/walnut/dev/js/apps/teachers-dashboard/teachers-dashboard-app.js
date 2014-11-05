@@ -30,7 +30,7 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
         var user;
         user = App.request("get:user:model");
         if ($.allowRoute('dashboard')) {
-          if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+          if (user.current_user_can('administrator') || user.current_user_can('school-admin') || user.current_user_can('content-creator')) {
             App.navigate('textbooks', {
               trigger: true
             });

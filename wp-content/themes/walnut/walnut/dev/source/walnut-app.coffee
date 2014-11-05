@@ -59,7 +59,7 @@ define ['marionette'], (Marionette)->
     App.vent.on "show:dashboard", (user_role) =>
         user = App.request "get:user:model"
 
-        if user.current_user_can('administrator') or user.current_user_can('school-admin')
+        if user.current_user_can('administrator') or user.current_user_can('school-admin') or user.current_user_can('content-creator')
             App.navigate('textbooks', trigger: true)
 
         if user.current_user_can 'teacher'
