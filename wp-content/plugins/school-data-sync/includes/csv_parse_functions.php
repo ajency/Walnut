@@ -777,8 +777,8 @@ function sds_posts_exists( $posts_data ) {
     $id= $posts_data['ID'];
 
     $query = $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}posts
-        WHERE ID like %s",
-        array($id)
+        WHERE ID like %s AND post_type NOT like %s",
+        array($id,'page')
     );
     $record = $wpdb->get_var( $query );
 
