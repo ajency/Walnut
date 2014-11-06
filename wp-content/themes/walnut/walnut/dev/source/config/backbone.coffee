@@ -60,15 +60,14 @@ define ["backbone"], (Backbone) ->
 					collection.set data
 
 			if collection_name is 'quiz-question-response'
-				_.getQuizQuestionResponseBySummaryID(opts.summary_id)
-				.done (data)->
+				@p = _.getQuizQuestionResponseBySummaryID(opts.summary_id)
+				@p.done (data)->
 					console.log 'getQuizQuestionResponseBySummaryID done'
 					collection.set data
 
 			if collection_name is 'content-piece'
-				_.getContentPiecesByIDs(opts.ids)
-				.done (data)->
-					console.log data
+				@p = _.getContentPiecesByIDs(opts.ids)
+				@p.done (data)->
 					console.log 'getContentPiecesByIDs done'
 					collection.set data
 
@@ -93,8 +92,8 @@ define ["backbone"], (Backbone) ->
 					collection.set data
 
 			if collection_name is 'media'
-				_.getListOfMediaByID(opts.ids)
-				.done (d)->
+				@p = _.getListOfMediaByID(opts.ids)
+				@p.done (d)->
 					collection.set d
 
 			return true
@@ -239,20 +238,24 @@ define ["backbone"], (Backbone) ->
 						
 
 				if modelname is 'quiz-response-summary'
-					_.writeQuizResponseSummary(model)
+					xhr = _.writeQuizResponseSummary(model)
 
 
 				if modelname is 'quiz-question-response'
-					_.writeQuestionResponse(model)
+					xhr = _.writeQuestionResponse(model)
 
+
+				if modelname is 'user'
+					xhr = _.getUserByID()
+					.done (data)->
+						console.log JSON.stringify data
+						model.set data
 
 				if modelname is 'content-group'
 					xhr = _.getContentGroupById(model.get('id'))
 					.done (d)->
 						model.set d
 
-				if modelname is 'question-response'
-					data = _.saveUpdateQuestionResponse(model)
 
 				if modelname is 'media'
 					xhr = _.getMediaById(model.get('id'))

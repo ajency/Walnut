@@ -31,6 +31,26 @@ define(['underscore'], function(_) {
       });
       return defer.promise();
     },
+    getUserByID: function() {
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var result, row;
+        row = data.rows.item(0);
+        result = {
+          ID: row['user_id'],
+          display_name: row['display_name'],
+          user_email: row['user_email'],
+          user_role: row['user_role'],
+          profile_pic: '/images/avtar.png'
+        };
+        return defer.resolve(result);
+      };
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT * FROM USERS WHERE user_id = ?", [_.getUserID()], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
+    },
     getNamesOfAllOfflineUsers: function() {
       var defer, onSuccess;
       defer = $.Deferred();

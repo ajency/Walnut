@@ -50,6 +50,40 @@ define ['underscore'], ( _) ->
 
 
 
+
+		getUserByID : ->
+			
+			defer = $.Deferred()
+			
+			onSuccess = (tx, data)->
+
+				
+				row = data.rows.item(0)
+				
+				result = 
+					ID: row['user_id']
+					display_name: row['display_name']
+					user_email: row['user_email']
+					user_role: row['user_role']
+					profile_pic: '/images/avtar.png'
+
+
+				defer.resolve result
+
+
+			_.db.transaction (tx)->
+				
+				tx.executeSql "SELECT * FROM USERS 
+								WHERE user_id = ?"
+								, [_.getUserID()]
+				, onSuccess, _.transactionErrorHandler
+
+
+			defer.promise()
+
+
+
+
 		getNamesOfAllOfflineUsers : ->
 
 			defer = $.Deferred()

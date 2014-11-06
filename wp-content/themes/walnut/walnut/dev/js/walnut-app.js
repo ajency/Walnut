@@ -30,21 +30,41 @@ define(['marionette'], function(Marionette) {
     return App.unregister(instance, id);
   });
   App.on("initialize:after", function(options) {
-    var authController, xhr;
+    var onDeviceReady, xhr;
     App.startHistory();
     if (_.platform() === 'DEVICE') {
-      if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
-        this.rootRoute = 'app-login';
-        if (_.isNull(_.getUserID())) {
-          this.rootRoute = 'login';
-        }
-        App.navigate(this.rootRoute, {
-          trigger: true
-        });
-      } else {
-        authController = App.request("get:auth:controller");
-        authController.setUserModelForOfflineLogin();
-      }
+      onDeviceReady = (function(_this) {
+        return function() {
+          _.cordovaOpenPrepopulatedDatabase();
+          _.cordovaLocalStorage();
+          FastClick.attach(document.body);
+          cordova.getAppVersion().then(function(version) {
+            if (version.indexOf('Production') === 0) {
+              AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";;
+            }
+            if (version.indexOf('Staging') === 0) {
+              return AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";;
+            }
+          });
+          return _.setSynapseMediaDirectoryPathToLocalStorage().done(function() {
+            var authController;
+            console.log('setSynapseMediaDirectoryPathToLocalStorage done');
+            if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
+              this.rootRoute = 'app-login';
+              if (_.isNull(_.getUserID())) {
+                this.rootRoute = 'login';
+              }
+              return App.navigate(this.rootRoute, {
+                trigger: true
+              });
+            } else {
+              authController = App.request("get:auth:controller");
+              return authController.setUserModelForOfflineLogin();
+            }
+          });
+        };
+      })(this);
+      document.addEventListener("deviceready", onDeviceReady, false);
     } else {
       return xhr = $.get("" + AJAXURL + "?action=get-user-data", {}, (function(_this) {
         return function(resp) {

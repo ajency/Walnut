@@ -37,7 +37,7 @@ define ['app'
                     if all_marks.length>0
                         total_marks= _.reduce all_marks, (memo, num)-> parseInt(memo) + parseInt(num) 
                     
-                    data.total_marks= parseFloat total_marks.toFixed 1
+                    data.total_marks= parseFloat parseFloat(total_marks).toFixed 1
 
                     data.hint_viewed = if responseModel.get('question_response').hint_viewed then 'Yes' else 'No'
 

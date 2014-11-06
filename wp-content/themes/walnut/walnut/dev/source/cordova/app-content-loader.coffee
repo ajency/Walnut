@@ -101,6 +101,7 @@ define ['underscore', 'unserialize'], ( _) ->
 						# element.columncount = element.elements.length
 						_.getRowElements(element).then (columnElement)->
 							content.excerpt.push columnElement.excerpt
+							content.marks += columnElement.marks if columnElement.marks
 							total--
 							if not total
 								defer.resolve content
@@ -113,6 +114,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								if meta isnt false
 									_.defaults element, meta
 								content.excerpt.push columnElement.excerpt
+								content.marks += columnElement.marks if columnElement.marks
 								total--
 								if not total
 									defer.resolve content
@@ -138,7 +140,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								if element.element is 'Video'
 									element.video_id = parseInt element.video_id
 
-								# content.marks += element.marks if element.marks
+								content.marks += element.marks if element.marks
 								
 							total--
 							if not total
@@ -182,6 +184,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							.then (columnElement)->
 
 								content.excerpt.push columnElement.excerpt
+								content.marks += columnElement.marks if columnElement.marks
 
 								total--
 								if not total
@@ -206,7 +209,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									if element.element is 'Video'
 										element.video_id = parseInt element.video_id
 
-									# content.marks += element.marks if element.marks
+									content.marks += element.marks if element.marks
 
 								total--
 								if not total
@@ -258,6 +261,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							.then (columnElement)->
 
 								content.excerpt.push columnElement.excerpt
+								content.marks += columnElement.marks if columnElement.marks
 								total--
 								if not total
 									defer.resolve content
@@ -281,7 +285,7 @@ define ['underscore', 'unserialize'], ( _) ->
 									if element.element is 'Video'
 										element.video_id = parseInt element.video_id
 
-									# content.marks += element.marks if element.marks
+									content.marks += element.marks if element.marks
 									
 								total--
 								if not total

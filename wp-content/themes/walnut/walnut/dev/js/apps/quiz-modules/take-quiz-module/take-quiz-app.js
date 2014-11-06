@@ -216,6 +216,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             'total_marks_scored': this.questionResponseCollection.getTotalScored()
           });
           quizResponseSummary.save();
+          this._queueStudentMail();
         }
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
@@ -230,6 +231,19 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizController.prototype.clearMediaDataOnEndQuiz = function() {
         _.clearMediaDirectory('videos-web');
         return _.clearMediaDirectory('audio-web');
+      };
+
+      TakeQuizController.prototype._queueStudentMail = function() {
+        var data;
+        data = {
+          component: 'quiz',
+          communication_type: 'quiz_completed_student_mail',
+          communication_mode: 'email',
+          additional_data: {
+            quiz_id: quizModel.id
+          }
+        };
+        return App.request("save:communications", data);
       };
 
       TakeQuizController.prototype._getUnansweredIDs = function() {

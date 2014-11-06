@@ -47,6 +47,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           return function() {
             return App.execute("when:fetched", quizModel, function() {
               var textbook_termIDs;
+              if (quizModel.get('code') === 'ERROR') {
+                App.execute("show:no:permissions:app", {
+                  region: App.mainContentRegion,
+                  error_header: 'Unauthorized Quiz',
+                  error_msg: quizModel.get('error_msg')
+                });
+                return false;
+              }
               if (display_mode !== 'quiz_report') {
                 display_mode = quizResponseSummary.get('status') === 'completed' ? 'replay' : 'class_mode';
               }
@@ -57,12 +65,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               }
               if (!questionsCollection) {
                 questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
-                App.execute("when:fetched", questionsCollection, function() {
+                questionsCollection.p.done(function() {
                   _this._setMarks();
                   return _this._randomizeOrder();
                 });
               }
-              return App.execute("when:fetched", [questionsCollection, _this.textbookNames], function() {
+              return $.when(questionsCollection, _this.textbookNames).done(function() {
                 var getStudentModel;
                 getStudentModel = _this._getStudent();
                 return getStudentModel.done(function() {
@@ -115,20 +123,33 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype._getStudent = function() {
         this.defer = $.Deferred();
-        if (this.student) {
-          if (this.student instanceof Backbone.Model) {
-            studentModel = this.student;
-            this.defer.resolve();
-          } else {
-            studentModel = App.request("get:user:by:id", this.student);
+        if (_.platform() === 'DEVICE') {
+          if (_.getUserID()) {
+            studentModel = App.request("get:user:by:id", _.getUserID());
             App.execute("when:fetched", studentModel, (function(_this) {
               return function() {
                 return _this.defer.resolve();
               };
             })(this));
+          } else {
+            this.defer.resolve();
           }
         } else {
-          this.defer.resolve();
+          if (this.student) {
+            if (this.student instanceof Backbone.Model) {
+              studentModel = this.student;
+              this.defer.resolve();
+            } else {
+              studentModel = App.request("get:user:by:id", this.student);
+              App.execute("when:fetched", studentModel, (function(_this) {
+                return function() {
+                  return _this.defer.resolve();
+                };
+              })(this));
+            }
+          } else {
+            this.defer.resolve();
+          }
         }
         return this.defer.promise();
       };
@@ -232,7 +253,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               _this.questionResponseCollection = App.request("get:quiz:question:response:collection", {
                 'summary_id': quizResponseSummary.get('summary_id')
               });
-              return App.execute("when:fetched", _this.questionResponseCollection, function() {
+              return _this.questionResponseCollection.p.done(function() {
                 return defer.resolve();
               });
             } else {

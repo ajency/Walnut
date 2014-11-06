@@ -88,8 +88,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 
 			# Create 'SynapseData' inside 'SynapseAssets' directory
-			synapseDataDirectory = _.createSynapseDataDirectory()
-			synapseDataDirectory.done ->
+			_.createSynapseDataDirectory().done ->
 
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->

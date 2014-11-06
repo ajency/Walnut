@@ -46,6 +46,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					forEach data.rows.item(0), 0
 
 			_.db.transaction (tx)->
+				
 				tx.executeSql "SELECT * FROM "+_.getTblPrefix()+"quiz_question_response 
 								WHERE summary_id = ?"
 								, [summary_id]
@@ -148,7 +149,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
 				model.set 'qr_id' :qr_id
-				# _.selectData(1)
+				_.selectData(1)
 			)
 
 		selectData : (v)->
@@ -234,7 +235,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			,_.transactionErrorHandler
 
 			,(tx)->
-				# _.selectData(2)
+				_.selectData(2)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)'
 			)
@@ -246,19 +247,20 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			question_response = serialize(model.get('question_response'))
 			_.db.transaction((tx)->
 
-				tx.executeSql("UPDATE "+_.getTblPrefix()+"quiz_question_response SET summary_id=?, 
-					content_piece_id=?, question_response=?
-					, time_taken=?, marks_scored=?, status=?, sync=? 
-					WHERE qr_id=?"
-					, [ model.get('summary_id'), model.get('content_piece_id'), 
-					question_response, model.get('time_taken'), 
-					model.get('marks_scored'), model.get('status'), 0
-					, model.get('qr_id')])
+				tx.executeSql "UPDATE "+_.getTblPrefix()+"quiz_question_response 
+								SET summary_id=?, content_piece_id=?
+								, question_response=?, time_taken=?
+								, marks_scored=?, status=?, sync=? 
+								WHERE qr_id=?"
+								, [ model.get('summary_id'), model.get('content_piece_id')
+								, question_response, model.get('time_taken')
+								, model.get('marks_scored'), model.get('status'), 0
+								, model.get('qr_id')]
 
 			,_.transactionErrorHandler
 
 			,(tx)->
-				# _.selectData(3)
+				_.selectData(3)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updateQuizQuestionResponseData)'
 			)

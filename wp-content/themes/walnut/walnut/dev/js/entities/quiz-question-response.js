@@ -63,7 +63,7 @@ define(['app', 'backbone'], function(App, Backbone) {
             return scored += m;
           }
         });
-        return scored.toFixed(1);
+        return parseFloat(scored).toFixed(1);
       };
 
       ResponseCollection.prototype.getNegativeScored = function() {
@@ -75,7 +75,7 @@ define(['app', 'backbone'], function(App, Backbone) {
             return negative += m;
           }
         });
-        return negative.toFixed(1);
+        return parseFloat(negative).toFixed(1);
       };
 
       return ResponseCollection;

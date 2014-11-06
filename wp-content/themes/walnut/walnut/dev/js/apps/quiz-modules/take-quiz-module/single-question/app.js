@@ -30,6 +30,11 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
         if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
+          if (this.display_mode === 'class_mode' && !this.quizModel.hasPermission('single_attempt')) {
+            this.answerWreqrObject.options = {
+              'displayAnswer': false
+            };
+          }
           answerData = this.questionResponseModel.get('question_response');
           if (_.isEmpty(answerData)) {
             answerData = {};

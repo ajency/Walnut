@@ -90,7 +90,7 @@ define ['app'
 				if _.platform() is 'DEVICE'
 
 					# Set 'SynapseMedia' directory path to local storage
-					_.setSynapseMediaDirectoryPathToLocalStorage()
+					# _.setSynapseMediaDirectoryPathToLocalStorage()
 
 					_.cordovaHideSplashscreen()
 

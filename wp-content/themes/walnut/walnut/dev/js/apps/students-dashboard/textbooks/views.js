@@ -107,7 +107,6 @@ define(['app', 'text!apps/students-dashboard/textbooks/templates/textbooks-list.
           return false;
         });
         if (_.platform() === 'DEVICE') {
-          _.setSynapseMediaDirectoryPathToLocalStorage();
           _.cordovaHideSplashscreen();
           _.removeCordovaBackbuttonEventListener();
           return _.enableCordovaBackbuttonNavigation();

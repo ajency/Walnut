@@ -1,274 +1,300 @@
 define ['app'
-        'controllers/region-controller'
-        'apps/quiz-modules/view-single-quiz/layout'
-        'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app'
-        'apps/quiz-modules/view-single-quiz/content-display/content-display-app'
-        'apps/quiz-modules/view-single-quiz/attempts/app'
-        'apps/quiz-modules/take-quiz-module/take-quiz-app'
+		'controllers/region-controller'
+		'apps/quiz-modules/view-single-quiz/layout'
+		'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app'
+		'apps/quiz-modules/view-single-quiz/content-display/content-display-app'
+		'apps/quiz-modules/view-single-quiz/attempts/app'
+		'apps/quiz-modules/take-quiz-module/take-quiz-app'
 ], (App, RegionController)->
-    App.module "QuizModuleApp.ViewQuiz", (ViewQuiz, App)->
-        class ViewQuiz.Controller extends RegionController
+	App.module "QuizModuleApp.ViewQuiz", (ViewQuiz, App)->
+		class ViewQuiz.Controller extends RegionController
 
-            quizModel = null
-            questionsCollection = null
-            quizResponseSummary = null
-            quizResponseSummaryCollection = null
-            studentModel = null
+			quizModel = null
+			questionsCollection = null
+			quizResponseSummary = null
+			quizResponseSummaryCollection = null
+			studentModel = null
 
-            #display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
-            display_mode = null
-            
-            initialize: (opts) ->
+			#display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
+			display_mode = null
+			
+			initialize: (opts) ->
 
-                {quiz_id,quizModel,questionsCollection,@questionResponseCollection} =opts
+				{quiz_id,quizModel,questionsCollection,@questionResponseCollection} =opts
 
-                {quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts
+				{quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts
 
-                quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
+				quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
-                #incase the display mode is sent from router on page refresh
-                display_mode = d_mode if d_mode
+				#incase the display mode is sent from router on page refresh
+				display_mode = d_mode if d_mode
 
-                #get the header and left nav back incase it was hidden for quiz view
-                $.showHeaderAndLeftNav()
+				#get the header and left nav back incase it was hidden for quiz view
+				$.showHeaderAndLeftNav()
 
-                @fetchQuizResponseSummary = @_fetchQuizResponseSummary()
+				@fetchQuizResponseSummary = @_fetchQuizResponseSummary()
 
-                fetchQuestionResponseCollection = @_fetchQuestionResponseCollection()
+				fetchQuestionResponseCollection = @_fetchQuestionResponseCollection()
 
-                fetchQuestionResponseCollection.done =>
-                    App.execute "when:fetched", quizModel, =>
+				fetchQuestionResponseCollection.done =>
+					App.execute "when:fetched", quizModel, =>
 
-                        if display_mode isnt 'quiz_report'
-                            display_mode = if quizResponseSummary.get('status') is 'completed' 
-                                                'replay' 
-                                            else 'class_mode'
+						if quizModel.get('code') is 'ERROR'
+							App.execute "show:no:permissions:app",
+								region          : App.mainContentRegion
+								error_header    : 'Unauthorized Quiz'
+								error_msg       : quizModel.get 'error_msg'
 
-                        textbook_termIDs = _.flatten quizModel.get 'term_ids'
-                        @textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
+							return false
 
-                        #if quiz has already been started or taken before, 
-                        #the questions must be displayed in the previously taken order
-                        #this order is saved on first time taking of quiz
-                        #questions wont be randomized again
-                        if not _.isEmpty quizResponseSummary.get 'questions_order'
-                            quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+						if display_mode isnt 'quiz_report'
+							display_mode = if quizResponseSummary.get('status') is 'completed' 
+												'replay' 
+											else 'class_mode'
 
-                        if not questionsCollection
-                            questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+						textbook_termIDs = _.flatten quizModel.get 'term_ids'
+						@textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
 
-                            App.execute "when:fetched", questionsCollection, =>
-                                @_setMarks()
-                                @_randomizeOrder()
-                        
-                        App.execute "when:fetched", [questionsCollection,@textbookNames],  =>
+						#if quiz has already been started or taken before, 
+						#the questions must be displayed in the previously taken order
+						#this order is saved on first time taking of quiz
+						#questions wont be randomized again
+						if not _.isEmpty quizResponseSummary.get 'questions_order'
+							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-                            getStudentModel = @_getStudent()
+						if not questionsCollection
+							questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
-                            getStudentModel.done =>
-                                @layout = layout = @_getQuizViewLayout()
+							# App.execute "when:fetched", questionsCollection, =>
+							questionsCollection.p.done =>
+								@_setMarks()
+								@_randomizeOrder()
+						
+						# App.execute "when:fetched", [questionsCollection.p, @textbookNames],  =>
+						$.when(questionsCollection, @textbookNames).done =>
 
-                                @show @layout, loading: true
+							getStudentModel = @_getStudent()
 
-                                @listenTo @layout, 'show', =>
-                                    @showQuizViews()
-                                    @_showAttemptsRegion()
+							getStudentModel.done =>
+								@layout = layout = @_getQuizViewLayout()
 
-                                @listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
+								@show @layout, loading: true
 
-                                @listenTo @layout.quizDetailsRegion, 'try:again', @_tryAgain
+								@listenTo @layout, 'show', =>
+									@showQuizViews()
+									@_showAttemptsRegion()
 
-                                @listenTo @layout.attemptsRegion, 'view:summary', @_viewSummary
+								@listenTo @layout.quizDetailsRegion, 'start:quiz:module', @startQuiz
 
-            _setMarks:->
+								@listenTo @layout.quizDetailsRegion, 'try:again', @_tryAgain
 
-                actualMarks= 0
-                questionsCollection.each (m)-> actualMarks += m.get('marks') if m.get('marks')
-                
-                multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
+								@listenTo @layout.attemptsRegion, 'view:summary', @_viewSummary
 
-                if multiplicationFactor
-                    questionsCollection.each (m)->
-                        m.setMarks multiplicationFactor
+			_setMarks:->
 
-                
+				actualMarks= 0
+				questionsCollection.each (m)-> actualMarks += m.get('marks') if m.get('marks')
+				
+				multiplicationFactor = quizModel.get('marks')/actualMarks if actualMarks>0
 
-            _randomizeOrder:->
-                if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
-                    questionsCollection.each (e)-> e.unset 'order'
-                    questionsCollection.reset questionsCollection.shuffle()
-                    #change the order in the main model also
-                    quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
+				if multiplicationFactor
+					questionsCollection.each (m)->
+						m.setMarks multiplicationFactor
 
-            _getStudent:->
-                @defer = $.Deferred()
+			_randomizeOrder:->
+				if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
+					questionsCollection.each (e)-> e.unset 'order'
+					questionsCollection.reset questionsCollection.shuffle()
+					#change the order in the main model also
+					quizModel.set 'content_pieces', questionsCollection.pluck 'ID'
 
-                if @student
-                    if @student instanceof Backbone.Model
-                        studentModel = @student
-                        @defer.resolve()
-                    else
-                        studentModel= App.request "get:user:by:id", @student
-                        App.execute "when:fetched", studentModel, => @defer.resolve()
+			_getStudent:->
+				@defer = $.Deferred()
 
-                else @defer.resolve()
+				if _.platform() is 'DEVICE'
 
-                @defer.promise()
+					if _.getUserID()
+						# if _.getUserID() instanceof Backbone.Model
+						# 	studentModel = _.getUserID()
+						# 	@defer.resolve()
+						# else
+						studentModel= App.request "get:user:by:id", _.getUserID()
+						App.execute "when:fetched", studentModel, => @defer.resolve()
 
-            _tryAgain:->
+					else @defer.resolve()
+				
+				else 
 
-                return false if quizModel.get('quiz_type') isnt 'practice'
+					if @student
+						if @student instanceof Backbone.Model
+							studentModel = @student
+							@defer.resolve()
+						else
+							studentModel= App.request "get:user:by:id", @student
+							App.execute "when:fetched", studentModel, => @defer.resolve()
 
-                @questionResponseCollection = null
-                
-                quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
 
-                @summary_data= 
-                    'collection_id' : quizModel.get 'id'
-                    'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
-                    'taken_on'      : moment().format("YYYY-MM-DD")
+					else @defer.resolve()
 
-                quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
-                quizResponseSummaryCollection.add quizResponseSummary
 
-                display_mode = 'class_mode'
+				@defer.promise()
 
-                @_randomizeOrder()
+			_tryAgain:->
 
-                @startQuiz()
+				return false if quizModel.get('quiz_type') isnt 'practice'
 
-            _viewSummary:(summary_id)->
-                quizResponseSummary = quizResponseSummaryCollection.get summary_id
-                @questionResponseCollection = null
-                fetchResponses = @_fetchQuestionResponseCollection()
-                fetchResponses.done => 
+				@questionResponseCollection = null
+				
+				quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
 
-                    if not _.isEmpty quizResponseSummary.get 'questions_order'
-                        
-                        #reorder the questions as per the order that it was taken in
-                        questionsCollection.each (e)-> e.unset 'order'
+				@summary_data= 
+					'collection_id' : quizModel.get 'id'
+					'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
+					'taken_on'      : moment().format("YYYY-MM-DD")
 
-                        quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+				quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
+				quizResponseSummaryCollection.add quizResponseSummary
 
-                        reorderQuestions = []
+				display_mode = 'class_mode'
 
-                        reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
+				@_randomizeOrder()
 
-                        questionsCollection.reset reorderQuestions
+				@startQuiz()
 
-                    @layout.$el.find '#quiz-details-region,#content-display-region'
-                    .hide()
-                    @layout.$el.find '#quiz-details-region,#content-display-region'
-                    .fadeIn('slow')
+			_viewSummary:(summary_id)->
+				quizResponseSummary = quizResponseSummaryCollection.get summary_id
+				@questionResponseCollection = null
+				fetchResponses = @_fetchQuestionResponseCollection()
+				fetchResponses.done => 
 
-                    @showQuizViews()
+					if not _.isEmpty quizResponseSummary.get 'questions_order'
+						
+						#reorder the questions as per the order that it was taken in
+						questionsCollection.each (e)-> e.unset 'order'
 
-                    @layout.attemptsRegion.$el.find '.view-summary i'
-                    .removeClass 'fa fa-spin fa-spinner'
+						quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-                    @_scrolltoQuizDetailsRegion()
+						reorderQuestions = []
 
-            _scrolltoQuizDetailsRegion:->
-                
-                top= @layout.quizDetailsRegion.$el.offset().top
-                #cancel out the header div height
-                top= top-70
+						reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
 
-                $('html,body').animate scrollTop: top, 'slow'
+						questionsCollection.reset reorderQuestions
 
+					@layout.$el.find '#quiz-details-region,#content-display-region'
+					.hide()
+					@layout.$el.find '#quiz-details-region,#content-display-region'
+					.fadeIn('slow')
 
-            _fetchQuizResponseSummary:=>
-                defer = $.Deferred();
+					@showQuizViews()
 
-                #if the summarycollection has been passed from quiz reports screens
-                quizResponseSummaryCollection= @quizResponseSummaryCollection if @quizResponseSummaryCollection
+					@layout.attemptsRegion.$el.find '.view-summary i'
+					.removeClass 'fa fa-spin fa-spinner'
 
-                #if the summary has been passed from the take-quiz-module app after quiz completion
-                if quizResponseSummary
-                    defer.resolve()
-                    return defer.promise()
+					@_scrolltoQuizDetailsRegion()
 
-                #userid fetched from LS and when fetched changed for student app DEVICE
+			_scrolltoQuizDetailsRegion:->
+				
+				top= @layout.quizDetailsRegion.$el.offset().top
+				#cancel out the header div height
+				top= top-70
 
-                @summary_data= 
-                    'collection_id' : quizModel.get 'id'
-                    'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
-                    'taken_on'      : moment().format("YYYY-MM-DD")
+				$('html,body').animate scrollTop: top, 'slow'
 
-                quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
-                # App.execute "when:fetched", quizResponseSummaryCollection, =>
-                quizResponseSummaryCollection.p.done =>
 
-                    if quizResponseSummaryCollection.length>0
-                        quizResponseSummary= quizResponseSummaryCollection.last()
-                        defer.resolve()
+			_fetchQuizResponseSummary:=>
+				defer = $.Deferred();
 
-                    else
-                        quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
-                        quizResponseSummaryCollection.add quizResponseSummary
-                        defer.resolve()
-                        
-                defer.promise()
+				#if the summarycollection has been passed from quiz reports screens
+				quizResponseSummaryCollection= @quizResponseSummaryCollection if @quizResponseSummaryCollection
 
-            _fetchQuestionResponseCollection:=>
-                defer = $.Deferred();
+				#if the summary has been passed from the take-quiz-module app after quiz completion
+				if quizResponseSummary
+					defer.resolve()
+					return defer.promise()
 
-                @fetchQuizResponseSummary.done =>
-                    if not @questionResponseCollection and not quizResponseSummary.isNew()
-                        @questionResponseCollection = App.request "get:quiz:question:response:collection",
-                            'summary_id': quizResponseSummary.get 'summary_id'
+				#userid fetched from LS and when fetched changed for student app DEVICE
 
-                        App.execute "when:fetched", @questionResponseCollection, =>
-                            defer.resolve()
-                    else
-                        defer.resolve()
+				@summary_data= 
+					'collection_id' : quizModel.get 'id'
+					'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
+					'taken_on'      : moment().format("YYYY-MM-DD")
 
-                defer.promise()
+				quizResponseSummaryCollection = App.request "get:quiz:response:summary", @summary_data
+				# App.execute "when:fetched", quizResponseSummaryCollection, =>
+				quizResponseSummaryCollection.p.done =>
 
-            startQuiz: =>
+					if quizResponseSummaryCollection.length>0
+						quizResponseSummary= quizResponseSummaryCollection.last()
+						defer.resolve()
 
-                App.execute "start:take:quiz:app",
-                    region: App.mainContentRegion
-                    quizModel               : quizModel
-                    quizResponseSummary     : quizResponseSummary
-                    questionsCollection     : questionsCollection
-                    display_mode            : display_mode
-                    questionResponseCollection: @questionResponseCollection
-                    textbookNames           : @textbookNames
+					else
+						quizResponseSummary =  App.request "create:quiz:response:summary", @summary_data
+						quizResponseSummaryCollection.add quizResponseSummary
+						defer.resolve()
+						
+				defer.promise()
 
-            showQuizViews: =>
+			_fetchQuestionResponseCollection:=>
+				defer = $.Deferred();
 
-                App.execute "show:view:quiz:detailsapp",
-                    region                  : @layout.quizDetailsRegion
-                    model                   : quizModel
-                    display_mode            : display_mode
-                    quizResponseSummary     : quizResponseSummary
-                    textbookNames           : @textbookNames
+				@fetchQuizResponseSummary.done =>
+					if not @questionResponseCollection and not quizResponseSummary.isNew()
+						@questionResponseCollection = App.request "get:quiz:question:response:collection",
+							'summary_id': quizResponseSummary.get 'summary_id'
 
-                if quizResponseSummary.get('status') is 'completed'
-                    
-                    App.execute "show:quiz:items:app",
-                        region                  : @layout.contentDisplayRegion
-                        model                   : quizModel
-                        groupContentCollection  : questionsCollection
-                        questionResponseCollection: @questionResponseCollection
+						# App.execute "when:fetched", @questionResponseCollection, =>
+						@questionResponseCollection.p.done =>
+							defer.resolve()
+					else
+						defer.resolve()
 
-                
-            _showAttemptsRegion: =>
-                if quizModel.get('quiz_type') is 'practice' and quizModel.get('attempts') >0
+				defer.promise()
 
-                    App.execute "show:quiz:attempts:app",
-                        region                  : @layout.attemptsRegion
-                        model                   : quizModel
-                        quizResponseSummaryCollection  : quizResponseSummaryCollection
+			startQuiz: =>
+				#@questionResponseCollection = null
 
-            _getQuizViewLayout: ->
-                new ViewQuiz.LayoutView.QuizViewLayout
-                    model: quizModel
-                    display_mode: display_mode
-                    student: studentModel
+				App.execute "start:take:quiz:app",
+					region: App.mainContentRegion
+					quizModel               : quizModel
+					quizResponseSummary     : quizResponseSummary
+					questionsCollection     : questionsCollection
+					display_mode            : display_mode
+					questionResponseCollection: @questionResponseCollection
+					textbookNames           : @textbookNames
 
+			showQuizViews: =>
 
-        # set handlers
-        App.commands.setHandler "show:single:quiz:app", (opt = {})->
-            new ViewQuiz.Controller opt
+				App.execute "show:view:quiz:detailsapp",
+					region                  : @layout.quizDetailsRegion
+					model                   : quizModel
+					display_mode            : display_mode
+					quizResponseSummary     : quizResponseSummary
+					textbookNames           : @textbookNames
+
+				if quizResponseSummary.get('status') is 'completed'
+					
+					App.execute "show:quiz:items:app",
+						region                  : @layout.contentDisplayRegion
+						model                   : quizModel
+						groupContentCollection  : questionsCollection
+						questionResponseCollection: @questionResponseCollection
+
+				
+			_showAttemptsRegion: =>
+				if quizModel.get('quiz_type') is 'practice' and quizModel.get('attempts') >0
+
+					App.execute "show:quiz:attempts:app",
+						region                  : @layout.attemptsRegion
+						model                   : quizModel
+						quizResponseSummaryCollection  : quizResponseSummaryCollection
+
+			_getQuizViewLayout: ->
+				new ViewQuiz.LayoutView.QuizViewLayout
+					model: quizModel
+					display_mode: display_mode
+					student: studentModel
+
+
+		# set handlers
+		App.commands.setHandler "show:single:quiz:app", (opt = {})->
+			new ViewQuiz.Controller opt

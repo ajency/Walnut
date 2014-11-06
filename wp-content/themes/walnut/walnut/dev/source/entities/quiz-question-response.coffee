@@ -40,7 +40,7 @@ define ['app'
 					
 					_.each marks, (m)-> scored += m if m>0
 
-					scored.toFixed 1
+					parseFloat(scored).toFixed 1
 
 				getNegativeScored:->
 					
@@ -50,7 +50,7 @@ define ['app'
 
 					_.each marks, (m)-> negative += m if m<0
 
-					negative.toFixed 1
+					parseFloat(negative).toFixed 1
 
 
 			API = 

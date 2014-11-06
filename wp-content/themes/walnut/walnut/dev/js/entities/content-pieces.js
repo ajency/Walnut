@@ -26,17 +26,6 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.name = 'content-piece';
 
-      ItemModel.prototype.getMarks = function() {
-        var layout, marks;
-        layout = this.get('layout');
-        marks = parseFloat(_.compact(_.pluck(layout, 'marks'))).toFixed(1);
-        marks = parseFloat(marks);
-        if (!marks || _.isNaN(parseInt(marks))) {
-          marks = 0;
-        }
-        return marks;
-      };
-
       ItemModel.prototype.setMarks = function(multiplicationFactor) {
         var layout;
         layout = this.get('layout');
@@ -228,7 +217,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       return contentPiecesRepository.clone();
     });
     return App.reqres.setHandler("app:reset:content:pieces:repository", function(models) {
-      return contentPiecesRepository.add(models);
+      return contentPiecesRepository.reset(models);
     });
   });
 });

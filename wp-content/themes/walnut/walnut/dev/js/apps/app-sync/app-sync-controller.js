@@ -71,13 +71,11 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.startContinueDataSyncProcess = function() {
-      var synapseDataDirectory;
       $('#totalRecords').css("display", "none");
       $('#lastDownload').css("display", "none");
       $('#syncError').css("display", "none");
       $('#syncMediaStart').prop("disabled", true);
-      synapseDataDirectory = _.createSynapseDataDirectory();
-      return synapseDataDirectory.done(function() {
+      return _.createSynapseDataDirectory().done(function() {
         var lastSyncOperation;
         lastSyncOperation = _.getLastSyncOperation();
         return lastSyncOperation.done(function(typeOfOperation) {
