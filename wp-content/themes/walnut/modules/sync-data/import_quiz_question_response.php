@@ -34,7 +34,7 @@ function validate_quiz_response_csv_row( $quiz_response_data ) {
         return false;
         
     // Total columns for each row MUST be 8. else its a improper CSV row
-    if (count( $quiz_response_data ) !== 8)
+    if (count( $quiz_response_data ) !== 7)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid
