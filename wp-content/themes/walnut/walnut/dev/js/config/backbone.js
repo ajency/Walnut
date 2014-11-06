@@ -50,14 +50,15 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'quiz-question-response') {
-        _.getQuizQuestionResponseBySummaryID(opts.summary_id).done(function(data) {
+        this.p = _.getQuizQuestionResponseBySummaryID(opts.summary_id);
+        this.p.done(function(data) {
           console.log('getQuizQuestionResponseBySummaryID done');
           return collection.set(data);
         });
       }
       if (collection_name === 'content-piece') {
-        _.getContentPiecesByIDs(opts.ids).done(function(data) {
-          console.log(data);
+        this.p = _.getContentPiecesByIDs(opts.ids);
+        this.p.done(function(data) {
           console.log('getContentPiecesByIDs done');
           collection.set(data);
           return App.request("app:reset:content:pieces:repository", data);
@@ -79,7 +80,8 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'media') {
-        _.getListOfMediaByID(opts.ids).done(function(d) {
+        this.p = _.getListOfMediaByID(opts.ids);
+        this.p.done(function(d) {
           return collection.set(d);
         });
       }
@@ -88,7 +90,7 @@ define(["backbone"], function(Backbone) {
   });
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
-      var allData, data, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
+      var allData, idAttr, modelname, onlyChanged, params, xhr, _action, _ref, _ref1;
       if (!this.name) {
         throw new Error("'name' property not set for the model");
       }
@@ -154,18 +156,21 @@ define(["backbone"], function(Backbone) {
           });
         }
         if (modelname === 'quiz-response-summary') {
-          _.writeQuizResponseSummary(model);
+          xhr = _.writeQuizResponseSummary(model);
         }
         if (modelname === 'quiz-question-response') {
-          _.writeQuestionResponse(model);
+          xhr = _.writeQuestionResponse(model);
+        }
+        if (modelname === 'user') {
+          xhr = _.getUserByID().done(function(data) {
+            console.log(JSON.stringify(data));
+            return model.set(data);
+          });
         }
         if (modelname === 'content-group') {
           xhr = _.getContentGroupById(model.get('id')).done(function(d) {
             return model.set(d);
           });
-        }
-        if (modelname === 'question-response') {
-          data = _.saveUpdateQuestionResponse(model);
         }
         if (modelname === 'media') {
           xhr = _.getMediaById(model.get('id')).done(function(d) {

@@ -80,11 +80,10 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         runFunc = (function(_this) {
           return function() {
             return $.Deferred(function(d) {
-              var audiosWebDirectory, deferreds, localAudioPaths;
+              var deferreds, localAudioPaths;
               localAudioPaths = [];
               deferreds = [];
-              audiosWebDirectory = _.createAudiosWebDirectory();
-              return audiosWebDirectory.done(function() {
+              return _.createAudioWebDirectory().done(function() {
                 var allAudioUrls;
                 allAudioUrls = _this.layout.model.get('audioUrls');
                 _.each(allAudioUrls, function(audioUrl, index) {

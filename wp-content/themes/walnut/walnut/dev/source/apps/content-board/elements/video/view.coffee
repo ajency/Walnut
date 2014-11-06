@@ -54,7 +54,7 @@ define ['app'], (App)->
 
 			_initLocalVideos : ->
 
-				navigator.notification.activityStart("Please wait", "loading content...")
+				# navigator.notification.activityStart("Please wait", "loading content...")
 
 				widthRatio = 16
 				heightRatio = 9
@@ -65,8 +65,7 @@ define ['app'], (App)->
 					$.Deferred (d)=>
 						deferreds = []
 
-						videosWebDirectory = _.createVideosWebDirectory()
-						videosWebDirectory.done =>
+						_.createVideosWebDirectory().done =>
 
 							_.each @videos , (videoSource, index)=>
 								do(videoSource)=>
@@ -90,7 +89,7 @@ define ['app'], (App)->
 
 				$.when(runFunc()).done =>
 					console.log('_initLocalVideos done')
-					navigator.notification.activityStop()
+					# navigator.notification.activityStop()
 					@$el.find('video')[0].src = @videos[0]
 					@$el.find('video')[0].load()
 

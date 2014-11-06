@@ -5,24 +5,33 @@ define ['underscore', 'unserialize'], ( _) ->
 	_.mixin
 
 		getListOfMediaByID : (ids)->
+
 			defer = $.Deferred()
+
 			result = []
 
-				
-			forEach = (mediaId, index)->
-				
-				_.getMediaById mediaId
-				.then (data)->
-					result[index] = data
-				i = i + 1
+			length = ids.length
 
-				if i < _.size(ids)
-					forEach ids[i], i
+			if length is 0
+				defer.resolve result
+			else
+				forEach = (mediaId, index)->
 
-				else
-					defer.resolve result
-			
-			forEach ids[0], 0
+					_.getMediaById(mediaId)
+					.then (mediaData)->
+						console.log 'getMediaById done'
+
+						result[index] = mediaData
+
+						index = index + 1
+						if index < length
+							forEach ids[index], index
+						else 
+							defer.resolve result
+
+
+				forEach ids[0], 0
+
 
 			defer.promise()
 
@@ -34,49 +43,36 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			onSuccess = (tx,data)->
 				
-				result = []
+				row = data.rows.item(0)
+				
 
-				if data.rows.length is 0
-					defer.resolve result
-				else
+				_.getAttachmentData id
+				.then (attachmentData)->
 
-					forEach = (row, i)->
+					url = row['guid']
+					mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
 
-						_.getAttachmentData id
-						.then (data)->
+					if attachmentData.sizes
+						sizes = attachmentData.sizes
+						full = full: {}
+						_.extend(sizes, full)
 
-							url = row['guid']
-							mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
+						_.each sizes, (size)->
+							size.url = mediaUrl
+					else
+						sizes = ''
+					
+					media = 
+						id: row['ID']
+						filename: attachmentData.file
+						url: mediaUrl
+						mime: row['post_mime_type']
+						icon: ''
+						sizes: sizes
+						height: attachmentData.height
+						width: attachmentData.width
 
-							if data.sizes
-								sizes = data.sizes
-								full = full: {}
-								_.extend(sizes, full)
-
-								_.each sizes, (size)->
-									size.url = mediaUrl
-							else
-								sizes = ''
-							
-							result = 
-								id: row['ID']
-								filename: data.file
-								url: mediaUrl
-								mime: row['post_mime_type']
-								icon: ''
-								sizes: sizes
-								height: data.height
-								width: data.width
-
-							i = i + 1
-
-							if ( i < data.rows.length)
-								forEach data.rows.item(i), i
-
-							else
-								defer.resolve result
-
-					forEach data.rows.item(0), 0
+					defer.resolve media
 
 
 
@@ -97,20 +93,25 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			defer = $.Deferred()
 
-			onSuccess = (tx,data)->
-				meta_value = ''
-				if data.rows.length isnt 0
-					meta_value = unserialize(data.rows.item(0)['meta_value'])
-				
-				defer.resolve(meta_value)
-			
+			onSuccess = (tx, data)->
 
-			_.db.transaction (tx)->
+				meta_value = ''
+
+				if data.rows.length isnt 0
+					meta_value = _.unserialize(data.rows.item(0)['meta_value'])
 				
-				tx.executeSql "SELECT * FROM wp_postmeta 
+				defer.resolve meta_value
+
+			
+			_.db.transaction (tx)->
+
+				tx.executeSql "SELECT * 
+								FROM wp_postmeta 
 								WHERE meta_key=? 
 								AND post_id=?"
 								, ['_wp_attachment_metadata', id]
+
 				, onSuccess, _.transactionErrorHandler
+
 
 			defer.promise()

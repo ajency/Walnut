@@ -82,6 +82,9 @@ define(['underscore', 'unserialize'], function(_) {
           if (element.element === 'Row') {
             _.getRowElements(element).then(function(columnElement) {
               content.excerpt.push(columnElement.excerpt);
+              if (columnElement.marks) {
+                content.marks += columnElement.marks;
+              }
               total--;
               if (!total) {
                 return defer.resolve(content);
@@ -95,6 +98,9 @@ define(['underscore', 'unserialize'], function(_) {
                   _.defaults(element, meta);
                 }
                 content.excerpt.push(columnElement.excerpt);
+                if (columnElement.marks) {
+                  content.marks += columnElement.marks;
+                }
                 total--;
                 if (!total) {
                   return defer.resolve(content);
@@ -123,6 +129,9 @@ define(['underscore', 'unserialize'], function(_) {
                 }
                 if (element.element === 'Video') {
                   element.video_id = parseInt(element.video_id);
+                }
+                if (element.marks) {
+                  content.marks += element.marks;
                 }
               }
               total--;
@@ -158,6 +167,9 @@ define(['underscore', 'unserialize'], function(_) {
             if (element.element === 'Row') {
               _.getRowElements(element).then(function(columnElement) {
                 content.excerpt.push(columnElement.excerpt);
+                if (columnElement.marks) {
+                  content.marks += columnElement.marks;
+                }
                 total--;
                 if (!total) {
                   return defer.resolve(content);
@@ -185,6 +197,9 @@ define(['underscore', 'unserialize'], function(_) {
                   }
                   if (element.element === 'Video') {
                     element.video_id = parseInt(element.video_id);
+                  }
+                  if (element.marks) {
+                    content.marks += element.marks;
                   }
                 }
                 total--;
@@ -226,6 +241,9 @@ define(['underscore', 'unserialize'], function(_) {
             if (element.element === 'Row') {
               _.getRowElements(element).then(function(columnElement) {
                 content.excerpt.push(columnElement.excerpt);
+                if (columnElement.marks) {
+                  content.marks += columnElement.marks;
+                }
                 total--;
                 if (!total) {
                   return defer.resolve(content);
@@ -253,6 +271,9 @@ define(['underscore', 'unserialize'], function(_) {
                   }
                   if (element.element === 'Video') {
                     element.video_id = parseInt(element.video_id);
+                  }
+                  if (element.marks) {
+                    content.marks += element.marks;
                   }
                 }
                 total--;

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'bootbox', 'backbone'], function(App, RegionController, bootbox, Backbone) {
+define(['app', 'controllers/region-controller', 'bootbox'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.QuizTimer", function(QuizTimer, App) {
     var QuizTimerView;
     QuizTimer.Controller = (function(_super) {
@@ -87,19 +87,27 @@ define(['app', 'controllers/region-controller', 'bootbox', 'backbone'], function
 
       QuizTimerView.prototype.className = 'timerBox';
 
-      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> <div id="downUpTimer" timerdirection=""></div> <div class="b-grey m-b-10 p-b-5" style="display:none" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div>';
+      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> {{#completed_quiz}} <div class="b-grey m-b-10 p-b-5" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-replay" class="btn btn-white block h-center"> End Replay </button> </div> {{/completed_quiz}} {{^completed_quiz}} <div id="downUpTimer" timerdirection=""></div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div> {{/completed_quiz}}';
 
       QuizTimerView.prototype.events = {
-        'click #end-quiz': 'endQuiz'
+        'click #end-quiz': 'endQuiz',
+        'click #end-replay': 'endReplay'
+      };
+
+      QuizTimerView.prototype.mixinTemplateHelpers = function(data) {
+        var _ref;
+        this.display_mode = Marionette.getOption(this, 'display_mode');
+        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
+          data.completed_quiz = true;
+        }
+        return data;
       };
 
       QuizTimerView.prototype.onShow = function() {
         var timeLeftOrElapsed, _ref;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
-          return this.$el.find('#completed-quiz').show();
-        } else {
+        if ((_ref = this.display_mode) !== 'replay' && _ref !== 'quiz_report') {
           if (timeLeftOrElapsed >= 0) {
             return this.countDown(timeLeftOrElapsed);
           }
@@ -134,6 +142,10 @@ define(['app', 'controllers/region-controller', 'bootbox', 'backbone'], function
             }
           };
         })(this));
+      };
+
+      QuizTimerView.prototype.endReplay = function() {
+        return this.trigger("end:quiz");
       };
 
       QuizTimerView.prototype.onPauseSessionClick = function() {

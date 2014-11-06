@@ -106,7 +106,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         $('body').addClass('error-body no-top');
         $('.page-content').addClass('condensed');
         if (_.platform() === 'DEVICE') {
-          _.setSynapseMediaDirectoryPathToLocalStorage();
           _.cordovaHideSplashscreen();
           _.setSchoolLogo();
           _.displayConnectionStatusOnMainLoginPage();

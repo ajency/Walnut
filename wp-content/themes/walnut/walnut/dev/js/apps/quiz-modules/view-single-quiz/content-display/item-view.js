@@ -33,7 +33,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
               return parseInt(memo) + parseInt(num);
             });
           }
-          data.total_marks = parseFloat(total_marks.toFixed(1));
+          data.total_marks = parseFloat(parseFloat(total_marks).toFixed(1));
           data.hint_viewed = responseModel.get('question_response').hint_viewed ? 'Yes' : 'No';
           if (!quizModel.hasPermission('allow_hint')) {
             data.hint = false;

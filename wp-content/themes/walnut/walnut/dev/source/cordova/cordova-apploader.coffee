@@ -10,7 +10,7 @@ define ['cordova/app-error-handlers'
 		'cordova/app-content-loader'
 		
 		#cordova on device ready
-		'cordova/app-on-load'
+		# 'cordova/app-on-load'
 
 		#cordova app entities
 		'cordova/entities/cordova-app-entities-loader'

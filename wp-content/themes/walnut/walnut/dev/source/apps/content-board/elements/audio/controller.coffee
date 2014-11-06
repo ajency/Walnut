@@ -72,8 +72,7 @@ define ['app'
 							$.Deferred (d)=>
 								localAudioPaths = []
 								deferreds = []
-								audiosWebDirectory = _.createAudiosWebDirectory()
-								audiosWebDirectory.done =>
+								_.createAudioWebDirectory().done =>
 
 									allAudioUrls = @layout.model.get('audioUrls')
 

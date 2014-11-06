@@ -211,6 +211,8 @@ define ['app'
 
 						quizResponseSummary.save()
 
+						@_queueStudentMail()
+
 					App.execute "show:single:quiz:app",
 						region                      : App.mainContentRegion
 						quizModel                   : quizModel
@@ -220,11 +222,22 @@ define ['app'
 						display_mode                : @display_mode
 
 
+
 				clearMediaDataOnEndQuiz : =>
 						_.clearMediaDirectory 'videos-web'
 						_.clearMediaDirectory 'audio-web'
-
 				
+
+				_queueStudentMail:->
+					data=
+						component           : 'quiz'
+						communication_type  : 'quiz_completed_student_mail'
+						communication_mode  : 'email'
+						additional_data:
+							quiz_id         : quizModel.id
+
+					App.request "save:communications", data
+
 				_getUnansweredIDs:->
 					
 					pausedModel = @questionResponseCollection.findWhere 'status': 'paused'
@@ -328,6 +341,3 @@ define ['app'
 			# set handlers
 			App.commands.setHandler "start:take:quiz:app", (opt = {})->
 				new View.TakeQuizController opt
-		
-
-
