@@ -31,7 +31,6 @@
 		tablesorter: 'plugins/jquery.tablesorter',
 		tablesorter_pager: 'plugins/jquery.tablesorter.pager',
 		moment: 'plugins/moment.min',
-		detect: 'plugins/detect',
 		kinetic             : 'plugins/kinetic',
 		kineticresize       : 'plugins/kinetic.plugin.resize',
 		select2             : 'plugins/select2',
