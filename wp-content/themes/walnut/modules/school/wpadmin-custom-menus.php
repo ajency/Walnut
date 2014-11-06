@@ -115,7 +115,7 @@ function import_student_csv($file_path){
             continue;
         }
         
-	$user_table = $wpdb->prefix ."users";
+	$user_table = $wpdb->base_prefix ."users";
         $user_pass = "ajency";
         $user_login = $csvData[$i][0];
         $first_name = $csvData[$i][1];
@@ -134,7 +134,7 @@ function import_student_csv($file_path){
 
         //Check if $user_email is present in users table
         $userExists = $wpdb->get_row( "select * from $user_table where user_email ='" . $user_email . "' OR user_login ='" . $user_login . "' "  );
-		
+	
 		if( $userExists != null ){ 
 		
 			$user_id = $userExists->ID; 
@@ -210,15 +210,7 @@ function add_update_student_parents($user_id,$parent_emails = array()){
         if( $parent_id = email_exists( $email_address )) {
             update_user_meta( $user_id, $key, $email_address );
             $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
-            
-            if(! is_array($parent_of_meta)){
-                $temp = $parent_of_meta;
-                $parent_of_meta= array();
-                if($temp != ''){
-                   array_push($parent_of_meta, (string)$temp);
-               }
-                
-            }
+            $parent_of_meta =  get_parent_of_formated($parent_of_meta);
             
             array_push($parent_of_meta, (string)$user_id);
             $parent_of_meta = array_unique($parent_of_meta);
@@ -239,14 +231,8 @@ function add_update_student_parents($user_id,$parent_emails = array()){
             update_user_meta( $user_id, $key, $email_address  );
             
             $parent_of_meta = get_user_meta($new_parent_id,'parent_of',true);
-            if(! is_array($parent_of_meta)){
-                $temp = $parent_of_meta;
-                $parent_of_meta= array();
-                if($temp != ''){
-                   array_push($parent_of_meta, (string)$temp);
-               }
-                
-            }
+            $parent_of_meta =  get_parent_of_formated($parent_of_meta);            
+
             array_push($parent_of_meta, (string)$user_id);
             $parent_of_meta = array_unique($parent_of_meta);           
             update_user_meta( $new_parent_id, 'parent_of', $parent_of_meta );

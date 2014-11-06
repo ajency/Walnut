@@ -87,6 +87,8 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
 	$template_data['from_name'] = 'Synapse';
     
     $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
+    
+        $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
 
 	$template_data['global_merge_vars'] = get_quiz_template_data($comm_data,$quiz_id);
 
@@ -101,25 +103,36 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
 
 	foreach($recipients as $user){
 
-        $student_id = get_user_meta($user->user_id, 'parent_of', true);
+        $student_ids = get_user_meta($user->user_id, 'parent_of', true);
 
-		$student 	= get_userdata($student_id);
+        $student_ids = get_parent_of_formated($student_ids); 
+        
+            foreach($student_ids as $child){
+                $student 	= get_userdata($child);
+                
+                $student_division = get_user_meta($student->ID,'student_division', true);
+                        
+                 if($division != $student_division)
+                     continue;
+                
+                $overwrite_vars = array();
 
-		$overwrite_vars = array();
+                $overwrite_vars = get_quiz_summary_data($quiz_id,$child);
 
-		$overwrite_vars = get_quiz_summary_data($quiz_id,$student_id);
+                $overwrite_vars[] = array(
+                    'name' => 'STUDENT_NAME',
+                    'content' => $student->display_name
+                );
 
-        $overwrite_vars[] = array(
-            'name' => 'STUDENT_NAME',
-            'content' => $student->display_name
-        );
+                $template_data['merge_vars'][] = array(
 
-        $template_data['merge_vars'][] = array(
+                    'rcpt'=>$user->value,
+                    'vars' => $overwrite_vars
+                ) ;	
 
-            'rcpt'=>$user->value,
-            'vars' => $overwrite_vars
-        ) ;			
-    }
+            }
+        
+        }
 
 	restore_current_blog();
 
