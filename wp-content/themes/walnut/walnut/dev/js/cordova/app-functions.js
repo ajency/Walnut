@@ -80,13 +80,25 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         });
       });
     },
-    getDeviceStoragePath: function() {
-      return Path.CheckPath(function(path) {
-        return console.log("file" + path);
+    getDeviceStorageOptions: function() {
+      var defer, storageOptions;
+      defer = $.Deferred();
+      storageOptions = [];
+      Path.CheckPath(function(path) {
+        if (!_.isUndefined(path.ExternalPath)) {
+          storageOptions['Internal'] = path.InternalPath;
+          storageOptions['External'] = path.ExternalPath;
+        } else {
+          storageOptions['Internal'] = path.InternalPath;
+        }
+        console.log('Storage Options');
+        console.log(storageOptions);
+        return defer.resolve(storageOptions);
       }, function(error) {
-        console.log('FILE  ERROR');
-        return console.log(error);
+        console.log('STORAGE ERROR');
+        return defer.reject(console.log(error));
       });
+      return defer.promise();
     },
     clearMediaDirectory: function(directory_name) {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {

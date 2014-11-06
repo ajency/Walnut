@@ -106,21 +106,33 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						console.log 'FILE DECRYPTION ERROR: '+message
 				)
 
-		getDeviceStoragePath : ->
+		
+		getDeviceStorageOptions : ->
 			
-			# defer = $.Deferred()
+			defer = $.Deferred()
+
+			storageOptions = []
 
 			Path.CheckPath(
 				(path)->
-					console.log "file"+path
-					# defer.resolve path
+
+					if not _.isUndefined(path.ExternalPath)
+						storageOptions['Internal'] = path.InternalPath
+						storageOptions['External'] = path.ExternalPath
+
+					else
+						storageOptions['Internal'] = path.InternalPath
+					
+					console.log 'Storage Options'
+					console.log storageOptions
+					defer.resolve storageOptions
 
 				,(error)->
-					console.log 'FILE  ERROR'
-					console.log error
+					console.log 'STORAGE ERROR'
+					defer.reject(console.log error)
 			)
 
-			# defer.promise()
+			defer.promise()
 
 
 

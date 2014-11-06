@@ -48,7 +48,6 @@ define ['marionette'], (Marionette)->
 
 
 			onDeviceReady = =>
-				_.getDeviceStoragePath()
 
 				# Open pre-populated SQLite database file.
 				_.cordovaOpenPrepopulatedDatabase()
