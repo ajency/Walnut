@@ -211,7 +211,7 @@ function sds_get_tables_to_export($last_sync=''){
     $quiz_schedules_table = "{$wpdb->prefix}quiz_schedules";
 
     $tables_list[]= array(
-        'query'=> "SELECT * FROM $question_response_table WHERE sync = 0",
+        'query'=> "SELECT ref_id,teacher_id,content_piece_id,collection_id,division,question_response,time_taken,start_date,end_date,status FROM $question_response_table WHERE sync = 0",
         'table_name'=> $question_response_table
         );
 
@@ -220,17 +220,17 @@ function sds_get_tables_to_export($last_sync=''){
         'table_name'=> $response_meta_table);
     
     $tables_list[]= array(
-        'query'=> "SELECT * FROM $quiz_question_response_table WHERE sync = 0",
+        'query'=> "SELECT qr_id,summary_id,content_piece_id,question_response,time_taken,marks_scored,status FROM $quiz_question_response_table WHERE sync = 0",
         'table_name'=> $quiz_question_response_table
         );
     
     $tables_list[]= array(
-        'query'=> "SELECT * FROM $quiz_response_summary_table WHERE sync = 0",
+        'query'=> "SELECT summary_id,collection_id,student_id,taken_on,quiz_meta FROM $quiz_response_summary_table WHERE sync = 0",
         'table_name'=> $quiz_response_summary_table
         );
 
     $tables_list[]= array(
-        'query'=> "SELECT * FROM $quiz_schedules_table WHERE sync = 0",
+        'query'=> "SELECT quiz_id,division_id,schedule_from,schedule_to FROM $quiz_schedules_table WHERE sync = 0",
         'table_name'=> $quiz_schedules_table
         );    
     
