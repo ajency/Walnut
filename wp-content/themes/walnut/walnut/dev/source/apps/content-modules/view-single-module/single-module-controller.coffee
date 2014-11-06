@@ -15,11 +15,12 @@ define ['app'
                 $.showHeaderAndLeftNav()
 
                 #mode refers to "training" mode or "take-class" mode
-                {model,@classID, @mode, @division,@studentCollection} = opts
+                {model,@classID, @mode, @division,@studentCollection,@questionResponseCollection} = opts
 
-                @questionResponseCollection = App.request "get:question:response:collection",
-                    'division': @division
-                    'collection_id': model.get 'id'
+                if not @questionResponseCollection
+                    @questionResponseCollection = App.request "get:question:response:collection",
+                        'division': @division
+                        'collection_id': model.get 'id'
 
                 if not @studentCollection
                     if @mode is 'training'

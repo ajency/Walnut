@@ -120,6 +120,8 @@ define ['app'
 
                 questionResponseModel.set data
 
+                questionResponseCollection.add questionResponseModel
+
                 questionResponseModel.save data,
                     wait : true
                     success :(model)=>
@@ -138,6 +140,7 @@ define ['app'
                     division: @division
                     classID: @classID
                     studentCollection: studentCollection
+                    questionResponseCollection: questionResponseCollection
 
 
             _getOrCreateModel : (content_piece_id)=>
