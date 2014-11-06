@@ -35,6 +35,7 @@ define(['marionette'], function(Marionette) {
     if (_.platform() === 'DEVICE') {
       onDeviceReady = (function(_this) {
         return function() {
+          _.getDeviceStoragePath();
           _.cordovaOpenPrepopulatedDatabase();
           _.cordovaLocalStorage();
           FastClick.attach(document.body);

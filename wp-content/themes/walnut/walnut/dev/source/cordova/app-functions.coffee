@@ -106,6 +106,23 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						console.log 'FILE DECRYPTION ERROR: '+message
 				)
 
+		getDeviceStoragePath : ->
+			
+			# defer = $.Deferred()
+
+			Path.CheckPath(
+				(path)->
+					console.log "file"+path
+					# defer.resolve path
+
+				,(error)->
+					console.log 'FILE  ERROR'
+					console.log error
+			)
+
+			# defer.promise()
+
+
 
 		
 		clearMediaDirectory : (directory_name)->

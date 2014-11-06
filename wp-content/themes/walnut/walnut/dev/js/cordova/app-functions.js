@@ -80,6 +80,14 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         });
       });
     },
+    getDeviceStoragePath: function() {
+      return Path.CheckPath(function(path) {
+        return console.log("file" + path);
+      }, function(error) {
+        console.log('FILE  ERROR');
+        return console.log(error);
+      });
+    },
     clearMediaDirectory: function(directory_name) {
       return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
         return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/" + directory_name, {
