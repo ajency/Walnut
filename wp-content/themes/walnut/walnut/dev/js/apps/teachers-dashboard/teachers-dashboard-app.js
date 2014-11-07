@@ -28,79 +28,91 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
       dashboardRedirect: function() {
         var user;
         user = App.request("get:user:model");
-        if (!user.ID) {
-          App.navigate('login', {
-            trigger: true
-          });
-          return false;
-        }
-        if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
-          App.navigate('textbooks', {
-            trigger: true
-          });
-        }
-        if (user.current_user_can('teacher')) {
-          this.teachersDashboard();
-        }
-        if (user.current_user_can('student')) {
-          return this.studentsDashboard();
+        if ($.allowRoute('dashboard')) {
+          if (user.current_user_can('administrator') || user.current_user_can('school-admin') || user.current_user_can('content-creator')) {
+            App.navigate('textbooks', {
+              trigger: true
+            });
+          }
+          if (user.current_user_can('teacher')) {
+            App.navigate('teachers/dashboard');
+            this.teachersDashboard();
+          }
+          if (user.current_user_can('student')) {
+            App.navigate('students/dashboard');
+            return this.studentsDashboard();
+          }
         }
       },
       teachersDashboard: function() {
-        return new TeachersDashboardApp.View.DashboardController({
-          region: App.mainContentRegion
-        });
+        if ($.allowRoute('dashboard')) {
+          return new TeachersDashboardApp.View.DashboardController({
+            region: App.mainContentRegion
+          });
+        }
       },
       takeClass: function(classID, div) {
-        return new TeachersDashboardApp.View.TakeClassController({
-          region: App.mainContentRegion,
-          classID: classID,
-          division: div,
-          mode: 'take-class'
-        });
+        if ($.allowRoute('dashboard')) {
+          return new TeachersDashboardApp.View.TakeClassController({
+            region: App.mainContentRegion,
+            classID: classID,
+            division: div,
+            mode: 'take-class'
+          });
+        }
       },
       startTraining: function(classID) {
-        return new TeachersDashboardApp.View.TakeClassController({
-          region: App.mainContentRegion,
-          classID: classID,
-          mode: 'training'
-        });
+        if ($.allowRoute('dashboard')) {
+          return new TeachersDashboardApp.View.TakeClassController({
+            region: App.mainContentRegion,
+            classID: classID,
+            mode: 'training'
+          });
+        }
       },
       takeClassTextbookModules: function(classID, div, tID) {
-        return new TeachersDashboardApp.View.textbookModulesController({
-          region: App.mainContentRegion,
-          textbookID: tID,
-          classID: classID,
-          division: div,
-          mode: 'take-class'
-        });
+        if ($.allowRoute('dashboard')) {
+          return new TeachersDashboardApp.View.textbookModulesController({
+            region: App.mainContentRegion,
+            textbookID: tID,
+            classID: classID,
+            division: div,
+            mode: 'take-class'
+          });
+        }
       },
       startTrainingTextbookModules: function(classID, tID) {
-        return new TeachersDashboardApp.View.textbookModulesController({
-          region: App.mainContentRegion,
-          textbookID: tID,
-          classID: classID,
-          mode: 'training'
-        });
+        if ($.allowRoute('dashboard')) {
+          return new TeachersDashboardApp.View.textbookModulesController({
+            region: App.mainContentRegion,
+            textbookID: tID,
+            classID: classID,
+            mode: 'training'
+          });
+        }
       },
       studentsDashboard: function() {
         var division;
-        division = App.request("get:user:data", "division");
-        return App.execute("show:take:class:textbooks:app", {
-          region: App.mainContentRegion,
-          division: division,
-          mode: 'take-quiz'
-        });
+        if ($.allowRoute('dashboard')) {
+          division = App.request("get:user:data", "division");
+          return App.execute("show:take:class:textbooks:app", {
+            region: App.mainContentRegion,
+            division: division,
+            mode: 'take-quiz'
+          });
+        }
       },
       studentsQuizModules: function(tID) {
         var division;
-        division = App.request("get:user:data", "division");
-        return new TeachersDashboardApp.View.textbookModulesController({
-          region: App.mainContentRegion,
-          textbookID: tID,
-          division: division,
-          mode: 'take-quiz'
-        });
+        if ($.allowRoute('dashboard')) {
+          division = App.request("get:user:data", "division");
+          return new TeachersDashboardApp.View.textbookModulesController({
+            region: App.mainContentRegion,
+            textbookID: tID,
+            division: division,
+            mode: 'take-quiz'
+          });
+        }
       }
     };
     return TeachersDashboardApp.on("start", function() {

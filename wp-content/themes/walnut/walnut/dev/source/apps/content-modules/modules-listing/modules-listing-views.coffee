@@ -1,6 +1,7 @@
 define ['app'
         'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'
-], (App, contentListTpl)->
+        'bootbox'
+], (App, contentListTpl,bootbox)->
     App.module "ContentModulesApp.ModulesListing.Views", (Views, App, Backbone, Marionette, $, _)->
         class ListItemView extends Marionette.ItemView
 
@@ -45,7 +46,7 @@ define ['app'
                         data.duration
 
                 if @groupType is 'quiz'
-                    data.quiz_type = if data.quiz_type is 'practice' then 'Practice' else 'Quiz'
+                    data.quiz_type = @model.getQuizTypeLabel()
                     data.view_url = SITEURL + "/#view-quiz/#{data.id}"
                     data.edit_url = SITEURL + "/#edit-quiz/#{data.id}"
 
@@ -77,23 +78,23 @@ define ['app'
 
             cloneModule :->
                 if @model.get('post_status') in ['publish','archive']
-                    if confirm("Are you sure you want to clone '#{@model.get('name')}' ?") is true
+                    bootbox.confirm "Are you sure you want to clone '#{@model.get('name')}' ?", (result)=>
+                        if(result)
+                            @cloneModel = App.request "new:content:group" if @groupType is 'teaching-module'
 
-                        @cloneModel = App.request "new:content:group" if @groupType is 'teaching-module'
+                            @cloneModel = App.request "new:quiz" if @groupType is 'quiz'
 
-                        @cloneModel = App.request "new:quiz" if @groupType is 'quiz'
+                            groupData = @model.toJSON()
+                            @clonedData = _.omit groupData,
+                              ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
+                            @clonedData.name = "#{@clonedData.name} clone"
+                            @clonedData.post_status = "underreview"
 
-                        groupData = @model.toJSON()
-                        @clonedData = _.omit groupData,
-                          ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
-                        @clonedData.name = "#{@clonedData.name} clone"
-                        @clonedData.post_status = "underreview"
-
-                        App.execute "when:fetched", @cloneModel, =>
-                            @cloneModel.save @clonedData,
-                                wait : true
-                                success : @successSaveFn
-                                error : @errorFn
+                            App.execute "when:fetched", @cloneModel, =>
+                                @cloneModel.save @clonedData,
+                                    wait : true
+                                    success : @successSaveFn
+                                    error : @errorFn
 
             successSaveFn : (model)=>
                 model.set('content_pieces', @clonedData.content_pieces)

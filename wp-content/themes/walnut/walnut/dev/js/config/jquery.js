@@ -155,10 +155,10 @@ define(['jquery', 'underscore'], function($, _) {
     return items;
   };
   return $.allowRoute = function(route) {
-    var userdata;
-    userdata = App.request("get:user:model");
-    if (route === 'textbooks' || route === 'content-pieces' || route === 'add-module' || route === 'edit-module' || route === 'view-module' || route === 'module-list' || route === 'dummy-module' || route === 'view-quiz' || route === 'create-quiz' || route === 'edit-quiz' || route === 'quiz-list' || route === 'dummy-quiz') {
-      if (userdata.get('ID')) {
+    var user;
+    user = App.request("get:user:model");
+    if (route === 'textbooks' || route === 'content-pieces' || route === 'add-module' || route === 'edit-module' || route === 'view-module' || route === 'module-list' || route === 'dummy-module' || route === 'view-quiz' || route === 'create-quiz' || route === 'edit-quiz' || route === 'quiz-list' || route === 'dummy-quiz' || route === 'quiz-report' || route === 'dashboard') {
+      if (user.get('ID')) {
         return true;
       } else {
         App.navigate("login", true);
@@ -167,7 +167,7 @@ define(['jquery', 'underscore'], function($, _) {
     } else {
       switch (route) {
         case 'login':
-          if (!userdata.get('ID')) {
+          if (!user.get('ID')) {
             return true;
           }
           break;

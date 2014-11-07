@@ -30,6 +30,7 @@ define ['app'
                                 region: @layout.filtersRegion
                                 collection: @contentPiecesCollection
                                 textbooksCollection: @textbooksCollection
+                                post_status: 'any'
                                 selectedFilterParamsObject: @selectedFilterParamsObject
                                 dataType: 'content-pieces'
                                 filters : ['textbooks', 'chapters','sections','subsections','post_status','status','content_type','student_question']

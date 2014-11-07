@@ -32,7 +32,7 @@ function validate_quiz_schedule_csv_row( $quiz_schedule ) {
         return false;
         
     // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $quiz_schedule ) !== 5)
+    if (count( $quiz_schedule ) !== 4)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid

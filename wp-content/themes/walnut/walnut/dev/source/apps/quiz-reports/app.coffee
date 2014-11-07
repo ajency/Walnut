@@ -18,25 +18,28 @@ define ['app'
         Controller =
 
             classReports: ->
-                App.execute "show:class:report:app",
-                    region: App.mainContentRegion
+                if $.allowRoute 'quiz-report'
+                    App.execute "show:class:report:app",
+                        region: App.mainContentRegion
 
             quizReport:(div,quiz) ->
-                App.execute "show:quiz:report:app",
-                    region      : App.mainContentRegion
-                    division    : div
-                    quiz        : quiz
+                if $.allowRoute 'quiz-report'
+                    App.execute "show:quiz:report:app",
+                        region      : App.mainContentRegion
+                        division    : div
+                        quiz        : quiz
 
             studentReport:(id) ->
+                
+                if $.allowRoute 'quiz-report'
+                    if not id
+                        id=App.request "get:loggedin:user:id"
+                        display_mode = 'ownReport'
 
-                if not id
-                    id=App.request "get:loggedin:user:id"
-                    display_mode = 'ownReport'
-
-                App.execute "show:student:report:app",
-                    region          : App.mainContentRegion
-                    student_id      : id
-                    display_mode    : display_mode
+                    App.execute "show:student:report:app",
+                        region          : App.mainContentRegion
+                        student_id      : id
+                        display_mode    : display_mode
 
 
         QuizReportsApp.on "start", ->

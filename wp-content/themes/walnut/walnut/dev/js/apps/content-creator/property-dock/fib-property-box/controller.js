@@ -33,14 +33,15 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
           'blanksArray': elements
         });
         if (this.model.get('marks') > 0) {
-          _.every(this.model.get('blanksArray'), (function(_this) {
+          this.model.set('complete', true);
+          this.has_individual_marks = this.model.get('enableIndividualMarks');
+          _.each(this.model.get('blanksArray'), (function(_this) {
             return function(blanks) {
-              if (blanks.correct_answers.length && blanks.correct_answers[0] !== '') {
-                _this.model.set('complete', true);
-                return true;
-              } else {
+              if (_.isEmpty(blanks.correct_answers) || _.isEmpty(blanks.correct_answers[0])) {
                 _this.model.set('complete', false);
-                return false;
+              }
+              if (_this.has_individual_marks && blanks.marks === 0) {
+                return _this.model.set('complete', false);
               }
             };
           })(this));

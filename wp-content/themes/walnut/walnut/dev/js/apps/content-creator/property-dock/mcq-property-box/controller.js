@@ -49,9 +49,24 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        var elements, models, optionCollection, optionElements;
+        var ans, answers, elements, models, opt, optionCollection, optionElements, options, _i, _len;
         if (this.model.get('marks') > 0 && this.model.get('correct_answer').length) {
-          this.model.set('complete', true);
+          if (!this.model.get('multiple')) {
+            this.model.set('complete', true);
+          } else {
+            answers = this.model.get('correct_answer');
+            options = this.model.get('options');
+            for (_i = 0, _len = answers.length; _i < _len; _i++) {
+              ans = answers[_i];
+              opt = options.get(ans);
+              if (parseInt(opt.get('marks')) === 0) {
+                this.model.set('complete', false);
+                return false;
+              } else {
+                this.model.set('complete', true);
+              }
+            }
+          }
         } else {
           this.model.set('complete', false);
         }

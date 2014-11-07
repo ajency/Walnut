@@ -1,5 +1,6 @@
 define ['app'
-        'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'], (App, contentListTpl, listitemTpl, notextbooksTpl)->
+        'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'
+        'bootbox'], (App, contentListTpl,bootbox)->
     App.module "ContentPiecesApp.ContentList.Views", (Views, App)->
         class ListItemView extends Marionette.ItemView
 
@@ -85,24 +86,23 @@ define ['app'
 
             cloneModule :->
                 if @model.get('post_status') in ['publish','archive']
-                    if confirm("Are you sure you want to clone '#{@model.get('post_excerpt')}' ?") is true
-                        @cloneModel = App.request "new:content:piece"
-                        contentPieceData = @model.toJSON()
-                        console.log 'contentpiecedata'
-                        console.log @model.toJSON()
+                    bootbox.confirm "Are you sure you want to clone '#{@model.get('post_excerpt')}' ?", (result)=>
+                        if(result)
+                            @cloneModel = App.request "new:content:piece"
+                            contentPieceData = @model.toJSON()
 
-                        @clonedData = _.omit contentPieceData,
-                                      ['ID', 'guid', 'last_modified_by', 'post_author',
-                                       'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
+                            @clonedData = _.omit contentPieceData,
+                                          ['ID', 'guid', 'last_modified_by', 'post_author',
+                                           'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
 
-                        @clonedData.post_status = "pending"
-                        @clonedData.clone_id =@model.id
+                            @clonedData.post_status = "pending"
+                            @clonedData.clone_id =@model.id
 
-                        App.execute "when:fetched", @cloneModel, =>
-                            @cloneModel.save @clonedData,
-                                wait : true
-                                success : @successSaveFn
-                                error : @errorFn
+                            App.execute "when:fetched", @cloneModel, =>
+                                @cloneModel.save @clonedData,
+                                    wait : true
+                                    success : @successSaveFn
+                                    error : @errorFn
 
             successSaveFn : (model)=>
                 document.location = SITEURL+ "/content-creator/#edit-content/#{model.id}"

@@ -70,17 +70,13 @@ define ['app'
 
                             if answerData.questionType isnt 'sort'
 
-                                switch answerData.emptyOrIncomplete
+                                if answerData.emptyOrIncomplete is 'empty'
+                                          
+                                    bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
+                                        @_triggerSubmit() if result
 
-                                    when 'empty'        
-                                        bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
-                                            @_triggerSubmit() if result
-
-                                    when 'incomplete'   
-                                        bootbox.confirm @quizModel.getMessageContent('incomplete_answer'),(result)=>
-                                            @_triggerSubmit() if result
-
-                                    when 'complete'     then @_triggerSubmit()
+                                else
+                                    @_triggerSubmit()
 
                             else 
                                 @_triggerSubmit()
@@ -120,6 +116,9 @@ define ['app'
 
                     _getAnswerStatus:(recievedMarks, totalMarks)->
                         status = 'wrong_answer'
+
+                        recievedMarks = parseFloat recievedMarks
+                        totalMarks = parseFloat totalMarks
 
                         if recievedMarks is totalMarks 
                             status = 'correct_answer' 

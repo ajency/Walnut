@@ -65,6 +65,8 @@ define ['app',
                     @$el.find '#question_type_column'
                     .remove()
 
+                @$el.find('#preview-question').show() if not @model.isNew()
+
             _changeTabs : (e)->
                 e.preventDefault()
                 $(e.target).tab('show')

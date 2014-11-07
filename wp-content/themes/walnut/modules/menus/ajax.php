@@ -7,8 +7,10 @@ function get_menus() {
     
     // GET USER ROLE
     $user = new WP_User( $user_ID );
-    $user_role= $user->roles[0];
-    
+    $user_role= '';
+    foreach($user->roles as $role){
+        $user_role = $role;
+    }
     //FETCH MENU
     $menu=get_site_menu($user_role);
     wp_send_json($menu);
@@ -19,8 +21,10 @@ function get_menus_response() {
     
     // GET USER ROLE
     $user = new WP_User( $user_ID );
-    $user_role= $user->roles[0];
-    
+    $user_role= '';
+    foreach($user->roles as $role){
+        $user_role = $role;
+    }
     //FETCH MENU
     $menu=get_site_menu($user_role);
     return $menu;

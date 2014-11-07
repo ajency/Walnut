@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
 
       Controller.prototype.initialize = function(opts) {
         var class_id, data;
-        this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType, this.divisionsCollection = opts.divisionsCollection;
+        this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType, this.divisionsCollection = opts.divisionsCollection, this.post_status = opts.post_status;
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
@@ -131,29 +131,31 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             _this.listenTo(_this.view, "fetch:chapters:or:sections", _this.fetchSectionOrSubsection);
             _this.listenTo(_this.view, "fetch:new:content", function(textbook_id, post_status) {
               var division, newContent;
-              division = this.view.$el.find('#divisions-filter').val();
+              console.log(post_status);
+              if (!post_status) {
+                post_status = _this.post_status;
+              }
+              division = _this.view.$el.find('#divisions-filter').val();
               data = {
                 'textbook': textbook_id,
-                'post_status': 'any',
+                'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
-              if (this.contentSelectionType === 'quiz') {
+              if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
-              } else if (this.contentSelectionType === 'teaching-module') {
+              } else if (_this.contentSelectionType === 'teaching-module') {
                 data.content_type = ['teacher_question', 'content_piece'];
               }
-              if (this.dataType === 'teaching-modules') {
+              if (_this.dataType === 'teaching-modules') {
                 newContent = App.request("get:content:groups", data);
-              } else if (this.dataType === 'quiz') {
+              } else if (_this.dataType === 'quiz') {
                 newContent = App.request("get:quizes", data);
               } else {
                 newContent = App.request("get:content:pieces", data);
               }
-              return App.execute("when:fetched", newContent, (function(_this) {
-                return function() {
-                  return _this.view.triggerMethod("new:content:fetched");
-                };
-              })(this));
+              return App.execute("when:fetched", newContent, function() {
+                return _this.view.triggerMethod("new:content:fetched");
+              });
             });
             return _this.listenTo(_this.view, "fetch:textbooks:by:division", function(division) {
               var divisionModel, tCollection;

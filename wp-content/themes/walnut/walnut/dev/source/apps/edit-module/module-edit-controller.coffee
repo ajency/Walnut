@@ -20,11 +20,9 @@ define ['app'
 
                 App.execute "when:fetched", @contentGroupModel, =>
                     @contentGroupCollection = @_getContentGroupCollection()
-#                    if @contentGroupModel.get('status') is 'underreview'
-                    @showContentGroupView()
-#                    else
-#                        @noEditView = @_getNotEditView @contentGroupModel.get('status')
-#                        @show @noEditView
+
+                    App.execute "when:fetched", @contentGroupCollection, =>
+                        @showContentGroupView()
             
             _getContentGroupCollection:=>
                 @contentGroupCollection = App.request "get:content:pieces:of:group", @contentGroupModel if @groupType is 'teaching-module'

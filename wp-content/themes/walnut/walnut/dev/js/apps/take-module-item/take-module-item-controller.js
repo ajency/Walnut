@@ -109,6 +109,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           status: status
         };
         questionResponseModel.set(data);
+        questionResponseCollection.add(questionResponseModel);
         if (_.platform === 'BROWSER') {
           return questionResponseModel.save(data, {
             wait: true,
@@ -136,7 +137,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           mode: this.display_mode,
           division: this.division,
           classID: this.classID,
-          studentCollection: studentCollection
+          studentCollection: studentCollection,
+          questionResponseCollection: questionResponseCollection
         });
       };
 
