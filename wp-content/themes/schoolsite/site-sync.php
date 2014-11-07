@@ -245,6 +245,7 @@
                                                     <div class="">
                                                       <button name="sync-media" id="sync-media" type="button" class="btn btn-success h-align-middle block"><span id="syncMediaButtonText" class="bold">Start</span></button>
                                                       <h5 id="syncSuccess" class="m-t-5 semi-bold text-center text-success status-msg"></h5>
+                                                      <h5 id="mediasyncProgress" class="m-t-5 semi-bold text-center text-success status-msg"></h5>
                                                     </div>
                                                   </div>
                                                 </div>
@@ -426,6 +427,7 @@ jQuery(document).ready(function() {
       var login_cookie_name = jQuery('#login_cookie_name').val();
       var login_cookie_value = jQuery('#login_cookie_value').val();      
        jQuery('#sync-media').prop('disabled', true);
+       jQuery(referer).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
        jQuery.ajax({  
                 type: 'POST',  
                 url: AJAXURL,  
@@ -448,6 +450,7 @@ jQuery(document).ready(function() {
                     console.log(errorThrown);  
                     jQuery('#sync-media').prop('disabled', false);
                     jQuery(referer).prop('disabled', false); 
+                    jQuery(referer).next().next().hide();
                 }  
 	    }); 
     }
@@ -465,7 +468,7 @@ jQuery(document).ready(function() {
                                    jQuery(referer).next().text('Blog Validity Expired'); 
                                    jQuery(referer).prop('disabled', false);
                                    jQuery('#sync-media').prop('disabled', false);
-
+                                   jQuery(referer).next().next().hide();
                        }       
             },'json');    
         }
@@ -489,6 +492,7 @@ jQuery(document).ready(function() {
                                    jQuery(referer).next().text('File download failed'); 
                                    jQuery(referer).prop('disabled', false);
                                    jQuery('#sync-media').prop('disabled', false);
+                                   jQuery(referer).next().next().hide();
                        }          
             },'json');            
         }
@@ -516,6 +520,7 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text('File download failed'); 
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
+                               jQuery(referer).next().next().hide();
                    }          
         },'json');
         
@@ -531,17 +536,23 @@ jQuery(document).ready(function() {
         function(data) {           
                    if(data.code === 'OK'){ 
                                jQuery(referer).next().text('Sync completed! You now have all the recent updates');
+                               jQuery(referer).attr('data-syncstatus','imported');
+                               jQuery('#totalRecordsToBeSynced').text('Records to be synced: '+data.to_be_synccount);
+                               jQuery('#lastDownloadTimeStamp').text('Last downloaded: '+data.sync_date);
+                               jQuery(referer).attr('data-syncstatus','imported');
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
                                jQuery(referer).val('Start');
-                               window.location.reload();
+                               jQuery(referer).next().next().hide();
+                               //window.location.reload();
                   
                    } else if(data.code === 'ERROR') {
                                //alert('error');
                                jQuery(referer).next().text('Data Import failed'); 
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
-                               window.location.reload();
+                               jQuery(referer).next().next().hide();
+                               //window.location.reload();
                    }          
         },'json');
         
@@ -550,6 +561,8 @@ jQuery(document).ready(function() {
     function resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id,blog_id){
         jQuery(syncreference).prop('disabled', true);
         jQuery('#sync-media').prop('disabled', true);
+        jQuery(syncreference).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
+        jQuery(syncreference).next().next().show();
         if(syncstatus == 'downloaded'){
             school_data_sync_import(syncreference,lastsync_id);
         }
@@ -597,6 +610,7 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text(data.status); 
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
+                               jQuery(referer).next().next().hide();
                    }          
         },'json');
     }
@@ -626,12 +640,13 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text(data.message); 
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
+                               jQuery(referer).next().next().hide();
                    }          
         },'json');
     }
     
     function check_server_data_sync(referer,sync_request_id,blog_id,last_sync){
-        referer.next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
+        referer.next().html('Checking Server..');
         var syncstatus = referer.attr('data-syncstatus');
         var server_sync_id = referer.attr('data-server-sync-id');
         var login_cookie_name = jQuery('#login_cookie_name').val();
@@ -667,7 +682,9 @@ jQuery(document).ready(function() {
 
                 jQuery(this).prop('disabled', true); 
                 jQuery('#sync-data').prop('disabled', true);
-                jQuery(this).next().text('Downloading images...');     
+                jQuery(this).next().text('Downloading images...');   
+                jQuery(this).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
+                jQuery(this).next().next().show();               
                 var referer = jQuery(this);
                 var login_cookie_name = jQuery('#login_cookie_name').val();
                 var login_cookie_value = jQuery('#login_cookie_value').val();
@@ -693,6 +710,7 @@ jQuery(document).ready(function() {
                                        referer.next().text(data.message); 
                                        referer.prop('disabled', false);
                                        jQuery('#sync-data').prop('disabled', false);
+                                       jQuery(this).next().next().hide();
                            }          
                 },'json');
          
@@ -724,6 +742,7 @@ jQuery(document).ready(function() {
                                        jQuery(referer).next().text(data.message); 
                                        jQuery(referer).prop('disabled', false);
                                        jQuery('#sync-data').prop('disabled', false);
+                                       jQuery(referer).next().next().hide();
                            }          
                 },'json');
         }
@@ -746,12 +765,14 @@ jQuery(document).ready(function() {
                                        });
                                        jQuery(referer).prop('disabled', false);
                                        jQuery('#sync-data').prop('disabled', false);
+                                       jQuery(referer).next().next().hide();
 
                            } else if(data.code === 'ERROR') {
                                        //alert('error');
                                        jQuery(referer).next().text(data.message).fadeOut(5000); 
                                        jQuery(referer).prop('disabled', false);
                                        jQuery('#sync-data').prop('disabled', false);
+                                       jQuery(referer).next().next().hide();
                            }          
                 },'json');
         }    

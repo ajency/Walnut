@@ -140,10 +140,15 @@ function ajax_sds_data_sync_import() {
     $zip->close();
     
     $status =  get_local_syncrecord_status($sync_id);
-    if($status == 'imported')
-    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id, 'status' => $status) ) );
-    else
+    if($status == 'imported'){
+        $upsyncount = get_upsync_data_count();
+        $last_sync_imported = get_last_sync_imported();
+        $last_sync_date = date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s');
+        wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id, 'status' => $status,'sync_date' => $last_sync_date,'to_be_synccount'=>$upsyncount) ) );
+    }
+    else{
     wp_die( json_encode( array( 'code' => 'ERROR', 'sync_request_id' => $sync_id, 'status' => $status) ) );
+    }
 }
 add_action( 'wp_ajax_sds_data_sync_import', 'ajax_sds_data_sync_import' );
 
