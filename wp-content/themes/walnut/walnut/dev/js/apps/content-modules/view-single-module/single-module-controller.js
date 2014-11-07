@@ -24,11 +24,13 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/view-singl
 
       GroupController.prototype.initialize = function(opts) {
         $.showHeaderAndLeftNav();
-        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.studentCollection = opts.studentCollection;
-        this.questionResponseCollection = App.request("get:question:response:collection", {
-          'division': this.division,
-          'collection_id': model.get('id')
-        });
+        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.studentCollection = opts.studentCollection, this.questionResponseCollection = opts.questionResponseCollection;
+        if (!this.questionResponseCollection) {
+          this.questionResponseCollection = App.request("get:question:response:collection", {
+            'division': this.division,
+            'collection_id': model.get('id')
+          });
+        }
         if (!this.studentCollection) {
           if (this.mode === 'training') {
             this.studentCollection = App.request("get:dummy:students");

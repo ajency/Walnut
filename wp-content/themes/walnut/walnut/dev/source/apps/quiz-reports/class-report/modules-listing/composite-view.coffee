@@ -23,7 +23,7 @@
             events:
                 'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#content-pieces-table'
                 'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
-                'click #send-email, #send-sms'          : 'saveCommunications'
+                'click .send-email, .send-sms'          : 'saveCommunications'
 
             initialize : ->
                 @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
@@ -61,11 +61,11 @@
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'
                 .is ':checked'
-                    @$el.find '#send-email, #send-sms'
+                    @$el.find '.send-email, .send-sms'
                     .show()
 
                 else
-                    @$el.find '#send-email, #send-sms'
+                    @$el.find '.send-email, .send-sms'
                     .hide()
 
             saveCommunications:(e)->

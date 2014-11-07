@@ -1,4 +1,5 @@
-define ['app'], (App)->
+define ['app'
+       'bootbox'], (App,bootbox)->
     App.module "SingleQuestionStudentsListApp.Views", (Views, App)->
         class StudentsItemView extends Marionette.ItemView
 
@@ -131,10 +132,12 @@ define ['app'], (App)->
 
             questionCompleted: ->
                 if (_.size(@correctAnswers) < 1) and (Marionette.getOption(@, 'display_mode') is 'class_mode')
-                    if confirm 'This item will be marked as complete. None of the options have been selected. Continue?'
-                        @trigger "question:completed", "no_answer"
+                    msg = 'This item will be marked as complete. None of the options have been selected. Continue?'
+                    bootbox.confirm msg, (result)->
+                        @trigger("question:completed", "no_answer") if result
                 else
-                    if confirm 'This item will be marked as complete. Continue?'
-                        @trigger "question:completed"
+                    msg = 'This item will be marked as complete. Continue?'
+                    bootbox.confirm msg (result)->
+                        @trigger("question:completed") if result
 
 

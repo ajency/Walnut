@@ -1,6 +1,7 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/take-module-item/module-description/templates/module-description-template.html'], (App, RegionController, moduleDescriptionTemplate)->
+        'text!apps/take-module-item/module-description/templates/module-description-template.html'
+        'bootbox'], (App, RegionController, moduleDescriptionTemplate,bootbox)->
     App.module "TeacherTeachingApp.ModuleDescription", (ModuleDescription, App)->
         class ModuleDescriptionController extends RegionController
 
@@ -117,8 +118,8 @@ define ['app'
             questionCompleted: =>
 
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    if confirm 'This item will be marked as complete. Continue?'
-                            @trigger "question:completed"
+                    bootbox.confirm 'This item will be marked as complete. Continue?', (result)->
+                        @trigger("question:completed") if result
 
                 else @trigger "question:completed"
 

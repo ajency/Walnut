@@ -23,7 +23,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        var collection_types, imageCollection, imageModels, optionCollection, optionModels, textCollection, textModels;
+        var collection_types, correctAns, imageCollection, imageModels, optionCollection, optionModels, optsColl, textCollection, textModels;
         App.execute("save:hotspot:content");
         console.log(this.model);
         collection_types = ['option', 'image', 'text'];
@@ -48,12 +48,25 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         this.model.set({
           'textCollection': textModels
         });
-        if (this.model.get('marks') > 0 && !_.every(this.model.get('optionCollection'), function(option) {
+        optsColl = this.model.get('optionCollection');
+        if (this.model.get('marks') > 0 && !_.every(optsColl, function(option) {
           return !option.correct;
         })) {
           this.model.set('complete', true);
         } else {
           this.model.set('complete', false);
+        }
+        if (this.model.get('enableIndividualMarks')) {
+          correctAns = _.where(optsColl, {
+            'correct': true
+          });
+          if (!_.every(correctAns, function(option) {
+            if (option.marks > 0) {
+              return true;
+            }
+          })) {
+            this.model.set('complete', false);
+          }
         }
         this.model.save();
         optionCollection = App.request("create:new:hotspot:element:collection", optionCollection);
