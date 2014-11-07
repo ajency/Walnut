@@ -972,6 +972,11 @@ textarea.border {
   /* Opera */
   border-image: url(../../../images/border.gif) 20 20 stretch;
 }
+.table-bordered th {
+  background-color: #8b91a0;
+  border: 1px solid #8b91a0;
+  color: #ffffff;
+}
 input[type="text"].rowColInput {
   width: 30%;
   float: left;
