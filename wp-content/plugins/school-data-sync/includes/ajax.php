@@ -260,7 +260,7 @@ function ajax_sds_local_upload_to_server(){
         array('status' => 'transfered-server','server_sync_id' => $resp_decode['sync_request_id']),
         array( 'id' => $sync_request_id ) );
         
-        wp_die( json_encode( array( 'code' => $resp_decode['code'], 'sync_request_id' => $resp_decode['sync_request_id']) ) );
+        wp_die( json_encode( array( 'code' => $resp_decode['code'], 'sync_request_id' => $resp_decode['sync_request_id'],'status' =>'transfered-server') ) );
     }
     
     wp_die( json_encode( array( 'code' => $resp_decode['code'], 'message' => $resp_decode['message']) ) );

@@ -484,6 +484,8 @@ jQuery(document).ready(function() {
             function(data) {           
                        if(data.code === 'OK'){ 
                                    jQuery(referer).next().text('File downloaded...');
+                                   jQuery(referer).attr('data-syncstatus',data.status);
+                                   jQuery(referer).attr('data-lastsync-id',data.sync_request_id);
                                    school_data_sync_import(referer,data.sync_request_id)
 
 
@@ -512,6 +514,8 @@ jQuery(document).ready(function() {
         function(data) {           
                    if(data.code === 'OK'){ 
                                jQuery(referer).next().text('File downloaded...');
+                               jQuery(referer).attr('data-syncstatus',data.status);
+                               jQuery(referer).attr('data-lastsync-id',data.sync_request_id);
                                school_data_sync_import(referer,data.sync_request_id)
                                
                   
@@ -632,6 +636,7 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text('Local Data uploaded...').delay(250).text('Waiting For Server Sync..');
                                //school_data_local_upload(referer,data.sync_request_id);
                                jQuery(referer).attr( 'data-server-sync-id', data.sync_request_id );
+                               jQuery(referer).attr( 'data-syncstatus', data.status );
                                check_server_data_sync(referer,sync_request_id,blog_id,last_sync);
                                
                   
