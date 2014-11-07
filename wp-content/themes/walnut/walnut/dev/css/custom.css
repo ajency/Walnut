@@ -2249,7 +2249,7 @@ input#duration {
 .holder a.jp-disabled:hover {
   background-color: #c8d0d6;
 }
-@media (max-width: 1295px) {
+@media (max-width: 1200px) {
   #content-board.quizContent {
     margin-top: 60px;
   }
