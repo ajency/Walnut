@@ -87,7 +87,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         } else {
           return this.authenticateUserBlogId(resp);
         }
-      } else if (user_role === 'student') {
+      } else {
         return this.onErrorResponse('Sorry this is not a valid teacher login. If you are a student please download Student training app from Google Playstore.');
       }
     };

@@ -80,7 +80,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 				if _.isNull(_.getBlogID()) then @initialAppLogin(resp)
 				else @authenticateUserBlogId(resp)
 
-			else if user_role is 'student'
+			else
 				@onErrorResponse('Sorry this is not a valid teacher login. 
 					If you are a student please download Student training 
 					app from Google Playstore.')

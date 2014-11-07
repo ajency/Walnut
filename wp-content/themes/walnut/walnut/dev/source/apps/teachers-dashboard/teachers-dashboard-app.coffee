@@ -10,7 +10,7 @@ define ['app'
         class TeachersDashboardRouter extends Marionette.AppRouter
 
             appRoutes:
-                ''                                  : 'dashboardRedirect'
+                # ''                                  : 'dashboardRedirect'
                 'teachers/dashboard'                : 'teachersDashboard'
                 'teachers/take-class/:classID/:div' : 'takeClass'
                 'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules'

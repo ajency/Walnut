@@ -18,7 +18,7 @@ define ['app'
 			Controller =
 
 				showLogin: ->
-					userdata= App.request "get:user:model"
+					userdata = App.request "get:user:model"
 					if not userdata.get 'ID'
 						new LoginApp.Controller.LoginController
 							region: App.loginRegion

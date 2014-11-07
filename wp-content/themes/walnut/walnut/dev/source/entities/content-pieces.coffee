@@ -154,3 +154,4 @@ define ["app", 'backbone'], (App, Backbone) ->
 
         App.reqres.setHandler "get:content:pieces:repository",->
             contentPiecesRepository.clone()
+

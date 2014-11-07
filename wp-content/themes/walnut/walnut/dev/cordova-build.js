@@ -51,8 +51,9 @@
 		json2csvparse       : 'plugins/json2csv',
 		jszip               : 'plugins/jszip',
 		fastclick           : 'plugins/fastclick',
-		walnutGlobal        : 'plugins/walnutapp-global',
-		bootbox 			: 'plugins/bootbox.min'
+		bootbox 			: 'plugins/bootbox.min',
+		walnutGlobal        : 'plugins/walnutapp-global'
+		
 	},
 	shim: {
 		underscore: {

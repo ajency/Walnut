@@ -12,7 +12,6 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
       }
 
       TeachersDashboardRouter.prototype.appRoutes = {
-        '': 'dashboardRedirect',
         'teachers/dashboard': 'teachersDashboard',
         'teachers/take-class/:classID/:div': 'takeClass',
         'teachers/take-class/:classID/:div/textbook/:tID': 'takeClassTextbookModules',
