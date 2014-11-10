@@ -18,16 +18,25 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       }
 
       Controller.prototype.initialize = function(options) {
-        var answerWreqrObject;
+        var answer, answerWreqrObject;
         answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
         if (answerWreqrObject) {
+          if (this.answerModel.get('answer')) {
+            answer = this.answerModel.get('answer');
+            answer = _.map(answer, function(m) {
+              return parseInt(m);
+            });
+            this.answerModel.set({
+              'answer': answer
+            });
+          }
           this.displayAnswer = answerWreqrObject.options.displayAnswer;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
-              var answer, data, emptyOrIncomplete;
+              var data, emptyOrIncomplete;
               answer = _.compact(_this.answerModel.get('answer'));
               if (_.isEmpty(answer)) {
                 emptyOrIncomplete = 'empty';

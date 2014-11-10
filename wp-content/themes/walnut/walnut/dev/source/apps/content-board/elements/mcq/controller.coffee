@@ -13,6 +13,11 @@ define ['app'
 
                 if answerWreqrObject
 
+                    if @answerModel.get 'answer'
+                        answer = @answerModel.get 'answer'
+                        answer = _.map answer, (m)-> parseInt m
+                        @answerModel.set 'answer' :answer
+
                     @displayAnswer = answerWreqrObject.options.displayAnswer
 
                     answerWreqrObject.setHandler "get:question:answer", =>
