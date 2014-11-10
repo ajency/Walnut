@@ -150,11 +150,13 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.questionCompleted = function() {
         if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          return bootbox.confirm('This item will be marked as complete. Continue?', function(result) {
-            if (result) {
-              return this.trigger("question:completed");
-            }
-          });
+          return bootbox.confirm('This item will be marked as complete. Continue?', (function(_this) {
+            return function(result) {
+              if (result) {
+                return _this.trigger("question:completed");
+              }
+            };
+          })(this));
         } else {
           return this.trigger("question:completed");
         }
