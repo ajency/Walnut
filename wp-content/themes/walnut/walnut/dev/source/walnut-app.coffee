@@ -48,6 +48,7 @@ define ['marionette'], (Marionette)->
 
 
 			onDeviceReady = =>
+				
 
 				# Open pre-populated SQLite database file.
 				_.cordovaOpenPrepopulatedDatabase()
@@ -68,26 +69,26 @@ define ['marionette'], (Marionette)->
 						`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
 				)
 
-				_.setSynapseMediaDirectoryPathToLocalStorage().done ->
-					console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
+				# _.setSynapseMediaDirectoryPathToLocalStorage().done ->
+				# 	console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
 
 
 					# If the UserId is null or 'null' i.e id not set in local storage then the app
 					# is either installed for the first time or user has logged out.
 
-					if _.isNull(_.getUserID()) or _.getUserID() is 'null'
+				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
 
-						# If the blog_id is not set then the app is installed for the very first time.
-						# Navigate to main login screen if blog id is null, else show list of users view.
+					# If the blog_id is not set then the app is installed for the very first time.
+					# Navigate to main login screen if blog id is null, else show list of users view.
 
-						@rootRoute = 'app-login'
-						@rootRoute = 'login' if _.isNull(_.getUserID())
-						App.navigate(@rootRoute, trigger: true)
-					else
-						#If User ID is set, then navigate to dashboard.
+					@rootRoute = 'app-login'
+					@rootRoute = 'login' if _.isNull(_.getUserID())
+					App.navigate(@rootRoute, trigger: true)
+				else
+					#If User ID is set, then navigate to dashboard.
 
-						authController = App.request "get:auth:controller"
-						authController.setUserModelForOfflineLogin()
+					authController = App.request "get:auth:controller"
+					authController.setUserModelForOfflineLogin()
 
 			
 			document.addEventListener("deviceready", onDeviceReady, false)

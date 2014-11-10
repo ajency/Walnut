@@ -88,9 +88,11 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			defer = $.Deferred()
 			content = 
-				elements : elements
-				excerpt : new Array
-				marks 	: 0
+				elements 	: elements
+				excerpt 	: new Array
+				marks 		: 0
+				audioArray 	: new Array
+				videoArray 	: new Array
 
 			if _.isArray elements  
 				total = 0
@@ -101,6 +103,8 @@ define ['underscore', 'unserialize'], ( _) ->
 						# element.columncount = element.elements.length
 						_.getRowElements(element).then (columnElement)->
 							content.excerpt.push columnElement.excerpt
+							content.videoArray.push(columnElement.videoArray) if columnElement.videoArray
+							content.audioArray.push(columnElement.audioArray) if columnElement.audioArray
 							content.marks += columnElement.marks if columnElement.marks
 							total--
 							if not total
@@ -139,6 +143,9 @@ define ['underscore', 'unserialize'], ( _) ->
 									element.image_id = parseInt element.image_id
 								if element.element is 'Video'
 									element.video_id = parseInt element.video_id
+									content.videoArray.push(element.video_ids) if element.video_ids
+								if element.element is 'Audio'
+									content.audioArray.push element
 
 								content.marks += element.marks if element.marks
 								
@@ -168,6 +175,8 @@ define ['underscore', 'unserialize'], ( _) ->
 			content = 
 				excerpt : new Array
 				marks : 0
+				audioArray 	: new Array
+				videoArray 	: new Array
 
 			total = 0
 
@@ -208,6 +217,9 @@ define ['underscore', 'unserialize'], ( _) ->
 										element.image_id = parseInt element.image_id
 									if element.element is 'Video'
 										element.video_id = parseInt element.video_id
+										content.videoArray.push(element.video_ids) if element.video_ids
+									if element.element is 'Audio'
+										content.audioArray.push element
 
 									content.marks += element.marks if element.marks
 

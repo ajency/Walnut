@@ -88,12 +88,20 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         if (!_.isUndefined(path.ExternalPath)) {
           storageOptions['Internal'] = path.InternalPath;
           storageOptions['External'] = path.ExternalPath;
+          return _.cordovaCheckIfPathExists(path.ExternalPath).then(function(pathExists) {
+            if (pathExists) {
+              console.log('Storage Options External');
+              return defer.resolve(storageOptions);
+            } else {
+              console.log('Storage Options Internal');
+              storageOptions = _.pick(storageOptions, 'Internal');
+              return defer.resolve(storageOptions);
+            }
+          });
         } else {
           storageOptions['Internal'] = path.InternalPath;
+          return defer.resolve(storageOptions);
         }
-        console.log('Storage Options');
-        console.log(storageOptions);
-        return defer.resolve(storageOptions);
       }, function(error) {
         console.log('STORAGE ERROR');
         return defer.reject(console.log(error));

@@ -11,9 +11,7 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
         } else {
           forEach = function(row, i) {
             return _.getQuizResponseSummaryByCollectionId(collection_id).then(function(quiz_responses) {
-              console.log(quiz_responses);
               return _.getCountForSkippedQuestion(row['summary_id']).then(function(skipped) {
-                console.log(skipped);
                 return _.getTotalMarksScoredAndTotalTimeTaken(row['summary_id']).then(function(value) {
                   var quiz_meta, userID;
                   console.log(value);
@@ -110,12 +108,13 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
     abc: function() {
       return _.db.transaction(function(tx) {
         return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_response_summary ", [], function(tx, results) {
-          var i, result, _i, _ref;
+          var i, result, _i, _ref, _results;
           result = new Array();
+          _results = [];
           for (i = _i = 0, _ref = results.rows.length - 1; _i <= _ref; i = _i += 1) {
-            result[i] = results.rows.item(i);
+            _results.push(result[i] = results.rows.item(i));
           }
-          return console.log(result);
+          return _results;
         }, _.transactionErrorHandler);
       });
     },

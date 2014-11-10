@@ -70,11 +70,14 @@ define ['app'
 
 						runFunc = =>
 							$.Deferred (d)=>
+
 								localAudioPaths = []
 								deferreds = []
+
 								_.createAudioWebDirectory().done =>
 
 									allAudioUrls = @layout.model.get('audioUrls')
+									
 
 									_.each allAudioUrls , (audioUrl , index)->
 
@@ -82,18 +85,34 @@ define ['app'
 											url = audioUrl.replace("media-web/","")
 											audioWebPath = url.substr(url.indexOf("uploads/"))
 											audiosPath = audioWebPath.replace("audio-web", "audios")
-											encryptedAudioPath = "SynapseAssets/SynapseMedia/"+audiosPath
-											decryptedAudioPath = "SynapseAssets/SynapseMedia/"+audioWebPath
+											encryptedPath = "SynapseAssets/SynapseMedia/"+audiosPath
+											decryptedPath = "SynapseAssets/SynapseMedia/"+audioWebPath
+
+											value = _.getStorageOption()
+											option = JSON.parse(value)
+
+											encryptedAudioPath = '' 
+											decryptedAudioPath = ''
+
+											if option.internal
+												encryptedAudioPath = option.internal+'/'+encryptedPath
+												decryptedAudioPath = option.internal+'/'+decryptedPath
+											else if option.external
+												encryptedAudioPath = option.external+'/'+encryptedPath
+												decryptedAudioPath = option.external+'/'+decryptedPath
 
 											decryptFile = _.decryptLocalFile(encryptedAudioPath, decryptedAudioPath)
 											deferreds.push decryptFile
 									
 									$.when(deferreds...).done (audioPaths...)=>
+
 										_.each audioPaths , (localAudioPath , index)=>
 											do(localAudioPath)=> 
 												
-												localPath = 'file:///mnt/sdcard/' + localAudioPath
-												localAudioPaths.push localPath
+												# localPath = filepath+'/'+localAudioPath
+												# localPath = 'file:///mnt/sdcard/' + localAudioPath
+												localAudioFullPath = 'file://'+localAudioPath
+												localAudioPaths.push localAudioFullPath
 
 										d.resolve @layout.model.set 'audioUrls', localAudioPaths
 

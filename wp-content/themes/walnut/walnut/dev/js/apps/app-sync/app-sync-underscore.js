@@ -114,8 +114,16 @@ define(['underscore', 'unserialize'], function(_) {
       });
     },
     clearSynapseDataDirectory: function() {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getDirectory("SynapseAssets/SynapseData", {
+      var filepath, option, value;
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
+      return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileSystem) {
+        return fileSystem.getDirectory("SynapseAssets/SynapseData", {
           create: false,
           exclusive: false
         }, function(directoryEntry) {

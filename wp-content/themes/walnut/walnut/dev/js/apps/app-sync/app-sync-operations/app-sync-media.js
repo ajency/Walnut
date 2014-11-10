@@ -82,14 +82,21 @@ define(['underscore', 'jquery'], function(_, $) {
       });
     },
     getListOfFilesFromLocalDirectory: function(file_type) {
-      var path, runFunc;
+      var filepath, option, path, runFunc, value;
       path = file_type.toLowerCase() + "s";
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
       runFunc = function() {
         return $.Deferred(function(d) {
           var localFilesList;
           localFilesList = [];
-          return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-            return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/" + path, {
+          return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileSystem) {
+            return fileSystem.getDirectory("SynapseAssets/SynapseMedia/uploads/" + path, {
               create: false,
               exclusive: false
             }, function(directoryEntry) {

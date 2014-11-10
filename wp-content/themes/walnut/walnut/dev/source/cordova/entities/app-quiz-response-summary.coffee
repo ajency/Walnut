@@ -20,11 +20,10 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 						_.getQuizResponseSummaryByCollectionId(collection_id)
 						.then (quiz_responses)->
 
-							console.log quiz_responses
 							
 							_.getCountForSkippedQuestion(row['summary_id'])
 							.then (skipped)->
-								console.log skipped
+								
 										
 								_.getTotalMarksScoredAndTotalTimeTaken(row['summary_id'])
 								.then (value)->
@@ -166,7 +165,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 							result[i] = results.rows.item(i)
 						
 						# alert "final"
-						console.log result
+						# console.log result
 
 					, _.transactionErrorHandler)
 

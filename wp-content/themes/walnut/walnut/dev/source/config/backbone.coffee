@@ -14,6 +14,7 @@ define ["backbone"], (Backbone) ->
 		sync :(method, collection, options)->
 
 			collection_name = collection.name
+			
 			opts = options.data
 			console.log 'Collection name: '+collection_name
 
@@ -215,6 +216,7 @@ define ["backbone"], (Backbone) ->
 			else
 				#Changes needed for offline data retrieval
 				modelname = model.name
+				
 				console.log "model"
 				console.log 'Model name: '+modelname
 

@@ -21,7 +21,6 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 						
 						_.getTotalMarksScoredAndTotalTimeTaken(summary_id)
 						.then (value)->
-							console.log value
 
 							result[i] = 
 								content_piece_id : row['content_piece_id']
@@ -149,7 +148,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
 				model.set 'qr_id' :qr_id
-				_.selectData(1)
+				# _.selectData(1)
 			)
 
 		selectData : (v)->
@@ -163,7 +162,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 							result[i] = results.rows.item(i)
 						
 						# alert "final"
-						console.log JSON.stringify result
+						
 
 					, _.transactionErrorHandler)
 
@@ -178,7 +177,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 						# if results.length>0
 						qrId = model.get('qr_id')
 						result = results.rows.item(0)
-						console.log JSON.stringify result
+						
 
 						if result.status is "paused" and model.get('status') is "paused"
 							_.updatePausedQuizQuestionResponseData(model)
