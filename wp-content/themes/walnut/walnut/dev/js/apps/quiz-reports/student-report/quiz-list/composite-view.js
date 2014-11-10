@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-report/quiz-list/item-views'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-reports/student-report/quiz-list/item-views'], function(App, RegionController, bootbox) {
   return App.module("StudentReportApp.QuizList.Views", function(Views, App) {
     return Views.QuizListView = (function(_super) {
       __extends(QuizListView, _super);
@@ -42,7 +42,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
       };
 
       QuizListView.prototype.events = {
-        'change #check_all_div': 'checkAll',
+        'change #check_all_div': function() {
+          return $.toggleCheckAll(this.$el.find('#quiz-table'));
+        },
         'change .tab_checkbox,#check_all_div ': 'showClearResponseButton',
         'click .reset-quiz': 'clearQuizResponse'
       };
@@ -56,16 +58,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
         return this.$el.find('#quiz-table').tablesorter().tablesorterPager(pagerOptions);
       };
 
-      QuizListView.prototype.checkAll = function() {
-        var all_ids, classTestModules, excludeIDs;
-        all_ids = this.collection.pluck('id');
-        classTestModules = _.chain(this.collection.where({
-          'quiz_type': 'test'
-        })).pluck('id').value();
-        excludeIDs = _.difference(all_ids, classTestModules);
-        return $.toggleCheckAll(this.$el.find('#quiz-table'), excludeIDs);
-      };
-
       QuizListView.prototype.showClearResponseButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
           return this.$el.find('.reset-quiz').show();
@@ -75,8 +67,31 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
       };
 
       QuizListView.prototype.clearQuizResponse = function() {
-        var quizID, quizIDs, _i, _len;
+        var msg, practice, quizIDs;
         quizIDs = $.getCheckedItems(this.$el.find('#quiz-table'));
+        quizIDs = _.map(quizIDs, function(m) {
+          return parseInt(m);
+        });
+        practice = this.collection.where({
+          'quiz_type': 'practice'
+        });
+        this.clearResponse = true;
+        if (!_.isEmpty(_.intersection(quizIDs, _.pluck(practice, 'id')))) {
+          msg = 'All the previous attempts for practice quiz only will also be resetted. Are you sure you want to continue?';
+          return bootbox.confirm(msg, (function(_this) {
+            return function(result) {
+              if (result) {
+                return _this.deleteSelectedResponses(quizIDs);
+              }
+            };
+          })(this));
+        } else {
+          return this.deleteSelectedResponses(quizIDs);
+        }
+      };
+
+      QuizListView.prototype.deleteSelectedResponses = function(quizIDs) {
+        var quizID, _i, _len;
         if (!_.isEmpty(quizIDs)) {
           for (_i = 0, _len = quizIDs.length; _i < _len; _i++) {
             quizID = quizIDs[_i];
@@ -88,12 +103,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/student-repor
       };
 
       QuizListView.prototype.deleteResponse = function(quizID) {
-        var quizResponseSummaries, summary;
+        var quizResponseSummaries, s, summary, _i, _len;
         quizResponseSummaries = Marionette.getOption(this, 'quizResponseSummaries');
-        summary = quizResponseSummaries.findWhere({
+        summary = quizResponseSummaries.where({
           'collection_id': parseInt(quizID)
         });
-        summary.destroy();
+        for (_i = 0, _len = summary.length; _i < _len; _i++) {
+          s = summary[_i];
+          s.destroy();
+        }
         this.collection.remove(quizID);
         this.updateTableSorter();
         return this.showResetSuccessMsg();
