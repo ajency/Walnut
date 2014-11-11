@@ -23,15 +23,22 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
       return csvData;
     },
     writeToZipFile: function(quiz_question_response_data, quiz_response_summary_data) {
-      var content, zip;
+      var content, filepath, option, value, zip;
       zip = new JSZip();
       zip.file('' + _.getTblPrefix() + 'quiz_question_response.csv', quiz_question_response_data);
       zip.file('' + _.getTblPrefix() + 'quiz_response_summary.csv', quiz_response_summary_data);
       content = zip.generate({
         type: "blob"
       });
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getFile("SynapseAssets/SynapseData/csv-export-" + device.uuid + ".zip", {
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
+      return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileSystem) {
+        return fileSystem.getFile("SynapseAssets/SynapseData/csv-export-" + device.uuid + ".zip", {
           create: true,
           exclusive: false
         }, function(fileEntry) {

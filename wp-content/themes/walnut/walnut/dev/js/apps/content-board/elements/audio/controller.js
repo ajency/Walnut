@@ -88,12 +88,23 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
                 allAudioUrls = _this.layout.model.get('audioUrls');
                 _.each(allAudioUrls, function(audioUrl, index) {
                   return (function(audioUrl) {
-                    var audioWebPath, audiosPath, decryptFile, decryptedAudioPath, encryptedAudioPath, url;
+                    var audioWebPath, audiosPath, decryptFile, decryptedAudioPath, decryptedPath, encryptedAudioPath, encryptedPath, option, url, value;
                     url = audioUrl.replace("media-web/", "");
                     audioWebPath = url.substr(url.indexOf("uploads/"));
                     audiosPath = audioWebPath.replace("audio-web", "audios");
-                    encryptedAudioPath = "SynapseAssets/SynapseMedia/" + audiosPath;
-                    decryptedAudioPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
+                    encryptedPath = "SynapseAssets/SynapseMedia/" + audiosPath;
+                    decryptedPath = "SynapseAssets/SynapseMedia/" + audioWebPath;
+                    value = _.getStorageOption();
+                    option = JSON.parse(value);
+                    encryptedAudioPath = '';
+                    decryptedAudioPath = '';
+                    if (option.internal) {
+                      encryptedAudioPath = option.internal + '/' + encryptedPath;
+                      decryptedAudioPath = option.internal + '/' + decryptedPath;
+                    } else if (option.external) {
+                      encryptedAudioPath = option.external + '/' + encryptedPath;
+                      decryptedAudioPath = option.external + '/' + decryptedPath;
+                    }
                     decryptFile = _.decryptLocalFile(encryptedAudioPath, decryptedAudioPath);
                     return deferreds.push(decryptFile);
                   })(audioUrl);
@@ -103,9 +114,9 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
                   audioPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(audioPaths, function(localAudioPath, index) {
                     return (function(localAudioPath) {
-                      var localPath;
-                      localPath = 'file:///mnt/sdcard/' + localAudioPath;
-                      return localAudioPaths.push(localPath);
+                      var localAudioFullPath;
+                      localAudioFullPath = 'file://' + localAudioPath;
+                      return localAudioPaths.push(localAudioFullPath);
                     })(localAudioPath);
                   });
                   return d.resolve(_this.layout.model.set('audioUrls', localAudioPaths));

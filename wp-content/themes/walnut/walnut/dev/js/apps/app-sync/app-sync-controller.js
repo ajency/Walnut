@@ -48,29 +48,38 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.changeSyncButtonTextBasedOnLastSyncOperation = function() {
-      var lastSyncOperation;
+      var lastSyncOperation, option;
+      option = _.getStorageOption();
       lastSyncOperation = _.getLastSyncOperation();
       return lastSyncOperation.done(function(typeOfOperation) {
         switch (typeOfOperation) {
           case 'none':
             $('#syncButtonText').text('Start');
-            return $('#syncMediaStart').prop("disabled", true);
+            $('#syncMediaStart').prop("disabled", true);
+            if (!_.isNull(option)) {
+              return $('#storageOption').prop("disabled", true);
+            }
+            break;
           case 'file_import':
             return $('#syncButtonText').text('Start');
           case 'file_download':
             $('#syncButtonText').text('Continue');
-            return $('#syncMediaStart').prop("disabled", true);
+            $('#syncMediaStart').prop("disabled", true);
+            return $('#storageOption').prop("disabled", true);
           case 'file_generate':
             $('#syncButtonText').text('Continue');
-            return $('#syncMediaStart').prop("disabled", true);
+            $('#syncMediaStart').prop("disabled", true);
+            return $('#storageOption').prop("disabled", true);
           case 'file_upload':
             $('#syncButtonText').text('Continue');
-            return $('#syncMediaStart').prop("disabled", true);
+            $('#syncMediaStart').prop("disabled", true);
+            return $('#storageOption').prop("disabled", true);
         }
       });
     };
 
     SynchronizationController.prototype.startContinueDataSyncProcess = function() {
+      $('#storageOption').prop("disabled", true);
       $('#totalRecords').css("display", "none");
       $('#lastDownload').css("display", "none");
       $('#syncError').css("display", "none");
@@ -126,15 +135,18 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.startMediaSyncProcess = function() {
+      $('#storageOption').prop("disabled", true);
       $('#syncStartContinue').prop("disabled", true);
       $('#syncMediaError').css("display", "none");
       $('#syncMediaStart').css("display", "none");
       $('#syncMediaSuccess').css("display", "block").text("Started media sync...");
-      return setTimeout((function(_this) {
-        return function() {
-          return _.startMediaSync();
-        };
-      })(this), 2000);
+      return _.createDirectoriesForMediaSync().done(function() {
+        return setTimeout((function(_this) {
+          return function() {
+            return _.startMediaSync();
+          };
+        })(this), 2000);
+      });
     };
 
     return SynchronizationController;

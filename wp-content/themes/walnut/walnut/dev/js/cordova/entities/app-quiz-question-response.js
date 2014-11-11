@@ -11,7 +11,6 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
         } else {
           forEach = function(row, i) {
             return _.getTotalMarksScoredAndTotalTimeTaken(summary_id).then(function(value) {
-              console.log(value);
               result[i] = {
                 content_piece_id: row['content_piece_id'],
                 marks_scored: value.total_marks_scored,
@@ -95,12 +94,13 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
     selectData: function(v) {
       return _.db.transaction(function(tx) {
         return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_question_response ", [], function(tx, results) {
-          var i, result, _i, _ref;
+          var i, result, _i, _ref, _results;
           result = new Array();
+          _results = [];
           for (i = _i = 0, _ref = results.rows.length - 1; _i <= _ref; i = _i += 1) {
-            result[i] = results.rows.item(i);
+            _results.push(result[i] = results.rows.item(i));
           }
-          return console.log(JSON.stringify(result));
+          return _results;
         }, _.transactionErrorHandler);
       });
     },
@@ -110,7 +110,6 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
           var qrId, result;
           qrId = model.get('qr_id');
           result = results.rows.item(0);
-          console.log(JSON.stringify(result));
           if (result.status === "paused" && model.get('status') === "paused") {
             return _.updatePausedQuizQuestionResponseData(model);
           } else {

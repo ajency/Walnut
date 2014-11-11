@@ -95,7 +95,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 		# Decrypt the encrypted audio/video local files
 		decryptLocalFile : (source, destination)->
-
+			
 			$.Deferred (d)->
 
 				decrypt.startDecryption(source, destination
@@ -105,6 +105,46 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					, (message) ->
 						console.log 'FILE DECRYPTION ERROR: '+message
 				)
+
+		
+		#Get Path From The PLugin
+		getDeviceStorageOptions : ->
+			
+			defer = $.Deferred()
+
+			storageOptions = []
+
+			Path.CheckPath(
+				(path)->
+
+					if not _.isUndefined(path.ExternalPath)
+						storageOptions['Internal'] = path.InternalPath
+						storageOptions['External'] = path.ExternalPath
+
+						_.cordovaCheckIfPathExists(path.ExternalPath)
+						.then (pathExists)->
+							
+							if pathExists
+								console.log 'Storage Options External'
+								defer.resolve storageOptions
+
+							else
+								console.log 'Storage Options Internal'
+								storageOptions = _.pick storageOptions, 'Internal'
+								defer.resolve storageOptions
+
+					else
+						storageOptions['Internal'] = path.InternalPath
+						defer.resolve storageOptions
+
+
+				,(error)->
+					console.log 'STORAGE ERROR'
+					defer.reject(console.log error)
+			)
+
+			defer.promise()
+
 
 
 		

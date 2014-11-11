@@ -73,7 +73,9 @@ define(['underscore', 'unserialize'], function(_) {
       content = {
         elements: elements,
         excerpt: new Array,
-        marks: 0
+        marks: 0,
+        audioArray: new Array,
+        videoArray: new Array
       };
       if (_.isArray(elements)) {
         total = 0;
@@ -82,6 +84,12 @@ define(['underscore', 'unserialize'], function(_) {
           if (element.element === 'Row') {
             _.getRowElements(element).then(function(columnElement) {
               content.excerpt.push(columnElement.excerpt);
+              if (columnElement.videoArray) {
+                content.videoArray.push(columnElement.videoArray);
+              }
+              if (columnElement.audioArray) {
+                content.audioArray.push(columnElement.audioArray);
+              }
               if (columnElement.marks) {
                 content.marks += columnElement.marks;
               }
@@ -129,6 +137,12 @@ define(['underscore', 'unserialize'], function(_) {
                 }
                 if (element.element === 'Video') {
                   element.video_id = parseInt(element.video_id);
+                  if (element.video_ids) {
+                    content.videoArray.push(element.video_ids);
+                  }
+                }
+                if (element.element === 'Audio') {
+                  content.audioArray.push(element);
                 }
                 if (element.marks) {
                   content.marks += element.marks;
@@ -156,7 +170,9 @@ define(['underscore', 'unserialize'], function(_) {
       defer = $.Deferred();
       content = {
         excerpt: new Array,
-        marks: 0
+        marks: 0,
+        audioArray: new Array,
+        videoArray: new Array
       };
       total = 0;
       forEachRowElement = function(column, i) {
@@ -214,6 +230,12 @@ define(['underscore', 'unserialize'], function(_) {
                   }
                   if (element.element === 'Video') {
                     element.video_id = parseInt(element.video_id);
+                    if (element.video_ids) {
+                      content.videoArray.push(element.video_ids);
+                    }
+                  }
+                  if (element.element === 'Audio') {
+                    content.audioArray.push(element);
                   }
                   if (element.marks) {
                     content.marks += element.marks;

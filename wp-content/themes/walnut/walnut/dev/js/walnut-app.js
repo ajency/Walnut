@@ -35,6 +35,7 @@ define(['marionette'], function(Marionette) {
     if (_.platform() === 'DEVICE') {
       onDeviceReady = (function(_this) {
         return function() {
+          var authController;
           _.cordovaOpenPrepopulatedDatabase();
           _.cordovaLocalStorage();
           FastClick.attach(document.body);
@@ -46,22 +47,18 @@ define(['marionette'], function(Marionette) {
               return AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";;
             }
           });
-          return _.setSynapseMediaDirectoryPathToLocalStorage().done(function() {
-            var authController;
-            console.log('setSynapseMediaDirectoryPathToLocalStorage done');
-            if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
-              this.rootRoute = 'app-login';
-              if (_.isNull(_.getUserID())) {
-                this.rootRoute = 'login';
-              }
-              return App.navigate(this.rootRoute, {
-                trigger: true
-              });
-            } else {
-              authController = App.request("get:auth:controller");
-              return authController.setUserModelForOfflineLogin();
+          if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
+            _this.rootRoute = 'app-login';
+            if (_.isNull(_.getUserID())) {
+              _this.rootRoute = 'login';
             }
-          });
+            return App.navigate(_this.rootRoute, {
+              trigger: true
+            });
+          } else {
+            authController = App.request("get:auth:controller");
+            return authController.setUserModelForOfflineLogin();
+          }
         };
       })(this);
       document.addEventListener("deviceready", onDeviceReady, false);

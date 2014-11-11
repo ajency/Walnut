@@ -26,7 +26,6 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 							data,
 							(resp)=>
 								
-								console.log JSON.stringify resp
 								if resp is 0
 									
 									userInfo = _.getUserDetails(_.getUserID())
@@ -53,7 +52,6 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 										,1000)
 								else
 									console.log 'getZipFileDownloadDetails response'
-									console.log JSON.stringify resp
 									_.downloadZipFile resp
 
 							,
@@ -63,27 +61,36 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 						_.onDataSyncError("none", "Could not connect to server")
 
 
-		
-		downloadZipFile : (resp)->
+
+		#Updated To Take filepath from user selection				
+		downloadZipFile : (resp) ->
 
 			$('#syncSuccess').css("display","block").text("Downloading file...")
 			uri = encodeURI resp.exported_csv_url
+			
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+			
+			window.resolveLocalFileSystemURL('file://'+filepath+''
+				,(fileSystem)->
 
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-				,(fileSystem)=>
-					fileSystem.root.getFile("SynapseAssets/SynapseData/csv-synapse.zip"
-						, {create: true, exclusive: false}
-
+					fileSystem.getFile("SynapseAssets/SynapseData/csv-synapse.zip"
+						, {create: true, exclusive:false} 
+						
 						,(fileEntry)->
-							filePath = fileEntry.toURL().replace("csv-synapse.zip", "")
+							csvFilePath = fileEntry.toURL().replace("csv-synapse.zip", "")
 
 							fileEntry.remove()
 
 							fileTransfer = new FileTransfer()
 							
-							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
+							fileTransfer.download(uri, csvFilePath+"csv-synapse.zip" 
 								,(file)->
-									_.onFileDownloadSuccess(file.toURL(), filePath, resp.last_sync)
+									_.onFileDownloadSuccess(file.toURL(), csvFilePath, resp.last_sync)
 								
 								,(error)->
 									_.onDataSyncError(error, "An error occurred during file download")
@@ -93,6 +100,9 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 						,_.fileErrorHandler)
 
 				, _.fileSystemErrorHandler)
+
+			
+			
 
 
 		
