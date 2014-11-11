@@ -107,7 +107,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         data = {
           time_taken: elapsedTime,
           status: status,
-          end_date: status === 'completed' ? moment().format("YYYY-MM-DD") : void 0
+          end_date: status === 'completed' ? moment().format("YYYY-MM-DD") : void 0,
+          teacher_name: App.request("get:user:data", "display_name")
         };
         questionResponseModel.set(data);
         questionResponseCollection.add(questionResponseModel);
