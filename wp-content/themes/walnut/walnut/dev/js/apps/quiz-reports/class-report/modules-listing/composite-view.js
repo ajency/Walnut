@@ -90,8 +90,8 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         }
         if (data.quizIDs) {
           this.trigger("save:communications", data);
-          this.$el.find('#communication_sent').remove();
-          return this.$el.find('#send-email').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
+          this.$el.find('.communication_sent').remove();
+          return this.$el.find('.send-email').after('<span class="m-l-40 text-success small communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
         }
       };
 
