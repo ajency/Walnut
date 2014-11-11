@@ -52,11 +52,9 @@ class ExportTables {
     var $sync_type;
 
     function __construct($args = '') {
-        global $user_ID;
 
         // Default arguments
         $defaults = array(
-            'user_id'       => $user_ID,
             'blog_id'       => get_current_blog_id(),
             'last_sync'     => '',
             'device_type'   => 'standalone',
@@ -66,7 +64,10 @@ class ExportTables {
 
         $r = wp_parse_args($args, $defaults);
         extract($r, EXTR_SKIP);
-
+        
+        if($last_sync)
+            $last_sync = date('Y-m-d H:i:s',strtotime('-5 hours -30 minutes',strtotime($last_sync)));
+    
         if($user_id){
             $blog = get_active_blog_for_user( $user_id );
             $blog_id=$blog->blog_id;            
@@ -119,6 +120,7 @@ class ExportTables {
         $export_details = array();
 
         $export_details['blog_expired'] = $this->is_blog_expired();
+        $currdate = date('Y-m-d H:i:s',strtotime('+5 hours 30 minutes',current_time( 'timestamp', 0 )));
         
         if($result === false){
             $export_details['error'] = true;
@@ -128,12 +130,28 @@ class ExportTables {
         else{
             $uploaded_url= $upload_url.$upload_path;
             $export_details['exported_csv_url'] = $uploaded_url;
-            $export_details['last_sync']=date('Y-m-d H:i:s',strtotime('+5 hours 30 minutes',current_time( 'timestamp', 0 )));  // adding +5.30 hours as current_time function returns same result 
+            $export_details['last_sync']=$currdate;  // adding +5.30 hours as current_time function returns same result 
             $this->create_sync_device_log($export_details['last_sync']);
         }
 
-        return $export_details;
+        $tabs = '';
 
+        foreach($tables_to_export as $t){
+            if(is_array($t))
+                $tabs .=$t['query'];
+            else
+                $tabs .=$t;
+            $tabs .='
+
+';
+        }
+
+        $fp = fopen($upload_directory . "/tmp/downsync_queries.txt","wb");
+        fwrite($fp, $tabs);
+        fclose($fp);
+
+
+        return $export_details;
     }
 
     private function get_tables_to_export(){
@@ -432,7 +450,7 @@ class ExportTables {
         $collectionStr = ' WHERE 1 ';
 
         if($this->last_sync)
-            $collectionStr .= " AND last_modified_on > '%".$this->last_sync."%'";
+            $collectionStr .= " AND last_modified_on > '".$this->last_sync."'";
 
         if($this->sync_type === 'student_app'){
             $collectionStr .= ' AND type LIKE "quiz" ';
