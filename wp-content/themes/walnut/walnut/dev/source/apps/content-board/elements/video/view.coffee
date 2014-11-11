@@ -52,6 +52,72 @@ define ['app'], (App)->
 
 				if _.platform() is 'DEVICE' then @_initLocalVideos()
 
+			_initLocalVideos : ->
+
+				navigator.notification.activityStart("Please wait", "loading content...")
+
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
+
+				runFunc = =>
+					$.Deferred (d)=>
+						deferreds = []
+
+						_.createVideosWebDirectory().done =>
+
+							_.each @videos , (videoSource, index)=>
+								do(videoSource)=>
+									
+									url = videoSource.replace("media-web/","")
+									videosWebUrl = url.substr(url.indexOf("uploads/"))
+									videoUrl = videosWebUrl.replace("videos-web", "videos")
+									encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
+									decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+									
+									value = _.getStorageOption()
+									option = JSON.parse(value)
+
+									encryptedVideoPath = '' 
+									decryptedVideoPath = ''
+
+									if option.internal
+										encryptedVideoPath = option.internal+'/'+encryptedPath
+										decryptedVideoPath = option.internal+'/'+decryptedPath
+									else if option.external
+										encryptedVideoPath = option.external+'/'+encryptedPath
+										decryptedVideoPath = option.external+'/'+decryptedPath
+
+
+									decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
+									deferreds.push decryptFile
+							
+							$.when(deferreds...).done (videoPaths...)=>
+								
+								
+
+								_.each videoPaths , (localVideoPath , index)=>
+									do(localVideoPath, index)=>
+										
+
+										# localVideoFullPath = filepath+'/'+localVideoPath
+										# @videos[index] = 'file:///mnt/sdcard/'+localVideoPath
+										
+										@videos[index] = 'file://'+localVideoPath
+
+								d.resolve @videos
+
+				$.when(runFunc()).done =>
+					console.log('_initLocalVideos done')
+					navigator.notification.activityStop()
+					@$el.find('video')[0].src = @videos[0]
+					@$el.find('video')[0].load()
+
+				.fail _.failureHandler
+
+
+
 			# _initLocalVideos : ->
 
 			# 	# navigator.notification.activityStart("Please wait", "loading content...")
@@ -61,117 +127,51 @@ define ['app'], (App)->
 			# 	setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
 			# 	@$el.find('video').attr 'height', setHeight
 
-			# 	runFunc = =>
-			# 		$.Deferred (d)=>
-			# 			deferreds = []
+			# 	defer = $.Deferred()
 
-			# 			_.createVideosWebDirectory().done =>
+			# 	_.createVideosWebDirectory().done =>
 
-			# 				_.each @videos , (videoSource, index)=>
-			# 					do(videoSource)=>
-									
-			# 						url = videoSource.replace("media-web/","")
-			# 						videosWebUrl = url.substr(url.indexOf("uploads/"))
-			# 						videoUrl = videosWebUrl.replace("videos-web", "videos")
-			# 						encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
-			# 						decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
-									
-			# 						value = _.getStorageOption()
-			# 						option = JSON.parse(value)
-
-			# 						encryptedVideoPath = '' 
-			# 						decryptedVideoPath = ''
-
-			# 						if option.internal
-			# 							encryptedVideoPath = option.internal+'/'+encryptedPath
-			# 							decryptedVideoPath = option.internal+'/'+decryptedPath
-			# 						else if option.external
-			# 							encryptedVideoPath = option.external+'/'+encryptedPath
-			# 							decryptedVideoPath = option.external+'/'+decryptedPath
-
-
-			# 						decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
-			# 						deferreds.push decryptFile
+			# 		# _.each @videos , (videoSource, index)=>
+			# 		# 	do(videoSource)=>
+			# 		forEach = (videoSource, index)=>
 							
-			# 				$.when(deferreds...).done (videoPaths...)=>
-								
-								
-
-			# 					_.each videoPaths , (localVideoPath , index)=>
-			# 						do(localVideoPath, index)=>
-										
-
-			# 							# localVideoFullPath = filepath+'/'+localVideoPath
-			# 							# @videos[index] = 'file:///mnt/sdcard/'+localVideoPath
-										
-			# 							@videos[index] = 'file://'+localVideoPath
-
-			# 					d.resolve @videos
-
-			# 	$.when(runFunc()).done =>
-			# 		console.log('_initLocalVideos done')
-			# 		# navigator.notification.activityStop()
-			# 		@$el.find('video')[0].src = @videos[0]
-			# 		@$el.find('video')[0].load()
-
-			# 	.fail _.failureHandler
-
-
-
-			_initLocalVideos : ->
-
-				# navigator.notification.activityStart("Please wait", "loading content...")
-
-				widthRatio = 16
-				heightRatio = 9
-				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
-				@$el.find('video').attr 'height', setHeight
-
-				defer = $.Deferred()
-
-				_.createVideosWebDirectory().done =>
-
-					# _.each @videos , (videoSource, index)=>
-					# 	do(videoSource)=>
-					forEach = (videoSource, index)=>
-							
-						url = videoSource.replace("media-web/","")
-						videosWebUrl = url.substr(url.indexOf("uploads/"))
-						videoUrl = videosWebUrl.replace("videos-web", "videos")
-						encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
-						decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+			# 			url = videoSource.replace("media-web/","")
+			# 			videosWebUrl = url.substr(url.indexOf("uploads/"))
+			# 			videoUrl = videosWebUrl.replace("videos-web", "videos")
+			# 			encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
+			# 			decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
 						
-						value = _.getStorageOption()
-						option = JSON.parse(value)
+			# 			value = _.getStorageOption()
+			# 			option = JSON.parse(value)
 
-						encryptedVideoPath = '' 
-						decryptedVideoPath = ''
+			# 			encryptedVideoPath = '' 
+			# 			decryptedVideoPath = ''
 
-						if option.internal
-							encryptedVideoPath = option.internal+'/'+encryptedPath
-							decryptedVideoPath = option.internal+'/'+decryptedPath
-						else if option.external
-							encryptedVideoPath = option.external+'/'+encryptedPath
-							decryptedVideoPath = option.external+'/'+decryptedPath
+			# 			if option.internal
+			# 				encryptedVideoPath = option.internal+'/'+encryptedPath
+			# 				decryptedVideoPath = option.internal+'/'+decryptedPath
+			# 			else if option.external
+			# 				encryptedVideoPath = option.external+'/'+encryptedPath
+			# 				decryptedVideoPath = option.external+'/'+decryptedPath
 
 
-						decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
-						decryptFile.done (localVideoPath)=>
+			# 			decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
+			# 			decryptFile.done (localVideoPath)=>
 							
-							index = index + 1
-							if index <= _.size(@videos)
-								i = index - 1
-								forEach @videos[index], index
-								@videos[i] = 'file://'+localVideoPath
-							else 
-								console.log('_initLocalVideos done')
-								# navigator.notification.activityStop()
-								@$el.find('video')[0].src = @videos[0]
-								@$el.find('video')[0].load()
+			# 				index = index + 1
+			# 				if index <= _.size(@videos)
+			# 					i = index - 1
+			# 					forEach @videos[index], index
+			# 					@videos[i] = 'file://'+localVideoPath
+			# 				else 
+			# 					console.log('_initLocalVideos done')
+			# 					# navigator.notification.activityStop()
+			# 					@$el.find('video')[0].src = @videos[0]
+			# 					@$el.find('video')[0].load()
 
-					forEach @videos[0], 0
+			# 		forEach @videos[0], 0
 
-				defer.promise()
+			# 	defer.promise()
 
 
 
