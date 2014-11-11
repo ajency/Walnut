@@ -136,7 +136,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				
 				_.setSynapseMediaDirectoryPathToLocalStorage()
 				.then (path)->
-					$('#storageOption').prop("disabled",true)
+					# $('#storageOption').prop("disabled",true)
 					
 					$('#syncStartContinue').prop("disabled",false)
 					console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
