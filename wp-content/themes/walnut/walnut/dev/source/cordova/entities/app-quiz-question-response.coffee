@@ -149,7 +149,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			,(tx)->
 				console.log 'Inserted data in quiz question response'
 				model.set 'qr_id' :qr_id
-				_.selectData(1)
+				# _.selectData(1)
 			)
 
 		selectData : (v)->
@@ -235,7 +235,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			,_.transactionErrorHandler
 
 			,(tx)->
-				_.selectData(2)
+				# _.selectData(2)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updatePausedQuizQuestionResponseData)'
 			)
@@ -260,7 +260,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 			,_.transactionErrorHandler
 
 			,(tx)->
-				_.selectData(3)
+				# _.selectData(3)
 				model.set 'qr_id' : qrId
 				console.log 'Updated data in quiz_question_response (updateQuizQuestionResponseData)'
 			)

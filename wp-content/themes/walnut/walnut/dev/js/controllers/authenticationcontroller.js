@@ -111,13 +111,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       login = resp.login_details;
       user = App.request("get:user:model");
       data = {
-        'ID': resp.ID,
+        'ID': login.ID,
         'division': login.data.division,
-        'display_name': login.data.username,
+        'display_name': login.data.display_name,
         'user_email': login.data.user_email
       };
       user.set({
-        'data': data
+        'data': data,
+        'ID': login.ID
       });
       return _.createDataTables(_.db);
     };
@@ -195,7 +196,8 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
             'user_email': userDetails.user_email
           };
           user.set({
-            'data': data
+            'data': data,
+            'ID': userDetails.user_id
           });
           App.vent.trigger("show:dashboard");
           return App.loginRegion.close();

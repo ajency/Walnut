@@ -155,20 +155,20 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 				console.log 'Inserted data in quiz_response_summary'
 			)
 
-		abc : ()->
+		# abc : ()->
 
-			_.db.transaction (tx)->
-				tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_response_summary ", []
-					, (tx,results)->
-						result = new Array()
-						# if results.length>0
-						for i in [0..results.rows.length-1] by 1
-							result[i] = results.rows.item(i)
+		# 	_.db.transaction (tx)->
+		# 		tx.executeSql("SELECT * FROM "+_.getTblPrefix()+"quiz_response_summary ", []
+		# 			, (tx,results)->
+		# 				result = new Array()
+		# 				# if results.length>0
+		# 				for i in [0..results.rows.length-1] by 1
+		# 					result[i] = results.rows.item(i)
 						
-						# alert "final"
-						console.log result
+		# 				# alert "final"
+		# 				console.log result
 
-					, _.transactionErrorHandler)
+		# 			, _.transactionErrorHandler)
 
 
 		updateIntoQuizResponseSummary : (model,quizMeta)->

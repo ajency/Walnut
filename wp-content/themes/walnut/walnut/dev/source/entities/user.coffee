@@ -78,7 +78,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					offlineUsers
 
 				getUserData:(key)->
-					data=loggedInUser.get 'data'
+					data = loggedInUser.get 'data'
 					console.log data[key]
 					data[key]
 

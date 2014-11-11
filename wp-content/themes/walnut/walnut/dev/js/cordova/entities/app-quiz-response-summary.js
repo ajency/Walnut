@@ -107,18 +107,6 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
         return console.log('Inserted data in quiz_response_summary');
       });
     },
-    abc: function() {
-      return _.db.transaction(function(tx) {
-        return tx.executeSql("SELECT * FROM " + _.getTblPrefix() + "quiz_response_summary ", [], function(tx, results) {
-          var i, result, _i, _ref;
-          result = new Array();
-          for (i = _i = 0, _ref = results.rows.length - 1; _i <= _ref; i = _i += 1) {
-            result[i] = results.rows.item(i);
-          }
-          return console.log(result);
-        }, _.transactionErrorHandler);
-      });
-    },
     updateIntoQuizResponseSummary: function(model, quizMeta) {
       var serializeQuizMetaValue, summary_id;
       summary_id = model.get('summary_id');

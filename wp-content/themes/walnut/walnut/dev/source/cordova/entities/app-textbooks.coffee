@@ -342,6 +342,7 @@ define ['underscore'], ( _) ->
 
 					forEach = (row, i)->
 						
+
 						result[i] =
 							id: row['term_id']
 							name: row['name']
@@ -359,8 +360,9 @@ define ['underscore'], ( _) ->
 
 
 			_.db.transaction (tx)->
-				
-				tx.executeSql "SELECT term_id, name FROM wp_terms 
+
+				tx.executeSql "SELECT term_id, name 
+								FROM wp_terms 
 								WHERE term_id IN ("+ids+")"
 								, []
 				, onSuccess, _.transactionErrorHandler

@@ -175,6 +175,7 @@ define ['jquery', 'underscore'], ($, _)->
     $.filterTableByTextbooks = (_this, dataType)->
         filter_elements= _this.$el.find('select.textbook-filter')
 
+        console.log dataType
         
         if dataType is 'teaching-modules'
             filterCollection = App.request "get:content:modules:repository"
@@ -198,6 +199,7 @@ define ['jquery', 'underscore'], ($, _)->
         content_status = _this.$el.find('#content-status-filter').val()
 
         content_post_status = _this.$el.find('#content-post-status-filter').val()
+        content_post_status = '' if content_post_status is 'any'
 
         quiz_type = _this.$el.find('#quiz-type-filter').val()
 

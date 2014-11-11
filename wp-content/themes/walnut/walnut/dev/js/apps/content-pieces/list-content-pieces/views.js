@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'], function(App, contentListTpl, listitemTpl, notextbooksTpl) {
+define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
   return App.module("ContentPiecesApp.ContentList.Views", function(Views, App) {
     var EmptyView, ListItemView;
     ListItemView = (function(_super) {
@@ -88,26 +88,27 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListItemView.prototype.cloneModule = function() {
-        var contentPieceData, _ref;
+        var _ref;
         if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
-          if (confirm("Are you sure you want to clone '" + (this.model.get('post_excerpt')) + "' ?") === true) {
-            this.cloneModel = App.request("new:content:piece");
-            contentPieceData = this.model.toJSON();
-            console.log('contentpiecedata');
-            console.log(this.model.toJSON());
-            this.clonedData = _.omit(contentPieceData, ['ID', 'guid', 'last_modified_by', 'post_author', 'post_author_name', 'post_date', 'post_date_gmt', 'published_by']);
-            this.clonedData.post_status = "pending";
-            this.clonedData.clone_id = this.model.id;
-            return App.execute("when:fetched", this.cloneModel, (function(_this) {
-              return function() {
-                return _this.cloneModel.save(_this.clonedData, {
-                  wait: true,
-                  success: _this.successSaveFn,
-                  error: _this.errorFn
+          return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
+            return function(result) {
+              var contentPieceData;
+              if (result) {
+                _this.cloneModel = App.request("new:content:piece");
+                contentPieceData = _this.model.toJSON();
+                _this.clonedData = _.omit(contentPieceData, ['ID', 'guid', 'last_modified_by', 'post_author', 'post_author_name', 'post_date', 'post_date_gmt', 'published_by']);
+                _this.clonedData.post_status = "pending";
+                _this.clonedData.clone_id = _this.model.id;
+                return App.execute("when:fetched", _this.cloneModel, function() {
+                  return _this.cloneModel.save(_this.clonedData, {
+                    wait: true,
+                    success: _this.successSaveFn,
+                    error: _this.errorFn
+                  });
                 });
-              };
-            })(this));
-          }
+              }
+            };
+          })(this));
         }
       };
 

@@ -156,3 +156,32 @@ define ['jquery', 'underscore'], ($, _)->
         items
 
     # --SELECT ALL CHECKBOX FUNCTIONS END --
+
+    $.allowRoute = (route)->
+        # return true
+
+        user= App.request "get:user:model"
+
+        if route in ['textbooks','content-pieces','add-module',
+            'edit-module', 'view-module','module-list','dummy-module',
+            'view-quiz', 'create-quiz', 'edit-quiz', 'quiz-list', 'dummy-quiz',
+            'quiz-report','dashboard'
+        ]
+            if user.get 'ID'
+                return true 
+            else
+                App.navigate "login", true
+                return false
+
+        else
+            switch route
+                when 'login'
+                    return true if not user.get 'ID'
+
+                when 'admin/view-all-modules'
+                    return true if user.current_user_can('administrator') or user.current_user_can('school-admin')
+
+
+
+
+

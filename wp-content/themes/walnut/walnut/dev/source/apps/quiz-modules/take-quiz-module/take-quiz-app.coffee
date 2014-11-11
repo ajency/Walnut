@@ -134,7 +134,7 @@ define ['app'
 						'content_piece_id'  : questionModel.id
 						'question_response' : _.omit answer.toJSON(), ['marks','status']
 						'status'            : answer.get 'status'
-						'marks_scored'      : answer.get 'marks'
+						'marks_scored'      : parseInt answer.get 'marks'
 						'time_taken'        : timeTaken
 
 					newResponseModel = App.request "create:quiz:question:response:model", data
@@ -176,7 +176,6 @@ define ['app'
 						@_endQuiz()
 
 				_endQuiz:->
-
 					if _.platform() is 'DEVICE'
 						@clearMediaDataOnEndQuiz()
 
@@ -221,12 +220,9 @@ define ['app'
 						quizResponseSummary         : quizResponseSummary
 						display_mode                : @display_mode
 
-
-
 				clearMediaDataOnEndQuiz : =>
-						_.clearMediaDirectory 'videos-web'
-						_.clearMediaDirectory 'audio-web'
-				
+					_.clearMediaDirectory 'videos-web'
+					_.clearMediaDirectory 'audio-web'
 
 				_queueStudentMail:->
 					data=
@@ -341,3 +337,6 @@ define ['app'
 			# set handlers
 			App.commands.setHandler "start:take:quiz:app", (opt = {})->
 				new View.TakeQuizController opt
+		
+
+

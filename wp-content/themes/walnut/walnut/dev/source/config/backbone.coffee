@@ -75,7 +75,7 @@ define ["backbone"], (Backbone) ->
 
 			#not required for student App
 			if collection_name is 'user'
-				_.getStudentsByDivision(opts.division)
+				_.getUserByID()
 				.done (data)->
 					collection.set data
 

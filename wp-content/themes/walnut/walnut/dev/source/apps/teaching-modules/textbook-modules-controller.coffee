@@ -24,6 +24,7 @@ define ['app'
                         'textbook': textbookID
                         'division': @division
 
+                #changes made for DEVICE
                 else if @mode is 'take-quiz'
                     @contentGroupsCollection = App.request "get:quizes",
                         'textbook': textbookID

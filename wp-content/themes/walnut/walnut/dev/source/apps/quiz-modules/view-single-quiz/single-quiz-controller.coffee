@@ -110,7 +110,6 @@ define ['app'
 
 			_getStudent:->
 				@defer = $.Deferred()
-
 				if _.platform() is 'DEVICE'
 
 					if _.getUserID()
@@ -118,10 +117,11 @@ define ['app'
 						# 	studentModel = _.getUserID()
 						# 	@defer.resolve()
 						# else
-						studentModel= App.request "get:user:by:id", _.getUserID()
+						studentModel= App.request "get:user:by:id", _.getUserID()#Changed for _.platform() DEVICE
 						App.execute "when:fetched", studentModel, => @defer.resolve()
 
-					else @defer.resolve()
+					else 
+						@defer.resolve()
 				
 				else 
 
@@ -130,12 +130,11 @@ define ['app'
 							studentModel = @student
 							@defer.resolve()
 						else
-							studentModel= App.request "get:user:by:id", @student
+							studentModel= App.request "get:user:by:id", _.getUserID()#Changed for _.platform() DEVICE
 							App.execute "when:fetched", studentModel, => @defer.resolve()
 
-
-					else @defer.resolve()
-
+					else 
+						@defer.resolve()
 
 				@defer.promise()
 
@@ -214,6 +213,7 @@ define ['app'
 
 				#userid fetched from LS and when fetched changed for student app DEVICE
 
+
 				@summary_data= 
 					'collection_id' : quizModel.get 'id'
 					'student_id'    : _.getUserID()#App.request "get:loggedin:user:id"
@@ -223,7 +223,7 @@ define ['app'
 				# App.execute "when:fetched", quizResponseSummaryCollection, =>
 				quizResponseSummaryCollection.p.done =>
 
-					if quizResponseSummaryCollection.length>0
+					if quizResponseSummaryCollection.length > 0
 						quizResponseSummary= quizResponseSummaryCollection.last()
 						defer.resolve()
 
@@ -251,7 +251,6 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
-				#@questionResponseCollection = null
 
 				App.execute "start:take:quiz:app",
 					region: App.mainContentRegion

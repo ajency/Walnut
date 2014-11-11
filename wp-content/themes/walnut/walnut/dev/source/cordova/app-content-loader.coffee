@@ -100,8 +100,10 @@ define ['underscore', 'unserialize'], ( _) ->
 					if element.element is 'Row'
 						# element.columncount = element.elements.length
 						_.getRowElements(element).then (columnElement)->
+							
 							content.excerpt.push columnElement.excerpt
 							content.marks += columnElement.marks if columnElement.marks
+							
 							total--
 							if not total
 								defer.resolve content
@@ -109,13 +111,16 @@ define ['underscore', 'unserialize'], ( _) ->
 					else if element.element is 'Mcq'
 						# element.columncount = element.elements.length
 						_.getMcqElements(element).then (columnElement)->
+
 							_.getElementMetaValues(element).then (meta)->
-								element.meta_id = parseInt element.meta_id
+								
+								element.meta_id = parseInt(element.meta_id)
 								if meta isnt false
 									_.defaults element, meta
 								content.excerpt.push columnElement.excerpt
 								content.marks += columnElement.marks if columnElement.marks
 								total--
+								
 								if not total
 									defer.resolve content
 
@@ -189,6 +194,25 @@ define ['underscore', 'unserialize'], ( _) ->
 								total--
 								if not total
 									defer.resolve content
+
+
+						else if element.element is 'Mcq'
+							# element.columncount = element.elements.length
+							_.getMcqElements(element).then (columnElement)->
+
+								_.getElementMetaValues(element).then (meta)->
+									
+									element.meta_id = parseInt element.meta_id
+									if meta isnt false
+										_.defaults element, meta
+									content.excerpt.push columnElement.excerpt
+									content.marks += columnElement.marks if columnElement.marks
+									total--
+									
+									if not total
+										defer.resolve content
+
+
 						else 
 							_.getElementMetaValues element
 							.then (meta)->
@@ -223,16 +247,15 @@ define ['underscore', 'unserialize'], ( _) ->
 					#inside For each
 					forEachColumnElement column.elements[0], 0
 
-				
-				
 				else
 					defer.resolve content
-
+				
 				i = i + 1
 				if i < _.size(rowElements.elements)
 					forEachRowElement rowElements.elements[i], i
+				
 
-			
+
 			forEachRowElement rowElements.elements[0], 0
 
 			defer.promise()

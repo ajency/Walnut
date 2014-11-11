@@ -175,6 +175,23 @@ define(['underscore', 'unserialize'], function(_) {
                   return defer.resolve(content);
                 }
               });
+            } else if (element.element === 'Mcq') {
+              _.getMcqElements(element).then(function(columnElement) {
+                return _.getElementMetaValues(element).then(function(meta) {
+                  element.meta_id = parseInt(element.meta_id);
+                  if (meta !== false) {
+                    _.defaults(element, meta);
+                  }
+                  content.excerpt.push(columnElement.excerpt);
+                  if (columnElement.marks) {
+                    content.marks += columnElement.marks;
+                  }
+                  total--;
+                  if (!total) {
+                    return defer.resolve(content);
+                  }
+                });
+              });
             } else {
               _.getElementMetaValues(element).then(function(meta) {
                 element.meta_id = parseInt(element.meta_id);

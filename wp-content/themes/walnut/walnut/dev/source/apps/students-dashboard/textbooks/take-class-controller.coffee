@@ -31,6 +31,7 @@ define ['app'
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
+                #changes made for DEVICE
                 if @mode is 'take-quiz'
                     textbooks = App.request "get:textbooks", user_id: App.request "get:user:data", "ID"
                 else
