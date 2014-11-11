@@ -1,6 +1,8 @@
 define ['app'
         'controllers/region-controller'
-        'apps/quiz-reports/student-report/quiz-list/item-views'], (App, RegionController)->
+        'bootbox'
+        'apps/quiz-reports/student-report/quiz-list/item-views'
+        ], (App, RegionController,bootbox)->
     App.module "StudentReportApp.QuizList.Views", (Views, App)->
 
         class Views.QuizListView extends Marionette.CompositeView
@@ -74,7 +76,7 @@ define ['app'
 
 
             events:
-                'change #check_all_div'                 : 'checkAll'
+                'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#quiz-table'
                 'change .tab_checkbox,#check_all_div '  : 'showClearResponseButton'
                 'click .reset-quiz'                     : 'clearQuizResponse'
 
@@ -86,18 +88,6 @@ define ['app'
                 @$el.find '#quiz-table'
                 .tablesorter()
                 .tablesorterPager pagerOptions
-
-            checkAll:->
-
-                all_ids = @collection.pluck 'id'
-
-                classTestModules= _.chain @collection.where 'quiz_type': 'test'
-                .pluck 'id'
-                .value()
-
-                excludeIDs = _.difference all_ids,classTestModules
-
-                $.toggleCheckAll @$el.find('#quiz-table'), excludeIDs
 
             showClearResponseButton:->
 
@@ -112,7 +102,23 @@ define ['app'
 
             clearQuizResponse:->
 
-                quizIDs= $.getCheckedItems @$el.find '#quiz-table'
+                quizIDs = $.getCheckedItems @$el.find '#quiz-table'
+
+                quizIDs = _.map quizIDs, (m)-> parseInt m
+
+                practice = @collection.where 'quiz_type': 'practice'
+
+                @clearResponse = true
+
+                if not _.isEmpty _.intersection quizIDs, _.pluck practice,'id'
+                    msg = 'All the previous attempts for practice quiz only will also be resetted. Are you sure you want to continue?'
+                    bootbox.confirm msg,(result)=>
+                        @deleteSelectedResponses(quizIDs) if result
+
+                else
+                    @deleteSelectedResponses quizIDs
+
+            deleteSelectedResponses:(quizIDs)->
 
                 @deleteResponse(quizID) for quizID in quizIDs if not _.isEmpty quizIDs
 
@@ -122,13 +128,13 @@ define ['app'
                 @$el.find '#reset-quiz'
                 .hide()
 
-
             deleteResponse:(quizID)->
 
                 quizResponseSummaries = Marionette.getOption @,'quizResponseSummaries'
 
-                summary= quizResponseSummaries.findWhere 'collection_id' : parseInt quizID
-                summary.destroy()
+                summary= quizResponseSummaries.where 'collection_id' : parseInt quizID
+
+                s.destroy() for s in summary
 
                 @collection.remove quizID
 

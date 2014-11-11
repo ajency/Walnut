@@ -117,10 +117,14 @@ define ['app'
                 data=
                     time_taken : elapsedTime
                     status : status
+                    end_date: moment().format("YYYY-MM-DD") if status is 'completed'
 
                 questionResponseModel.set data
 
                 questionResponseCollection.add questionResponseModel
+
+                if not moment(questionResponseModel.get('start_date')).isValid()
+                    data.start_date = moment().format("YYYY-MM-DD")
 
                 questionResponseModel.save data,
                     wait : true
@@ -276,10 +280,3 @@ define ['app'
 
                 @$el.find '#instructions'
                 .html contentPiece.get 'instructions'
-
-
-
-
-        
-
-

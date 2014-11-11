@@ -39,7 +39,8 @@ define ['app'
 
                 @layout = layout = @_getTrainingModuleLayout()
 
-                @show layout, (loading: true, entities: [textbooks, divisionModel])
+                App.execute "when:fetched", [divisionModel,textbooks], =>
+                    @show layout, loading: true
 
                 @listenTo layout, "show", @_showTextbooksListView
 
@@ -72,6 +73,8 @@ define ['app'
                                     'N/A'
                                 else
                                     divisionModel.get 'students_count'
+
+                            trainingMode:=> true if @mode is 'training'
 
                       @layout.textbooksListRegion.show(textbookListView)
 

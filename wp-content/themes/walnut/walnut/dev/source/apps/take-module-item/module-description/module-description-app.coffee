@@ -118,7 +118,7 @@ define ['app'
             questionCompleted: =>
 
                 if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    bootbox.confirm 'This item will be marked as complete. Continue?', (result)->
+                    bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
                         @trigger("question:completed") if result
 
                 else @trigger "question:completed"
