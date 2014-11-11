@@ -49,10 +49,13 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
           });
         }
         this.layout = layout = this._getTrainingModuleLayout();
-        this.show(layout, {
-          loading: true,
-          entities: [textbooks, divisionModel]
-        });
+        App.execute("when:fetched", [divisionModel, textbooks], (function(_this) {
+          return function() {
+            return _this.show(layout, {
+              loading: true
+            });
+          };
+        })(this));
         return this.listenTo(layout, "show", this._showTextbooksListView);
       };
 
