@@ -98,6 +98,7 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         }
         _.setStorageOption(localStoragePath);
         return _.setSynapseMediaDirectoryPathToLocalStorage().then(function(path) {
+          _.setSynapseMediaDirectoryPath(path);
           $('#syncStartContinue').prop("disabled", false);
           return console.log('setSynapseMediaDirectoryPathToLocalStorage done');
         });

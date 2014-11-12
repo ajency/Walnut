@@ -28,9 +28,12 @@ define ['app',
 
 						</td>
 						<td>
-							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
-							View {{moduleType}}
-							</button>
+					   		{{#practice_quiz}}
+								<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
+								View {{moduleType}}
+								</button>
+					   		{{/practice_quiz}}
+					   		
 							{{#schedule_button}}
 								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
 									<i class="fa fa-calendar"></i> {{taken_on}}

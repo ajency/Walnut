@@ -497,15 +497,14 @@ define ['underscore', 'unserialize'], ( _) ->
 
 
 			onSuccess =(tx,data)->
-
-					result = data.rows.item(0)
+				result = data.rows.item(0)
 					
-					if result.attempts is 0
-						result = ''
-						defer.resolve(result)
-					else
-						console.log "getQuizResponseSummaryByCollectionId done"
-						defer.resolve(result)
+				if result.attempts is 0
+					result = ''
+					defer.resolve(result)
+				else
+					console.log "getQuizResponseSummaryByCollectionId done"
+					defer.resolve(result)
 
 			_.db.transaction (tx)->
 				

@@ -34,6 +34,8 @@ define(['underscore', 'unserialize'], function(_) {
           var full, media, mediaUrl, sizes, url;
           url = row['guid'];
           mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"));
+          alert(mediaUrl);
+          console.log(mediaUrl);
           if (attachmentData.sizes) {
             sizes = attachmentData.sizes;
             full = {

@@ -29,6 +29,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								.then (contentElements)->
 									console.log contentElements
 									excerpt_array = contentElements.excerpt
+									marks = contentElements.marks
 
 									excerpt_array = _.flatten excerpt_array
 									taglessArray = new Array
@@ -55,6 +56,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										last_modified_by: meta_value.last_modified_by
 										layout: contentElements.elements
 										menu_order: row['menu_order']
+										marks: marks
 										order: _.indexOf(ids, row['ID'].toString())
 										ping_status: row['ping_status']
 										pinged: row['pinged']

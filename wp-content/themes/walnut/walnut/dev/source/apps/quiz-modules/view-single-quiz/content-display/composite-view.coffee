@@ -29,40 +29,40 @@ define ['app'
             events:
                 'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
 
-            onShow: ->
-                responseCollection = Marionette.getOption @, 'responseCollection'
+            # onShow: ->
+            #     responseCollection = Marionette.getOption @, 'responseCollection'
 
-                if responseCollection
-                    completedResponses = responseCollection.where 'status': 'completed'
+            #     if responseCollection
+            #         completedResponses = responseCollection.where 'status': 'completed'
 
-                    if @model.hasPermission 'teacher_check'
-                        @$el.find "#teacher-check"
-                        .show()
+            #         if @model.hasPermission 'teacher_check'
+            #             @$el.find "#teacher-check"
+            #             .show()
 
-                    console.log JSON.stringify completedResponses
-                    responseQuestionIDs = _.chain completedResponses
-                                            .map (m)->m.toJSON()
-                                            .pluck 'content_piece_id'
-                                            .value()
+            #         console.log JSON.stringify completedResponses
+            #         responseQuestionIDs = _.chain completedResponses
+            #                                 .map (m)->m.toJSON()
+            #                                 .pluck 'content_piece_id'
+            #                                 .value()
 
 
-                    console.log responseQuestionIDs
-                    if Marionette.getOption(@, 'mode') is 'training'
-                        for question in @$el.find '.contentPiece'
-                            $(question).find '.cbp_tmlabel'
-                            .addClass 'completed'
-                            .css 'cursor', 'pointer'
+            #         console.log responseQuestionIDs
+            #         if Marionette.getOption(@, 'mode') is 'training'
+            #             for question in @$el.find '.contentPiece'
+            #                 $(question).find '.cbp_tmlabel'
+            #                 .addClass 'completed'
+            #                 .css 'cursor', 'pointer'
 
-                    else
-                        for question in @$el.find '.contentPiece'
-                            if _.contains responseQuestionIDs, parseInt $(question).attr 'data-id'
-                                $(question).find '.cbp_tmlabel'
-                                .addClass 'done completed'
-                                .css 'cursor', 'pointer'
+            #         else
+            #             for question in @$el.find '.contentPiece'
+            #                 if _.contains responseQuestionIDs, parseInt $(question).attr 'data-id'
+            #                     $(question).find '.cbp_tmlabel'
+            #                     .addClass 'done completed'
+            #                     .css 'cursor', 'pointer'
 
-            viewQuestionReadOnly: (e)=>
-                questionID = $ e.target
-                .closest '.contentPiece'
-                    .attr 'data-id'
+            # viewQuestionReadOnly: (e)=>
+            #     questionID = $ e.target
+            #     .closest '.contentPiece'
+            #         .attr 'data-id'
 
-                @trigger "view:question:readonly", questionID
+            #     @trigger "view:question:readonly", questionID

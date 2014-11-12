@@ -72,7 +72,7 @@ define ["backbone"], (Backbone) ->
 					console.log 'getContentPiecesByIDs done'
 					collection.set data
 
-					App.request "app:reset:content:pieces:repository", data
+					# App.request "app:reset:content:pieces:repository", data
 
 			#not required for student App
 			if collection_name is 'user'
