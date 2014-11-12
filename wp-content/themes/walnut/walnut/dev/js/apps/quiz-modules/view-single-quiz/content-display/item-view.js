@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.tagName = 'li';
 
       View.prototype.mixinTemplateHelpers = function(data) {
-        var all_marks, marks_obtained, quizModel, responseModel, total_marks;
+        var marks_obtained, quizModel, responseModel, total_marks;
         responseModel = Marionette.getOption(this, 'responseModel');
         quizModel = Marionette.getOption(this, 'quizModel');
         data.dateCompleted = 'N/A';
@@ -26,13 +26,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.display_answer = quizModel.hasPermission('display_answer');
           marks_obtained = responseModel.get('marks_scored');
           data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(1));
-          all_marks = _.compact(_.pluck(this.model.get('layout'), 'marks'));
-          total_marks = 0;
-          if (all_marks.length > 0) {
-            total_marks = _.reduce(all_marks, function(memo, num) {
-              return parseInt(memo) + parseInt(num);
-            });
-          }
+          total_marks = this.model.get('marks');
           data.total_marks = parseFloat(total_marks.toFixed(1));
           data.hint_viewed = responseModel.get('question_response').hint_viewed ? 'Yes' : 'No';
           if (!quizModel.hasPermission('allow_hint')) {

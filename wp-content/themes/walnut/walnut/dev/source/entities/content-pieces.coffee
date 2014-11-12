@@ -32,6 +32,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                         _.each options, (op)-> 
                             op.marks=op.marks*multiplicationFactor if op.marks
 
+                @.set 'marks' : multiplicationFactor * @.get 'marks'
+
                 @
 
         # ContentPiece collection class
