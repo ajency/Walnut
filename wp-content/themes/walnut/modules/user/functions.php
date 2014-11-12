@@ -429,24 +429,21 @@ function get_parents_by_student_ids($student_ids){
 
     $parents = array();
 
-    foreach($student_ids as $id)
-    $parents[]=get_parent_for_student($id);
+    if(!is_array($student_ids))
+        $student_ids = array($student_ids);
 
+    foreach($student_ids as $id){
+        $p1_email = get_user_meta($id, 'parent_email1',true);
+        $p2_email = get_user_meta($id, 'parent_email2',true);
+        
+        $p1= get_user_by('email',$p1_email);
+        if ($p1)
+            $parents[]= $p1;
 
-    return $parents;
-
-}
-
-function get_parent_for_student($id){
-
-    $args= array(
-        'role' => 'parent',
-        'meta_key' => 'parent_of',
-        'meta_value' => '"'.$id.'";',
-        'meta_compare' => 'LIKE'
-    );
-
-    $parents = get_users( $args );
+        $p2= get_user_by('email',$p2_email);
+        if ($p2)
+            $parents[]= $p2;
+    }
 
     return $parents;
 

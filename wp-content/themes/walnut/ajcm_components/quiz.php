@@ -161,7 +161,13 @@ function get_quiz_template_data($comm_data,$quiz_id){
 		'content' => "<a href='$siteurl/#view-quiz/$quiz_id'>here</a>"
 	);
 	
-	$quiz_details= get_single_quiz_module($quiz_id); 
+	switch_to_blog($comm_data['blog_id']);
+
+	$school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
+
+	$quiz_details= get_single_quiz_module($quiz_id,$school_admin[0]); 
+
+	restore_current_blog();
 
     $terms= $quiz_details->term_ids;
 
