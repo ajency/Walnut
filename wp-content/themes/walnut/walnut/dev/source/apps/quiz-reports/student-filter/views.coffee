@@ -4,20 +4,20 @@ define ['app'
     App.module "StudentsFilterApp", (StudentsFilterApp, App, Backbone, Marionette, $, _)->
         class StudentsFilterApp.StudentsFilterView extends Marionette.ItemView
 
-            template: 'View quizzes taken by :
+            template: '<span class="small">View quizzes taken by:</span>
                         <select id="student-name" class="textbook-filter select-student">
                             <option value="">-student name-</option>
                             {{#students}}
                                 <option value="{{ID}}">{{display_name}}</option>
                             {{/students}}
-                        </select> or : 
+                        </select> <span class="small">or:</span> 
                         <select class="textbook-filter select-student">
                             <option value="">-roll number-</option>
                             {{#students}}
                                 <option value="{{ID}}">{{roll_no}}</option>
                             {{/students}}
                         </select>
-                        <button class="btn btn-success view-student">View Student</button>
+                        <button class="btn btn-success btn-small view-student">View Student</button>
                     </div>'
 
             events:
