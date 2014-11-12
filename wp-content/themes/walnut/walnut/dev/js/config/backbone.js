@@ -65,7 +65,7 @@ define(["backbone"], function(Backbone) {
         });
       }
       if (collection_name === 'user') {
-        _.getStudentsByDivision(opts.division).done(function(data) {
+        _.getUserByID().done(function(data) {
           return collection.set(data);
         });
       }

@@ -89,13 +89,14 @@ define ['underscore', 'unserialize'], ( _) ->
 		#get extra information related to quiz from wp_collection_meta
 		getCollectionMeta : (collection_id)->
 
+			defer = $.Deferred()
+			
 			deferreds = []
 
 			result = quizType: '', contentPieces: '', instructions: '', permission:'', marks:''
 					, negMarks: '', negMarksEnable: '', message: ''
 
-			defer = $.Deferred()
-
+			
 
 			onSuccess = (tx,data)->
 				
@@ -128,7 +129,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							result.negMarksEnable = quiz_meta.negMarksEnable
 							result.message = quiz_meta.message
 
-						if row['meta_key'] is 'content_layout'
+						if row['meta_key'] is 'content_layout' 
 							def = _.getContentPiecesFromContentLayout(row['meta_value'])
 							deferreds.push def
 
@@ -139,6 +140,7 @@ define ['underscore', 'unserialize'], ( _) ->
 							forEach data.rows.item(i), i
 						
 						else
+							# if result.quizType is 'practice'
 							if deferreds.length is 0
 								defer.resolve result
 							
@@ -149,8 +151,18 @@ define ['underscore', 'unserialize'], ( _) ->
 
 									console.log "getCollectionMeta done"
 									defer.resolve result
+							# else
+							# 	if deferreds.length is 0
+							# 		defer.resolve result
+								
+							# 	else
+							# 		$.when(deferreds...).done (content_pieces...)->
+							# 			_.each content_pieces, (contentPiece)->
+							# 				result.contentPieces = []
 
-					
+							# 			console.log "getCollectionMeta without content piece done"
+							# 			defer.resolve result
+
 
 					forEach data.rows.item(0), 0
 

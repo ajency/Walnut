@@ -14,6 +14,7 @@ define ["backbone"], (Backbone) ->
 		sync :(method, collection, options)->
 
 			collection_name = collection.name
+			
 			opts = options.data
 			console.log 'Collection name: '+collection_name
 
@@ -75,7 +76,7 @@ define ["backbone"], (Backbone) ->
 
 			#not required for student App
 			if collection_name is 'user'
-				_.getStudentsByDivision(opts.division)
+				_.getUserByID()
 				.done (data)->
 					collection.set data
 
@@ -215,6 +216,7 @@ define ["backbone"], (Backbone) ->
 			else
 				#Changes needed for offline data retrieval
 				modelname = model.name
+				
 				console.log "model"
 				console.log 'Model name: '+modelname
 

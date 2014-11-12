@@ -88,9 +88,11 @@ define ['underscore', 'unserialize'], ( _) ->
 
 			defer = $.Deferred()
 			content = 
-				elements : elements
-				excerpt : new Array
-				marks 	: 0
+				elements 	: elements
+				excerpt 	: new Array
+				marks 		: 0
+				audioArray 	: new Array
+				videoArray 	: new Array
 
 			if _.isArray elements  
 				total = 0
@@ -100,8 +102,12 @@ define ['underscore', 'unserialize'], ( _) ->
 					if element.element is 'Row'
 						# element.columncount = element.elements.length
 						_.getRowElements(element).then (columnElement)->
+							
 							content.excerpt.push columnElement.excerpt
+							content.videoArray.push(columnElement.videoArray) if columnElement.videoArray
+							content.audioArray.push(columnElement.audioArray) if columnElement.audioArray
 							content.marks += columnElement.marks if columnElement.marks
+							
 							total--
 							if not total
 								defer.resolve content
@@ -109,13 +115,16 @@ define ['underscore', 'unserialize'], ( _) ->
 					else if element.element is 'Mcq'
 						# element.columncount = element.elements.length
 						_.getMcqElements(element).then (columnElement)->
+
 							_.getElementMetaValues(element).then (meta)->
-								element.meta_id = parseInt element.meta_id
+								
+								element.meta_id = parseInt(element.meta_id)
 								if meta isnt false
 									_.defaults element, meta
 								content.excerpt.push columnElement.excerpt
 								content.marks += columnElement.marks if columnElement.marks
 								total--
+								
 								if not total
 									defer.resolve content
 
@@ -139,6 +148,9 @@ define ['underscore', 'unserialize'], ( _) ->
 									element.image_id = parseInt element.image_id
 								if element.element is 'Video'
 									element.video_id = parseInt element.video_id
+									content.videoArray.push(element.video_ids) if element.video_ids
+								if element.element is 'Audio'
+									content.audioArray.push element
 
 								content.marks += element.marks if element.marks
 								
@@ -168,6 +180,8 @@ define ['underscore', 'unserialize'], ( _) ->
 			content = 
 				excerpt : new Array
 				marks : 0
+				audioArray 	: new Array
+				videoArray 	: new Array
 
 			total = 0
 
@@ -189,6 +203,25 @@ define ['underscore', 'unserialize'], ( _) ->
 								total--
 								if not total
 									defer.resolve content
+
+
+						else if element.element is 'Mcq'
+							# element.columncount = element.elements.length
+							_.getMcqElements(element).then (columnElement)->
+
+								_.getElementMetaValues(element).then (meta)->
+									
+									element.meta_id = parseInt element.meta_id
+									if meta isnt false
+										_.defaults element, meta
+									content.excerpt.push columnElement.excerpt
+									content.marks += columnElement.marks if columnElement.marks
+									total--
+									
+									if not total
+										defer.resolve content
+
+
 						else 
 							_.getElementMetaValues element
 							.then (meta)->
@@ -208,6 +241,9 @@ define ['underscore', 'unserialize'], ( _) ->
 										element.image_id = parseInt element.image_id
 									if element.element is 'Video'
 										element.video_id = parseInt element.video_id
+										content.videoArray.push(element.video_ids) if element.video_ids
+									if element.element is 'Audio'
+										content.audioArray.push element
 
 									content.marks += element.marks if element.marks
 
@@ -223,16 +259,15 @@ define ['underscore', 'unserialize'], ( _) ->
 					#inside For each
 					forEachColumnElement column.elements[0], 0
 
-				
-				
 				else
 					defer.resolve content
-
+				
 				i = i + 1
 				if i < _.size(rowElements.elements)
 					forEachRowElement rowElements.elements[i], i
+				
 
-			
+
 			forEachRowElement rowElements.elements[0], 0
 
 			defer.promise()

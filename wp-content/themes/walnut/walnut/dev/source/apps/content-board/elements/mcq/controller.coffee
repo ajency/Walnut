@@ -251,17 +251,14 @@ define ['app'
             # when a checkbox is checked
             _optionChecked : (model)=>
                 answerArray = @answerModel.get 'answer'
-                if not @layout.model.get('multiple') and answerArray.length
-                    @answerModel.set 'answer', [model.get('optionNo')]
-                    console.log 'in check'
-                    @view.$el.find('input:checkbox').prop 'checked', false
-                    @view.$el.find('input:checkbox').parent().css('background-position', '0px 0px')
-                    @view.$el.find("input#option-#{model.get('optionNo')}").prop 'checked', true
-                    @view.$el.find("input#option-#{model.get('optionNo')}").parent().css('background-position',
-                      '0px -26px')
 
-                else
-                    answerArray.push model.get('optionNo')
+                if model.get('optionNo') not in answerArray
+                    answerArray.push model.get 'optionNo'
+                    
+                @view.$el.find("input#option-#{model.get('optionNo')}").prop 'checked', true
+                @view.$el.find("input#option-#{model.get('optionNo')}").parent().css('background-position',
+                  '0px -26px')
+
                 answerArray.sort()
                 console.log @answerModel.get('answer')
 
@@ -282,4 +279,4 @@ define ['app'
 
 
 
-					
+                    

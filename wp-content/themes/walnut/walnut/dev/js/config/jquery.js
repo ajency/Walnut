@@ -145,7 +145,7 @@ define(['jquery', 'underscore'], function($, _) {
       return element.find('.tab_checkbox').removeAttr('checked');
     }
   };
-  return $.getCheckedItems = function(element) {
+  $.getCheckedItems = function(element) {
     var items;
     items = _.chain(element.find('.tab_checkbox')).map(function(checkbox) {
       if ($(checkbox).is(':checked')) {
@@ -153,5 +153,29 @@ define(['jquery', 'underscore'], function($, _) {
       }
     }).compact().value();
     return items;
+  };
+  return $.allowRoute = function(route) {
+    var user;
+    user = App.request("get:user:model");
+    if (route === 'textbooks' || route === 'content-pieces' || route === 'add-module' || route === 'edit-module' || route === 'view-module' || route === 'module-list' || route === 'dummy-module' || route === 'view-quiz' || route === 'create-quiz' || route === 'edit-quiz' || route === 'quiz-list' || route === 'dummy-quiz' || route === 'quiz-report' || route === 'dashboard') {
+      if (user.get('ID')) {
+        return true;
+      } else {
+        App.navigate("login", true);
+        return false;
+      }
+    } else {
+      switch (route) {
+        case 'login':
+          if (!user.get('ID')) {
+            return true;
+          }
+          break;
+        case 'admin/view-all-modules':
+          if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+            return true;
+          }
+      }
+    }
   };
 });

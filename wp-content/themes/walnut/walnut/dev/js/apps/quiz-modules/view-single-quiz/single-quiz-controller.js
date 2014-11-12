@@ -140,7 +140,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
               studentModel = this.student;
               this.defer.resolve();
             } else {
-              studentModel = App.request("get:user:by:id", this.student);
+              studentModel = App.request("get:user:by:id", _.getUserID());
               App.execute("when:fetched", studentModel, (function(_this) {
                 return function() {
                   return _this.defer.resolve();

@@ -22,6 +22,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			template : AppSyncTpl
 
 			events :
+				'change #storageOption' : 'selectStorageOption'
+				
 				'click #syncStartContinue' : 'startContinueSyncProcess'
 
 				'click #syncMediaStart' : 'startMediaSyncProcess'
@@ -29,6 +31,72 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 
 			onShow : ->
+
+				
+				#Disable Selectbox StorageOption
+				$('#storageOption').prop("disabled",false)
+
+
+
+				_.getDeviceStorageOptions()
+				.then (storageOptions)->
+					value = _.getStorageOption()
+					option = JSON.parse(value)
+
+					if _.isNull(option)
+						$("#storageOption").append('<option selected>
+							Select your storage option</option>');
+						$('#syncStartContinue').prop("disabled",true)
+						$('#syncMediaStart').prop("disabled",true)
+
+					else
+						$("#storageOption").append('<option>
+							Select your storage option</option>');
+						$('#syncStartContinue').prop("disabled",false)
+
+					
+					if storageOptions.External
+						
+						internalPath = storageOptions.Internal
+						externalPath = storageOptions.External
+
+						if not _.isNull(option) and option.internal
+							$("#storageOption").append('<option selected 
+								value="'+internalPath+'">Internal Path :"'+internalPath+'"</option>');
+							$("#storageOption").append('<option 
+								value="'+externalPath+'">External Path :"'+externalPath+'"</option>');
+
+						else if not _.isNull(option) and option.external
+							$("#storageOption").append('<option 
+								value="'+internalPath+'">Internal Path :"'+internalPath+'"</option>');
+							$("#storageOption").append('<option selected
+								value="'+externalPath+'">External Path :"'+externalPath+'"</option>');
+
+						else 
+							$("#storageOption").append('<option
+								value="'+internalPath+'">Internal Path :"'+internalPath+'"</option>');
+							$("#storageOption").append('<option 
+								value="'+externalPath+'">External Path :"'+externalPath+'"</option>');
+
+
+					else
+						internalPath = storageOptions.Internal
+						
+						if not _.isNull(option) and option.internal
+							$("#storageOption").append('<option selected 
+								value="'+internalPath+'">Internal Path :"'+internalPath+'"</option>');
+						else
+							$("#storageOption").append('<option 
+								value="'+internalPath+'">Internal Path :"'+internalPath+'"</option>');
+						
+						# $("#storageOption option[value='external']").remove();
+						# $("#storageOption").removeOption("external");
+						
+					
+
+
+				
+
 
 				# Hide breadcrumb region
 				# App.breadcrumbRegion.close()
@@ -49,6 +117,30 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				App.request "get:sync:controller"
 
 
+			
+
+				
+
+			selectStorageOption : ->
+
+				storagePathValue = $("#storageOption").val();
+				storagePath = $( "#storageOption option:selected" ).text();
+				
+				if storagePath.indexOf('Internal') is 0
+					localStoragePath = { internal : storagePathValue}
+				else
+					localStoragePath = { external : storagePathValue}
+				
+				_.setStorageOption(localStoragePath);
+				
+				
+				_.setSynapseMediaDirectoryPathToLocalStorage()
+				.then (path)->
+					# $('#storageOption').prop("disabled",true)
+					
+					$('#syncStartContinue').prop("disabled",false)
+					console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
+				
 
 
 			startContinueSyncProcess : ->

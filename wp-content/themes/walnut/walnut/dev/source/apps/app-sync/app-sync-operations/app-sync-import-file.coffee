@@ -14,13 +14,21 @@ define ['underscore', 'csvparse'], ( _) ->
 			,2000)
 
 
-		
+		#Updated To Take filepath from user selection
 		parseCSVToJSON : (fileName)->
+
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+			
 
 			readFile = ->
 				$.Deferred (d)->
-					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-						fileSystem.root.getFile("SynapseAssets/SynapseData/"+fileName, {create: false}
+					window.resolveLocalFileSystemURL('file://'+filepath+'', (fileSystem)->
+						fileSystem.getFile("SynapseAssets/SynapseData/"+fileName, {create: false}
 							, (fileEntry)->
 								fileEntry.file((file)->
 

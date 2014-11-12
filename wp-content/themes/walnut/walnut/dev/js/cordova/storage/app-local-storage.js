@@ -44,6 +44,12 @@ define(['underscore'], function(_) {
     },
     getAudioCues: function() {
       return _.localStorage.getItem("check_uncheck_value");
+    },
+    setStorageOption: function(Value) {
+      return _.localStorage.setItem("storage_option", JSON.stringify(Value));
+    },
+    getStorageOption: function() {
+      return _.localStorage.getItem("storage_option");
     }
   });
 });

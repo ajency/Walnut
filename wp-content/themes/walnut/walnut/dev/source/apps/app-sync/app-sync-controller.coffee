@@ -48,6 +48,8 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 		
 		changeSyncButtonTextBasedOnLastSyncOperation : ->
 
+			option = _.getStorageOption()
+
 			lastSyncOperation = _.getLastSyncOperation()
 			lastSyncOperation.done (typeOfOperation)->
 
@@ -56,6 +58,9 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					when 'none'
 						$('#syncButtonText').text('Start')
 						$('#syncMediaStart').prop("disabled",true)
+						if not _.isNull(option)
+							$('#storageOption').prop("disabled",true)
+					
 
 					when 'file_import'
 						$('#syncButtonText').text('Start')
@@ -63,18 +68,26 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 					when 'file_download'
 						$('#syncButtonText').text('Continue')
 						$('#syncMediaStart').prop("disabled",true)
+						$('#storageOption').prop("disabled",true)
+						
 
 					when 'file_generate'
 						$('#syncButtonText').text('Continue')
 						$('#syncMediaStart').prop("disabled",true)
+						$('#storageOption').prop("disabled",true)
+						
 
 					when 'file_upload'
 						$('#syncButtonText').text('Continue')
 						$('#syncMediaStart').prop("disabled",true)
+						$('#storageOption').prop("disabled",true)
 
 
 
 		startContinueDataSyncProcess : ->
+
+			#Disable Selectbox StorageOption
+			$('#storageOption').prop("disabled",true)
 
 			# Hide sync details
 			$('#totalRecords').css("display","none")
@@ -149,6 +162,9 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 		
 		startMediaSyncProcess : ->
 
+			#Disable Selectbox StorageOption
+			$('#storageOption').prop("disabled",true)
+			
 			# Disable data sync button
 			$('#syncStartContinue').prop("disabled",true)
 
@@ -158,13 +174,14 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 			$('#syncMediaStart').css("display","none")
 			
 			$('#syncMediaSuccess').css("display","block").text("Started media sync...")
-			
-			setTimeout(=>
-				_.startMediaSync()
-			,2000)
+
+			_.createDirectoriesForMediaSync().done ->
+
+				setTimeout(=>
+					_.startMediaSync()
+				,2000)
 
 
-	
 
 	# Request Handler
 	App.reqres.setHandler "get:sync:controller", ->

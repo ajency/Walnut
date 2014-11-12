@@ -21,11 +21,9 @@ define ['underscore', 'unserialize'], ( _) ->
 						
 						_.getPostAuthorName(row['post_author'])
 						.then (author_name)->
-							console.log author_name
 								
 							_.getMetaValue(row['ID'])
 							.then (meta_value)->
-								console.log meta_value
 									
 								_.getJsonToClone(meta_value.layout_json)
 								.then (contentElements)->

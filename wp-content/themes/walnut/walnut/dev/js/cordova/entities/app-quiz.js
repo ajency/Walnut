@@ -64,6 +64,7 @@ define(['underscore', 'unserialize'], function(_) {
     },
     getCollectionMeta: function(collection_id) {
       var defer, deferreds, onSuccess, result;
+      defer = $.Deferred();
       deferreds = [];
       result = {
         quizType: '',
@@ -75,7 +76,6 @@ define(['underscore', 'unserialize'], function(_) {
         negMarksEnable: '',
         message: ''
       };
-      defer = $.Deferred();
       onSuccess = function(tx, data) {
         var forEach;
         if (data.rows.length === 0) {
