@@ -118,6 +118,7 @@ define ['app'
                     time_taken : elapsedTime
                     status : status
                     end_date: moment().format("YYYY-MM-DD") if status is 'completed'
+                    teacher_name: App.request "get:user:data", "display_name"
 
                 questionResponseModel.set data
 

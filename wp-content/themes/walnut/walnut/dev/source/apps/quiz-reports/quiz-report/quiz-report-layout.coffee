@@ -23,7 +23,7 @@ define ['app'
 
                                 <div class="row m-t-20 small">
                                     <div class="col-md-4">
-                                        Taken By {{takenBy}} out of {{totalStudents}} students
+                                        <span class="small">Taken By {{takenBy}} out of {{totalStudents}} students</span>
                                     </div>
                                     <div class="col-md-8" id="students-filter-region"></div>
                                 </div>

@@ -7,7 +7,7 @@ function test_comm(){
     if(isset($_GET['testing'])){
         #cron_quizzes_taken_report();
 
-        cron_teaching_modules_report_mail();
+        #cron_teaching_modules_report_mail();
     
         $aj_comm->cron_process_communication_queue();
         echo "test";

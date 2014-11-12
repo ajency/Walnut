@@ -29,8 +29,10 @@ define ['app'
 
             mixinTemplateHelpers:(data)->
                 data = super data
-
-                data.syncUrl= SITEURL + '/sync-site-content' if IS_STANDALONE_SITE? and IS_STANDALONE_SITE is true
+                if IS_STANDALONE_SITE? and IS_STANDALONE_SITE is true
+                  user = App.request "get:user:model"
+                  if user.current_user_can('school-admin') or user.current_user_can('teacher')
+                    data.syncUrl= SITEURL + '/sync-site-content' 
 
                 data
 

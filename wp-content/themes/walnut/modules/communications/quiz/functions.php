@@ -104,14 +104,12 @@ function add_quiz_completed_parent_mail($data, $comm_data){
             $parents= get_parents_by_student_ids($student_ids);
 
             if($parents){
-                foreach($parents as $student_parents){
-                    foreach($student_parents as $user){
-                        $recipients[] = array(                
-                                'user_id'   => $user->ID,
-                                'type'      => 'email',
-                                'value'     => $user->user_email
-                            ); 
-                    }
+                foreach($parents as $user){
+                    $recipients[] = array(                
+                            'user_id'   => $user->ID,
+                            'type'      => 'email',
+                            'value'     => $user->user_email
+                        ); 
                 }
             }
 
