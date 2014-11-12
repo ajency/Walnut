@@ -46,8 +46,7 @@ function get_sync_form_html($blog_id,$cookiename,$cookievalue){
     }
 
 
-    $sync_form_html= '<form>
-         <fieldset>
+    $sync_form_html= '<fieldset>
          <h3>School Data Sync</h3>';
     $sync_form_html .= '<p id="reset-passwrd-block">Reset Sync Password: <input type="password" name="reset-sync-password" id="reset-sync-password"> 
                         <input type="button" name="reset-passwrd-button" value="Reset" id="reset-passwrd-button"/>
@@ -72,8 +71,7 @@ function get_sync_form_html($blog_id,$cookiename,$cookievalue){
                          <br/><br/>
                          <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
                                  <span class="status-msg"></span>
-                         </fieldset>
-                        </form>';
+                         </fieldset>';
         if(!school_is_syncd()){
             $sync_form_html .='<iframe style="position:absolute;top:-5000px" src="'.site_url().'/wp-admin/options-permalink.php"></iframe>'; 
         }
@@ -87,12 +85,12 @@ function get_sync_user_validation_form(){
     
     $html ='<h3>Validate Sync User</h3>';
 
-    $html .= '<form id="validate_sync_school_user"  autocomplete="off">
+    $html .= '<div id="validate_sync_school_user">
                 <div class="error_msg" style="color:red; padding:10px 0"></div>
                 <input id="validate_blog_id" value="'.$blog_id.'" type="hidden">
                 Sync Password: <input id="validate_pwd" value=""  type="password"><br>
                 <input type="button" id="validate-blog-sync-user" value="Validate">
-            </form>';
+            </div>';
 
     return $html;
 
