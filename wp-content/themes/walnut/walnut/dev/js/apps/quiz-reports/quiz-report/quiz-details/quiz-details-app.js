@@ -38,7 +38,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return QuizDetailsView.__super__.constructor.apply(this, arguments);
       }
 
-      QuizDetailsView.prototype.template = '<div class="row"> <div class="col-md-4"> Division: {{division}} </div> <div class="col-md-8"> Quiz Name: {{name}} </div> </div> <div class="row"> <div class="col-md-2"> Total Marks: {{marks}} </div> <div class="col-md-2"> Duration: {{duration}} min </div> <div class="col-md-2"> Textbook: {{textbookName}} </div> <div class="col-md-2"> Chapter: {{chapterName}} </div> <div class="col-md-2"> Section: {{sectionNames}} </div> <div class="col-md-2"> Subsection: {{subSectionNames}} </div> </div>';
+      QuizDetailsView.prototype.template = '<div class="row m-b-10 p-t-10 b-grey b-t"> <div class="col-md-3"> Quiz Name: {{name}} </div> <div class="col-md-3"> Division: {{division}} </div> <div class="col-md-3"> Duration: {{duration}} min </div> <div class="col-md-3"> Total Marks: {{marks}} </div> </div> <div class="row m-b-10 p-b-10 b-grey b-b"> <div class="col-md-3"> Textbook: {{textbookName}} </div> <div class="col-md-3"> Chapter: {{chapterName}} </div> <div class="col-md-3"> Section: {{sectionNames}} </div> <div class="col-md-3"> Subsection: {{subSectionNames}} </div> </div>';
 
       QuizDetailsView.prototype.className = 'small';
 
