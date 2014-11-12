@@ -74,6 +74,8 @@ define ['app'
                                 else
                                     divisionModel.get 'students_count'
 
+                            trainingMode:=> true if @mode is 'training'
+
                       @layout.textbooksListRegion.show(textbookListView)
 
                       @layout.classDetailsRegion.show(classDescriptionView)

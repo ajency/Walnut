@@ -106,10 +106,15 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         elapsedTime = this.timerObject.request("get:elapsed:time");
         data = {
           time_taken: elapsedTime,
-          status: status
+          status: status,
+          end_date: status === 'completed' ? moment().format("YYYY-MM-DD") : void 0,
+          teacher_name: App.request("get:user:data", "display_name")
         };
         questionResponseModel.set(data);
         questionResponseCollection.add(questionResponseModel);
+        if (!moment(questionResponseModel.get('start_date')).isValid()) {
+          data.start_date = moment().format("YYYY-MM-DD");
+        }
         return questionResponseModel.save(data, {
           wait: true,
           success: (function(_this) {

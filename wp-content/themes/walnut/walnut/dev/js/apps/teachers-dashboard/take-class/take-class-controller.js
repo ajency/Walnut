@@ -87,6 +87,11 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/ta
                   } else {
                     return divisionModel.get('students_count');
                   }
+                },
+                trainingMode: function() {
+                  if (_this.mode === 'training') {
+                    return true;
+                  }
                 }
               }
             });
