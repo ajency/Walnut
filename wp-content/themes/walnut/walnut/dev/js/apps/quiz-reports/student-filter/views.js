@@ -10,7 +10,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return StudentsFilterView.__super__.constructor.apply(this, arguments);
       }
 
-      StudentsFilterView.prototype.template = 'View quizzes taken by : <select id="student-name" class="textbook-filter select-student"> <option value="">-student name-</option> {{#students}} <option value="{{ID}}">{{display_name}}</option> {{/students}} </select> or : <select class="textbook-filter select-student"> <option value="">-roll number-</option> {{#students}} <option value="{{ID}}">{{roll_no}}</option> {{/students}} </select> <button class="btn btn-success view-student">View Student</button> </div>';
+      StudentsFilterView.prototype.template = '<span class="small">View quizzes taken by:</span> <select id="student-name" class="textbook-filter select-student"> <option value="">-student name-</option> {{#students}} <option value="{{ID}}">{{display_name}}</option> {{/students}} </select> <span class="small">or:</span> <select class="textbook-filter select-student"> <option value="">-roll number-</option> {{#students}} <option value="{{ID}}">{{roll_no}}</option> {{/students}} </select> <button class="btn btn-success btn-small view-student">View Student</button> </div>';
 
       StudentsFilterView.prototype.events = {
         'change .select-student': function(e) {
