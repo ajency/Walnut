@@ -349,18 +349,9 @@ function user_extend_profile_fields_save($user_id) {
                  if( $parent_id = email_exists( $_POST['parent_email_'.$i] )) {
                      
                      $saved_parent_email = get_user_meta($user_id, 'parent_email'.$i,true);
-                     if($saved_parent_email != '' && $saved_parent_email != $_POST['parent_email_'.$i]){
-                         unset_userid_parent_of_meta($saved_parent_email,$user_id);
-                     }
                      
                      update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
-                         
-                     $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
-                     $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-                        
-                     array_push($parent_of_meta, (string)$user_id);
-                     $parent_of_meta = array_unique($parent_of_meta);                     
-                     update_user_meta( $parent_id, 'parent_of', $parent_of_meta );
+                      
                     }
                  elseif(is_email($_POST['parent_email_'.$i])){
                      $password = wp_generate_password( 12, true );
@@ -377,13 +368,6 @@ function user_extend_profile_fields_save($user_id) {
                      
                      //$parent_user->set_role( 'parent' );
                      update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
-                     
-                     $parent_of_meta = get_user_meta($new_parent_id,'parent_of',true);
-                     $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-                        
-                     array_push($parent_of_meta, (string)$user_id);
-                     $parent_of_meta = array_unique($parent_of_meta);                     
-                     update_user_meta( $new_parent_id, 'parent_of', $parent_of_meta );
 
                  }             
             }  
@@ -573,7 +557,7 @@ function set_meta_user_activation($user_id, $password, $meta)
     $updatemetafields = array('divisions','textbooks','student_division','student_rollno','parent_email1','parent_email',
                             'parent_email2','parent_email3','parent_phone1','parent_phone2'
                         );
-    $updateparentof = array('child_of1','child_of2','child_of3');
+
     $signup_tbl = $wpdb->base_prefix."signups";
     $users_tbl = $wpdb->base_prefix."users";
 
@@ -586,17 +570,6 @@ function set_meta_user_activation($user_id, $password, $meta)
     foreach($updatemetafields as $field => $value){
      if(isset($user_meta[$value]))
          update_usermeta( $user_id, $value, $user_meta[$value] );
-    }
-    
-    foreach($updateparentof as $field => $value){
-        if(isset($user_meta[$value])){
-            $parent_of_meta = get_user_meta($user_meta[$value],'parent_of',true);
-            $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-
-            array_push($parent_of_meta, (string)$user_id);
-            $parent_of_meta = array_unique($parent_of_meta);            
-            update_usermeta( $user_meta[$value], 'parent_of', $parent_of_meta );
-        }
     }
 
 }
@@ -664,18 +637,6 @@ function getLoggedInUserModel(){
     
 }
 
-function unset_userid_parent_of_meta($parent_email,$user_id){
-    $parent_id = email_exists($parent_email);
-    if($parent_id){
-        $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
-        $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-        
-        if(($key = array_search($user_id, $parent_of_meta)) !== false) {
-            unset($parent_of_meta[$key]);
-        }
-        update_usermeta( $parent_id, 'parent_of', $parent_of_meta );
-    }
-}
 
 //////custom logo on login page//////
 function custom_login_logo() {
