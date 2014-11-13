@@ -90,10 +90,11 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
       });
     },
     insertIntoQuizResponseSummary: function(model, quizMetaValue, collectionMetaData) {
-      var serializeQuizMetaValue, start_date, summary_id;
+      var addDateAndTime, serializeQuizMetaValue, start_date, summary_id;
       summary_id = 'Q' + model.get('collection_id') + 'S' + _.getUserID();
       if (collectionMetaData.quizType === "practice") {
-        summary_id = summary_id + '_' + _.getCurrentDateTime(1);
+        addDateAndTime = _.getCurrentDateTime(2).replace(/[:  -]/g, '');
+        summary_id = summary_id + '_' + addDateAndTime;
       }
       console.log(JSON.stringify(quizMetaValue));
       model.set({
