@@ -133,7 +133,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 			summary_id = 'Q'+model.get('collection_id')+'S'+_.getUserID()
 			if collectionMetaData.quizType is "practice"
-				summary_id = summary_id+'_'+_.getCurrentDateTime(0)
+				summary_id = summary_id+'_'+_.getCurrentDateTime(1)
 
 			console.log JSON.stringify quizMetaValue
 			model.set 'summary_id' :summary_id

@@ -13,9 +13,10 @@ define(['underscore', 'unserialize'], function(_) {
             return _.getPostAuthorName(row['post_author']).then(function(author_name) {
               return _.getMetaValue(row['ID']).then(function(meta_value) {
                 return _.getJsonToClone(meta_value.layout_json).then(function(contentElements) {
-                  var excerpt, excerpt_array, taglessArray;
+                  var excerpt, excerpt_array, marks, taglessArray;
                   console.log(contentElements);
                   excerpt_array = contentElements.excerpt;
+                  marks = contentElements.marks;
                   excerpt_array = _.flatten(excerpt_array);
                   taglessArray = new Array;
                   _.each(excerpt_array, function(excerpt) {
@@ -40,6 +41,7 @@ define(['underscore', 'unserialize'], function(_) {
                     last_modified_by: meta_value.last_modified_by,
                     layout: contentElements.elements,
                     menu_order: row['menu_order'],
+                    marks: marks,
                     order: _.indexOf(ids, row['ID'].toString()),
                     ping_status: row['ping_status'],
                     pinged: row['pinged'],

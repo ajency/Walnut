@@ -106,8 +106,8 @@ define(['underscore', 'unserialize'], function(_) {
                   _.defaults(element, meta);
                 }
                 content.excerpt.push(columnElement.excerpt);
-                if (columnElement.marks) {
-                  content.marks += columnElement.marks;
+                if (meta.marks) {
+                  content.marks += parseInt(meta.marks);
                 }
                 total--;
                 if (!total) {
@@ -183,8 +183,8 @@ define(['underscore', 'unserialize'], function(_) {
             if (element.element === 'Row') {
               _.getRowElements(element).then(function(columnElement) {
                 content.excerpt.push(columnElement.excerpt);
-                if (columnElement.marks) {
-                  content.marks += columnElement.marks;
+                if (meta.marks) {
+                  content.marks += parseInt(meta.marks);
                 }
                 total--;
                 if (!total) {
@@ -199,8 +199,8 @@ define(['underscore', 'unserialize'], function(_) {
                     _.defaults(element, meta);
                   }
                   content.excerpt.push(columnElement.excerpt);
-                  if (columnElement.marks) {
-                    content.marks += columnElement.marks;
+                  if (meta.marks) {
+                    content.marks += parseInt(meta.marks);
                   }
                   total--;
                   if (!total) {
@@ -237,9 +237,11 @@ define(['underscore', 'unserialize'], function(_) {
                   if (element.element === 'Audio') {
                     content.audioArray.push(element);
                   }
-                  if (element.marks) {
-                    content.marks += element.marks;
+                  if (meta.marks) {
+                    content.marks += parseInt(meta.marks);
                   }
+                  console.log('element.marks');
+                  console.log(element.marks);
                 }
                 total--;
                 if (!total) {

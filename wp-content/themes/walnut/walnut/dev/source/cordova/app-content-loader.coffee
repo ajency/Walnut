@@ -122,7 +122,7 @@ define ['underscore', 'unserialize'], ( _) ->
 								if meta isnt false
 									_.defaults element, meta
 								content.excerpt.push columnElement.excerpt
-								content.marks += columnElement.marks if columnElement.marks
+								content.marks += parseInt(meta.marks) if meta.marks
 								total--
 								
 								if not total
@@ -198,8 +198,8 @@ define ['underscore', 'unserialize'], ( _) ->
 							.then (columnElement)->
 
 								content.excerpt.push columnElement.excerpt
-								content.marks += columnElement.marks if columnElement.marks
-
+								content.marks += parseInt(meta.marks) if meta.marks
+								
 								total--
 								if not total
 									defer.resolve content
@@ -215,7 +215,8 @@ define ['underscore', 'unserialize'], ( _) ->
 									if meta isnt false
 										_.defaults element, meta
 									content.excerpt.push columnElement.excerpt
-									content.marks += columnElement.marks if columnElement.marks
+									content.marks += parseInt(meta.marks) if meta.marks
+									
 									total--
 									
 									if not total
@@ -245,7 +246,9 @@ define ['underscore', 'unserialize'], ( _) ->
 									if element.element is 'Audio'
 										content.audioArray.push element
 
-									content.marks += element.marks if element.marks
+									content.marks += parseInt(meta.marks) if meta.marks
+									console.log 'element.marks'
+									console.log element.marks
 
 								total--
 								if not total

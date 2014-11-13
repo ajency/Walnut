@@ -51,6 +51,9 @@ define(["app", 'backbone'], function(App, Backbone) {
             });
           }
         });
+        this.set({
+          'marks': multiplicationFactor * this.get('marks')
+        });
         return this;
       };
 

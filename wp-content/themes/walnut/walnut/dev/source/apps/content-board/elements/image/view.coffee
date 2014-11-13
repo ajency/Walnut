@@ -9,9 +9,9 @@ define ['app'], (App)->
 
             className : 'image'
 
-            template : '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%" style="position:relative;"/>
-                        						<div class="clearfix"></div>
-                        						'
+            template : '<img src="{{imageurl}}" alt="{{title}}" class="img-responsive" width="100%" style="position:relative;"
+                        onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';"/>
+                        						<div class="clearfix"></div>'
 
             # override serializeData to set holder property for the view
             mixinTemplateHelpers : (data)->

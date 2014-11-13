@@ -179,3 +179,29 @@ define ['underscore'], ( _) ->
 			
 
 			defer.promise()
+
+		
+
+		getDivisionIdForSchedule : ->
+
+			defer = $.Deferred()
+
+			onSuccess = (tx,data)->
+
+				id = ''
+
+				if data.rows.length isnt 0
+					id = data.rows.item(0)['meta_value']
+
+				defer.resolve id
+
+			_.db.transaction (tx)->
+	
+				tx.executeSql "SELECT meta_value 
+								FROM wp_usermeta 
+								WHERE user_id=? 
+								AND meta_key=?"
+								, [_.getUserID(), 'student_division']
+				,onSuccess, _.transactionErrorHandler
+
+			defer.promise()

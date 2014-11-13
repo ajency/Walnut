@@ -60,8 +60,7 @@ define(["backbone"], function(Backbone) {
         this.p = _.getContentPiecesByIDs(opts.ids);
         this.p.done(function(data) {
           console.log('getContentPiecesByIDs done');
-          collection.set(data);
-          return App.request("app:reset:content:pieces:repository", data);
+          return collection.set(data);
         });
       }
       if (collection_name === 'user') {

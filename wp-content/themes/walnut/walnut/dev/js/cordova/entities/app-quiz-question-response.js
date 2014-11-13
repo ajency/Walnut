@@ -10,24 +10,22 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
           return defer.resolve(result);
         } else {
           forEach = function(row, i) {
-            return _.getTotalMarksScoredAndTotalTimeTaken(summary_id).then(function(value) {
-              result[i] = {
-                content_piece_id: row['content_piece_id'],
-                marks_scored: value.total_marks_scored,
-                qr_id: row['qr_id'],
-                question_response: _.unserialize(row['question_response']),
-                status: row['status'],
-                summary_id: summary_id,
-                time_taken: value.total_time_taken
-              };
-              i = i + 1;
-              if (i < data.rows.length) {
-                return forEach(data.rows.item(i), i);
-              } else {
-                console.log("getQuizQuestionResponseBySummaryID done");
-                return defer.resolve(result);
-              }
-            });
+            result[i] = {
+              content_piece_id: row['content_piece_id'],
+              marks_scored: row['marks_scored'],
+              qr_id: row['qr_id'],
+              question_response: _.unserialize(row['question_response']),
+              status: row['status'],
+              summary_id: summary_id,
+              time_taken: row['time_taken']
+            };
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
+            } else {
+              console.log("getQuizQuestionResponseBySummaryID done");
+              return defer.resolve(result);
+            }
           };
           return forEach(data.rows.item(0), 0);
         }

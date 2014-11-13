@@ -372,9 +372,30 @@ define ['underscore', 'csvparse'], ( _) ->
 				,_.transactionErrorhandler
 				,(tx)->
 					console.log 'Inserted data in wp_users'
-					_.onFileImportSuccess()
+					# _.onFileImportSuccess()
+					_.insertIntoWpQuizSchedules()
 				)
 
+
+		insertIntoWpQuizSchedules : ->
+
+			_.importingFileMessage 15
+
+			getParsedData = _.parseCSVToJSON _.getTblPrefix()+'quiz_schedules.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"quiz_schedules")
+
+					_.each data, (row, i)->
+						tx.executeSql("INSERT OR REPLACE INTO "+_.getTblPrefix()+"quiz_schedules 
+							(quiz_id, division_id, schedule_from, schedule_to) 
+							VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+
+				,_.transactionErrorhandler
+				,(tx)->
+					console.log 'Inserted data '+_.getTblPrefix()+'quiz_schedules'
+					_.onFileImportSuccess()
+				)
 
 
 		
