@@ -49,6 +49,8 @@ define ['app'
 						else				
 							@model.set 'complete',false
 
+						@model.set('complete': false) if @model.get('numberOfBlanks') is 0
+
 						@model.save()
 
 						ElementCollection = App.request "create:new:question:element:collection", models

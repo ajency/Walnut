@@ -106,6 +106,18 @@ define(['app'], function(App) {
 
       FibView.prototype._changeNumberOfBlanks = function(model, numberOfBlanks) {
         var noOfBlanksToAdd, noOfBlanksToRemove;
+        if (numberOfBlanks === 0) {
+          this.model.set({
+            'complete': false
+          });
+          this.model.set({
+            'error_info': 'You need to set at least one blank'
+          });
+        } else {
+          this.model.set({
+            'error_info': ''
+          });
+        }
         if (this.$el.find('input').length !== numberOfBlanks) {
           if (numberOfBlanks > model.previous('numberOfBlanks')) {
             noOfBlanksToAdd = numberOfBlanks - model.previous('numberOfBlanks');

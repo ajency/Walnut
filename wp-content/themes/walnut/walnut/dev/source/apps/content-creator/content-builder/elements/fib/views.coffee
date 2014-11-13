@@ -98,6 +98,13 @@ define ['app'], (App)->
 
             #on change of the number of blanks from the dropdown
             _changeNumberOfBlanks: (model, numberOfBlanks)->
+                
+                if numberOfBlanks is 0
+                    @model.set 'complete': false 
+                    @model.set 'error_info' : 'You need to set at least one blank'
+                else
+                    @model.set 'error_info': ''
+
                 if @$el.find('input').length isnt numberOfBlanks
 
                     if numberOfBlanks > model.previous 'numberOfBlanks'
