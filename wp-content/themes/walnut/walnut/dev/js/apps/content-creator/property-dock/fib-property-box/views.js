@@ -171,7 +171,8 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
       };
 
       PropertyView.prototype._updateNoOfBlanks = function(model, numberOfBlanks) {
-        return this.ui.noOfBlanksDropdown.select2('val', numberOfBlanks);
+        this.ui.noOfBlanksDropdown.select2('val', numberOfBlanks);
+        return console.log(numberOfBlanks);
       };
 
       PropertyView.prototype.onClose = function() {

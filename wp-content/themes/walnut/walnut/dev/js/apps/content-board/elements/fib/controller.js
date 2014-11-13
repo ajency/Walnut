@@ -84,7 +84,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
             blank.blank_size = parseInt(blank.blank_size);
           }
           if (blank.marks != null) {
-            return blank.marks = parseInt(blank.marks);
+            return blank.marks = parseFloat(blank.marks);
           }
         });
       };

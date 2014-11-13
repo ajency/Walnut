@@ -84,7 +84,7 @@ define ['app'
                 _.each blanksArray,(blank)->
                     blank.blank_index = parseInt blank.blank_index if blank.blank_index?
                     blank.blank_size = parseInt blank.blank_size if blank.blank_size?
-                    blank.marks = parseInt blank.marks if blank.marks?
+                    blank.marks = parseFloat blank.marks if blank.marks?
 
 
             _submitAnswer :(displayAnswer=true) ->

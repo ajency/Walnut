@@ -65,7 +65,7 @@ define ['app'
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->
                 _.each optionsObj,(option)->
-                    option.marks = parseInt option.marks if option.marks?
+                    option.marks = parseFloat option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?
                     option.class = parseInt option['class'] if option['class']?
 

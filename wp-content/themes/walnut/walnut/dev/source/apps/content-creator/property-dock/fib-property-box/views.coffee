@@ -190,6 +190,7 @@ define ['app'
 
             _updateNoOfBlanks:(model,numberOfBlanks)->
                 @ui.noOfBlanksDropdown.select2 'val',numberOfBlanks
+                console.log numberOfBlanks
 
 
             onClose: ->

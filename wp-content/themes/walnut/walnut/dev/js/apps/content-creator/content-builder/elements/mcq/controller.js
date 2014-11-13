@@ -77,7 +77,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._parseOptions = function(optionsObj) {
         _.each(optionsObj, function(option) {
           if (option.marks != null) {
-            option.marks = parseInt(option.marks);
+            option.marks = parseFloat(option.marks);
           }
           if (option.optionNo != null) {
             option.optionNo = parseInt(option.optionNo);
