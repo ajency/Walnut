@@ -93,7 +93,7 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
       var serializeQuizMetaValue, start_date, summary_id;
       summary_id = 'Q' + model.get('collection_id') + 'S' + _.getUserID();
       if (collectionMetaData.quizType === "practice") {
-        summary_id = summary_id + '_' + _.getCurrentDateTime(0);
+        summary_id = summary_id + '_' + _.getCurrentDateTime(1);
       }
       console.log(JSON.stringify(quizMetaValue));
       model.set({

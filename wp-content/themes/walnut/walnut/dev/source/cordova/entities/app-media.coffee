@@ -51,8 +51,8 @@ define ['underscore', 'unserialize'], ( _) ->
 
 					url = row['guid']
 					mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
-					alert mediaUrl
-					console.log mediaUrl
+					# alert mediaUrl
+					# console.log mediaUrl
 
 					if attachmentData.sizes
 						sizes = attachmentData.sizes

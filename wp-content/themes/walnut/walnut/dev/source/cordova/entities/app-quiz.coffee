@@ -30,43 +30,48 @@ define ['underscore', 'unserialize'], ( _) ->
 							.then (dateStatus)->
 
 
-								result[i] = 
-									id : row['id']
-									name : row['name']
-									created_on : row['created_on']
-									created_by : row['created_by']
-									last_modified_on : row['last_modified_on']
-									last_modified_by : row['last_modified_by']
-									published_on : row['published_on']
-									published_by : row['published_by']
-									post_status : row['post_status']
-									type : row['type']
-									term_ids : _.unserialize(row['term_ids'])
-									duration : _.getDuration(row['duration'])
-									minshours : _.getMinsHours(row['duration'])
-									total_minutes : row['duration']
-									description : ""
-									permissions : collectionMetaData.permission
-									instructions : collectionMetaData.instructions
-									quiz_type : collectionMetaData.quizType
-									marks : collectionMetaData.marks
-									negMarksEnable : collectionMetaData.negMarksEnable
-									negMarks : collectionMetaData.negMarks
-									message : collectionMetaData.message
-									content_layout : ""
-									taken_on : dateStatus.start_date
-									status : dateStatus.status
-									attempts : dateStatus.attempts
-									content_pieces : collectionMetaData.contentPieces
+								_.getQuizSchedule(row['id'])
+								.then (schedule)->
 
 
-								i = i + 1
-								if (i < data.rows.length)
-									forEach data.rows.item(i), i
-								
-								else
-									console.log "getQuizByTextbookId done"
-									defer.resolve result
+									result[i] = 
+										id : row['id']
+										name : row['name']
+										created_on : row['created_on']
+										created_by : row['created_by']
+										last_modified_on : row['last_modified_on']
+										last_modified_by : row['last_modified_by']
+										published_on : row['published_on']
+										published_by : row['published_by']
+										post_status : row['post_status']
+										type : row['type']
+										term_ids : _.unserialize(row['term_ids'])
+										duration : _.getDuration(row['duration'])
+										minshours : _.getMinsHours(row['duration'])
+										total_minutes : row['duration']
+										description : ""
+										permissions : collectionMetaData.permission
+										instructions : collectionMetaData.instructions
+										quiz_type : collectionMetaData.quizType
+										marks : collectionMetaData.marks
+										negMarksEnable : collectionMetaData.negMarksEnable
+										negMarks : collectionMetaData.negMarks
+										message : collectionMetaData.message
+										content_layout : ""
+										taken_on : dateStatus.start_date
+										status : dateStatus.status
+										attempts : dateStatus.attempts
+										content_pieces : collectionMetaData.contentPieces
+										schedule:schedule
+
+
+									i = i + 1
+									if (i < data.rows.length)
+										forEach data.rows.item(i), i
+									
+									else
+										console.log "getQuizByTextbookId done"
+										defer.resolve result
 					
 
 					forEach data.rows.item(0), 0
@@ -491,6 +496,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			defer.promise()
 
 
+
 		getQuizResponseSummaryByCollectionId : (collection_id)->
 			
 			defer = $.Deferred()
@@ -517,7 +523,58 @@ define ['underscore', 'unserialize'], ( _) ->
 
 		
 			defer.promise()
-		
+
+		#Gives the schedule date if the quiz type is class test
+		getQuizSchedule : (quiz_id)->
+
+			defer = $.Deferred()
+			
+			_.getDivisionIdForSchedule()
+			.then (division_id)->
+	
+				onSuccess =(tx,data)->
+					
+					schedule = new Array()
+					
+					row = data.rows.item(0)
+						
+					if row
+						current_date = _.getCurrentDateTime(0)
+						from = row['schedule_from']
+						to = row['schedule_to']
+						
+						if current_date >= from and current_date <= to
+							active = true
+						else
+							active = false
+
+						if current_date > to
+							expired = true
+						else
+							expired = false
+						
+						schedule = 'from' : from, 'to' : to
+									, 'is_active':active ,'is_expired':expired
+						
+						defer.resolve(schedule)
+
+					else
+						schedule = ''
+						defer.resolve(schedule)
+
+
+				_.db.transaction (tx)->
+					
+					tx.executeSql "SELECT schedule_from, schedule_to 
+									FROM "+_.getTblPrefix()+"quiz_schedules 
+									WHERE quiz_id=? 
+									AND division_id=?"
+									, [quiz_id, division_id] 
+					, onSuccess, _.transactionErrorHandler
+				
+			defer.promise()
+
+
 
 		getDuration : (duration)->
 

@@ -19,28 +19,28 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 					forEach = (row, i)->
 						
-						_.getTotalMarksScoredAndTotalTimeTaken(summary_id)
-						.then (value)->
+						# _.getTotalMarksScoredAndTotalTimeTaken(summary_id)
+						# .then (value)->
 
-							result[i] = 
-								content_piece_id : row['content_piece_id']
-								marks_scored: value.total_marks_scored
-								qr_id: row['qr_id']
-								question_response : _.unserialize(row['question_response'])
-								status : row['status']
-								summary_id :summary_id
-								time_taken : value.total_time_taken
+						result[i] = 
+							content_piece_id : row['content_piece_id']
+							marks_scored: row['marks_scored']
+							qr_id: row['qr_id']
+							question_response : _.unserialize(row['question_response'])
+							status : row['status']
+							summary_id :summary_id
+							time_taken : row['time_taken']
 						
 						
 
-							i = i + 1
+						i = i + 1
 
-							if ( i < data.rows.length)
-								forEach data.rows.item(i), i
+						if ( i < data.rows.length)
+							forEach data.rows.item(i), i
 
-							else
-								console.log "getQuizQuestionResponseBySummaryID done"
-								defer.resolve result
+						else
+							console.log "getQuizQuestionResponseBySummaryID done"
+							defer.resolve result
 
 					forEach data.rows.item(0), 0
 
@@ -52,7 +52,6 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 				, onSuccess, _.transactionErrorHandler
 
 			defer.promise()
-
 
 
 

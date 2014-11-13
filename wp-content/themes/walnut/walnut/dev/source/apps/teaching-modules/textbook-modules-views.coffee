@@ -13,27 +13,27 @@ define ['app',
 						<td class="v-align-middle">{{quiz_type}}</td>
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-					   	<td>
-					   	{{#practice_quiz}}
-						   	{{#attempts}}
-						   		<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
-						   	{{/attempts}}
-						   	{{^attempts}}
-						   		<span class="label label-important">Not Started</span>
-						   	{{/attempts}}
-					   	{{/practice_quiz}}
-					   	{{^practice_quiz}}
+						<td>
+						{{#practice_quiz}}
+							{{#attempts}}
+								<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
+							{{/attempts}}
+							{{^attempts}}
+								<span class="label label-important">Not Started</span>
+							{{/attempts}}
+						{{/practice_quiz}}
+						{{^practice_quiz}}
 						  {{&status_str}}
-					   	{{/practice_quiz}}
+						{{/practice_quiz}}
 
 						</td>
 						<td>
-					   		{{#practice_quiz}}
+							{{#viewQuiz}}
 								<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
 								View {{moduleType}}
 								</button>
-					   		{{/practice_quiz}}
-					   		
+							{{/viewQuiz}}
+							
 							{{#schedule_button}}
 								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
 									<i class="fa fa-calendar"></i> {{taken_on}}
@@ -160,6 +160,9 @@ define ['app',
 				if @model.get('quiz_type') is 'practice'
 					data.practice_quiz = true
 
+				if data.quiz_type is 'Practice' or data.classTest and data.status is 'completed'
+					data.viewQuiz = true
+				
 				data
 
 			initialize : (options)->

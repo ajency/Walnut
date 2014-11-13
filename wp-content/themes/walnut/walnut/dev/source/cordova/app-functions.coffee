@@ -149,24 +149,40 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 		
 		clearMediaDirectory : (directory_name)->
+
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+
+
 			# Delete all video files from 'videos-web' folder
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
-					, {create: false, exclusive: false}
+			window.resolveLocalFileSystemURL('file://'+filepath+''
 
-					, (directoryEntry)->
-						reader = directoryEntry.createReader()
-						reader.readEntries(
-							(entries)->
-								for i in [0..entries.length-1] by 1
-									entries[i].remove()
+				,(fileEntry)->
+					
+					fileEntry.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
+						, {create: false, exclusive: false}
 
-									if i is entries.length-1
-										console.log 'Deleted all files from '+directory_name+' directory'
+						, (entry)->
+				
+							reader = entry.createReader()
+				
+							reader.readEntries(
+								(entries)->
+									for i in [0..entries.length-1] by 1
+										entries[i].remove()
 
-							,_.directoryErrorHandler)
-					, _.directoryErrorHandler)
-			, _.fileSystemErrorHandler)
+										if i is entries.length-1
+											console.log 'Deleted all files from '+directory_name+' directory'
+
+								,_.directoryErrorHandler)
+				
+						, _.directoryErrorHandler)
+			
+				, _.fileSystemErrorHandler)
 			
 
 

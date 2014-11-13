@@ -15,42 +15,45 @@ define(['underscore', 'unserialize'], function(_) {
           forEach = function(row, i) {
             return _.getCollectionMeta(row['id']).then(function(collectionMetaData) {
               return _.getStartDateAndStatus(row['id']).then(function(dateStatus) {
-                result[i] = {
-                  id: row['id'],
-                  name: row['name'],
-                  created_on: row['created_on'],
-                  created_by: row['created_by'],
-                  last_modified_on: row['last_modified_on'],
-                  last_modified_by: row['last_modified_by'],
-                  published_on: row['published_on'],
-                  published_by: row['published_by'],
-                  post_status: row['post_status'],
-                  type: row['type'],
-                  term_ids: _.unserialize(row['term_ids']),
-                  duration: _.getDuration(row['duration']),
-                  minshours: _.getMinsHours(row['duration']),
-                  total_minutes: row['duration'],
-                  description: "",
-                  permissions: collectionMetaData.permission,
-                  instructions: collectionMetaData.instructions,
-                  quiz_type: collectionMetaData.quizType,
-                  marks: collectionMetaData.marks,
-                  negMarksEnable: collectionMetaData.negMarksEnable,
-                  negMarks: collectionMetaData.negMarks,
-                  message: collectionMetaData.message,
-                  content_layout: "",
-                  taken_on: dateStatus.start_date,
-                  status: dateStatus.status,
-                  attempts: dateStatus.attempts,
-                  content_pieces: collectionMetaData.contentPieces
-                };
-                i = i + 1;
-                if (i < data.rows.length) {
-                  return forEach(data.rows.item(i), i);
-                } else {
-                  console.log("getQuizByTextbookId done");
-                  return defer.resolve(result);
-                }
+                return _.getQuizSchedule(row['id']).then(function(schedule) {
+                  result[i] = {
+                    id: row['id'],
+                    name: row['name'],
+                    created_on: row['created_on'],
+                    created_by: row['created_by'],
+                    last_modified_on: row['last_modified_on'],
+                    last_modified_by: row['last_modified_by'],
+                    published_on: row['published_on'],
+                    published_by: row['published_by'],
+                    post_status: row['post_status'],
+                    type: row['type'],
+                    term_ids: _.unserialize(row['term_ids']),
+                    duration: _.getDuration(row['duration']),
+                    minshours: _.getMinsHours(row['duration']),
+                    total_minutes: row['duration'],
+                    description: "",
+                    permissions: collectionMetaData.permission,
+                    instructions: collectionMetaData.instructions,
+                    quiz_type: collectionMetaData.quizType,
+                    marks: collectionMetaData.marks,
+                    negMarksEnable: collectionMetaData.negMarksEnable,
+                    negMarks: collectionMetaData.negMarks,
+                    message: collectionMetaData.message,
+                    content_layout: "",
+                    taken_on: dateStatus.start_date,
+                    status: dateStatus.status,
+                    attempts: dateStatus.attempts,
+                    content_pieces: collectionMetaData.contentPieces,
+                    schedule: schedule
+                  };
+                  i = i + 1;
+                  if (i < data.rows.length) {
+                    return forEach(data.rows.item(i), i);
+                  } else {
+                    console.log("getQuizByTextbookId done");
+                    return defer.resolve(result);
+                  }
+                });
               });
             });
           };
@@ -351,6 +354,47 @@ define(['underscore', 'unserialize'], function(_) {
       };
       _.db.transaction(function(tx) {
         return tx.executeSql("SELECT COUNT(summary_id) AS attempts, taken_on, quiz_meta FROM " + _.getTblPrefix() + "quiz_response_summary WHERE collection_id=? AND student_id=?", [collection_id, _.getUserID()], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
+    },
+    getQuizSchedule: function(quiz_id) {
+      var defer;
+      defer = $.Deferred();
+      _.getDivisionIdForSchedule().then(function(division_id) {
+        var onSuccess;
+        onSuccess = function(tx, data) {
+          var active, current_date, expired, from, row, schedule, to;
+          schedule = new Array();
+          row = data.rows.item(0);
+          if (row) {
+            current_date = _.getCurrentDateTime(0);
+            from = row['schedule_from'];
+            to = row['schedule_to'];
+            if (current_date >= from && current_date <= to) {
+              active = true;
+            } else {
+              active = false;
+            }
+            if (current_date > to) {
+              expired = true;
+            } else {
+              expired = false;
+            }
+            schedule = {
+              'from': from,
+              'to': to,
+              'is_active': active,
+              'is_expired': expired
+            };
+            return defer.resolve(schedule);
+          } else {
+            schedule = '';
+            return defer.resolve(schedule);
+          }
+        };
+        return _.db.transaction(function(tx) {
+          return tx.executeSql("SELECT schedule_from, schedule_to FROM " + _.getTblPrefix() + "quiz_schedules WHERE quiz_id=? AND division_id=?", [quiz_id, division_id], onSuccess, _.transactionErrorHandler);
+        });
       });
       return defer.promise();
     },

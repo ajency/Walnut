@@ -101,6 +101,22 @@ define(['underscore'], function(_) {
         return tx.executeSql("SELECT COUNT(user_id) AS students_count FROM wp_usermeta WHERE meta_key=? AND meta_value=? AND user_id IN (" + ids + ")", ['student_division', division_id], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
+    },
+    getDivisionIdForSchedule: function() {
+      var defer, onSuccess;
+      defer = $.Deferred();
+      onSuccess = function(tx, data) {
+        var id;
+        id = '';
+        if (data.rows.length !== 0) {
+          id = data.rows.item(0)['meta_value'];
+        }
+        return defer.resolve(id);
+      };
+      _.db.transaction(function(tx) {
+        return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? AND meta_key=?", [_.getUserID(), 'student_division'], onSuccess, _.transactionErrorHandler);
+      });
+      return defer.promise();
     }
   });
 });

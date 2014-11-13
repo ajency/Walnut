@@ -147,48 +147,67 @@ define(['underscore'], function(_) {
         practice_completed = new Array();
         class_test_in_progress = new Array();
         practice_in_progress = new Array();
-        forEach = function(row, i) {
-          var count_practice_completed, count_practice_in_progress, quiz_meta, status;
-          quiz_meta = _.unserialize(row['quiz_meta']);
-          status = quiz_meta['status'];
-          if (status === 'completed') {
-            if (row['quiz_type'] === 'test') {
-              class_test_completed[i] = row['id'];
+        if (data.rows.length === 0) {
+          practice_quizzes_completed = {
+            class_test_completed: 0,
+            practice_completed: 0,
+            class_test_in_progress: 0,
+            practice_in_progress: 0
+          };
+          defer.resolve(practice_quizzes_completed);
+        } else {
+          forEach = function(row, i) {
+            var count_practice_completed, count_practice_in_progress, quiz_meta, status;
+            quiz_meta = _.unserialize(row['quiz_meta']);
+            if (_.isNull(quiz_meta)) {
+              practice_quizzes_completed[i] = '';
             } else {
-              practice_completed[i] = row['id'];
+              status = quiz_meta['status'];
+              if (status === 'completed') {
+                if (row['quiz_type'] === 'test') {
+                  class_test_completed[i] = row['id'];
+                } else if (_.indexOf(practice_in_progress, row['id']) === -1) {
+                  practice_completed[i] = row['id'];
+                }
+              } else {
+                if (row['quiz_type'] === 'test') {
+                  class_test_in_progress[i] = row['id'];
+                } else {
+                  practice_in_progress[i] = row['id'];
+                  if (_.indexOf(practice_completed, row['id']) !== -1) {
+                    practice_completed[i] = _.without(practice_completed, row['id']);
+                  }
+                }
+              }
             }
-          } else {
-            if (row['quiz_type'] === 'test') {
-              class_test_in_progress[i] = row['id'];
+            i = i + 1;
+            if (i < data.rows.length) {
+              return forEach(data.rows.item(i), i);
             } else {
-              practice_in_progress[i] = row['id'];
+              count_practice_completed = '';
+              count_practice_in_progress = '';
+              if (practice_completed.length > 0) {
+                count_practice_completed = _.uniq(practice_completed);
+              }
+              if (practice_in_progress.length > 0) {
+                count_practice_in_progress = _.uniq(practice_in_progress);
+              }
+              practice_quizzes_completed = {
+                class_test_completed: _.size(_.values(class_test_completed)),
+                practice_completed: _.size(count_practice_completed),
+                class_test_in_progress: _.size(_.values(class_test_in_progress)),
+                practice_in_progress: _.size(count_practice_in_progress)
+              };
+              return defer.resolve(practice_quizzes_completed);
             }
-          }
-          i = i + 1;
-          if (i < data.rows.length) {
-            return forEach(data.rows.item(i), i);
-          } else {
-            if (practice_completed.length > 0) {
-              count_practice_completed = _.uniq(practice_completed);
-            }
-            if (practice_in_progress.length > 0) {
-              count_practice_in_progress = _.uniq(practice_in_progress);
-            }
-            practice_quizzes_completed = {
-              class_test_completed: _.size(_.values(class_test_completed)),
-              practice_completed: _.size(count_practice_completed),
-              class_test_in_progress: _.size(_.values(class_test_in_progress)),
-              practice_in_progress: _.size(count_practice_in_progress)
-            };
-            return defer.resolve(practice_quizzes_completed);
-          }
-        };
+          };
+        }
         return forEach(data.rows.item(0), 0);
       };
       _.db.transaction(function(tx) {
         var pattern;
         pattern = '%"' + textbook_id + '"%';
-        return tx.executeSql("SELECT cc.id, cm.meta_value as quiz_type, qr.quiz_meta FROM " + _.getTblPrefix() + "quiz_response_summary qr, wp_content_collection cc, wp_collection_meta cm WHERE qr.collection_id = cc.id AND cm.collection_id = cc.id AND cm.meta_key LIKE '%quiz_type%' AND cc.post_status IN ('publish','archive') AND qr.student_id = ? AND cc.term_ids LIKE '" + pattern + "' ", [_.getUserID()], onSuccess, _.transactionErrorHandler);
+        return tx.executeSql("SELECT cc.id, cm.meta_value as quiz_type, qr.quiz_meta FROM wp_collection_meta cm, wp_content_collection cc LEFT OUTER JOIN " + _.getTblPrefix() + "quiz_response_summary qr ON cc.id = qr.collection_id AND qr.student_id =? WHERE cm.collection_id = cc.id AND cm.meta_key LIKE '%quiz_type%' AND cc.post_status IN ('publish','archive') AND cc.term_ids LIKE '" + pattern + "' ", [_.getUserID()], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
     },

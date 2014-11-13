@@ -230,39 +230,65 @@ define ['underscore'], ( _) ->
 				practice_in_progress = new Array()
 
 
-				forEach = (row, i)->
+				if data.rows.length is 0
+					practice_quizzes_completed = 
+						class_test_completed : 0
+						practice_completed : 0
+						class_test_in_progress : 0
+						practice_in_progress : 0
+					defer.resolve practice_quizzes_completed
+				
+				else
 
-					quiz_meta = _.unserialize(row['quiz_meta'])
-					status = quiz_meta['status']
-
-					if status is 'completed'
-						if row['quiz_type'] is 'test'
-							class_test_completed[i] = row['id']
-						else
-							practice_completed[i] = row['id']
-					else
-						if row['quiz_type'] is 'test'
-							class_test_in_progress[i] = row['id']
-						else
-							practice_in_progress[i] = row['id']
-
-
-					i = i + 1
-					if(i < data.rows.length)
-						forEach data.rows.item(i), i
-					else
-						if practice_completed.length >0
-							count_practice_completed = _.uniq practice_completed
-						if practice_in_progress.length >0
-							count_practice_in_progress = _.uniq practice_in_progress
+					forEach = (row, i)->
+							
+						quiz_meta = _.unserialize(row['quiz_meta'])
+						# status = quiz_meta['status']
 						
-						practice_quizzes_completed = 
-							class_test_completed : _.size(_.values(class_test_completed))
-							practice_completed : _.size(count_practice_completed)
-							class_test_in_progress : _.size(_.values(class_test_in_progress))
-							practice_in_progress : _.size(count_practice_in_progress)
-						
-						defer.resolve practice_quizzes_completed
+						if _.isNull(quiz_meta)
+							
+							practice_quizzes_completed[i]=''
+
+						else
+							status = quiz_meta['status']
+							
+							if status is 'completed'
+								if row['quiz_type'] is 'test'
+									class_test_completed[i] = row['id']
+								
+								else if _.indexOf(practice_in_progress, row['id']) is -1
+									practice_completed[i] = row['id']
+							else
+								if row['quiz_type'] is 'test'
+									class_test_in_progress[i] = row['id']
+								
+								else 
+									practice_in_progress[i] = row['id']
+									if _.indexOf(practice_completed, row['id']) isnt -1
+										practice_completed[i] = _.without(practice_completed, row['id'])
+
+
+						i = i + 1
+						if(i < data.rows.length)
+							forEach data.rows.item(i), i
+						else
+							count_practice_completed = ''
+							count_practice_in_progress = ''
+							if practice_completed.length >0
+								count_practice_completed = _.uniq practice_completed
+								
+							if practice_in_progress.length >0
+								count_practice_in_progress = _.uniq practice_in_progress
+							
+							
+							
+							practice_quizzes_completed = 
+								class_test_completed : _.size(_.values(class_test_completed))
+								practice_completed : _.size(count_practice_completed)
+								class_test_in_progress : _.size(_.values(class_test_in_progress))
+								practice_in_progress : _.size(count_practice_in_progress)
+							
+							defer.resolve practice_quizzes_completed
 
 
 				forEach data.rows.item(0), 0
@@ -273,13 +299,12 @@ define ['underscore'], ( _) ->
 				pattern = '%"'+textbook_id+'"%'
 
 				tx.executeSql "SELECT cc.id, cm.meta_value as quiz_type, qr.quiz_meta 
-								FROM "+_.getTblPrefix()+"quiz_response_summary qr, wp_content_collection cc, 
-								wp_collection_meta cm 
-								WHERE qr.collection_id = cc.id 
-								AND cm.collection_id = cc.id 
+								FROM wp_collection_meta cm, wp_content_collection cc 
+								LEFT OUTER JOIN "+_.getTblPrefix()+"quiz_response_summary qr 
+								ON cc.id = qr.collection_id AND qr.student_id =? 
+								WHERE cm.collection_id = cc.id 
 								AND cm.meta_key LIKE '%quiz_type%' 
 								AND cc.post_status IN ('publish','archive') 
-								AND qr.student_id = ? 
 								AND cc.term_ids LIKE '"+pattern+"' "
 								, [_.getUserID()]
 
@@ -287,7 +312,6 @@ define ['underscore'], ( _) ->
 
 
 			defer.promise()
-		
 
 
 

@@ -279,6 +279,22 @@ define(['underscore', 'csvparse'], function(_) {
           });
         }, _.transactionErrorhandler, function(tx) {
           console.log('Inserted data in wp_users');
+          return _.insertIntoWpQuizSchedules();
+        });
+      });
+    },
+    insertIntoWpQuizSchedules: function() {
+      var getParsedData;
+      _.importingFileMessage(15);
+      getParsedData = _.parseCSVToJSON(_.getTblPrefix() + 'quiz_schedules.csv');
+      return getParsedData.done(function(data) {
+        return _.db.transaction(function(tx) {
+          tx.executeSql("DELETE FROM " + _.getTblPrefix() + "quiz_schedules");
+          return _.each(data, function(row, i) {
+            return tx.executeSql("INSERT OR REPLACE INTO " + _.getTblPrefix() + "quiz_schedules (quiz_id, division_id, schedule_from, schedule_to) VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]]);
+          });
+        }, _.transactionErrorhandler, function(tx) {
+          console.log('Inserted data ' + _.getTblPrefix() + 'quiz_schedules');
           return _.onFileImportSuccess();
         });
       });

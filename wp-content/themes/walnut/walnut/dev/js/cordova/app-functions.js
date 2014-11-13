@@ -109,13 +109,21 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       return defer.promise();
     },
     clearMediaDirectory: function(directory_name) {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/" + directory_name, {
+      var filepath, option, value;
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
+      return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileEntry) {
+        return fileEntry.getDirectory("SynapseAssets/SynapseMedia/uploads/" + directory_name, {
           create: false,
           exclusive: false
-        }, function(directoryEntry) {
+        }, function(entry) {
           var reader;
-          reader = directoryEntry.createReader();
+          reader = entry.createReader();
           return reader.readEntries(function(entries) {
             var i, _i, _ref, _results;
             _results = [];
