@@ -135,7 +135,17 @@ define(['app', 'text!apps/content-creator/property-dock/fib-property-box/templat
       };
 
       PropertyView.prototype._changeNumberOfBlanks = function(evt) {
-        return this.model.set('numberOfBlanks', parseInt($(evt.target).val()));
+        var numberOfBlanks;
+        numberOfBlanks = parseInt($(evt.target).val());
+        if (numberOfBlanks < this.model.previous('numberOfBlanks')) {
+          if (confirm("Decreasing number of blanks may cause loss of data. Do you want to continue?")) {
+            return this.model.set('numberOfBlanks', numberOfBlanks);
+          } else {
+            return $(evt.target).select2().select2("val", this.model.previous('numberOfBlanks'));
+          }
+        } else {
+          return this.model.set('numberOfBlanks', numberOfBlanks);
+        }
       };
 
       PropertyView.prototype._changeStyle = function(evt) {

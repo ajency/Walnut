@@ -156,7 +156,16 @@ define ['app'
                 # 		@model.set 'marks', $(evt.target).val()
 
             _changeNumberOfBlanks: (evt)->
-                @model.set 'numberOfBlanks', parseInt $(evt.target).val()
+                numberOfBlanks = parseInt $(evt.target).val()
+
+                if numberOfBlanks < @model.previous 'numberOfBlanks'
+                    if confirm "Decreasing number of blanks may cause loss of data. Do you want to continue?"
+                        @model.set 'numberOfBlanks', numberOfBlanks
+                    else
+                        $(evt.target).select2().select2 "val", this.model.previous 'numberOfBlanks'
+                else
+                    @model.set 'numberOfBlanks', numberOfBlanks
+
 
 
             _changeStyle: (evt)->

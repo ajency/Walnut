@@ -253,13 +253,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           }
         }
         if (oldOptionCount > newOptionCount) {
-          if (confirm("Decreasing number of options may cause loss of data. Do you want to continue?")) {
-            while (oldOptionCount !== newOptionCount) {
-              model.get('elements').pop();
-              optionRemoved = model.get('options').pop();
-              model.set('correct_answer', _.without(model.get('correct_answer'), optionRemoved.get('optionNo')));
-              oldOptionCount--;
-            }
+          while (oldOptionCount !== newOptionCount) {
+            model.get('elements').pop();
+            optionRemoved = model.get('options').pop();
+            model.set('correct_answer', _.without(model.get('correct_answer'), optionRemoved.get('optionNo')));
+            oldOptionCount--;
           }
         }
         model.get('options').each(_.bind(this._changeColumnClass, this, numberOfColumns));

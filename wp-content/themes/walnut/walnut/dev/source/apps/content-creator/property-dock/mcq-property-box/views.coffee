@@ -75,13 +75,21 @@ define ['app'
                 if not isNaN $(evt.target).val()
                     @model.set 'marks', $(evt.target).val()
 
-
-
             _changeOptionNumber : (evt)->
-                @model.set 'optioncount', parseInt $(evt.target).val()
+                
+                optionCount = parseInt $(evt.target).val()
+                oldOptionCount = @model.previous 'optioncount'
+
+                if oldOptionCount > optionCount
+                    if confirm "Decreasing number of blanks may cause loss of data. Do you want to continue?"
+                        @model.set 'optioncount', optionCount
+                    else
+                        $(evt.target).select2().select2 "val", oldOptionCount
+                else
+                    @model.set 'optioncount', optionCount
 
             _changeColumnNumber : (evt)->
-                @model.set 'columncount', parseInt $(evt.target).val()
+                @model.set 'columncount', optionCount
 
 
 

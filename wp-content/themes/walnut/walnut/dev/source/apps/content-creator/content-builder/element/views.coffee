@@ -72,7 +72,9 @@ define ['app'
 
 						if @model.get('element') in ['Fib','Mcq','Sort','Hotspot','BigAnswer']
 							@$el.find('form').append "<input type='hidden' name='complete' value=#{@model.get('complete')} />"
-							@$el.find('form').append "<input type='hidden' name='error_info' value=#{@model.get('error_info')} />"
+							
+							if @model.get 'error_info' 
+								@$el.find('form').append "<input type='hidden' name='error_info' value=#{@model.get('error_info')} />"
 
 						@setDraggable @model.get 'draggable'
 

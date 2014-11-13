@@ -112,8 +112,7 @@ define ['app'], (App)->
                         @_addBlanks noOfBlanksToAdd
                     else if numberOfBlanks < model.previous 'numberOfBlanks'
                         noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks
-                        if confirm "Decreasing number of blanks may cause loss of data. Do you want to continue?"
-                            @_removeBlanks noOfBlanksToRemove
+                        @_removeBlanks noOfBlanksToRemove
 
             # remove n number of blanks from the end
             _removeBlanks: (noOfBlanksToRemove)->
