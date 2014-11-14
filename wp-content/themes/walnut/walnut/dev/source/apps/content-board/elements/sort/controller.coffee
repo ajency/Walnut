@@ -12,11 +12,17 @@ define ['app'
 
                 @displayAnswer = true
                 
+                @multiplicationFactor = 0
+
                 if answerWreqrObject
                     
-                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    @displayAnswer = answerWreqrObject.displayAnswer
                     
+                    @multiplicationFactor = answerWreqrObject.multiplicationFactor
+
                     answerWreqrObject.setHandler "get:question:answer",=>
+                        
+                        @layout.model.setMultiplicationFactor @multiplicationFactor
 
                         data=
                             'answerModel': @answerModel
@@ -87,6 +93,9 @@ define ['app'
 
 
             _submitAnswer :(displayAnswer=true) =>
+                
+                @layout.model.setMultiplicationFactor @multiplicationFactor
+                
                 @answerModel.set 'marks', @layout.model.get 'marks'
                 displayAnswer = Marionette.getOption @, 'displayAnswer'
                 @answerModel.set 'answer' : []

@@ -52,7 +52,6 @@ define ['app'], (App)->
 
                 marks = parseFloat marks
                 total = parseFloat total
-                display_marks = parseFloat display_marks
 
                 quizModel = Marionette.getOption @, 'quizModel'
 

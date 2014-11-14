@@ -19,20 +19,21 @@ define ['app'
                         displayAnswer = @quizModel.hasPermission 'display_answer'
 
                         @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
-                        @answerWreqrObject.options = 'displayAnswer': displayAnswer
+                        @answerWreqrObject.displayAnswer= displayAnswer
+                        @answerWreqrObject.multiplicationFactor = @model.get 'multiplicationFactor'
 
                         @layout = layout = @_showSingleQuestionLayout @model
 
                         @answerModel = App.request "create:new:answer"
 
-                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'
+                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'    
 
                             # if the question is not having permission of single attempt, 
                             # ie. can be skipped and answered again,
                             # display answer should be false.
                             # if not class mode then the answer can be displayed if display answer permission is there
                             if @display_mode is 'class_mode' and not @quizModel.hasPermission 'single_attempt'
-                                @answerWreqrObject.options = 'displayAnswer': false
+                                @answerWreqrObject.displayAnswer = false
 
                             answerData = @questionResponseModel.get 'question_response'
                             

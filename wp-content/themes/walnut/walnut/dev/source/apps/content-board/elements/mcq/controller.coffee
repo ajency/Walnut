@@ -8,6 +8,8 @@ define ['app'
             initialize : (options)->
 
                 {answerWreqrObject,@answerModel} = options
+                
+                @multiplicationFactor = 0
 
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
@@ -18,9 +20,12 @@ define ['app'
                         answer = _.map answer, (m)-> parseInt m
                         @answerModel.set 'answer' :answer
 
-                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    @displayAnswer = answerWreqrObject.displayAnswer
+                    @multiplicationFactor = answerWreqrObject.multiplicationFactor
 
                     answerWreqrObject.setHandler "get:question:answer", =>
+
+                        @layout.model.set 'multiplicationFactor' :answerWreqrObject.multiplicationFactor
 
                         answer = _.compact @answerModel.get 'answer'
 
@@ -31,7 +36,9 @@ define ['app'
                             emptyOrIncomplete = 'incomplete' 
 
                         else emptyOrIncomplete = 'complete'
-
+                        
+                        @layout.model.setMultiplicationFactor @multiplicationFactor
+                        
                         data=
                             'emptyOrIncomplete' : emptyOrIncomplete
                             'answerModel': @answerModel
@@ -46,6 +53,9 @@ define ['app'
 
                 super(options)
 
+
+                if not @layout.model.get 'marks_set'
+                    @layout.model.set 'multiplicationFactor' :1
 
 
 
@@ -106,6 +116,9 @@ define ['app'
                     parseInt ans
 
             _submitAnswer :(displayAnswer=true) =>
+                
+                @layout.model.setMultiplicationFactor @multiplicationFactor
+
                 @answerModel.set 'marks', 0
                 if not @answerModel.get('answer').length
                     # confirmbox = confirm 'You haven\'t selected anything..\n do you still want to continue?'
@@ -129,9 +142,8 @@ define ['app'
                                   @answerModel.get('answer'))
                                 totalMarks = @layout.model.get 'marks'
                                 _.each answersNotMarked, (notMarked)=>
-                                    totalMarks -= @layout.model.get('options').get(notMarked).get('marks')
+                                    totalMarks -= @layout.model.get('options').get(notMarked).get('marks')*@layout.model.get 'multiplicationFactor'
                                 @answerModel.set 'marks', totalMarks
-
 
                 # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
                 # else
