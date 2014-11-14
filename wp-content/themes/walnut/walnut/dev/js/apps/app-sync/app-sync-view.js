@@ -50,7 +50,6 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
             $('#syncStartContinue').prop("disabled", true);
             $('#syncMediaStart').prop("disabled", true);
           } else {
-            $("#storageOption").append('<option> Select your storage option</option>');
             $('#syncStartContinue').prop("disabled", false);
           }
           if (storageOptions.External) {

@@ -418,8 +418,10 @@ define ['underscore', 'csvparse'], ( _) ->
 				$('#syncSuccess').css("display","block").text("Sync completed successfully")
 				# App.execute "show:leftnavapp", region:App.leftNavRegion
 				$('#main-menu-toggle').css('display','block')
+				$('#storageOption').prop("disabled",false)
 			,2000)
 
 			setTimeout(=>
+
 				App.navigate('students/dashboard', trigger: true)
 			,2000)

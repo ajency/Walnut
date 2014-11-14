@@ -2,6 +2,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
   return _.mixin({
     generateZipFile: function() {
       var quizQuestionResponseData;
+      $('#storageOption').prop("disabled", true);
       $('#syncSuccess').css("display", "block").text("Generating file...");
       quizQuestionResponseData = _.getDataFromQuizQuestionResponse();
       return quizQuestionResponseData.done(function(quiz_question_response_data) {

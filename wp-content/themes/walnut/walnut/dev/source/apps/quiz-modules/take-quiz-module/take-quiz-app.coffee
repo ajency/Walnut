@@ -334,6 +334,37 @@ define ['app'
 				onShow : ->
 					$('.page-content').addClass 'condensed expand-page'
 
+					if _.platform() is 'DEVICE'
+
+					    # $('body').css('height' : 'auto')
+					    @cordovaEventsForModuleDescriptionView()
+
+
+				onPauseSessionClick : =>
+
+				    console.log 'Invoked onPauseSessionClick'
+				    Backbone.history.history.back()
+				    @clearMediaData()
+
+				    document.removeEventListener("backbutton", @onPauseSessionClick, false)
+
+				
+				
+				cordovaEventsForModuleDescriptionView : ->
+
+				    # Cordova backbutton event
+				    navigator.app.overrideBackbutton(true)
+				    document.addEventListener("backbutton", @onPauseSessionClick, false)
+
+				    # Cordova pause event
+				    document.addEventListener("pause", @onPauseSessionClick, false)
+
+
+				clearMediaData : =>
+				    _.clearMediaDirectory 'videos-web'
+				    _.clearMediaDirectory 'audio-web'
+
+
 			# set handlers
 			App.commands.setHandler "start:take:quiz:app", (opt = {})->
 				new View.TakeQuizController opt

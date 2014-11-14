@@ -106,7 +106,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         if (this.model.get('quiz_type') === 'practice') {
           data.practice_quiz = true;
         }
-        if (data.quiz_type === 'Practice' || data.classTest && data.status === 'completed') {
+        if (data.quiz_type === 'Practice' || data.classTest && data.status === 'completed' || data.quiz_type === 'Take at Home' && data.status === 'completed') {
           data.viewQuiz = true;
         }
         return data;
