@@ -149,6 +149,7 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				if _.isOnline()
 					
 					@connectionErrorMessage false
+					
 					syncController = App.request "get:sync:controller"
 					syncController.startContinueDataSyncProcess()
 				else

@@ -153,7 +153,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 			# Create 'SynapseData' inside 'SynapseAssets' directory
 			_.createSynapseDataDirectory().done ->
-
+				
 				lastSyncOperation = _.getLastSyncOperation()
 				lastSyncOperation.done (typeOfOperation)->
 					
@@ -165,6 +165,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 							$('#syncSuccess').css("display","block").text("Started data sync...")
 							
 							setTimeout(=>
+								$('#storageOption').prop("disabled",true)
 								_.getZipFileDownloadDetails()
 							,2000)
 							

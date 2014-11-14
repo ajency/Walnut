@@ -21,25 +21,32 @@
 {{#take_quiz}}
     <div class="meta modules rec">
           <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Practice Quizzes: {{practice_count}}</h4>
-          <div class="chapStatus text-success"><h5 class="no-margin">Completed</h5> {{practice_completed}}</div>
-          <div class="chapStatus text-info"><h5 class="no-margin">Paused</h5> {{practice_in_progress}}</div>
-          <div class="chapStatus text-error"><h5 class="no-margin">Not Started</h5> {{practice_not_started}}</div>
+          <div class="pull-left text-success"><h5 class="no-margin">Completed</h5> {{practice_completed}}</div>
+          <div class="pull-left m-l-5 text-info"><h5 class="no-margin">Paused</h5> {{practice_in_progress}}</div>
+          <div class="pull-left m-l-5 text-error"><h5 class="no-margin">Not Started</h5> {{practice_not_started}}</div>
     </div>
     <div class="meta modules rec">
           <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Total Quizzes: {{class_test_count}}</h4>
-          <div class="chapStatus text-success"><h5 class="no-margin">Completed</h5> {{class_test_completed}}</div>
-          <div class="chapStatus text-info"><h5 class="no-margin">Paused</h5> {{class_test_in_progress}}</div>
-          <div class="chapStatus text-error"><h5 class="no-margin">Not Started</h5> {{class_test_not_started}}</div>
+          <div class="pull-left text-success"><h5 class="no-margin">Completed</h5> {{class_test_completed}}</div>
+          <div class="pull-left m-l-5 text-info"><h5 class="no-margin">Paused</h5> {{class_test_in_progress}}</div>
+          <div class="pull-left m-l-5 text-error"><h5 class="no-margin">Not Started</h5> {{class_test_not_started}}</div>
     </div>
 {{/take_quiz}}
 
 {{^take_quiz}}
   <div class="meta modules rec">
-      <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Total Chapters: {{chapter_count}}</h4>
+
+      {{#training_mode}}
+        <p>Total Chapters: {{chapter_count}}</p>
+      {{/training_mode}}
+
+      {{^training_mode}}
+        <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Total Chapters: {{chapter_count}}</h4>
         <div class="chapStatus text-success"><h5 class="no-margin">Completed</h5> {{chapters_completed}}</div>
         <div class="chapStatus text-info"><h5 class="no-margin">In Progress</h5> {{chapters_in_progress}}</div>
         <div class="chapStatus text-error"><h5 class="no-margin">Not Started</h5> {{chapters_not_started}}</div>
-      
+      {{/training_mode}}
+
   </div>
 {{/take_quiz}}
 <div class="clearfix"></div>

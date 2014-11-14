@@ -135,6 +135,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               $('#syncSuccess').css("display", "block").text("Started data sync...");
               return setTimeout((function(_this) {
                 return function() {
+                  $('#storageOption').prop("disabled", true);
                   return _.getZipFileDownloadDetails();
                 };
               })(this), 2000);
