@@ -160,7 +160,7 @@ define ['app',
 				if @model.get('quiz_type') is 'practice'
 					data.practice_quiz = true
 
-				if data.quiz_type is 'Practice' or data.classTest and data.status is 'completed'
+				if data.quiz_type is 'Practice' or data.classTest and data.status is 'completed' or data.quiz_type is 'Take at Home' and data.status is 'completed'
 					data.viewQuiz = true
 				
 				data

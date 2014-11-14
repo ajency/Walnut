@@ -5,7 +5,7 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 	_.mixin
 
 		getZipFileDownloadDetails : ->
-
+			
 			$('#syncSuccess').css("display","block").text("Starting file download...")
 
 			userDetails = _.getUserDetails(_.getUserID())

@@ -29,7 +29,7 @@ define ["backbone"], (Backbone) ->
 
 				data = _.getChaptersByParentId(opts.parent)
 				data.done (d)->
-					collection.set d                                   
+					collection.set d                   
 
 
 			if collection_name is 'division'
@@ -49,10 +49,11 @@ define ["backbone"], (Backbone) ->
 				_.getQuizByTextbookId(opts.textbook)
 				.done (data)->
 					console.log 'getQuizByTextbookId done'
-
+					data = data.reverse()
 					collection.set data
 
 					App.request "app:reset:quiz:repository", data
+					
 
 			if collection_name is 'quiz-response-summary'
 				@p = _.getQuizResponseSummaryByCollectionIdAndUserID(opts.collection_id)

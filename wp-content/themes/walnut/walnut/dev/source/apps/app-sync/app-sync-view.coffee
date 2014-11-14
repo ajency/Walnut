@@ -50,8 +50,8 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 						$('#syncMediaStart').prop("disabled",true)
 
 					else
-						$("#storageOption").append('<option>
-							Select your storage option</option>');
+						# $("#storageOption").append('<option>
+						# 	Select your storage option</option>');
 						$('#syncStartContinue').prop("disabled",false)
 
 					
@@ -147,7 +147,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 			startContinueSyncProcess : ->
 
 				if _.isOnline()
+					
 					@connectionErrorMessage false
+					
 					syncController = App.request "get:sync:controller"
 					syncController.startContinueDataSyncProcess()
 				else

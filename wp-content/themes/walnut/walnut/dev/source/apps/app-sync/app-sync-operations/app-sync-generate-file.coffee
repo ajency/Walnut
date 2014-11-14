@@ -5,7 +5,8 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 	_.mixin
 
 		generateZipFile : ->
-
+			$('#storageOption').prop("disabled",true)
+			
 			$('#syncSuccess').css("display","block").text("Generating file...")
 
 			quizQuestionResponseData = _.getDataFromQuizQuestionResponse()

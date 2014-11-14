@@ -135,13 +135,18 @@ define ['marionette'], (Marionette)->
 				if not synced
 					App.navigate('sync', trigger: true)
 					
+
+					
 				else
 
 					lastSyncOperation = _.getLastSyncOperation()
 					lastSyncOperation.done (type_of_operation)->
 						
 						if type_of_operation is 'none' or type_of_operation isnt 'file_import'
+
 							App.navigate('sync', trigger: true)
+
+
 						else
 							App.navigate('students/dashboard', trigger: true)
 

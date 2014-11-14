@@ -309,7 +309,8 @@ define(['underscore', 'csvparse'], function(_) {
       setTimeout((function(_this) {
         return function() {
           $('#syncSuccess').css("display", "block").text("Sync completed successfully");
-          return $('#main-menu-toggle').css('display', 'block');
+          $('#main-menu-toggle').css('display', 'block');
+          return $('#storageOption').prop("disabled", false);
         };
       })(this), 2000);
       return setTimeout((function(_this) {

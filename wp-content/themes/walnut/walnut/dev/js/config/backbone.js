@@ -38,6 +38,7 @@ define(["backbone"], function(Backbone) {
       if (collection_name === 'quiz') {
         _.getQuizByTextbookId(opts.textbook).done(function(data) {
           console.log('getQuizByTextbookId done');
+          data = data.reverse();
           collection.set(data);
           return App.request("app:reset:quiz:repository", data);
         });

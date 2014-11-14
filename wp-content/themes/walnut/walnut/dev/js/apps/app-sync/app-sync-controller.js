@@ -48,20 +48,61 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
     };
 
     SynchronizationController.prototype.changeSyncButtonTextBasedOnLastSyncOperation = function() {
-      var lastSyncOperation, option;
-      option = _.getStorageOption();
+      var lastSyncOperation, value;
+      value = _.getStorageOption();
       lastSyncOperation = _.getLastSyncOperation();
       return lastSyncOperation.done(function(typeOfOperation) {
+        var option;
         switch (typeOfOperation) {
           case 'none':
-            $('#syncButtonText').text('Start');
-            $('#syncMediaStart').prop("disabled", true);
-            if (!_.isNull(option)) {
-              return $('#storageOption').prop("disabled", true);
+            if (!_.isNull(value)) {
+              option = JSON.parse(value);
+              if (option.external) {
+                return _.cordovaCheckIfPathExists(option.external).then(function(pathExists) {
+                  if (!pathExists) {
+                    $('#storageOption').prop("disabled", false);
+                    $('#syncStartContinue').prop("disabled", true);
+                    return $('#syncMediaStart').prop("disabled", true);
+                  } else {
+                    $('#storageOption').prop("disabled", false);
+                    $('#syncButtonText').text('Start');
+                    return $('#syncMediaStart').prop("disabled", true);
+                  }
+                });
+              } else if (option.internal) {
+                $('#syncButtonText').text('Start');
+                return $('#syncMediaStart').prop("disabled", true);
+              }
+            } else {
+              $('#storageOption').prop("disabled", false);
+              $('#syncStartContinue').prop("disabled", true);
+              return $('#syncMediaStart').prop("disabled", true);
             }
             break;
           case 'file_import':
-            return $('#syncButtonText').text('Start');
+            $('#syncButtonText').text('Start');
+            if (!_.isNull(value)) {
+              option = JSON.parse(value);
+              if (option.external) {
+                return _.cordovaCheckIfPathExists(option.external).then(function(pathExists) {
+                  if (!pathExists) {
+                    $('#storageOption').prop("disabled", false);
+                    $('#syncStartContinue').prop("disabled", true);
+                    return $('#syncMediaStart').prop("disabled", true);
+                  } else {
+                    $('#storageOption').prop("disabled", false);
+                    return $('#syncButtonText').text('Start');
+                  }
+                });
+              } else if (option.internal) {
+                return $('#syncButtonText').text('Start');
+              }
+            } else {
+              $('#storageOption').prop("disabled", false);
+              $('#syncStartContinue').prop("disabled", true);
+              return $('#syncMediaStart').prop("disabled", true);
+            }
+            break;
           case 'file_download':
             $('#syncButtonText').text('Continue');
             $('#syncMediaStart').prop("disabled", true);
@@ -94,6 +135,7 @@ define(["marionette", "app", "underscore", "csvparse"], function(Marionette, App
               $('#syncSuccess').css("display", "block").text("Started data sync...");
               return setTimeout((function(_this) {
                 return function() {
+                  $('#storageOption').prop("disabled", true);
                   return _.getZipFileDownloadDetails();
                 };
               })(this), 2000);

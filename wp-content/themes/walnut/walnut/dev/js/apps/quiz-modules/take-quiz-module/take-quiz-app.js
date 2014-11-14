@@ -343,6 +343,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       __extends(TakeQuizLayout, _super);
 
       function TakeQuizLayout() {
+        this.clearMediaData = __bind(this.clearMediaData, this);
+        this.onPauseSessionClick = __bind(this.onPauseSessionClick, this);
         return TakeQuizLayout.__super__.constructor.apply(this, arguments);
       }
 
@@ -358,7 +360,28 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizLayout.prototype.className = 'content';
 
       TakeQuizLayout.prototype.onShow = function() {
-        return $('.page-content').addClass('condensed expand-page');
+        $('.page-content').addClass('condensed expand-page');
+        if (_.platform() === 'DEVICE') {
+          return this.cordovaEventsForModuleDescriptionView();
+        }
+      };
+
+      TakeQuizLayout.prototype.onPauseSessionClick = function() {
+        console.log('Invoked onPauseSessionClick');
+        Backbone.history.history.back();
+        this.clearMediaData();
+        return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+      };
+
+      TakeQuizLayout.prototype.cordovaEventsForModuleDescriptionView = function() {
+        navigator.app.overrideBackbutton(true);
+        document.addEventListener("backbutton", this.onPauseSessionClick, false);
+        return document.addEventListener("pause", this.onPauseSessionClick, false);
+      };
+
+      TakeQuizLayout.prototype.clearMediaData = function() {
+        _.clearMediaDirectory('videos-web');
+        return _.clearMediaDirectory('audio-web');
       };
 
       return TakeQuizLayout;

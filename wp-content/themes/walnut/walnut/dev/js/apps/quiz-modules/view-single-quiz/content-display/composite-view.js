@@ -30,10 +30,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         };
       };
 
-      View.prototype.events = {
-        'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
-      };
-
       return View;
 
     })(Marionette.CompositeView);
