@@ -166,7 +166,8 @@
   overflow-x: auto;
 }
 #content-board #myCanvas,
-#content-board.quizContent #myCanvas {
+#content-board.quizContent #myCanvas,
+#content-builder #myCanvas {
   background: #ffffff;
   max-width: 760px;
   margin: 0 auto;
@@ -175,7 +176,8 @@
   font-weight: normal;
 }
 #content-board #myCanvas li.ui-sortable-placeholder,
-#content-board.quizContent #myCanvas li.ui-sortable-placeholder {
+#content-board.quizContent #myCanvas li.ui-sortable-placeholder,
+#content-builder #myCanvas li.ui-sortable-placeholder {
   list-style: none;
   padding: 20px 0;
   background: #d0d0d0;
