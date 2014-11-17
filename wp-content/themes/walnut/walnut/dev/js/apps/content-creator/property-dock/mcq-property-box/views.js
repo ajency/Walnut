@@ -87,11 +87,22 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
       };
 
       PropertyView.prototype._changeOptionNumber = function(evt) {
-        return this.model.set('optioncount', parseInt($(evt.target).val()));
+        var oldOptionCount, optionCount;
+        optionCount = parseInt($(evt.target).val());
+        oldOptionCount = this.model.previous('optioncount');
+        if (oldOptionCount > optionCount) {
+          if (confirm("Decreasing number of blanks may cause loss of data. Do you want to continue?")) {
+            return this.model.set('optioncount', optionCount);
+          } else {
+            return $(evt.target).select2().select2("val", oldOptionCount);
+          }
+        } else {
+          return this.model.set('optioncount', optionCount);
+        }
       };
 
       PropertyView.prototype._changeColumnNumber = function(evt) {
-        return this.model.set('columncount', parseInt($(evt.target).val()));
+        return this.model.set('columncount', optionCount);
       };
 
       return PropertyView;

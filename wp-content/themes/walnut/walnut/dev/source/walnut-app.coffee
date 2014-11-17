@@ -57,15 +57,14 @@ define ['marionette'], (Marionette)->
 
 
     App.vent.on "show:dashboard", (user_role) =>
-        user = App.request "get:user:model"
 
-        if user.current_user_can('administrator') or user.current_user_can('school-admin') or user.current_user_can('content-creator')
+        if App.request('current:user:can','administrator') or App.request('current:user:can','school-admin') or App.request('current:user:can','content-creator')
             App.navigate('textbooks', trigger: true)
 
-        if user.current_user_can 'teacher'
+        if App.request 'current:user:can','teacher'
             App.navigate('teachers/dashboard', trigger: true)     
 
-        if user.current_user_can 'student'
+        if App.request 'current:user:can','student'
             App.navigate('students/dashboard', trigger: true)             
 
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion

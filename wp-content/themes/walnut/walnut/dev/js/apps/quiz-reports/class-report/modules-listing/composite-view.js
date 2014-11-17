@@ -41,9 +41,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       };
 
       ModulesListingView.prototype.mixinTemplateHelpers = function(data) {
-        var user;
-        user = App.request("get:user:model");
-        if (user.current_user_can('school-admin') || user.current_user_can('teacher')) {
+        if (App.request('current:user:can', 'schedule_quiz')) {
           data.can_schedule = true;
         }
         return data;
@@ -83,7 +81,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         data = [];
         data.quizIDs = $.getCheckedItems(this.$el.find('#content-pieces-table'));
         data.division = this.$el.find('#divisions-filter').val();
-        if (e.target.id === 'send-email') {
+        if ($(e.target).hasClass('send-email')) {
           data.communication_mode = 'email';
         } else {
           data.communication_mode = 'sms';

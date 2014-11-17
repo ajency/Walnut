@@ -21,14 +21,17 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.$el.attr('data-id', this.model.get('id'));
         if (this.model.get('quiz_type') === 'class_test') {
           if (this.model.get('schedule')) {
-            if (!this.model.get('schedule')['is_active']) {
+            if (!IS_STANDALONE_SITE || this.model.get('schedule')['is_active']) {
               this.$el.find('.start-training').hide();
             }
             if (this.model.get('is_expired')) {
-              return this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
+              this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
             }
           } else {
-            return this.$el.find('.start-training').hide();
+            this.$el.find('.start-training').hide();
+          }
+          if (this.model.get('status') === 'completed') {
+            return this.$el.find('.start-training').show();
           }
         }
       };

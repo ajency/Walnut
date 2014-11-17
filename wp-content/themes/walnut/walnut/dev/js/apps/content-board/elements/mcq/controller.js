@@ -20,6 +20,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       Controller.prototype.initialize = function(options) {
         var answer, answerWreqrObject;
         answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        this.multiplicationFactor = 0;
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
@@ -33,10 +34,14 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               'answer': answer
             });
           }
-          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          this.displayAnswer = answerWreqrObject.displayAnswer;
+          this.multiplicationFactor = answerWreqrObject.multiplicationFactor;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data, emptyOrIncomplete;
+              _this.layout.model.set({
+                'multiplicationFactor': answerWreqrObject.multiplicationFactor
+              });
               answer = _.compact(_this.answerModel.get('answer'));
               if (_.isEmpty(answer)) {
                 emptyOrIncomplete = 'empty';
@@ -45,6 +50,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               } else {
                 emptyOrIncomplete = 'complete';
               }
+              _this.layout.model.setMultiplicationFactor(_this.multiplicationFactor);
               return data = {
                 'emptyOrIncomplete': emptyOrIncomplete,
                 'answerModel': _this.answerModel,
@@ -58,7 +64,12 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
             };
           })(this));
         }
-        return Controller.__super__.initialize.call(this, options);
+        Controller.__super__.initialize.call(this, options);
+        if (!this.layout.model.get('marks_set')) {
+          return this.layout.model.set({
+            'multiplicationFactor': 1
+          });
+        }
       };
 
       Controller.prototype.renderElement = function() {
@@ -117,6 +128,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (displayAnswer == null) {
           displayAnswer = true;
         }
+        this.layout.model.setMultiplicationFactor(this.multiplicationFactor);
         this.answerModel.set('marks', 0);
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
@@ -135,7 +147,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
                 totalMarks = this.layout.model.get('marks');
                 _.each(answersNotMarked, (function(_this) {
                   return function(notMarked) {
-                    return totalMarks -= _this.layout.model.get('options').get(notMarked).get('marks');
+                    return totalMarks -= _this.layout.model.get('options').get(notMarked).get('marks') * _this.layout.model.get('multiplicationFactor');
                   };
                 })(this));
                 this.answerModel.set('marks', totalMarks);

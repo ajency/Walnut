@@ -53,19 +53,17 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
-      var user;
-      user = App.request("get:user:model");
-      if (user.current_user_can('administrator') || user.current_user_can('school-admin') || user.current_user_can('content-creator')) {
+      if (App.request('current:user:can', 'administrator') || App.request('current:user:can', 'school-admin') || App.request('current:user:can', 'content-creator')) {
         App.navigate('textbooks', {
           trigger: true
         });
       }
-      if (user.current_user_can('teacher')) {
+      if (App.request('current:user:can', 'teacher')) {
         App.navigate('teachers/dashboard', {
           trigger: true
         });
       }
-      if (user.current_user_can('student')) {
+      if (App.request('current:user:can', 'student')) {
         App.navigate('students/dashboard', {
           trigger: true
         });

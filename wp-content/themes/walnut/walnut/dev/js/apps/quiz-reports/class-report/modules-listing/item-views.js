@@ -17,7 +17,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
       ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> {{#can_schedule}} <td> {{#class_test}} <div class="schedule_dates none"> From: <span id="schedule-from-date"> {{scheduleFrom}} </span> <br> To: <span id="schedule-to-date"> {{scheduleTo}} </span><br> <span class="schedule-quiz">change</a></span> | <span class="clear-schedule">clear</a> </div> <button id="schedule-button" type="button" class="btn btn-white btn-small pull-left m-r-10 schedule-quiz"> <i class="fa fa-calendar"></i> Schedule </button> {{/class_test}} </td> {{/can_schedule}} <td><button class="btn btn-small btn-success view-report">view report</button></td>';
 
       ListItemView.prototype.mixinTemplateHelpers = function(data) {
-        var schedule, term_ids, textbooks, user;
+        var schedule, term_ids, textbooks;
         textbooks = Marionette.getOption(this, 'textbookNamesCollection');
         term_ids = data.term_ids;
         data.textbookName = textbooks.getTextbookName(term_ids);
@@ -45,8 +45,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           data.scheduleFrom = moment(schedule['from']).format("Do MMM YYYY");
           data.scheduleTo = moment(schedule['to']).format("Do MMM YYYY");
         }
-        user = App.request("get:user:model");
-        if (user.current_user_can('school-admin') || user.current_user_can('teacher')) {
+        if (App.request('current:user:can', 'schedule_quiz')) {
           data.can_schedule = true;
         }
         return data;

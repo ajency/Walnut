@@ -39,7 +39,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           display_mode: this.display_mode,
           templateHelpers: {
             getQuestionDuration: currentQuestion.get('duration'),
-            getQuestionMarks: currentQuestion.get('marks'),
+            getQuestionMarks: parseFloat(currentQuestion.get('marks')).toFixed(1),
             getClass: (function(_this) {
               return function() {
                 return _this.textbookModel.getClasses();
@@ -96,7 +96,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       ModuleDescriptionView.prototype.onQuestionChange = function(model) {
         this.$el.find("#time-on-question").html(model.get('duration'));
-        return this.$el.find("#marks-for-question").html(model.get('marks'));
+        return this.$el.find("#marks-for-question").html(parseFloat(model.get('marks')).toFixed(1));
       };
 
       return ModuleDescriptionView;

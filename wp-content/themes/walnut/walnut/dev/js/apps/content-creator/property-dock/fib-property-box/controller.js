@@ -48,6 +48,11 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
         } else {
           this.model.set('complete', false);
         }
+        if (this.model.get('numberOfBlanks') === 0) {
+          this.model.set({
+            'complete': false
+          });
+        }
         this.model.save();
         ElementCollection = App.request("create:new:question:element:collection", models);
         return this.model.set('blanksArray', ElementCollection);

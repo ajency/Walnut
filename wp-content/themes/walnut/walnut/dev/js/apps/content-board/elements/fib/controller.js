@@ -16,8 +16,10 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
+        this.multiplicationFactor = 0;
         if (answerWreqrObject) {
-          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          this.displayAnswer = answerWreqrObject.displayAnswer;
+          this.multiplicationFactor = answerWreqrObject.multiplicationFactor;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var answer, blanks, data, emptyOrIncomplete;
@@ -29,6 +31,17 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
                 return _this.answerModel.get('answer').push($(blank).val());
               });
               answer = _.compact(_this.answerModel.get('answer'));
+              _this.layout.model.set({
+                'multiplicationFactor': answerWreqrObject.multiplicationFactor
+              });
+              if (!_this.layout.model.get('marks_set')) {
+                _this.layout.model.set({
+                  'marks': _this.layout.model.get('marks') * answerWreqrObject.multiplicationFactor
+                });
+              }
+              _this.layout.model.set({
+                'marks_set': true
+              });
               if (_.isEmpty(answer)) {
                 emptyOrIncomplete = 'empty';
               } else if (_.size(answer) < _.size(blanks)) {
@@ -36,6 +49,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               } else {
                 emptyOrIncomplete = 'complete';
               }
+              _this.layout.model.setMultiplicationFactor(_this.multiplicationFactor);
               return data = {
                 'emptyOrIncomplete': emptyOrIncomplete,
                 'answerModel': _this.answerModel,
@@ -49,7 +63,12 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
             };
           })(this));
         }
-        return Controller.__super__.initialize.call(this, options);
+        Controller.__super__.initialize.call(this, options);
+        if (!this.layout.model.get('marks_set')) {
+          return this.layout.model.set({
+            'multiplicationFactor': 1
+          });
+        }
       };
 
       Controller.prototype.renderElement = function() {
@@ -84,7 +103,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
             blank.blank_size = parseInt(blank.blank_size);
           }
           if (blank.marks != null) {
-            return blank.marks = parseInt(blank.marks);
+            return blank.marks = parseFloat(blank.marks);
           }
         });
       };
@@ -94,6 +113,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (displayAnswer == null) {
           displayAnswer = true;
         }
+        this.layout.model.setMultiplicationFactor(this.multiplicationFactor);
         enableIndividualMarks = this.layout.model.get('enableIndividualMarks');
         this.caseSensitive = this.layout.model.get('case_sensitive');
         answerArray = this.answerModel.get('answer');
@@ -125,7 +145,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               blankModel = _this.blanksCollection.get($(blank).attr('data-id'));
               correctAnswersArray = blankModel.get('correct_answers');
               if (_this._checkAnswer($(blank).val(), correctAnswersArray)) {
-                _this.answerModel.set('marks', _this.answerModel.get('marks') + blankModel.get('marks'));
+                _this.answerModel.set('marks', _this.answerModel.get('marks') + parseInt(blankModel.get('marks')) * _this.layout.model.get('multiplicationFactor'));
                 return $(blank).addClass('ansRight');
               } else {
                 return $(blank).addClass('ansWrong');

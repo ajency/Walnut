@@ -76,7 +76,8 @@ define(['app', 'holder', 'text!apps/content-creator/content-builder/element/temp
       };
 
       ElementView.prototype._changeComplete = function(model, complete) {
-        return this.setHiddenField('complete', this.model.get('complete'));
+        this.setHiddenField('complete', this.model.get('complete'));
+        return this.setHiddenField('error_info', this.model.get('error_info'));
       };
 
       ElementView.prototype.onBeforeRenderElement = function() {
@@ -88,6 +89,9 @@ define(['app', 'holder', 'text!apps/content-creator/content-builder/element/temp
         }
         if ((_ref1 = this.model.get('element')) === 'Fib' || _ref1 === 'Mcq' || _ref1 === 'Sort' || _ref1 === 'Hotspot' || _ref1 === 'BigAnswer') {
           this.$el.find('form').append("<input type='hidden' name='complete' value=" + (this.model.get('complete')) + " />");
+          if (this.model.get('error_info')) {
+            this.$el.find('form').append("<input type='hidden' name='error_info' value=" + (this.model.get('error_info')) + " />");
+          }
         }
         return this.setDraggable(this.model.get('draggable'));
       };
