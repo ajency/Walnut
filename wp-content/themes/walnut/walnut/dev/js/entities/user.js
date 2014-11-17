@@ -24,16 +24,6 @@ define(["app", 'backbone'], function(App, Backbone) {
         };
       };
 
-      UserModel.prototype.current_user_can = function(capability) {
-        var all_capabilites;
-        all_capabilites = this.get('allcaps');
-        if (all_capabilites[capability]) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-
       return UserModel;
 
     })(Backbone.Model);
@@ -95,6 +85,15 @@ define(["app", 'backbone'], function(App, Backbone) {
         console.log(data[key]);
         return data[key];
       },
+      current_user_can: function(capability) {
+        var all_capabilites;
+        all_capabilites = loggedInUser.get('allcaps');
+        if (all_capabilites[capability]) {
+          return true;
+        } else {
+          return false;
+        }
+      },
       getDummyStudents: function() {
         var students, userCollection;
         userCollection = new UserCollection;
@@ -143,8 +142,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:dummy:students", function() {
       return API.getDummyStudents();
     });
-    return App.reqres.setHandler("get:user:by:id", function(id) {
+    App.reqres.setHandler("get:user:by:id", function(id) {
       return API.getUserByID(id);
+    });
+    return App.reqres.setHandler("current:user:can", function(capability) {
+      return API.current_user_can(capability);
     });
   });
 });

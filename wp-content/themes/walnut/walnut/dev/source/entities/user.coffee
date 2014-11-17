@@ -15,11 +15,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 					role 			: []
 					profile_pic 	: ''
 
-
-				current_user_can:(capability)->
-					all_capabilites = @.get 'allcaps'
-					if all_capabilites[capability] then return true else return false
-
 			loggedInUser = new Users.UserModel
 			loggedInUser.set USER if USER?
 			
@@ -70,6 +65,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 					data=loggedInUser.get 'data'
 					console.log data[key]
 					data[key]
+
+				current_user_can:(capability)->
+					all_capabilites = loggedInUser.get 'allcaps'
+					if all_capabilites[capability] then return true else return false
 
 				getDummyStudents:->
 					userCollection = new UserCollection
@@ -125,3 +124,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "get:user:by:id",(id) ->
 				API.getUserByID id
+
+			App.reqres.setHandler "current:user:can",(capability) ->
+				API.current_user_can capability
