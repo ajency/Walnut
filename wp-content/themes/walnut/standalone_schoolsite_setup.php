@@ -168,6 +168,15 @@ function create_custom_tables(){
 
     $wpdb->query( $quiz_responses_table );
 
+    $quiz_schedules_table = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}quiz_schedules` (
+      `quiz_id` int(11) NOT NULL,
+      `division_id` int(11) NOT NULL,
+      `schedule_from` date NOT NULL,
+      `schedule_to` date NOT NULL
+    )";
+
+  $wpdb->query( $quiz_schedules_table );
+
 
 }
 

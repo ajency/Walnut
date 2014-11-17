@@ -117,8 +117,15 @@ define ['app'
                 data=
                     time_taken : elapsedTime
                     status : status
+                    end_date: moment().format("YYYY-MM-DD") if status is 'completed'
+                    teacher_name: App.request "get:user:data", "display_name"
 
                 questionResponseModel.set data
+
+                questionResponseCollection.add questionResponseModel
+
+                if not moment(questionResponseModel.get('start_date')).isValid()
+                    data.start_date = moment().format("YYYY-MM-DD")
 
                 questionResponseModel.save data,
                     wait : true
@@ -138,6 +145,7 @@ define ['app'
                     division: @division
                     classID: @classID
                     studentCollection: studentCollection
+                    questionResponseCollection: questionResponseCollection
 
 
             _getOrCreateModel : (content_piece_id)=>
@@ -273,10 +281,3 @@ define ['app'
 
                 @$el.find '#instructions'
                 .html contentPiece.get 'instructions'
-
-
-
-
-        
-
-

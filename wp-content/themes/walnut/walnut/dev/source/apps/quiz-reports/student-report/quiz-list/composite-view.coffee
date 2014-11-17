@@ -1,11 +1,16 @@
 define ['app'
         'controllers/region-controller'
-        'apps/quiz-reports/student-report/quiz-list/item-views'], (App, RegionController)->
+        'bootbox'
+        'apps/quiz-reports/student-report/quiz-list/item-views'
+        ], (App, RegionController,bootbox)->
     App.module "StudentReportApp.QuizList.Views", (Views, App)->
 
         class Views.QuizListView extends Marionette.CompositeView
 
             template : '<div class="col-lg-12">
+                            <button class="reset-quiz none btn btn-success m-b-10 m-r-10" type="submit">
+                                <i class="fa fa-check"></i> Reset Quiz
+                            </button>
                             <table class="table table-bordered m-t-15" id="quiz-table" >                                
                                 <thead>
                                     <tr>
@@ -40,7 +45,7 @@ define ['app'
                                     <option value="100">100</option>
                                 </select>
                             </div>
-                            <button id="reset-quiz" class="none btn btn-success btn-cons2 right pull-left m-t-10 m-r-10" type="submit">
+                            <button class="reset-quiz none btn btn-success pull-left m-t-10 m-r-10" type="submit">
                                 <i class="fa fa-check"></i> Reset Quiz
                             </button>
                         </div>'
@@ -71,9 +76,9 @@ define ['app'
 
 
             events:
-                'change #check_all_div'                 : 'checkAll'
+                'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#quiz-table'
                 'change .tab_checkbox,#check_all_div '  : 'showClearResponseButton'
-                'click #reset-quiz'                     : 'clearQuizResponse'
+                'click .reset-quiz'                     : 'clearQuizResponse'
 
             onShow:->
                 pagerOptions =
@@ -84,32 +89,36 @@ define ['app'
                 .tablesorter()
                 .tablesorterPager pagerOptions
 
-            checkAll:->
-
-                all_ids = @collection.pluck 'id'
-
-                classTestModules= _.chain @collection.where 'quiz_type': 'test'
-                .pluck 'id'
-                .value()
-
-                excludeIDs = _.difference all_ids,classTestModules
-
-                $.toggleCheckAll @$el.find('#quiz-table'), excludeIDs
-
             showClearResponseButton:->
 
                 if @$el.find '.tab_checkbox'
                 .is ':checked'
-                    @$el.find '#reset-quiz'
+                    @$el.find '.reset-quiz'
                     .show()
 
                 else
-                    @$el.find '#reset-quiz'
+                    @$el.find '.reset-quiz'
                     .hide()
 
             clearQuizResponse:->
 
-                quizIDs= $.getCheckedItems @$el.find '#quiz-table'
+                quizIDs = $.getCheckedItems @$el.find '#quiz-table'
+
+                quizIDs = _.map quizIDs, (m)-> parseInt m
+
+                practice = @collection.where 'quiz_type': 'practice'
+
+                @clearResponse = true
+
+                if not _.isEmpty _.intersection quizIDs, _.pluck practice,'id'
+                    msg = 'All the previous attempts for practice quiz only will also be resetted. Are you sure you want to continue?'
+                    bootbox.confirm msg,(result)=>
+                        @deleteSelectedResponses(quizIDs) if result
+
+                else
+                    @deleteSelectedResponses quizIDs
+
+            deleteSelectedResponses:(quizIDs)->
 
                 @deleteResponse(quizID) for quizID in quizIDs if not _.isEmpty quizIDs
 
@@ -119,13 +128,13 @@ define ['app'
                 @$el.find '#reset-quiz'
                 .hide()
 
-
             deleteResponse:(quizID)->
 
                 quizResponseSummaries = Marionette.getOption @,'quizResponseSummaries'
 
-                summary= quizResponseSummaries.findWhere 'collection_id' : parseInt quizID
-                summary.destroy()
+                summary= quizResponseSummaries.where 'collection_id' : parseInt quizID
+
+                s.destroy() for s in summary
 
                 @collection.remove quizID
 

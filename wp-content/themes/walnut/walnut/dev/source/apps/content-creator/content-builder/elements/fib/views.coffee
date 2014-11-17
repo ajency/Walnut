@@ -98,6 +98,13 @@ define ['app'], (App)->
 
             #on change of the number of blanks from the dropdown
             _changeNumberOfBlanks: (model, numberOfBlanks)->
+                
+                if numberOfBlanks is 0
+                    @model.set 'complete': false 
+                    @model.set 'error_info' : 'You need to set at least one blank'
+                else
+                    @model.set 'error_info': ''
+
                 if @$el.find('input').length isnt numberOfBlanks
 
                     if numberOfBlanks > model.previous 'numberOfBlanks'
@@ -105,8 +112,7 @@ define ['app'], (App)->
                         @_addBlanks noOfBlanksToAdd
                     else if numberOfBlanks < model.previous 'numberOfBlanks'
                         noOfBlanksToRemove = model.previous('numberOfBlanks') - numberOfBlanks
-                        if confirm "Decreasing number of blanks may cause loss of data. Do you want to continue?"
-                            @_removeBlanks noOfBlanksToRemove
+                        @_removeBlanks noOfBlanksToRemove
 
             # remove n number of blanks from the end
             _removeBlanks: (noOfBlanksToRemove)->

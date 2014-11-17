@@ -33,15 +33,23 @@ define ['app'
 						@model.set 'blanksArray': elements
 
 						if @model.get('marks') > 0
-							_.every @model.get('blanksArray'),(blanks)=>
-								if blanks.correct_answers.length && blanks.correct_answers[0] isnt ''
-									@model.set 'complete',true
-									return true
-								else
+							
+							@model.set 'complete',true
+
+							@has_individual_marks= @model.get 'enableIndividualMarks'
+
+							_.each @model.get('blanksArray'),(blanks)=>								
+
+								if _.isEmpty(blanks.correct_answers) or _.isEmpty blanks.correct_answers[0]
 									@model.set 'complete',false
-									return false
+
+								if @has_individual_marks and blanks.marks is 0
+									@model.set 'complete',false
+									
 						else				
 							@model.set 'complete',false
+
+						@model.set('complete': false) if @model.get('numberOfBlanks') is 0
 
 						@model.save()
 

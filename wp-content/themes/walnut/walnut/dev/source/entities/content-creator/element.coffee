@@ -13,6 +13,16 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'element'
 
+            setMultiplicationFactor:(multiplicationFactor)->
+                if multiplicationFactor
+                    if not @.get 'marks_set'
+                        @.set 
+                            'multiplicationFactor' :multiplicationFactor
+                            'marks'     : parseFloat (parseFloat(@.get('marks'))*multiplicationFactor).toFixed(1)
+                            'marks_set' : true
+                else
+                    @.set 'multiplicationFactor' :1
+
         class Elements.ElementCollection extends Backbone.Collection
 
             model : Elements.ElementModel

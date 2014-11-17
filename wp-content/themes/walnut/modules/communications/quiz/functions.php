@@ -18,31 +18,34 @@ function cron_quizzes_taken_report(){
 
     foreach($blogs as $blog) {
     
-        $comm_data['blog_id'] = $blog['blog_id'];
+        if($blog['blog_id'] != 1){
+    
+            $comm_data['blog_id'] = $blog['blog_id'];
 
-        $filepath= get_quiz_report_zip($blog['blog_id']);
+            $filepath= get_quiz_report_zip($blog['blog_id']);
 
-        $meta_data = array('filepath'=>$filepath);
-        
-        $user_args= array(
-            'blog_id' => $blog['blog_id'],
-            'role' => 'school-admin'
-        );
+            $meta_data = array('filepath'=>$filepath);
+            
+            $user_args= array(
+                'blog_id' => $blog['blog_id'],
+                'role' => 'school-admin'
+            );
 
-        $users = get_users($user_args);
+            $users = get_users($user_args);
 
-        $recipients = array();
+            $recipients = array();
 
-        foreach($users as $user){
+            foreach($users as $user){
 
-            $recipients[] = array(                
-                    'user_id'   => $user->ID,
-                    'type'      => 'email',
-                    'value'     => $user->user_email
-                );
+                $recipients[] = array(                
+                        'user_id'   => $user->ID,
+                        'type'      => 'email',
+                        'value'     => $user->user_email
+                    );
+            }
+
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
         }
-
-        $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
     }
 
     return $comm;
@@ -52,7 +55,7 @@ add_action('queue_quizzes_taken_report','cron_quizzes_taken_report');
 
 function add_quiz_completed_student_mail($data, $comm_data){
 
-	global $aj_comm;
+    global $aj_comm;
 
     $meta = $data['additional_data'];
 
@@ -74,8 +77,8 @@ function add_quiz_completed_student_mail($data, $comm_data){
 
 function add_quiz_completed_parent_mail($data, $comm_data){
 
-	global $aj_comm;
-	global $wpdb;
+    global $aj_comm;
+    global $wpdb;
 
     $meta = $data['additional_data'];
 
@@ -83,39 +86,39 @@ function add_quiz_completed_parent_mail($data, $comm_data){
 
     foreach($meta['quiz_ids'] as $quiz_id){
 
-    	$recipients = array();
+        $recipients = array();
 
-    	switch_to_blog($comm_data['blog_id']);
+        switch_to_blog($comm_data['blog_id']);
     
-	    $query = $wpdb->prepare("SELECT DISTINCT student_id 
-	    	FROM {$wpdb->prefix}quiz_response_summary 
-	    	WHERE quiz_meta LIKE %s
-	    		AND collection_id = %d",
-	    	array('%"completed";%', $quiz_id)
-	    );
+        $query = $wpdb->prepare("SELECT DISTINCT student_id 
+            FROM {$wpdb->prefix}quiz_response_summary 
+            WHERE quiz_meta LIKE %s
+                AND collection_id = %d",
+            array('%"completed";%', $quiz_id)
+        );
 
-	    $student_ids= $wpdb->get_col($query);
+        $student_ids= $wpdb->get_col($query);
 
-	    if($student_ids){
+        if($student_ids){
 
-		    $parents= get_parents_by_student_ids($student_ids);
+            $parents= get_parents_by_student_ids($student_ids);
 
-		    if($parents){
-			    foreach($parents as $user){
-			    	$recipients[] = array(                
-		                    'user_id'   => $user->ID,
-		                    'type'      => 'email',
-		                    'value'     => $user->user_email
-		                ); 
-			    }
-			}
+            if($parents){
+                foreach($parents as $user){
+                    $recipients[] = array(                
+                            'user_id'   => $user->ID,
+                            'type'      => 'email',
+                            'value'     => $user->user_email
+                        ); 
+                }
+            }
 
-		    restore_current_blog();
+            restore_current_blog();
 
-	        $meta_data['quiz_id']= $quiz_id;
+            $meta_data['quiz_id']= $quiz_id;
 
-        	$comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
-	    }
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        }
     }
 
     return $comm;

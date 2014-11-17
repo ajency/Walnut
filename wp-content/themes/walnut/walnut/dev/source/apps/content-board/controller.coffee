@@ -74,8 +74,8 @@ define ['app'
                     itemsDeferred.promise()
 
                     if i is _.size(section)-1
-                        itemsDeferred.done =>
-                            allItemsDeferred.resolve()
+                        #itemsDeferred.done =>
+                        allItemsDeferred.resolve()
 
                 allItemsDeferred.promise()
 

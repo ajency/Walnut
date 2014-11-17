@@ -23,10 +23,18 @@
             events:
                 'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#content-pieces-table'
                 'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
-                'click #send-email, #send-sms'          : 'saveCommunications'
+                'click .send-email, .send-sms'          : 'saveCommunications'
 
             initialize : ->
                 @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
+
+            mixinTemplateHelpers:(data)->
+                user = App.request "get:user:model"
+
+                if user.current_user_can('school-admin') or user.current_user_can('teacher')
+                    data.can_schedule = true
+
+                data
 
             onShow : ->
                 @$el.find '#content-pieces-table'
@@ -53,11 +61,11 @@
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'
                 .is ':checked'
-                    @$el.find '#send-email, #send-sms'
+                    @$el.find '.send-email, .send-sms'
                     .show()
 
                 else
-                    @$el.find '#send-email, #send-sms'
+                    @$el.find '.send-email, .send-sms'
                     .hide()
 
             saveCommunications:(e)->
@@ -68,7 +76,7 @@
                 data.division = @$el.find '#divisions-filter'
                         .val()
 
-                if e.target.id is 'send-email'
+                if $(e.target).hasClass 'send-email'
                     data.communication_mode = 'email'
                 else
                     data.communication_mode = 'sms'
@@ -76,9 +84,9 @@
                 if data.quizIDs
                     @trigger "save:communications", data
 
-                    @$el.find '#communication_sent'
+                    @$el.find '.communication_sent'
                     .remove()
 
-                    @$el.find '#send-email'
-                    .after '<span class="m-l-40 small" id="communication_sent">
+                    @$el.find '.send-email'
+                    .after '<span class="m-l-40 text-success small communication_sent">
                             Your '+data.communication_mode+' has been queued successfully</span>'

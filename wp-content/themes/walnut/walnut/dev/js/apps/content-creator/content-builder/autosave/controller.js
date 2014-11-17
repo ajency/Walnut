@@ -39,6 +39,11 @@ define(['app'], function(App) {
           } else {
             valid_content = false;
           }
+        } else if (data.post_status !== 'pending') {
+          if (_.isEmpty(data.json)) {
+            this._showEmptyCanvasError(data.post_status);
+            valid_content = false;
+          }
         }
         if (valid_content) {
           return $.ajax(options).done(function(response) {
@@ -76,11 +81,16 @@ define(['app'], function(App) {
         var elements;
         elements = App.mainContentRegion.$el.find('#myCanvas').find('.element-wrapper');
         return _.every(elements, function(element) {
-          var _ref;
+          var error_info, msg, _ref;
           if (((_ref = $(element).find('form input[name="element"]').val()) === 'Fib' || _ref === 'Mcq' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') && $(element).find('form input[name="complete"]').val() === 'false') {
             $('#saved-successfully').remove();
             $('#save-failure').remove();
-            $(".page-title").before('<div id="save-failure" style="text-align:center;" class="alert alert-failure">Ensure you have set the marks and added valid answers to save the question</div>');
+            msg = 'Ensure you have set the marks and added valid answers to save the question';
+            error_info = $(element).find('form input[name="error_info"]').val();
+            if (!_.isEmpty(error_info)) {
+              msg = error_info;
+            }
+            $(".page-title").before('<div id="save-failure" style="text-align:center;" class="alert alert-failure">' + msg + '</div>');
             return false;
           } else {
             return true;
@@ -91,6 +101,11 @@ define(['app'], function(App) {
       Controller.prototype._showNoQuestionExistsError = function() {
         $('#saved-successfully,#save-failure').remove();
         return $(".page-title").before('<div id="save-failure" style="text-align:center;" class="alert alert-failure">To save, at least 1 question element must be included in the question area</div>');
+      };
+
+      Controller.prototype._showEmptyCanvasError = function(post_status) {
+        $('#saved-successfully,#save-failure').remove();
+        return $(".page-title").before("<div id='save-failure' style='text-align:center;' class='alert alert-failure'> Cannot " + post_status + " an empty canvas </div>");
       };
 
       Controller.prototype._getPageJson = function($site) {

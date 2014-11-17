@@ -10,14 +10,19 @@ define ['app'
 			initialize : (options)->
 					{answerWreqrObject,@answerModel} = options
 					@answerModel = App.request "create:new:answer" if not @answerModel
+					
+					@multiplicationFactor = 0
 
 					super options
 
 					if answerWreqrObject
 					
-						@displayAnswer = answerWreqrObject.options.displayAnswer
+						@displayAnswer = answerWreqrObject.displayAnswer
+						@multiplicationFactor = answerWreqrObject.multiplicationFactor
 						
 						answerWreqrObject.setHandler "get:question:answer",=>
+
+							@layout.model.setMultiplicationFactor @multiplicationFactor
 
 							answer = @view.$el.find('textarea').val()
 

@@ -99,6 +99,8 @@ define ['app'
                     questionsCollection.each (m)->
                         m.setMarks multiplicationFactor
 
+                console.log multiplicationFactor
+
             _randomizeOrder:->
                 if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
                     questionsCollection.each (e)-> e.unset 'order'

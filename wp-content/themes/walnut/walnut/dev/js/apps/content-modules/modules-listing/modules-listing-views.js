@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'], function(App, contentListTpl) {
+define(['app', 'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
   return App.module("ContentModulesApp.ModulesListing.Views", function(Views, App, Backbone, Marionette, $, _) {
     var EmptyView, ListItemView;
     ListItemView = (function(_super) {
@@ -53,7 +53,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           }
         };
         if (this.groupType === 'quiz') {
-          data.quiz_type = data.quiz_type === 'practice' ? 'Practice' : 'Quiz';
+          data.quiz_type = this.model.getQuizTypeLabel();
           data.view_url = SITEURL + ("/#view-quiz/" + data.id);
           data.edit_url = SITEURL + ("/#edit-quiz/" + data.id);
         }
@@ -91,29 +91,32 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.cloneModule = function() {
-        var groupData, _ref;
+        var _ref;
         if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
-          if (confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?") === true) {
-            if (this.groupType === 'teaching-module') {
-              this.cloneModel = App.request("new:content:group");
-            }
-            if (this.groupType === 'quiz') {
-              this.cloneModel = App.request("new:quiz");
-            }
-            groupData = this.model.toJSON();
-            this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-            this.clonedData.name = "" + this.clonedData.name + " clone";
-            this.clonedData.post_status = "underreview";
-            return App.execute("when:fetched", this.cloneModel, (function(_this) {
-              return function() {
-                return _this.cloneModel.save(_this.clonedData, {
-                  wait: true,
-                  success: _this.successSaveFn,
-                  error: _this.errorFn
+          return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?", (function(_this) {
+            return function(result) {
+              var groupData;
+              if (result) {
+                if (_this.groupType === 'teaching-module') {
+                  _this.cloneModel = App.request("new:content:group");
+                }
+                if (_this.groupType === 'quiz') {
+                  _this.cloneModel = App.request("new:quiz");
+                }
+                groupData = _this.model.toJSON();
+                _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
+                _this.clonedData.name = "" + _this.clonedData.name + " clone";
+                _this.clonedData.post_status = "underreview";
+                return App.execute("when:fetched", _this.cloneModel, function() {
+                  return _this.cloneModel.save(_this.clonedData, {
+                    wait: true,
+                    success: _this.successSaveFn,
+                    error: _this.errorFn
+                  });
                 });
-              };
-            })(this));
-          }
+              }
+            };
+          })(this));
         }
       };
 

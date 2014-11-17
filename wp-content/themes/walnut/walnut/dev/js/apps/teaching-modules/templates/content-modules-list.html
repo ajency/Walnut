@@ -19,7 +19,8 @@
                         <select class="select2-filters" id="quiz-type-filter" style="width:150px">
                         <option value="">All Types</option>
                             <option value="practice">Practice Quiz</option>
-                            <option value="test">Class Test</option>
+                            <option value="test">Take at Home</option>
+                            <option value="class_test">Class Test</option>
                         </select>
                     {{/take_quiz}}
                     </div>
@@ -40,7 +41,7 @@
                         <th class="v-align-middle">Quiz Type</th>
                     {{/take_quiz}}
                     <th class="{sorter:\'minutesSort\'} duration">Duration</th>
-                    <th><div id="status_header">Status</div></th>
+                    <th class="statusColmn"><div id="status_header">Status</div></th>
                     <th>{{#take_quiz}}Taken On{{/take_quiz}}
                     {{^take_quiz}}Schedule Date{{/take_quiz}}</th>
                   </tr>

@@ -24,16 +24,13 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         });
         displayAnswer = this.quizModel.hasPermission('display_answer');
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
-        this.answerWreqrObject.options = {
-          'displayAnswer': displayAnswer
-        };
+        this.answerWreqrObject.displayAnswer = displayAnswer;
+        this.answerWreqrObject.multiplicationFactor = this.model.get('multiplicationFactor');
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
         if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
           if (this.display_mode === 'class_mode' && !this.quizModel.hasPermission('single_attempt')) {
-            this.answerWreqrObject.options = {
-              'displayAnswer': false
-            };
+            this.answerWreqrObject.displayAnswer = false;
           }
           answerData = this.questionResponseModel.get('question_response');
           if (_.isEmpty(answerData)) {
@@ -69,25 +66,16 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
           answerData = this.answerWreqrObject.request("get:question:answer");
           answer = answerData.answerModel;
           if (answerData.questionType !== 'sort') {
-            switch (answerData.emptyOrIncomplete) {
-              case 'empty':
-                return bootbox.confirm(this.quizModel.getMessageContent('submit_without_attempting'), (function(_this) {
-                  return function(result) {
-                    if (result) {
-                      return _this._triggerSubmit();
-                    }
-                  };
-                })(this));
-              case 'incomplete':
-                return bootbox.confirm(this.quizModel.getMessageContent('incomplete_answer'), (function(_this) {
-                  return function(result) {
-                    if (result) {
-                      return _this._triggerSubmit();
-                    }
-                  };
-                })(this));
-              case 'complete':
-                return this._triggerSubmit();
+            if (answerData.emptyOrIncomplete === 'empty') {
+              return bootbox.confirm(this.quizModel.getMessageContent('submit_without_attempting'), (function(_this) {
+                return function(result) {
+                  if (result) {
+                    return _this._triggerSubmit();
+                  }
+                };
+              })(this));
+            } else {
+              return this._triggerSubmit();
             }
           } else {
             return this._triggerSubmit();
@@ -142,6 +130,8 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
       Controller.prototype._getAnswerStatus = function(recievedMarks, totalMarks) {
         var status;
         status = 'wrong_answer';
+        recievedMarks = parseFloat(recievedMarks);
+        totalMarks = parseFloat(totalMarks);
         if (recievedMarks === totalMarks) {
           status = 'correct_answer';
         }

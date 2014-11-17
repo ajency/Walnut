@@ -33,11 +33,20 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           return $.toggleCheckAll(this.$el.find('#content-pieces-table'));
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
-        'click #send-email, #send-sms': 'saveCommunications'
+        'click .send-email, .send-sms': 'saveCommunications'
       };
 
       ModulesListingView.prototype.initialize = function() {
         return this.textbookNamesCollection = Marionette.getOption(this, 'textbookNamesCollection');
+      };
+
+      ModulesListingView.prototype.mixinTemplateHelpers = function(data) {
+        var user;
+        user = App.request("get:user:model");
+        if (user.current_user_can('school-admin') || user.current_user_can('teacher')) {
+          data.can_schedule = true;
+        }
+        return data;
       };
 
       ModulesListingView.prototype.onShow = function() {
@@ -63,9 +72,9 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
-          return this.$el.find('#send-email, #send-sms').show();
+          return this.$el.find('.send-email, .send-sms').show();
         } else {
-          return this.$el.find('#send-email, #send-sms').hide();
+          return this.$el.find('.send-email, .send-sms').hide();
         }
       };
 
@@ -74,15 +83,15 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         data = [];
         data.quizIDs = $.getCheckedItems(this.$el.find('#content-pieces-table'));
         data.division = this.$el.find('#divisions-filter').val();
-        if (e.target.id === 'send-email') {
+        if ($(e.target).hasClass('send-email')) {
           data.communication_mode = 'email';
         } else {
           data.communication_mode = 'sms';
         }
         if (data.quizIDs) {
           this.trigger("save:communications", data);
-          this.$el.find('#communication_sent').remove();
-          return this.$el.find('#send-email').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
+          this.$el.find('.communication_sent').remove();
+          return this.$el.find('.send-email').after('<span class="m-l-40 text-success small communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
         }
       };
 

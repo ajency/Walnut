@@ -56,6 +56,7 @@ define ['app'
                             model: @model
                             filters : filters
                             dataType: 'content-pieces'
+                            post_status: 'publish'
                             contentSelectionType: contentSelectionType
 
                         App.execute "show:all:content:selection:app",

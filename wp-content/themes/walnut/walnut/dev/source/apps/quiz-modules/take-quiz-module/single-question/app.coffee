@@ -19,20 +19,21 @@ define ['app'
                         displayAnswer = @quizModel.hasPermission 'display_answer'
 
                         @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
-                        @answerWreqrObject.options = 'displayAnswer': displayAnswer
+                        @answerWreqrObject.displayAnswer= displayAnswer
+                        @answerWreqrObject.multiplicationFactor = @model.get 'multiplicationFactor'
 
                         @layout = layout = @_showSingleQuestionLayout @model
 
                         @answerModel = App.request "create:new:answer"
 
-                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'
+                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'    
 
                             # if the question is not having permission of single attempt, 
                             # ie. can be skipped and answered again,
                             # display answer should be false.
                             # if not class mode then the answer can be displayed if display answer permission is there
                             if @display_mode is 'class_mode' and not @quizModel.hasPermission 'single_attempt'
-                                @answerWreqrObject.options = 'displayAnswer': false
+                                @answerWreqrObject.displayAnswer = false
 
                             answerData = @questionResponseModel.get 'question_response'
                             
@@ -70,17 +71,13 @@ define ['app'
 
                             if answerData.questionType isnt 'sort'
 
-                                switch answerData.emptyOrIncomplete
+                                if answerData.emptyOrIncomplete is 'empty'
+                                          
+                                    bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
+                                        @_triggerSubmit() if result
 
-                                    when 'empty'        
-                                        bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
-                                            @_triggerSubmit() if result
-
-                                    when 'incomplete'   
-                                        bootbox.confirm @quizModel.getMessageContent('incomplete_answer'),(result)=>
-                                            @_triggerSubmit() if result
-
-                                    when 'complete'     then @_triggerSubmit()
+                                else
+                                    @_triggerSubmit()
 
                             else 
                                 @_triggerSubmit()
@@ -120,6 +117,9 @@ define ['app'
 
                     _getAnswerStatus:(recievedMarks, totalMarks)->
                         status = 'wrong_answer'
+
+                        recievedMarks = parseFloat recievedMarks
+                        totalMarks = parseFloat totalMarks
 
                         if recievedMarks is totalMarks 
                             status = 'correct_answer' 

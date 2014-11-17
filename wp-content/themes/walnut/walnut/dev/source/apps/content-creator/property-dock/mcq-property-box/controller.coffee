@@ -39,8 +39,25 @@ define ['app'
 
             onClose: ->
                     if @model.get('marks') > 0 and @model.get('correct_answer').length 
-                        @model.set 'complete',true
-                    else                
+
+                        if not @model.get('multiple') #if only one correct answer
+                            @model.set 'complete',true
+
+                        else 
+                            answers = @model.get 'correct_answer'
+                            options = @model.get 'options'
+
+                            #check if marks are set foreach answer marked as correct answer
+                            for ans in answers
+                                opt = options.get ans
+
+                                if parseInt(opt.get('marks')) is 0
+                                    @model.set 'complete',false
+                                    return false
+
+                                else
+                                    @model.set 'complete',true
+                    else
                         @model.set 'complete',false
 
                     models= this.model.get('options').models

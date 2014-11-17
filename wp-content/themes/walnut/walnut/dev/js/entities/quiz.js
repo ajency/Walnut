@@ -72,6 +72,21 @@ define(["app", 'backbone'], function(App, Backbone) {
         return message_content;
       };
 
+      ItemModel.prototype.getQuizTypeLabel = function() {
+        var quiz_type;
+        quiz_type = (function() {
+          switch (this.get('quiz_type')) {
+            case 'practice':
+              return 'Practice';
+            case 'test':
+              return 'Take at Home';
+            case 'class_test':
+              return 'Class Test';
+          }
+        }).call(this);
+        return quiz_type;
+      };
+
       return ItemModel;
 
     })(Backbone.Model);
@@ -153,6 +168,31 @@ define(["app", 'backbone'], function(App, Backbone) {
           }
         });
         return dummyQuiz;
+      },
+      saveQuizSchedule: function(data) {
+        var connection_resp, defer;
+        defer = $.Deferred();
+        this.result = 0;
+        connection_resp = $.middle_layer(AJAXURL + '?action=save-quiz-schedule', data, (function(_this) {
+          return function(response) {
+            return defer.resolve(response);
+          };
+        })(this));
+        return defer.promise();
+      },
+      clearQuizSchedule: function(quiz_id, division) {
+        var connection_resp, data, defer;
+        defer = $.Deferred();
+        data = {
+          'quiz_id': quiz_id,
+          'division': division
+        };
+        connection_resp = $.middle_layer(AJAXURL + '?action=clear-quiz-schedule', data, (function(_this) {
+          return function(response) {
+            return defer.resolve(response);
+          };
+        })(this));
+        return defer.promise();
       }
     };
     App.reqres.setHandler("get:quizes", function(opt) {
@@ -166,6 +206,12 @@ define(["app", 'backbone'], function(App, Backbone) {
     });
     App.reqres.setHandler("new:quiz", function() {
       return API.newQuiz();
+    });
+    App.reqres.setHandler("save:quiz:schedule", function(data) {
+      return API.saveQuizSchedule(data);
+    });
+    App.reqres.setHandler("clear:quiz:schedule", function(quiz_id, division) {
+      return API.clearQuizSchedule(quiz_id, division);
     });
     App.reqres.setHandler("create:dummy:quiz:module", function(content_piece_id) {
       return API.getDummyQuiz(content_piece_id);

@@ -36,6 +36,10 @@ define ['app'], (App)->
                     else
                         valid_content = false
 
+                else if data.post_status isnt 'pending'
+                    if _.isEmpty data.json
+                        @_showEmptyCanvasError data.post_status
+                        valid_content = false
 
                 if valid_content
                     $.ajax(options).done (response)->
@@ -74,8 +78,14 @@ define ['app'], (App)->
                     if $(element).find('form input[name="element"]').val() in ['Fib','Mcq','Sort','Hotspot','BigAnswer'] and $(element).find('form input[name="complete"]').val() is 'false'
                         $('#saved-successfully').remove()
                         $('#save-failure').remove()
+
+                        msg = 'Ensure you have set the marks and added valid answers to save the question';
+                        error_info= $(element).find('form input[name="error_info"]').val()
+                        
+                        msg = error_info if not _.isEmpty error_info
+
                         $(".page-title").before '<div id="save-failure" style="text-align:center;"
-                            class="alert alert-failure">Ensure you have set the marks and added valid answers to save the question</div>'
+                            class="alert alert-failure">'+msg+'</div>'
                         return false
                     else
                         return true
@@ -85,8 +95,15 @@ define ['app'], (App)->
                 $('#saved-successfully,#save-failure').remove()
                 $(".page-title").before '<div id="save-failure" style="text-align:center;"
                     class="alert alert-failure">To save, at least 1 question element must be included in the question area</div>'
-                        
+            
+            _showEmptyCanvasError:(post_status)->  
 
+                $('#saved-successfully,#save-failure').remove()
+                $(".page-title").before "<div id='save-failure' style='text-align:center;'
+                    class='alert alert-failure'>
+                        Cannot #{post_status} an empty canvas
+                    </div>"
+            
             # get the json
             _getPageJson : ($site)->
                 json =

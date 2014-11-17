@@ -65,7 +65,10 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#comment_enable').trigger('click');
         }
         if (this.model.get('content_type') !== 'teacher_question') {
-          return this.$el.find('#question_type_column').remove();
+          this.$el.find('#question_type_column').remove();
+        }
+        if (!this.model.isNew()) {
+          return this.$el.find('#preview-question').show();
         }
       };
 

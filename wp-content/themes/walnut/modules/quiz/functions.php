@@ -41,8 +41,6 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $data->permissions = $data->description = array();
 
-//    print_r $quiz_details; exit;
-
     foreach ($quiz_details as $key=>$value){
 
         if ($value->meta_key == 'permissions')
@@ -55,7 +53,10 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
         if ($value->meta_key == 'description'){
             $description = maybe_unserialize($value->meta_value);
-            $data->instructions = wp_unslash($description['instruction']);
+
+            if(isset($description['instruction']))
+                $data->description['instruction'] =wp_unslash($description['instruction']);
+
         }
 
         if ($value->meta_key == 'quiz_type')
@@ -83,7 +84,23 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     }
 
     $content_ids = array();
-    if ($data->content_layout){
+
+    $show_questions = true;
+    $schedule       = array();
+
+    if($data->quiz_type == 'class_test'){
+        $schedule = get_quiz_schedule($id, $division);
+
+        if($schedule)
+            $data->schedule  = $schedule;        
+
+        if(current_user_can('school-admin') || current_user_can('teacher') || current_user_can('content-creator') || $schedule['is_active'])
+            $show_questions = true;
+        else
+            $show_questions = false;
+    }
+    
+    if ($data->content_layout && $show_questions){
         foreach($data->content_layout as $content){
             if ($content['type'] == 'content-piece'){
                 $content_ids[] = $content['id'];
@@ -96,43 +113,97 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
                     $content_ids[] = $id;
                 }
             }
-
         }
         $data->content_pieces = $content_ids;
     }
 
-    if($division){
+    if($division){        
 
-        $taken_by=0;
-        
-        $args=array(
-                'role'=>'student',
-                'division'=>$division,
-            );
-
-        $students=get_user_list($args);
-
-        if($students){
-            $student_ids=__u::pluck($students,'ID');
-
-            if(sizeof($student_ids)>0){
-                $students_str= join($student_ids,',');
-
-                $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id) 
-                    FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
-                    AND student_id in ($students_str)",
-                    $id);
-
-                $taken_by=(int) $wpdb->get_var($taken_by_query);
-            }
-        }
-
-        $data->taken_by = $taken_by;
+        $data->taken_by = num_students_taken_quiz($id, $division);
         
         $data->total_students = get_student_count_in_division($division);
+
     }
 
     return $data;
+}
+
+function num_students_taken_quiz($quiz_id, $division){
+
+    global $wpdb;
+
+    $taken_by = 0;
+
+    $args=array(
+            'role'=>'student',
+            'division'=>$division,
+        );
+
+    $students=get_user_list($args);
+
+    if($students){
+        $student_ids=__u::pluck($students,'ID');
+
+        if(sizeof($student_ids)>0){
+            $students_str= join($student_ids,',');
+
+            $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id) 
+                FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
+                AND student_id in ($students_str)",
+                $quiz_id);
+
+            $taken_by=(int) $wpdb->get_var($taken_by_query);
+        }
+    }
+
+    return $taken_by;
+
+}
+
+function get_quiz_schedule($quiz_id, $division){
+
+    global $wpdb;
+    global $user_ID;
+
+    if(!$division)
+        $division=get_user_meta($user_ID,'student_division',true);
+
+    if(!$quiz_id || !$division)
+        return false;
+
+    $query = $wpdb->prepare("SELECT schedule_from, schedule_to 
+                        FROM {$wpdb->prefix}quiz_schedules 
+                        WHERE quiz_id = %d AND division_id = %d",
+                    array($quiz_id, $division)
+            );
+
+    $result = $wpdb->get_row($query);
+
+    if(!$result)
+        return false;
+
+    $today = date('Y-m-d');
+
+    $from   = $result->schedule_from;
+    $to     = $result->schedule_to;
+    
+    if( ($today >= $from) && ($today <= $to))
+        $active = true;
+    else
+        $active = false;
+
+    if($today > $to)
+        $expired = true;
+    
+    else
+        $expired = false;
+
+    return array(
+        'from'      => $from,
+        'to'        => $to,
+        'is_active' => $active,
+        'is_expired'=> $expired
+        );
 }
 
 function get_quiz_status($quiz_id,$user_id){
@@ -268,7 +339,6 @@ function get_all_quiz_modules($args){
         $quiz_ids_str = join(',', $args['quiz_ids']);
         $quiz_ids_search_str = " AND post.id in ($quiz_ids_str)";
     }
-
 
     $query_string = "SELECT DISTINCT post.id
             FROM {$wpdb->base_prefix}content_collection AS post,
@@ -662,3 +732,67 @@ function delete_quiz_response_summary($summary_id){
 
 }
 
+function save_quiz_schedule($data){
+
+    global $wpdb;
+
+    if(!$data['schedule'] || !$data['schedule']['from'] || !$data['schedule']['to'])
+        return false;
+
+    $from   = date('Y-m-d', strtotime($data['schedule']['from']));
+    $to     = date('Y-m-d', strtotime($data['schedule']['to']));
+
+    $scheduledata = array(
+        'quiz_id'       => $data['quiz_id'],
+        'division_id'   => $data['division'],
+        'schedule_from' => $from,
+        'schedule_to'   => $to
+        );
+
+    if (!is_multisite()) 
+        $scheduledata['sync']=0;
+
+    $check_query = $wpdb->prepare("SELECT quiz_id FROM {$wpdb->prefix}quiz_schedules 
+                                        WHERE quiz_id = %d AND division_id = %d",
+                                    array($data['quiz_id'],$data['division'])
+                                );
+    $schedule_exists = $wpdb->get_var($check_query);
+
+    if($schedule_exists){
+
+        $schedule_id = (int) $schedule_exists;
+
+        $save = $wpdb->update(
+            $wpdb->prefix.'quiz_schedules', 
+            $scheduledata, 
+            array(
+                'quiz_id'       => $data['quiz_id'],
+                'division_id'   => $data['division']
+            ),
+            array('%d','%d','%s','%s')
+        );
+    }
+    else{
+        $save = $wpdb->insert($wpdb->prefix.'quiz_schedules', $scheduledata, array('%d','%d','%s','%s'));
+        $schedule_id= $wpdb->insert_id;
+    }
+
+    return $schedule_id; 
+
+}
+
+function clear_quiz_schedule($quiz_id, $division){
+
+    global $wpdb;
+
+    $del = $wpdb->delete(
+            $wpdb->prefix.'quiz_schedules',
+            array(
+                'quiz_id' => $quiz_id,
+                'division_id' => $division
+                )
+        );
+
+    return $del;
+
+}

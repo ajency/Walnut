@@ -974,6 +974,11 @@ textarea.border {
   /* Opera */
   border-image: url(../../../images/border.gif) 20 20 stretch;
 }
+.table-bordered th {
+  background-color: #8b91a0;
+  border: 1px solid #8b91a0;
+  color: #ffffff;
+}
 input[type="text"].rowColInput {
   width: 30%;
   float: left;
@@ -2430,7 +2435,7 @@ ul.classes .classesWrap {
   padding-bottom: 4px;
 }
 #textbooks.list.myClass .meta {
-  width: 15.5%;
+  width: 13.5%;
 }
 #textbooks.list.myClass .meta.name {
   width: 25%;
@@ -2442,7 +2447,7 @@ ul.classes .classesWrap {
   width: 65%;
 }
 #textbooks.list.myClass .meta.rec {
-  width: 22%;
+  width: 24%;
 }
 #textbooks.list.myClass .txtbook {
   cursor: pointer;
@@ -2676,8 +2681,11 @@ textarea.error,
 #take-class-modules.takeClass th.duration {
   width: 10%;
 }
+#take-class-modules.takeClass th.statusColmn {
+  width: 13%;
+}
 #take-class-modules.takeClass th:last-child {
-  width: 30%;
+  width: 29%;
 }
 .table-fixed-layout td.cpHeight {
   white-space: normal;

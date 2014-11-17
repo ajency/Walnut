@@ -18,12 +18,15 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
+        this.multiplicationFactor = 0;
         Controller.__super__.initialize.call(this, options);
         if (answerWreqrObject) {
-          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          this.displayAnswer = answerWreqrObject.displayAnswer;
+          this.multiplicationFactor = answerWreqrObject.multiplicationFactor;
           return answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var answer, data, emptyOrIncomplete;
+              _this.layout.model.setMultiplicationFactor(_this.multiplicationFactor);
               answer = _this.view.$el.find('textarea').val();
               _this.answerModel.set({
                 'answer': answer
