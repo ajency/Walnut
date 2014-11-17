@@ -76,7 +76,7 @@
                 data.division = @$el.find '#divisions-filter'
                         .val()
 
-                if e.target.id is 'send-email'
+                if $(e.target).hasClass 'send-email'
                     data.communication_mode = 'email'
                 else
                     data.communication_mode = 'sms'

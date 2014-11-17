@@ -83,7 +83,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         data = [];
         data.quizIDs = $.getCheckedItems(this.$el.find('#content-pieces-table'));
         data.division = this.$el.find('#divisions-filter').val();
-        if (e.target.id === 'send-email') {
+        if ($(e.target).hasClass('send-email')) {
           data.communication_mode = 'email';
         } else {
           data.communication_mode = 'sms';
