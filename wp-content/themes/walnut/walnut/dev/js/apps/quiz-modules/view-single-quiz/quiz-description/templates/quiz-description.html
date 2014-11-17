@@ -95,13 +95,13 @@
 </div>
 
 <div class="text-center">
-    {{#hasQuestions}}
+    {{^takeQuizError}}
         <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 m-r-10" id="take-quiz"> Start Quiz</button>
         {{#try_again}}
             <button type="button" class="btn btn-success btn-lg btn-large btn-cons2 m-r-10" id="try-again"> Try Again</button>
         {{/try_again}}
-    {{/hasQuestions}}
-    {{^hasQuestions}}
-        Sorry this quiz has no questions in it.
-    {{/hasQuestions}}
+    {{/takeQuizError}}
+    {{#takeQuizError}}
+        {{takeQuizError}}
+    {{/takeQuizError}}
 </div>

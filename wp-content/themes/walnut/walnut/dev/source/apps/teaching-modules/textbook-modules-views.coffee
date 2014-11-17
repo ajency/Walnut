@@ -78,7 +78,7 @@ define ['app',
 				if @model.get('quiz_type') is 'class_test'
 
 					if @model.get 'schedule'
-						if not @model.get('schedule')['is_active']
+						if not IS_STANDALONE_SITE or @model.get('schedule')['is_active']
 							@$el.find '.start-training'
 							.hide()
 
@@ -89,6 +89,11 @@ define ['app',
 					else
 						@$el.find '.start-training'
 						.hide()
+
+					if @model.get('status') is 'completed'
+						@$el.find '.start-training'
+						.show()
+
 
 			serializeData : ->
 				data = super()
