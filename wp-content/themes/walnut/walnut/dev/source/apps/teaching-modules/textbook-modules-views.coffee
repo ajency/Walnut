@@ -43,22 +43,12 @@ define ['app',
 
 								{{^taken_on}}
 									{{#classTest}}
-										{{#schedule}}
-											{{#schedule.is_active}}										
-												<div class="alert alert-info inline pull-left m-b-0 m-r-10">
-													Scheduled<br>
-													From: {{scheduleFrom}}<br>
-													To: {{scheduleTo}}
-												</div>
-											{{/schedule.is_active}}
-
-											{{^schedule.is_active}}
-												<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
-													Scheduled<br>
-													From: {{scheduleFrom}}<br>
-													To: {{scheduleTo}}
-												</div>
-											{{/schedule.is_active}}
+										{{#schedule}}								
+											<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
+												Scheduled<br>
+												From: {{scheduleFrom}}<br>
+												To: {{scheduleTo}}
+											</div>
 										{{/schedule}}
 										{{^schedule}}
 											Not Scheduled
@@ -78,14 +68,19 @@ define ['app',
 				if @model.get('quiz_type') is 'class_test'
 
 					if @model.get 'schedule'
-						if not IS_STANDALONE_SITE or @model.get('schedule')['is_active']
+						#hide the start button if 
+						#1. the schedule has expired without completing the quiz
+						#2. the status isnt active. ie. the quiz is scheduled for a future date.
+						#3. if the current site is a multisite. class test can only be taken on standalone school site. 
+						if @model.get('schedule')['is_expired'] or not (IS_STANDALONE_SITE or @model.get('schedule')['is_active'])
 							@$el.find '.start-training'
 							.hide()
 
-						if @model.get 'is_expired'
+						if @model.get('schedule')['is_expired']
 							@$el.find '.schedule_dates'
 							.removeClass 'alert-info'
 							.addClass 'alert-error'
+
 					else
 						@$el.find '.start-training'
 						.hide()
