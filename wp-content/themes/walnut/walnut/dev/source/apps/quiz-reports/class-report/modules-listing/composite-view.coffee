@@ -29,10 +29,8 @@
                 @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
 
             mixinTemplateHelpers:(data)->
-                user = App.request "get:user:model"
 
-                if user.current_user_can('school-admin') or user.current_user_can('teacher')
-                    data.can_schedule = true
+                data.can_schedule = true if App.request 'current:user:can','schedule_quiz'                    
 
                 data
 

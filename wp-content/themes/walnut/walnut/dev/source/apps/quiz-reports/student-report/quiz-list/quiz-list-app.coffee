@@ -12,10 +12,7 @@ define ['app'
 
                 @quizResponseSummaries = App.request "get:quiz:response:summary", 'student_id'   : @student_id
 
-                loggedInUser = App.request "get:user:model"
-
-                if loggedInUser.current_user_can('school-admin') or loggedInUser.current_user_can('teacher')  
-                    @allowResetQuiz = true
+                @allowResetQuiz = true if App.request 'current:user:can','reset_quiz'
 
                 App.execute "when:fetched", @quizResponseSummaries, =>
                     

@@ -27,19 +27,17 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
     })(Marionette.AppRouter);
     Controller = {
       dashboardRedirect: function() {
-        var user;
-        user = App.request("get:user:model");
         if ($.allowRoute('dashboard')) {
-          if (user.current_user_can('administrator') || user.current_user_can('school-admin') || user.current_user_can('content-creator')) {
+          if (App.request('current:user:can', 'view_all_textbooks')) {
             App.navigate('textbooks', {
               trigger: true
             });
           }
-          if (user.current_user_can('teacher')) {
+          if (App.request('current:user:can', 'teacher')) {
             App.navigate('teachers/dashboard');
             this.teachersDashboard();
           }
-          if (user.current_user_can('student')) {
+          if (App.request('current:user:can', 'student')) {
             App.navigate('students/dashboard');
             return this.studentsDashboard();
           }

@@ -41,9 +41,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       };
 
       ModulesListingView.prototype.mixinTemplateHelpers = function(data) {
-        var user;
-        user = App.request("get:user:model");
-        if (user.current_user_can('school-admin') || user.current_user_can('teacher')) {
+        if (App.request('current:user:can', 'schedule_quiz')) {
           data.can_schedule = true;
         }
         return data;

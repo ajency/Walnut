@@ -178,7 +178,7 @@ define ['jquery', 'underscore'], ($, _)->
                     return true if not user.get 'ID'
 
                 when 'admin/view-all-modules'
-                    return true if user.current_user_can('administrator') or user.current_user_can('school-admin')
+                    return true if App.request('current:user:can','administrator') or App.request('current:user:can','school-admin')
 
 
 
