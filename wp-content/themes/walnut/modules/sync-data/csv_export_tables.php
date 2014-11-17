@@ -220,8 +220,8 @@ class ExportTables {
 
         $options_table_query= $wpdb->prepare(
             "SELECT * FROM $options_table_name
-                WHERE option_name LIKE %s",
-            'taxonomy%'
+                WHERE option_name LIKE %s OR option_name LIKE %s",
+            'taxonomy%', 'wp_user_roles'
         );
         $options_table= array(
             'query'=> $options_table_query,
