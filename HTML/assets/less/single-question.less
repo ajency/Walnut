@@ -1,6 +1,6 @@
 .container-grey{
 	background: @preview-grey;
-	border: 1px solid lighten(@dash-grey, 10%);
+	// border: 1px solid lighten(@dash-grey, 10%);
 	box-shadow: darken(@preview-grey, 10%) 0 0 0 3px inset;
 }
 
@@ -147,7 +147,7 @@
 	position: absolute;
 }
 
-.qstnInfo{
+.qstnInfo, .quizComment{
 	max-width: 760px;
 	margin: auto;
 	margin-bottom: 5px;
@@ -162,12 +162,12 @@
 @media (min-width: 1020px) and (max-width:1295px){
 	#content-board{
 		margin: 0;
-		// margin-top: 15px;
+		#myCanvas, #eval-parameters{
+			margin: 0;
+			margin-left: auto;
+		}
 	}
-	#myCanvas, #eval-parameters{
-		margin: 0;
-		margin-left: auto;
-	}
+	
 	#eval-parameters{
 		max-width: 755px;
 	}
@@ -176,8 +176,6 @@
 		margin-left: 2px;
 	}
 	.contentTime, .contentInfo{
-		// margin: 0;
-		// left: 5px;
 		position: static;
 		float: none;
 		margin: 0 1.5%;
@@ -185,9 +183,7 @@
 	.contentTime{
 		margin-bottom: 8px;
 	}
-	.contentInfo{
-		// top: 175px;
-	}
+
 	.qstnInfo{
 		margin: 0;
 		margin-bottom: 5px;

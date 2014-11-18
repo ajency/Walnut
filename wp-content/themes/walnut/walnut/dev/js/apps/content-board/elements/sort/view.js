@@ -51,13 +51,18 @@ define(['app'], function(App) {
         if (Marionette.getOption(this, 'displayAnswer') === false) {
           displayAnswer = false;
         }
-        return this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
+        this.$el.closest('.preview').find('#submit-answer-button').on('click', (function(_this) {
           return function() {
             if (displayAnswer) {
               return _this.trigger("submit:answer");
             }
           };
         })(this));
+        return _.delay((function(_this) {
+          return function() {
+            return _this.trigger('show:completed');
+          };
+        })(this), 200);
       };
 
       SortView.prototype._changeBGColor = function(model, bgColor) {

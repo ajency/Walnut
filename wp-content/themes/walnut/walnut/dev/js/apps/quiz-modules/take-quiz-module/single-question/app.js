@@ -24,16 +24,13 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         });
         displayAnswer = this.quizModel.hasPermission('display_answer');
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
-        this.answerWreqrObject.options = {
-          'displayAnswer': displayAnswer
-        };
+        this.answerWreqrObject.displayAnswer = displayAnswer;
+        this.answerWreqrObject.multiplicationFactor = this.model.get('multiplicationFactor');
         this.layout = layout = this._showSingleQuestionLayout(this.model);
         this.answerModel = App.request("create:new:answer");
         if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
           if (this.display_mode === 'class_mode' && !this.quizModel.hasPermission('single_attempt')) {
-            this.answerWreqrObject.options = {
-              'displayAnswer': false
-            };
+            this.answerWreqrObject.displayAnswer = false;
           }
           answerData = this.questionResponseModel.get('question_response');
           if (_.isEmpty(answerData)) {

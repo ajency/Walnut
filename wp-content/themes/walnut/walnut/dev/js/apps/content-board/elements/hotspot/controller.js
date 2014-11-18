@@ -9,6 +9,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       __extends(Controller, _super);
 
       function Controller() {
+        this._submitAnswer = __bind(this._submitAnswer, this);
         this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
@@ -16,11 +17,13 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       Controller.prototype.initialize = function(options) {
         var answerWreqrObject;
         answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
+        this.multiplicationFactor = 0;
         if (!this.answerModel) {
           this.answerModel = App.request("create:new:answer");
         }
         if (answerWreqrObject) {
-          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          this.displayAnswer = answerWreqrObject.displayAnswer;
+          this.multiplicationFactor = answerWreqrObject.multiplicationFactor;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var answer, data, emptyOrIncomplete;
@@ -34,6 +37,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               } else {
                 emptyOrIncomplete = 'complete';
               }
+              _this.layout.model.setMultiplicationFactor(_this.multiplicationFactor);
               return data = {
                 'emptyOrIncomplete': emptyOrIncomplete,
                 'answerModel': _this.answerModel,
@@ -128,17 +132,13 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (displayAnswer == null) {
           displayAnswer = true;
         }
-        console.log('_submitAnswer');
-        console.log(this.optionCollection);
+        this.layout.model.setMultiplicationFactor(this.multiplicationFactor);
         correctOptions = this.optionCollection.where({
           correct: true
         });
-        console.log(correctOptions);
         correctOptionsIds = _.pluck(correctOptions, 'id');
-        console.log(correctOptionsIds);
         answerId = _.pluck(this.answerModel.get('answer'), 'id');
-        if (this.layout.model.get('enableIndividualMarks')) {
-          console.log(_.difference(answerId, correctOptionsIds));
+        if (_.toBool(this.layout.model.get('enableIndividualMarks'))) {
           if (!_.difference(answerId, correctOptionsIds).length) {
             if (!_.difference(correctOptionsIds, answerId).length) {
               this.answerModel.set('marks', this.layout.model.get('marks'));
@@ -147,12 +147,9 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               totalMarks = this.layout.model.get('marks');
               _.each(answersNotMarked, (function(_this) {
                 return function(notMarked) {
-                  console.log(_this.optionCollection.findWhere({
-                    id: notMarked
-                  }));
                   return totalMarks -= _this.optionCollection.findWhere({
                     id: notMarked
-                  }).get('marks');
+                  }).get('marks') * _this.layout.model.get('multiplicationFactor');
                 };
               })(this));
               this.answerModel.set('marks', totalMarks);

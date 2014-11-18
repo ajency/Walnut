@@ -13,11 +13,15 @@ define ['app'
             initialize : (options)->
                 {answerWreqrObject,@answerModel} = options
 
+                @multiplicationFactor = 0
+
                 @answerModel = App.request "create:new:answer" if not @answerModel
 
                 if answerWreqrObject
                     
-                    @displayAnswer = answerWreqrObject.options.displayAnswer
+                    @displayAnswer = answerWreqrObject.displayAnswer
+
+                    @multiplicationFactor = answerWreqrObject.multiplicationFactor
                     
                     answerWreqrObject.setHandler "get:question:answer", =>
 
@@ -31,16 +35,17 @@ define ['app'
 
                         else emptyOrIncomplete = 'complete'
 
+                        @layout.model.setMultiplicationFactor @multiplicationFactor
+
                         data=
                             'emptyOrIncomplete' : emptyOrIncomplete
                             'answerModel': @answerModel
-                            'totalMarks' : @layout.model.get('marks')
+                            'totalMarks' : @layout.model.get 'marks'
 
                     answerWreqrObject.setHandler "submit:answer",(displayAnswer) =>
                         #if displayAnswer is true, the correct & wrong answers & marks will be displayed
                         #default is true
                         @_submitAnswer @displayAnswer 
-
                 
                 super(options)
 
@@ -112,17 +117,15 @@ define ['app'
                     object[key] = parseFloat value if key in Floats
                     object[key] = _.toBoolean value if key in Booleans
 
-            _submitAnswer :(displayAnswer=true) ->
-                console.log '_submitAnswer'
-                console.log @optionCollection
+            _submitAnswer :(displayAnswer=true) =>
+
+                @layout.model.setMultiplicationFactor @multiplicationFactor
+
                 correctOptions = @optionCollection.where { correct : true }
-                console.log correctOptions
                 correctOptionsIds = _.pluck correctOptions, 'id'
-                console.log correctOptionsIds
                 answerId = _.pluck @answerModel.get('answer'), 'id'
 
-                if @layout.model.get 'enableIndividualMarks'
-                    console.log _.difference(answerId, correctOptionsIds)
+                if _.toBool @layout.model.get 'enableIndividualMarks'
                     if not _.difference(answerId, correctOptionsIds).length
                         if not _.difference(correctOptionsIds, answerId).length
                             @answerModel.set 'marks', @layout.model.get 'marks'
@@ -130,8 +133,7 @@ define ['app'
                             answersNotMarked = _.difference(correctOptionsIds, answerId)
                             totalMarks = @layout.model.get 'marks'
                             _.each answersNotMarked, (notMarked)=>
-                                console.log @optionCollection.findWhere({ id : notMarked })
-                                totalMarks -= @optionCollection.findWhere({ id : notMarked }).get('marks')
+                                totalMarks -= @optionCollection.findWhere({ id : notMarked }).get('marks')*@layout.model.get 'multiplicationFactor'
                             @answerModel.set 'marks', totalMarks
 
 
@@ -145,6 +147,3 @@ define ['app'
 
                 # if @answerModel.get('marks') < @layout.model.get('marks')
                 @view.triggerMethod 'show:feedback' if displayAnswer
-
-
-

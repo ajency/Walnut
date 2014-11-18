@@ -16,10 +16,6 @@ define ['app'
             initialize : (options)->
                 {@model,answerWreqrObject, answerModel, @quizModel}=options
 
-
-                #get video ids
-                #if exists, decrypt
-
                 @view = @_getContentBoardView()
 
                 @listenTo @view, "add:new:element", (container, type)->
@@ -78,8 +74,8 @@ define ['app'
                     itemsDeferred.promise()
 
                     if i is _.size(section)-1
-                        itemsDeferred.done =>
-                            allItemsDeferred.resolve()
+                        #itemsDeferred.done =>
+                        allItemsDeferred.resolve()
 
                 allItemsDeferred.promise()
 

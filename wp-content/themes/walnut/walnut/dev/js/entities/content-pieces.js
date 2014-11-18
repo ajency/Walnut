@@ -27,32 +27,11 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.name = 'content-piece';
 
       ItemModel.prototype.setMarks = function(multiplicationFactor) {
-        var layout;
-        layout = this.get('layout');
-        _.each(layout, function(ele) {
-          var options;
-          if (ele.marks) {
-            ele.marks = ele.marks * multiplicationFactor;
-          }
-          if (_.has(ele, 'optionCollection')) {
-            options = ele.optionCollection;
-          }
-          if (_.has(ele, 'elements')) {
-            options = ele.elements;
-          }
-          if (_.has(ele, 'blanksArray')) {
-            options = ele.blanksArray;
-          }
-          if (options) {
-            return _.each(options, function(op) {
-              if (op.marks) {
-                return op.marks = op.marks * multiplicationFactor;
-              }
-            });
-          }
-        });
         this.set({
           'marks': multiplicationFactor * this.get('marks')
+        });
+        this.set({
+          'multiplicationFactor': multiplicationFactor
         });
         return this;
       };
@@ -216,11 +195,8 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("empty:content:pieces:collection", function() {
       return API.emptyContentCollection();
     });
-    App.reqres.setHandler("get:content:pieces:repository", function() {
+    return App.reqres.setHandler("get:content:pieces:repository", function() {
       return contentPiecesRepository.clone();
-    });
-    return App.reqres.setHandler("app:reset:content:pieces:repository", function(models) {
-      return contentPiecesRepository.reset(models);
     });
   });
 });

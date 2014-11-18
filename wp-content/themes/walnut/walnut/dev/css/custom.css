@@ -165,7 +165,9 @@
   margin-bottom: 50px;
   overflow-x: auto;
 }
-#myCanvas {
+#content-board #myCanvas,
+#content-board.quizContent #myCanvas,
+#content-builder #myCanvas {
   background: #ffffff;
   max-width: 760px;
   margin: 0 auto;
@@ -173,7 +175,9 @@
   padding: 15px 10px;
   font-weight: normal;
 }
-#myCanvas li.ui-sortable-placeholder {
+#content-board #myCanvas li.ui-sortable-placeholder,
+#content-board.quizContent #myCanvas li.ui-sortable-placeholder,
+#content-builder #myCanvas li.ui-sortable-placeholder {
   list-style: none;
   padding: 20px 0;
   background: #d0d0d0;
@@ -1416,7 +1420,8 @@ p.mcq-option-text {
   box-shadow: #dadada 0 0 0 3px inset;
   position: absolute;
 }
-.qstnInfo {
+.qstnInfo,
+.quizComment {
   max-width: 760px;
   margin: auto;
   margin-bottom: 5px;
@@ -1430,8 +1435,8 @@ p.mcq-option-text {
   #content-board {
     margin: 0;
   }
-  #myCanvas,
-  #eval-parameters {
+  #content-board #myCanvas,
+  #content-board #eval-parameters {
     margin: 0;
     margin-left: auto;
   }
@@ -2068,6 +2073,9 @@ input#duration {
 .practiceNote + div {
   padding-top: 80px;
 }
+#content-board.quizContent {
+  margin: auto;
+}
 .quizTimer {
   margin: 0 auto 0;
 }
@@ -2075,19 +2083,25 @@ input#duration {
   max-width: 760px;
   box-shadow: #dadada 0px 3px 0 0px inset;
 }
-.timerBox {
-  float: right;
-}
 .timerBox,
 .quizProgress {
   width: 235px;
-  background: #f3f3f3;
-  box-shadow: #dadada 0 0 0 3px inset;
   margin: 0 1.5%;
-  padding: 5px;
+  padding: 0 5px;
+}
+.timerBox {
+  float: right;
+  padding: 0;
+}
+.timerStrip,
+.progressStrip,
+.detailsStrip {
+  display: none;
 }
 .quizProgress {
   float: left;
+  background: #f3f3f3;
+  box-shadow: #dadada 0 0 0 3px inset;
 }
 .quizSteps ul {
   list-style-type: none;
@@ -2242,46 +2256,92 @@ input#duration {
 .holder a.jp-disabled:hover {
   background-color: #c8d0d6;
 }
-@media (min-width: 1020px) and (max-width: 1295px) {
+@media (max-width: 1200px) {
+  #content-board.quizContent {
+    margin-top: 60px;
+  }
+  .timerStrip,
+  .progressStrip,
+  .detailsStrip {
+    display: block;
+    position: fixed;
+    top: 150px;
+    right: 0px;
+    height: 60px;
+    width: 50px;
+    font-size: 28px;
+    text-align: center;
+    padding-top: 8px;
+    color: #ffffff;
+    background: #259b24;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .progressStrip {
+    right: auto;
+    left: 0px;
+    background: #0090d9;
+  }
+  .detailsStrip {
+    width: 150px;
+    height: 40px;
+    top: 0;
+    left: 43%;
+    right: auto;
+    background-color: #e74c30;
+    font-size: 16px;
+  }
+  .quizHeader {
+    position: fixed;
+    top: -112px;
+    margin-bottom: 0;
+    width: 100%;
+    z-index: 5;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .quizHeader:hover {
+    top: 0;
+  }
+  .quizHeader:hover .detailsStrip {
+    top: 112px;
+  }
   .timerBox,
   .quizProgress {
-    margin: 0 1.5%;
+    margin: 0;
     float: none;
-    position: static;
+    position: fixed;
+    top: 150px;
+    left: -235px;
+    z-index: 9999;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+  }
+  .quizProgress:hover {
+    left: 0;
+  }
+  .quizProgress:hover .progressStrip {
+    left: 235px;
   }
   .timerBox {
-    margin-bottom: 8px;
+    right: -235px;
+    left: auto;
   }
-  .quizActions {
-    margin: 0;
-    margin-bottom: 10px;
-    margin-left: auto;
+  .timerBox:hover {
+    right: 0;
+  }
+  .timerBox:hover .timerStrip {
+    right: 235px;
   }
   .sidebarContainer {
     position: relative;
     float: left;
-  }
-}
-@media (max-width: 1019px) {
-  .sidebarContainer {
-    bottom: 0;
-    z-index: 999;
-    width: 100%;
-  }
-  .sidebarContainer .timerBox {
-    float: none;
-    width: 100%;
-    max-width: 760px;
-    margin: 10px auto;
-  }
-  .sidebarContainer .quizProgress {
-    float: none;
-    width: 100%;
-    max-width: 760px;
-    margin: 10px auto;
-  }
-  .sidebarContainer .quizProgress .quizSteps ul li a {
-    width: 15%;
   }
 }
 .quizSummRespnse {
