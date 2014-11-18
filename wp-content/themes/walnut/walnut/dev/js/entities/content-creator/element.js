@@ -22,6 +22,22 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ElementModel.prototype.name = 'element';
 
+      ElementModel.prototype.setMultiplicationFactor = function(multiplicationFactor) {
+        if (multiplicationFactor) {
+          if (!this.get('marks_set')) {
+            return this.set({
+              'multiplicationFactor': multiplicationFactor,
+              'marks': parseFloat((parseFloat(this.get('marks')) * multiplicationFactor).toFixed(1)),
+              'marks_set': true
+            });
+          }
+        } else {
+          return this.set({
+            'multiplicationFactor': 1
+          });
+        }
+      };
+
       return ElementModel;
 
     })(Backbone.Model);

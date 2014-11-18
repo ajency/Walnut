@@ -73,8 +73,7 @@ define ['app'], (App)->
 
                 # custom checkbox
                 @$el.find('input:checkbox').screwDefaultButtons
-                    image : 'url("' + SITEURL + '/wp-content/themes/walnut/walnut/images/csscheckbox-correct.png")'
-                    image : 'url("/images/csscheckbox-correct.png")' if _.platform() is 'DEVICE'
+                    image : 'url("' + SITEURL + '/wp-content/themes/walnut/images/csscheckbox-correct.png")'
                     width : 32
                     height : 26
 

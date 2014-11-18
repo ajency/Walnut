@@ -84,9 +84,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
             }
             itemsDeferred.promise();
             if (i === _.size(section) - 1) {
-              return itemsDeferred.done(function() {
-                return allItemsDeferred.resolve();
-              });
+              return allItemsDeferred.resolve();
             }
           };
         })(this));

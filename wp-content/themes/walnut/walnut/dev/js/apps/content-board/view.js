@@ -39,7 +39,6 @@ define(['app'], function(App) {
         var answerModel, display_marks, quizModel;
         marks = parseFloat(marks);
         total = parseFloat(total);
-        display_marks = parseFloat(display_marks);
         quizModel = Marionette.getOption(this, 'quizModel');
         if (marks === 0 && _.toBool(quizModel.get('negMarksEnable'))) {
           display_marks = -total * quizModel.get('negMarks') / 100;

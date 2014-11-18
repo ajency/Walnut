@@ -224,19 +224,11 @@ define ['app'], (App)->
                 correctImage = new Image()
                 correctImage.onload = =>
                     @_showMyAnswers options.correct, correctImage
-                    if _.platform() is 'BROWSER'
-                        correctImage.src = THEMEURL + '/images/right-ans.gif'
-                    else
-                        correctImage.src = '/images/right-ans.gif'
+                correctImage.src = THEMEURL + '/images/right-ans.gif'
                 wrongImage = new Image()
                 wrongImage.onload = =>
                     @_showMyAnswers options.wrong, wrongImage
-                
-
-                if _.platform() is 'BROWSER'
-                    wrongImage.src = THEMEURL + '/images/wrong-ans.gif'
-                else
-                    wrongImage.src = '/images/wrong-ans.gif'
+                wrongImage.src = THEMEURL + '/images/wrong-ans.gif'
 
             _showMyAnswers : (answersId, image)->
                 _.each answersId, (answerId)=>
