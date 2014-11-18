@@ -5,7 +5,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['app', 'controllers/region-controller', 'apps/content-board/element/controller', 'apps/content-board/view', 'apps/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
     return ContentBoard.Controller = (function(_super) {
-      var API, answerModel, answerWreqrObject;
+      var API, answerModel, answerWreqrObject, quizModel;
 
       __extends(Controller, _super);
 
@@ -18,8 +18,11 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
 
       answerModel = null;
 
+      quizModel = null;
+
       Controller.prototype.initialize = function(options) {
         this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel;
+        quizModel = this.quizModel;
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -35,8 +38,15 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         })(this));
         this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
           return function() {
-            var fillElements;
+            var allVideoIds, fillElements, getDecryptedVideoIdsAndUrl;
             fillElements = _this.startFillingElements();
+            if (quizModel.get('videoIDs')) {
+              allVideoIds = quizModel.get('videoIDs');
+              getDecryptedVideoIdsAndUrl = _.decryptVideos(allVideoIds);
+              getDecryptedVideoIdsAndUrl.done(function(decryptedVideoPathandId) {
+                return console.log(decryptedVideoPathandId);
+              });
+            }
             return fillElements.done(function() {
               return setTimeout(function() {
                 $('#loading-content-board').remove();
@@ -84,9 +94,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
             }
             itemsDeferred.promise();
             if (i === _.size(section) - 1) {
-              return itemsDeferred.done(function() {
-                return allItemsDeferred.resolve();
-              });
+              return allItemsDeferred.resolve();
             }
           };
         })(this));
@@ -130,12 +138,17 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
 
       API = {
         addNewElement: function(container, type, modelData) {
+          var decryptedMedia;
           console.log(type);
+          if (type === 'Video') {
+            decryptedMedia = quizModel.get('videoIDs');
+          }
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,
             answerWreqrObject: answerWreqrObject,
-            answerModel: answerModel
+            answerModel: answerModel,
+            decryptedMedia: decryptedMedia
           });
         }
       };

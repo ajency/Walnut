@@ -13,9 +13,11 @@ define(['underscore', 'unserialize'], function(_) {
             return _.getPostAuthorName(row['post_author']).then(function(author_name) {
               return _.getMetaValue(row['ID']).then(function(meta_value) {
                 return _.getJsonToClone(meta_value.layout_json).then(function(contentElements) {
-                  var excerpt, excerpt_array, marks, taglessArray;
+                  var excerpt, excerpt_array, flattenVideosArray, marks, taglessArray, videoArray;
                   console.log(contentElements);
                   excerpt_array = contentElements.excerpt;
+                  flattenVideosArray = _.flatten(contentElements.videoArray);
+                  videoArray = _.compact(flattenVideosArray);
                   marks = contentElements.marks;
                   excerpt_array = _.flatten(excerpt_array);
                   taglessArray = new Array;
@@ -65,7 +67,8 @@ define(['underscore', 'unserialize'], function(_) {
                     published_by: meta_value.published_by,
                     question_type: meta_value.question_type,
                     term_ids: meta_value.term_ids,
-                    to_ping: row['to_ping']
+                    to_ping: row['to_ping'],
+                    videoArray: videoArray
                   };
                   i = i + 1;
                   if (i < data.rows.length) {

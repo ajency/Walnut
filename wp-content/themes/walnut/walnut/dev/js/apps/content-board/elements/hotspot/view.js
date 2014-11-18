@@ -225,25 +225,17 @@ define(['app'], function(App) {
         correctImage = new Image();
         correctImage.onload = (function(_this) {
           return function() {
-            _this._showMyAnswers(options.correct, correctImage);
-            if (_.platform() === 'BROWSER') {
-              return correctImage.src = THEMEURL + '/images/right-ans.gif';
-            } else {
-              return correctImage.src = '/images/right-ans.gif';
-            }
+            return _this._showMyAnswers(options.correct, correctImage);
           };
         })(this);
+        correctImage.src = THEMEURL + '/images/right-ans.gif';
         wrongImage = new Image();
         wrongImage.onload = (function(_this) {
           return function() {
             return _this._showMyAnswers(options.wrong, wrongImage);
           };
         })(this);
-        if (_.platform() === 'BROWSER') {
-          return wrongImage.src = THEMEURL + '/images/wrong-ans.gif';
-        } else {
-          return wrongImage.src = '/images/wrong-ans.gif';
-        }
+        return wrongImage.src = THEMEURL + '/images/wrong-ans.gif';
       };
 
       HotspotView.prototype._showMyAnswers = function(answersId, image) {

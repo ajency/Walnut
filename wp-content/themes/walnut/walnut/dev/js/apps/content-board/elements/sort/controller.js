@@ -19,11 +19,14 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
           this.answerModel = App.request("create:new:answer");
         }
         this.displayAnswer = true;
+        this.multiplicationFactor = 0;
         if (answerWreqrObject) {
-          this.displayAnswer = answerWreqrObject.options.displayAnswer;
+          this.displayAnswer = answerWreqrObject.displayAnswer;
+          this.multiplicationFactor = answerWreqrObject.multiplicationFactor;
           answerWreqrObject.setHandler("get:question:answer", (function(_this) {
             return function() {
               var data;
+              _this.layout.model.setMultiplicationFactor(_this.multiplicationFactor);
               return data = {
                 'answerModel': _this.answerModel,
                 'totalMarks': _this.layout.model.get('marks'),
@@ -68,7 +71,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         this.view = this._getSortView(this.optionCollection);
         App.execute("show:total:marks", this.layout.model.get('marks'));
         this.listenTo(this.view, "submit:answer", this._submitAnswer);
-        this.listenTo(this.view, "show", (function(_this) {
+        this.listenTo(this.view, "show:completed", (function(_this) {
           return function() {
             if (_this.answerModel.get('status') !== 'not_attempted') {
               return _this._submitAnswer();
@@ -103,6 +106,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (displayAnswer == null) {
           displayAnswer = true;
         }
+        this.layout.model.setMultiplicationFactor(this.multiplicationFactor);
         this.answerModel.set('marks', this.layout.model.get('marks'));
         displayAnswer = Marionette.getOption(this, 'displayAnswer');
         this.answerModel.set({

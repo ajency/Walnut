@@ -95,6 +95,27 @@ define(["app", 'backbone'], function(App, Backbone) {
         return quiz_type;
       };
 
+      ItemModel.prototype.setDecryptedVideos = function(questionsCollection) {
+        var compactVideosIds, defer, flattendecryptedVideos, getVideoIds, uniqueVideosIds, vids;
+        defer = $.Deferred();
+        if (!this.get('videoIDs')) {
+          vids = questionsCollection.pluck('videoArray');
+          flattendecryptedVideos = _.flatten(vids);
+          compactVideosIds = _.compact(flattendecryptedVideos);
+          uniqueVideosIds = _.uniq(compactVideosIds);
+          getVideoIds = _.initLocalVideosCheck(uniqueVideosIds);
+          getVideoIds.done((function(_this) {
+            return function(videoIds) {
+              _this.set({
+                'videoIDs': videoIds
+              });
+              return defer.resolve(videoIds);
+            };
+          })(this));
+        }
+        return defer.promise();
+      };
+
       return ItemModel;
 
     })(Backbone.Model);

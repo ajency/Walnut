@@ -50,7 +50,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 			if currentRoute is 'students/dashboard' or currentRoute is 'app-login'
 				navigator.app.exitApp()
-			else 	
+			else    
 				App.navigate('app-login', trigger: true)
 
 			_.removeCordovaBackbuttonEventListener()
@@ -189,8 +189,8 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		#Get current date
 		getCurrentDateTime : (bit)->
 			# bit = 0 - date
-			# 	  = 1 - time 
-			# 	  = 2 - date and time
+			#     = 1 - time 
+			#     = 2 - date and time
 
 			d = new Date()
 			date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()
@@ -289,4 +289,94 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					, [userID]
 				, onSuccess, _.transactionErrorHandler
 
+			defer.promise()
+
+
+		initLocalVideosCheck :(videoIds) ->
+
+			defer = $.Deferred()
+			# navigator.notification.activityStart("Please wait", "loading content...")
+			videoIdAndUrl = new Array()
+
+			# decryptedDestinationVideoPath = []
+			
+			_.createVideosWebDirectory().done =>
+				forEach = (videoId, index)->
+					_.getMediaById(videoId).then (video)->
+						# navigator.notification.activityStart("Please wait", "loading content...")
+						
+							
+						url = video.url.replace("media-web/","")
+						videosWebUrl = url.substr(url.indexOf("uploads/"))
+						videoUrl = videosWebUrl.replace("videos-web", "videos")
+						encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
+						decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+						
+						value = _.getStorageOption()
+						option = JSON.parse(value)
+
+						encryptedVideoPath = '' 
+						decryptedVideoPath = ''
+
+						if option.internal
+							encryptedVideoPath = option.internal+'/'+encryptedPath
+							decryptedVideoPath = option.internal+'/'+decryptedPath
+						else if option.external
+							encryptedVideoPath = option.external+'/'+encryptedPath
+							decryptedVideoPath = option.external+'/'+decryptedPath
+
+						
+						# deferreds = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
+						# deferreds.done (localVideoPath)=>
+
+						# 	navigator.notification.activityStop()
+						# 	console.log localVideoPath
+						# 	decryptedPath = 'file://'+localVideoPath
+							
+						videoIdAndUrl[index] =
+							encryptedPath : encryptedVideoPath
+							decryptedPath : decryptedVideoPath
+							vId : videoId
+
+							
+						index = index + 1
+						
+						if index < _.size(videoIds)
+							forEach videoIds[index], index
+
+						else
+							defer.resolve videoIdAndUrl
+							
+				
+				forEach videoIds[0], 0
+							
+
+			defer.promise()
+
+		decryptVideos :(videoIdAndUrl)->
+			decryptedVideoPath = new Array()
+			defer = $.Deferred()
+			forEach = (videoId, index)->
+				deferreds = _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath)
+				deferreds.done (localVideoPath)=>
+
+					# navigator.notification.activityStop()
+					# console.log localVideoPath
+
+					index = index + 1
+					if index < _.size(videoIdAndUrl)
+						decryptedVideoPath[index-1] = 'file://'+localVideoPath
+						decryptedVideoPath[index-1] =
+							videoDecryptedPath : 'file://'+localVideoPath
+							vId : videoId.vId
+
+					else
+						decryptedVideoPath[index-1] =
+							videoDecryptedPath : 'file://'+localVideoPath
+							vId : videoId.vId
+						defer.resolve decryptedVideoPath
+
+
+			forEach videoIdAndUrl[0], 0
+			
 			defer.promise()
