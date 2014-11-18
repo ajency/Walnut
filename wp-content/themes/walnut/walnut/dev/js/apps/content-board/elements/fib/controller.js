@@ -114,7 +114,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
           displayAnswer = true;
         }
         this.layout.model.setMultiplicationFactor(this.multiplicationFactor);
-        enableIndividualMarks = this.layout.model.get('enableIndividualMarks');
+        enableIndividualMarks = _.toBool(this.layout.model.get('enableIndividualMarks'));
         this.caseSensitive = this.layout.model.get('case_sensitive');
         answerArray = this.answerModel.get('answer');
         if (!enableIndividualMarks) {

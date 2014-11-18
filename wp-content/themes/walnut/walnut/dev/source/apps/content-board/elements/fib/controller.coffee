@@ -105,7 +105,7 @@ define ['app'
 
                 @layout.model.setMultiplicationFactor @multiplicationFactor
 
-                enableIndividualMarks = @layout.model.get('enableIndividualMarks')
+                enableIndividualMarks = _.toBool @layout.model.get('enableIndividualMarks')
                 @caseSensitive = @layout.model.get 'case_sensitive'
 
 

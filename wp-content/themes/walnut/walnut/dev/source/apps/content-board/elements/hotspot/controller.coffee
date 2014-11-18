@@ -125,7 +125,7 @@ define ['app'
                 correctOptionsIds = _.pluck correctOptions, 'id'
                 answerId = _.pluck @answerModel.get('answer'), 'id'
 
-                if @layout.model.get 'enableIndividualMarks'
+                if _.toBool @layout.model.get 'enableIndividualMarks'
                     if not _.difference(answerId, correctOptionsIds).length
                         if not _.difference(correctOptionsIds, answerId).length
                             @answerModel.set 'marks', @layout.model.get 'marks'
@@ -147,6 +147,3 @@ define ['app'
 
                 # if @answerModel.get('marks') < @layout.model.get('marks')
                 @view.triggerMethod 'show:feedback' if displayAnswer
-
-
-

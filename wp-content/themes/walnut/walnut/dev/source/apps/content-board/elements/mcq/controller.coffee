@@ -127,7 +127,7 @@ define ['app'
                     # App.execute "show:response",@answerModel.get('marks'),@layout.model.get('marks')
 
                 else
-                    if not @layout.model.get 'multiple'
+                    if not _.toBool @layout.model.get 'multiple'
                         console.log _.difference(@answerModel.get('answer'), @layout.model.get('correct_answer'))
                         if not _.difference(@answerModel.get('answer'), @layout.model.get('correct_answer')).length
                             @answerModel.set 'marks', @layout.model.get 'marks'

@@ -159,5 +159,5 @@ define ["app", 'backbone'], (App, Backbone) ->
 		App.reqres.setHandler "get:content:pieces:repository",->
 			contentPiecesRepository.clone()
 
-		App.reqres.setHandler "app:reset:content:pieces:repository", (models)->
-			contentPiecesRepository.reset models
+		# App.reqres.setHandler "app:reset:content:pieces:repository", (models)->
+		# 	contentPiecesRepository.reset models
