@@ -137,6 +137,10 @@ define ['app'
                         bootbox.alert msgContent,=>
                             @trigger "end:quiz"
 
+                        if _.platform() is 'DEVICE'
+                            @cordovaEventsForModuleDescriptionView()
+                            
+
                     endQuiz:->                        
                         msgContent= @model.getMessageContent 'end_quiz'
                         bootbox.confirm msgContent,(result)=>
@@ -150,8 +154,9 @@ define ['app'
                     onPauseSessionClick : =>
 
                         console.log 'Invoked onPauseSessionClick'
+                        @trigger "end:quiz"
                         Backbone.history.history.back()
-                        @clearMediaData()
+                        # @clearMediaData()
 
                         document.removeEventListener("backbutton", @onPauseSessionClick, false)
 
@@ -160,6 +165,7 @@ define ['app'
                     cordovaEventsForModuleDescriptionView : ->
 
                         # Cordova backbutton event
+
                         navigator.app.overrideBackbutton(true)
                         document.addEventListener("backbutton", @onPauseSessionClick, false)
 

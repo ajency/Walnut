@@ -530,8 +530,8 @@ define ['underscore', 'unserialize'], ( _) ->
 			defer = $.Deferred()
 			
 			_.getDivisionIdForSchedule()
-			.then (division_id)->
-	
+			.then (division_id_string)->
+				division_id = parseInt division_id_string
 				onSuccess =(tx,data)->
 					
 					schedule = new Array()
