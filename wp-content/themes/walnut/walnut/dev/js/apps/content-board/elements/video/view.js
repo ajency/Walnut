@@ -22,6 +22,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype.onShow = function() {
+        var heightRatio, setHeight, widthRatio;
         if (!this.model.get('video_ids').length) {
           return;
         }
@@ -35,7 +36,12 @@ define(['app', 'bootbox'], function(App, bootbox) {
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
-        return this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find('video')[0].src = this.videos[0];
+        widthRatio = 16;
+        heightRatio = 9;
+        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+        return this.$el.find('video').attr('height', setHeight);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -92,7 +98,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         } else {
           this.$el.find('video')[0].src = this.videos[this.index];
-          this.$el.find('video')[0].attr('poster', '/images/video-unavailable.png');
+          this.$el.find('video').attr('poster', '/images/video-unavailable.png');
         }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();

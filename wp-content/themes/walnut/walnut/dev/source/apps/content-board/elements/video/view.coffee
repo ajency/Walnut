@@ -51,6 +51,13 @@ define ['app'
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
+				@$el.find('video')[0].src = @videos[0]
+
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
+
 				# if _.platform() is 'DEVICE' then @_initLocalVideos()
 
 			# _initLocalVideos : ->
@@ -242,7 +249,7 @@ define ['app'
 
 				else 
 					@$el.find('video')[0].src = @videos[@index]
-					@$el.find('video')[0].attr 'poster', '/images/video-unavailable.png'
+					@$el.find('video').attr 'poster', '/images/video-unavailable.png'
 
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()

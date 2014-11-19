@@ -254,7 +254,7 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
-
+				
 				deferFunc = quizModel.setDecryptedVideos questionsCollection
 
 				deferFunc.done =>

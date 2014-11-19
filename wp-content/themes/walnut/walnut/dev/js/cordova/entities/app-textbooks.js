@@ -38,16 +38,16 @@ define(['underscore'], function(_) {
               console.log('getChapterCount transaction completed');
               return _.getPracticeAndTotalQuiz(row['textbook_id']).then(function(total_quiz_count) {
                 console.log('getPracticeAndTotalQuiz transaction completed');
-                return _.getPracticeCompletedQuizCount(row['textbook_id']).then(function(practice_quizzes_completed) {
+                return _.getPracticeCompletedQuizCount(row['textbook_id']).then(function(quizzes_completed) {
                   var class_test_not_started, practice_not_started;
                   console.log('getPracticeCompletedQuizCount transaction completed');
-                  class_test_not_started = total_quiz_count.class_test - (practice_quizzes_completed.class_test_completed + practice_quizzes_completed.class_test_in_progress);
-                  practice_not_started = total_quiz_count.practice - (practice_quizzes_completed.practice_completed + practice_quizzes_completed.practice_in_progress);
+                  class_test_not_started = total_quiz_count.class_test - (quizzes_completed.class_test_completed + quizzes_completed.class_test_in_progress);
+                  practice_not_started = total_quiz_count.practice - (quizzes_completed.practice_completed + quizzes_completed.practice_in_progress);
                   result[i] = {
                     term_id: row["term_id"],
                     name: row["name"],
                     class_test_count: total_quiz_count.class_test,
-                    class_test_completed: practice_quizzes_completed.class_test_completed,
+                    class_test_completed: quizzes_completed.class_test_completed,
                     class_test_not_started: class_test_not_started,
                     slug: row["slug"],
                     term_group: row["term_group"],
@@ -64,10 +64,10 @@ define(['underscore'], function(_) {
                     filter: 'raw',
                     chapter_count: chapter_count,
                     practice_count: total_quiz_count.practice,
-                    practice_completed: practice_quizzes_completed.practice_completed,
+                    practice_completed: quizzes_completed.practice_completed,
                     practice_not_started: practice_not_started,
-                    practice_in_progress: practice_quizzes_completed.practice_in_progress,
-                    class_test_in_progress: practice_quizzes_completed.class_test_in_progress
+                    practice_in_progress: quizzes_completed.practice_in_progress,
+                    class_test_in_progress: quizzes_completed.class_test_in_progress
                   };
                   i = i + 1;
                   if (i < data.rows.length) {

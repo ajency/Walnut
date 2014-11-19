@@ -336,6 +336,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						videoIdAndUrl[index] =
 							encryptedPath : encryptedVideoPath
 							decryptedPath : decryptedVideoPath
+							url:'file://' + decryptedVideoPath
 							vId : videoId
 
 							
@@ -353,12 +354,18 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 			defer.promise()
 
+
+
 		decryptVideos :(videoIdAndUrl)->
-			decryptedVideoPath = new Array()
+			
 			defer = $.Deferred()
+			
+			decryptedVideoPath = new Array()
+
 			forEach = (videoId, index)->
-				deferreds = _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath)
-				deferreds.done (localVideoPath)=>
+				
+				_.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath)
+				.then (localVideoPath)=>
 
 					# navigator.notification.activityStop()
 					# console.log localVideoPath
@@ -369,11 +376,13 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 						decryptedVideoPath[index-1] =
 							videoDecryptedPath : 'file://'+localVideoPath
 							vId : videoId.vId
+						forEach videoIdAndUrl[index], index
 
 					else
 						decryptedVideoPath[index-1] =
 							videoDecryptedPath : 'file://'+localVideoPath
 							vId : videoId.vId
+						
 						defer.resolve decryptedVideoPath
 
 

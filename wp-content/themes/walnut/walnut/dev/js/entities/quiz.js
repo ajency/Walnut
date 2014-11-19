@@ -112,6 +112,8 @@ define(["app", 'backbone'], function(App, Backbone) {
               return defer.resolve(videoIds);
             };
           })(this));
+        } else {
+          defer.resolve(this);
         }
         return defer.promise();
       };

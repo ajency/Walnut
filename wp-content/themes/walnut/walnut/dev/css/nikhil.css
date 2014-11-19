@@ -1,0 +1,10 @@
+@import "icomoon.css";
+/*Custom Colors*/
+/*Custom Mixins*/
+.disableTouchForView {
+	pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none; /* Disable selection/copy in UIWebView */
+  -ms-touch-action: none;
+  
+}

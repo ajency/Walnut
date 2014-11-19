@@ -279,6 +279,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               videoIdAndUrl[index] = {
                 encryptedPath: encryptedVideoPath,
                 decryptedPath: decryptedVideoPath,
+                url: 'file://' + decryptedVideoPath,
                 vId: videoId
               };
               index = index + 1;
@@ -296,20 +297,19 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
     },
     decryptVideos: function(videoIdAndUrl) {
       var decryptedVideoPath, defer, forEach;
-      decryptedVideoPath = new Array();
       defer = $.Deferred();
+      decryptedVideoPath = new Array();
       forEach = function(videoId, index) {
-        var deferreds;
-        deferreds = _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath);
-        return deferreds.done((function(_this) {
+        return _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath).then((function(_this) {
           return function(localVideoPath) {
             index = index + 1;
             if (index < _.size(videoIdAndUrl)) {
               decryptedVideoPath[index - 1] = 'file://' + localVideoPath;
-              return decryptedVideoPath[index - 1] = {
+              decryptedVideoPath[index - 1] = {
                 videoDecryptedPath: 'file://' + localVideoPath,
                 vId: videoId.vId
               };
+              return forEach(videoIdAndUrl[index], index);
             } else {
               decryptedVideoPath[index - 1] = {
                 videoDecryptedPath: 'file://' + localVideoPath,

@@ -80,6 +80,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 						@.set 'videoIDs' : videoIds
 						
 						defer.resolve videoIds
+				else
+					defer.resolve @
 
 				defer.promise()
 

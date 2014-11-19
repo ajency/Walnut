@@ -18,43 +18,79 @@ define ['app'
 				{@model,answerWreqrObject, answerModel, @quizModel}=options
 
 				quizModel = @quizModel
-				# videoDecrptedPath= _.initLocalVideosCheck()
-				@view = @_getContentBoardView()
-
-				@listenTo @view, "add:new:element", (container, type)->
-					App.request "add:new:element", container, type
+				
+				if quizModel.get 'videoIDs'
+					navigator.notification.activityStart("Please wait", "loading content...")
+					$('body').addClass 'disableTouchForView'
 					
-				@listenTo @view, "close", => 
-					audioEls = @view.$el.find '.audio'
-					_.each audioEls,(el, ind)->
-						$(el).find '.pause'
-						.trigger 'click'
+					allVideoIds = quizModel.get 'videoIDs'
+					
+					getDecryptedVideoIdsAndUrl = _.decryptVideos(allVideoIds)
+					getDecryptedVideoIdsAndUrl.done (decryptedVideoPathandId)=>
+
+						console.log decryptedVideoPathandId
+						$('body').removeClass 'disableTouchForView'
+						navigator.notification.activityStop()
+
+						@view = @_getContentBoardView()
+
+						@listenTo @view, "add:new:element", (container, type)->
+							App.request "add:new:element", container, type
+							
+						@listenTo @view, "close", => 
+							audioEls = @view.$el.find '.audio'
+							_.each audioEls,(el, ind)->
+								$(el).find '.pause'
+								.trigger 'click'
+								
+						@listenTo @view, 'dependencies:fetched', =>
+							fillElements = @startFillingElements()
+							fillElements.done =>
+								setTimeout ->
+									$('#loading-content-board').remove()
+									$('#question-area').removeClass 'vHidden'
+								,500
+
+						#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
+
+						App.commands.setHandler "show:response", (marks, total)=>
+						   # console.log "#{marks}   #{total}"
+							@view.triggerMethod 'show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1)
+
+						@show @view,
+							loading : true
+							entities : [@elements]
+				
+				else 
+
+					@view = @_getContentBoardView()
+
+					@listenTo @view, "add:new:element", (container, type)->
+						App.request "add:new:element", container, type
 						
-				@listenTo @view, 'dependencies:fetched', =>
-					fillElements = @startFillingElements()
+					@listenTo @view, "close", => 
+						audioEls = @view.$el.find '.audio'
+						_.each audioEls,(el, ind)->
+							$(el).find '.pause'
+							.trigger 'click'
+							
+					@listenTo @view, 'dependencies:fetched', =>
+						fillElements = @startFillingElements()
+						fillElements.done =>
+							setTimeout ->
+								$('#loading-content-board').remove()
+								$('#question-area').removeClass 'vHidden'
+							,500
 
-					if quizModel.get 'videoIDs'
-						allVideoIds = quizModel.get 'videoIDs'
-						getDecryptedVideoIdsAndUrl = _.decryptVideos(allVideoIds)
-						getDecryptedVideoIdsAndUrl.done (decryptedVideoPathandId)->
-							console.log decryptedVideoPathandId
+					#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 
+					App.commands.setHandler "show:response", (marks, total)=>
+					   # console.log "#{marks}   #{total}"
+						@view.triggerMethod 'show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1)
 
-					fillElements.done =>
-						setTimeout ->
-							$('#loading-content-board').remove()
-							$('#question-area').removeClass 'vHidden'
-						,500
-
-				#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
-
-				App.commands.setHandler "show:response", (marks, total)=>
-				   # console.log "#{marks}   #{total}"
-					@view.triggerMethod 'show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1)
-
-				@show @view,
-					loading : true
-					entities : [@elements]
+					@show @view,
+						loading : true
+						entities : [@elements]
 
 
 
