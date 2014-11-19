@@ -10,9 +10,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/attempts/item
         return AttemptsMainView.__super__.constructor.apply(this, arguments);
       }
 
-      AttemptsMainView.prototype.template = '<div class="col-lg-12"> <table class="table table-bordered tiles white" id="attempts-list-table" > <thead> <tr> <th>Attempted On</th> <th>Marks Obtained</th> <th>Time Taken</th> <th></th> </tr> </thead> <tbody id="list-attempts" class="rowlink"></tbody> </table>';
+      AttemptsMainView.prototype.template = '<table class="table table-bordered tiles white" id="attempts-list-table" > <thead> <tr> <th>Attempted On</th> <th>Marks Obtained</th> <th>Time Taken</th> <th></th> </tr> </thead> <tbody id="list-attempts" class="rowlink"></tbody> </table>';
 
-      AttemptsMainView.prototype.className = 'row';
+      AttemptsMainView.prototype.className = 'row col-lg-12';
 
       AttemptsMainView.prototype.itemView = Views.AttemptsItemView;
 

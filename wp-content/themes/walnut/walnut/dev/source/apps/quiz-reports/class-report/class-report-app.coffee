@@ -4,7 +4,8 @@ define ['app'
     'apps/quiz-reports/class-report/modules-listing/controller'
     'apps/quiz-reports/student-filter/student-filter-app'
     'apps/quiz-reports/class-report/search-results-app'
-    'apps/quiz-reports/class-report/schedule-quiz-app'], (App, RegionController)->
+    'apps/quiz-reports/class-report/schedule-quiz-app'
+    'apps/quiz-reports/class-report/recipients-popup/controller'], (App, RegionController)->
 
     App.module "ClassReportApp", (ClassReportApp, App)->
         class ClassReportApp.Controller extends RegionController
@@ -105,7 +106,9 @@ define ['app'
                                     quiz_ids        : data.quizIDs
                                     division        : @division
 
-                            App.request "save:communications",data
+                            communicationModel = App.request "create:communication",data
+                            @_showSelectRecipientsApp communicationModel
+                            
 
                     @listenTo @layout.allContentRegion, "schedule:quiz", @_showScheduleQuizApp
 
@@ -123,6 +126,12 @@ define ['app'
                     region      : App.dialogRegion
                     division    : @division
                     quizModel   : quizModel
+
+            _showSelectRecipientsApp:(communicationModel)->
+                App.execute "show:quiz:select:recipients:popup",
+                    region               : App.dialogRegion
+                    communicationModel   : communicationModel
+                    quizCollection       : quizzes
 
             _showQuiz:(quizModel)->
                 App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"

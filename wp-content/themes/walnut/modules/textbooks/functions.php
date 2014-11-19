@@ -442,7 +442,7 @@ function get_assigned_textbooks( $user_id = '' ) {
     if ($user_id == '')
         $user_id = get_current_user_id();
     
-    if(current_user_can('administrator') || current_user_can('school-admin') || current_user_can('content-creator')){
+    if(user_can($user_id, 'administrator') || user_can($user_id, 'school-admin') || user_can($user_id, 'content-creator')){
 
         switch_to_blog(1);
         $txtbook_ids = get_terms(
@@ -454,7 +454,7 @@ function get_assigned_textbooks( $user_id = '' ) {
         restore_current_blog();
     }
     
-    elseif(current_user_can('student')){
+    elseif(user_can($user_id, 'student')){
         
         $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
         $division = fetch_single_division($division_id);

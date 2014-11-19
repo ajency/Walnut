@@ -113,7 +113,13 @@ function get_taught_in_class_template_data($comm_data){
 	$module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
 	$division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
 
-	$module_details= get_single_content_module($module_id);
+	switch_to_blog($comm_data['blog_id']);
+
+	$school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
+
+	$module_details= get_single_content_module($module_id,$school_admin[0]);
+
+	restore_current_blog();
 
     $module_end_date = get_module_end_date($module_id, $comm_data['blog_id']);
 

@@ -54,6 +54,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.onUpdatePager = function() {
         var pagerOptions;
+        this.$el.find('.communication_sent').remove();
         this.$el.find("#content-pieces-table").trigger("updateCache");
         pagerOptions = {
           container: this.$el.find(".pager"),
@@ -77,19 +78,26 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       };
 
       ModulesListingView.prototype.saveCommunications = function(e) {
-        var data;
+        var allQuizIDs, data, excludeIDs;
         data = [];
-        data.quizIDs = $.getCheckedItems(this.$el.find('#content-pieces-table'));
+        this.$el.find('.communication_sent').remove();
+        allQuizIDs = _.map($.getCheckedItems(this.$el.find('#content-pieces-table')), function(m) {
+          return parseInt(m);
+        });
+        excludeIDs = _.chain(this.collection.where({
+          'taken_by': 0
+        })).pluck('id').value();
+        data.quizIDs = _.difference(allQuizIDs, excludeIDs);
         data.division = this.$el.find('#divisions-filter').val();
         if ($(e.target).hasClass('send-email')) {
           data.communication_mode = 'email';
         } else {
           data.communication_mode = 'sms';
         }
-        if (data.quizIDs) {
-          this.trigger("save:communications", data);
-          this.$el.find('.communication_sent').remove();
-          return this.$el.find('.send-email').after('<span class="m-l-40 text-success small communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
+        if (_.isEmpty(data.quizIDs)) {
+          return this.$el.find('.send-email').after('<span class="m-l-40 text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
+        } else {
+          return this.trigger("save:communications", data);
         }
       };
 
