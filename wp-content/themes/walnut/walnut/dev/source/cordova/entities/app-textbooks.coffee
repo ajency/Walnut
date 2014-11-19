@@ -72,7 +72,6 @@ define ['underscore'], ( _) ->
 
 			defer.promise()
 
-
 		
 		getTextbooksForStudent : (class_id)->
 

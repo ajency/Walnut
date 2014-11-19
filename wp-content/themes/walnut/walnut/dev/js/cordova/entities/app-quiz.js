@@ -360,8 +360,9 @@ define(['underscore', 'unserialize'], function(_) {
     getQuizSchedule: function(quiz_id) {
       var defer;
       defer = $.Deferred();
-      _.getDivisionIdForSchedule().then(function(division_id) {
-        var onSuccess;
+      _.getDivisionIdForSchedule().then(function(division_id_string) {
+        var division_id, onSuccess;
+        division_id = parseInt(division_id_string);
         onSuccess = function(tx, data) {
           var active, current_date, expired, from, row, schedule, to;
           schedule = new Array();

@@ -125,11 +125,14 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
       QuizTimerView.prototype.quizTimedOut = function() {
         var msgContent;
         msgContent = this.model.getMessageContent('quiz_time_up');
-        return bootbox.alert(msgContent, (function(_this) {
+        bootbox.alert(msgContent, (function(_this) {
           return function() {
             return _this.trigger("end:quiz");
           };
         })(this));
+        if (_.platform() === 'DEVICE') {
+          return this.cordovaEventsForModuleDescriptionView();
+        }
       };
 
       QuizTimerView.prototype.endQuiz = function() {
@@ -150,8 +153,8 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.onPauseSessionClick = function() {
         console.log('Invoked onPauseSessionClick');
+        this.trigger("end:quiz");
         Backbone.history.history.back();
-        this.clearMediaData();
         return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
       };
 
