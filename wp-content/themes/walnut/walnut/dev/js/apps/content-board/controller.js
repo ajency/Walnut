@@ -5,7 +5,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['app', 'controllers/region-controller', 'apps/content-board/element/controller', 'apps/content-board/view', 'apps/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
     return ContentBoard.Controller = (function(_super) {
-      var API, answerModel, answerWreqrObject;
+      var API, answerModel, answerWreqrObject, quizModel;
 
       __extends(Controller, _super);
 
@@ -18,8 +18,11 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
 
       answerModel = null;
 
+      quizModel = null;
+
       Controller.prototype.initialize = function(options) {
         this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel;
+        quizModel = this.quizModel;
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -38,10 +41,8 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
             var fillElements;
             fillElements = _this.startFillingElements();
             return fillElements.done(function() {
-              return setTimeout(function() {
-                $('#loading-content-board').remove();
-                return $('#question-area').removeClass('vHidden');
-              }, 500);
+              $('#question-area').removeClass('vHidden');
+              return $('#loading-content-board').remove();
             });
           };
         })(this));
@@ -128,12 +129,17 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
 
       API = {
         addNewElement: function(container, type, modelData) {
+          var decryptedMedia;
           console.log(type);
+          if (type === 'Video') {
+            decryptedMedia = quizModel.get('videoIDs');
+          }
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,
             answerWreqrObject: answerWreqrObject,
-            answerModel: answerModel
+            answerModel: answerModel,
+            decryptedMedia: decryptedMedia
           });
         }
       };

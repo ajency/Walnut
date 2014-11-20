@@ -75,6 +75,9 @@ define ['app',
 
 
 			onShow : ->
+				navigator.notification.activityStop()
+				$('body').removeClass 'disableTouchForView'
+				
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
 

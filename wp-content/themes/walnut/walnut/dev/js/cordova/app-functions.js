@@ -76,7 +76,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         return decrypt.startDecryption(source, destination, function() {
           return d.resolve(destination);
         }, function(message) {
-          return console.log('FILE DECRYPTION ERROR: ' + message);
+          console.log('FILE DECRYPTION ERROR: ' + message);
+          return d.resolve('');
         });
       });
     },
@@ -248,6 +249,86 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       _.db.transaction(function(tx) {
         return tx.executeSql("SELECT * FROM USERS WHERE user_id=?", [userID], onSuccess, _.transactionErrorHandler);
       });
+      return defer.promise();
+    },
+    initLocalVideosCheck: function(videoIds) {
+      var defer, videoIdAndUrl;
+      defer = $.Deferred();
+      videoIdAndUrl = new Array();
+      _.createVideosWebDirectory().done((function(_this) {
+        return function() {
+          var forEach;
+          forEach = function(videoId, index) {
+            return _.getMediaById(videoId).then(function(video) {
+              var decryptedPath, decryptedVideoPath, encryptedPath, encryptedVideoPath, option, url, value, videoUrl, videosWebUrl;
+              url = video.url.replace("media-web/", "");
+              videosWebUrl = url.substr(url.indexOf("uploads/"));
+              videoUrl = videosWebUrl.replace("videos-web", "videos");
+              encryptedPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+              decryptedPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+              value = _.getStorageOption();
+              option = JSON.parse(value);
+              encryptedVideoPath = '';
+              decryptedVideoPath = '';
+              if (option.internal) {
+                encryptedVideoPath = option.internal + '/' + encryptedPath;
+                decryptedVideoPath = option.internal + '/' + decryptedPath;
+              } else if (option.external) {
+                encryptedVideoPath = option.external + '/' + encryptedPath;
+                decryptedVideoPath = option.external + '/' + decryptedPath;
+              }
+              videoIdAndUrl[index] = {
+                encryptedPath: encryptedVideoPath,
+                decryptedPath: decryptedVideoPath,
+                url: 'file://' + decryptedVideoPath,
+                vId: videoId
+              };
+              index = index + 1;
+              if (index < _.size(videoIds)) {
+                return forEach(videoIds[index], index);
+              } else {
+                return defer.resolve(videoIdAndUrl);
+              }
+            });
+          };
+          return forEach(videoIds[0], 0);
+        };
+      })(this));
+      return defer.promise();
+    },
+    decryptVideos: function(videoIdAndUrl) {
+      var decryptedVideoPath, defer, forEach;
+      defer = $.Deferred();
+      decryptedVideoPath = new Array();
+      forEach = function(videoId, index) {
+        var getdecryptedLocalFile;
+        getdecryptedLocalFile = _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath);
+        return getdecryptedLocalFile.done(function(localVideoPath) {
+          if (_.size(localVideoPath) === 0) {
+            decryptedVideoPath[0] = {
+              videoDecryptedPath: '',
+              vId: ''
+            };
+            return defer.resolve(decryptedVideoPath);
+          } else {
+            index = index + 1;
+            if (index < _.size(videoIdAndUrl)) {
+              decryptedVideoPath[index - 1] = {
+                videoDecryptedPath: 'file://' + localVideoPath,
+                vId: videoId.vId
+              };
+              return forEach(videoIdAndUrl[index], index);
+            } else {
+              decryptedVideoPath[index - 1] = {
+                videoDecryptedPath: 'file://' + localVideoPath,
+                vId: videoId.vId
+              };
+              return defer.resolve(decryptedVideoPath);
+            }
+          }
+        });
+      };
+      forEach(videoIdAndUrl[0], 0);
       return defer.promise();
     }
   });

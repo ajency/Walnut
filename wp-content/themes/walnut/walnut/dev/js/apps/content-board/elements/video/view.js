@@ -1,8 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __slice = [].slice;
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app'], function(App) {
+define(['app', 'bootbox'], function(App, bootbox) {
   return App.module('ContentPreview.ContentBoard.Element.Video.Views', function(Views, App, Backbone, Marionette, $, _) {
     return Views.VideoView = (function(_super) {
       __extends(VideoView, _super);
@@ -13,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-unavailable.png" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -23,6 +22,7 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
+        var heightRatio, setHeight, widthRatio;
         if (!this.model.get('video_ids').length) {
           return;
         }
@@ -37,69 +37,12 @@ define(['app'], function(App) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
-        if (_.platform() === 'DEVICE') {
-          return this._initLocalVideos();
-        }
-      };
-
-      VideoView.prototype._initLocalVideos = function() {
-        var heightRatio, runFunc, setHeight, widthRatio;
-        navigator.notification.activityStart("Please wait", "loading content...");
+        this.$el.find('video')[0].poster = "../images/video-poster.jpg";
+        this.$el.find('video')[0].src = this.videos[0];
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
-        this.$el.find('video').attr('height', setHeight);
-        runFunc = (function(_this) {
-          return function() {
-            return $.Deferred(function(d) {
-              var deferreds;
-              deferreds = [];
-              return _.createVideosWebDirectory().done(function() {
-                _.each(_this.videos, function(videoSource, index) {
-                  return (function(videoSource) {
-                    var decryptFile, decryptedPath, decryptedVideoPath, encryptedPath, encryptedVideoPath, option, url, value, videoUrl, videosWebUrl;
-                    url = videoSource.replace("media-web/", "");
-                    videosWebUrl = url.substr(url.indexOf("uploads/"));
-                    videoUrl = videosWebUrl.replace("videos-web", "videos");
-                    encryptedPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-                    decryptedPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
-                    value = _.getStorageOption();
-                    option = JSON.parse(value);
-                    encryptedVideoPath = '';
-                    decryptedVideoPath = '';
-                    if (option.internal) {
-                      encryptedVideoPath = option.internal + '/' + encryptedPath;
-                      decryptedVideoPath = option.internal + '/' + decryptedPath;
-                    } else if (option.external) {
-                      encryptedVideoPath = option.external + '/' + encryptedPath;
-                      decryptedVideoPath = option.external + '/' + decryptedPath;
-                    }
-                    decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath);
-                    return deferreds.push(decryptFile);
-                  })(videoSource);
-                });
-                return $.when.apply($, deferreds).done(function() {
-                  var videoPaths;
-                  videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-                  _.each(videoPaths, function(localVideoPath, index) {
-                    return (function(localVideoPath, index) {
-                      return _this.videos[index] = 'file://' + localVideoPath;
-                    })(localVideoPath, index);
-                  });
-                  return d.resolve(_this.videos);
-                });
-              });
-            });
-          };
-        })(this);
-        return $.when(runFunc()).done((function(_this) {
-          return function() {
-            console.log('_initLocalVideos done');
-            navigator.notification.activityStop();
-            _this.$el.find('video')[0].src = _this.videos[0];
-            return _this.$el.find('video')[0].load();
-          };
-        })(this)).fail(_.failureHandler);
+        return this.$el.find('video').attr('height', setHeight);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -156,7 +99,11 @@ define(['app'], function(App) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         } else {
           this.$el.find('video')[0].src = this.videos[this.index];
-          this.$el.find('video').attr('poster', "/images/video-unavailable.png");
+          setTimeout((function(_this) {
+            return function() {
+              return _this.$el.find('video')[0].poster = "../images/video-unavailable.png";
+            };
+          })(this), 50);
         }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();

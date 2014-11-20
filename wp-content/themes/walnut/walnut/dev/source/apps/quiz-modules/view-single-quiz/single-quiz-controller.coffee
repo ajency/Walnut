@@ -74,7 +74,9 @@ define ['app'
 						$.when(questionsCollection, @textbookNames).done =>
 
 							getStudentModel = @_getStudent()
-
+							
+							#get all the video ids for DEVICE
+							
 							getStudentModel.done =>
 								@layout = layout = @_getQuizViewLayout()
 
@@ -101,6 +103,7 @@ define ['app'
 					questionsCollection.each (m)->
 						m.setMarks multiplicationFactor
 
+				console.log multiplicationFactor
 			_randomizeOrder:->
 				if quizResponseSummary.isNew() and quizModel.get('permissions').randomize
 					questionsCollection.each (e)-> e.unset 'order'
@@ -251,15 +254,37 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
+				checkIfVideoArrayPresent = []
+				
+				_.each questionsCollection.models, (questionsCollectionValues, index)=>
+					
+					if _.size(questionsCollectionValues.get('videoArray'))
+						checkIfVideoArrayPresent.push questionsCollectionValues.get('videoArray');
 
-				App.execute "start:take:quiz:app",
-					region: App.mainContentRegion
-					quizModel               : quizModel
-					quizResponseSummary     : quizResponseSummary
-					questionsCollection     : questionsCollection
-					display_mode            : display_mode
-					questionResponseCollection: @questionResponseCollection
-					textbookNames           : @textbookNames
+
+				if _.size(checkIfVideoArrayPresent)
+					deferFunc = quizModel.setDecryptedVideos questionsCollection
+
+					deferFunc.done =>
+						App.execute "start:take:quiz:app",
+							region: App.mainContentRegion
+							quizModel               : quizModel
+							quizResponseSummary     : quizResponseSummary
+							questionsCollection     : questionsCollection
+							display_mode            : display_mode
+							questionResponseCollection: @questionResponseCollection
+							textbookNames           : @textbookNames
+				else
+					
+					App.execute "start:take:quiz:app",
+						region: App.mainContentRegion
+						quizModel               : quizModel
+						quizResponseSummary     : quizResponseSummary
+						questionsCollection     : questionsCollection
+						display_mode            : display_mode
+						questionResponseCollection: @questionResponseCollection
+						textbookNames           : @textbookNames
+
 
 			showQuizViews: =>
 

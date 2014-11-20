@@ -9,10 +9,13 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       function Controller() {
         this.renderElement = __bind(this.renderElement, this);
+        this._getVideoCollection = __bind(this._getVideoCollection, this);
+        this.initialize = __bind(this.initialize, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(options) {
+        this.decryptedMedia = options.decryptedMedia;
         return Controller.__super__.initialize.call(this, options);
       };
 
@@ -27,9 +30,24 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       };
 
       Controller.prototype._getVideoCollection = function() {
+        var videoData, videoIds;
+        videoData = new Array();
         if (!this.videoCollection) {
           if (this.layout.model.get('video_ids').length) {
-            this.videoCollection = App.request("get:media:collection:by:ids", this.layout.model.get('video_ids'));
+            if (_.platform() === 'BROWSER') {
+              this.videoCollection = App.request("get:media:collection:by:ids", this.layout.model.get('video_ids'));
+            } else {
+              videoIds = this.layout.model.get('video_ids');
+              this.videoCollection = App.request("get:empty:media:collection");
+              _.each(videoIds, (function(_this) {
+                return function(videoId, index) {
+                  return videoData[index] = _.findWhere(_this.decryptedMedia, {
+                    'vId': JSON.stringify(videoId)
+                  });
+                };
+              })(this));
+              this.videoCollection.reset(videoData);
+            }
           } else {
             this.videoCollection = App.request("get:empty:media:collection");
           }
@@ -55,7 +73,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         var videoCollection;
         this._parseInt();
         videoCollection = this._getVideoCollection();
-        return videoCollection.p.done((function(_this) {
+        return App.execute("when:fetched", videoCollection, (function(_this) {
           return function() {
             var view;
             _this.layout.model.set({

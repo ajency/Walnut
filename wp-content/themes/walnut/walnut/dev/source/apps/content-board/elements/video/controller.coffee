@@ -1,6 +1,6 @@
 define ['app'
-        'apps/content-board/element/controller'
-        'apps/content-board/elements/video/view'
+		'apps/content-board/element/controller'
+		'apps/content-board/elements/video/view'
 ],(App,Element)->
 
 	App.module 'ContentPreview.ContentBoard.Element.Video',
@@ -10,7 +10,8 @@ define ['app'
 		class Video.Controller extends Element.Controller
 
 			# intializer
-			initialize:(options)->
+			initialize:(options)=>
+				{@decryptedMedia} = options
 				super(options)
 
 			bindEvents:->
@@ -21,12 +22,23 @@ define ['app'
 				new Video.Views.VideoView
 								model : @layout.model
 
-			_getVideoCollection: ->
+			_getVideoCollection: =>
+				videoData = new Array()
 				if not @videoCollection
 					if @layout.model.get('video_ids').length
-						@videoCollection = App.request "get:media:collection:by:ids", @layout.model.get 'video_ids'
+						if _.platform() is 'BROWSER'
+							@videoCollection = App.request "get:media:collection:by:ids", @layout.model.get 'video_ids'
+						else
+							videoIds = @layout.model.get 'video_ids'
+							@videoCollection = App.request "get:empty:media:collection"
+							_.each videoIds, (videoId, index)=>
+								
+								videoData[index] = _.findWhere(@decryptedMedia, {'vId':JSON.stringify(videoId)})
+
+							@videoCollection.reset videoData
 					else
 						@videoCollection = App.request "get:empty:media:collection"
+				
 				@videoCollection.comparator = 'order'
 
 
@@ -47,15 +59,11 @@ define ['app'
 			# setup templates for the element
 			renderElement:()=>
 
-				# get logo attachment
-#                        videoModel = App.request "get:media:by:id",@layout.model.get 'video_id'
-#
 				@_parseInt()
 
 				videoCollection = @_getVideoCollection()
 
-				# App.execute "when:fetched", videoCollection, =>
-				videoCollection.p.done =>
+				App.execute "when:fetched", videoCollection, =>
 
 					@layout.model.set 'videoUrl' : _.first videoCollection.pluck 'url'
 					@layout.model.set 'videoUrls' : videoCollection.pluck 'url'

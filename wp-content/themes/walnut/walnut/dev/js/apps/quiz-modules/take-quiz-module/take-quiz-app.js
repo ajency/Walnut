@@ -26,8 +26,25 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       TakeQuizController.prototype.initialize = function(opts) {
+        var allVideoIds, deferredvalue;
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
-        return this._startTakeQuiz();
+        deferredvalue = [];
+        if (quizModel.get('videoIDs')) {
+          navigator.notification.activityStart("Please wait", "loading content...");
+          $('body').addClass('disableTouchForView');
+          allVideoIds = quizModel.get('videoIDs');
+          deferredvalue = _.decryptVideos(allVideoIds);
+          return deferredvalue.done((function(_this) {
+            return function(decryptedVideoPathandId) {
+              console.log(decryptedVideoPathandId);
+              $('body').removeClass('disableTouchForView');
+              navigator.notification.activityStop();
+              return _this._startTakeQuiz();
+            };
+          })(this));
+        } else {
+          return this._startTakeQuiz();
+        }
       };
 
       TakeQuizController.prototype._startTakeQuiz = function() {
@@ -344,6 +361,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       function TakeQuizLayout() {
         this.clearMediaData = __bind(this.clearMediaData, this);
+        this.onBackSessionClick = __bind(this.onBackSessionClick, this);
         this.onPauseSessionClick = __bind(this.onPauseSessionClick, this);
         return TakeQuizLayout.__super__.constructor.apply(this, arguments);
       }
@@ -369,14 +387,25 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizLayout.prototype.onPauseSessionClick = function() {
         console.log('Invoked onPauseSessionClick');
         Backbone.history.history.back();
-        this.clearMediaData();
-        return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+        document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+        return this.clearMediaData();
+      };
+
+      TakeQuizLayout.prototype.onBackSessionClick = function() {
+        console.log('Invoked onPauseSessionClick');
+        return document.removeEventListener("backbutton", this.onBackSessionClick, false);
       };
 
       TakeQuizLayout.prototype.cordovaEventsForModuleDescriptionView = function() {
+        var functionName;
         navigator.app.overrideBackbutton(true);
-        document.addEventListener("backbutton", this.onPauseSessionClick, false);
-        return document.addEventListener("pause", this.onPauseSessionClick, false);
+        if ($('body').hasClass('disableTouchForView')) {
+          functionName = this.onBackSessionClick;
+        } else {
+          functionName = this.onPauseSessionClick;
+        }
+        document.addEventListener("backbutton", functionName, false);
+        return document.addEventListener("pause", functionName, false);
       };
 
       TakeQuizLayout.prototype.clearMediaData = function() {

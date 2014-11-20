@@ -22,8 +22,26 @@ define ['app'
 				initialize : (opts)->
 					{quizModel,quizResponseSummary,questionsCollection,
 					@questionResponseCollection,@textbookNames,@display_mode} = opts
+					
+					deferredvalue = []
+					
+					if quizModel.get 'videoIDs'
+						
+						navigator.notification.activityStart("Please wait", "loading content...")
+						$('body').addClass 'disableTouchForView'
+						# window.ontouchstart == false
+						allVideoIds = quizModel.get 'videoIDs'
 
-					@_startTakeQuiz()
+						deferredvalue = _.decryptVideos(allVideoIds)
+						deferredvalue.done (decryptedVideoPathandId)=>
+							
+							console.log decryptedVideoPathandId
+							
+							$('body').removeClass 'disableTouchForView'
+							navigator.notification.activityStop()
+							@_startTakeQuiz()
+					else
+						@_startTakeQuiz()
 				
 				_startTakeQuiz:=>
 
@@ -335,34 +353,45 @@ define ['app'
 					$('.page-content').addClass 'condensed expand-page'
 
 					if _.platform() is 'DEVICE'
-
-					    # $('body').css('height' : 'auto')
-					    @cordovaEventsForModuleDescriptionView()
+						
+						@cordovaEventsForModuleDescriptionView()
 
 
 				onPauseSessionClick : =>
+					
+					console.log 'Invoked onPauseSessionClick'
+					Backbone.history.history.back()
+					document.removeEventListener("backbutton", @onPauseSessionClick, false)
+					@clearMediaData()
 
-				    console.log 'Invoked onPauseSessionClick'
-				    Backbone.history.history.back()
-				    @clearMediaData()
-
-				    document.removeEventListener("backbutton", @onPauseSessionClick, false)
-
-				
+				onBackSessionClick : =>
+					
+					console.log 'Invoked onPauseSessionClick'
+					# Backbone.history.history.back()
+					document.removeEventListener("backbutton", @onBackSessionClick, false)
+					# @clearMediaData()
 				
 				cordovaEventsForModuleDescriptionView : ->
 
-				    # Cordova backbutton event
-				    navigator.app.overrideBackbutton(true)
-				    document.addEventListener("backbutton", @onPauseSessionClick, false)
+					# Cordova backbutton event
+					navigator.app.overrideBackbutton(true)
+					# $('body').addClass 'disableTouchForView'
+					
+					if $('body').hasClass 'disableTouchForView'
+						functionName = @onBackSessionClick
 
-				    # Cordova pause event
-				    document.addEventListener("pause", @onPauseSessionClick, false)
+					else
+						functionName = @onPauseSessionClick
+
+					document.addEventListener("backbutton", functionName, false)
+
+					# Cordova pause event
+					document.addEventListener("pause", functionName, false)
 
 
 				clearMediaData : =>
-				    _.clearMediaDirectory 'videos-web'
-				    _.clearMediaDirectory 'audio-web'
+					_.clearMediaDirectory 'videos-web'
+					_.clearMediaDirectory 'audio-web'
 
 
 			# set handlers

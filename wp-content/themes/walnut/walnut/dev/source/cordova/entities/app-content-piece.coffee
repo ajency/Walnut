@@ -29,7 +29,26 @@ define ['underscore', 'unserialize'], ( _) ->
 								.then (contentElements)->
 									console.log contentElements
 									excerpt_array = contentElements.excerpt
+									videoArray = ''
+									if contentElements.videoArray
+										flattenVideosArray = _.flatten contentElements.videoArray
+										videoArray = _.compact flattenVideosArray
+
+
 									marks = contentElements.marks
+									# _.each videoArray , (video)->												
+									# 	console.log video
+									# 	if video.length
+									# 		videoIds = _.flatten(video)
+									# 		_.each videoIds , (id)->
+									# 			_.getMediaById(id)
+									# 			.then (videoInfo)->
+									# 				console.log videoInfo
+									# 				console.log videoInfo.url
+									# 				_.initLocalVideosCheck(videoInfo.url)
+									# 				.then (localVideoPath)->
+									# 					console.log localVideoPath
+
 
 									excerpt_array = _.flatten excerpt_array
 									taglessArray = new Array
@@ -81,6 +100,9 @@ define ['underscore', 'unserialize'], ( _) ->
 										question_type: meta_value.question_type
 										term_ids: meta_value.term_ids
 										to_ping: row['to_ping']
+										videoArray: videoArray
+
+
 
 									i = i + 1
 									if(i < data.rows.length)
