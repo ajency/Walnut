@@ -96,15 +96,16 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		# Decrypt the encrypted audio/video local files
 		decryptLocalFile : (source, destination)->
 			
-			$.Deferred (d)->
+			defer = $.Deferred()
 
-				decrypt.startDecryption(source, destination
-					, ->
-						d.resolve destination
+			decrypt.startDecryption(source, destination
+				, ->
+					defer.resolve destination
 
-					, (message) ->
-						console.log 'FILE DECRYPTION ERROR: '+message
-				)
+				, (message) ->
+					console.log 'FILE DECRYPTION ERROR: '+message
+			)
+			defer.promise()
 
 		
 		#Get Path From The PLugin

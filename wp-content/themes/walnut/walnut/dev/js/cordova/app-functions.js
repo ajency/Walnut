@@ -72,13 +72,14 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }
     },
     decryptLocalFile: function(source, destination) {
-      return $.Deferred(function(d) {
-        return decrypt.startDecryption(source, destination, function() {
-          return d.resolve(destination);
-        }, function(message) {
-          return console.log('FILE DECRYPTION ERROR: ' + message);
-        });
+      var defer;
+      defer = $.Deferred();
+      decrypt.startDecryption(source, destination, function() {
+        return defer.resolve(destination);
+      }, function(message) {
+        return console.log('FILE DECRYPTION ERROR: ' + message);
       });
+      return defer.promise();
     },
     getDeviceStorageOptions: function() {
       var defer, storageOptions;

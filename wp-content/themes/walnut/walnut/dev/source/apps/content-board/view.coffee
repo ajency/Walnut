@@ -6,7 +6,7 @@ define ['app'], (App)->
 
             className: 'animated fadeIn'
 
-            template: ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner"></span></h1>
+            template: ' <h1 id="loading-content-board">Loading ... <span class="fa fa-spin fa-spinner" ></span></h1>
                         <div class="vHidden" id="question-area"></div>
 						<div id="feedback-area">
 							<div id="correct" class="alert alert-success text-center answrMsg">
