@@ -17,7 +17,7 @@ function getvars_quizzes_taken_report($recipients_email,$comm_data){
 
 	$template_data['global_merge_vars'][]=array(
 		'name' 		=> 'BLOG_URL',
-		'content' 	=> '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+		'content' 	=> '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
 	);
 
 	$template_data['global_merge_vars'][] = get_mail_header($comm_data['blog_id']);
@@ -66,7 +66,7 @@ function getvars_quiz_completed_student_mail($recipients_email,$comm_data){
 
 	$template_data['global_merge_vars'][]=array(
 		'name' 		=> 'BLOG_URL',
-		'content' 	=> '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+		'content' 	=> '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
 	);
 
 	return $template_data;
@@ -88,13 +88,13 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
     
     $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
     
-        $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
+    $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
 
 	$template_data['global_merge_vars'] = get_quiz_template_data($comm_data,$quiz_id);
 
 	$template_data['global_merge_vars'][]=array(
 		'name' 		=> 'BLOG_URL',
-		'content' 	=> '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+		'content' 	=> '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
 	);
 
 	switch_to_blog($comm_data['blog_id']);
@@ -137,6 +137,75 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
 	restore_current_blog();
 
 	return $template_data;
+
+}
+function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
+    
+    global $aj_comm;
+
+    $data = array();    
+    
+    if(!$division){
+        if($comm_data['communication_type'] == 'quiz_completed_student_mail')
+            $division   = get_user_meta($comm_data['user_id'],'student_division', true);
+
+        else
+            $division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
+    }
+
+    $siteurl = get_site_url();
+
+    $data[] = array(
+        'name' => 'QUIZ_URL',       
+        'content' => "<a target='_blank' href='$siteurl/#view-quiz/$quiz_id'>here</a>"
+    );
+    
+    switch_to_blog($comm_data['blog_id']);
+
+    $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
+
+    $quiz_details= get_single_quiz_module($quiz_id,$school_admin[0]);   
+
+    restore_current_blog();
+
+    $terms= $quiz_details->term_ids;
+
+    $textbook_id = $terms['textbook'];
+
+    $chapter_id = $terms['chapter'];
+
+    $textbook_name = get_term_field('name', $textbook_id, 'textbook');
+
+    if($chapter_id)
+        $chapter_name = get_term_field('name', $chapter_id, 'textbook');
+    else
+        $chapter_name = ' -- ';
+
+    $subject = get_textbook_subject($textbook_id);
+
+    $division_data = fetch_single_division($division,$comm_data['blog_id']);
+    $division  = $division_data['division'];
+
+    if($quiz_details->quiz_type == 'practice'){
+        $quiz_type = 'Practice Quiz';
+        $data[] = array('name' => 'PRACTICE', 'content' => 'true');
+    }
+    else
+        $quiz_type = 'Class Test';
+
+
+    $data[] = array('name' => 'QUIZ_NAME',      'content' => $quiz_details->name);
+    $data[] = array('name' => 'QUIZ_TYPE',      'content' => $quiz_type);
+    $data[] = array('name' => 'CLASS',          'content' => $division);
+    $data[] = array('name' => 'SUBJECT',        'content' => $subject);
+    $data[] = array('name' => 'TEXTBOOK',       'content' => $textbook_name);
+    $data[] = array('name' => 'CHAPTER',        'content' => $chapter_name);
+    $data[] = array('name' => 'QUIZ_MARKS',     'content' => $quiz_details->marks);
+    
+    $data[] = get_mail_header($comm_data['blog_id']);
+    $data[] = get_mail_footer($comm_data['blog_id']);
+
+    return $data;
 
 }
 

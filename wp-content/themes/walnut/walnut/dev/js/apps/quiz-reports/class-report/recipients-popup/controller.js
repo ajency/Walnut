@@ -27,8 +27,18 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
             });
             _this.view = _this._getSelectRecipientsView(recipientsCollection);
             _this.show(_this.view);
-            return _this.listenTo(_this.view, 'close:popup:dialog', function() {
+            _this.listenTo(_this.view, 'close:popup:dialog', function() {
               return this.region.closeDialog();
+            });
+            return _this.listenTo(_this.view, 'itemview:preview:email', function(itemview, id) {
+              var preview, recipient;
+              recipient = recipientsCollection.get(id);
+              preview = this.communicationModel.getPreview(recipient);
+              return preview.done((function(_this) {
+                return function(content) {
+                  return itemview.triggerMethod("show:preview", content.html);
+                };
+              })(this));
             });
           };
         })(this));

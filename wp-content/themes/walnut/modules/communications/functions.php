@@ -193,3 +193,31 @@ function ajax_get_communication_recipients(){
 
 }
 add_action('wp_ajax_get-communication-recipients', 'ajax_get_communication_recipients');
+
+function ajax_get_communication_preview(){
+    
+    global $aj_comm;
+
+    $functionName = $_POST['communication_type'].'_preview';
+
+    if (function_exists($functionName)){
+
+        unset($_POST['action']);
+        $data = $_POST;
+
+        $template_data  = $functionName($data);
+
+        switch_to_blog(1);
+
+        $response= $aj_comm->get_email_preview($template_data);
+
+        restore_current_blog();
+
+    }
+    else
+        $response=array('error'=>"function $functionName doesnt exist");
+
+    wp_send_json($response);
+
+}
+add_action('wp_ajax_get-communication-preview','ajax_get_communication_preview');

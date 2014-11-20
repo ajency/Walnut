@@ -118,71 +118,38 @@ function prepare_quiz_completed_parent_mail_recipients($data){
     return $recipients;
 }
 
-function get_quiz_template_data($comm_data,$quiz_id){
+function quiz_completed_parent_mail_preview($data){
+
+    require_once get_template_directory()."/ajcm_components/quiz.php";
+
+    $comm_data = array(
+        'component'=>$data['component'],
+        'communication_type'=>$data['communication_type']
+        );
+
+    $recipient=$data['additional_data']['recipient'];
+    $division =$data['additional_data']['division'];
+
+    //print_r($recipient); exit;
+
+    $template_data['template_name']              = 'quiz-completed-parent-mail'; 
+    $template_data['template_content']           = array(); 
+    $template_data['merge_vars'] = get_quiz_template_data($comm_data,$recipient['quiz_id'], $division);
+
+    $quiz_summary = get_quiz_summary_data($recipient['quiz_id'],$recipient['student_id']);
     
-    global $aj_comm;
-
-    $data = array();    
-    
-    if($comm_data['communication_type'] == 'quiz_completed_student_mail')
-        $division   = get_user_meta($comm_data['user_id'],'student_division', true);
-
-    else
-        $division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
-
-
-    $siteurl = get_site_url();
-
-    $data[] = array(
-        'name' => 'QUIZ_URL',       
-        'content' => "<a href='$siteurl/#view-quiz/$quiz_id'>here</a>"
+    $template_data['merge_vars'] = array_merge($template_data['merge_vars'],$quiz_summary);
+    $template_data['merge_vars'][]=array(
+        'name'=>'STUDENT_NAME',
+        'content'=>$recipient['student_name']
+        );
+    #print_r($template_data['global_merge_vars']);exit;
+    $blog_data= get_blog_details($comm_data['blog_id'], true);
+    $template_data['merge_vars'][]=array(
+        'name'      => 'BLOG_URL',
+        'content'   => '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
     );
-    
-    switch_to_blog($comm_data['blog_id']);
 
-    $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
-
-    $quiz_details= get_single_quiz_module($quiz_id,$school_admin[0]);   
-
-    restore_current_blog();
-
-    $terms= $quiz_details->term_ids;
-
-    $textbook_id = $terms['textbook'];
-
-    $chapter_id = $terms['chapter'];
-
-    $textbook_name = get_term_field('name', $textbook_id, 'textbook');
-
-    if($chapter_id)
-        $chapter_name = get_term_field('name', $chapter_id, 'textbook');
-    else
-        $chapter_name = ' -- ';
-
-    $subject = get_textbook_subject($textbook_id);
-
-    $division_data = fetch_single_division($division,$comm_data['blog_id']);
-    $division  = $division_data['division'];
-
-    if($quiz_details->quiz_type == 'practice'){
-        $quiz_type = 'Practice Quiz';
-        $data[] = array('name' => 'PRACTICE', 'content' => 'true');
-    }
-    else
-        $quiz_type = 'Class Test';
-
-
-    $data[] = array('name' => 'QUIZ_NAME',      'content' => $quiz_details->name);
-    $data[] = array('name' => 'QUIZ_TYPE',      'content' => $quiz_type);
-    $data[] = array('name' => 'CLASS',          'content' => $division);
-    $data[] = array('name' => 'SUBJECT',        'content' => $subject);
-    $data[] = array('name' => 'TEXTBOOK',       'content' => $textbook_name);
-    $data[] = array('name' => 'CHAPTER',        'content' => $chapter_name);
-    $data[] = array('name' => 'QUIZ_MARKS',     'content' => $quiz_details->marks);
-    
-    $data[] = get_mail_header($comm_data['blog_id']);
-    $data[] = get_mail_footer($comm_data['blog_id']);
-
-    return $data;
+    return $template_data;
 
 }

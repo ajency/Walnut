@@ -23,6 +23,12 @@ define ['app'
                     @listenTo @view, 'close:popup:dialog',->
                         @region.closeDialog()  
 
+                    @listenTo @view, 'itemview:preview:email',(itemview, id)->
+                        recipient = recipientsCollection.get id
+                        preview= @communicationModel.getPreview recipient
+                        preview.done (content)=>
+                            itemview.triggerMethod "show:preview",content.html
+
             _getSelectRecipientsView :(recipients)=>
                 new RecipientsPopup.Views.RecipientsView
                     model        : @communicationModel

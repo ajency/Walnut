@@ -17,6 +17,7 @@
                                     <th>Recipient Email</th>
                                     <th>Student Name</th>
                                     <th>Quiz</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="list-recipients" class="rowlink"></tbody>

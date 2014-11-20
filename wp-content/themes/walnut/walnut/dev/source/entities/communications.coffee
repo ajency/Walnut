@@ -31,6 +31,22 @@ define ["app", 'backbone'], (App, Backbone) ->
                     
                 defer.promise()
 
+
+            getPreview:(recipient)->
+                console.log recipient
+                url     = AJAXURL + '?action=get-communication-preview'
+                data    = @.toJSON()
+                data.additional_data.recipient = recipient.toJSON()
+
+                defer = $.Deferred()
+
+                $.post url, 
+                    data, (response) =>
+                        defer.resolve response
+                    'json'
+                    
+                defer.promise()
+
         # Communications collection class
         class Communications.ItemCollection extends Backbone.Collection
 

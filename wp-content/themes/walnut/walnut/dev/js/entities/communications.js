@@ -37,6 +37,21 @@ define(["app", 'backbone'], function(App, Backbone) {
         return defer.promise();
       };
 
+      ItemModel.prototype.getPreview = function(recipient) {
+        var data, defer, url;
+        console.log(recipient);
+        url = AJAXURL + '?action=get-communication-preview';
+        data = this.toJSON();
+        data.additional_data.recipient = recipient.toJSON();
+        defer = $.Deferred();
+        $.post(url, data, (function(_this) {
+          return function(response) {
+            return defer.resolve(response);
+          };
+        })(this), 'json');
+        return defer.promise();
+      };
+
       return ItemModel;
 
     })(Backbone.Model);
