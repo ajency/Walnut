@@ -22,15 +22,41 @@ define ['underscore'], ( _) ->
 			defer.promise()
 
 
-		
 		getClassIdForUser : ->
+
+			defer = $.Deferred()
+
+			_.getDivisionIdForUser()
+			.then (division_id)->
+
+				onSuccess = (tx, data)->
+
+					class_id = data.rows.item(0)['class_id']
+					defer.resolve class_id
+
+
+				_.db.transaction (tx)->
+
+					tx.executeSql "SELECT class_id 
+									FROM "+_.getTblPrefix()+"class_divisions 
+									WHERE id=? "
+									, [division_id]
+
+					, onSuccess , _.transactionErrorHandler
+
+
+			defer.promise()
+
+
+		
+		getDivisionIdForUser : ->
 
 			defer = $.Deferred()
 
 			onSuccess = (tx, data)->
 
-				class_id = data.rows.item(0)['meta_value']
-				defer.resolve class_id
+				divisionId = data.rows.item(0)['meta_value']
+				defer.resolve divisionId
 
 
 			_.db.transaction (tx)->
@@ -46,7 +72,6 @@ define ['underscore'], ( _) ->
 
 			defer.promise()
 
-
 		
 		getTextbooksForStudent : (class_id)->
 
@@ -56,67 +81,72 @@ define ['underscore'], ( _) ->
 
 				result = []
 
-				forEach = (row, i)->
-					
-					_.getTextbookOptions row['term_id']
-					.then (options)->
-						console.log 'getTextbookOptions transaction completed'
+				if data.rows.length is 0
+					defer.resolve result
+				
+				else
 
-						_.getChapterCount row['term_id']
-						.then (chapter_count)->
-							console.log 'getChapterCount transaction completed'
+					forEach = (row, i)->
+						
+						_.getTextbookOptions row['term_id']
+						.then (options)->
+							console.log 'getTextbookOptions transaction completed'
 
-							_.getPracticeAndTotalQuiz row['textbook_id']
-							.then (total_quiz_count)->
-								console.log 'getPracticeAndTotalQuiz transaction completed'
+							_.getChapterCount row['term_id']
+							.then (chapter_count)->
+								console.log 'getChapterCount transaction completed'
 
-								_.getPracticeCompletedQuizCount row['textbook_id']
-								.then (quizzes_completed)->
-									console.log 'getPracticeCompletedQuizCount transaction completed'
+								_.getPracticeAndTotalQuiz row['textbook_id']
+								.then (total_quiz_count)->
+									console.log 'getPracticeAndTotalQuiz transaction completed'
 
-									class_test_not_started = total_quiz_count.class_test - 
-										(quizzes_completed.class_test_completed + 
-										quizzes_completed.class_test_in_progress)
+									_.getPracticeCompletedQuizCount row['textbook_id']
+									.then (practice_quizzes_completed)->
+										console.log 'getPracticeCompletedQuizCount transaction completed'
 
-									practice_not_started = total_quiz_count.practice - 
-										(quizzes_completed.practice_completed + 
-										quizzes_completed.practice_in_progress )
+										class_test_not_started = total_quiz_count.class_test - 
+											(practice_quizzes_completed.class_test_completed + 
+											practice_quizzes_completed.class_test_in_progress)
 
-									result[i] = 
-										term_id: row["term_id"]
-										name: row["name"]
-										class_test_count: total_quiz_count.class_test
-										class_test_completed : quizzes_completed.class_test_completed
-										class_test_not_started : class_test_not_started
-										slug: row["slug"]
-										term_group: row["term_group"]
-										term_taxonomy_id: row["term_taxonomy_id"]
-										taxonomy: row["taxonomy"]
-										description: row["description"]
-										parent: row["parent"]
-										count: row["count"]
-										classes: _.unserialize(row["class_id"])
-										subjects: _.unserialize(row["tags"])
-										author: options.author
-										thumbnail: options.attachmenturl
-										cover_pic: options.attachmenturl
-										filter: 'raw'
-										chapter_count : chapter_count
-										practice_count: total_quiz_count.practice
-										practice_completed : quizzes_completed.practice_completed
-										practice_not_started : practice_not_started
-										practice_in_progress :quizzes_completed.practice_in_progress
-										class_test_in_progress :quizzes_completed.class_test_in_progress
+										practice_not_started = total_quiz_count.practice - 
+											(practice_quizzes_completed.practice_completed + 
+											practice_quizzes_completed.practice_in_progress )
 
-									
-									i = i + 1
-									if(i < data.rows.length)
-										forEach data.rows.item(i), i
-									else 
-										defer.resolve result
+										result[i] = 
+											term_id: row["term_id"]
+											name: row["name"]
+											class_test_count: total_quiz_count.class_test
+											class_test_completed : practice_quizzes_completed.class_test_completed
+											class_test_not_started : class_test_not_started
+											slug: row["slug"]
+											term_group: row["term_group"]
+											term_taxonomy_id: row["term_taxonomy_id"]
+											taxonomy: row["taxonomy"]
+											description: row["description"]
+											parent: row["parent"]
+											count: row["count"]
+											classes: _.unserialize(row["class_id"])
+											subjects: _.unserialize(row["tags"])
+											author: options.author
+											thumbnail: options.attachmenturl
+											cover_pic: options.attachmenturl
+											filter: 'raw'
+											chapter_count : chapter_count
+											practice_count: total_quiz_count.practice
+											practice_completed : practice_quizzes_completed.practice_completed
+											practice_not_started : practice_not_started
+											practice_in_progress :practice_quizzes_completed.practice_in_progress
+											class_test_in_progress :practice_quizzes_completed.class_test_in_progress
+
+										
+										i = i + 1
+										if(i < data.rows.length)
+											forEach data.rows.item(i), i
+										else 
+											defer.resolve result
 
 
-				forEach data.rows.item(0), 0
+					forEach data.rows.item(0), 0
 
 			
 			_.db.transaction (tx)->

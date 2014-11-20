@@ -1,145 +1,145 @@
 define ['app'
-        'controllers/region-controller'
-        'bootbox'
-        'apps/quiz-modules/take-quiz-module/single-question/views'],
-        (App, RegionController,bootbox)->
+		'controllers/region-controller'
+		'bootbox'
+		'apps/quiz-modules/take-quiz-module/single-question/views'],
+		(App, RegionController,bootbox)->
 
-            App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
+			App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
-                answer=null
-                answerData= null
+				answer=null
+				answerData= null
 
-                class SingleQuestion.Controller extends RegionController
+				class SingleQuestion.Controller extends RegionController
 
-                    initialize: (opts)->
-                        {@model, @quizModel, @questionResponseCollection,@display_mode} = opts
+					initialize: (opts)->
+						{@model, @quizModel, @questionResponseCollection,@display_mode} = opts
 
-                        @questionResponseModel= @questionResponseCollection.findWhere 'content_piece_id' : @model.id
-                        
-                        displayAnswer = @quizModel.hasPermission 'display_answer'
+						@questionResponseModel= @questionResponseCollection.findWhere 'content_piece_id' : @model.id
+						
+						displayAnswer = @quizModel.hasPermission 'display_answer'
 
-                        @answerWreqrObject = new Backbone.Wreqr.RequestResponse()
-                        @answerWreqrObject.displayAnswer= displayAnswer
-                        @answerWreqrObject.multiplicationFactor = @model.get 'multiplicationFactor'
+						@answerWreqrObject = new Backbone.Wreqr.RequestResponse()
+						@answerWreqrObject.displayAnswer= displayAnswer
+						@answerWreqrObject.multiplicationFactor = @model.get 'multiplicationFactor'
 
-                        @layout = layout = @_showSingleQuestionLayout @model
+						@layout = layout = @_showSingleQuestionLayout @model
 
-                        @answerModel = App.request "create:new:answer"
+						@answerModel = App.request "create:new:answer"
 
-                        if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused' 
+						if @questionResponseModel and @questionResponseModel.get('status') isnt 'paused'
 
-                            # if the question is not having permission of single attempt, 
-                            # ie. can be skipped and answered again,
-                            # display answer should be false.
-                            # if not class mode then the answer can be displayed if display answer permission is there
-                            if @display_mode is 'class_mode' and not @quizModel.hasPermission 'single_attempt'
-                                @answerWreqrObject.displayAnswer = false
+							# if the question is not having permission of single attempt, 
+							# ie. can be skipped and answered again,
+							# display answer should be false.
+							# if not class mode then the answer can be displayed if display answer permission is there
+							if @display_mode is 'class_mode' and not @quizModel.hasPermission 'single_attempt'
+								@answerWreqrObject.displayAnswer = false
 
-                            answerData = @questionResponseModel.get 'question_response'
-                            
-                            answerData = {} if _.isEmpty answerData
+							answerData = @questionResponseModel.get 'question_response'
+							
+							answerData = {} if _.isEmpty answerData
 
-                            answerData.status = @questionResponseModel.get 'status'
-                            answerData.marks = @questionResponseModel.get 'marks_scored'                            
-                            @answerModel = App.request "create:new:answer", answerData
+							answerData.status = @questionResponseModel.get 'status'
+							answerData.marks = @questionResponseModel.get 'marks_scored'                            
+							@answerModel = App.request "create:new:answer", answerData
 
 
-                        @show layout,
-                            loading: true
+						@show layout,
+							loading: true
 
-                        @listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject
-                        
-                        @listenTo @region, "silent:save:question", =>
-                            answerData= @answerWreqrObject.request "get:question:answer"
+						@listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject
+						
+						@listenTo @region, "silent:save:question", =>
+							answerData= @answerWreqrObject.request "get:question:answer"
 
-                            answer = answerData.answerModel
+							answer = answerData.answerModel
 
-                            @answerWreqrObject.request "submit:answer"
-                            answer_status = @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+							@answerWreqrObject.request "submit:answer"
+							answer_status = @_getAnswerStatus answer.get('marks'), answerData.totalMarks
 
-                            answer.set 'status' : answer_status
+							answer.set 'status' : answer_status
 
-                            if (answer.get('status') is 'wrong_answer') and _.toBool @quizModel.get 'negMarksEnable'
-                                answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
+							if (answer.get('status') is 'wrong_answer') and _.toBool @quizModel.get 'negMarksEnable'
+								answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
 
-                            @region.trigger "submit:question", answer
+							@region.trigger "submit:question", answer
 
-                        @listenTo layout, "validate:answer",->
-                            answerData= @answerWreqrObject.request "get:question:answer"
+						@listenTo layout, "validate:answer",->
+							answerData= @answerWreqrObject.request "get:question:answer"
 
-                            answer = answerData.answerModel
+							answer = answerData.answerModel
 
-                            if answerData.questionType isnt 'sort'
+							if answerData.questionType isnt 'sort'
 
-                                if answerData.emptyOrIncomplete is 'empty'
-                                          
-                                    bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
-                                        @_triggerSubmit() if result
+								if answerData.emptyOrIncomplete is 'empty'
+										  
+									bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
+										@_triggerSubmit() if result
 
-                                else
-                                    @_triggerSubmit()
+								else
+									@_triggerSubmit()
 
-                            else 
-                                @_triggerSubmit()
+							else 
+								@_triggerSubmit()
 
-                        @listenTo layout, "goto:next:question",->
-                            @region.trigger "goto:next:question"
+						@listenTo layout, "goto:next:question",->
+							@region.trigger "goto:next:question"
 
-                        @listenTo layout, "goto:previous:question",
-                            -> @region.trigger "goto:previous:question"
+						@listenTo layout, "goto:previous:question",
+							-> @region.trigger "goto:previous:question"
 
-                        @listenTo layout, "skip:question",-> 
+						@listenTo layout, "skip:question",-> 
 
-                            @answerModel.set 'status': 'skipped'
+							@answerModel.set 'status': 'skipped'
 
-                            @region.trigger "skip:question", @answerModel
+							@region.trigger "skip:question", @answerModel
 
-                        @listenTo layout, 'show:hint:dialog',=>
-                            @answerModel.set 'hint_viewed' : true
+						@listenTo layout, 'show:hint:dialog',=>
+							@answerModel.set 'hint_viewed' : true
 
-                        @listenTo @region, 'trigger:submit',=> @_triggerSubmit()
+						@listenTo @region, 'trigger:submit',=> @_triggerSubmit()
 
-                    _triggerSubmit:->
-                        @layout.triggerMethod "submit:question"
+					_triggerSubmit:->
+						@layout.triggerMethod "submit:question"
 
-                        if _.contains _.pluck(this.model.get('layout'),'element'),'BigAnswer'
-                            answer.set 'status' : 'teacher_check'
-                            
-                        else
-                            @answerWreqrObject.request "submit:answer"
+						if _.contains _.pluck(this.model.get('layout'),'element'),'BigAnswer'
+							answer.set 'status' : 'teacher_check'
+							
+						else
+							@answerWreqrObject.request "submit:answer"
 
-                            answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
+							answer.set 'status' : @_getAnswerStatus answer.get('marks'), answerData.totalMarks
 
-                            if answer.get('status') is 'wrong_answer' and _.toBool @quizModel.get 'negMarksEnable'
-                                answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
+							if answer.get('status') is 'wrong_answer' and _.toBool @quizModel.get 'negMarksEnable'
+								answer.set 'marks': - answerData.totalMarks*@quizModel.get('negMarks')/100
 
-                        @region.trigger "submit:question", answer
+						@region.trigger "submit:question", answer
 
-                    _getAnswerStatus:(recievedMarks, totalMarks)->
-                        status = 'wrong_answer'
+					_getAnswerStatus:(recievedMarks, totalMarks)->
+						status = 'wrong_answer'
 
-                        recievedMarks = parseFloat recievedMarks
-                        totalMarks = parseFloat totalMarks
+						recievedMarks = parseFloat recievedMarks
+						totalMarks = parseFloat totalMarks
 
-                        if recievedMarks is totalMarks 
-                            status = 'correct_answer' 
+						if recievedMarks is totalMarks 
+							status = 'correct_answer' 
 
-                        if recievedMarks > 0 and recievedMarks < totalMarks
-                            status = 'partially_correct' 
+						if recievedMarks > 0 and recievedMarks < totalMarks
+							status = 'partially_correct' 
 
-                        status
+						status
 
-                    _showContentBoard:(model,answerWreqrObject)=>
-                        App.execute "show:content:board",
-                                region              : @layout.contentBoardRegion,
-                                model               : model
-                                answerWreqrObject   : answerWreqrObject
-                                answerModel         : @answerModel
-                                quizModel           : @quizModel
-                            
-                    _showSingleQuestionLayout: (model) =>
-                        new SingleQuestion.SingleQuestionLayout
-                            model: model
-                            questionResponseModel   : @questionResponseModel
-                            quizModel               : @quizModel
-                            display_mode            : @display_mode
+					_showContentBoard:(model,answerWreqrObject)=>
+						App.execute "show:content:board",
+								region              : @layout.contentBoardRegion,
+								model               : model
+								answerWreqrObject   : answerWreqrObject
+								answerModel         : @answerModel
+								quizModel           : @quizModel
+							
+					_showSingleQuestionLayout: (model) =>
+						new SingleQuestion.SingleQuestionLayout
+							model: model
+							questionResponseModel   : @questionResponseModel
+							quizModel               : @quizModel
+							display_mode            : @display_mode

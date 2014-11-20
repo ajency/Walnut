@@ -138,7 +138,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         });
         correctOptionsIds = _.pluck(correctOptions, 'id');
         answerId = _.pluck(this.answerModel.get('answer'), 'id');
-        if (this.layout.model.get('enableIndividualMarks')) {
+        if (_.toBool(this.layout.model.get('enableIndividualMarks'))) {
           if (!_.difference(answerId, correctOptionsIds).length) {
             if (!_.difference(correctOptionsIds, answerId).length) {
               this.answerModel.set('marks', this.layout.model.get('marks'));

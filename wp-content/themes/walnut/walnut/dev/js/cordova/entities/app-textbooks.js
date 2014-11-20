@@ -13,12 +13,28 @@ define(['underscore'], function(_) {
       return defer.promise();
     },
     getClassIdForUser: function() {
+      var defer;
+      defer = $.Deferred();
+      _.getDivisionIdForUser().then(function(division_id) {
+        var onSuccess;
+        onSuccess = function(tx, data) {
+          var class_id;
+          class_id = data.rows.item(0)['class_id'];
+          return defer.resolve(class_id);
+        };
+        return _.db.transaction(function(tx) {
+          return tx.executeSql("SELECT class_id FROM " + _.getTblPrefix() + "class_divisions WHERE id=? ", [division_id], onSuccess, _.transactionErrorHandler);
+        });
+      });
+      return defer.promise();
+    },
+    getDivisionIdForUser: function() {
       var defer, onSuccess;
       defer = $.Deferred();
       onSuccess = function(tx, data) {
-        var class_id;
-        class_id = data.rows.item(0)['meta_value'];
-        return defer.resolve(class_id);
+        var divisionId;
+        divisionId = data.rows.item(0)['meta_value'];
+        return defer.resolve(divisionId);
       };
       _.db.transaction(function(tx) {
         return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['student_division', _.getUserID()], onSuccess, _.transactionErrorHandler);
@@ -31,56 +47,60 @@ define(['underscore'], function(_) {
       onSuccess = function(tx, data) {
         var forEach, result;
         result = [];
-        forEach = function(row, i) {
-          return _.getTextbookOptions(row['term_id']).then(function(options) {
-            console.log('getTextbookOptions transaction completed');
-            return _.getChapterCount(row['term_id']).then(function(chapter_count) {
-              console.log('getChapterCount transaction completed');
-              return _.getPracticeAndTotalQuiz(row['textbook_id']).then(function(total_quiz_count) {
-                console.log('getPracticeAndTotalQuiz transaction completed');
-                return _.getPracticeCompletedQuizCount(row['textbook_id']).then(function(quizzes_completed) {
-                  var class_test_not_started, practice_not_started;
-                  console.log('getPracticeCompletedQuizCount transaction completed');
-                  class_test_not_started = total_quiz_count.class_test - (quizzes_completed.class_test_completed + quizzes_completed.class_test_in_progress);
-                  practice_not_started = total_quiz_count.practice - (quizzes_completed.practice_completed + quizzes_completed.practice_in_progress);
-                  result[i] = {
-                    term_id: row["term_id"],
-                    name: row["name"],
-                    class_test_count: total_quiz_count.class_test,
-                    class_test_completed: quizzes_completed.class_test_completed,
-                    class_test_not_started: class_test_not_started,
-                    slug: row["slug"],
-                    term_group: row["term_group"],
-                    term_taxonomy_id: row["term_taxonomy_id"],
-                    taxonomy: row["taxonomy"],
-                    description: row["description"],
-                    parent: row["parent"],
-                    count: row["count"],
-                    classes: _.unserialize(row["class_id"]),
-                    subjects: _.unserialize(row["tags"]),
-                    author: options.author,
-                    thumbnail: options.attachmenturl,
-                    cover_pic: options.attachmenturl,
-                    filter: 'raw',
-                    chapter_count: chapter_count,
-                    practice_count: total_quiz_count.practice,
-                    practice_completed: quizzes_completed.practice_completed,
-                    practice_not_started: practice_not_started,
-                    practice_in_progress: quizzes_completed.practice_in_progress,
-                    class_test_in_progress: quizzes_completed.class_test_in_progress
-                  };
-                  i = i + 1;
-                  if (i < data.rows.length) {
-                    return forEach(data.rows.item(i), i);
-                  } else {
-                    return defer.resolve(result);
-                  }
+        if (data.rows.length === 0) {
+          return defer.resolve(result);
+        } else {
+          forEach = function(row, i) {
+            return _.getTextbookOptions(row['term_id']).then(function(options) {
+              console.log('getTextbookOptions transaction completed');
+              return _.getChapterCount(row['term_id']).then(function(chapter_count) {
+                console.log('getChapterCount transaction completed');
+                return _.getPracticeAndTotalQuiz(row['textbook_id']).then(function(total_quiz_count) {
+                  console.log('getPracticeAndTotalQuiz transaction completed');
+                  return _.getPracticeCompletedQuizCount(row['textbook_id']).then(function(practice_quizzes_completed) {
+                    var class_test_not_started, practice_not_started;
+                    console.log('getPracticeCompletedQuizCount transaction completed');
+                    class_test_not_started = total_quiz_count.class_test - (practice_quizzes_completed.class_test_completed + practice_quizzes_completed.class_test_in_progress);
+                    practice_not_started = total_quiz_count.practice - (practice_quizzes_completed.practice_completed + practice_quizzes_completed.practice_in_progress);
+                    result[i] = {
+                      term_id: row["term_id"],
+                      name: row["name"],
+                      class_test_count: total_quiz_count.class_test,
+                      class_test_completed: practice_quizzes_completed.class_test_completed,
+                      class_test_not_started: class_test_not_started,
+                      slug: row["slug"],
+                      term_group: row["term_group"],
+                      term_taxonomy_id: row["term_taxonomy_id"],
+                      taxonomy: row["taxonomy"],
+                      description: row["description"],
+                      parent: row["parent"],
+                      count: row["count"],
+                      classes: _.unserialize(row["class_id"]),
+                      subjects: _.unserialize(row["tags"]),
+                      author: options.author,
+                      thumbnail: options.attachmenturl,
+                      cover_pic: options.attachmenturl,
+                      filter: 'raw',
+                      chapter_count: chapter_count,
+                      practice_count: total_quiz_count.practice,
+                      practice_completed: practice_quizzes_completed.practice_completed,
+                      practice_not_started: practice_not_started,
+                      practice_in_progress: practice_quizzes_completed.practice_in_progress,
+                      class_test_in_progress: practice_quizzes_completed.class_test_in_progress
+                    };
+                    i = i + 1;
+                    if (i < data.rows.length) {
+                      return forEach(data.rows.item(i), i);
+                    } else {
+                      return defer.resolve(result);
+                    }
+                  });
                 });
               });
             });
-          });
-        };
-        return forEach(data.rows.item(0), 0);
+          };
+          return forEach(data.rows.item(0), 0);
+        }
       };
       _.db.transaction(function(tx) {
         var pattern;

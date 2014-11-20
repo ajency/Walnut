@@ -133,7 +133,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         if (!this.answerModel.get('answer').length) {
           console.log('you havent selected any thing');
         } else {
-          if (!this.layout.model.get('multiple')) {
+          if (!_.toBool(this.layout.model.get('multiple'))) {
             console.log(_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')));
             if (!_.difference(this.answerModel.get('answer'), this.layout.model.get('correct_answer')).length) {
               this.answerModel.set('marks', this.layout.model.get('marks'));
