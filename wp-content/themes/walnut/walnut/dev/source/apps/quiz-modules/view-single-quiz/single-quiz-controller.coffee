@@ -254,10 +254,28 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
+				checkIfVideoArrayPresent = []
 				
-				deferFunc = quizModel.setDecryptedVideos questionsCollection
+				_.each questionsCollection.models, (questionsCollectionValues, index)=>
+					
+					if _.size(questionsCollectionValues.get('videoArray'))
+						checkIfVideoArrayPresent.push questionsCollectionValues.get('videoArray');
 
-				deferFunc.done =>
+
+				if _.size(checkIfVideoArrayPresent)
+					deferFunc = quizModel.setDecryptedVideos questionsCollection
+
+					deferFunc.done =>
+						App.execute "start:take:quiz:app",
+							region: App.mainContentRegion
+							quizModel               : quizModel
+							quizResponseSummary     : quizResponseSummary
+							questionsCollection     : questionsCollection
+							display_mode            : display_mode
+							questionResponseCollection: @questionResponseCollection
+							textbookNames           : @textbookNames
+				else
+					
 					App.execute "start:take:quiz:app",
 						region: App.mainContentRegion
 						quizModel               : quizModel
@@ -266,6 +284,7 @@ define ['app'
 						display_mode            : display_mode
 						questionResponseCollection: @questionResponseCollection
 						textbookNames           : @textbookNames
+
 
 			showQuizViews: =>
 

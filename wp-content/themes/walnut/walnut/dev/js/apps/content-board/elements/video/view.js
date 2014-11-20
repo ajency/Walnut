@@ -12,7 +12,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-unavailable.png" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -37,6 +37,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find('video')[0].poster = "../images/video-poster.jpg";
         this.$el.find('video')[0].src = this.videos[0];
         widthRatio = 16;
         heightRatio = 9;
@@ -98,7 +99,11 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         } else {
           this.$el.find('video')[0].src = this.videos[this.index];
-          this.$el.find('video').attr('poster', '/images/video-unavailable.png');
+          setTimeout((function(_this) {
+            return function() {
+              return _this.$el.find('video')[0].poster = "../images/video-unavailable.png";
+            };
+          })(this), 50);
         }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();

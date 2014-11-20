@@ -16,8 +16,11 @@ define(['underscore', 'unserialize'], function(_) {
                   var excerpt, excerpt_array, flattenVideosArray, marks, taglessArray, videoArray;
                   console.log(contentElements);
                   excerpt_array = contentElements.excerpt;
-                  flattenVideosArray = _.flatten(contentElements.videoArray);
-                  videoArray = _.compact(flattenVideosArray);
+                  videoArray = '';
+                  if (contentElements.videoArray) {
+                    flattenVideosArray = _.flatten(contentElements.videoArray);
+                    videoArray = _.compact(flattenVideosArray);
+                  }
                   marks = contentElements.marks;
                   excerpt_array = _.flatten(excerpt_array);
                   taglessArray = new Array;

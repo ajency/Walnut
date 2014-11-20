@@ -21,90 +21,40 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
       quizModel = null;
 
       Controller.prototype.initialize = function(options) {
-        var allVideoIds, deferredvalue;
         this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel;
         quizModel = this.quizModel;
-        deferredvalue = [];
-        if (quizModel.get('videoIDs')) {
-          navigator.notification.activityStart("Please wait", "loading content...");
-          $('body').addClass('disableTouchForView');
-          allVideoIds = quizModel.get('videoIDs');
-          deferredvalue = _.decryptVideos(allVideoIds);
-          return deferredvalue.done((function(_this) {
-            return function(decryptedVideoPathandId) {
-              console.log(_.size(deferredvalue));
-              if (_.size(deferredvalue) !== 0) {
-                console.log(decryptedVideoPathandId);
-                console.log(decryptedVideoPathandId);
-                $('body').removeClass('disableTouchForView');
-                navigator.notification.activityStop();
-                _this.view = _this._getContentBoardView();
-                _this.listenTo(_this.view, "add:new:element", function(container, type) {
-                  return App.request("add:new:element", container, type);
-                });
-                _this.listenTo(_this.view, "close", function() {
-                  var audioEls;
-                  audioEls = _this.view.$el.find('.audio');
-                  return _.each(audioEls, function(el, ind) {
-                    return $(el).find('.pause').trigger('click');
-                  });
-                });
-                _this.listenTo(_this.view, 'dependencies:fetched', function() {
-                  var fillElements;
-                  fillElements = _this.startFillingElements();
-                  return fillElements.done(function() {
-                    return setTimeout(function() {
-                      $('#loading-content-board').remove();
-                      return $('#question-area').removeClass('vHidden');
-                    }, 500);
-                  });
-                });
-                App.commands.setHandler("show:response", function(marks, total) {
-                  return _this.view.triggerMethod('show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1));
-                });
-                return _this.show(_this.view, {
-                  loading: true,
-                  entities: [_this.elements]
-                });
-              }
-            };
-          })(this));
-        } else {
-          this.view = this._getContentBoardView();
-          this.listenTo(this.view, "add:new:element", function(container, type) {
-            return App.request("add:new:element", container, type);
-          });
-          this.listenTo(this.view, "close", (function(_this) {
-            return function() {
-              var audioEls;
-              audioEls = _this.view.$el.find('.audio');
-              return _.each(audioEls, function(el, ind) {
-                return $(el).find('.pause').trigger('click');
-              });
-            };
-          })(this));
-          this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
-            return function() {
-              var fillElements;
-              fillElements = _this.startFillingElements();
-              return fillElements.done(function() {
-                return setTimeout(function() {
-                  $('#loading-content-board').remove();
-                  return $('#question-area').removeClass('vHidden');
-                }, 500);
-              });
-            };
-          })(this));
-          App.commands.setHandler("show:response", (function(_this) {
-            return function(marks, total) {
-              return _this.view.triggerMethod('show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1));
-            };
-          })(this));
-          return this.show(this.view, {
-            loading: true,
-            entities: [this.elements]
-          });
-        }
+        this.view = this._getContentBoardView();
+        this.listenTo(this.view, "add:new:element", function(container, type) {
+          return App.request("add:new:element", container, type);
+        });
+        this.listenTo(this.view, "close", (function(_this) {
+          return function() {
+            var audioEls;
+            audioEls = _this.view.$el.find('.audio');
+            return _.each(audioEls, function(el, ind) {
+              return $(el).find('.pause').trigger('click');
+            });
+          };
+        })(this));
+        this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
+          return function() {
+            var fillElements;
+            fillElements = _this.startFillingElements();
+            return fillElements.done(function() {
+              $('#question-area').removeClass('vHidden');
+              return $('#loading-content-board').remove();
+            });
+          };
+        })(this));
+        App.commands.setHandler("show:response", (function(_this) {
+          return function(marks, total) {
+            return _this.view.triggerMethod('show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1));
+          };
+        })(this));
+        return this.show(this.view, {
+          loading: true,
+          entities: [this.elements]
+        });
       };
 
       Controller.prototype._getContentBoardView = function() {

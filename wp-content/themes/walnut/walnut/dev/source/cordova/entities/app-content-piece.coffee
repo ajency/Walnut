@@ -29,8 +29,10 @@ define ['underscore', 'unserialize'], ( _) ->
 								.then (contentElements)->
 									console.log contentElements
 									excerpt_array = contentElements.excerpt
-									flattenVideosArray = _.flatten contentElements.videoArray
-									videoArray = _.compact flattenVideosArray
+									videoArray = ''
+									if contentElements.videoArray
+										flattenVideosArray = _.flatten contentElements.videoArray
+										videoArray = _.compact flattenVideosArray
 
 
 									marks = contentElements.marks

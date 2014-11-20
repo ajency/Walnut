@@ -17,6 +17,8 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       ContentGroupsItemView.prototype.tagName = 'tr';
 
       ContentGroupsItemView.prototype.onShow = function() {
+        navigator.notification.activityStop();
+        $('body').removeClass('disableTouchForView');
         this.$el.attr('id', 'row-' + this.model.get('id'));
         this.$el.attr('data-id', this.model.get('id'));
         if (this.model.get('quiz_type') === 'class_test') {

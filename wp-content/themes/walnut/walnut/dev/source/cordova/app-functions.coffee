@@ -96,16 +96,16 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		# Decrypt the encrypted audio/video local files
 		decryptLocalFile : (source, destination)->
 			
-			defer = $.Deferred()
+			$.Deferred (d)->
 
-			decrypt.startDecryption(source, destination
-				, ->
-					defer.resolve destination
+				decrypt.startDecryption(source, destination
+					, ->
+						d.resolve destination
 
-				, (message) ->
-					console.log 'FILE DECRYPTION ERROR: '+message
-			)
-			defer.promise()
+					, (message) ->
+						console.log 'FILE DECRYPTION ERROR: '+message
+						d.resolve ''
+				)
 
 		
 		#Get Path From The PLugin
@@ -293,19 +293,18 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			defer.promise()
 
 
+
 		initLocalVideosCheck :(videoIds) ->
 
 			defer = $.Deferred()
-			# navigator.notification.activityStart("Please wait", "loading content...")
+			
 			videoIdAndUrl = new Array()
 
-			# decryptedDestinationVideoPath = []
-			
 			_.createVideosWebDirectory().done =>
+				
 				forEach = (videoId, index)->
+					
 					_.getMediaById(videoId).then (video)->
-						# navigator.notification.activityStart("Please wait", "loading content...")
-						
 							
 						url = video.url.replace("media-web/","")
 						videosWebUrl = url.substr(url.indexOf("uploads/"))
@@ -326,13 +325,6 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 							encryptedVideoPath = option.external+'/'+encryptedPath
 							decryptedVideoPath = option.external+'/'+decryptedPath
 
-						
-						# deferreds = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
-						# deferreds.done (localVideoPath)=>
-
-						# 	navigator.notification.activityStop()
-						# 	console.log localVideoPath
-						# 	decryptedPath = 'file://'+localVideoPath
 							
 						videoIdAndUrl[index] =
 							encryptedPath : encryptedVideoPath
@@ -365,26 +357,32 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 			forEach = (videoId, index)->
 				
-				_.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath)
-				.then (localVideoPath)=>
+				getdecryptedLocalFile = _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath)
+				getdecryptedLocalFile.done (localVideoPath)->
 
-					# navigator.notification.activityStop()
-					# console.log localVideoPath
-
-					index = index + 1
-					if index < _.size(videoIdAndUrl)
-						decryptedVideoPath[index-1] = 'file://'+localVideoPath
-						decryptedVideoPath[index-1] =
-							videoDecryptedPath : 'file://'+localVideoPath
-							vId : videoId.vId
-						forEach videoIdAndUrl[index], index
-
-					else
-						decryptedVideoPath[index-1] =
-							videoDecryptedPath : 'file://'+localVideoPath
-							vId : videoId.vId
-						
+					if _.size(localVideoPath) is 0
+						decryptedVideoPath[0] =
+							videoDecryptedPath : ''
+							vId : ''
 						defer.resolve decryptedVideoPath
+					else
+						index = index + 1
+						
+						if index < _.size(videoIdAndUrl)
+							
+							# decryptedVideoPath[index-1] = 'file://'+localVideoPath
+							decryptedVideoPath[index-1] =
+								videoDecryptedPath : 'file://'+localVideoPath
+								vId : videoId.vId
+							forEach videoIdAndUrl[index], index
+
+						else
+							
+							decryptedVideoPath[index-1] =
+								videoDecryptedPath : 'file://'+localVideoPath
+								vId : videoId.vId
+							
+							defer.resolve decryptedVideoPath
 
 
 			forEach videoIdAndUrl[0], 0

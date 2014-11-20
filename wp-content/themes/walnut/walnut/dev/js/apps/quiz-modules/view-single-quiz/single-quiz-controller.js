@@ -266,21 +266,41 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype.startQuiz = function() {
-        var deferFunc;
-        deferFunc = quizModel.setDecryptedVideos(questionsCollection);
-        return deferFunc.done((function(_this) {
-          return function() {
-            return App.execute("start:take:quiz:app", {
-              region: App.mainContentRegion,
-              quizModel: quizModel,
-              quizResponseSummary: quizResponseSummary,
-              questionsCollection: questionsCollection,
-              display_mode: display_mode,
-              questionResponseCollection: _this.questionResponseCollection,
-              textbookNames: _this.textbookNames
-            });
+        var checkIfVideoArrayPresent, deferFunc;
+        checkIfVideoArrayPresent = [];
+        _.each(questionsCollection.models, (function(_this) {
+          return function(questionsCollectionValues, index) {
+            if (_.size(questionsCollectionValues.get('videoArray'))) {
+              return checkIfVideoArrayPresent.push(questionsCollectionValues.get('videoArray'));
+            }
           };
         })(this));
+        if (_.size(checkIfVideoArrayPresent)) {
+          deferFunc = quizModel.setDecryptedVideos(questionsCollection);
+          return deferFunc.done((function(_this) {
+            return function() {
+              return App.execute("start:take:quiz:app", {
+                region: App.mainContentRegion,
+                quizModel: quizModel,
+                quizResponseSummary: quizResponseSummary,
+                questionsCollection: questionsCollection,
+                display_mode: display_mode,
+                questionResponseCollection: _this.questionResponseCollection,
+                textbookNames: _this.textbookNames
+              });
+            };
+          })(this));
+        } else {
+          return App.execute("start:take:quiz:app", {
+            region: App.mainContentRegion,
+            quizModel: quizModel,
+            quizResponseSummary: quizResponseSummary,
+            questionsCollection: questionsCollection,
+            display_mode: display_mode,
+            questionResponseCollection: this.questionResponseCollection,
+            textbookNames: this.textbookNames
+          });
+        }
       };
 
       Controller.prototype.showQuizViews = function() {

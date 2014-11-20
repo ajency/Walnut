@@ -72,14 +72,14 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }
     },
     decryptLocalFile: function(source, destination) {
-      var defer;
-      defer = $.Deferred();
-      decrypt.startDecryption(source, destination, function() {
-        return defer.resolve(destination);
-      }, function(message) {
-        return console.log('FILE DECRYPTION ERROR: ' + message);
+      return $.Deferred(function(d) {
+        return decrypt.startDecryption(source, destination, function() {
+          return d.resolve(destination);
+        }, function(message) {
+          console.log('FILE DECRYPTION ERROR: ' + message);
+          return d.resolve('');
+        });
       });
-      return defer.promise();
     },
     getDeviceStorageOptions: function() {
       var defer, storageOptions;
@@ -301,11 +301,18 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       defer = $.Deferred();
       decryptedVideoPath = new Array();
       forEach = function(videoId, index) {
-        return _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath).then((function(_this) {
-          return function(localVideoPath) {
+        var getdecryptedLocalFile;
+        getdecryptedLocalFile = _.decryptLocalFile(videoId.encryptedPath, videoId.decryptedPath);
+        return getdecryptedLocalFile.done(function(localVideoPath) {
+          if (_.size(localVideoPath) === 0) {
+            decryptedVideoPath[0] = {
+              videoDecryptedPath: '',
+              vId: ''
+            };
+            return defer.resolve(decryptedVideoPath);
+          } else {
             index = index + 1;
             if (index < _.size(videoIdAndUrl)) {
-              decryptedVideoPath[index - 1] = 'file://' + localVideoPath;
               decryptedVideoPath[index - 1] = {
                 videoDecryptedPath: 'file://' + localVideoPath,
                 vId: videoId.vId
@@ -318,8 +325,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
               };
               return defer.resolve(decryptedVideoPath);
             }
-          };
-        })(this));
+          }
+        });
       };
       forEach(videoIdAndUrl[0], 0);
       return defer.promise();
