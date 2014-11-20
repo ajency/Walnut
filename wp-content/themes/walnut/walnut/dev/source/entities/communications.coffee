@@ -36,7 +36,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 console.log recipient
                 url     = AJAXURL + '?action=get-communication-preview'
                 data    = @.toJSON()
-                data.additional_data.recipient = recipient.toJSON()
+                data.additional_data.preview_recipient = recipient.toJSON()
 
                 defer = $.Deferred()
 

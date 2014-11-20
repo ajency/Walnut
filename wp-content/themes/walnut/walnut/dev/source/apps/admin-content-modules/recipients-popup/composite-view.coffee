@@ -1,8 +1,8 @@
  define ['app'
-        'apps/quiz-reports/class-report/recipients-popup/item-view'
+        'apps/admin-content-modules/recipients-popup/item-view'
         ], (App)->
 
-    App.module "QuizRecipientsPopup.Views", (Views)-> 
+    App.module "ModulesEmailRecipientsPopup.Views", (Views)-> 
 
         class Views.RecipientsView extends Marionette.CompositeView
 
@@ -13,11 +13,10 @@
                                         <input id="check_all" type="checkbox">
                                         <label for="check_all"></label>
                                     </div></th>
-                                    <th>Recipient Name (Parents)</th>
-                                    <th>Recipient Email</th>
-                                    <th>Student Name</th>
-                                    <th>Quiz</th>
-                                    <th></th>
+                                    <th>Parent</th>
+                                    <th>Student</th>
+                                    <th>Module Name</th>
+                                    <th>Preview</th>
                                 </tr>
                             </thead>
                             <tbody id="list-recipients" class="rowlink"></tbody>
@@ -69,9 +68,20 @@
 
                     @model.save()
 
-                    @$el.find '.send-email'
-                    .after '<span class="m-l-40 text-success small communication_sent">
-                            Your Emails have been queued successfully</span>'
+                    data= communication_type  : 'taught_in_class_student_mail'
+
+                    @model.save data,
+                        'success':=>
+                            @$el.find '.send-email'
+                            .after '<span class="m-l-40 text-success small communication_sent">
+                                    Your Emails have been queued successfully</span>'
+
+                            @model.set 'communication_type'  : 'taught_in_class_parent_mail'
+                                
+                        'error':=>
+                            @$el.find '.send-email'
+                            .after '<span class="m-l-40 text-error small communication_sent">
+                                    Error sending mail</span>'                    
 
                 else
                     @$el.find '.send-email'

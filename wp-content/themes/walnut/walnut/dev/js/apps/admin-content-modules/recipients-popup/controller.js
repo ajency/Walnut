@@ -2,9 +2,9 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/recipients-popup/composite-view'], function(App, RegionController) {
-  return App.module('QuizRecipientsPopup', function(QuizRecipientsPopup, App) {
-    QuizRecipientsPopup.Controller = (function(_super) {
+define(['app', 'controllers/region-controller', 'apps/admin-content-modules/recipients-popup/composite-view'], function(App, RegionController) {
+  return App.module('ModulesEmailRecipientsPopup', function(ModulesEmailRecipientsPopup, App) {
+    ModulesEmailRecipientsPopup.Controller = (function(_super) {
       __extends(Controller, _super);
 
       function Controller() {
@@ -45,7 +45,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       };
 
       Controller.prototype._getSelectRecipientsView = function(recipients) {
-        return new QuizRecipientsPopup.Views.RecipientsView({
+        return new ModulesEmailRecipientsPopup.Views.RecipientsView({
           model: this.communicationModel,
           collection: recipients
         });
@@ -54,8 +54,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       return Controller;
 
     })(RegionController);
-    return App.commands.setHandler('show:quiz:select:recipients:popup', function(options) {
-      return new QuizRecipientsPopup.Controller(options);
+    return App.commands.setHandler('show:modules:select:recipients:popup', function(options) {
+      return new ModulesEmailRecipientsPopup.Controller(options);
     });
   });
 });

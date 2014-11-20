@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/admin-content-modules/views'], function(App, RegionController, classDescriptionTpl) {
+define(['app', 'controllers/region-controller', 'apps/admin-content-modules/views', 'apps/admin-content-modules/recipients-popup/controller'], function(App, RegionController, classDescriptionTpl) {
   return App.module("AdminContentModulesApp.View", function(View, App) {
     View.AdminModulesController = (function(_super) {
       __extends(AdminModulesController, _super);
@@ -67,6 +67,7 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                   });
                 });
                 return _this.listenTo(_this.view, "save:communications", function(data) {
+                  var communicationModel;
                   data = {
                     component: 'teaching_modules',
                     communication_type: 'taught_in_class_parent_mail',
@@ -76,14 +77,20 @@ define(['app', 'controllers/region-controller', 'apps/admin-content-modules/view
                       division: data.division
                     }
                   };
-                  App.request("save:communications", data);
-                  data.communication_type = 'taught_in_class_student_mail';
-                  return App.request("save:communications", data);
+                  communicationModel = App.request("create:communication", data);
+                  return _this._showSelectRecipientsApp(communicationModel);
                 });
               });
             });
           };
         })(this));
+      };
+
+      AdminModulesController.prototype._showSelectRecipientsApp = function(communicationModel) {
+        return App.execute("show:modules:select:recipients:popup", {
+          region: App.dialogRegion,
+          communicationModel: communicationModel
+        });
       };
 
       AdminModulesController.prototype._getContentGroupsListingView = function(collection) {

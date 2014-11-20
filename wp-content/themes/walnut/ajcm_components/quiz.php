@@ -166,7 +166,7 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
 
     $quiz_details= get_single_quiz_module($quiz_id,$school_admin[0]);   
 
-    restore_current_blog();
+    switch_to_blog(1);
 
     $terms= $quiz_details->term_ids;
 
@@ -181,6 +181,8 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
     else
         $chapter_name = ' -- ';
 
+    restore_current_blog();
+    
     $subject = get_textbook_subject($textbook_id);
 
     $division_data = fetch_single_division($division,$comm_data['blog_id']);

@@ -1,10 +1,10 @@
 define ['app'
         'controllers/region-controller'
-        'apps/quiz-reports/class-report/recipients-popup/composite-view'
+        'apps/admin-content-modules/recipients-popup/composite-view'
 ],(App,RegionController)->
-    App.module 'QuizRecipientsPopup', (QuizRecipientsPopup,App)->
+    App.module 'ModulesEmailRecipientsPopup', (ModulesEmailRecipientsPopup,App)->
 
-        class QuizRecipientsPopup.Controller extends RegionController
+        class ModulesEmailRecipientsPopup.Controller extends RegionController
 
             initialize : (options)->
 
@@ -24,15 +24,17 @@ define ['app'
                         @region.closeDialog()  
 
                     @listenTo @view, 'itemview:preview:email',(itemview, id)->
+                        
                         recipient = recipientsCollection.get id
+
                         preview= @communicationModel.getPreview recipient
                         preview.done (content)=>
                             itemview.triggerMethod "show:preview",content.html
 
             _getSelectRecipientsView :(recipients)=>
-                new QuizRecipientsPopup.Views.RecipientsView
+                new ModulesEmailRecipientsPopup.Views.RecipientsView
                     model        : @communicationModel
                     collection   : recipients
 
-        App.commands.setHandler 'show:quiz:select:recipients:popup',(options)->
-            new QuizRecipientsPopup.Controller options
+        App.commands.setHandler 'show:modules:select:recipients:popup',(options)->
+            new ModulesEmailRecipientsPopup.Controller options

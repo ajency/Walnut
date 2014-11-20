@@ -127,7 +127,7 @@ function quiz_completed_parent_mail_preview($data){
         'communication_type'=>$data['communication_type']
         );
 
-    $recipient=$data['additional_data']['recipient'];
+    $recipient=$data['additional_data']['preview_recipient'];
     $division =$data['additional_data']['division'];
 
     //print_r($recipient); exit;

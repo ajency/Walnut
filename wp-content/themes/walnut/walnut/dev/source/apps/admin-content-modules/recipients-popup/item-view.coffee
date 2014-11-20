@@ -1,9 +1,9 @@
  define ['app'
         'bootbox'
-        'apps/quiz-reports/class-report/recipients-popup/item-view'
+        'apps/admin-content-modules/recipients-popup/item-view'
         ], (App,bootbox)->
 
-    App.module "QuizRecipientsPopup.Views", (Views)-> 
+    App.module "ModulesEmailRecipientsPopup.Views", (Views)-> 
 
     	class Views.RecipientsItemView extends Marionette.ItemView
 
@@ -15,10 +15,9 @@
                             <label for="checkbox{{id}}"></label>
                           </div>
                         </td>
-                        <td>{{parent_name}}</td>
-                        <td>{{parent_email}}</td>
-                        <td>{{student_name}}</td>
-                        <td>{{quiz_name}}</td>
+                        <td>Name: {{parent_name}}<br>Email: {{parent_email}}</td>
+                        <td>Name: {{student_name}}<br>Email: {{student_email}}</td>
+                        <td>{{module_name}}</td>
                         <td><button class="btn btn-info pull-left email-preview">
                             <i class="progress-spinner fa fa-spinner fa-spin none"></i>
                             Preview</button>

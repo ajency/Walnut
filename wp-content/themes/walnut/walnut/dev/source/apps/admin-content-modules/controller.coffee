@@ -1,6 +1,7 @@
 define ['app'
         'controllers/region-controller'
         'apps/admin-content-modules/views'
+        'apps/admin-content-modules/recipients-popup/controller'
 ], (App, RegionController, classDescriptionTpl)->
 
     App.module "AdminContentModulesApp.View", (View, App)->
@@ -69,13 +70,13 @@ define ['app'
                                         division        : data.division
 
                                 #save communication for type taught_in_class_parent_mail
-                                App.request "save:communications",data
+                                communicationModel = App.request "create:communication",data
+                                @_showSelectRecipientsApp communicationModel
 
-                                data.communication_type  = 'taught_in_class_student_mail'
-
-                                #save communication for type taught_in_class_student_mail
-                                App.request "save:communications",data
-
+            _showSelectRecipientsApp:(communicationModel)->
+                App.execute "show:modules:select:recipients:popup",
+                    region               : App.dialogRegion
+                    communicationModel   : communicationModel
 
             _getContentGroupsListingView: (collection)=>
                 new View.AdminModulesView.ModulesView

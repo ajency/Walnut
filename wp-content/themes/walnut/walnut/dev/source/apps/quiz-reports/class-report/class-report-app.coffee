@@ -131,7 +131,6 @@ define ['app'
                 App.execute "show:quiz:select:recipients:popup",
                     region               : App.dialogRegion
                     communicationModel   : communicationModel
-                    quizCollection       : quizzes
 
             _showQuiz:(quizModel)->
                 App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"

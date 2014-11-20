@@ -42,7 +42,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         console.log(recipient);
         url = AJAXURL + '?action=get-communication-preview';
         data = this.toJSON();
-        data.additional_data.recipient = recipient.toJSON();
+        data.additional_data.preview_recipient = recipient.toJSON();
         defer = $.Deferred();
         $.post(url, data, (function(_this) {
           return function(response) {
