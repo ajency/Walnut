@@ -95,13 +95,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       return _.getUserDetails(this.data.txtusername).done((function(_this) {
         return function(user) {
-          var getDisplayName;
+          var author_id, getDisplayName;
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
-              getDisplayName = _.getPostAuthorName(_.getUserID());
+              author_id = _.getUserID();
+              getDisplayName = _.getPostAuthorName(author_id);
               return getDisplayName.done(function(display_name) {
-                this.setOflineUserDetails(display_name, user.user_id, this.data.txtusername);
-                return this.onSuccessResponse();
+                _this.setOflineUserDetails(display_name, user.user_id, _this.data.txtusername);
+                return _this.onSuccessResponse();
               });
             } else {
               return _this.onErrorResponse('Invalid Password');
@@ -142,28 +143,6 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
         'data': data,
         'ID': id
       });
-    };
-
-    AuthenticationController.prototype.setUserModelForOfflineLogin = function() {
-      return _.getUserDetails(_.getUserID()).then((function(_this) {
-        return function(userDetails) {
-          var data, user;
-          _.setTblPrefix(userDetails.blog_id);
-          user = App.request("get:user:model");
-          data = {
-            'ID': userDetails.user_id,
-            'division': userDetails.division,
-            'display_name': userDetails.username,
-            'user_email': userDetails.user_email
-          };
-          user.set({
-            'data': data,
-            'ID': userDetails.user_id
-          });
-          App.vent.trigger("show:dashboard");
-          return App.loginRegion.close();
-        };
-      })(this));
     };
 
     AuthenticationController.prototype.initialAppLogin = function(server_resp) {

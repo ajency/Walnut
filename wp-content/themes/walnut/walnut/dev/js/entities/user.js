@@ -52,6 +52,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       UserCollection.prototype.name = 'user';
 
+      UserCollection.prototype.comparator = 'display_name';
+
       UserCollection.prototype.url = function() {
         return AJAXURL + '?action=get-users';
       };

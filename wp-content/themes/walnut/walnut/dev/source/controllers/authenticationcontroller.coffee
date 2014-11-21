@@ -93,8 +93,9 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 				if user.exists
 					if user.password is @data.txtpassword
-						getDisplayName = _.getPostAuthorName(_.getUserID())
-						getDisplayName.done (display_name)->
+						author_id = _.getUserID()
+						getDisplayName = _.getPostAuthorName(author_id)
+						getDisplayName.done (display_name)=>
 							@setOflineUserDetails(display_name, user.user_id, @data.txtusername)
 							@onSuccessResponse()
 
@@ -104,7 +105,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 		
 		
-		setUserDetails : (resp , id, username)-> 
+		setUserDetails : (resp, id, username)-> 
 
 			# save logged in user id and username
 			_.setUserID(id)
@@ -144,28 +145,6 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 			# userModel.set 'ID' : ''+_.getUserID()
 
 
-		setUserModelForOfflineLogin : ->
-			
-			_.getUserDetails(_.getUserID())
-			.then (userDetails)=>
-
-				_.setTblPrefix(userDetails.blog_id)
-
-				user = App.request "get:user:model"
-
-				data = 
-					'ID': userDetails.user_id
-					'division': userDetails.division
-					'display_name': userDetails.username
-					'user_email': userDetails.user_email
-
-
-				user.set 
-					'data' : data
-					'ID' 	: userDetails.user_id
-
-				App.vent.trigger "show:dashboard"
-				App.loginRegion.close()
 		# when the app is installed for the first time
 		initialAppLogin : (server_resp)->
 
