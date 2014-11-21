@@ -51,7 +51,7 @@ define ['app'
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
-				@$el.find('video')[0].poster = "../images/video-poster.jpg"
+				@$el.find('video')[0].poster = "/images/video-poster.jpg"
 				@$el.find('video')[0].src = @videos[0]
 
 
@@ -131,7 +131,7 @@ define ['app'
 				else 
 					@$el.find('video')[0].src = @videos[@index]
 					setTimeout(=>
-						@$el.find('video')[0].poster = "../images/video-unavailable.png"
+						@$el.find('video')[0].poster = "/images/video-unavailable.png"
 					,50)
 					
 				

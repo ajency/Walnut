@@ -189,18 +189,24 @@ define ['app'
 
 					@showQuizViews()
 
+					@_scrolltoQuizDetailsRegion()
+					
 					@layout.attemptsRegion.$el.find '.view-summary i'
 					.removeClass 'fa fa-spin fa-spinner'
 
-					@_scrolltoQuizDetailsRegion()
+					# @_scrolltoQuizDetailsRegion()
 
 			_scrolltoQuizDetailsRegion:->
 				
 				top= @layout.quizDetailsRegion.$el.offset().top
 				#cancel out the header div height
-				top= top-70
-
-				$('html,body').animate scrollTop: top, 'slow'
+				top= top-100
+				# alert top
+				# chk = $('body').height()
+				# alert chk
+				# console.log top
+				$('html,body').animate({scrollTop: top}, 'slow');
+				# $('body').animate scrollTop: top, 'slow'
 
 
 			_fetchQuizResponseSummary:=>

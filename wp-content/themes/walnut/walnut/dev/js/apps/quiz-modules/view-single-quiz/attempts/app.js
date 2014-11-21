@@ -67,7 +67,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       QuizAttemptsView.prototype.events = {
         'click .view-summary': function(e) {
           $(e.target).find('i').addClass('fa fa-spinner fa-spin');
-          return this.trigger('view:summary', $(e.target).attr('data-id'));
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.trigger('view:summary', $(e.target).attr('data-id'));
+            };
+          })(this), 200);
         }
       };
 

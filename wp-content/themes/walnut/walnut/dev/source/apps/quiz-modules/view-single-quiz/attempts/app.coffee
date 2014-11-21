@@ -73,7 +73,11 @@ define ['app'
             events: 
                 'click .view-summary':(e)-> 
                     $(e.target).find('i').addClass 'fa fa-spinner fa-spin'
-                    @trigger 'view:summary', $(e.target).attr 'data-id'
+                    
+                    setTimeout =>
+                        @trigger 'view:summary', $(e.target).attr 'data-id'                        
+                    ,200
+                   
 
 
         # set handlers
