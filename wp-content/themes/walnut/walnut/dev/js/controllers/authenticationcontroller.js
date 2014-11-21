@@ -81,7 +81,7 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       var user_role;
       user_role = resp.blog_details.blog_roles[0];
       if (user_role === 'teacher') {
-        this.setUserDetails(resp.login_details.ID, this.data.txtusername);
+        this.setUserDetails(resp, resp.login_details.ID, this.data.txtusername);
         if (_.isNull(_.getBlogID())) {
           return this.initialAppLogin(resp);
         } else {
@@ -95,10 +95,14 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       return _.getUserDetails(this.data.txtusername).done((function(_this) {
         return function(user) {
+          var getDisplayName;
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
-              _this.setUserDetails(user.user_id, _this.data.txtusername);
-              return _this.onSuccessResponse();
+              getDisplayName = _.getPostAuthorName(_.getUserID());
+              return getDisplayName.done(function(display_name) {
+                this.setOflineUserDetails(display_name, user.user_id, this.data.txtusername);
+                return this.onSuccessResponse();
+              });
             } else {
               return _this.onErrorResponse('Invalid Password');
             }
@@ -109,14 +113,57 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
-    AuthenticationController.prototype.setUserDetails = function(id, username) {
-      var userModel;
+    AuthenticationController.prototype.setUserDetails = function(resp, id, username) {
+      var data, login, userModel;
+      _.setUserID(id);
+      _.setUserName(username);
+      login = resp.login_details;
+      userModel = App.request("get:user:model");
+      data = {
+        'ID': login.ID,
+        'display_name': login.data.display_name
+      };
+      return userModel.set({
+        'data': data,
+        'ID': id
+      });
+    };
+
+    AuthenticationController.prototype.setOflineUserDetails = function(display_name, id, username) {
+      var data, userModel;
       _.setUserID(id);
       _.setUserName(username);
       userModel = App.request("get:user:model");
+      data = {
+        'ID': id,
+        'display_name': display_name
+      };
       return userModel.set({
-        'ID': '' + _.getUserID()
+        'data': data,
+        'ID': id
       });
+    };
+
+    AuthenticationController.prototype.setUserModelForOfflineLogin = function() {
+      return _.getUserDetails(_.getUserID()).then((function(_this) {
+        return function(userDetails) {
+          var data, user;
+          _.setTblPrefix(userDetails.blog_id);
+          user = App.request("get:user:model");
+          data = {
+            'ID': userDetails.user_id,
+            'division': userDetails.division,
+            'display_name': userDetails.username,
+            'user_email': userDetails.user_email
+          };
+          user.set({
+            'data': data,
+            'ID': userDetails.user_id
+          });
+          App.vent.trigger("show:dashboard");
+          return App.loginRegion.close();
+        };
+      })(this));
     };
 
     AuthenticationController.prototype.initialAppLogin = function(server_resp) {

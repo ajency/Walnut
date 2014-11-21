@@ -73,7 +73,7 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 			if user_role is 'teacher'
 							
-				@setUserDetails(resp.login_details.ID, @data.txtusername)
+				@setUserDetails(resp, resp.login_details.ID, @data.txtusername)
 
 				# if the blog id is null, then the app is installed
 				# for the first time.
@@ -93,28 +93,79 @@ define ["marionette","app", "underscore"], (Marionette, App, _) ->
 
 				if user.exists
 					if user.password is @data.txtpassword
+						getDisplayName = _.getPostAuthorName(_.getUserID())
+						getDisplayName.done (display_name)->
+							@setOflineUserDetails(display_name, user.user_id, @data.txtusername)
+							@onSuccessResponse()
 
-						@setUserDetails(user.user_id, @data.txtusername)
-						@onSuccessResponse()
-
-					else @onErrorResponse('Invalid Password')       
+					else @onErrorResponse('Invalid Password')    
 
 				else @onErrorResponse('No such user has previously logged in')
 
 		
 		
-		setUserDetails : (id, username)-> 
+		setUserDetails : (resp , id, username)-> 
 
 			# save logged in user id and username
 			_.setUserID(id)
 			_.setUserName(username)
 
+			login = resp.login_details
 			# set user model
 			userModel = App.request "get:user:model"
-			userModel.set 'ID' : ''+_.getUserID()
+			
+			data = 
+				'ID': login.ID
+				'display_name': login.data.display_name
+			
+			userModel.set 
+				'data' : data
+				'ID' : id
+			# userModel.set 'ID' : ''+_.getUserID()
 
 
-		
+
+		setOflineUserDetails : (display_name,id,username)->
+			# save logged in user id and username
+			_.setUserID(id)
+			_.setUserName(username)
+
+			# login = resp.login_details
+			# set user model
+			userModel = App.request "get:user:model"
+			
+			data = 
+				'ID': id
+				'display_name': display_name
+			
+			userModel.set 
+				'data' : data
+				'ID' : id
+			# userModel.set 'ID' : ''+_.getUserID()
+
+
+		setUserModelForOfflineLogin : ->
+			
+			_.getUserDetails(_.getUserID())
+			.then (userDetails)=>
+
+				_.setTblPrefix(userDetails.blog_id)
+
+				user = App.request "get:user:model"
+
+				data = 
+					'ID': userDetails.user_id
+					'division': userDetails.division
+					'display_name': userDetails.username
+					'user_email': userDetails.user_email
+
+
+				user.set 
+					'data' : data
+					'ID' 	: userDetails.user_id
+
+				App.vent.trigger "show:dashboard"
+				App.loginRegion.close()
 		# when the app is installed for the first time
 		initialAppLogin : (server_resp)->
 
