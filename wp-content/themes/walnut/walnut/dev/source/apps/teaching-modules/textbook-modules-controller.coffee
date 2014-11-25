@@ -39,10 +39,15 @@ define ['app'
 
 					@listenTo @view, "schedule:training": (id)=>
 						@singleModule = @contentGroupsCollection.get id
-						modalview = @_showScheduleModal @singleModule
-						@show modalview, region: App.popupRegion
+						@modalview = @_showScheduleModal @singleModule
+						@show @modalview, region: App.popupRegion
+						@modalview.$el.on 'hidden.bs.modal', ()=>
+							$(".datepicker-dropdown").remove();
+							# @modalview.$el.find('#schedule').datepicker('hide');
+							# @modalview.$el.find('#schedule').removeClass('modal fade')
+						
 
-						@listenTo modalview, "save:scheduled:date", @_saveSchedule
+						@listenTo @modalview, "save:scheduled:date", @_saveSchedule
 
 					@listenTo @view, "fetch:chapters:or:sections", (parentID, filterType) =>
 						chaptersOrSections= App.request "get:chapters", ('parent' : parentID)
@@ -94,22 +99,22 @@ define ['app'
 		class ScheduleModalView extends Marionette.ItemView
 
 			template: '<div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-												  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
-												</div>
-												<div class="modal-body">
-												  <div data-date-format="yyyy-mm-dd" class="input-append success date">
-																  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
-																  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
-														  </div>
-														  <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
-												</div>
-											  </div>
-											</div>
-										</div>'
+							<div class="modal-dialog">
+								  <div class="modal-content">
+									<div class="modal-header">
+									  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									  <h4 class="modal-title" id="myModalLabel">Schedule Module</h4>
+									</div>
+									<div class="modal-body">
+									  <div data-date-format="yyyy-mm-dd" class="input-append success date">
+													  <input id="scheduled-date" type="text" value="{{training_date}}" placeholder="Select Date" class="span12">
+													  <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+										</div>
+										<button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+									</div>
+								  </div>
+							</div>
+						</div>'
 
 			events:
 				'click .btn-success': 'saveScheduledDate'
@@ -122,6 +127,8 @@ define ['app'
 					autoclose: true
 					todayHighlight: true
 					startDate: today
+
+				# find('input.date').removeClass('hasDatepicker').datepicker({dateFormat:'dd/mm/yy'});
 
 
 			serializeData: ->

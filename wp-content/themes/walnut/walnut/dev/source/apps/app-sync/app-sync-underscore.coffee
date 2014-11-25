@@ -125,8 +125,15 @@ define ['underscore', 'unserialize'], ( _) ->
 		#Delete all files from 'SynapseData' directory
 		clearSynapseDataDirectory : ->
 		   
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-				fileSystem.root.getDirectory("SynapseAssets/SynapseData"
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+		   
+			window.resolveLocalFileSystemURL('file://'+filepath+'', (fileSystem)->
+				fileSystem.getDirectory("SynapseAssets/SynapseData"
 					, {create: false, exclusive: false}
 
 					, (directoryEntry)->
@@ -140,7 +147,9 @@ define ['underscore', 'unserialize'], ( _) ->
 										console.log "Deleted all files from 'SynapseData' directory"
 
 							,_.directoryErrorHandler)
+					
 					, _.directoryErrorHandler)
+			
 			, _.fileSystemErrorHandler)
 
 

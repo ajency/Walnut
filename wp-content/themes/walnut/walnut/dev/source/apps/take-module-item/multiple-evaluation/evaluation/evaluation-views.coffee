@@ -61,8 +61,8 @@ define ['app'], (App)->
 													<div id="evaluation-collection">
 													</div>
 													{{#showButtons}}
-													<div class="row m-r-0 m-l-0 p-t-10">
-														<button class="btn btn-info h-center block" id="saveEval">Save</button>
+													<div class="text-center">
+														<button class="btn btn-info m-r-10" id="saveEval">Save</button>
 													</div>
 													{{/showButtons}}
 													</div>'

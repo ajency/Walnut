@@ -100,14 +100,22 @@ define ['underscore', 'jquery'], ( _ , $) ->
 
 			path = file_type.toLowerCase()+"s"
 
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+
 			runFunc = ->
 				$.Deferred (d)->
 
 					localFilesList = []
 
-					window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
+					window.resolveLocalFileSystemURL('file://'+filepath+''
 						, (fileSystem)->
-							fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+path
+
+							fileSystem.getDirectory("SynapseAssets/SynapseMedia/uploads/"+path
 								, {create: false, exclusive: false}
 
 								, (directoryEntry)->
@@ -128,7 +136,6 @@ define ['underscore', 'jquery'], ( _ , $) ->
 			$.when(runFunc()).done ->
 				console.log 'getListOfFilesFromLocalDirectory done'
 			.fail _.failureHandler
-				
 
 		
 		getListOfMediaFilesFromServer : (file_type)->

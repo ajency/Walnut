@@ -55,7 +55,7 @@ define ['app'], (App)->
 
 			_initLocalVideos : ->
 
-				# navigator.notification.activityStart("Please wait", "loading content...")
+				navigator.notification.activityStart("Please wait", "loading content...")
 
 				widthRatio = 16
 				heightRatio = 9
@@ -75,9 +75,23 @@ define ['app'], (App)->
 									url = videoSource.replace("media-web/","")
 									videosWebUrl = url.substr(url.indexOf("uploads/"))
 									videoUrl = videosWebUrl.replace("videos-web", "videos")
-									encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-									decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+									encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
+									decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+									
+									value = _.getStorageOption()
+									option = JSON.parse(value)
 
+									encryptedVideoPath = '' 
+									decryptedVideoPath = ''
+
+									if option.internal
+										encryptedVideoPath = option.internal+'/'+encryptedPath
+										decryptedVideoPath = option.internal+'/'+decryptedPath
+									else if option.external
+										encryptedVideoPath = option.external+'/'+encryptedPath
+										decryptedVideoPath = option.external+'/'+decryptedPath
+
+									
 									decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
 									deferreds.push decryptFile
 							
@@ -85,14 +99,14 @@ define ['app'], (App)->
 								_.each videoPaths , (localVideoPath , index)=>
 									do(localVideoPath, index)=> 
 										
-										@videos[index] = 'file:///mnt/sdcard/'+localVideoPath
+										@videos[index] = 'file://'+localVideoPath
 
 								d.resolve @videos
 								
 
 				$.when(runFunc()).done =>
 					console.log('_initLocalVideos done')
-					# navigator.notification.activityStop()
+					navigator.notification.activityStop()
 					@$el.find('video')[0].src = @videos[0]
 					@$el.find('video')[0].load()
 

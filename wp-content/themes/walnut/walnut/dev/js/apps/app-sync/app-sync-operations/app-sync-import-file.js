@@ -9,11 +9,18 @@ define(['underscore', 'csvparse'], function(_) {
       })(this), 2000);
     },
     parseCSVToJSON: function(fileName) {
-      var readFile;
+      var filepath, option, readFile, value;
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
       readFile = function() {
         return $.Deferred(function(d) {
-          return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-            return fileSystem.root.getFile("SynapseAssets/SynapseData/" + fileName, {
+          return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileSystem) {
+            return fileSystem.getFile("SynapseAssets/SynapseData/" + fileName, {
               create: false
             }, function(fileEntry) {
               return fileEntry.file(function(file) {
@@ -293,7 +300,8 @@ define(['underscore', 'csvparse'], function(_) {
       setTimeout((function(_this) {
         return function() {
           $('#syncSuccess').css("display", "block").text("Sync completed successfully");
-          return $('#main-menu-toggle').css('display', 'block');
+          $('#main-menu-toggle').css('display', 'block');
+          return $('#storageOption').prop("disabled", false);
         };
       })(this), 2000);
       return setTimeout((function(_this) {

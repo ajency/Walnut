@@ -6,6 +6,8 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 
 		generateZipFile : ->
 
+			$('#storageOption').prop("disabled",true)
+			
 			$('#syncSuccess').css("display","block").text("Generating file...")
 
 			questionResponseData = _.getDataFromQuestionResponse()
@@ -42,9 +44,16 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 			
 			content = zip.generate({type:"blob"})
 
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+
+			window.resolveLocalFileSystemURL('file://'+filepath+'' 
 				,(fileSystem)->
-					fileSystem.root.getFile("SynapseAssets/SynapseData/csv-export-"+device.uuid+".zip"
+					fileSystem.getFile("SynapseAssets/SynapseData/csv-export-"+device.uuid+".zip"
 						, {create: true, exclusive: false}
 						
 						,(fileEntry)->
@@ -63,7 +72,7 @@ define ['underscore', 'unserialize', 'json2csvparse', 'jszip'], ( _) ->
 				, _.fileSystemErrorHandler)
 
 
-		
+
 		onFileGenerationSuccess : ->
 
 			_.updateSyncDetails('file_generate', _.getCurrentDateTime(2))

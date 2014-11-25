@@ -2,6 +2,7 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
   return _.mixin({
     generateZipFile: function() {
       var questionResponseData;
+      $('#storageOption').prop("disabled", true);
       $('#syncSuccess').css("display", "block").text("Generating file...");
       questionResponseData = _.getDataFromQuestionResponse();
       return questionResponseData.done(function(question_response_data) {
@@ -23,15 +24,22 @@ define(['underscore', 'unserialize', 'json2csvparse', 'jszip'], function(_) {
       return csvData;
     },
     writeToZipFile: function(question_response_data, question_response_meta_data) {
-      var content, zip;
+      var content, filepath, option, value, zip;
       zip = new JSZip();
       zip.file('' + _.getTblPrefix() + 'question_response.csv', question_response_data);
       zip.file('' + _.getTblPrefix() + 'question_response_meta.csv', question_response_meta_data);
       content = zip.generate({
         type: "blob"
       });
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getFile("SynapseAssets/SynapseData/csv-export-" + device.uuid + ".zip", {
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
+      return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileSystem) {
+        return fileSystem.getFile("SynapseAssets/SynapseData/csv-export-" + device.uuid + ".zip", {
           create: true,
           exclusive: false
         }, function(fileEntry) {

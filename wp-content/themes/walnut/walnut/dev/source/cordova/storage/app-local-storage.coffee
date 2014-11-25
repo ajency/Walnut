@@ -80,4 +80,9 @@ define ['underscore'], ( _)->
         getAudioCues : ->
             _.localStorage.getItem("check_uncheck_value")
 
-        
+        #Set the storage path selected by the user
+        setStorageOption : (Value)->
+            _.localStorage.setItem("storage_option", JSON.stringify(Value))
+
+        getStorageOption : ->
+            _.localStorage.getItem("storage_option")
