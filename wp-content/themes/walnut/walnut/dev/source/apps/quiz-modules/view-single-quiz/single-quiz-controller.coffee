@@ -194,13 +194,20 @@ define ['app'
 
 					@_scrolltoQuizDetailsRegion()
 
+					# @_scrolltoQuizDetailsRegion()
+
 			_scrolltoQuizDetailsRegion:->
 				
 				top= @layout.quizDetailsRegion.$el.offset().top
+				# top= $('body').height()
 				#cancel out the header div height
-				top= top-70
-
-				$('html,body').animate scrollTop: top, 'slow'
+				top= top-100
+				# alert top
+				# chk = $('body').height()
+				# alert chk
+				# console.log top
+				$('html,body').animate({scrollTop: top}, 1000);
+				# $('body').animate scrollTop: top, 'slow'
 
 
 			_fetchQuizResponseSummary:=>

@@ -208,10 +208,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       Controller.prototype._scrolltoQuizDetailsRegion = function() {
         var top;
         top = this.layout.quizDetailsRegion.$el.offset().top;
-        top = top - 70;
+        top = top - 100;
         return $('html,body').animate({
           scrollTop: top
-        }, 'slow');
+        }, 1000);
       };
 
       Controller.prototype._fetchQuizResponseSummary = function() {

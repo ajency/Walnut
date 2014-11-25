@@ -37,7 +37,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
-        this.$el.find('video')[0].poster = "../images/video-poster.jpg";
+        this.$el.find('video')[0].poster = "/images/video-poster.jpg";
         this.$el.find('video')[0].src = this.videos[0];
         widthRatio = 16;
         heightRatio = 9;
@@ -101,7 +101,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('video')[0].src = this.videos[this.index];
           setTimeout((function(_this) {
             return function() {
-              return _this.$el.find('video')[0].poster = "../images/video-unavailable.png";
+              return _this.$el.find('video')[0].poster = "/images/video-unavailable.png";
             };
           })(this), 50);
         }

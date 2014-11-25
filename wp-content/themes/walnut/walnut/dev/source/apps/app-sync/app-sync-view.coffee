@@ -117,8 +117,6 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 				App.request "get:sync:controller"
 
 
-			
-
 				
 
 			selectStorageOption : ->

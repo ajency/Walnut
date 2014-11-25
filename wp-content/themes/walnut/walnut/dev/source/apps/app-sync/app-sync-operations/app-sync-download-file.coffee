@@ -104,8 +104,6 @@ define ['underscore', 'bootbox'], ( _ ,bootbox ) ->
 			
 			
 
-
-		
 		onFileDownloadSuccess : (source, destination, last_sync)->
 
 			console.log 'Downloaded Zip file successfully'

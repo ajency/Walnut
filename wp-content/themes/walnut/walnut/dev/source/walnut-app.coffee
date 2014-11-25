@@ -75,9 +75,9 @@ define ['marionette'], (Marionette)->
 
 					# If the UserId is null or 'null' i.e id not set in local storage then the app
 					# is either installed for the first time or user has logged out.
-
+				
 				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
-
+					
 					# If the blog_id is not set then the app is installed for the very first time.
 					# Navigate to main login screen if blog id is null, else show list of users view.
 
