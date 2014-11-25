@@ -23,7 +23,11 @@ define ['app'
 
 				@listenTo @view, "add:new:element", (container, type)->
 					App.request "add:new:element", container, type
+				
+				# @listenTo @view, "show", => 
 					
+				# 	$('#loading-content-board').remove()
+
 				@listenTo @view, "close", => 
 					audioEls = @view.$el.find '.audio'
 					_.each audioEls,(el, ind)->
@@ -31,13 +35,15 @@ define ['app'
 						.trigger 'click'
 						
 				@listenTo @view, 'dependencies:fetched', =>
-					fillElements = @startFillingElements()
-					fillElements.done =>
-						# setTimeout ->
+
+					@startFillingElements()
+					# $('#question-area').removeClass 'vHidden'
+					setTimeout =>
 						$('#question-area').removeClass 'vHidden'
 						$('#loading-content-board').remove()
-						
-						# ,200
+					, 300
+					
+
 					# fillElements.done =>
 						
 
@@ -47,9 +53,11 @@ define ['app'
 				   # console.log "#{marks}   #{total}"
 					@view.triggerMethod 'show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1)
 
-				@show @view,
-					loading : true
-					entities : [@elements]
+				setTimeout =>
+					@show @view,
+						loading : true
+						entities : [@elements]
+				, 800
 
 
 
@@ -60,64 +68,39 @@ define ['app'
 					answerModel: answerModel
 
 			# start filling elements
-			startFillingElements : ()->
+			startFillingElements : ()=>
 				section = @view.model.get 'layout'
 
-				allItemsDeferred =$.Deferred()
-
 				container = $('#myCanvas #question-area')
+				
 				_.each section, (element, i)=>
-					itemsDeferred= $.Deferred()
 					if element.element is 'Row' or element.element is 'TeacherQuestion'
-						nestedItems= @addNestedElements container, element
-						nestedItems.done =>
-							itemsDeferred.resolve()
+						@addNestedElements container, element
 					else
 						App.request "add:new:element", container, element.element, element
-						itemsDeferred.resolve()
-
-					itemsDeferred.promise()
-
-					if i is _.size(section)-1
-						#itemsDeferred.done =>
-						allItemsDeferred.resolve()
-
-				allItemsDeferred.promise()
 
 
-			addNestedElements : (container, element)->
 
-				defer= $.Deferred()
+			addNestedElements : (container, element)=>
 
 				controller = App.request "add:new:element", container, element.element, element
 				_.each element.elements, (column, index)=>
-					nestedDef=$.Deferred()
-					if not column.elements
-						return nestedDef.resolve()
-
-
+					return if not column.elements
+					
 					container = controller.layout.elementRegion.currentView.$el.children().eq(index)
+
 					_.each column.elements, (ele, i)=>
 						if ele.element is 'Row'
-							addedElement = @addNestedElements $(container), ele
-							addedElement.done =>
-								nestedDef.resolve()
+							@addNestedElements $(container), ele
 						else
 							App.request "add:new:element", container, ele.element, ele
-							nestedDef.resolve()
 
-					nestedDef.promise()
 
-					if index is _.size(element.elements)-1
-						nestedDef.done =>
-							defer.resolve()
-
-				defer.promise()
 
 			API =
 			# add a new element to the builder region
 				addNewElement : (container, type, modelData)=>
-					console.log type
+					# decryptedMedia = ""
 
 					decryptedMedia = quizModel.get('videoIDs') if type is 'Video'
 
