@@ -167,6 +167,34 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       });
       return defer.promise();
     },
+    getDeviceStorageOptions: function() {
+      var defer, storageOptions;
+      defer = $.Deferred();
+      storageOptions = [];
+      Path.CheckPath(function(path) {
+        if (!_.isUndefined(path.ExternalPath)) {
+          storageOptions['Internal'] = path.InternalPath;
+          storageOptions['External'] = path.ExternalPath;
+          return _.cordovaCheckIfPathExists(path.ExternalPath).then(function(pathExists) {
+            if (pathExists) {
+              console.log('Storage Options External');
+              return defer.resolve(storageOptions);
+            } else {
+              console.log('Storage Options Internal');
+              storageOptions = _.pick(storageOptions, 'Internal');
+              return defer.resolve(storageOptions);
+            }
+          });
+        } else {
+          storageOptions['Internal'] = path.InternalPath;
+          return defer.resolve(storageOptions);
+        }
+      }, function(error) {
+        console.log('STORAGE ERROR');
+        return defer.reject(console.log(error));
+      });
+      return defer.promise();
+    },
     downloadSchoolLogo: function(logo_url) {
       return window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fileSystem) {
         return fileSystem.root.getFile("logo.jpg", {
@@ -187,13 +215,21 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       }, _.fileSystemErrorHandler);
     },
     clearMediaDirectory: function(directory_name) {
-      return window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/" + directory_name, {
+      var filepath, option, value;
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
+      return window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileEntry) {
+        return fileEntry.getDirectory("SynapseAssets/SynapseMedia/uploads/" + directory_name, {
           create: false,
           exclusive: false
-        }, function(directoryEntry) {
+        }, function(entry) {
           var reader;
-          reader = directoryEntry.createReader();
+          reader = entry.createReader();
           return reader.readEntries(function(entries) {
             var i, _i, _ref, _results;
             _results = [];

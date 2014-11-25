@@ -29,12 +29,13 @@ define(['marionette'], function(Marionette) {
   App.commands.setHandler("unregister:instance", function(instance, id) {
     return App.unregister(instance, id);
   });
-  App.addInitializer(function(options) {
+  App.on("initialize:after", function(options) {
     var onDeviceReady, user;
     App.startHistory();
     if (_.platform() === 'DEVICE') {
       onDeviceReady = (function(_this) {
         return function() {
+          var author_id, displayName;
           _.cordovaOpenPrepopulatedDatabase();
           _.cordovaLocalStorage();
           FastClick.attach(document.body);
@@ -46,26 +47,32 @@ define(['marionette'], function(Marionette) {
               return AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";;
             }
           });
-          return _.setSynapseMediaDirectoryPathToLocalStorage().done(function() {
-            var user;
-            console.log('setSynapseMediaDirectoryPathToLocalStorage done');
-            if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
-              this.rootRoute = 'app-login';
-              if (_.isNull(_.getBlogID())) {
-                this.rootRoute = 'login';
-              }
-              return App.navigate(this.rootRoute, {
-                trigger: true
-              });
-            } else {
-              user = App.request("get:user:model");
-              user.set({
-                'ID': '' + _.getUserID()
+          if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {
+            _this.rootRoute = 'app-login';
+            if (_.isNull(_.getBlogID())) {
+              _this.rootRoute = 'login';
+            }
+            return App.navigate(_this.rootRoute, {
+              trigger: true
+            });
+          } else {
+            author_id = _.getUserID();
+            displayName = _.getPostAuthorName(author_id);
+            return displayName.done(function(display_name) {
+              var data, userModel;
+              userModel = App.request("get:user:model");
+              data = {
+                'ID': _.getUserID(),
+                'display_name': display_name
+              };
+              userModel.set({
+                'data': data,
+                'ID': _.getUserID()
               });
               App.vent.trigger("show:dashboard");
               return App.loginRegion.close();
-            }
-          });
+            });
+          }
         };
       })(this);
       document.addEventListener("deviceready", onDeviceReady, false);

@@ -100,27 +100,92 @@ define ['underscore'], ( _) ->
 
 
 		
-		cordovaCreateDirectory : (directory)->
+		# cordovaCreateDirectory : (directory)->
+
+		# 	defer = $.Deferred()
+
+		# 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
+		# 		,(fileSystem)->
+		# 			fileSystem.root.getDirectory(directory, {create: true, exclusive:false} 
+						
+		# 				,(fileEntry)->
+		# 					console.log directory+' PATH: '+fileEntry.toURL()
+		# 					defer.resolve fileEntry.toURL()
+						
+		# 				,(error)->
+		# 					defer.reject(console.log(directory+' ERROR: '+error.code))
+		# 				)
+
+		# 		,_.fileSystemErrorHandler)
+
+
+		# 	defer.promise()
+
+		#Check if sdCard path exists
+		cordovaCheckIfPathExists : (filepath) ->
 
 			defer = $.Deferred()
+			
+			window.resolveLocalFileSystemURL('file://'+filepath+''
+				,(fileEntry)->
 
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0 
-				,(fileSystem)->
-					fileSystem.root.getDirectory(directory, {create: true, exclusive:false} 
+					fileEntry.getDirectory("tempSA",{create: true, exclusive:false} 
 						
-						,(fileEntry)->
-							console.log directory+' PATH: '+fileEntry.toURL()
-							defer.resolve fileEntry.toURL()
+						,(entry)->
+							console.log 'tempSA directory path: '+entry.toURL()
+							entry.remove(
+								->
+									console.log "Sucess"
+								, ->
+									console.log "error"
+								)
+							defer.resolve true
 						
 						,(error)->
-							defer.reject(console.log(directory+' ERROR: '+error.code))
+							
+							defer.resolve false
+							console.log 'ERROR: '+error.code
 						)
 
-				,_.fileSystemErrorHandler)
+				,->
+					console.log 'resolveLocalFileSystemURL error '
+					defer.resolve false
+					)
 
-
-			defer.promise()
 			
+			defer.promise()
 
-		
-		
+
+		cordovaCreateDirectory : (directory) ->
+
+			defer = $.Deferred()
+			
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+			
+			window.resolveLocalFileSystemURL('file://'+filepath+''
+				,(fileEntry)->
+
+					fileEntry.getDirectory(directory,{create: true, exclusive:false} 
+						
+						,(entry)->
+							console.log 'directory path: '+entry.toURL()
+							defer.resolve entry.toURL()
+						
+						,(error)->
+							
+							defer.resolve false
+							console.log 'ERROR: '+error.code
+						)
+
+				,->
+					console.log 'cordovaCreateDirectory error '
+					defer.resolve false
+					)
+
+			
+			defer.promise()

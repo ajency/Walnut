@@ -1,396 +1,405 @@
 define ['underscore', 'csvparse'], ( _) ->
 
-    #File import
+	#File import
 
-    _.mixin
+	_.mixin
 
-        startFileImport : ->
+		startFileImport : ->
 
-            $('#syncSuccess').css("display","block").text("Starting file import...")
+			$('#syncSuccess').css("display","block").text("Starting file import...")
 
-            setTimeout(=>
-                _.insertIntoWpClassDivisions()
-            ,2000)
+			setTimeout(=>
+				_.insertIntoWpClassDivisions()
+			,2000)
 
 
-        
-        parseCSVToJSON : (fileName)->
+		
+		parseCSVToJSON : (fileName)->
 
-            readFile = ->
-                $.Deferred (d)->
-                    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-                        fileSystem.root.getFile("SynapseAssets/SynapseData/"+fileName, {create: false}
-                            , (fileEntry)->
-                                fileEntry.file((file)->
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
 
-                                    reader = new FileReader()
-                                    reader.onloadend = (evt)->
-                                        csvString = evt.target.result
-                                        parsedObj = Papa.parse(csvString, {header : false, dynamicTyping : false})
-                                        parsedData = parsedObj.data
 
-                                        do(parsedData)->
-                                            _.each parsedData, (outerRow, i)->
-                                                _.each outerRow, (innerRow, j)->
-                                                    # Replace back slash (/) with empty quote.
-                                                    parsedData[i][j] = parsedData[i][j].replace(/\\/g,'')
+			readFile = ->
+				$.Deferred (d)->
+					window.resolveLocalFileSystemURL('file://'+filepath+'', (fileSystem)->
+						fileSystem.getFile("SynapseAssets/SynapseData/"+fileName, {create: false}
+							, (fileEntry)->
+								fileEntry.file((file)->
 
-                                        d.resolve parsedData
+									reader = new FileReader()
+									reader.onloadend = (evt)->
+										csvString = evt.target.result
+										parsedObj = Papa.parse(csvString, {header : false, dynamicTyping : false})
+										parsedData = parsedObj.data
 
-                                    reader.readAsText file
+										do(parsedData)->
+											_.each parsedData, (outerRow, i)->
+												_.each outerRow, (innerRow, j)->
+													# Replace back slash (/) with empty quote.
+													parsedData[i][j] = parsedData[i][j].replace(/\\/g,'')
 
-                                , _.fileErrorHandler)
-                            , _.fileErrorHandler)
-                    , _.fileSystemErrorHandler)
+										d.resolve parsedData
 
-            $.when(readFile()).done ->
-                console.log 'parseCSVToJSON done for file '+fileName
-            .fail _.failureHandler
+									reader.readAsText file
 
+								, _.fileErrorHandler)
+							, _.fileErrorHandler)
+					, _.fileSystemErrorHandler)
 
+			$.when(readFile()).done ->
+				console.log 'parseCSVToJSON done for file '+fileName
+			.fail _.failureHandler
 
-        # Insert data into 14 tables
-        insertIntoWpClassDivisions : ->
 
-            _.importingFileMessage 1
 
-            getParsedData = _.parseCSVToJSON _.getTblPrefix()+'class_divisions.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
-                    
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id
-                            , division, class_id) VALUES (?,?,?)"
-                            , [row[0], row[1], row[2]])
+		# Insert data into 14 tables
+		insertIntoWpClassDivisions : ->
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in '+_.getTblPrefix()+'class_divisions'
-                    _.insertIntoWpQuestionResponse()
-                )
+			_.importingFileMessage 1
 
+			getParsedData = _.parseCSVToJSON _.getTblPrefix()+'class_divisions.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"class_divisions")
+					
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"class_divisions (id
+							, division, class_id) VALUES (?,?,?)"
+							, [row[0], row[1], row[2]])
 
-        insertIntoWpQuestionResponse : ->
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in '+_.getTblPrefix()+'class_divisions'
+					_.insertIntoWpQuestionResponse()
+				)
 
-            _.importingFileMessage 2
 
-            getParsedData = _.parseCSVToJSON _.getTblPrefix()+'question_response.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
+		insertIntoWpQuestionResponse : ->
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response (ref_id
-                            , teacher_id, content_piece_id, collection_id, division , question_response 
-                            , time_taken , start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
-                            , row[9], 1])
+			_.importingFileMessage 2
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in '+_.getTblPrefix()+'question_response'
-                    _.insertIntoWpQuestionResponseMeta()
-                )
+			getParsedData = _.parseCSVToJSON _.getTblPrefix()+'question_response.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response")
 
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response (ref_id
+							, teacher_id, content_piece_id, collection_id, division , question_response 
+							, time_taken , start_date, end_date, status, sync) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+							, [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+							, row[9], 1])
 
-        insertIntoWpQuestionResponseMeta : ->
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in '+_.getTblPrefix()+'question_response'
+					_.insertIntoWpQuestionResponseMeta()
+				)
 
-            _.importingFileMessage 3
 
-            getParsedData = _.parseCSVToJSON _.getTblPrefix()+'question_response_meta.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response_meta")
+		insertIntoWpQuestionResponseMeta : ->
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response_meta 
-                            (qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)"
-                            , [row[0], row[1], row[2], 1])
+			_.importingFileMessage 3
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in '+_.getTblPrefix()+'question_response_meta'
-                    _.insertIntoWpCollectionMeta()
-                )
-
-        
-        insertIntoWpCollectionMeta : ->
+			getParsedData = _.parseCSVToJSON _.getTblPrefix()+'question_response_meta.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM "+_.getTblPrefix()+"question_response_meta")
 
-            _.importingFileMessage 4
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO "+_.getTblPrefix()+"question_response_meta 
+							(qr_ref_id, meta_key, meta_value, sync) VALUES (?,?,?,?)"
+							, [row[0], row[1], row[2], 1])
 
-            getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in '+_.getTblPrefix()+'question_response_meta'
+					_.insertIntoWpCollectionMeta()
+				)
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_collection_meta (id, collection_id
-                            , meta_key, meta_value) VALUES (?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3]])
+		
+		insertIntoWpCollectionMeta : ->
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_collection_meta'
-                    _.insertIntoWpContentCollection()
-                )
-
-        
-        insertIntoWpContentCollection : ->
+			_.importingFileMessage 4
 
-            _.importingFileMessage 5
-
-            getParsedData = _.parseCSVToJSON 'wp_content_collection.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on
-                            , created_by, last_modified_on, last_modified_by, published_on, published_by
-                            , status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
-                            , row[9], row[10], row[11]])
-
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_content_collection'
-                    _.insertIntoWpOptions()
-                )
-
+			getParsedData = _.parseCSVToJSON 'wp_collection_meta.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
 
-        insertIntoWpOptions : ->
-
-            _.importingFileMessage 6
-
-            getParsedData = _.parseCSVToJSON 'wp_options.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_options")
+					_.each data, (row, i)->
+						tx.executeSql("INSERT OR REPLACE INTO wp_collection_meta (id, collection_id
+							, meta_key, meta_value) VALUES (?,?,?,?)"
+							, [row[0], row[1], row[2], row[3]])
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_options (option_id, option_name
-                            , option_value, autoload) VALUES (?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3]])
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_collection_meta'
+					_.insertIntoWpContentCollection()
+				)
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_options'
-                    _.insertIntoWpPostMeta()
-                )
+		
+		insertIntoWpContentCollection : ->
 
+			_.importingFileMessage 5
 
-        
-        insertIntoWpPostMeta : ->
+			getParsedData = _.parseCSVToJSON 'wp_content_collection.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
 
-            _.importingFileMessage 7
-
-            getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
-            getParsedData.done (data)->
+					_.each data, (row, i)->
+						tx.executeSql("INSERT OR REPLACE INTO wp_content_collection (id, name, created_on
+							, created_by, last_modified_on, last_modified_by, published_on, published_by
+							, status, type, term_ids, duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+							, [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+							, row[9], row[10], row[11]])
 
-                splitArray = _.groupBy data, (element, index)->
-                    Math.floor(index/2000)
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_content_collection'
+					_.insertIntoWpOptions()
+				)
 
-                splitArray = _.toArray(splitArray);
 
-                insertRecords = (splitData, index)->
-                    _.db.transaction((tx)->
+		insertIntoWpOptions : ->
 
-                        _.each splitData, (row, i)->
-                            tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
-                                , meta_key, meta_value) VALUES (?,?,?,?)"
-                                , [row[0], row[1], row[2], row[3]])
+			_.importingFileMessage 6
 
-                    ,_.transactionErrorHandler
-                    ,(tx)->
-                        console.log 'Inserted data in wp_postmeta'
-                        index = index + 1
-                        if index < splitArray.length
-                            setTimeout(->
-                                insertRecords(splitArray[index], index)
-                            , 100)
-                            
-                        else
-                            _.insertIntoWpPosts()
-                    )
-                
-                insertRecords(splitArray[0], 0)
-                
+			getParsedData = _.parseCSVToJSON 'wp_options.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_options")
 
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_options (option_id, option_name
+							, option_value, autoload) VALUES (?,?,?,?)"
+							, [row[0], row[1], row[2], row[3]])
 
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_options'
+					_.insertIntoWpPostMeta()
+				)
 
-        insertIntoWpPosts : ->
 
-            _.importingFileMessage 8
+		
+		insertIntoWpPostMeta : ->
 
-            getParsedData = _.parseCSVToJSON 'wp_posts.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
+			_.importingFileMessage 7
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date
-                            , post_date_gmt, post_content, post_title, post_excerpt, post_status
-                            , comment_status, ping_status, post_password, post_name, to_ping, pinged
-                            , post_modified, post_modified_gmt, post_content_filtered, post_parent
-                            , guid, menu_order, post_type, post_mime_type, comment_count) 
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
-                            , row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]
-                            , row[17], row[18], row[19], row[20], row[21], row[22]])
+			getParsedData = _.parseCSVToJSON 'wp_postmeta.csv'
+			getParsedData.done (data)->
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_posts'
-                    _.insertIntoWpTermRelationships()
-                )
+				splitArray = _.groupBy data, (element, index)->
+					Math.floor(index/2000)
 
-        
-        insertIntoWpTermRelationships : ->
+				splitArray = _.toArray(splitArray);
 
-            _.importingFileMessage 9
+				insertRecords = (splitData, index)->
+					_.db.transaction((tx)->
 
-            getParsedData = _.parseCSVToJSON 'wp_term_relationships.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_term_relationships")
+						_.each splitData, (row, i)->
+							tx.executeSql("INSERT OR REPLACE INTO wp_postmeta (meta_id, post_id
+								, meta_key, meta_value) VALUES (?,?,?,?)"
+								, [row[0], row[1], row[2], row[3]])
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id
-                            , term_order) VALUES (?,?,?)", [row[0], row[1], row[2]])
+					,_.transactionErrorHandler
+					,(tx)->
+						console.log 'Inserted data in wp_postmeta'
+						index = index + 1
+						if index < splitArray.length
+							setTimeout(->
+								insertRecords(splitArray[index], index)
+							, 100)
+							
+						else
+							_.insertIntoWpPosts()
+					)
+				
+				insertRecords(splitArray[0], 0)
+				
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_term_relationships'
-                    _.insertIntoWpTermTaxonomy()
-                )
 
 
-        insertIntoWpTermTaxonomy : ->
+		insertIntoWpPosts : ->
 
-            _.importingFileMessage 10
+			_.importingFileMessage 8
 
-            getParsedData = _.parseCSVToJSON 'wp_term_taxonomy.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_term_taxonomy")
+			getParsedData = _.parseCSVToJSON 'wp_posts.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy
-                            , description, parent, count) VALUES (?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5]])
+					_.each data, (row, i)->
+						tx.executeSql("INSERT OR REPLACE INTO wp_posts (ID, post_author, post_date
+							, post_date_gmt, post_content, post_title, post_excerpt, post_status
+							, comment_status, ping_status, post_password, post_name, to_ping, pinged
+							, post_modified, post_modified_gmt, post_content_filtered, post_parent
+							, guid, menu_order, post_type, post_mime_type, comment_count) 
+							VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+							, [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+							, row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]
+							, row[17], row[18], row[19], row[20], row[21], row[22]])
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_term_taxonomy'
-                    _.insertIntoWpTerms()
-                )
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_posts'
+					_.insertIntoWpTermRelationships()
+				)
 
+		
+		insertIntoWpTermRelationships : ->
 
-        insertIntoWpTerms : ->
+			_.importingFileMessage 9
 
-            _.importingFileMessage 11
+			getParsedData = _.parseCSVToJSON 'wp_term_relationships.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_term_relationships")
 
-            getParsedData = _.parseCSVToJSON 'wp_terms.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_terms")
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id
+							, term_order) VALUES (?,?,?)", [row[0], row[1], row[2]])
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) 
-                            VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_term_relationships'
+					_.insertIntoWpTermTaxonomy()
+				)
 
-                ,_.transactionErrorHandler
-                ,(tx)=>
-                    console.log 'Inserted data in wp_terms'
-                    _.insertIntoWpTextbookRelationships()
-                )
 
+		insertIntoWpTermTaxonomy : ->
 
-        insertIntoWpTextbookRelationships : ->
+			_.importingFileMessage 10
 
-            _.importingFileMessage 12
+			getParsedData = _.parseCSVToJSON 'wp_term_taxonomy.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_term_taxonomy")
 
-            getParsedData = _.parseCSVToJSON 'wp_textbook_relationships.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_textbook_relationships")
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy
+							, description, parent, count) VALUES (?,?,?,?,?,?)"
+							, [row[0], row[1], row[2], row[3], row[4], row[5]])
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_textbook_relationships 
-                            (id, textbook_id, class_id, tags) VALUES (?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3]])
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_term_taxonomy'
+					_.insertIntoWpTerms()
+				)
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_textbook_relationships'
-                    _.insertIntoWpUserMeta()
-                )
 
+		insertIntoWpTerms : ->
 
-        insertIntoWpUserMeta : ->
+			_.importingFileMessage 11
 
-            _.importingFileMessage 13
+			getParsedData = _.parseCSVToJSON 'wp_terms.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_terms")
 
-            getParsedData = _.parseCSVToJSON 'wp_usermeta.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_usermeta")
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_terms (term_id, name, slug, term_group) 
+							VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
-                            VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
+				,_.transactionErrorHandler
+				,(tx)=>
+					console.log 'Inserted data in wp_terms'
+					_.insertIntoWpTextbookRelationships()
+				)
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_usermeta'
-                    _.insertIntoWpUsers()
-                )
 
+		insertIntoWpTextbookRelationships : ->
 
-        insertIntoWpUsers : ->
+			_.importingFileMessage 12
 
-            _.importingFileMessage 14
+			getParsedData = _.parseCSVToJSON 'wp_textbook_relationships.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_textbook_relationships")
 
-            getParsedData = _.parseCSVToJSON 'wp_users.csv'
-            getParsedData.done (data)->
-                _.db.transaction((tx)->
-                    tx.executeSql("DELETE FROM wp_users")
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_textbook_relationships 
+							(id, textbook_id, class_id, tags) VALUES (?,?,?,?)"
+							, [row[0], row[1], row[2], row[3]])
 
-                    _.each data, (row, i)->
-                        tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename
-                            , user_email, user_url, user_registered, user_activation_key, user_status
-                            , display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
-                            , [row[0], row[1], row[2], row[3], row[4], row[5]
-                            , row[6], row[7], row[8], row[9], row[10], row[11]])
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_textbook_relationships'
+					_.insertIntoWpUserMeta()
+				)
 
-                ,_.transactionErrorHandler
-                ,(tx)->
-                    console.log 'Inserted data in wp_users'
-                    _.onFileImportSuccess()
-                )
 
+		insertIntoWpUserMeta : ->
 
+			_.importingFileMessage 13
 
-        
-        importingFileMessage : (file_number)->
+			getParsedData = _.parseCSVToJSON 'wp_usermeta.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_usermeta")
 
-            $('#syncSuccess').css("display","block").text("Importing files... ("+file_number+")")
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_usermeta (umeta_id, user_id, meta_key, meta_value) 
+							VALUES (?,?,?,?)", [row[0], row[1], row[2], row[3]])
 
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_usermeta'
+					_.insertIntoWpUsers()
+				)
 
 
+		insertIntoWpUsers : ->
 
-        onFileImportSuccess : ->
+			_.importingFileMessage 14
 
-            _.updateSyncDetails('file_import', _.getCurrentDateTime(2))
+			getParsedData = _.parseCSVToJSON 'wp_users.csv'
+			getParsedData.done (data)->
+				_.db.transaction((tx)->
+					tx.executeSql("DELETE FROM wp_users")
 
-            _.clearSynapseDataDirectory()
+					_.each data, (row, i)->
+						tx.executeSql("INSERT INTO wp_users (ID, user_login, user_pass, user_nicename
+							, user_email, user_url, user_registered, user_activation_key, user_status
+							, display_name, spam,deleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+							, [row[0], row[1], row[2], row[3], row[4], row[5]
+							, row[6], row[7], row[8], row[9], row[10], row[11]])
 
-            $('#syncSuccess').css("display","block").text("File import completed")
+				,_.transactionErrorHandler
+				,(tx)->
+					console.log 'Inserted data in wp_users'
+					_.onFileImportSuccess()
+				)
 
-            setTimeout(=>
-                $('#syncSuccess').css("display","block").text("Sync completed successfully")
-                # App.execute "show:leftnavapp", region:App.leftNavRegion
-                $('#main-menu-toggle').css('display','block')
-            ,2000)
 
-            setTimeout(=>
-                App.navigate('teachers/dashboard', trigger: true)
-            ,2000)
+
+		
+		importingFileMessage : (file_number)->
+
+			$('#syncSuccess').css("display","block").text("Importing files... ("+file_number+")")
+
+
+
+
+		onFileImportSuccess : ->
+
+			_.updateSyncDetails('file_import', _.getCurrentDateTime(2))
+
+			_.clearSynapseDataDirectory()
+
+			$('#syncSuccess').css("display","block").text("File import completed")
+
+			setTimeout(=>
+				$('#syncSuccess').css("display","block").text("Sync completed successfully")
+				# App.execute "show:leftnavapp", region:App.leftNavRegion
+				$('#main-menu-toggle').css('display','block')
+				$('#storageOption').prop("disabled",false)
+			,2000)
+
+			setTimeout(=>
+				App.navigate('teachers/dashboard', trigger: true)
+			,2000)

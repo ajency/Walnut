@@ -44,6 +44,7 @@ define(['app'], function(App) {
 
       VideoView.prototype._initLocalVideos = function() {
         var heightRatio, runFunc, setHeight, widthRatio;
+        navigator.notification.activityStart("Please wait", "loading content...");
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -56,12 +57,23 @@ define(['app'], function(App) {
               return _.createVideosWebDirectory().done(function() {
                 _.each(_this.videos, function(videoSource, index) {
                   return (function(videoSource) {
-                    var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                    var decryptFile, decryptedPath, decryptedVideoPath, encryptedPath, encryptedVideoPath, option, url, value, videoUrl, videosWebUrl;
                     url = videoSource.replace("media-web/", "");
                     videosWebUrl = url.substr(url.indexOf("uploads/"));
                     videoUrl = videosWebUrl.replace("videos-web", "videos");
-                    encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-                    decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                    encryptedPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                    decryptedPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                    value = _.getStorageOption();
+                    option = JSON.parse(value);
+                    encryptedVideoPath = '';
+                    decryptedVideoPath = '';
+                    if (option.internal) {
+                      encryptedVideoPath = option.internal + '/' + encryptedPath;
+                      decryptedVideoPath = option.internal + '/' + decryptedPath;
+                    } else if (option.external) {
+                      encryptedVideoPath = option.external + '/' + encryptedPath;
+                      decryptedVideoPath = option.external + '/' + decryptedPath;
+                    }
                     decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath);
                     return deferreds.push(decryptFile);
                   })(videoSource);
@@ -71,7 +83,7 @@ define(['app'], function(App) {
                   videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(videoPaths, function(localVideoPath, index) {
                     return (function(localVideoPath, index) {
-                      return _this.videos[index] = 'file:///mnt/sdcard/' + localVideoPath;
+                      return _this.videos[index] = 'file://' + localVideoPath;
                     })(localVideoPath, index);
                   });
                   return d.resolve(_this.videos);
@@ -83,6 +95,7 @@ define(['app'], function(App) {
         return $.when(runFunc()).done((function(_this) {
           return function() {
             console.log('_initLocalVideos done');
+            navigator.notification.activityStop();
             _this.$el.find('video')[0].src = _this.videos[0];
             return _this.$el.find('video')[0].load();
           };

@@ -40,8 +40,9 @@ define ['marionette'], (Marionette)->
 	App.commands.setHandler "unregister:instance", (instance, id) ->
 		App.unregister instance, id
 
-	App.addInitializer (options) ->
-
+	# App.addInitializer (options) ->
+	App.on "initialize:after", (options) ->
+		
 		App.startHistory()
 
 		if _.platform() is 'DEVICE'
@@ -67,23 +68,33 @@ define ['marionette'], (Marionette)->
 						`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
 				)
 
-				_.setSynapseMediaDirectoryPathToLocalStorage().done ->
-					console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
+				# _.setSynapseMediaDirectoryPathToLocalStorage().done ->
+				# 	console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
 
 					# If the UserId is null or 'null' i.e id not set in local storage then the app
 					# is either installed for the first time or user has logged out.
+				
+				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
+					# If the blog_id is not set then the app is installed for the very first time.
+					# Navigate to main login screen if blog id is null, else show list of users view.
+					@rootRoute = 'app-login'
+					@rootRoute = 'login' if _.isNull _.getBlogID()
+					App.navigate(@rootRoute, trigger: true)
 
-					if _.isNull(_.getUserID()) or _.getUserID() is 'null'
-						# If the blog_id is not set then the app is installed for the very first time.
-						# Navigate to main login screen if blog id is null, else show list of users view.
-						@rootRoute = 'app-login'
-						@rootRoute = 'login' if _.isNull _.getBlogID()
-						App.navigate(@rootRoute, trigger: true)
-
-					else
-						#If User ID is set, then navigate to dashboard.
-						user = App.request "get:user:model"
-						user.set 'ID' : ''+_.getUserID()
+				else
+					#If User ID is set, then navigate to dashboard.
+					author_id  = _.getUserID()
+					displayName = _.getPostAuthorName(author_id)
+					displayName.done (display_name)=>
+						userModel = App.request "get:user:model"
+						data = 
+							'ID': _.getUserID()
+							'display_name': display_name
+									
+						userModel.set 
+							'data' : data
+							'ID' : _.getUserID()
+						
 						App.vent.trigger "show:dashboard"
 						App.loginRegion.close() 
 

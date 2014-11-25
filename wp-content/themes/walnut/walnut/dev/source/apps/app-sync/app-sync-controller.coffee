@@ -48,21 +48,74 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 		
 		changeSyncButtonTextBasedOnLastSyncOperation : ->
 
+			value = _.getStorageOption()
+
 			lastSyncOperation = _.getLastSyncOperation()
 			lastSyncOperation.done (typeOfOperation)->
 
 				switch typeOfOperation
 
 					when 'none'
-						$('#syncButtonText').text('Start')
-						$('#syncMediaStart').prop("disabled",true)
+						if not _.isNull(value)
+							# $('#storageOption').prop("disabled",true)
+							# $('#syncButtonText').text('Start')
+							# $('#syncMediaStart').prop("disabled",true)
+							option = JSON.parse(value)
+							if option.external
+								_.cordovaCheckIfPathExists(option.external)
+								.then (pathExists)->
+									if not pathExists
+										$('#storageOption').prop("disabled",false)
+										$('#syncStartContinue').prop("disabled",true)
+										$('#syncMediaStart').prop("disabled",true)
+									else
+										$('#storageOption').prop("disabled",false)
+										$('#syncButtonText').text('Start')
+										$('#syncMediaStart').prop("disabled",true)
+							else if option.internal
+								# $('#storageOption').prop("disabled",true)
+								$('#syncButtonText').text('Start')
+								$('#syncMediaStart').prop("disabled",true)
+						else
+							
+							$('#storageOption').prop("disabled",false)
+							$('#syncStartContinue').prop("disabled",true)
+							$('#syncMediaStart').prop("disabled",true)
 
 					when 'file_import'
 						$('#syncButtonText').text('Start')
 
+						if not _.isNull(value)
+							# $('#storageOption').prop("disabled",true)
+							# $('#syncButtonText').text('Start')
+							# $('#syncMediaStart').prop("disabled",true)
+							option = JSON.parse(value)
+							if option.external
+								_.cordovaCheckIfPathExists(option.external)
+								.then (pathExists)->
+									if not pathExists
+										$('#storageOption').prop("disabled",false)
+										$('#syncStartContinue').prop("disabled",true)
+										$('#syncMediaStart').prop("disabled",true)
+									else
+										$('#storageOption').prop("disabled",false)
+										$('#syncButtonText').text('Start')
+										# $('#syncMediaStart').prop("disabled",true)
+							else if option.internal
+								# $('#storageOption').prop("disabled",true)
+								$('#syncButtonText').text('Start')
+								# $('#syncMediaStart').prop("disabled",true)
+						else
+							
+							$('#storageOption').prop("disabled",false)
+							$('#syncStartContinue').prop("disabled",true)
+							$('#syncMediaStart').prop("disabled",true)
+
+
 					when 'file_download'
 						$('#syncButtonText').text('Continue')
 						$('#syncMediaStart').prop("disabled",true)
+
 
 					when 'file_generate'
 						$('#syncButtonText').text('Continue')
@@ -75,6 +128,9 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 
 		startContinueDataSyncProcess : ->
+			
+			#Disable Selectbox StorageOption
+			$('#storageOption').prop("disabled",true)
 
 			# Hide sync details
 			$('#totalRecords').css("display","none")
@@ -99,6 +155,7 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 							$('#syncSuccess').css("display","block").text("Started data sync...")
 							
 							setTimeout(=>
+								$('#storageOption').prop("disabled",true)
 								_.getZipFileDownloadDetails()
 							,2000)
 							
@@ -145,6 +202,9 @@ define ["marionette","app", "underscore", "csvparse" ], (Marionette, App, _, par
 
 		
 		startMediaSyncProcess : ->
+
+			#Disable Selectbox StorageOption
+			$('#storageOption').prop("disabled",true)
 
 			# Disable data sync button
 			$('#syncStartContinue').prop("disabled",true)
