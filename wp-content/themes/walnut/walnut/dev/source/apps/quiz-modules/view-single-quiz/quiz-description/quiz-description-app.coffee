@@ -113,8 +113,8 @@ define ['app'
 						.html 'Replay'
 					# Changes for cordova app
 					if _.platform() is 'DEVICE'
-						
-						# $('body').css('height' : '100%')
+
+						# $('body').css({'height' : 'auto'});
 
 						_.disableCordovaBackbuttonNavigation()
 					

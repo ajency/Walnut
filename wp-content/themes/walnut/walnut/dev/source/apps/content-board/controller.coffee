@@ -37,14 +37,12 @@ define ['app'
 				@listenTo @view, 'dependencies:fetched', =>
 
 					@startFillingElements()
-					# $('#question-area').removeClass 'vHidden'
+					
 					setTimeout =>
 						$('#question-area').removeClass 'vHidden'
 						$('#loading-content-board').remove()
 					, 300
 					
-
-					# fillElements.done =>
 						
 
 				#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
@@ -100,7 +98,6 @@ define ['app'
 			API =
 			# add a new element to the builder region
 				addNewElement : (container, type, modelData)=>
-					# decryptedMedia = ""
 
 					decryptedMedia = quizModel.get('videoIDs') if type is 'Video'
 

@@ -231,6 +231,9 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         };
         $('#take-class-modules').tablesorterPager(pagerOptions);
         if (_.platform() === 'DEVICE') {
+          $('body').css({
+            'height': '100%'
+          });
           return _.disableCordovaBackbuttonNavigation();
         }
       };

@@ -206,12 +206,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._scrolltoQuizDetailsRegion = function() {
-        var top;
-        top = this.layout.quizDetailsRegion.$el.offset().top;
-        top = top - 100;
-        return $('html,body').animate({
-          scrollTop: top
-        }, 1000);
+        var value;
+        value = this.layout.quizDetailsRegion.$el.offset().top;
+        value = value - 70;
+        $('body').css({
+          'height': 'auto'
+        });
+        return $('body').animate({
+          scrollTop: value
+        }, 'slow');
       };
 
       Controller.prototype._fetchQuizResponseSummary = function() {
