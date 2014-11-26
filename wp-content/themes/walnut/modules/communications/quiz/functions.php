@@ -124,7 +124,8 @@ function quiz_completed_parent_mail_preview($data){
 
     $comm_data = array(
         'component'=>$data['component'],
-        'communication_type'=>$data['communication_type']
+        'communication_type'=>$data['communication_type'],
+        'blog_id'   => get_current_blog_id()
         );
 
     $recipient=$data['additional_data']['preview_recipient'];
