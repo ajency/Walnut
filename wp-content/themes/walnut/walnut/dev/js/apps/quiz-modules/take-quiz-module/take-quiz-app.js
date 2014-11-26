@@ -380,6 +380,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizLayout.prototype.onShow = function() {
         $('.page-content').addClass('condensed expand-page');
         if (_.platform() === 'DEVICE') {
+          $('body').css({
+            'height': '100%'
+          });
           return this.cordovaEventsForModuleDescriptionView();
         }
       };
@@ -392,7 +395,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizLayout.prototype.onBackSessionClick = function() {
-        console.log('Invoked onPauseSessionClick');
+        console.log('Invoked onBackSessionClick');
         return document.removeEventListener("backbutton", this.onBackSessionClick, false);
       };
 

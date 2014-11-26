@@ -353,6 +353,7 @@ define ['app'
 					$('.page-content').addClass 'condensed expand-page'
 
 					if _.platform() is 'DEVICE'
+						$('body').css({'height' : '100%'});
 						
 						@cordovaEventsForModuleDescriptionView()
 
@@ -366,7 +367,7 @@ define ['app'
 
 				onBackSessionClick : =>
 					
-					console.log 'Invoked onPauseSessionClick'
+					console.log 'Invoked onBackSessionClick'
 					# Backbone.history.history.back()
 					document.removeEventListener("backbutton", @onBackSessionClick, false)
 					# @clearMediaData()

@@ -192,22 +192,28 @@ define ['app'
 					@layout.attemptsRegion.$el.find '.view-summary i'
 					.removeClass 'fa fa-spin fa-spinner'
 
+
 					@_scrolltoQuizDetailsRegion()
 
-					# @_scrolltoQuizDetailsRegion()
 
 			_scrolltoQuizDetailsRegion:->
 				
-				top= @layout.quizDetailsRegion.$el.offset().top
-				# top= $('body').height()
-				#cancel out the header div height
-				top= top-100
-				# alert top
-				# chk = $('body').height()
-				# alert chk
-				# console.log top
-				$('html,body').animate({scrollTop: top}, 1000);
-				# $('body').animate scrollTop: top, 'slow'
+				value= @layout.quizDetailsRegion.$el.offset().top
+				
+				value= value-70
+				$('body').css({'height' : 'auto'});
+				
+				$('body').animate({ 
+					scrollTop: value }
+				, 'slow'
+				)
+				# {duration:500
+				# 	, complete: ()->
+				# 		# setTimeout =>
+				# 		# 	$( @ ).after( $('body').css('height' : '100%') )
+				# 		# , 2000
+						
+				# }
 
 
 			_fetchQuizResponseSummary:=>

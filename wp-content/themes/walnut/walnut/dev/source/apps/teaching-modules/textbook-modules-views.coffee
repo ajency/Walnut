@@ -279,7 +279,7 @@ define ['app',
 				# Changes for cordova app
 				if _.platform() is 'DEVICE'
 					
-					# $('body').css('height' : '100%')
+					$('body').css('height' : '100%')
 
 					_.disableCordovaBackbuttonNavigation()
 
