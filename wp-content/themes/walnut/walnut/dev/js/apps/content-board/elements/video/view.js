@@ -12,13 +12,14 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video class="video-js vjs-default-skin" controls poster="/images/video-poster.jpg" preload="none" width="100%"> </video> {{/videoUrl}} {{^videoUrl}} <video class="video-js vjs-default-skin" controls poster="/images/video-unavailable.png" preload="none" width="100%"> </video> {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
         'click #prev': '_playPrevVideo',
         'click #next': '_playNextVideo',
-        'click .playlist-video': '_playClickedVideo'
+        'click .playlist-video': '_playClickedVideo',
+        'click .video-js': '_playFirstVideo'
       };
 
       VideoView.prototype.onShow = function() {
@@ -28,6 +29,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
         }
         this.videos = this.model.get('videoUrls');
         this.index = 0;
+        this.count = 0;
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
             return _this._playNextVideo();
@@ -37,8 +39,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
-        this.$el.find('video')[0].poster = "/images/video-poster.jpg";
-        this.$el.find('video')[0].src = this.videos[0];
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -46,7 +46,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype._setVideoList = function() {
-        console.log('@model');
         console.log(this.model);
         this.$el.append('<div id="playlist-hover" class="playlistHover"> <div class="row m-l-0 m-r-0 p-b-5 m-b-5"> <div class="col-sm-8 nowPlaying"> <span class="small text-muted">Now Playing:</span> <span id="now-playing-tag">' + this.model.get('title')[0] + '</span> </div> <div class="col-sm-4"> <button class="btn btn-white btn-small pull-right show-playlist"> <i class="fa fa-list-ul"></i> Playlist </button> </div> </div> <div class="row m-l-0 m-r-0 playlist-hidden vidList animated fadeInRight" style="display: none;"> <div class="video-list col-sm-8" id="video-list"></div> <div class="col-sm-4 p-t-5 m-b-5"> <button class="btn btn-info btn-small pull-right" id="next"> <i class="fa fa-step-forward"></i> </button> <button class="btn btn-info btn-small pull-right m-r-10" id="prev"> <i class="fa fa-step-backward"></i> </button> </div> </div> </div>');
         this.$el.find('#video-list').empty();
@@ -55,6 +54,19 @@ define(['app', 'bootbox'], function(App, bootbox) {
             return _this.$el.find('#video-list').append("<div class='playlist-video' data-index=" + index + ">" + title + "</div>");
           };
         })(this));
+      };
+
+      VideoView.prototype._playFirstVideo = function() {
+        if (this.count === 0) {
+          this.count++;
+          this.$el.find('video')[0].src = this.videos[0];
+          this.$el.find('video')[0].load();
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.$el.find('video')[0].play();
+            };
+          })(this), 500);
+        }
       };
 
       VideoView.prototype.togglePlaylist = function() {
@@ -74,6 +86,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           e.stopPropagation();
         }
         if (this.index < this.videos.length - 1) {
+          this.count++;
           this.index++;
           return this._playVideo();
         }
@@ -88,6 +101,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype._playVideo = function() {
+        this.count++;
         if (_.platform() === 'DEVICE') {
           this.$el.find('video').attr('height', 'auto !important');
         }
@@ -103,7 +117,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
             return function() {
               return _this.$el.find('video')[0].poster = "/images/video-unavailable.png";
             };
-          })(this), 50);
+          })(this), 200);
         }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();

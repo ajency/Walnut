@@ -10,15 +10,13 @@ define ['app'
 			className : 'video'
 
 			template : '    {{#videoUrl}}
-								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-								poster="" data-setup="{}">
-
+								<video class="video-js vjs-default-skin" controls poster="/images/video-poster.jpg" 
+									preload="none" width="100%">
 								</video>
 							{{/videoUrl}}
 							{{^videoUrl}}
-								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-								poster="" data-setup="{}">
-
+								<video class="video-js vjs-default-skin" controls poster="/images/video-unavailable.png" 
+									preload="none" width="100%">
 								</video>
 							{{/videoUrl}}
 
@@ -27,12 +25,12 @@ define ['app'
 
 
 
-
 			events :
 				'click .show-playlist' : 'togglePlaylist'
 				'click #prev' : '_playPrevVideo'
 				'click #next' : '_playNextVideo'
 				'click .playlist-video' : '_playClickedVideo'
+				'click .video-js' : '_playFirstVideo'
 
 			# check if a valid image_id is set for the element
 			# if present ignore else run the Holder.js to show a placeholder
@@ -44,25 +42,25 @@ define ['app'
 
 				@videos = @model.get('videoUrls')
 				@index = 0
-
+				@count = 0
 				@$el.find('video').on 'ended', =>
 					@_playNextVideo()
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
-				@$el.find('video')[0].poster = "/images/video-poster.jpg"
-				@$el.find('video')[0].src = @videos[0]
-
-
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
 				@$el.find('video').attr 'height', setHeight
+				
+
+				# @$el.find('source')[0].src = @videos[0]
+				# @$el.find('video')[0].src = @videos[0]
+				
 
 
 			_setVideoList : ->
-				console.log '@model'
 				console.log @model
 				@$el.append('<div id="playlist-hover" class="playlistHover">
 								<div class="row m-l-0 m-r-0 p-b-5 m-b-5">
@@ -92,7 +90,14 @@ define ['app'
 				_.each @model.get('title'),(title,index)=>
 					@$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
 
-
+			_playFirstVideo :->
+				if @count is 0
+					@count++
+					@$el.find('video')[0].src = @videos[0]
+					@$el.find('video')[0].load()
+					setTimeout =>
+						@$el.find('video')[0].play()
+					,500
 
 			togglePlaylist :->
 				@$el.find('.playlist-hidden').toggle()
@@ -105,10 +110,12 @@ define ['app'
 			_playNextVideo : (e)->
 				e.stopPropagation() if e?
 				if @index < @videos.length-1
+					@count++
 					@index++
 					@_playVideo()
 
 			_playClickedVideo : (e)->
+				
 				e.stopPropagation()
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
@@ -117,7 +124,7 @@ define ['app'
 
 
 			_playVideo:->
-
+				@count++
 				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 
 				@$el.find('.playlist-video').removeClass 'currentVid'
@@ -130,9 +137,11 @@ define ['app'
 
 				else 
 					@$el.find('video')[0].src = @videos[@index]
+					# @$el.find('img')[0].attr 'z-index', 0
+
 					setTimeout(=>
 						@$el.find('video')[0].poster = "/images/video-unavailable.png"
-					,50)
+					,200)
 					
 				
 				@$el.find('video')[0].load()
