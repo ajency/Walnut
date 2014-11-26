@@ -72,7 +72,11 @@ define ['app',
 						#1. the schedule has expired without completing the quiz
 						#2. the status isnt active. ie. the quiz is scheduled for a future date.
 						#3. if the current site is a multisite. class test can only be taken on standalone school site. 
-						if @model.get('schedule')['is_expired'] or not (IS_STANDALONE_SITE or @model.get('schedule')['is_active'])
+						if @model.get('schedule')['is_expired'] or not @model.get('schedule')['is_active']
+							@$el.find '.start-training'
+							.hide()
+
+						if not IS_STANDALONE_SITE
 							@$el.find '.start-training'
 							.hide()
 

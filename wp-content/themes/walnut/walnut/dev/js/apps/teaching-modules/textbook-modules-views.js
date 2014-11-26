@@ -21,7 +21,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         this.$el.attr('data-id', this.model.get('id'));
         if (this.model.get('quiz_type') === 'class_test') {
           if (this.model.get('schedule')) {
-            if (this.model.get('schedule')['is_expired'] || !(IS_STANDALONE_SITE || this.model.get('schedule')['is_active'])) {
+            if (this.model.get('schedule')['is_expired'] || !this.model.get('schedule')['is_active']) {
+              this.$el.find('.start-training').hide();
+            }
+            if (!IS_STANDALONE_SITE) {
               this.$el.find('.start-training').hide();
             }
             if (this.model.get('schedule')['is_expired']) {
