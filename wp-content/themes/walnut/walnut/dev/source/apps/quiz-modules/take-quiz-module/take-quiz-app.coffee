@@ -398,6 +398,3 @@ define ['app'
 			# set handlers
 			App.commands.setHandler "start:take:quiz:app", (opt = {})->
 				new View.TakeQuizController opt
-		
-
-
