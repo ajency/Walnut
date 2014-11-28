@@ -77,7 +77,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
           return d.resolve(destination);
         }, function(message) {
           console.log('FILE DECRYPTION ERROR: ' + message);
-          return d.resolve('');
+          return d.resolve(destination);
         });
       });
     },

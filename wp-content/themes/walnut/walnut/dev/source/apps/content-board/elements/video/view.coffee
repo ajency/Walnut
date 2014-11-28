@@ -11,17 +11,14 @@ define ['app'
 
 			template : '    {{#videoUrl}}
 								<video class="video-js vjs-default-skin" controls poster="/images/video-poster.jpg" 
-									preload="none" width="100%">
+									preload="none" width="100%" data-setup="{}" >
 								</video>
 							{{/videoUrl}}
-							{{^videoUrl}}
-								<video class="video-js vjs-default-skin" controls poster="/images/video-unavailable.png" 
-									preload="none" width="100%">
-								</video>
-							{{/videoUrl}}
+							
+							<img src="/images/video-unavailable.png" alt="no video" class="hidden" width="100%"/>
+							
 
-							<div class="clearfix"></div>
-										'
+							<div class="clearfix"></div>'
 
 
 
@@ -32,19 +29,23 @@ define ['app'
 				'click .playlist-video' : '_playClickedVideo'
 				'click .video-js' : '_playFirstVideo'
 
+
 			# check if a valid image_id is set for the element
 			# if present ignore else run the Holder.js to show a placeholder
 			# after run remove the data-src attribute of the image to avoid
 			# reloading placeholder image again
 			onShow : ->
-
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
 				return if not @model.get('video_ids').length
 
 				@videos = @model.get('videoUrls')
 				@index = 0
 				@count = 0
+				@timeUpdateValue = 0
 				@$el.find('video').on 'ended', =>
 					@_playNextVideo()
+
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
@@ -54,12 +55,49 @@ define ['app'
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
 				@$el.find('video').attr 'height', setHeight
 				
+				@$el.find('video')[0].currentTime;
+				
+				@$el.find('video')[0].addEventListener 'timeupdate', @ontimeUpdate;
+
+				@$el.find('video')[0].addEventListener 'error', @onError, true;
 
 				# @$el.find('source')[0].src = @videos[0]
 				# @$el.find('video')[0].src = @videos[0]
+			
+			ontimeUpdate : =>
+
+				@videoTimeUpdate = @$el.find('video')[0].currentTime;
 				
+				@timeUpdateValue = @timeUpdateValue+1
+				
+				if @timeUpdateValue is 1
+					setTimeout =>
+						@ontimeUpdate()
+					, 1000
+				else
+					setTimeout =>
+						@videoTimeUpdate = @$el.find('video')[0].currentTime
+					,300
 
+					if @videoTimeUpdate is 0
+						@$el.find('img').attr 'height', 'auto !important' 
+						
+						$('img').removeClass 'hidden'
+						
+						$('video').addClass 'hidden'
 
+					
+					@$el.find('video')[0].removeEventListener 'timeupdate', @ontimeUpdate, false
+			
+			onError : (evt)=>
+				
+				@$el.find('img').attr 'height', 'auto !important' 
+				
+				$('img').removeClass 'hidden'
+				
+				$('video').addClass 'hidden'
+				@$el.find('video')[0].removeEventListener 'error', @onError, true;
+			
 			_setVideoList : ->
 				console.log @model
 				@$el.append('<div id="playlist-hover" class="playlistHover">
@@ -90,24 +128,39 @@ define ['app'
 				_.each @model.get('title'),(title,index)=>
 					@$el.find('#video-list').append("<div class='playlist-video' data-index=#{index}>#{title}</div>")
 
-			_playFirstVideo :->
+			_playFirstVideo :=>
 				if @count is 0
 					@count++
 					@$el.find('video')[0].src = @videos[0]
 					@$el.find('video')[0].load()
 					setTimeout =>
 						@$el.find('video')[0].play()
-					,500
+					,300
+					
 
 			togglePlaylist :->
 				@$el.find('.playlist-hidden').toggle()
 
 			_playPrevVideo : (e)->
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
+
 				e.stopPropagation()
 				@index-- if @index > 0
 				@_playVideo()
 
 			_playNextVideo : (e)->
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
+
 				e.stopPropagation() if e?
 				if @index < @videos.length-1
 					@count++
@@ -115,17 +168,24 @@ define ['app'
 					@_playVideo()
 
 			_playClickedVideo : (e)->
-				
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
+				widthRatio = 16
+				heightRatio = 9
+				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				@$el.find('video').attr 'height', setHeight
+
 				e.stopPropagation()
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
 				@_playVideo()
-
-
+				
 
 			_playVideo:->
+				@timeUpdateValue = 0
+				@$el.find('video')[0].currentTime;
 				@count++
-				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
@@ -137,13 +197,10 @@ define ['app'
 
 				else 
 					@$el.find('video')[0].src = @videos[@index]
-					# @$el.find('img')[0].attr 'z-index', 0
-
-					setTimeout(=>
-						@$el.find('video')[0].poster = "/images/video-unavailable.png"
-					,200)
+					
 					
 				
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()
-				
+
+				@$el.find('video')[0].addEventListener 'timeupdate', @ontimeUpdate;

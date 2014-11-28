@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'bootbox'], function(App, bootbox) {
@@ -7,12 +8,15 @@ define(['app', 'bootbox'], function(App, bootbox) {
       __extends(VideoView, _super);
 
       function VideoView() {
+        this._playFirstVideo = __bind(this._playFirstVideo, this);
+        this.onError = __bind(this.onError, this);
+        this.ontimeUpdate = __bind(this.ontimeUpdate, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video class="video-js vjs-default-skin" controls poster="/images/video-poster.jpg" preload="none" width="100%"> </video> {{/videoUrl}} {{^videoUrl}} <video class="video-js vjs-default-skin" controls poster="/images/video-unavailable.png" preload="none" width="100%"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video class="video-js vjs-default-skin" controls poster="/images/video-poster.jpg" preload="none" width="100%" data-setup="{}" > </video> {{/videoUrl}} <img src="/images/video-unavailable.png" alt="no video" class="hidden" width="100%"/> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -24,12 +28,15 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       VideoView.prototype.onShow = function() {
         var heightRatio, setHeight, widthRatio;
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
         if (!this.model.get('video_ids').length) {
           return;
         }
         this.videos = this.model.get('videoUrls');
         this.index = 0;
         this.count = 0;
+        this.timeUpdateValue = 0;
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
             return _this._playNextVideo();
@@ -42,7 +49,41 @@ define(['app', 'bootbox'], function(App, bootbox) {
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
-        return this.$el.find('video').attr('height', setHeight);
+        this.$el.find('video').attr('height', setHeight);
+        this.$el.find('video')[0].currentTime;
+        this.$el.find('video')[0].addEventListener('timeupdate', this.ontimeUpdate);
+        return this.$el.find('video')[0].addEventListener('error', this.onError, true);
+      };
+
+      VideoView.prototype.ontimeUpdate = function() {
+        this.videoTimeUpdate = this.$el.find('video')[0].currentTime;
+        this.timeUpdateValue = this.timeUpdateValue + 1;
+        if (this.timeUpdateValue === 1) {
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.ontimeUpdate();
+            };
+          })(this), 1000);
+        } else {
+          setTimeout((function(_this) {
+            return function() {
+              return _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
+            };
+          })(this), 300);
+          if (this.videoTimeUpdate === 0) {
+            this.$el.find('img').attr('height', 'auto !important');
+            $('img').removeClass('hidden');
+            $('video').addClass('hidden');
+          }
+          return this.$el.find('video')[0].removeEventListener('timeupdate', this.ontimeUpdate, false);
+        }
+      };
+
+      VideoView.prototype.onError = function(evt) {
+        this.$el.find('img').attr('height', 'auto !important');
+        $('img').removeClass('hidden');
+        $('video').addClass('hidden');
+        return this.$el.find('video')[0].removeEventListener('error', this.onError, true);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -65,7 +106,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
             return function() {
               return _this.$el.find('video')[0].play();
             };
-          })(this), 500);
+          })(this), 300);
         }
       };
 
@@ -74,6 +115,13 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype._playPrevVideo = function(e) {
+        var heightRatio, setHeight, widthRatio;
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
+        widthRatio = 16;
+        heightRatio = 9;
+        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+        this.$el.find('video').attr('height', setHeight);
         e.stopPropagation();
         if (this.index > 0) {
           this.index--;
@@ -82,6 +130,13 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype._playNextVideo = function(e) {
+        var heightRatio, setHeight, widthRatio;
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
+        widthRatio = 16;
+        heightRatio = 9;
+        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+        this.$el.find('video').attr('height', setHeight);
         if (e != null) {
           e.stopPropagation();
         }
@@ -93,7 +148,13 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype._playClickedVideo = function(e) {
-        var index;
+        var heightRatio, index, setHeight, widthRatio;
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
+        widthRatio = 16;
+        heightRatio = 9;
+        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
+        this.$el.find('video').attr('height', setHeight);
         e.stopPropagation();
         index = parseInt($(e.target).attr('data-index'));
         this.index = index;
@@ -101,10 +162,9 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       VideoView.prototype._playVideo = function() {
+        this.timeUpdateValue = 0;
+        this.$el.find('video')[0].currentTime;
         this.count++;
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
@@ -113,14 +173,10 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         } else {
           this.$el.find('video')[0].src = this.videos[this.index];
-          setTimeout((function(_this) {
-            return function() {
-              return _this.$el.find('video')[0].poster = "/images/video-unavailable.png";
-            };
-          })(this), 200);
         }
         this.$el.find('video')[0].load();
-        return this.$el.find('video')[0].play();
+        this.$el.find('video')[0].play();
+        return this.$el.find('video')[0].addEventListener('timeupdate', this.ontimeUpdate);
       };
 
       return VideoView;
