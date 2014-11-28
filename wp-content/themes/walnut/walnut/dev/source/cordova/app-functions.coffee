@@ -104,7 +104,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 
 					, (message) ->
 						console.log 'FILE DECRYPTION ERROR: '+message
-						d.resolve ''
+						d.resolve destination
 				)
 
 		
