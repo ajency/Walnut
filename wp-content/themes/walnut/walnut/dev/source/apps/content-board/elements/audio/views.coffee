@@ -11,7 +11,8 @@ define ['app'], (App)->
 
             template: '{{#audio}}
                         <audio title="{{title}}" class="audio1" controls>
-                            <source src="{{audioUrl}}" type="audio/mpeg">
+                            <source src="{{audioUrl}}" type="audio/mpeg" 
+                            onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';">
                             Your browser does not support the audio element.
                         </audio>
                         {{/audio}}'
