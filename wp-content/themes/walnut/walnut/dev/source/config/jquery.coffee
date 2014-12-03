@@ -1,9 +1,9 @@
 define ['jquery', 'underscore'], ($, _)->
 
-    $( document ).on  "click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', (e)->
-
+    #$( document ).on  "click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle, .attempts-title', (e)->
+    $( document ).on  "click", '.attempts-title', (e)->
         el = $(e.target).parents(".grid").children(".grid-body");
-        el.slideToggle(200);
+        # el.slideToggle(200);
 
         icon = $(e.target).parents(".grid").find(".tools a");
 
