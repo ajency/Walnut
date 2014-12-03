@@ -58,7 +58,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return QuizAttemptsView.__super__.constructor.apply(this, arguments);
       }
 
-      QuizAttemptsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title attempts-title no-border"> <h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> <div class="tools"> <a href="javascript:;" class="expand"></a> </div> </div> <div class="none grid-body attempts-body no-border contentSelect" style="display:none"> <div class="row"> <div class="col-md-4"> <label class="text-grey">Attempted On </label> </div> <div class="col-md-4"> <label class="text-grey">Marks Scored (out of {{marks}}) </label> </div> <div class="col-md-3"> <label class="text-grey">Time Taken (out of {{total_minutes}}m) </label> </div> </div> <div id="attempts_list"> </div> </div> </div>';
+      QuizAttemptsView.prototype.template = '<div class="tiles white grid simple vertical blue"> <div class="grid-title attempts-title no-border"> <h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> <div class="tools"> <a class="expand"></a> </div> </div> <div class="none grid-body attempts-body no-border contentSelect" style="display:none"> <div class="row"> <div class="col-md-4"> <label class="text-grey">Attempted On </label> </div> <div class="col-md-4"> <label class="text-grey">Marks Scored (out of {{marks}}) </label> </div> <div class="col-md-3"> <label class="text-grey">Time Taken (out of {{total_minutes}}m) </label> </div> </div> <div id="attempts_list"> </div> </div> </div>';
 
       QuizAttemptsView.prototype.itemView = AttemptsItemView;
 
@@ -73,6 +73,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             };
           })(this), 200);
         }
+      };
+
+      QuizAttemptsView.prototype.onShow = function() {
+        return $(".attempts-title").click(function() {
+          return $(".attempts-body").toggle(400);
+        });
       };
 
       return QuizAttemptsView;

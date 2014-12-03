@@ -2,10 +2,9 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 
 define(['jquery', 'underscore'], function($, _) {
   var adjustPageDim;
-  $(document).on("click", '.grid .tools .collapse, .grid .tools .expand, .grid-body-toggle', function(e) {
+  $(document).on("click", '.attempts-title', function(e) {
     var el, icon;
     el = $(e.target).parents(".grid").children(".grid-body");
-    el.slideToggle(200);
     icon = $(e.target).parents(".grid").find(".tools a");
     if ($(icon).hasClass("collapse")) {
       return $(icon).removeClass("collapse").addClass("expand");
@@ -51,12 +50,11 @@ define(['jquery', 'underscore'], function($, _) {
   $.fn.removeAllAttr = function() {
     var attrs;
     attrs = ['class', 'tabindex', 'contenteditable', 'id', 'spellcheck', 'role', 'aria-label', 'title', 'aria-describedby', 'style'];
-    return _.each(this, function(div) {
-      return _.each(attrs, function(attr) {
-        return $(div).removeAttr(attr);
-      });
-    });
+    return _.each(this, function(div) {});
   };
+  _.each(attrs, function(attr) {
+    return $(div).removeAttr(attr);
+  });
   $.fn.center = function(parent) {
     if (parent) {
       parent = this.parent();
