@@ -104,6 +104,7 @@ define ['app'
 			onShow:->
 
 				if  Marionette.getOption(@,'mode') is 'take-quiz'
+
 					@$el.addClass 'myClass'
 
 				else 
@@ -125,11 +126,14 @@ define ['app'
 
 				if _.platform() is 'DEVICE'
 					# _.setSynapseMediaDirectoryPathToLocalStorage()
-
+					$('.header').css({'top':'0%', 'left':'0%'});
+					
 					_.cordovaHideSplashscreen()
 
 					_.removeCordovaBackbuttonEventListener()
 
 					_.enableCordovaBackbuttonNavigation()
+
+
 
 					# _.disableCordovaBackbuttonNavigation()

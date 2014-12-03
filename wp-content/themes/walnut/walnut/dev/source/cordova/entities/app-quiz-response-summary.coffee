@@ -104,6 +104,7 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 		writeQuizResponseSummary : (model)->
 			quizMetaValue= ''
 			quizMeta = ''
+			questionsOrder = ''
 			_.getCollectionMeta(model.get('collection_id'))
 			.then (collectionMetaData)->
 
@@ -111,13 +112,20 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 					# quizResponseSummary = _.getQuizResponseSummaryByCollectionId(model.get('collection_id'))
 					# quizResponseSummary.done (result)->
 					quizMetaValue = model.get('status')
+					questionsOrder = model.get('questions_order')
 					# quizMeta = 'attempts' : result.attempts
-					quizMeta = 'status' : quizMetaValue
+					quizMeta = 
+						'status' : quizMetaValue
+						'questions_order' : questionsOrder
 
 
 				else
 					quizMetaValue = model.get('status')
-					quizMeta = 'status' : quizMetaValue
+					questionsOrder = model.get('questions_order')
+					
+					quizMeta = 
+						'status' : quizMetaValue
+						'questions_order' : questionsOrder
 
 
 			# if typeof summary_id != 'undefined'

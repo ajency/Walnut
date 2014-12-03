@@ -82,17 +82,14 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.onShow = function() {
-        this.questionOrder = this.quizModel.get('content_pieces').sort(function(a, b) {
-          return a - b;
-        });
         if (this.$el.find('#submit-question').length === 0) {
-          if (this.model.id === parseInt(_.last(this.questionOrder))) {
+          if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
             this.$el.find('#last_question').html('This is the last question');
           } else {
             this.$el.find('#next-question').show();
           }
         }
-        if (parseInt(this.model.id) === parseInt(_.first(this.questionOrder))) {
+        if (parseInt(this.model.id) === parseInt(_.first(this.quizModel.get('content_pieces')))) {
           this.$el.find('#first_question').html('This is the first question');
           return this.$el.find('#previous-question').hide();
         }
@@ -100,7 +97,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
 
       SingleQuestionLayout.prototype.onSubmitQuestion = function() {
         this.$el.find("#submit-question").hide();
-        if (this.model.id === parseInt(_.last(this.questionOrder))) {
+        if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
           this.$el.find('#last_question').html('This is the last question');
           bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
         } else {

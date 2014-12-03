@@ -201,12 +201,17 @@ define ['app'
 				value= @layout.quizDetailsRegion.$el.offset().top
 				
 				value= value-70
-				$('body').css({'height' : 'auto'});
+				$('html,body').css({'height' : 'auto'});
+				
+				# $.mobile.silentScroll(value);
+				# $('html').css({'overflow-y' : 'hidden'});
 				
 				$('body').animate({ 
 					scrollTop: value }
 				, 'slow'
 				)
+				@layout.quizDetailsRegion.$el.slideDown()
+				
 				# {duration:500
 				# 	, complete: ()->
 				# 		# setTimeout =>
@@ -214,6 +219,7 @@ define ['app'
 				# 		# , 2000
 						
 				# }
+				# $('html').css({'overflow-y' : 'auto'});
 
 
 			_fetchQuizResponseSummary:=>

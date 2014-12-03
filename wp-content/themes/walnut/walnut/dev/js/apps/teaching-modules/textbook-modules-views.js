@@ -19,6 +19,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       ContentGroupsItemView.prototype.onShow = function() {
         navigator.notification.activityStop();
         $('body').removeClass('disableTouchForView');
+        $('.header').css({
+          'top': '0%',
+          'left': '0%'
+        });
         this.$el.attr('id', 'row-' + this.model.get('id'));
         this.$el.attr('data-id', this.model.get('id'));
         if (this.model.get('quiz_type') === 'class_test') {
@@ -27,11 +31,17 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
               this.$el.find('.start-training').hide();
             }
             if (this.model.get('is_expired')) {
-              return this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
+              this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
             }
           } else {
-            return this.$el.find('.start-training').hide();
+            this.$el.find('.start-training').hide();
           }
+        }
+        if (_.platform() === 'DEVICE') {
+          $('body').css({
+            'height': '100%'
+          });
+          return _.disableCordovaBackbuttonNavigation();
         }
       };
 

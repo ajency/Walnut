@@ -380,6 +380,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizLayout.prototype.onShow = function() {
         $('.page-content').addClass('condensed expand-page');
         if (_.platform() === 'DEVICE') {
+          $('.header').css({
+            'top': '0%',
+            'left': '0%'
+          });
           $('body').css({
             'height': '100%'
           });
@@ -391,6 +395,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         console.log('Invoked onPauseSessionClick');
         Backbone.history.history.back();
         document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+        document.removeEventListener("pause", this.onPauseSessionClick, false);
         return this.clearMediaData();
       };
 

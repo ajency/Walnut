@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,12 +8,13 @@ define(['app'], function(App) {
       __extends(AudioView, _super);
 
       function AudioView() {
+        this.onError = __bind(this.onError, this);
         return AudioView.__super__.constructor.apply(this, arguments);
       }
 
       AudioView.prototype.className = 'audio';
 
-      AudioView.prototype.template = '{{#audio}} <audio title="{{title}}" class="audio1" controls> <source src="{{audioUrl}}" type="audio/mpeg" onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';"> Your browser does not support the audio element. </audio> {{/audio}}';
+      AudioView.prototype.template = '{{#audio}} <audio title="{{title}}" class="audio1" controls > <source src="{{audioUrl}}" type="audio/mpeg" > Your browser does not support the audio element. </audio> {{/audio}}';
 
       AudioView.prototype.mixinTemplateHelpers = function(data) {
         var arrays, audioArray;
@@ -37,6 +39,10 @@ define(['app'], function(App) {
           showduration: true,
           show_prev_next: true
         });
+      };
+
+      AudioView.prototype.onError = function() {
+        return console.log("error");
       };
 
       return AudioView;

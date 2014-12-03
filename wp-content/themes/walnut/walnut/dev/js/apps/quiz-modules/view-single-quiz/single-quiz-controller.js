@@ -209,12 +209,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         var value;
         value = this.layout.quizDetailsRegion.$el.offset().top;
         value = value - 70;
-        $('body').css({
+        $('html,body').css({
           'height': 'auto'
         });
-        return $('body').animate({
+        $('body').animate({
           scrollTop: value
         }, 'slow');
+        return this.layout.quizDetailsRegion.$el.slideDown();
       };
 
       Controller.prototype._fetchQuizResponseSummary = function() {

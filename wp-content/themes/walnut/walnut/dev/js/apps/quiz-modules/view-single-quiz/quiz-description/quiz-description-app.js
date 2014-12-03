@@ -134,6 +134,10 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       QuizDetailsView.prototype.onShow = function() {
         var responseSummary, _ref;
+        $('.header').css({
+          'top': '0%',
+          'left': '0%'
+        });
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
           this.$el.find("#take-quiz").html('Continue');
@@ -145,6 +149,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             this.$el.find("#take-quiz").html('Replay');
           }
           if (_.platform() === 'DEVICE') {
+            $('body').css({
+              'height': '100%'
+            });
             return _.disableCordovaBackbuttonNavigation();
           }
         }
