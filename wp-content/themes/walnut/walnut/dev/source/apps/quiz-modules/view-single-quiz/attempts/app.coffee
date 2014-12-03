@@ -45,11 +45,11 @@ define ['app'
         class QuizAttemptsView extends Marionette.CompositeView
 
             template : '<div class="tiles white grid simple vertical blue">
-                            <div class="grid-title no-border"> 
+                            <div class="grid-title attempts-title no-border"> 
                                 <h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> 
                                 <div class="tools"> <a href="javascript:;" class="expand"></a> </div> 
                             </div>
-                            <div class="none grid-body no-border contentSelect">
+                            <div class="none grid-body attempts-body no-border contentSelect" style="display:none">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label class="text-grey">Attempted On </label>
