@@ -44,6 +44,8 @@ define ['app'
 
 		class QuizAttemptsView extends Marionette.CompositeView
 
+			#changed for _.platform() DEVICE
+			
 			template : '<div class="tiles white grid simple vertical blue">
 							<div class="grid-title attempts-title no-border"> 
 								<h4 class="grid-body-toggle pointer">List of <span class="semi-bold">Attempts</span></h4> 
@@ -77,6 +79,8 @@ define ['app'
 					setTimeout =>
 						@trigger 'view:summary', $(e.target).attr 'data-id'                        
 					,200
+
+			#changed for _.platform() DEVICE
 
 			onShow:->
 				$(".attempts-title").click ->
