@@ -77,7 +77,8 @@ define ['app',
 			onShow : ->
 				navigator.notification.activityStop()
 				$('body').removeClass 'disableTouchForView'
-				
+				$('.header').css({'top':'0%', 'left':'0%'});
+
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
 
@@ -95,6 +96,13 @@ define ['app',
 					else
 						@$el.find '.start-training'
 						.hide()
+
+				if _.platform() is 'DEVICE'
+					
+					$('body').css('height' : '100%')
+
+					_.disableCordovaBackbuttonNavigation()
+					# _.removeCordovaBackbuttonEventListener()
 
 			serializeData : ->
 				data = super()
@@ -282,6 +290,7 @@ define ['app',
 					$('body').css('height' : '100%')
 
 					_.disableCordovaBackbuttonNavigation()
+					# _.removeCordovaBackbuttonEventListener()
 
 			onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 

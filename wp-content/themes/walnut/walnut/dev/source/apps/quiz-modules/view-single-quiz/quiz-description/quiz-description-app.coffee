@@ -96,6 +96,8 @@ define ['app'
 
 			onShow:->
 
+				$('.header').css({'top':'0%', 'left':'0%'});
+				
 				responseSummary = Marionette.getOption @, 'quizResponseSummary'
 				if responseSummary.get('status') is 'started'                    
 					@$el.find "#take-quiz"
@@ -116,6 +118,7 @@ define ['app'
 
 						# $('body').css({'height' : 'auto'});
 
+						$('body').css({'height' : '100%'});
 						_.disableCordovaBackbuttonNavigation()
 					
 

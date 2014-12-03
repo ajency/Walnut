@@ -107,6 +107,10 @@ define(['app', 'text!apps/students-dashboard/textbooks/templates/textbooks-list.
           return false;
         });
         if (_.platform() === 'DEVICE') {
+          $('.header').css({
+            'top': '0%',
+            'left': '0%'
+          });
           _.cordovaHideSplashscreen();
           _.removeCordovaBackbuttonEventListener();
           return _.enableCordovaBackbuttonNavigation();

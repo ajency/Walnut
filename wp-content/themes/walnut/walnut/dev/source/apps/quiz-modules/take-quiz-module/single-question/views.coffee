@@ -76,17 +76,20 @@ define ['app'
 
 
                     onShow:->
+                        #changed for _.platform 'DEVICE'
+                        # @questionOrder = @quizModel.get('content_pieces').sort((a,b)-> a-b)
+                        
                         if @$el.find('#submit-question').length is 0
+                            
                             if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                                 @$el.find '#last_question'
                                 .html 'This is the last question'
-
-                                
 
                             else
                                 @$el.find '#next-question'
                                 .show()
 
+                        
                         if parseInt(@model.id) is parseInt _.first @quizModel.get 'content_pieces'
                             @$el.find '#first_question'
                             .html 'This is the first question'

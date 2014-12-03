@@ -67,19 +67,24 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
       return defer.promise();
     },
     writeQuizResponseSummary: function(model) {
-      var quizMeta, quizMetaValue;
+      var questionsOrder, quizMeta, quizMetaValue;
       quizMetaValue = '';
       quizMeta = '';
+      questionsOrder = '';
       return _.getCollectionMeta(model.get('collection_id')).then(function(collectionMetaData) {
         if (collectionMetaData.quizType === "practice") {
           quizMetaValue = model.get('status');
+          questionsOrder = model.get('questions_order');
           quizMeta = {
-            'status': quizMetaValue
+            'status': quizMetaValue,
+            'questions_order': questionsOrder
           };
         } else {
           quizMetaValue = model.get('status');
+          questionsOrder = model.get('questions_order');
           quizMeta = {
-            'status': quizMetaValue
+            'status': quizMetaValue,
+            'questions_order': questionsOrder
           };
         }
         if (model.get('summary_id') === "" || typeof model.get('summary_id') === 'undefined') {

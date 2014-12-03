@@ -239,6 +239,7 @@ define ['app'
 						display_mode                : @display_mode
 
 				clearMediaDataOnEndQuiz : =>
+					# $('.header').css({'top':'0%', 'left':'0%'});
 					_.clearMediaDirectory 'videos-web'
 					_.clearMediaDirectory 'audio-web'
 
@@ -353,6 +354,7 @@ define ['app'
 					$('.page-content').addClass 'condensed expand-page'
 
 					if _.platform() is 'DEVICE'
+						$('.header').css({'top':'0%', 'left':'0%'});
 						$('body').css({'height' : '100%'});
 						
 						@cordovaEventsForModuleDescriptionView()
@@ -361,8 +363,11 @@ define ['app'
 				onPauseSessionClick : =>
 					
 					console.log 'Invoked onPauseSessionClick'
+					
 					Backbone.history.history.back()
 					document.removeEventListener("backbutton", @onPauseSessionClick, false)
+					document.removeEventListener("pause", @onPauseSessionClick, false)
+					
 					@clearMediaData()
 
 				onBackSessionClick : =>

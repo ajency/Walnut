@@ -165,7 +165,6 @@ define ['app'
                     cordovaEventsForModuleDescriptionView : ->
 
                         # Cordova backbutton event
-
                         navigator.app.overrideBackbutton(true)
                         document.addEventListener("backbutton", @onPauseSessionClick, false)
 
