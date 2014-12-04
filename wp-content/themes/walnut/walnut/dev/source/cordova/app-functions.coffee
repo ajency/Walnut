@@ -204,7 +204,10 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					defer.resolve destination
 
 				, (message) ->
-					defer.reject(console.log('FILE DECRYPTION ERROR: '+message))
+
+					defer.resolve destination
+					# defer.resolve(console.log('FILE DECRYPTION ERROR: '+message))
+					# navigator.notification.activityStop()
 			)
 
 

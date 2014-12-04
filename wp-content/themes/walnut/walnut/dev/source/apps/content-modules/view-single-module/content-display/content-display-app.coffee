@@ -128,6 +128,10 @@ define ['app'
                 'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
 
             onShow: ->
+                # Changes for cordova app
+                if _.platform() is 'DEVICE'
+                    $('.header').css({'top':'0%', 'left':'0%'});
+                
                 responseCollection = Marionette.getOption @, 'responseCollection'
 
                 completedResponses = responseCollection.where 'status': 'completed'

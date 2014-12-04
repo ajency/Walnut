@@ -166,6 +166,12 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       ContentDisplayView.prototype.onShow = function() {
         var completedResponses, question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        if (_.platform() === 'DEVICE') {
+          $('.header').css({
+            'top': '0%',
+            'left': '0%'
+          });
+        }
         responseCollection = Marionette.getOption(this, 'responseCollection');
         completedResponses = responseCollection.where({
           'status': 'completed'
