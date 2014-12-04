@@ -50,11 +50,12 @@ define(['jquery', 'underscore'], function($, _) {
   $.fn.removeAllAttr = function() {
     var attrs;
     attrs = ['class', 'tabindex', 'contenteditable', 'id', 'spellcheck', 'role', 'aria-label', 'title', 'aria-describedby', 'style'];
-    return _.each(this, function(div) {});
+    return _.each(this, function(div) {
+      return _.each(attrs, function(attr) {
+        return $(div).removeAttr(attr);
+      });
+    });
   };
-  _.each(attrs, function(attr) {
-    return $(div).removeAttr(attr);
-  });
   $.fn.center = function(parent) {
     if (parent) {
       parent = this.parent();
@@ -170,7 +171,7 @@ define(['jquery', 'underscore'], function($, _) {
           }
           break;
         case 'admin/view-all-modules':
-          if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+          if (App.request('current:user:can', 'administrator') || App.request('current:user:can', 'school-admin')) {
             return true;
           }
       }
