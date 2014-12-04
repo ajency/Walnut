@@ -25,17 +25,21 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         });
         this.$el.attr('id', 'row-' + this.model.get('id'));
         this.$el.attr('data-id', this.model.get('id'));
-        if (this.model.get('quiz_type') === 'class_test') {
-          if (this.model.get('schedule')) {
-            if (!this.model.get('schedule')['is_active']) {
-              this.$el.find('.start-training').hide();
-            }
-            if (this.model.get('is_expired')) {
-              this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
-            }
-          } else {
+        if (this.model.get('schedule')) {
+          if (this.model.get('schedule')['is_expired'] || !this.model.get('schedule')['is_active']) {
             this.$el.find('.start-training').hide();
           }
+          if (!IS_STANDALONE_SITE) {
+            this.$el.find('.start-training').hide();
+          }
+          if (this.model.get('schedule')['is_expired']) {
+            this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
+          }
+        } else {
+          this.$el.find('.start-training').hide();
+        }
+        if (this.model.get('status') === 'completed') {
+          this.$el.find('.start-training').show();
         }
         if (_.platform() === 'DEVICE') {
           $('body').css({
