@@ -19,12 +19,18 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
                   console.log(value);
                   if (value.marks_scored) {
                     marks_scored = value.marks_scored.toFixed(1);
+                  } else {
+                    marks_scored = value.marks_scored;
                   }
                   if (value.negative_scored) {
                     negative_scored = value.negative_scored.toFixed(1);
+                  } else {
+                    negative_scored = value.negative_scored;
                   }
                   if (value.total_marks_scored) {
                     total_marks_scored = value.total_marks_scored.toFixed(1);
+                  } else {
+                    total_marks_scored = value.total_marks_scored;
                   }
                   userID = _.getUserID();
                   quiz_meta = _.unserialize(row['quiz_meta']);
