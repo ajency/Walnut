@@ -34,16 +34,16 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 
 									result[i] = 
 										collection_id : collection_id
-										marks_scored: value.marks_scored
+										marks_scored: value.marks_scored.toFixed(1)
 										attempts:quiz_responses.attempts
-										negative_scored: value.negative_scored
+										negative_scored: value.negative_scored.toFixed(1)
 										num_skipped: skipped
 										questions_order:quiz_meta.questions_order
 										status : quiz_meta.status
 										student_id : userID
 										summary_id : row['summary_id']
 										taken_on : row['taken_on']
-										total_marks_scored : value.total_marks_scored
+										total_marks_scored : value.total_marks_scored.toFixed(1)
 										total_time_taken : value.total_time_taken
 
 

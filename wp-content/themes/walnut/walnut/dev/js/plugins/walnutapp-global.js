@@ -6,6 +6,8 @@
 	
 	var SITEURL = "";
 
+	var IS_STANDALONE_SITE = false;
+
 	//'videos' is initialized globally as 'html5Video' plugin loses scope of 
 	// video source incase of more than 1 video.
 	var videos = {};

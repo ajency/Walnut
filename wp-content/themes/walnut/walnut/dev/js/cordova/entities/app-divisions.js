@@ -32,7 +32,8 @@ define(['underscore'], function(_) {
       return defer.promise();
     },
     fetchSingleDivision: function(id) {
-      var defer, divisionData, onSuccess;
+      var defer, divisionData, divisionid, onSuccess;
+      divisionid = parseInt(id);
       divisionData = {
         id: '',
         division: '',

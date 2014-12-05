@@ -82,7 +82,7 @@ define ['app',
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
 
-				# if @model.get('quiz_type') is 'class_test'
+				if @model.get('quiz_type') is 'class_test'
 
 				# 	if @model.get 'schedule'
 				# 		if not @model.get('schedule')['is_active']
@@ -97,31 +97,31 @@ define ['app',
 				# 		@$el.find '.start-training'
 				# 		.hide()
 
-				if @model.get 'schedule'
-					#hide the start button if 
-					#1. the schedule has expired without completing the quiz
-					#2. the status isnt active. ie. the quiz is scheduled for a future date.
-					#3. if the current site is a multisite. class test can only be taken on standalone school site. 
-					if @model.get('schedule')['is_expired'] or not @model.get('schedule')['is_active']
+					if @model.get 'schedule'
+						#hide the start button if 
+						#1. the schedule has expired without completing the quiz
+						#2. the status isnt active. ie. the quiz is scheduled for a future date.
+						#3. if the current site is a multisite. class test can only be taken on standalone school site. 
+						if @model.get('schedule')['is_expired'] or not @model.get('schedule')['is_active']
+							@$el.find '.start-training'
+							.hide()
+
+						if not IS_STANDALONE_SITE
+							@$el.find '.start-training'
+							.hide()
+
+						if @model.get('schedule')['is_expired']
+							@$el.find '.schedule_dates'
+							.removeClass 'alert-info'
+							.addClass 'alert-error'
+
+					else
 						@$el.find '.start-training'
 						.hide()
 
-					if not IS_STANDALONE_SITE
+					if @model.get('status') is 'completed'
 						@$el.find '.start-training'
-						.hide()
-
-					if @model.get('schedule')['is_expired']
-						@$el.find '.schedule_dates'
-						.removeClass 'alert-info'
-						.addClass 'alert-error'
-
-				else
-					@$el.find '.start-training'
-					.hide()
-
-				if @model.get('status') is 'completed'
-					@$el.find '.start-training'
-					.show()
+						.show()
 
 				if _.platform() is 'DEVICE'
 					
