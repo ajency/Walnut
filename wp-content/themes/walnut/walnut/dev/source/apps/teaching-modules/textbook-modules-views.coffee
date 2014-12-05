@@ -23,7 +23,7 @@ define ['app',
 							{{/attempts}}
 						{{/practice_quiz}}
 						{{^practice_quiz}}
-						  {{&status_str}}
+							{{&status_str}}
 						{{/practice_quiz}}
 
 						</td>
@@ -82,8 +82,6 @@ define ['app',
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
 
-				if @model.get('quiz_type') is 'class_test'
-
 				# 	if @model.get 'schedule'
 				# 		if not @model.get('schedule')['is_active']
 				# 			@$el.find '.start-training'
@@ -96,6 +94,8 @@ define ['app',
 				# 	else
 				# 		@$el.find '.start-training'
 				# 		.hide()
+				
+				if @model.get('quiz_type') is 'class_test'
 
 					if @model.get 'schedule'
 						#hide the start button if 
