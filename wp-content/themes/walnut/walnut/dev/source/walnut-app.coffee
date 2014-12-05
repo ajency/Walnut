@@ -56,6 +56,8 @@ define ['marionette'], (Marionette)->
 				# Cordova local storage
 				_.cordovaLocalStorage()
 
+				# IS_STANDALONE_SITE = false
+
 				# 'FastClick' helps to reduce the 400ms click delay.
 				FastClick.attach(document.body)
 
@@ -68,6 +70,8 @@ define ['marionette'], (Marionette)->
 					if version.indexOf('Staging') is 0
 						`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
 				)
+
+
 
 				# _.setSynapseMediaDirectoryPathToLocalStorage().done ->
 				# 	console.log 'setSynapseMediaDirectoryPathToLocalStorage done'

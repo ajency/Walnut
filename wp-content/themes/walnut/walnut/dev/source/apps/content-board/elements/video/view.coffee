@@ -144,6 +144,7 @@ define ['app'
 			_playPrevVideo : (e)->
 				$('img').addClass 'hidden'
 				$('video').removeClass 'hidden'
+				@timeUpdateValue = 0
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
@@ -156,6 +157,7 @@ define ['app'
 			_playNextVideo : (e)->
 				$('img').addClass 'hidden'
 				$('video').removeClass 'hidden'
+				@timeUpdateValue = 0
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
@@ -170,6 +172,7 @@ define ['app'
 			_playClickedVideo : (e)->
 				$('img').addClass 'hidden'
 				$('video').removeClass 'hidden'
+				@timeUpdateValue = 0
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
@@ -185,6 +188,8 @@ define ['app'
 				@timeUpdateValue = 0
 				@$el.find('video')[0].currentTime;
 				@count++
+
+				@ontimeUpdate()
 				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 
 				@$el.find('.playlist-video').removeClass 'currentVid'

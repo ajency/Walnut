@@ -71,12 +71,12 @@ define ['app'
 						data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
 						
 						if _.platform() is 'DEVICE'
-							data.negative_scored = data.negative_scored.toFixed(2);
-							data.marks_scored = data.marks_scored.toFixed(2);
+							data.negative_scored = data.negative_scored.toFixed(1);
+							data.marks_scored = data.marks_scored.toFixed(1);
 
 					data.total_marks_scored = parseFloat responseSummary.get 'total_marks_scored'
 					if _.platform() is 'DEVICE'
-						data.total_marks_scored = data.total_marks_scored.toFixed(2);
+						data.total_marks_scored = data.total_marks_scored.toFixed(1);
 					
 					if responseSummary.get('taken_on')
 						data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")

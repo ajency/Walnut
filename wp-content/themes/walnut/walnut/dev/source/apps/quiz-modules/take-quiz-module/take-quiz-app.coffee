@@ -152,7 +152,7 @@ define ['app'
 						'content_piece_id'  : questionModel.id
 						'question_response' : _.omit answer.toJSON(), ['marks','status']
 						'status'            : answer.get 'status'
-						'marks_scored'      : parseInt answer.get 'marks'
+						'marks_scored'      : parseFloat answer.get 'marks'
 						'time_taken'        : timeTaken
 
 					newResponseModel = App.request "create:quiz:question:response:model", data

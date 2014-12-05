@@ -65,6 +65,7 @@ define ['underscore'], ( _) ->
 
 		# For each division id, fetch individual division details along with total students count.
 		fetchSingleDivision	: (id)->
+			divisionid = parseInt(id);
 
 			divisionData = id:'', division:'', class_id:'', class_label:'', students_count:''
 

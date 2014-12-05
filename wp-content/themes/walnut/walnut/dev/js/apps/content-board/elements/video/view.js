@@ -118,6 +118,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
         var heightRatio, setHeight, widthRatio;
         $('img').addClass('hidden');
         $('video').removeClass('hidden');
+        this.timeUpdateValue = 0;
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -133,6 +134,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
         var heightRatio, setHeight, widthRatio;
         $('img').addClass('hidden');
         $('video').removeClass('hidden');
+        this.timeUpdateValue = 0;
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -151,6 +153,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
         var heightRatio, index, setHeight, widthRatio;
         $('img').addClass('hidden');
         $('video').removeClass('hidden');
+        this.timeUpdateValue = 0;
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -165,6 +168,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
         this.timeUpdateValue = 0;
         this.$el.find('video')[0].currentTime;
         this.count++;
+        this.ontimeUpdate();
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
