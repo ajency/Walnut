@@ -72,6 +72,8 @@ define ['app',
 
 
 			onShow : ->
+				$('.header').css({'top':'0%', 'left':'0%'});
+				
 				@$el.attr 'id', 'row-' + @model.get 'id'
 				@$el.attr 'data-id', @model.get 'id'
 

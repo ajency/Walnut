@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'text!apps/take-module-item/module-description/templates/module-description-template.html'], function(App, RegionController, moduleDescriptionTemplate) {
+define(['app', 'controllers/region-controller', 'text!apps/take-module-item/module-description/templates/module-description-template.html', 'bootbox'], function(App, RegionController, moduleDescriptionTemplate, bootbox) {
   return App.module("TeacherTeachingApp.ModuleDescription", function(ModuleDescription, App) {
     var ModuleDescriptionController, ModuleDescriptionView;
     ModuleDescriptionController = (function(_super) {
@@ -179,9 +179,13 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
           _.audioQueuesSelection('Click-Next');
         }
         if (Marionette.getOption(this, 'display_mode') === 'class_mode') {
-          if (confirm('This item will be marked as complete. Continue?')) {
-            return this.trigger("question:completed");
-          }
+          return bootbox.confirm('This item will be marked as complete. Continue?', (function(_this) {
+            return function(result) {
+              if (result) {
+                return _this.trigger("question:completed");
+              }
+            };
+          })(this));
         } else {
           return this.trigger("question:completed");
         }

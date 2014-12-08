@@ -2,7 +2,7 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['app'], function(App) {
+define(['app', 'bootbox'], function(App, bootbox) {
   return App.module("SingleQuestionStudentsListApp.Views", function(Views, App) {
     var StudentsEmptyView, StudentsItemView;
     StudentsItemView = (function(_super) {
@@ -126,14 +126,21 @@ define(['app'], function(App) {
       };
 
       StudentsList.prototype.questionCompleted = function() {
+        var msg;
         if ((_.size(this.correctAnswers) < 1) && (Marionette.getOption(this, 'display_mode') === 'class_mode')) {
-          if (confirm('This item will be marked as complete. None of the options have been selected. Continue?')) {
-            return this.trigger("question:completed", "no_answer");
-          }
+          msg = 'This item will be marked as complete. None of the options have been selected. Continue?';
+          return bootbox.confirm(msg, function(result) {
+            if (result) {
+              return this.trigger("question:completed", "no_answer");
+            }
+          });
         } else {
-          if (confirm('This item will be marked as complete. Continue?')) {
-            return this.trigger("question:completed");
-          }
+          msg = 'This item will be marked as complete. Continue?';
+          return bootbox.confirm(msg(function(result) {
+            if (result) {
+              return this.trigger("question:completed");
+            }
+          }));
         }
       };
 

@@ -61,6 +61,9 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
               var display_time, timeTakenArray, totalTimeTakenForModule;
               timeTakenArray = _this.questionResponseCollection.pluck('time_taken');
               totalTimeTakenForModule = 0;
+              timeTakenArray = _.map(timeTakenArray, function(num) {
+                return parseInt(num);
+              });
               if (_.size(timeTakenArray) > 0) {
                 totalTimeTakenForModule = _.reduce(timeTakenArray, function(memo, num) {
                   return parseInt(memo + parseInt(num));

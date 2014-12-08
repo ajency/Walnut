@@ -58,20 +58,56 @@ define(['underscore'], function(_) {
       });
       return defer.promise();
     },
-    cordovaCreateDirectory: function(directory) {
+    cordovaCheckIfPathExists: function(filepath) {
       var defer;
       defer = $.Deferred();
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-        return fileSystem.root.getDirectory(directory, {
+      window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileEntry) {
+        return fileEntry.getDirectory("tempSA", {
           create: true,
           exclusive: false
-        }, function(fileEntry) {
-          console.log(directory + ' PATH: ' + fileEntry.toURL());
-          return defer.resolve(fileEntry.toURL());
+        }, function(entry) {
+          console.log('tempSA directory path: ' + entry.toURL());
+          entry.remove(function() {
+            return console.log("Sucess");
+          }, function() {
+            return console.log("error");
+          });
+          return defer.resolve(true);
         }, function(error) {
-          return defer.reject(console.log(directory + ' ERROR: ' + error.code));
+          defer.resolve(false);
+          return console.log('ERROR: ' + error.code);
         });
-      }, _.fileSystemErrorHandler);
+      }, function() {
+        console.log('resolveLocalFileSystemURL error ');
+        return defer.resolve(false);
+      });
+      return defer.promise();
+    },
+    cordovaCreateDirectory: function(directory) {
+      var defer, filepath, option, value;
+      defer = $.Deferred();
+      value = _.getStorageOption();
+      option = JSON.parse(value);
+      if (option.internal) {
+        filepath = option.internal;
+      } else if (option.external) {
+        filepath = option.external;
+      }
+      window.resolveLocalFileSystemURL('file://' + filepath + '', function(fileEntry) {
+        return fileEntry.getDirectory(directory, {
+          create: true,
+          exclusive: false
+        }, function(entry) {
+          console.log('directory path: ' + entry.toURL());
+          return defer.resolve(entry.toURL());
+        }, function(error) {
+          defer.resolve(false);
+          return console.log('ERROR: ' + error.code);
+        });
+      }, function() {
+        console.log('cordovaCreateDirectory error ');
+        return defer.resolve(false);
+      });
       return defer.promise();
     }
   });

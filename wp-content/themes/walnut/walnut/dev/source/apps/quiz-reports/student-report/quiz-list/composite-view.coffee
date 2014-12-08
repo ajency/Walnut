@@ -6,6 +6,9 @@ define ['app'
         class Views.QuizListView extends Marionette.CompositeView
 
             template : '<div class="col-lg-12">
+                            <button class="reset-quiz none btn btn-success m-b-10 m-r-10" type="submit">
+                                <i class="fa fa-check"></i> Reset Quiz
+                            </button>
                             <table class="table table-bordered m-t-15" id="quiz-table" >                                
                                 <thead>
                                     <tr>
@@ -40,7 +43,7 @@ define ['app'
                                     <option value="100">100</option>
                                 </select>
                             </div>
-                            <button id="reset-quiz" class="none btn btn-success btn-cons2 right pull-left m-t-10 m-r-10" type="submit">
+                            <button class="reset-quiz none btn btn-success pull-left m-t-10 m-r-10" type="submit">
                                 <i class="fa fa-check"></i> Reset Quiz
                             </button>
                         </div>'
@@ -73,7 +76,7 @@ define ['app'
             events:
                 'change #check_all_div'                 : 'checkAll'
                 'change .tab_checkbox,#check_all_div '  : 'showClearResponseButton'
-                'click #reset-quiz'                     : 'clearQuizResponse'
+                'click .reset-quiz'                     : 'clearQuizResponse'
 
             onShow:->
                 pagerOptions =
@@ -100,11 +103,11 @@ define ['app'
 
                 if @$el.find '.tab_checkbox'
                 .is ':checked'
-                    @$el.find '#reset-quiz'
+                    @$el.find '.reset-quiz'
                     .show()
 
                 else
-                    @$el.find '#reset-quiz'
+                    @$el.find '.reset-quiz'
                     .hide()
 
             clearQuizResponse:->

@@ -48,10 +48,16 @@ define ['app'
 
                 @model.set 'textCollection': textModels
 
-                if @model.get('marks') > 0 and not _.every(@model.get('optionCollection'),(option)-> return not option.correct)
+                optsColl = @model.get 'optionCollection'
+
+                if @model.get('marks') > 0 and not _.every(optsColl,(option)-> return not option.correct)
                     @model.set 'complete', true
                 else
                     @model.set 'complete',false
+
+                if @model.get 'enableIndividualMarks'
+                    correctAns= _.where optsColl, 'correct':true
+                    @model.set 'complete',false if not _.every(correctAns,(option)-> return true if option.marks >0)
 
                 @model.save()
 

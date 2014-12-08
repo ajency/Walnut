@@ -46,6 +46,10 @@ define ['app'
                 showElapsedTime : =>
                     timeTakenArray = @questionResponseCollection.pluck('time_taken');
                     totalTimeTakenForModule = 0
+
+                    timeTakenArray = _.map timeTakenArray, (num)->
+                        parseInt num
+
                     if _.size(timeTakenArray) > 0
                         totalTimeTakenForModule = _.reduce timeTakenArray, (memo, num)->
                             parseInt memo + parseInt num

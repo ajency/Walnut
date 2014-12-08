@@ -17,6 +17,10 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
       ContentGroupsItemView.prototype.tagName = 'tr';
 
       ContentGroupsItemView.prototype.onShow = function() {
+        $('.header').css({
+          'top': '0%',
+          'left': '0%'
+        });
         this.$el.attr('id', 'row-' + this.model.get('id'));
         this.$el.attr('data-id', this.model.get('id'));
         if (this.model.get('quiz_type') === 'class_test') {

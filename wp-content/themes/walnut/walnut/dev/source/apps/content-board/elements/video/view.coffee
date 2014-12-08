@@ -14,12 +14,8 @@ define ['app'], (App)->
 
 								</video>
 							{{/videoUrl}}
-							{{^videoUrl}}
-								<video  class="video-js vjs-default-skin" controls preload="none" width="100%"
-								poster="/images/video-unavailable.png" data-setup="{}">
 
-								</video>
-							{{/videoUrl}}
+							<img src="/images/video-unavailable.png" alt="no video" class="hidden" width="100%"/>
 
 							<div class="clearfix"></div>
 										'
@@ -30,6 +26,7 @@ define ['app'], (App)->
 				'click #prev' : '_playPrevVideo'
 				'click #next' : '_playNextVideo'
 				'click .playlist-video' : '_playClickedVideo'
+				'click .video-js' : '_playFirstVideo'
 
 				
 
@@ -37,25 +34,33 @@ define ['app'], (App)->
 			# if present ignore else run the Holder.js to show a placeholder
 			# after run remove the data-src attribute of the image to avoid
 			# reloading placeholder image again
-			onShow : ->
-
+			onShow : =>
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
 				return if not @model.get('video_ids').length
 
 				@videos = @model.get('videoUrls')
 				@index = 0
-
+				@count = 0
+				@timeUpdateValue = 0
 				@$el.find('video').on 'ended', =>
 					@_playNextVideo()
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
 
+				@$el.find('video')[0].currentTime;
+
+				@$el.find('video')[0].addEventListener 'timeupdate', @ontimeUpdate;
+				
+				@$el.find('video')[0].addEventListener 'error', @onError, true;
+
 				if _.platform() is 'DEVICE' then @_initLocalVideos()
 
 
 			_initLocalVideos : ->
 
-				# navigator.notification.activityStart("Please wait", "loading content...")
+				navigator.notification.activityStart("Please wait", "loading content...")
 
 				widthRatio = 16
 				heightRatio = 9
@@ -75,9 +80,23 @@ define ['app'], (App)->
 									url = videoSource.replace("media-web/","")
 									videosWebUrl = url.substr(url.indexOf("uploads/"))
 									videoUrl = videosWebUrl.replace("videos-web", "videos")
-									encryptedVideoPath = "SynapseAssets/SynapseMedia/"+videoUrl
-									decryptedVideoPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+									encryptedPath = "SynapseAssets/SynapseMedia/"+videoUrl
+									decryptedPath = "SynapseAssets/SynapseMedia/"+videosWebUrl
+									
+									value = _.getStorageOption()
+									option = JSON.parse(value)
 
+									encryptedVideoPath = '' 
+									decryptedVideoPath = ''
+
+									if option.internal
+										encryptedVideoPath = option.internal+'/'+encryptedPath
+										decryptedVideoPath = option.internal+'/'+decryptedPath
+									else if option.external
+										encryptedVideoPath = option.external+'/'+encryptedPath
+										decryptedVideoPath = option.external+'/'+decryptedPath
+
+									
 									decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath)
 									deferreds.push decryptFile
 							
@@ -85,19 +104,27 @@ define ['app'], (App)->
 								_.each videoPaths , (localVideoPath , index)=>
 									do(localVideoPath, index)=> 
 										
-										@videos[index] = 'file:///mnt/sdcard/'+localVideoPath
+										@videos[index] = 'file://'+localVideoPath
 
 								d.resolve @videos
 								
 
 				$.when(runFunc()).done =>
 					console.log('_initLocalVideos done')
-					# navigator.notification.activityStop()
-					@$el.find('video')[0].src = @videos[0]
-					@$el.find('video')[0].load()
+					navigator.notification.activityStop()
+					# @$el.find('video')[0].src = @videos[0]
+					# @$el.find('video')[0].load()
 
 				.fail _.failureHandler
 
+			_playFirstVideo :=>
+				if @count is 0
+					@count++
+					@$el.find('video')[0].src = @videos[0]
+					@$el.find('video')[0].load()
+					setTimeout =>
+						@$el.find('video')[0].play()
+					,300
 
 			_setVideoList : ->
 				console.log '@model'
@@ -135,27 +162,54 @@ define ['app'], (App)->
 			togglePlaylist :->
 				@$el.find('.playlist-hidden').toggle()
 
-			_playPrevVideo : (e)->
+			_playPrevVideo : (e)=>
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
+				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				@$el.find('video')[0].currentTime;
+				@timeUpdateValue = 0
+
 				e.stopPropagation()
 				@index-- if @index > 0
 				@_playVideo()
 
-			_playNextVideo : (e)->
+			_playNextVideo : (e)=>
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
+				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				@$el.find('video')[0].currentTime;
+				@timeUpdateValue = 0
+
 				e.stopPropagation() if e?
 				if @index < @videos.length-1
+					@count++
 					@index++
 					@_playVideo()
 
-			_playClickedVideo : (e)->
+			_playClickedVideo : (e)=>
+				$('img').addClass 'hidden'
+				$('video').removeClass 'hidden'
+				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				@$el.find('video')[0].currentTime;
+				@timeUpdateValue = 0
+
+				# widthRatio = 16
+				# heightRatio = 9
+				# setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
+				# @$el.find('video').attr 'height', setHeight
+				
+				
 				e.stopPropagation()
 				index = parseInt $(e.target).attr 'data-index'
 				@index = index
 				@_playVideo()
 
 
-			_playVideo:->
+			_playVideo:=>
+				
 
-				@$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
+				@count++
+				# @ontimeUpdate()
 
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
@@ -167,10 +221,47 @@ define ['app'], (App)->
 
 				else 
 					@$el.find('video')[0].src = @videos[@index]
-					@$el.find('video').attr 'poster', "/images/video-unavailable.png"
+
+					# @$el.find('video').attr 'poster', "/images/video-unavailable.png"
 
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()
+
+			
+			ontimeUpdate : =>
+
+				@videoTimeUpdate = @$el.find('video')[0].currentTime;
+				
+				@timeUpdateValue = @timeUpdateValue+1
+				
+				if @timeUpdateValue is 1
+					setTimeout =>
+						@ontimeUpdate()
+					, 1000
+				else
+					setTimeout =>
+						@videoTimeUpdate = @$el.find('video')[0].currentTime
+						if @videoTimeUpdate is 0
+							# @$el.find('img').attr 'height', 'auto !important' 
+							
+							$('img').removeClass 'hidden'
+							
+							$('video').addClass 'hidden'
+					,300
+
+					
+
+					
+					@$el.find('video')[0].removeEventListener 'timeupdate', @ontimeUpdate, false
+
+			onError : (evt)=>
+				
+				# @$el.find('img').attr 'height', 'auto !important' 
+				
+				$('img').removeClass 'hidden'
+				
+				$('video').addClass 'hidden'
+				@$el.find('video')[0].removeEventListener 'error', @onError, true;
 
 
 				

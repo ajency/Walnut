@@ -81,13 +81,13 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       var user_role;
       user_role = resp.blog_details.blog_roles[0];
       if (user_role === 'teacher') {
-        this.setUserDetails(resp.login_details.ID, this.data.txtusername);
+        this.setUserDetails(resp, resp.login_details.ID, this.data.txtusername);
         if (_.isNull(_.getBlogID())) {
           return this.initialAppLogin(resp);
         } else {
           return this.authenticateUserBlogId(resp);
         }
-      } else if (user_role === 'student') {
+      } else {
         return this.onErrorResponse('Sorry this is not a valid teacher login. If you are a student please download Student training app from Google Playstore.');
       }
     };
@@ -95,10 +95,15 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
     AuthenticationController.prototype.offlineDeviceAuth = function() {
       return _.getUserDetails(this.data.txtusername).done((function(_this) {
         return function(user) {
+          var author_id, getDisplayName;
           if (user.exists) {
             if (user.password === _this.data.txtpassword) {
-              _this.setUserDetails(user.user_id, _this.data.txtusername);
-              return _this.onSuccessResponse();
+              author_id = _.getUserID();
+              getDisplayName = _.getPostAuthorName(author_id);
+              return getDisplayName.done(function(display_name) {
+                _this.setOflineUserDetails(display_name, user.user_id, _this.data.txtusername);
+                return _this.onSuccessResponse();
+              });
             } else {
               return _this.onErrorResponse('Invalid Password');
             }
@@ -109,13 +114,34 @@ define(["marionette", "app", "underscore"], function(Marionette, App, _) {
       })(this));
     };
 
-    AuthenticationController.prototype.setUserDetails = function(id, username) {
-      var userModel;
+    AuthenticationController.prototype.setUserDetails = function(resp, id, username) {
+      var data, login, userModel;
+      _.setUserID(id);
+      _.setUserName(username);
+      login = resp.login_details;
+      userModel = App.request("get:user:model");
+      data = {
+        'ID': login.ID,
+        'display_name': login.data.display_name
+      };
+      return userModel.set({
+        'data': data,
+        'ID': id
+      });
+    };
+
+    AuthenticationController.prototype.setOflineUserDetails = function(display_name, id, username) {
+      var data, userModel;
       _.setUserID(id);
       _.setUserName(username);
       userModel = App.request("get:user:model");
+      data = {
+        'ID': id,
+        'display_name': display_name
+      };
       return userModel.set({
-        'ID': '' + _.getUserID()
+        'data': data,
+        'ID': id
       });
     };
 

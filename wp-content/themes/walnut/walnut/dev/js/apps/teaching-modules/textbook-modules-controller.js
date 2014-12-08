@@ -48,13 +48,15 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
             });
             _this.listenTo(_this.view, {
               "schedule:training": function(id) {
-                var modalview;
                 _this.singleModule = _this.contentGroupsCollection.get(id);
-                modalview = _this._showScheduleModal(_this.singleModule);
-                _this.show(modalview, {
+                _this.modalview = _this._showScheduleModal(_this.singleModule);
+                _this.show(_this.modalview, {
                   region: App.popupRegion
                 });
-                return _this.listenTo(modalview, "save:scheduled:date", _this._saveSchedule);
+                _this.modalview.$el.on('hidden.bs.modal', function() {
+                  return $(".datepicker-dropdown").remove();
+                });
+                return _this.listenTo(_this.modalview, "save:scheduled:date", _this._saveSchedule);
               }
             });
             return _this.listenTo(_this.view, "fetch:chapters:or:sections", function(parentID, filterType) {

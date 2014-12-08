@@ -39,6 +39,11 @@ define(['app'], function(App) {
           } else {
             valid_content = false;
           }
+        } else if (data.post_status !== 'pending') {
+          if (_.isEmpty(data.json)) {
+            this._showEmptyCanvasError(data.post_status);
+            valid_content = false;
+          }
         }
         if (valid_content) {
           return $.ajax(options).done(function(response) {
@@ -91,6 +96,11 @@ define(['app'], function(App) {
       Controller.prototype._showNoQuestionExistsError = function() {
         $('#saved-successfully,#save-failure').remove();
         return $(".page-title").before('<div id="save-failure" style="text-align:center;" class="alert alert-failure">To save, at least 1 question element must be included in the question area</div>');
+      };
+
+      Controller.prototype._showEmptyCanvasError = function(post_status) {
+        $('#saved-successfully,#save-failure').remove();
+        return $(".page-title").before("<div id='save-failure' style='text-align:center;' class='alert alert-failure'> Cannot " + post_status + " an empty canvas </div>");
       };
 
       Controller.prototype._getPageJson = function($site) {

@@ -36,21 +36,29 @@ define ['underscore'], ( _) ->
 
 			uri = encodeURI resp.exported_csv_url
 
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0
-				,(fileSystem)=>
-					fileSystem.root.getFile("SynapseAssets/SynapseData/csv-synapse.zip"
-						, {create: true, exclusive: false}
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
+			
+			window.resolveLocalFileSystemURL('file://'+filepath+''
+				,(fileSystem)->
 
+					fileSystem.getFile("SynapseAssets/SynapseData/csv-synapse.zip"
+						, {create: true, exclusive:false} 
+						
 						,(fileEntry)->
-							filePath = fileEntry.toURL().replace("csv-synapse.zip", "")
+							csvFilePath = fileEntry.toURL().replace("csv-synapse.zip", "")
 
 							fileEntry.remove()
 
 							fileTransfer = new FileTransfer()
 							
-							fileTransfer.download(uri, filePath+"csv-synapse.zip" 
+							fileTransfer.download(uri, csvFilePath+"csv-synapse.zip" 
 								,(file)->
-									_.onFileDownloadSuccess(file.toURL(), filePath, resp.last_sync)
+									_.onFileDownloadSuccess(file.toURL(), csvFilePath, resp.last_sync)
 								
 								,(error)->
 									_.onDataSyncError(error, "An error occurred during file download")

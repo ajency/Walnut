@@ -33,7 +33,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           return $.toggleCheckAll(this.$el.find('#content-pieces-table'));
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
-        'click #send-email, #send-sms': 'saveCommunications'
+        'click .send-email, .send-sms': 'saveCommunications'
       };
 
       ModulesListingView.prototype.initialize = function() {
@@ -72,9 +72,9 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
-          return this.$el.find('#send-email, #send-sms').show();
+          return this.$el.find('.send-email, .send-sms').show();
         } else {
-          return this.$el.find('#send-email, #send-sms').hide();
+          return this.$el.find('.send-email, .send-sms').hide();
         }
       };
 

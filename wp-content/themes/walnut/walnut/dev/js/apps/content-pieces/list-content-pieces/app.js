@@ -34,6 +34,7 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
                   region: _this.layout.filtersRegion,
                   collection: _this.contentPiecesCollection,
                   textbooksCollection: _this.textbooksCollection,
+                  post_status: 'any',
                   selectedFilterParamsObject: _this.selectedFilterParamsObject,
                   dataType: 'content-pieces',
                   filters: ['textbooks', 'chapters', 'sections', 'subsections', 'post_status', 'status', 'content_type', 'student_question']

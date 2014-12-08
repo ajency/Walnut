@@ -25,7 +25,7 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
           right_margin: ''
         };
         _.defaults(modelData, options);
-        if ((_ref = modelData.element) === 'Mcq' || _ref === 'Fib' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer' || _ref === 'TeacherQuestion') {
+        if ((_ref = modelData.element) === 'Mcq' || _ref === 'Fib' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') {
           this.eventObj.vent.trigger("question:element:added");
         }
         element = App.request("create:new:element", modelData);

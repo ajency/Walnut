@@ -28,6 +28,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				model : Users.UserModel
 				name: 'user'
+				comparator: 'display_name'
+
 
 				url : -> #ajax call to return a list of all the users from the databse
 					AJAXURL + '?action=get-users'
@@ -40,7 +42,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 				model : Users.UserModel
 				name: 'offlineUsers'
-			
 			
 
 			# API
@@ -74,7 +75,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 					students
 
 				getUserData:(key)->
-					data=loggedInUser.get 'data'
+					data= loggedInUser.get 'data'
 					console.log data[key]
 					data[key]
 

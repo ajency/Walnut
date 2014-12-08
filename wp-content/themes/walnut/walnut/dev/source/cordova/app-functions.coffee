@@ -204,9 +204,50 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 					defer.resolve destination
 
 				, (message) ->
-					defer.reject(console.log('FILE DECRYPTION ERROR: '+message))
+
+					defer.resolve destination
+					# defer.resolve(console.log('FILE DECRYPTION ERROR: '+message))
+					# navigator.notification.activityStop()
 			)
 
+
+			defer.promise()
+
+		#Get Path From The PLugin
+		getDeviceStorageOptions : ->
+			
+			defer = $.Deferred()
+
+			storageOptions = []
+
+			Path.CheckPath(
+				(path)->
+
+					if not _.isUndefined(path.ExternalPath)
+						storageOptions['Internal'] = path.InternalPath
+						storageOptions['External'] = path.ExternalPath
+
+						_.cordovaCheckIfPathExists(path.ExternalPath)
+						.then (pathExists)->
+							
+							if pathExists
+								console.log 'Storage Options External'
+								defer.resolve storageOptions
+
+							else
+								console.log 'Storage Options Internal'
+								storageOptions = _.pick storageOptions, 'Internal'
+								defer.resolve storageOptions
+
+					else
+						storageOptions['Internal'] = path.InternalPath
+						defer.resolve storageOptions
+
+
+				,(error)->
+					console.log 'STORAGE ERROR'
+					defer.reject(console.log error)
+			)
 
 			defer.promise()
 
@@ -239,24 +280,39 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 		
 		clearMediaDirectory : (directory_name)->
 
-			# Delete all video files from 'videos-web' and 'audio-web' folder
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fileSystem)->
-				fileSystem.root.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
-					, {create: false, exclusive: false}
+			value = _.getStorageOption()
+			option = JSON.parse(value)
+			if option.internal
+				filepath = option.internal
+			else if option.external
+				filepath = option.external
 
-					, (directoryEntry)->
-						reader = directoryEntry.createReader()
-						reader.readEntries(
-							(entries)->
-								for i in [0..entries.length-1] by 1
-									entries[i].remove()
 
-									if i is entries.length-1
-										console.log 'Deleted all files from '+directory_name+' directory'
+			# Delete all video files from 'videos-web' folder
+			window.resolveLocalFileSystemURL('file://'+filepath+''
 
-							,_.directoryErrorHandler)
-					, _.directoryErrorHandler)
-			, _.fileSystemErrorHandler)
+				,(fileEntry)->
+					
+					fileEntry.getDirectory("SynapseAssets/SynapseMedia/uploads/"+directory_name
+						, {create: false, exclusive: false}
+
+						, (entry)->
+				
+							reader = entry.createReader()
+				
+							reader.readEntries(
+								(entries)->
+									for i in [0..entries.length-1] by 1
+										entries[i].remove()
+
+										if i is entries.length-1
+											console.log 'Deleted all files from '+directory_name+' directory'
+
+								,_.directoryErrorHandler)
+				
+						, _.directoryErrorHandler)
+			
+				, _.fileSystemErrorHandler)
 
 		
 		

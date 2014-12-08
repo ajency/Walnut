@@ -130,7 +130,7 @@ define ['app'],(App)->
 										</div>
 
 										<div class="textProp slider success">
-											Backgroung Transparency
+											Background Transparency
 											<input type="text" id="bg-opacity" class="opacity" data-slider-max="1" data-slider-min="0" data-slider-step="0.01" data-slider-value="{{bg_opacity}}" data-slider-orientation="horizontal" data-slider-selection="before" style="width:85%">
 										</div>
 

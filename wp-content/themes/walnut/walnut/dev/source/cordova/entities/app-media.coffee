@@ -46,12 +46,12 @@ define ['underscore'], ( _) ->
 
 				row = data.rows.item(0)
 
-				_.getAttachmentData(id).then (attachmentData)->
+				_.getAttachmentData id
+				.then (attachmentData)->
 					console.log 'getAttachmentData done'
 
 					url = row['guid']
-					mediaUrl = _.getSynapseMediaDirectoryPath() + 
-					url.substr(url.indexOf("uploads/"))
+					mediaUrl = _.getSynapseMediaDirectoryPath() + url.substr(url.indexOf("uploads/"))
 
 					if attachmentData.sizes
 						sizes = attachmentData.sizes

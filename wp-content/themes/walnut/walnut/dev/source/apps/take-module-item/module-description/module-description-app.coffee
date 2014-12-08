@@ -1,7 +1,10 @@
 define ['app'
 		'controllers/region-controller'
-		'text!apps/take-module-item/module-description/templates/module-description-template.html'], (App, RegionController, moduleDescriptionTemplate)->
+		'text!apps/take-module-item/module-description/templates/module-description-template.html'
+		'bootbox'], (App, RegionController, moduleDescriptionTemplate, bootbox)->
+	
 	App.module "TeacherTeachingApp.ModuleDescription", (ModuleDescription, App)->
+		
 		class ModuleDescriptionController extends RegionController
 
 			initialize: (opts)->
@@ -115,9 +118,11 @@ define ['app'
 						$("#question-details-region").css "margin-top", 0
 					return
 
+				
 				if _.platform() is 'DEVICE'
 
 					$('body').css('height' : 'auto')
+
 					@cordovaEventsForModuleDescriptionView()
 
 
@@ -151,13 +156,13 @@ define ['app'
 
 
 
-			questionCompleted: =>
+			questionCompleted : =>
 
 				_.audioQueuesSelection('Click-Next') if _.platform() is 'DEVICE'
 
 				if Marionette.getOption(@, 'display_mode') is 'class_mode'
-					if confirm 'This item will be marked as complete. Continue?'
-							@trigger "question:completed"
+					bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
+						@trigger("question:completed") if result
 
 				else @trigger "question:completed"
 

@@ -24,7 +24,7 @@ define ['app'
                     region      : App.dialogRegion
                     student     : @students.get student_id
                     quiz        : @quizModel
-                    summaries   : @quizResponseSummaries
+                    summaries   : @quizResponseSummaries.where 'student_id': student_id
 
             _replay_quiz:(itemview,student_id,summary_id)->
 

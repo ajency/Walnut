@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __slice = [].slice;
 
@@ -8,26 +9,39 @@ define(['app'], function(App) {
       __extends(VideoView, _super);
 
       function VideoView() {
+        this.onError = __bind(this.onError, this);
+        this.ontimeUpdate = __bind(this.ontimeUpdate, this);
+        this._playVideo = __bind(this._playVideo, this);
+        this._playClickedVideo = __bind(this._playClickedVideo, this);
+        this._playNextVideo = __bind(this._playNextVideo, this);
+        this._playPrevVideo = __bind(this._playPrevVideo, this);
+        this._playFirstVideo = __bind(this._playFirstVideo, this);
+        this.onShow = __bind(this.onShow, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-unavailable.png" data-setup="{}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} <img src="/images/video-unavailable.png" alt="no video" class="hidden" width="100%"/> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
         'click #prev': '_playPrevVideo',
         'click #next': '_playNextVideo',
-        'click .playlist-video': '_playClickedVideo'
+        'click .playlist-video': '_playClickedVideo',
+        'click .video-js': '_playFirstVideo'
       };
 
       VideoView.prototype.onShow = function() {
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
         if (!this.model.get('video_ids').length) {
           return;
         }
         this.videos = this.model.get('videoUrls');
         this.index = 0;
+        this.count = 0;
+        this.timeUpdateValue = 0;
         this.$el.find('video').on('ended', (function(_this) {
           return function() {
             return _this._playNextVideo();
@@ -37,6 +51,9 @@ define(['app'], function(App) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find('video')[0].currentTime;
+        this.$el.find('video')[0].addEventListener('timeupdate', this.ontimeUpdate);
+        this.$el.find('video')[0].addEventListener('error', this.onError, true);
         if (_.platform() === 'DEVICE') {
           return this._initLocalVideos();
         }
@@ -44,6 +61,7 @@ define(['app'], function(App) {
 
       VideoView.prototype._initLocalVideos = function() {
         var heightRatio, runFunc, setHeight, widthRatio;
+        navigator.notification.activityStart("Please wait", "loading content...");
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -56,12 +74,23 @@ define(['app'], function(App) {
               return _.createVideosWebDirectory().done(function() {
                 _.each(_this.videos, function(videoSource, index) {
                   return (function(videoSource) {
-                    var decryptFile, decryptedVideoPath, encryptedVideoPath, url, videoUrl, videosWebUrl;
+                    var decryptFile, decryptedPath, decryptedVideoPath, encryptedPath, encryptedVideoPath, option, url, value, videoUrl, videosWebUrl;
                     url = videoSource.replace("media-web/", "");
                     videosWebUrl = url.substr(url.indexOf("uploads/"));
                     videoUrl = videosWebUrl.replace("videos-web", "videos");
-                    encryptedVideoPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-                    decryptedVideoPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                    encryptedPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                    decryptedPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                    value = _.getStorageOption();
+                    option = JSON.parse(value);
+                    encryptedVideoPath = '';
+                    decryptedVideoPath = '';
+                    if (option.internal) {
+                      encryptedVideoPath = option.internal + '/' + encryptedPath;
+                      decryptedVideoPath = option.internal + '/' + decryptedPath;
+                    } else if (option.external) {
+                      encryptedVideoPath = option.external + '/' + encryptedPath;
+                      decryptedVideoPath = option.external + '/' + decryptedPath;
+                    }
                     decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath);
                     return deferreds.push(decryptFile);
                   })(videoSource);
@@ -71,7 +100,7 @@ define(['app'], function(App) {
                   videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
                   _.each(videoPaths, function(localVideoPath, index) {
                     return (function(localVideoPath, index) {
-                      return _this.videos[index] = 'file:///mnt/sdcard/' + localVideoPath;
+                      return _this.videos[index] = 'file://' + localVideoPath;
                     })(localVideoPath, index);
                   });
                   return d.resolve(_this.videos);
@@ -83,10 +112,22 @@ define(['app'], function(App) {
         return $.when(runFunc()).done((function(_this) {
           return function() {
             console.log('_initLocalVideos done');
-            _this.$el.find('video')[0].src = _this.videos[0];
-            return _this.$el.find('video')[0].load();
+            return navigator.notification.activityStop();
           };
         })(this)).fail(_.failureHandler);
+      };
+
+      VideoView.prototype._playFirstVideo = function() {
+        if (this.count === 0) {
+          this.count++;
+          this.$el.find('video')[0].src = this.videos[0];
+          this.$el.find('video')[0].load();
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.$el.find('video')[0].play();
+            };
+          })(this), 300);
+        }
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -106,6 +147,13 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playPrevVideo = function(e) {
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
+        if (_.platform() === 'DEVICE') {
+          this.$el.find('video').attr('height', 'auto !important');
+        }
+        this.$el.find('video')[0].currentTime;
+        this.timeUpdateValue = 0;
         e.stopPropagation();
         if (this.index > 0) {
           this.index--;
@@ -114,10 +162,18 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playNextVideo = function(e) {
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
+        if (_.platform() === 'DEVICE') {
+          this.$el.find('video').attr('height', 'auto !important');
+        }
+        this.$el.find('video')[0].currentTime;
+        this.timeUpdateValue = 0;
         if (e != null) {
           e.stopPropagation();
         }
         if (this.index < this.videos.length - 1) {
+          this.count++;
           this.index++;
           return this._playVideo();
         }
@@ -125,6 +181,13 @@ define(['app'], function(App) {
 
       VideoView.prototype._playClickedVideo = function(e) {
         var index;
+        $('img').addClass('hidden');
+        $('video').removeClass('hidden');
+        if (_.platform() === 'DEVICE') {
+          this.$el.find('video').attr('height', 'auto !important');
+        }
+        this.$el.find('video')[0].currentTime;
+        this.timeUpdateValue = 0;
         e.stopPropagation();
         index = parseInt($(e.target).attr('data-index'));
         this.index = index;
@@ -132,9 +195,7 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playVideo = function() {
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
+        this.count++;
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
@@ -143,10 +204,38 @@ define(['app'], function(App) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         } else {
           this.$el.find('video')[0].src = this.videos[this.index];
-          this.$el.find('video').attr('poster', "/images/video-unavailable.png");
         }
         this.$el.find('video')[0].load();
         return this.$el.find('video')[0].play();
+      };
+
+      VideoView.prototype.ontimeUpdate = function() {
+        this.videoTimeUpdate = this.$el.find('video')[0].currentTime;
+        this.timeUpdateValue = this.timeUpdateValue + 1;
+        if (this.timeUpdateValue === 1) {
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.ontimeUpdate();
+            };
+          })(this), 1000);
+        } else {
+          setTimeout((function(_this) {
+            return function() {
+              _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
+              if (_this.videoTimeUpdate === 0) {
+                $('img').removeClass('hidden');
+                return $('video').addClass('hidden');
+              }
+            };
+          })(this), 300);
+          return this.$el.find('video')[0].removeEventListener('timeupdate', this.ontimeUpdate, false);
+        }
+      };
+
+      VideoView.prototype.onError = function(evt) {
+        $('img').removeClass('hidden');
+        $('video').addClass('hidden');
+        return this.$el.find('video')[0].removeEventListener('error', this.onError, true);
       };
 
       return VideoView;

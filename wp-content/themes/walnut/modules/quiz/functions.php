@@ -41,8 +41,6 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $data->permissions = $data->description = array();
 
-//    print_r $quiz_details; exit;
-
     foreach ($quiz_details as $key=>$value){
 
         if ($value->meta_key == 'permissions')
@@ -55,8 +53,10 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
         if ($value->meta_key == 'description'){
             $description = maybe_unserialize($value->meta_value);
+
             if(isset($description['instruction']))
-                $data->instructions = wp_unslash($description['instruction']);
+                $data->description['instruction'] =wp_unslash($description['instruction']);
+
         }
 
         if ($value->meta_key == 'quiz_type')
@@ -94,7 +94,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
         if($schedule)
             $data->schedule  = $schedule;        
 
-        if(current_user_can('school-admin') || current_user_can('teacher') || $schedule['is_active'])
+        if(current_user_can('school-admin') || current_user_can('teacher') || current_user_can('content-creator') || $schedule['is_active'])
             $show_questions = true;
         else
             $show_questions = false;
