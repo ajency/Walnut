@@ -77,15 +77,15 @@ define ['app'
 				else
 					setTimeout =>
 						@videoTimeUpdate = @$el.find('video')[0].currentTime
+					
+
+						if @videoTimeUpdate is 0
+							@$el.find('img').attr 'height', 'auto !important' 
+							
+							$('img').removeClass 'hidden'
+							
+							$('video').addClass 'hidden'
 					,300
-
-					if @videoTimeUpdate is 0
-						@$el.find('img').attr 'height', 'auto !important' 
-						
-						$('img').removeClass 'hidden'
-						
-						$('video').addClass 'hidden'
-
 					
 					@$el.find('video')[0].removeEventListener 'timeupdate', @ontimeUpdate, false
 			
@@ -144,7 +144,6 @@ define ['app'
 			_playPrevVideo : (e)->
 				$('img').addClass 'hidden'
 				$('video').removeClass 'hidden'
-				@timeUpdateValue = 0
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
@@ -157,7 +156,6 @@ define ['app'
 			_playNextVideo : (e)->
 				$('img').addClass 'hidden'
 				$('video').removeClass 'hidden'
-				@timeUpdateValue = 0
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
@@ -172,7 +170,6 @@ define ['app'
 			_playClickedVideo : (e)->
 				$('img').addClass 'hidden'
 				$('video').removeClass 'hidden'
-				@timeUpdateValue = 0
 				widthRatio = 16
 				heightRatio = 9
 				setHeight = (@$el.find('video').width() * heightRatio) / widthRatio
@@ -189,7 +186,6 @@ define ['app'
 				@$el.find('video')[0].currentTime;
 				@count++
 
-				@ontimeUpdate()
 				# @$el.find('video').attr 'height', 'auto !important' if _.platform() is 'DEVICE'
 
 				@$el.find('.playlist-video').removeClass 'currentVid'
@@ -207,5 +203,5 @@ define ['app'
 				
 				@$el.find('video')[0].load()
 				@$el.find('video')[0].play()
-
-				@$el.find('video')[0].addEventListener 'timeupdate', @ontimeUpdate;
+				# @ontimeUpdate()
+				# @$el.find('video')[0].addEventListener 'timeupdate', @ontimeUpdate;

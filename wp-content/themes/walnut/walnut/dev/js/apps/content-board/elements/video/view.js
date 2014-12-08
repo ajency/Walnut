@@ -67,14 +67,14 @@ define(['app', 'bootbox'], function(App, bootbox) {
         } else {
           setTimeout((function(_this) {
             return function() {
-              return _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
+              _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
+              if (_this.videoTimeUpdate === 0) {
+                _this.$el.find('img').attr('height', 'auto !important');
+                $('img').removeClass('hidden');
+                return $('video').addClass('hidden');
+              }
             };
           })(this), 300);
-          if (this.videoTimeUpdate === 0) {
-            this.$el.find('img').attr('height', 'auto !important');
-            $('img').removeClass('hidden');
-            $('video').addClass('hidden');
-          }
           return this.$el.find('video')[0].removeEventListener('timeupdate', this.ontimeUpdate, false);
         }
       };
@@ -118,7 +118,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
         var heightRatio, setHeight, widthRatio;
         $('img').addClass('hidden');
         $('video').removeClass('hidden');
-        this.timeUpdateValue = 0;
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -134,7 +133,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
         var heightRatio, setHeight, widthRatio;
         $('img').addClass('hidden');
         $('video').removeClass('hidden');
-        this.timeUpdateValue = 0;
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -153,7 +151,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
         var heightRatio, index, setHeight, widthRatio;
         $('img').addClass('hidden');
         $('video').removeClass('hidden');
-        this.timeUpdateValue = 0;
         widthRatio = 16;
         heightRatio = 9;
         setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
@@ -168,7 +165,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
         this.timeUpdateValue = 0;
         this.$el.find('video')[0].currentTime;
         this.count++;
-        this.ontimeUpdate();
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
@@ -179,8 +175,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('video')[0].src = this.videos[this.index];
         }
         this.$el.find('video')[0].load();
-        this.$el.find('video')[0].play();
-        return this.$el.find('video')[0].addEventListener('timeupdate', this.ontimeUpdate);
+        return this.$el.find('video')[0].play();
       };
 
       return VideoView;
