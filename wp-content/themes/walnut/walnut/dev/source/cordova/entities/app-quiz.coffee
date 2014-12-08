@@ -32,7 +32,12 @@ define ['underscore', 'unserialize'], ( _) ->
 
 								_.getQuizSchedule(row['id'])
 								.then (schedule)->
-
+									
+									if collectionMetaData.marks
+										marks = parseFloat(collectionMetaData.marks)
+									else
+										marks = collectionMetaData.marks
+									
 
 									result[i] = 
 										id : row['id']
@@ -53,7 +58,7 @@ define ['underscore', 'unserialize'], ( _) ->
 										permissions : collectionMetaData.permission
 										instructions : collectionMetaData.instructions
 										quiz_type : collectionMetaData.quizType
-										marks : collectionMetaData.marks
+										marks : marks
 										negMarksEnable : collectionMetaData.negMarksEnable
 										negMarks : collectionMetaData.negMarks
 										message : collectionMetaData.message

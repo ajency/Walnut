@@ -10,9 +10,13 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
           return defer.resolve(result);
         } else {
           forEach = function(row, i) {
+            var marks_scored;
+            if (row['marks_scored']) {
+              marks_scored = parseFloat(row['marks_scored']);
+            }
             result[i] = {
               content_piece_id: row['content_piece_id'],
-              marks_scored: row['marks_scored'],
+              marks_scored: marks_scored,
               qr_id: row['qr_id'],
               question_response: _.unserialize(row['question_response']),
               status: row['status'],
