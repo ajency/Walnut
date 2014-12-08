@@ -48,7 +48,8 @@ define ['underscore', 'unserialize'], ( _) ->
 									# 				_.initLocalVideosCheck(videoInfo.url)
 									# 				.then (localVideoPath)->
 									# 					console.log localVideoPath
-
+									if marks
+										marks = parseFloat(marks)
 
 									excerpt_array = _.flatten excerpt_array
 									taglessArray = new Array

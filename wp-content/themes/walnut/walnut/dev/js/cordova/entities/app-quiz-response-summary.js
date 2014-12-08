@@ -18,17 +18,20 @@ define(['underscore', 'unserialize', 'serialize'], function(_) {
                   var marks_scored, negative_scored, quiz_meta, total_marks_scored, userID;
                   console.log(value);
                   if (value.marks_scored) {
-                    marks_scored = value.marks_scored.toFixed(1);
+                    marks_scored = value.marks_scored.toFixed(2);
+                    marks_scored = parseFloat(marks_scored);
                   } else {
                     marks_scored = value.marks_scored;
                   }
                   if (value.negative_scored) {
-                    negative_scored = value.negative_scored.toFixed(1);
+                    negative_scored = value.negative_scored.toFixed(2);
+                    negative_scored = parseFloat(negative_scored);
                   } else {
                     negative_scored = value.negative_scored;
                   }
                   if (value.total_marks_scored) {
-                    total_marks_scored = value.total_marks_scored.toFixed(1);
+                    total_marks_scored = value.total_marks_scored.toFixed(2);
+                    total_marks_scored = parseFloat(total_marks_scored);
                   } else {
                     total_marks_scored = value.total_marks_scored;
                   }

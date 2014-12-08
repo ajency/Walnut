@@ -18,13 +18,14 @@ define ['underscore', 'unserialize', 'serialize'], ( _) ->
 				else
 
 					forEach = (row, i)->
-						
+						if row['marks_scored']
+							marks_scored = parseFloat(row['marks_scored'])
 						# _.getTotalMarksScoredAndTotalTimeTaken(summary_id)
 						# .then (value)->
 
 						result[i] = 
 							content_piece_id : row['content_piece_id']
-							marks_scored: row['marks_scored']
+							marks_scored: marks_scored
 							qr_id: row['qr_id']
 							question_response : _.unserialize(row['question_response'])
 							status : row['status']

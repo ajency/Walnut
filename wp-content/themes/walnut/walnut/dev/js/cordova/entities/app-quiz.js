@@ -16,6 +16,12 @@ define(['underscore', 'unserialize'], function(_) {
             return _.getCollectionMeta(row['id']).then(function(collectionMetaData) {
               return _.getStartDateAndStatus(row['id']).then(function(dateStatus) {
                 return _.getQuizSchedule(row['id']).then(function(schedule) {
+                  var marks;
+                  if (collectionMetaData.marks) {
+                    marks = parseFloat(collectionMetaData.marks);
+                  } else {
+                    marks = collectionMetaData.marks;
+                  }
                   result[i] = {
                     id: row['id'],
                     name: row['name'],
@@ -35,7 +41,7 @@ define(['underscore', 'unserialize'], function(_) {
                     permissions: collectionMetaData.permission,
                     instructions: collectionMetaData.instructions,
                     quiz_type: collectionMetaData.quizType,
-                    marks: collectionMetaData.marks,
+                    marks: marks,
                     negMarksEnable: collectionMetaData.negMarksEnable,
                     negMarks: collectionMetaData.negMarks,
                     message: collectionMetaData.message,

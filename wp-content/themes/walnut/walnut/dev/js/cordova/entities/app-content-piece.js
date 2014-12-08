@@ -22,6 +22,9 @@ define(['underscore', 'unserialize'], function(_) {
                     videoArray = _.compact(flattenVideosArray);
                   }
                   marks = contentElements.marks;
+                  if (marks) {
+                    marks = parseFloat(marks);
+                  }
                   excerpt_array = _.flatten(excerpt_array);
                   taglessArray = new Array;
                   _.each(excerpt_array, function(excerpt) {
