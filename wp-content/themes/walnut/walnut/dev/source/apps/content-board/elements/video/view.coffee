@@ -209,7 +209,7 @@ define ['app'], (App)->
 				
 
 				@count++
-				@ontimeUpdate()
+				# @ontimeUpdate()
 
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
@@ -241,14 +241,15 @@ define ['app'], (App)->
 				else
 					setTimeout =>
 						@videoTimeUpdate = @$el.find('video')[0].currentTime
+						if @videoTimeUpdate is 0
+							# @$el.find('img').attr 'height', 'auto !important' 
+							
+							$('img').removeClass 'hidden'
+							
+							$('video').addClass 'hidden'
 					,300
 
-					if @videoTimeUpdate is 0
-						# @$el.find('img').attr 'height', 'auto !important' 
-						
-						$('img').removeClass 'hidden'
-						
-						$('video').addClass 'hidden'
+					
 
 					
 					@$el.find('video')[0].removeEventListener 'timeupdate', @ontimeUpdate, false

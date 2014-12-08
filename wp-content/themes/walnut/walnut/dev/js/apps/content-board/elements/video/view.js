@@ -196,7 +196,6 @@ define(['app'], function(App) {
 
       VideoView.prototype._playVideo = function() {
         this.count++;
-        this.ontimeUpdate();
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
@@ -222,13 +221,13 @@ define(['app'], function(App) {
         } else {
           setTimeout((function(_this) {
             return function() {
-              return _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
+              _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
+              if (_this.videoTimeUpdate === 0) {
+                $('img').removeClass('hidden');
+                return $('video').addClass('hidden');
+              }
             };
           })(this), 300);
-          if (this.videoTimeUpdate === 0) {
-            $('img').removeClass('hidden');
-            $('video').addClass('hidden');
-          }
           return this.$el.find('video')[0].removeEventListener('timeupdate', this.ontimeUpdate, false);
         }
       };
