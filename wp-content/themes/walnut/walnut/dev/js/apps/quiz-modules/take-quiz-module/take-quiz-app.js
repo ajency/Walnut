@@ -79,6 +79,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.questionDisplayRegion, "goto:previous:question", this._gotoPreviousQuestion);
         this.listenTo(this.layout.questionDisplayRegion, "skip:question", this._skipQuestion);
         this.listenTo(this.layout.quizTimerRegion, "end:quiz", this._endQuiz);
+        this.listenTo(this.layout.quizTimerRegion, "show:single:quiz:app", this._showSingleQuizApp);
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
         return setInterval((function(_this) {
           return function() {
@@ -174,7 +175,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           questionModel = questionsCollection.get(nextQuestionID);
           return this._showSingleQuestionApp(questionModel);
         } else {
-          return this._endQuiz();
+          return this._showSingleQuizApp();
         }
       };
 
@@ -212,8 +213,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             'total_marks_scored': this.questionResponseCollection.getTotalScored()
           });
           quizResponseSummary.save();
-          this._queueStudentMail();
+          return this._queueStudentMail();
         }
+      };
+
+      TakeQuizController.prototype._showSingleQuizApp = function() {
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,
