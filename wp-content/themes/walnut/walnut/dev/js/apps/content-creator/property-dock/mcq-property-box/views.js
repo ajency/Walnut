@@ -102,7 +102,7 @@ define(['app', 'text!apps/content-creator/property-dock/mcq-property-box/templat
       };
 
       PropertyView.prototype._changeColumnNumber = function(evt) {
-        return this.model.set('columncount', optionCount);
+        return this.model.set('columncount', parseInt($(evt.target).val()));
       };
 
       return PropertyView;

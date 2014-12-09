@@ -18,6 +18,35 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             name: 'communications'
 
+            getRecipients:->
+                url     = AJAXURL + '?action=get-communication-recipients'
+                data    = @.toJSON()
+
+                defer = $.Deferred()
+
+                $.post url, 
+                    data, (response) =>
+                        defer.resolve response
+                    'json'
+                    
+                defer.promise()
+
+
+            getPreview:(recipient)->
+                console.log recipient
+                url     = AJAXURL + '?action=get-communication-preview'
+                data    = @.toJSON()
+                data.additional_data.preview_recipient = recipient.toJSON()
+
+                defer = $.Deferred()
+
+                $.post url, 
+                    data, (response) =>
+                        defer.resolve response
+                    'json'
+                    
+                defer.promise()
+
         # Communications collection class
         class Communications.ItemCollection extends Backbone.Collection
 
@@ -29,14 +58,13 @@ define ["app", 'backbone'], (App, Backbone) ->
             parse: (resp)->
                 resp.data
 
+
         API =
-            saveCommunications : (data)->
+
+            createCommunication: (data)->
                 CommunicationsModel = new Communications.ItemModel()
                 CommunicationsModel.set data
-                CommunicationsModel.save()
                 CommunicationsModel
 
-
-        App.reqres.setHandler "save:communications" ,(data)->
-
-            API.saveCommunications data
+        App.reqres.setHandler "create:communication" ,(data)->
+            API.createCommunication data

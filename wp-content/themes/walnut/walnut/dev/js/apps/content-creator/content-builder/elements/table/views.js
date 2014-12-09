@@ -23,14 +23,14 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.events = {
-        'click @ui.editableData,@ui.editableHead': 'showEditor',
-        'click .cke_editable': function(e) {
+        'focus @ui.editableData,@ui.editableHead': 'showEditor',
+        'focus .cke_editable': function(e) {
           return e.stopPropagation();
         },
         'click a': function(e) {
           return e.preventDefault();
         },
-        'click .table-holder': 'destroyEditor',
+        'focus .table-holder': 'destroyEditor',
         'column:resize:stop.rc table': 'saveTableMarkup'
       };
 
@@ -44,6 +44,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       TableView.prototype.onShow = function() {
         this.$el.find('.table-holder').html(_.stripslashes(this.model.get('content')));
+        this.$el.find('.table-holder tr div').attr('tabindex', 0);
         return this.$el.find('table').resizableColumns();
       };
 
@@ -57,7 +58,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
           while (currentRows !== rows) {
             html = '<tr>';
             for (index = _i = 1, _ref = model.get('column'); 1 <= _ref ? _i <= _ref : _i >= _ref; index = 1 <= _ref ? ++_i : --_i) {
-              html += '<td><div>demo</div></td>';
+              html += '<td><div tabindex=0>demo</div></td>';
             }
             html += '</tr>';
             this.$el.find('tbody').append(html);
@@ -93,10 +94,10 @@ define(['app', 'bootbox'], function(App, bootbox) {
         } else if (currentColumns < columns) {
           _results = [];
           while (currentColumns !== columns) {
-            this.$el.find('thead tr').append('<th><div>demo</div></th>');
+            this.$el.find('thead tr').append('<th><div tabindex=0>demo</div></th>');
             tableRows = this.$el.find('tbody tr');
             _.each(tableRows, function(row, index) {
-              return $(row).append('<td><div>demo</div></td>');
+              return $(row).append('<td><div tabindex=0>demo</div></td>');
             });
             this.$el.find('table').resizableColumns('destroy');
             this.$el.find('table').resizableColumns();

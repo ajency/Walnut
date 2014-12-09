@@ -663,7 +663,7 @@ function quiz_status_for_textbook($book_id,$student_id){
     
     $result= $wpdb->get_results($query);
 
-    $class_test_completed = $practice_completed =$class_test_in_progress = $practice_in_progress = array();
+    $home_test_completed = $practice_completed =$home_test_in_progress = $practice_in_progress = array();
 
     foreach ($result as $res) {
         $quiz_meta= maybe_unserialize($res->quiz_meta);
@@ -671,7 +671,7 @@ function quiz_status_for_textbook($book_id,$student_id){
 
         if($status === 'completed'){
             if($res->quiz_type==='test')
-                $class_test_completed[]=$res->id;
+                $home_test_completed[]=$res->id;
             else{
                 #add practice quiz in completed array only if it isnt in progress
                 if(!in_array($res->id, $practice_in_progress))
@@ -680,7 +680,7 @@ function quiz_status_for_textbook($book_id,$student_id){
         }
         else{
             if($res->quiz_type==='test')
-                $class_test_in_progress[]=$res->id;
+                $home_test_in_progress[]=$res->id;
             else{
                 $practice_in_progress[]=$res->id;
                 #if practice quiz has one attempt in progress remove it from completed array
@@ -697,9 +697,9 @@ function quiz_status_for_textbook($book_id,$student_id){
         $count_practice_in_progress = sizeof(__u::uniq($practice_in_progress));
 
     $data=array(
-        'class_test_completed'      => sizeof($class_test_completed), 
+        'home_test_completed'      => sizeof($home_test_completed), 
         'practice_completed'        => $count_practice_completed,
-        'class_test_in_progress'    => sizeof($class_test_in_progress),
+        'home_test_in_progress'    => sizeof($home_test_in_progress),
         'practice_in_progress'      => $count_practice_in_progress,
     );
 

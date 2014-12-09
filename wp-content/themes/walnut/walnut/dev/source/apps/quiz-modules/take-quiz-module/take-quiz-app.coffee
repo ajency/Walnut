@@ -80,6 +80,7 @@ define ['app'
                     @listenTo @layout.questionDisplayRegion, "skip:question", @_skipQuestion
 
                     @listenTo @layout.quizTimerRegion, "end:quiz", @_endQuiz
+                    @listenTo @layout.quizTimerRegion, "show:single:quiz:app", @_showSingleQuizApp
 
                     @listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
@@ -173,7 +174,7 @@ define ['app'
                         @_showSingleQuestionApp questionModel
 
                     else
-                        @_endQuiz()
+                        @_showSingleQuizApp()
 
                 _endQuiz:->
 
@@ -210,6 +211,8 @@ define ['app'
 
                         @_queueStudentMail()
 
+                    
+                _showSingleQuizApp:->
                     App.execute "show:single:quiz:app",
                         region                      : App.mainContentRegion
                         quizModel                   : quizModel

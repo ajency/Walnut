@@ -421,12 +421,16 @@ function get_parents_by_student_ids($student_ids){
         $p2_email = get_user_meta($id, 'parent_email2',true);
         
         $p1= get_user_by('email',$p1_email);
-        if ($p1)
+        if ($p1){
+            $p1->student_id = $id;
             $parents[]= $p1;
+        }
 
         $p2= get_user_by('email',$p2_email);
-        if ($p2)
+        if ($p2){
+            $p2->student_id = $id;
             $parents[]= $p2;
+        }
     }
 
     return $parents;

@@ -154,9 +154,11 @@ class CommunicationModule{
                                 `communication_id` int(11) DEFAULT NULL,
                                 `user_id` int(11) DEFAULT '0',
                                 `type` varchar(25) NOT NULL,
-                                `value` varchar(25) NOT NULL,
+                                `value` varchar(50) NOT NULL,
                                 `thirdparty_id` varchar(50) DEFAULT '',
-                                `status` varchar(25) NOT NULL
+                                `status` varchar(25) NOT NULL,
+                                `reject_reason` varchar(25) NOT NULL,
+                                `to_type` varchar(25) NOT NULL 
                                  );";   
 
                 $email_preferences_tbl=$wpdb->prefix."ajcm_emailpreferences";            
@@ -474,7 +476,9 @@ class CommunicationModule{
                     'type'                => '',                  
                     'value'               => '',    
                     'thirdparty_id'       => '',
-                    'status'              => ''
+                    'status'              => '',
+                    'reject_reason'       => '',
+                    'to_type'             => 'to'
             );
             
             $params = wp_parse_args( $args, $defaults );
@@ -488,7 +492,8 @@ class CommunicationModule{
                                             'type' => $type,
                                             'value' => $value,
                                             'thirdparty_id' => $thirdparty_id,
-                                            'status' => 'linedup'
+                                            'status' => 'linedup',
+                                            'to_type' => $to_type
                                             ));
                         if ( false === $q )
                             return new WP_Error('recipient_add_failed', __('Add Recipient Failed.') );
@@ -497,7 +502,7 @@ class CommunicationModule{
                 return $recipient_id;
             }else{
                 
-                $q = $wpdb->update($wpdb->ajcm_recipients,array('thirdparty_id'=>$thirdparty_id,'status'=>$status),
+                $q = $wpdb->update($wpdb->ajcm_recipients,array('thirdparty_id'=>$thirdparty_id,'status'=>$status,'reject_reason'=>$reject_reason),
                                             array('id'=>$id));
                          if ( false === $q )
                             return new WP_Error('recipient_update_failed', __('Update Recipient Failed.') );
@@ -827,7 +832,7 @@ class CommunicationModule{
                         $to = array();  
                         $recipients_dbupdate_struct = array();          //array to hold recipients email=>id key value pair
                         foreach($recipients_email as $recipient){ 
-                            $to[] = array('email' => $recipient->value,'name' => '','type'=>'to'); 
+                            $to[] = array('email' => $recipient->value,'name' => '','type'=> $recipient->to_type); 
                             $recipients_dbupdate_struct[$recipient->value] = $recipient->id;
                         }
                     
@@ -847,11 +852,9 @@ class CommunicationModule{
                                                         'to' => $to,
                                                         'metadata' => array('communication_type' => $comm_data['communication_type']),
                                                         'global_merge_vars' =>  $template_data['global_merge_vars'],
-                                                        'merge_vars' => $template_data['merge_vars'],
-                                                        'attachments' => $template_data['attachments']
+                                                        'merge_vars' => $template_data['merge_vars']
                                                      )
                                         );
-
 
                         //var_dump($mandrill->call($url,$params));exit;
                         $response  =  $mandrill->call($url,$params);
@@ -862,8 +865,7 @@ class CommunicationModule{
                                     $args = array(
                                         'id'                  => $recipients_dbupdate_struct[$recipient_response['email']],
                                         'thirdparty_id'       => $recipient_response['_id'],
-                                        'status'              => $recipient_response['status'],
-                                        'reject_reason'       => $recipient_response['reject_reason']
+                                        'status'              => $recipient_response['status']
                                     );
                             $this->recipient_add($recipient->communication_id,$args); 
                             }
@@ -1091,5 +1093,40 @@ class CommunicationModule{
                 return false;     
         }
         
+        public function get_email_preview($data){
+
+        //	 $preview_data = array();
+            // $preview_data['template_name'] =array();
+          //   $preview_data['template_content'] = array();
+         //    $preview_data['template_content'][] = array('name' => 'homeurl','content' => 'homeurllink');
+         //    $preview_data['template_content'][] = array('name' => 'userlogin','content' => 'userloginglink');
+         //    $preview_data['template_content'][] = array('name' => 'reseturl','content' => 'reseturllink');
+            
+          //   $preview_data['merge_vars'] = array();
+         //    $preview_data['merge_vars'][] = array('name' => 'FNAME','content' => 'Userfirstname');
+            
+            $ajcm_plugin_options = get_option('ajcm_plugin_options'); // get the plugin options
+            
+            if(isset($ajcm_plugin_options['ajcm_mandrill_key']) && $ajcm_plugin_options['ajcm_mandrill_key'] != ''){
+                     //create an instance of Mandrill and pass the api key
+                     $mandrill = new Mandrill($ajcm_plugin_options['ajcm_mandrill_key']);
+                     $url = '/templates/render';    //the mandrill api url to call to get the temaplate preview
+                     #print_r($data);exit;
+                     $preview_api_call  =  $mandrill->call($url,$data);
+                     
+                     if(array_key_exists('html', $preview_api_call)){
+                        $response =$preview_api_call;
+                     }else{
+                        $response =$preview_api_call;
+                     }
+                
+            }
+            else{
+                $response = array('msg'=>'Mandrill api key not set');
+            }
+
+            return $response;
+
+        }
         
 }

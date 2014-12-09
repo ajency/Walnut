@@ -45,6 +45,7 @@ define ['app'
                             loading: true
 
                         @listenTo view, 'end:quiz', -> @region.trigger 'end:quiz'
+                        @listenTo view, 'show:single:quiz:app', -> @region.trigger 'show:single:quiz:app'
 
                     _timeLeftOrElapsed : =>
                         timeTaken = 0
@@ -128,15 +129,20 @@ define ['app'
                             onExpiry: @quizTimedOut
 
                     quizTimedOut:=>
+                        @trigger "end:quiz"
                         msgContent= @model.getMessageContent 'quiz_time_up'
                         bootbox.alert msgContent,=>
-                            @trigger "end:quiz"
+                            @trigger "show:single:quiz:app"
+
 
                     endQuiz:->                        
                         msgContent= @model.getMessageContent 'end_quiz'
                         bootbox.confirm msgContent,(result)=>
-                            @trigger("end:quiz") if result
+                            if result
+                                @trigger "end:quiz"
+                                @trigger "show:single:quiz:app"
+
 
                     endReplay:->                        
-                        @trigger "end:quiz"
+                        @trigger "show:single:quiz:app"
                             

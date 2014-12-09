@@ -45,8 +45,11 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         this.show(view, {
           loading: true
         });
-        return this.listenTo(view, 'end:quiz', function() {
+        this.listenTo(view, 'end:quiz', function() {
           return this.region.trigger('end:quiz');
+        });
+        return this.listenTo(view, 'show:single:quiz:app', function() {
+          return this.region.trigger('show:single:quiz:app');
         });
       };
 
@@ -122,10 +125,11 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.quizTimedOut = function() {
         var msgContent;
+        this.trigger("end:quiz");
         msgContent = this.model.getMessageContent('quiz_time_up');
         return bootbox.alert(msgContent, (function(_this) {
           return function() {
-            return _this.trigger("end:quiz");
+            return _this.trigger("show:single:quiz:app");
           };
         })(this));
       };
@@ -136,14 +140,15 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         return bootbox.confirm(msgContent, (function(_this) {
           return function(result) {
             if (result) {
-              return _this.trigger("end:quiz");
+              _this.trigger("end:quiz");
+              return _this.trigger("show:single:quiz:app");
             }
           };
         })(this));
       };
 
       QuizTimerView.prototype.endReplay = function() {
-        return this.trigger("end:quiz");
+        return this.trigger("show:single:quiz:app");
       };
 
       return QuizTimerView;

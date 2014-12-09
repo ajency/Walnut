@@ -89,7 +89,7 @@ define ['app'
                     @model.set 'optioncount', optionCount
 
             _changeColumnNumber : (evt)->
-                @model.set 'columncount', optionCount
+                @model.set 'columncount', parseInt $(evt.target).val()
 
 
 

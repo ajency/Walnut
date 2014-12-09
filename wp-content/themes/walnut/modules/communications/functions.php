@@ -6,6 +6,7 @@
 
 require_once "teaching_modules/functions.php";
 require_once "quiz/functions.php";
+require_once "quiz/quiz-report.php";
 require_once "user/functions.php";
 
 //Registering communication components
@@ -144,3 +145,79 @@ function get_mail_footer($blog_id){
     );
 
 }
+
+function format_communication_recipients($users=array()){
+        
+    $recipients = array();
+
+    if(sizeof($users)>0){
+
+        foreach($users as $user){
+
+            $recipients[] = array(                
+                    'user_id'   => $user->ID,
+                    'type'      => 'email',
+                    'value'     => $user->user_email
+                ); 
+        }
+    }
+
+    return $recipients;
+}
+
+function ajax_get_communication_recipients(){
+
+    $functionName = 'prepare_'.$_POST['communication_type'].'_recipients';
+
+    if (function_exists($functionName)){
+
+        unset($_POST['action']);
+        $data = $_POST;
+
+        $recipients   = $functionName($data);
+
+        if( is_wp_error( $comm ) ) {
+
+            $recipients= $comm->get_error_message();
+
+            $response=array('error'=>$recipients);
+        }
+        else
+            $response=$recipients;
+
+    }
+    else
+        $response=array('error'=>"function $functionName doesnt exist");
+
+    wp_send_json($response);
+
+}
+add_action('wp_ajax_get-communication-recipients', 'ajax_get_communication_recipients');
+
+function ajax_get_communication_preview(){
+    
+    global $aj_comm;
+
+    $functionName = $_POST['communication_type'].'_preview';
+
+    if (function_exists($functionName)){
+
+        unset($_POST['action']);
+        $data = $_POST;
+
+        $template_data  = $functionName($data);
+
+        switch_to_blog(1);
+
+        $response= $aj_comm->get_email_preview($template_data);
+
+        restore_current_blog();
+
+    }
+    else
+        $response=array('error'=>"function $functionName doesnt exist");
+
+    wp_send_json($response);
+
+}
+add_action('wp_ajax_get-communication-preview','ajax_get_communication_preview');
