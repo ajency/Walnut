@@ -6,7 +6,7 @@
 
 	// "version": "Staging-0.1.1",                      // [Synapse Staging Version]
 	// "version": "0.5.0.06",
-	"version": "Production-0.0.2",                   // [Synapse Production Version]
+	"version": "Production-0.0.3",                   // [Synapse Production Version]
 
 	"permissions": ["<all_urls>", "storage", "unlimitedStorage"],
 
