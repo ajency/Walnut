@@ -1,6 +1,6 @@
 {
-  "packageId": "com.synapse.studentsapp.edu",         // [Synapse Staging Package]
-  // "packageId": "com.synapse.studentsapp.learning",    // [Synapse Production Package]
-  "versionCode": 11,
+  // "packageId": "com.synapse.studentsapp.edu",         // [Synapse Staging Package]
+  "packageId": "com.synapse.studentsapp.learning",    // [Synapse Production Package]
+  "versionCode": 2,
   "CFBundleVersion": "1.1.1"
 }
