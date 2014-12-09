@@ -11,7 +11,7 @@
 //"http:\/\/synapsedu.info\/wp-content\/uploads\/sites\/14\/tmp\/downsync\/csvs-7365920140710064728.zip
 //http://subinsb.com/php-download-extract-zip-archives
 
-define('REMOTE_SERVER_URL','http://synapsedu.info');
+define('REMOTE_SERVER_URL','http://synapselearning.net');
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 require_once( plugin_dir_path( __FILE__ ) . 'includes/ajax.php');
