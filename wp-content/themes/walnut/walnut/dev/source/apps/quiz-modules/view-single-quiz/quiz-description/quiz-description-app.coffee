@@ -61,6 +61,15 @@ define ['app'
 
 				data.hasQuestions=true if not _.isEmpty data.content_pieces
 
+				#new Changes
+				# if _.isEmpty data.content_pieces
+				# 	data.takeQuizError = 'Sorry this quiz has no questions in it.'
+
+				# else
+				# 	if not data.status is 'completed' or App.request "current:user:can", "view_all_quizzes"
+				# 		if data.quiz_type is 'class_test' and not IS_STANDALONE_SITE
+				# 			data.takeQuizError = 'Class tests can be taken from school site only'
+
 				if responseSummary.get('status') is 'completed'
 					data.responseSummary    = true
 					data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'

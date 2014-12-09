@@ -29,15 +29,16 @@ define(['underscore'], function(_) {
       return defer.promise();
     },
     getDivisionIdForUser: function() {
-      var defer, onSuccess;
+      var defer, onSuccess, userId;
       defer = $.Deferred();
+      userId = parseInt(_.getUserID());
       onSuccess = function(tx, data) {
         var divisionId;
         divisionId = data.rows.item(0)['meta_value'];
         return defer.resolve(divisionId);
       };
       _.db.transaction(function(tx) {
-        return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['student_division', _.getUserID()], onSuccess, _.transactionErrorHandler);
+        return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE meta_key=? AND user_id=?", ['student_division', userId], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
     },
