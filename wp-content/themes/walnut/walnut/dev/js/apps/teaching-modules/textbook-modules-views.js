@@ -12,7 +12,7 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} <span class="label label-info">Attempts: <strong>{{attempts}}</strong></span> {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> {{#viewQuiz}} <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> View {{moduleType}} </button> {{/viewQuiz}} {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{taken_on}} </button> {{/schedule_button}} {{^schedule_button}} {{#taken_on}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{taken_on}}</div> {{/taken_on}} {{^taken_on}} {{#classTest}} {{#schedule}} {{#schedule.is_active}} <div class="alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule.is_active}} {{^schedule.is_active}} <div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule.is_active}} {{/schedule}} {{^schedule}} Not Scheduled {{/schedule}} {{/classTest}} {{/taken_on}} {{/schedule_button}} </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> {{#take_quiz}} <td class="v-align-middle">{{quiz_type}}</td> {{/take_quiz}} <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> {{#practice_quiz}} {{#attempts}} <span class="label label-info">Attempts: <strong>{{attempts}}</strong></span> {{/attempts}} {{^attempts}} <span class="label label-important">Not Started</span> {{/attempts}} {{/practice_quiz}} {{^practice_quiz}} {{&status_str}} {{/practice_quiz}} </td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> View {{moduleType}} </button> {{#schedule_button}} <button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date"> <i class="fa fa-calendar"></i> {{taken_on}} </button> {{/schedule_button}} {{^schedule_button}} {{#taken_on}} <div class="alert alert-success inline pull-left m-b-0 m-r-10 dateInfo">{{taken_on}}</div> {{/taken_on}} {{^taken_on}} {{#classTest}} {{#schedule}} <div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10"> Scheduled<br> From: {{scheduleFrom}}<br> To: {{scheduleTo}} </div> {{/schedule}} {{^schedule}} Not Scheduled {{/schedule}} {{/classTest}} {{/taken_on}} {{/schedule_button}} </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
@@ -25,12 +25,12 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
         });
         this.$el.attr('id', 'row-' + this.model.get('id'));
         this.$el.attr('data-id', this.model.get('id'));
-        if (this.model.get('quiz_type') === 'class_test') {
+        if (this.model.get('quiz_type') === 'class_test' || this.model.get('quiz_type') === 'test') {
           if (this.model.get('schedule')) {
             if (this.model.get('schedule')['is_expired'] || !this.model.get('schedule')['is_active']) {
               this.$el.find('.start-training').hide();
             }
-            if (!IS_STANDALONE_SITE) {
+            if (IS_STANDALONE_SITE) {
               this.$el.find('.start-training').hide();
             }
             if (this.model.get('schedule')['is_expired']) {

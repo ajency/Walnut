@@ -536,7 +536,7 @@ define ['underscore', 'unserialize'], ( _) ->
 			
 			_.getDivisionIdForSchedule()
 			.then (division_id_string)->
-				division_id = parseInt division_id_string
+				division_id = parseInt(division_id_string)
 				onSuccess =(tx,data)->
 					
 					schedule = new Array()
@@ -544,9 +544,24 @@ define ['underscore', 'unserialize'], ( _) ->
 					row = data.rows.item(0)
 						
 					if row
-						current_date = _.getCurrentDateTime(0)
-						from = row['schedule_from']
-						to = row['schedule_to']
+						current_date_in_string_format = _.getCurrentDateTime(0)
+						from_in_string_format = row['schedule_from']
+						to_in_string_format = row['schedule_to']
+
+						current_date_split = current_date_in_string_format.split("-");
+						current_date = new Date(parseInt(current_date_split[0], 10), 
+														parseInt(current_date_split[1], 10)-1, 
+														parseInt(current_date_split[2], 10));
+
+						from_split = from_in_string_format.split("-");
+						from = new Date(parseInt(from_split[0], 10), 
+														parseInt(from_split[1], 10)-1, 
+														parseInt(from_split[2], 10));
+						
+						to_split = to_in_string_format.split("-");
+						to = new Date(parseInt(to_split[0], 10), 
+														parseInt(to_split[1], 10)-1, 
+														parseInt(to_split[2], 10));						
 						
 						if current_date >= from and current_date <= to
 							active = true

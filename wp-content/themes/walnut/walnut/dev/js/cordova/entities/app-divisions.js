@@ -104,8 +104,9 @@ define(['underscore'], function(_) {
       return defer.promise();
     },
     getDivisionIdForSchedule: function() {
-      var defer, onSuccess;
+      var defer, onSuccess, userId;
       defer = $.Deferred();
+      userId = parseInt(_.getUserID());
       onSuccess = function(tx, data) {
         var id;
         id = '';
@@ -115,7 +116,7 @@ define(['underscore'], function(_) {
         return defer.resolve(id);
       };
       _.db.transaction(function(tx) {
-        return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? AND meta_key=?", [_.getUserID(), 'student_division'], onSuccess, _.transactionErrorHandler);
+        return tx.executeSql("SELECT meta_value FROM wp_usermeta WHERE user_id=? AND meta_key=?", [userId, 'student_division'], onSuccess, _.transactionErrorHandler);
       });
       return defer.promise();
     }

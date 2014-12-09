@@ -186,6 +186,7 @@ define ['underscore'], ( _) ->
 		getDivisionIdForSchedule : ->
 
 			defer = $.Deferred()
+			userId = parseInt(_.getUserID())
 
 			onSuccess = (tx,data)->
 
@@ -202,7 +203,7 @@ define ['underscore'], ( _) ->
 								FROM wp_usermeta 
 								WHERE user_id=? 
 								AND meta_key=?"
-								, [_.getUserID(), 'student_division']
+								, [userId, 'student_division']
 				,onSuccess, _.transactionErrorHandler
 
 			defer.promise()

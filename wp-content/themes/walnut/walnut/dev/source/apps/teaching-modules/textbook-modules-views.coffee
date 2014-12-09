@@ -13,27 +13,24 @@ define ['app',
 						<td class="v-align-middle">{{quiz_type}}</td>
 						{{/take_quiz}}
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-						<td>
-						{{#practice_quiz}}
-							{{#attempts}}
-								<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
-							{{/attempts}}
-							{{^attempts}}
-								<span class="label label-important">Not Started</span>
-							{{/attempts}}
-						{{/practice_quiz}}
-						{{^practice_quiz}}
+							<td>
+							{{#practice_quiz}}
+								{{#attempts}}
+									<span class="label label-info">Attempts: <strong>{{attempts}}</strong></span>
+								{{/attempts}}
+								{{^attempts}}
+									<span class="label label-important">Not Started</span>
+								{{/attempts}}
+							{{/practice_quiz}}
+							{{^practice_quiz}}
 							{{&status_str}}
-						{{/practice_quiz}}
+							{{/practice_quiz}}
 
 						</td>
 						<td>
-							{{#viewQuiz}}
-								<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
-								View {{moduleType}}
-								</button>
-							{{/viewQuiz}}
-							
+							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
+							View {{moduleType}}
+							</button>
 							{{#schedule_button}}
 								<button type="button" data-target="#schedule" data-toggle="modal" class="btn btn-white btn-small pull-left m-r-10 training-date">
 									<i class="fa fa-calendar"></i> {{taken_on}}
@@ -46,22 +43,12 @@ define ['app',
 
 								{{^taken_on}}
 									{{#classTest}}
-										{{#schedule}}
-											{{#schedule.is_active}}										
-												<div class="alert alert-info inline pull-left m-b-0 m-r-10">
-													Scheduled<br>
-													From: {{scheduleFrom}}<br>
-													To: {{scheduleTo}}
-												</div>
-											{{/schedule.is_active}}
-
-											{{^schedule.is_active}}
-												<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
-													Scheduled<br>
-													From: {{scheduleFrom}}<br>
-													To: {{scheduleTo}}
-												</div>
-											{{/schedule.is_active}}
+										{{#schedule}}								
+											<div class="schedule_dates alert alert-info inline pull-left m-b-0 m-r-10">
+												Scheduled<br>
+												From: {{scheduleFrom}}<br>
+												To: {{scheduleTo}}
+											</div>
 										{{/schedule}}
 										{{^schedule}}
 											Not Scheduled
@@ -79,9 +66,6 @@ define ['app',
 				$('body').removeClass 'disableTouchForView'
 				$('.header').css({'top':'0%', 'left':'0%'});
 
-				@$el.attr 'id', 'row-' + @model.get 'id'
-				@$el.attr 'data-id', @model.get 'id'
-
 				# 	if @model.get 'schedule'
 				# 		if not @model.get('schedule')['is_active']
 				# 			@$el.find '.start-training'
@@ -94,8 +78,11 @@ define ['app',
 				# 	else
 				# 		@$el.find '.start-training'
 				# 		.hide()
+
+				@$el.attr 'id', 'row-' + @model.get 'id'
+				@$el.attr 'data-id', @model.get 'id'
 				
-				if @model.get('quiz_type') is 'class_test'
+				if @model.get('quiz_type') is 'class_test' or @model.get('quiz_type') is 'test'
 
 					if @model.get 'schedule'
 						#hide the start button if 
@@ -106,7 +93,7 @@ define ['app',
 							@$el.find '.start-training'
 							.hide()
 
-						if not IS_STANDALONE_SITE
+						if IS_STANDALONE_SITE
 							@$el.find '.start-training'
 							.hide()
 

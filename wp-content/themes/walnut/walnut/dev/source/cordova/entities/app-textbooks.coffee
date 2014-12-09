@@ -53,6 +53,8 @@ define ['underscore'], ( _) ->
 
 			defer = $.Deferred()
 
+			userId = parseInt(_.getUserID())
+
 			onSuccess = (tx, data)->
 
 				divisionId = data.rows.item(0)['meta_value']
@@ -65,7 +67,7 @@ define ['underscore'], ( _) ->
 								FROM wp_usermeta 
 								WHERE meta_key=? 
 								AND user_id=?"
-								, ['student_division', _.getUserID()]
+								, ['student_division', userId]
 
 				, onSuccess , _.transactionErrorHandler
 
