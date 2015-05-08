@@ -112,17 +112,31 @@ function get_user_by_id( $id ) {
 
 
 function user_extend_profile_fields($user){
-
-    $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
-    $user_divisions = maybe_unserialize(get_user_meta( $user->ID, 'divisions',true));
-    $user_student_division = maybe_unserialize(get_user_meta( $user->ID, 'student_division',true));
-    $user_student_rollno = get_user_meta( $user->ID, 'roll_no',true);
-    $user_student_parentemail1 = get_user_meta( $user->ID, 'parent_email1',true);
-    $user_student_parentemail2 = get_user_meta( $user->ID, 'parent_email2',true);
-    $user_student_parentemail3 = get_user_meta( $user->ID, 'parent_email3',true);
-    $user_student_parentphone1 = get_user_meta( $user->ID, 'parent_phone1',true);
-    $user_student_parentphone2 = get_user_meta( $user->ID, 'parent_phone2',true);
- 
+    
+    # set the values to the submitted items to populate the fields with previously entered data
+    # incase of error while saving
+    if(isset($_POST) && $_POST['action']='createuser'){
+        if(isset($_POST['textbooks']))          $user_textbooks         = $_POST['textbooks'];
+        if(isset($_POST['divisions']))          $user_divisions         = $_POST['divisions'];
+        if(isset($_POST['student_division']))   $user_student_division  = $_POST['student_division'];
+        if(isset($_POST['student_rollno']))     $user_student_rollno    = $_POST['student_rollno'];
+        if(isset($_POST['parent_email1']))      $user_student_parentemail1  = $_POST['parent_email1'];
+        if(isset($_POST['parent_email2']))      $user_student_parentemail2  = $_POST['parent_email2'];
+        if(isset($_POST['parent_phone1']))      $user_student_parentphone1  = $_POST['parent_phone1'];
+        if(isset($_POST['parent_phone2']))      $user_student_parentphone2  = $_POST['parent_phone2'];
+        
+    }
+    else{
+        $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
+        $user_divisions = maybe_unserialize(get_user_meta( $user->ID, 'divisions',true));
+        $user_student_division = maybe_unserialize(get_user_meta( $user->ID, 'student_division',true));
+        $user_student_rollno = get_user_meta( $user->ID, 'roll_no',true);
+        $user_student_parentemail1 = get_user_meta( $user->ID, 'parent_email1',true);
+        $user_student_parentemail2 = get_user_meta( $user->ID, 'parent_email2',true);
+        $user_student_parentemail3 = get_user_meta( $user->ID, 'parent_email3',true);
+        $user_student_parentphone1 = get_user_meta( $user->ID, 'parent_phone1',true);
+        $user_student_parentphone2 = get_user_meta( $user->ID, 'parent_phone2',true);
+    }
       if(!is_array($user_textbooks)){
             $user_textbooks = array();
       }
@@ -137,7 +151,7 @@ function user_extend_profile_fields($user){
          $user_divisions = array_map('intval', $user_divisions);
       }     
       $hide_textbooks="style='display:none'";
-      if(user_can($user->ID,'teacher'))
+      if(user_can($user->ID,'teacher') || (isset($_POST['role']) && $_POST['role']=='teacher'))
         $hide_textbooks= "";
       
       switch_to_blog(1);
