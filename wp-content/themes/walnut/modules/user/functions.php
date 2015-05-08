@@ -566,15 +566,17 @@ function set_meta_user_activation($user_id, $password, $meta)
     $users_tbl = $wpdb->base_prefix."users";
 
     //Query to get the custom fields stored in the signup table
-    $metadata = $wpdb->get_var("SELECT meta FROM ".$signup_tbl." WHERE user_login=(SELECT user_login FROM $users_tbl "
+    $signupData = $wpdb->get_row("SELECT signup_id,meta FROM ".$signup_tbl." WHERE user_login=(SELECT user_login FROM $users_tbl "
                                 . "WHERE ID=".$user_id.")");
 
-    $user_meta = unserialize($metadata);
+    $user_meta = unserialize($signupData->meta);
     
     foreach($updatemetafields as $field => $value){
      if(isset($user_meta[$value]))
          update_usermeta( $user_id, $value, $user_meta[$value] );
     }
+    
+    $wpdb->delete($signup_tbl,array( 'signup_id' => $signupData->signup_id ));
 
 }
 add_action( 'wpmu_activate_user', 'set_meta_user_activation', 10, 3);
