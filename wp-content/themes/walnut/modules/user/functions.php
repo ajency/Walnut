@@ -690,3 +690,10 @@ function get_parent_of_formated($parent_of_meta){
    
    return $parent_of_meta;
 }
+
+function get_school_admin_for_cronjob($blog_id=0){
+    
+    if(!$blog_id) $blog_id= get_current_blog_id ();
+    $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID','blog_id'=>$blog_id));
+    return $school_admin[0];
+}

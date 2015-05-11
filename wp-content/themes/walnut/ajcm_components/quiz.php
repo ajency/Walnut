@@ -164,9 +164,9 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
     
     switch_to_blog($comm_data['blog_id']);
 
-    $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
+    $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
 
-    $quiz_details= get_single_quiz_module($quiz_id,$school_admin[0]);   
+    $quiz_details= get_single_quiz_module($quiz_id,$school_admin);   
 
     $terms= $quiz_details->term_ids;
 

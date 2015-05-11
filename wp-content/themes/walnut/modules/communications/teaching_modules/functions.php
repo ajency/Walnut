@@ -172,7 +172,6 @@ function get_teaching_modules_report_zip($blog_id){
     $random= rand(9999,99999);
 
     $upload_path= '/tmp/reports/teaching-modules-report-'.$random.date('Ymdhis').'.zip';
-
     $zip = create_zip($files,$upload_directory.$upload_path);
 
     return $zip;
@@ -186,9 +185,11 @@ function get_teaching_modules_report_csv($blog_id){
     $files = array();
 
     switch_to_blog($blog_id);
-
-    $divisions= get_all_divisions();
-
+    
+    $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
+    
+    $divisions= get_all_divisions($school_admin);
+    
     $headers = array('Training module name',
                 'Status',
                 'Teacher'
@@ -217,7 +218,7 @@ function get_teaching_modules_report_csv($blog_id){
 
                 foreach($moduleIDs as $moduleID){
 
-                    $row = get_teaching_module_report_data($moduleID, $div['id']);
+                    $row = get_teaching_module_report_data($moduleID, $div['id'],$blog_id);
 
                     if($row)
                         $output .= str_putcsv($row);
@@ -237,11 +238,12 @@ function get_teaching_modules_report_csv($blog_id){
 
 }
 
-function get_teaching_module_report_data($moduleID, $division){
-
-    $moduleData = get_single_content_module($moduleID, $division);
-
-    $taken_by= get_module_taken_by($moduleID,$division);
+function get_teaching_module_report_data($moduleID, $division,$blog_id){
+    
+    $school_admin = get_school_admin_for_cronjob($blog_id);
+    switch_to_blog($blog_id);
+    $moduleData = get_single_content_module($moduleID, $division,$school_admin);
+    $taken_by= get_module_taken_by($moduleID,$division,$blog_id);
 
     if($moduleData->status == 'completed')
         $status = 'Completed';

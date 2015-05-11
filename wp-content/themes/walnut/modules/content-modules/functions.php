@@ -215,10 +215,12 @@ function get_modules_by_post_status($post_status='publish',$module_type='teachin
 
 }
 
-function get_single_content_module($id, $division='', $user_id){
+function get_single_content_module($id, $division='', $user_id=0){
 
     global $wpdb;
-
+    
+    if(!$user_id)
+        $user_id = get_current_user_id();
 
     $query = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id= %d", $id);
 
@@ -334,15 +336,17 @@ function get_content_piece_ids_by_module_id($id){
 
 }
 
-function get_module_taken_by($module_id, $division){
+function get_module_taken_by($module_id, $division, $blog_id=0){
 
     global $wpdb;
 
     $teachers = '';
     $teacher_names= array();
+    
+    if($blog_id) switch_to_blog ($blog_id);
 
     $question_response_table = $wpdb->prefix . "question_response";
-
+    
     $taken_by_query = $wpdb->prepare(
         "SELECT teacher_id FROM $question_response_table
         WHERE collection_id = %d AND division = %s",
@@ -361,7 +365,7 @@ function get_module_taken_by($module_id, $division){
         if($teacher_names)
             $teachers= join(',', $teacher_names);
     }
-
+    if($blog_id) restore_current_blog();
     return $teachers;
 }
 
