@@ -58,10 +58,10 @@ function get_all_divisions($user_id=''){
 
     if($division_ids)
         $division_str = implode(',',$division_ids);
-
+    
     foreach ( $wp_roles->role_names as $role => $name ) :
 
-        if ( current_user_can( 'school-admin' ) || current_user_can( 'administrator' )  )
+        if ( user_can( $user_id,'school-admin' ) || user_can($user_id, 'administrator' )  )
             $admin=true;
 
     endforeach;
@@ -71,7 +71,6 @@ function get_all_divisions($user_id=''){
         $search_str= "where id in (".$division_str.")";
 
     $divisions_qry="select id from {$wpdb->prefix}class_divisions ".$search_str;
-
     $divisions = $wpdb->get_results($divisions_qry);
 
     foreach($divisions as $div)

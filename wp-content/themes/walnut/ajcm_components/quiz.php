@@ -33,7 +33,7 @@ function getvars_quizzes_taken_report($recipients_email,$comm_data){
             "content"   => base64_encode(file_get_contents($zipfile))
         );
 
-        #unlink($zipfile);
+        unlink($zipfile);
     }
 
     return $template_data;
