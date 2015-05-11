@@ -115,14 +115,14 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 
 function get_taught_in_class_template_data($comm_data, $module_id, $division){
 
-	$data = array();
+    $data = array();
 
-	switch_to_blog($comm_data['blog_id']);
+    switch_to_blog($comm_data['blog_id']);
 
-	$school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
+    $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID'));
 
-	$module_details= get_single_content_module($module_id,$school_admin[0]);
-
+    $module_details= get_single_content_module($module_id,$division,$school_admin[0]);
+    
     $module_end_date = get_module_end_date($module_id, $comm_data['blog_id']);
 
     $terms= $module_details->term_ids;

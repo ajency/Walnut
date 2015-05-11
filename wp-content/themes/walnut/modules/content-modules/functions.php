@@ -215,7 +215,7 @@ function get_modules_by_post_status($post_status='publish',$module_type='teachin
 
 }
 
-function get_single_content_module($id, $division=''){
+function get_single_content_module($id, $division='', $user_id){
 
     global $wpdb;
 
