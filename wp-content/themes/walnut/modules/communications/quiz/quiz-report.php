@@ -110,7 +110,6 @@ function get_quiz_report_csv($blog_id){
                         DATE(taken_on) LIKE %s AND student_id in ($student_ids)",
                         date('Y-m-d')
                 );
-
             $quizIDs = $wpdb->get_col($quizIDs_query);
 
             // output the column headings
@@ -124,7 +123,7 @@ function get_quiz_report_csv($blog_id){
 
                         foreach($students as $student){
 
-                            $row = get_quiz_report_data($quizID, $student);
+                            $row = get_quiz_report_data($quizID, $student,$blog_id);
 
                             if($row)
                                 $output .= str_putcsv($row);
@@ -147,12 +146,12 @@ function get_quiz_report_csv($blog_id){
 
 }
 
-function get_quiz_report_data($quizID, $student){
+function get_quiz_report_data($quizID, $student, $blog_id){
 
-    $quizData = get_single_quiz_module($quizID, $student->ID);
+    $school_admin = get_school_admin_for_cronjob($blog_id);
+    $quizData = get_single_quiz_module($quizID,$school_admin);
     $roll_number = get_user_meta($student->ID, 'student_rollno', true);
     $summary = get_latest_quiz_response_summary($quizID, $student->ID);
-
     if($quizData->quiz_type == 'practice')
         $quiz_type = 'Practice Quiz';
     else
