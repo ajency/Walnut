@@ -6,15 +6,13 @@ define ['app'
         class DefaultAppRouter extends Marionette.AppRouter
 
             appRoutes:
-                '*path': 'default'
-
-
+                'route-not-found': 'routeNotFound'
+				
         Controller =
 
-            default:->
-                console.log 'defaulted'
-                App.navigate '',
-                    trigger : true
+            routeNotFound:->
+                App.execute "show:404:app",
+                    region: App.mainContentRegion
 
 
         DefaultApp.on "start", ->

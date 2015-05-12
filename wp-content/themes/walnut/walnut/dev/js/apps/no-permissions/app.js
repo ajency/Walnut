@@ -12,8 +12,14 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       }
 
       NoPermissionsController.prototype.initialize = function(opts) {
-        var view;
-        this.error_msg = opts.error_msg, this.error_header = opts.error_header;
+        var is404, view;
+        this.error_msg = opts.error_msg, this.error_header = opts.error_header, is404 = opts.is404;
+        this.view = view = this._getNoPermissionsView();
+        this.show(view);
+        if (is404) {
+          this.error_msg = '404';
+          this.error_header = "Page not found";
+        }
         this.view = view = this._getNoPermissionsView();
         return this.show(view);
       };
@@ -49,10 +55,17 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return NoPermissionsView;
 
     })(Marionette.ItemView);
-    return App.commands.setHandler("show:no:permissions:app", function(opt) {
+    App.commands.setHandler("show:no:permissions:app", function(opt) {
       if (opt == null) {
         opt = {};
       }
+      return new Controller.NoPermissionsController(opt);
+    });
+    return App.commands.setHandler("show:404:app", function(opt) {
+      if (opt == null) {
+        opt = {};
+      }
+      opt.is404 = true;
       return new Controller.NoPermissionsController(opt);
     });
   });
