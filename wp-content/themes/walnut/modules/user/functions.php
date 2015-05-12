@@ -115,7 +115,7 @@ function user_extend_profile_fields($user){
     
     # set the values to the submitted items to populate the fields with previously entered data
     # incase of error while saving
-    if(isset($_POST) && $_POST['action']='createuser'){
+    if(isset($_POST) && $_POST['action']=='createuser'){
         if(isset($_POST['textbooks']))          $user_textbooks         = $_POST['textbooks'];
         if(isset($_POST['divisions']))          $user_divisions         = $_POST['divisions'];
         if(isset($_POST['student_division']))   $user_student_division  = $_POST['student_division'];
