@@ -164,7 +164,7 @@ define ['jquery', 'underscore'], ($, _)->
         if route in ['textbooks','content-pieces','add-module',
             'edit-module', 'view-module','module-list','dummy-module',
             'view-quiz', 'create-quiz', 'edit-quiz', 'quiz-list', 'dummy-quiz',
-            'quiz-report','dashboard'
+            'quiz-report','dashboard','users'
         ]
             if user.get 'ID'
                 return true 

@@ -24,6 +24,9 @@ define [
     #list of all textbooks -> list of chapters
     'apps/textbooks/app'
     
+    #list of all users in school
+    'apps/users/app'
+	
     #redirect here if user doesnt have permissions
     'apps/no-permissions/app'
 ], ->

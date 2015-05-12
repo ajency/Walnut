@@ -22,6 +22,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 			class UserCollection extends Backbone.Collection
 
 				model : Users.UserModel
+				comparator: 'display_name'
 
 				url : -> #ajax call to return a list of all the users from the databse
 					AJAXURL + '?action=get-users'
@@ -40,7 +41,10 @@ define ["app", 'backbone'], (App, Backbone) ->
 						data : params
 
 					userCollection
-
+				
+				newUser:->
+					new Users.UserModel()
+				
 				getUserByID:(id)-> #returns a collection of users
 					
 					user = new Users.UserModel ('ID': id)
@@ -127,3 +131,6 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 			App.reqres.setHandler "current:user:can",(capability) ->
 				API.current_user_can capability
+
+			App.reqres.setHandler "new:user",->
+				API.newUser()
