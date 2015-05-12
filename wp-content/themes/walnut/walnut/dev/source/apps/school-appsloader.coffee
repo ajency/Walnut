@@ -29,4 +29,7 @@ define [
 	
     #redirect here if user doesnt have permissions
     'apps/no-permissions/app'
+	
+    #route not found
+    'apps/default-router/default-app'
 ], ->
