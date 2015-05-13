@@ -16,21 +16,9 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
       }
     },
     startHistory: function() {
-      var AppHandlers, AppHistory, History;
-      AppHandlers = Backbone.history.handlers;
-      History = Backbone.History.extend({
-        loadUrl: function() {
-          var match;
-          match = Backbone.History.prototype.loadUrl.apply(this, arguments);
-          if (!match) {
-            this.loadUrl('route-not-found');
-          }
-          return match;
-        }
-      });
-      AppHistory = new History;
-      AppHistory.handlers = AppHandlers;
-      return AppHistory.start();
+      if (Backbone.history) {
+        return Backbone.history.start();
+      }
     },
     register: function(instance, id) {
       if (this._registry == null) {

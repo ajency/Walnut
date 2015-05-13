@@ -33,5 +33,6 @@ define [
     #custom messages edit popups for add/edit quiz
     'apps/popup-dialog/single-edit-popup/single-edit-popup-controller'
 
-    #'apps/default-router/default-app'
+    #route not found
+    'apps/default-router/default-app'
 ], ->
