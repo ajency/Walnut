@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <div class="videoContainer"></div> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -88,8 +88,13 @@ define(['app'], function(App) {
         if (!this.videos[this.index]) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         }
-        this.$el.find('video')[0].load();
-        return this.$el.find('video')[0].play();
+        this.$el.find('.videoContainer').empty();
+        this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + this.videos[this.index] + '"> </video>');
+        return videojs(this.$el.find('video')[0], {
+          techOrder: _.str.contains(this.videos[this.index], 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
+          src: this.videos[this.index],
+          autoplay: true
+        });
       };
 
       return VideoView;

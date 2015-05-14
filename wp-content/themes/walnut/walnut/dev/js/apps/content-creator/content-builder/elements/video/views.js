@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
@@ -7,12 +8,13 @@ define(['app'], function(App) {
       __extends(VideoView, _super);
 
       function VideoView() {
+        this._playVideo = __bind(this._playVideo, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '{{#video}} <video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videourl}}"> </video> <div class="clearfix"></div> {{/video}} {{#placeholder}} <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div> {{/placeholder}}';
+      VideoView.prototype.template = '{{#video}} <div class="videoContainer"></div> <div class="clearfix"></div> {{/video}} {{#placeholder}} <div class="video-placeholder show-video "><span class="bicon icon-uniF11E"></span>Add Video</div> {{/placeholder}}';
 
       VideoView.prototype.mixinTemplateHelpers = function(data) {
         data = VideoView.__super__.mixinTemplateHelpers.call(this, data);
@@ -47,7 +49,8 @@ define(['app'], function(App) {
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
-        return this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        return this._addVideoElement(this.videos[0]);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -94,14 +97,22 @@ define(['app'], function(App) {
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
-        this.$el.find('video').attr('src', this.videos[this.index]);
-        this.$el.find('video')[0].load();
-        return this.$el.find('video')[0].play();
+        return this._addVideoElement(this.videos[this.index]);
       };
 
       VideoView.prototype._showMediaManager = function(e) {
         e.stopPropagation();
         return this.trigger("show:media:manager");
+      };
+
+      VideoView.prototype._addVideoElement = function(videoUrl) {
+        this.$el.find('.videoContainer').empty();
+        this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + this.videos[this.index] + '"> </video>');
+        return videojs(this.$el.find('video')[0], {
+          techOrder: _.str.contains(videoUrl, 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
+          src: videoUrl,
+          autoplay: true
+        });
       };
 
       return VideoView;

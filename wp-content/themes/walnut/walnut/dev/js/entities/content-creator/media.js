@@ -147,6 +147,9 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler('get:media:collection:by:ids', function(mediaIds) {
       return API.getMediaCollectionById(mediaIds);
     });
+    App.reqres.setHandler("new:media:added", function(modelData) {
+      return API.createNewMedia(modelData);
+    });
     return App.commands.setHandler("new:media:added", function(modelData) {
       return API.createNewMedia(modelData);
     });

@@ -42,8 +42,12 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
               region: layout.uploadRegion,
               mediaType: _this.mediaType
             });
-            return App.execute("start:media:grid:app", {
+            App.execute("start:media:grid:app", {
               region: layout.gridRegion,
+              mediaType: _this.mediaType
+            });
+            return App.execute("start:youtube:video:app", {
+              region: layout.youtubeRegion,
               mediaType: _this.mediaType
             });
           };
@@ -52,6 +56,21 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
         this.listenTo(this.layout.gridRegion, "media:element:selected", (function(_this) {
           return function(media) {
             return _this.choosedMedia = media;
+          };
+        })(this));
+        this.listenTo(this.layout.youtubeRegion, "youtube:url:selected", (function(_this) {
+          return function(url) {
+            var data, mediaModel;
+            data = {
+              id: 34,
+              title: url,
+              name: url,
+              url: url,
+              type: 'video',
+              videoType: 'youtubeVideo'
+            };
+            mediaModel = App.request("new:media:added", data);
+            return App.vent.trigger("media:manager:choosed:media", mediaModel);
           };
         })(this));
         return this.listenTo(this.layout, "media:selected", (function(_this) {
@@ -88,7 +107,8 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
 
       OuterLayout.prototype.regions = {
         uploadRegion: '#upload-region',
-        gridRegion: '#grid-region'
+        gridRegion: '#grid-region',
+        youtubeRegion: '#youtube-region'
       };
 
       OuterLayout.prototype.dialogOptions = {
