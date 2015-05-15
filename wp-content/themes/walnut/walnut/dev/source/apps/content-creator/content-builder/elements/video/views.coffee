@@ -122,13 +122,20 @@ define ['app'], (App)->
 			_addVideoElement:(videoUrl, autoplay=false)->
 			
 				@$el.find('.videoContainer').empty()
-				@$el.find('.videoContainer').html '<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" height="auto" 
-								poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
-											data-setup="{}" controls src="'+@videos[@index]+'">
+				if _.str.contains videoUrl, 'youtube.com'
+					vidID= _.str.strRightBack videoUrl,'?v='
+					@$el.find('.videoContainer').html '<div class="videoWrapper">
+					<iframe width="100%" height="349" 
+						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0&autoplay=1" 
+						frameborder="0">
+					</iframe></div>'
+					
+				else
+					@$el.find('.videoContainer').html '<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%"
+									poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
+												data-setup="{}" controls src="'+videoUrl+'">
 
-							</video>'
-							
-				videojs @$el.find('video')[0],
-							techOrder: if _.str.contains(videoUrl, 'youtube.com') then ['youtube'] else ['html5','flash']
-							src: videoUrl
-							autoplay:true if autoplay
+								</video>'
+								
+					@$el.find('video')[0].load()
+					@$el.find('video')[0].play()

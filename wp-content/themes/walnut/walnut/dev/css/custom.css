@@ -803,9 +803,20 @@
 .video-js {
   background-color: #f8f8f8;
   border-bottom: 1px solid #e5e9ec;
-  padding-top: 56.25%;
 }
-.vjs-fullscreen {padding-top: 0px}
+.videoWrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+}
+.videoWrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
 .playlistToggle {
   position: relative;
   top: -45px;
