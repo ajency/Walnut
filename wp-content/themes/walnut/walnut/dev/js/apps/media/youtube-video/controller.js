@@ -11,7 +11,7 @@ define(['app', 'controllers/region-controller'], function(App, AppController) {
         return YoutubeView.__super__.constructor.apply(this, arguments);
       }
 
-      YoutubeView.prototype.template = '<div class="row"> <div class="col-md-6"> <input type="text" class="form-control youtubeUrl" placeholder="http://www.youtube.com/watch?v=ZtFG0152"> <i class="text-danger hidden">Your URL should be something like http://www.youtube.com/watch?v=ZtFG0152</i> </div> <div class="col-md-4"> <button class="pull-left btn btn-info btn-small">Add Video</button> </div> </div>';
+      YoutubeView.prototype.template = '<div class="row"> <div class="col-md-6"> <input type="text" class="form-control youtubeUrl" placeholder="http://www.youtube.com/watch?v=xW_AsV7k42o"> <i class="text-danger hidden">Your URL should be something like http://www.youtube.com/watch?v=xW_AsV7k42o</i> </div> <div class="col-md-4"> <button class="pull-left btn btn-info btn-small">Add Video</button> </div> </div>';
 
       YoutubeView.prototype.events = function() {
         return {

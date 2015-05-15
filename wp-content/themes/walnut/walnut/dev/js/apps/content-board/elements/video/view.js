@@ -89,17 +89,20 @@ define(['app'], function(App) {
         if (!this.videos[this.index]) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         }
-        return this._addVideoElement(this.videos[this.index]);
+        return this._addVideoElement(this.videos[this.index], true);
       };
 
-      VideoView.prototype._addVideoElement = function(videoUrl) {
+      VideoView.prototype._addVideoElement = function(videoUrl, autoplay) {
+        if (autoplay == null) {
+          autoplay = false;
+        }
         this.$el.find('.videoContainer').empty();
         this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
         return videojs(this.$el.find('video')[0], {
           techOrder: _.str.contains(videoUrl, 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
           src: videoUrl,
           height: 400,
-          autoplay: true
+          autoplay: autoplay ? true : void 0
         });
       };
 

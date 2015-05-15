@@ -113,13 +113,13 @@ define ['app'], (App)->
 				@$el.find('.playlist-video').removeClass 'currentVid'
 				@$el.find(".playlist-video[data-index='#{@index}']").addClass 'currentVid'
 				@$el.find('#now-playing-tag').text @model.get('title')[@index]
-				@_addVideoElement @videos[@index]
+				@_addVideoElement @videos[@index], true
 
 			_showMediaManager : (e)->
 				e.stopPropagation()
 				@trigger "show:media:manager"
 			
-			_addVideoElement:(videoUrl)->
+			_addVideoElement:(videoUrl, autoplay=false)->
 			
 				@$el.find('.videoContainer').empty()
 				@$el.find('.videoContainer').html '<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%"
@@ -132,4 +132,4 @@ define ['app'], (App)->
 							techOrder: if _.str.contains(videoUrl, 'youtube.com') then ['youtube'] else ['html5','flash']
 							src: videoUrl
 							height: 400
-							autoplay:true
+							autoplay:true if autoplay
