@@ -47,7 +47,8 @@ define ['app'], (App)->
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
-
+				
+				@_addVideoElement @videos[0]
 
 			_setVideoList : ->
 				console.log '@model'
@@ -112,28 +113,20 @@ define ['app'], (App)->
 
 				if not @videos[@index]
 					@$el.find('video').attr 'poster', SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png'
+				
+				@_addVideoElement @videos[@index]
 
+			_addVideoElement:(videoUrl)->
+			
 				@$el.find('.videoContainer').empty()
 				@$el.find('.videoContainer').html '<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%"
 								poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
-											data-setup="{}" controls src="'+@videos[@index]+'">
+											data-setup="{}" controls src="'+videoUrl+'">
 
 							</video>'
-
+							
 				videojs @$el.find('video')[0],
-							techOrder: if _.str.contains(@videos[@index], 'youtube.com') then ['youtube'] else ['html5','flash']
-							src: @videos[@index]
+							techOrder: if _.str.contains(videoUrl, 'youtube.com') then ['youtube'] else ['html5','flash']
+							src: videoUrl
+							height: 400
 							autoplay:true
-
-
-				
-				
-
-				
-			
-				
-
-
-				
-
-			

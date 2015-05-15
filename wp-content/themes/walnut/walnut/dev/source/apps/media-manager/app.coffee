@@ -52,7 +52,7 @@ define ['app'
 				@listenTo @layout.youtubeRegion, "youtube:url:selected", (url)=>
 				
 					data= 
-						id		: 34,
+						id		: 'youtube_'+_.random 855,1234
 						title	: url
 						name	: url
 						url		: url

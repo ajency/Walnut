@@ -111,6 +111,7 @@ define(['app'], function(App) {
         return videojs(this.$el.find('video')[0], {
           techOrder: _.str.contains(videoUrl, 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
           src: videoUrl,
+          height: 400,
           autoplay: true
         });
       };

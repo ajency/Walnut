@@ -35,7 +35,8 @@ define(['app'], function(App) {
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
-        return this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        return this._addVideoElement(this.videos[0]);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -88,11 +89,16 @@ define(['app'], function(App) {
         if (!this.videos[this.index]) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         }
+        return this._addVideoElement(this.videos[this.index]);
+      };
+
+      VideoView.prototype._addVideoElement = function(videoUrl) {
         this.$el.find('.videoContainer').empty();
-        this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + this.videos[this.index] + '"> </video>');
+        this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
         return videojs(this.$el.find('video')[0], {
-          techOrder: _.str.contains(this.videos[this.index], 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
-          src: this.videos[this.index],
+          techOrder: _.str.contains(videoUrl, 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
+          src: videoUrl,
+          height: 400,
           autoplay: true
         });
       };

@@ -131,4 +131,5 @@ define ['app'], (App)->
 				videojs @$el.find('video')[0],
 							techOrder: if _.str.contains(videoUrl, 'youtube.com') then ['youtube'] else ['html5','flash']
 							src: videoUrl
+							height: 400
 							autoplay:true

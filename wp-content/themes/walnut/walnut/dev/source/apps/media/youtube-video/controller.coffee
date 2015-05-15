@@ -4,9 +4,11 @@ define ['app', 'controllers/region-controller'], (App, AppController)->
 	App.module "Media.Youtube", (Youtube, App)->
 	
 		class YoutubeView extends Marionette.ItemView
-			template: '<div class="row">
-						<div class="col-md-4">
-							<input type="text" class="form-control youtubeUrl" placeholder="Youtube Video Url">
+			template: '
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" class="form-control youtubeUrl" placeholder="http://www.youtube.com/watch?v=ZtFG0152">
+							<i class="text-danger hidden">Your URL should be something like http://www.youtube.com/watch?v=ZtFG0152</i>
 						</div>
 						<div class="col-md-4">
 							<button class="pull-left btn btn-info btn-small">Add Video</button>
@@ -14,7 +16,23 @@ define ['app', 'controllers/region-controller'], (App, AppController)->
 					</div>'
 			
 			events:->
-				'click button' :-> @trigger "youtube:url:selected", $('.youtubeUrl').val()
+				'click button' :-> 
+					url = $('.youtubeUrl').val()
+					
+					@$el.find '.text-danger'
+					.addClass 'hidden'
+					
+					@$el.find '.youtubeUrl'
+					.removeClass 'error'
+
+					if _.str.contains(url, 'http://www.youtube.com/watch?v=') or _.str.contains url, 'https://www.youtube.com/watch?v='
+						@trigger "youtube:url:selected", url
+					else
+						@$el.find '.text-danger'
+						.removeClass 'hidden'
+						
+						@$el.find '.youtubeUrl'
+						.addClass 'error'
 	
 		#Show Controller 
 		class Youtube.Controller extends AppController

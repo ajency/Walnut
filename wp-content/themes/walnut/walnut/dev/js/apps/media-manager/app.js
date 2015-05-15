@@ -62,7 +62,7 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
           return function(url) {
             var data, mediaModel;
             data = {
-              id: 34,
+              id: 'youtube_' + _.random(855, 1234),
               title: url,
               name: url,
               url: url,
