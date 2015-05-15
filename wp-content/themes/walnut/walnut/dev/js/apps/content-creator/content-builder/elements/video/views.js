@@ -110,11 +110,10 @@ define(['app'], function(App) {
           autoplay = false;
         }
         this.$el.find('.videoContainer').empty();
-        this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + this.videos[this.index] + '"> </video>');
+        this.$el.find('.videoContainer').html('<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%" height="auto" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + this.videos[this.index] + '"> </video>');
         return videojs(this.$el.find('video')[0], {
           techOrder: _.str.contains(videoUrl, 'youtube.com') ? ['youtube'] : ['html5', 'flash'],
           src: videoUrl,
-          height: 400,
           autoplay: autoplay ? true : void 0
         });
       };

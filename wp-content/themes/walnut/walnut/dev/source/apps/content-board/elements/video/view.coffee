@@ -119,7 +119,7 @@ define ['app'], (App)->
 			_addVideoElement:(videoUrl, autoplay=false)->
 			
 				@$el.find('.videoContainer').empty()
-				@$el.find('.videoContainer').html '<video  class="video-js vjs-default-skin show-video" controls preload="none" width="100%"
+				@$el.find('.videoContainer').html '<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%"
 								poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
 											data-setup="{}" controls src="'+videoUrl+'">
 
@@ -128,5 +128,4 @@ define ['app'], (App)->
 				videojs @$el.find('video')[0],
 							techOrder: if _.str.contains(videoUrl, 'youtube.com') then ['youtube'] else ['html5','flash']
 							src: videoUrl
-							height: 400
 							autoplay:true if autoplay
