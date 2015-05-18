@@ -3,125 +3,129 @@ define ['app'
         'apps/content-modules/modules-listing/modules-listing-controller'
         'apps/content-modules/modules-listing/search-results-app'
         'apps/textbook-filters/textbook-filters-app'], (App, RegionController)->
-    App.module "ContentModulesApp.ModulesListing", (ModulesListing, App)->
-        class ModulesListing.ListController extends RegionController
+	App.module "ContentModulesApp.ModulesListing", (ModulesListing, App)->
+		class ModulesListing.ListController extends RegionController
 
-            initialize: (options)->
-                {@groupType} = options
+			initialize: (options)->
+				{@groupType} = options
 
-                @textbooksCollection = App.request "get:textbooks", "fetch_all":true
-                
-                App.execute "when:fetched", @textbooksCollection, =>
-                    textbook = @textbooksCollection.first()
+				@textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
-                    data = 
-                        'post_status': 'any' 
-                        'textbook'   : textbook.id
+				App.execute "when:fetched", @textbooksCollection, =>
+					textbook = @textbooksCollection.first()
 
-                    if @groupType is 'teaching-module'
-                        @contentModulesCollection = App.request "get:content:groups", data
-                    else
-                        @contentModulesCollection = App.request "get:quizes", data
+					data = 
+						'post_status': 'any' 
+						'textbook'   : textbook.id
 
-                    #wreqr object to get the selected filter parameters so that search can be done using them
-                    @selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
+					if @groupType is 'teaching-module'
+						@contentModulesCollection = App.request "get:content:groups", data
 
-                    @layout = @_getContentPiecesLayout()
+					else if @groupType is 'student-training'
 
-                    App.execute "when:fetched", [@contentModulesCollection, @textbooksCollection], =>
+						@contentModulesCollection = App.request "get:student:training:modules", data
+					else
+						@contentModulesCollection = App.request "get:quizes", data
 
+					#wreqr object to get the selected filter parameters so that search can be done using them
+					@selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse()
 
-                        @show @layout,
-                            loading: true
+					@layout = @_getContentPiecesLayout()
 
-                        @listenTo @layout, "show",=>
-                            if @groupType is 'teaching-module'
-                                dataType = 'teaching-modules'
-                            else
-                                dataType = 'quiz'
-
-                            App.execute "show:textbook:filters:app",
-                                region: @layout.filtersRegion
-                                collection: @contentModulesCollection
-                                textbooksCollection: @textbooksCollection
-                                selectedFilterParamsObject: @selectedFilterParamsObject
-                                dataType : dataType
-                                post_status: 'any'
-                                filters : ['textbooks', 'chapters','sections','subsections','module_status']
-
-                            App.execute "show:list:all:modules:app",
-                                region: @layout.allContentRegion
-                                contentModulesCollection: @contentModulesCollection
-                                textbooksCollection: @textbooksCollection
-                                groupType : @groupType
-
-                            new ModulesListing.SearchResults.Controller
-                                region: @layout.searchResultsRegion
-                                textbooksCollection: @textbooksCollection
-                                selectedFilterParamsObject: @selectedFilterParamsObject
-                                groupType : @groupType
-
-                        @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
+					App.execute "when:fetched", [@contentModulesCollection, @textbooksCollection], =>
 
 
+						@show @layout,
+							loading: true
+
+						@listenTo @layout, "show",=>
+							dataType = switch @groupType
+											when 'teaching-module' then 'teaching-modules'
+											when 'student-training' then 'student-training'
+											else 'quiz'
+
+							App.execute "show:textbook:filters:app",
+								region: @layout.filtersRegion
+								collection: @contentModulesCollection
+								textbooksCollection: @textbooksCollection
+								selectedFilterParamsObject: @selectedFilterParamsObject
+								dataType : dataType
+								post_status: 'any'
+								filters : ['textbooks', 'chapters','sections','subsections','module_status']
+
+							App.execute "show:list:all:modules:app",
+								region: @layout.allContentRegion
+								contentModulesCollection: @contentModulesCollection
+								textbooksCollection: @textbooksCollection
+								groupType : @groupType
+
+							new ModulesListing.SearchResults.Controller
+								region: @layout.searchResultsRegion
+								textbooksCollection: @textbooksCollection
+								selectedFilterParamsObject: @selectedFilterParamsObject
+								groupType : @groupType
+
+						@listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
 
-            _getContentPiecesLayout:->
-                new ContentPiecesLayout
-                    groupType : @groupType
 
 
-        class ContentPiecesLayout extends Marionette.Layout
-            template : '<div class="grid-title no-border">
-                            <h4 class="">List of <span class="semi-bold">{{type}}</span></h4>
-                            <div class="tools">
-                                <a href="javascript:;" class="collapse"></a>
-                            </div>
-                        </div>
+			_getContentPiecesLayout:->
+				new ContentPiecesLayout
+					groupType : @groupType
 
-                        <div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
 
-                            <div id="filters-region" class="m-b-10"></div>
+		class ContentPiecesLayout extends Marionette.Layout
+			template : '<div class="grid-title no-border">
+							<h4 class="">List of <span class="semi-bold">{{type}}</span></h4>
+							<div class="tools">
+								<a href="javascript:;" class="collapse"></a>
+							</div>
+						</div>
 
-                            <ul class="nav nav-tabs b-grey b-l b-r b-t" id="addContent">
-                              <li class="active"><a href="#all-content-region"><span class="semi-bold">All</span> Modules</a></li>
-                              <li><a href="#search-results-region"><span class="semi-bold">Search</span> Modules</a></li>
-                            </ul>
+						<div class="grid-body no-border contentSelect" style="overflow: hidden; display: block;">
 
-                            <div id="tab-content" class="tab-content" >
-                                <div id="all-content-region" class="tab-pane active"></div>
-                                <div id="search-results-region" class="tab-pane"></div>
-                            </div>
-                        </div>'
+							<div id="filters-region" class="m-b-10"></div>
 
-            className: 'tiles white grid simple vertical green'
+							<ul class="nav nav-tabs b-grey b-l b-r b-t" id="addContent">
+							  <li class="active"><a href="#all-content-region"><span class="semi-bold">All</span> Modules</a></li>
+							  <li><a href="#search-results-region"><span class="semi-bold">Search</span> Modules</a></li>
+							</ul>
 
-            regions:
-                filtersRegion       : '#filters-region'
-                allContentRegion    : '#all-content-region'
-                searchResultsRegion : '#search-results-region'
+							<div id="tab-content" class="tab-content" >
+								<div id="all-content-region" class="tab-pane active"></div>
+								<div id="search-results-region" class="tab-pane"></div>
+							</div>
+						</div>'
 
-            events:
-                'click #addContent a': 'changeTab'
+			className: 'tiles white grid simple vertical green'
 
-            mixinTemplateHelpers : (data)->
-                data = super data
-                data.type = _.titleize _.humanize Marionette.getOption @, 'groupType'
-                data
+			regions:
+				filtersRegion       : '#filters-region'
+				allContentRegion    : '#all-content-region'
+				searchResultsRegion : '#search-results-region'
 
-            changeTab: (e)->
-                e.preventDefault()
+			events:
+				'click #addContent a': 'changeTab'
 
-                @$el.find '#addContent a'
-                .removeClass 'active'
+			mixinTemplateHelpers : (data)->
+				data = super data
+				data.type = _.titleize _.humanize Marionette.getOption @, 'groupType'
+				data
 
-                $(e.target).closest 'a'
-                .addClass 'active'
-                    .tab 'show'
+			changeTab: (e)->
+				e.preventDefault()
 
-        App.commands.setHandler 'show:module:listing:app',(options)->
-             new ModulesListing.ListController options
-                    
+				@$el.find '#addContent a'
+				.removeClass 'active'
+
+				$(e.target).closest 'a'
+				.addClass 'active'
+					.tab 'show'
+
+		App.commands.setHandler 'show:module:listing:app',(options)->
+			 new ModulesListing.ListController options
+
 
 
 

@@ -6,7 +6,7 @@
  * Time: 2:07 PM
  */
 
-function get_all_content_modules($args=array()){
+function get_all_content_modules($args=array(),$type= 'teaching-module'){
 
     global $wpdb;
 
@@ -15,7 +15,7 @@ function get_all_content_modules($args=array()){
     if(isset($args['post_status']))
         $post_status = $args['post_status'];
 
-    $content_modules_ids_array = get_modules_by_post_status($post_status);
+    $content_modules_ids_array = get_modules_by_post_status($post_status,$type);
 
     if(isset($args['search_str']) && trim($args['search_str']) !=''){
         $content_modules_ids_array = get_modules_by_search_string($args['search_str'],$content_modules_ids_array);

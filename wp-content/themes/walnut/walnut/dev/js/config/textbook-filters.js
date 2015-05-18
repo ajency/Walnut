@@ -180,6 +180,8 @@ define(['jquery', 'underscore'], function($, _) {
     console.log(dataType);
     if (dataType === 'teaching-modules') {
       filterCollection = App.request("get:content:modules:repository");
+    } else if (dataType === 'student-training') {
+      filterCollection = App.request("get:student:training:modules:repository");
     } else if (dataType === 'quiz') {
       filterCollection = App.request("get:quiz:repository");
     } else {

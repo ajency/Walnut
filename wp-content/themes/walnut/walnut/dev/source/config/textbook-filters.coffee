@@ -179,6 +179,9 @@ define ['jquery', 'underscore'], ($, _)->
         
         if dataType is 'teaching-modules'
             filterCollection = App.request "get:content:modules:repository"
+			
+        else if dataType is 'student-training'
+            filterCollection = App.request "get:student:training:modules:repository"
 
         else if dataType is 'quiz'
             filterCollection = App.request "get:quiz:repository"

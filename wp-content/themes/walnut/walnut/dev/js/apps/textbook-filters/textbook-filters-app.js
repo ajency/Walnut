@@ -148,6 +148,8 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
               }
               if (_this.dataType === 'teaching-modules') {
                 newContent = App.request("get:content:groups", data);
+              } else if (_this.dataType === 'student-training') {
+                newContent = App.request("get:student:training:modules", data);
               } else if (_this.dataType === 'quiz') {
                 newContent = App.request("get:quizes", data);
               } else {

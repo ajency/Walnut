@@ -1,9 +1,12 @@
-define ['app'
+define ['app',
+		'apps/student-training-module/edit-module/module-edit-controller'
+        'apps/content-modules/modules-listing/app'
+		
 ], (App)->
-	App.module "ContentModulesApp", (ContentModulesApp, App)->
+	App.module "StudentTrainingApp", (StudentTrainingApp, App)->
 
 		#startWithParent = false
-		class ContentModulesRouter extends Marionette.AppRouter
+		class StudentTrainingRouter extends Marionette.AppRouter
 
 			appRoutes:
 				'add-student-training-module': 'addStudentModule'
@@ -14,18 +17,20 @@ define ['app'
 
 		Controller =
 			addStudentModule: ->
-				console.log 'add student module'
 				if $.allowRoute 'add-module'
-					App.execute 'show:edit:module:controller',
+					App.execute 'show:student:training:edit:module:controller',
 						region : App.mainContentRegion
-						groupType : 'teaching-module'
 
 			editStudentModule:(id) ->
 
 			viewStudentModule:(id)->
 
 			listStudentModules:->
+				if $.allowRoute 'module-list'
+					App.execute "show:module:listing:app",
+						region: App.mainContentRegion
+						groupType : 'student-training'
 
-		ContentModulesApp.on "start", ->
-			new  ContentModulesRouter
+		StudentTrainingApp.on "start", ->
+			new StudentTrainingRouter
 				controller: Controller
