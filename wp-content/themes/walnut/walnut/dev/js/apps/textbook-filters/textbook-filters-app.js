@@ -131,7 +131,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             _this.listenTo(_this.view, "fetch:chapters:or:sections", _this.fetchSectionOrSubsection);
             _this.listenTo(_this.view, "fetch:new:content", function(textbook_id, post_status) {
               var division, newContent;
-              console.log(post_status);
               if (!post_status) {
                 post_status = _this.post_status;
               }

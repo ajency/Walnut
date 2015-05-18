@@ -50,6 +50,10 @@ define ['app'
                     data.view_url = SITEURL + "/#view-quiz/#{data.id}"
                     data.edit_url = SITEURL + "/#edit-quiz/#{data.id}"
 
+                if @groupType is 'student-training'
+                    data.view_url = SITEURL + "/#view-student-training-module/#{data.id}"
+                    data.edit_url = SITEURL + "/#edit-student-training-module/#{data.id}"
+					
 
                 data.statusMessage = ->
                     if data.post_status is 'underreview'

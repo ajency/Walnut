@@ -174,8 +174,6 @@ define ['jquery', 'underscore'], ($, _)->
 
     $.filterTableByTextbooks = (_this, dataType)->
         filter_elements= _this.$el.find('select.textbook-filter')
-
-        console.log dataType
         
         if dataType is 'teaching-modules'
             filterCollection = App.request "get:content:modules:repository"

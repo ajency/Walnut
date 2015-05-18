@@ -6,9 +6,9 @@ define ['app'
 		class Edit.GroupController extends RegionController
 
 			initialize : (options) ->
-				{@group_id,@groupType} = options
+				{@id,@groupType} = options
 				@studentTrainingCollection = null
-				@studentTrainingModel = App.request "new:student:training:module"
+				@studentTrainingModel = if @id then App.request "get:student:training:by:id", @id else App.request "new:student:training:module"				
 				@studentTrainingModel.set 'type', 'student_training'
 
 				App.execute "when:fetched", @studentTrainingModel, =>
@@ -30,11 +30,11 @@ define ['app'
 					]
 
 				App.execute "update:breadcrumb:model", breadcrumb_items
-				@layout =  @_getContentGroupEditLayout()
+				@layout =  @_getModuleEditLayout()
 
 				@listenTo @layout, 'show', =>
 					@showGroupDetailsApp()
-	#                    if @group_id
+	#                    if @id
 	#                        @_showContentSelectionApp @studentTrainingModel
 
 				#@listenTo @studentTrainingModel, 'change:id', @_showContentSelectionApp, @
@@ -51,8 +51,8 @@ define ['app'
 					model : @studentTrainingModel
 					studentTrainingCollection: @studentTrainingCollection
 
-			_getContentGroupEditLayout : =>
-				new Edit.Views.ContentGroupEditLayout
+			_getModuleEditLayout : =>
+				new Edit.Views.EditLayout
 
 			_showContentSelectionApp : (model)=>
 

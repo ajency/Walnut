@@ -27,8 +27,6 @@ define ['app'
 							term_id =
 								id : $(ele).val()
 								text : $(ele).find(':selected').text()
-	#                        console.log ele.id
-	#                        console.log term_id
 
 				@selectedFilterParamsObject.setHandler "get:parameters:for:search", =>
 
@@ -97,8 +95,6 @@ define ['app'
 
 					@listenTo @view, "fetch:chapters:or:sections", @fetchSectionOrSubsection
 					@listenTo @view, "fetch:new:content", (textbook_id, post_status)=>
-
-						console.log post_status
 
 						post_status = @post_status if not post_status  
 

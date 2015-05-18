@@ -22,6 +22,10 @@ define ['app',
 						region : App.mainContentRegion
 
 			editStudentModule:(id) ->
+				if $.allowRoute 'edit-module'
+					App.execute 'show:student:training:edit:module:controller',
+						region	: App.mainContentRegion
+						id		: id
 
 			viewStudentModule:(id)->
 

@@ -92,7 +92,6 @@ define ['app'], (App)->
 
                 'change .filters' :(e)->
                     if e.target.id isnt 'divisions-filter'
-                        console.log e.target.id
                         @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change .content-type-filter' : (e)->

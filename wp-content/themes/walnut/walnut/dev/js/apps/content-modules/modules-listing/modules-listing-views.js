@@ -57,6 +57,10 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           data.view_url = SITEURL + ("/#view-quiz/" + data.id);
           data.edit_url = SITEURL + ("/#edit-quiz/" + data.id);
         }
+        if (this.groupType === 'student-training') {
+          data.view_url = SITEURL + ("/#view-student-training-module/" + data.id);
+          data.edit_url = SITEURL + ("/#edit-student-training-module/" + data.id);
+        }
         data.statusMessage = function() {
           if (data.post_status === 'underreview') {
             return '<span class="label label-important">Under Review</span>';

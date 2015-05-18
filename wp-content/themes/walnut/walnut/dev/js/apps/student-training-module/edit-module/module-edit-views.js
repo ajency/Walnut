@@ -2,26 +2,26 @@ var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app'], function(App) {
-  return App.module('ContentModulesApp.Edit.Views', function(Views, App) {
+  return App.module('StudentTrainingApp.Edit.Views', function(Views, App) {
     var NotEditView;
-    Views.ContentGroupEditLayout = (function(_super) {
-      __extends(ContentGroupEditLayout, _super);
+    Views.EditLayout = (function(_super) {
+      __extends(EditLayout, _super);
 
-      function ContentGroupEditLayout() {
-        return ContentGroupEditLayout.__super__.constructor.apply(this, arguments);
+      function EditLayout() {
+        return EditLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupEditLayout.prototype.template = '<div class="teacher-app" id="teacher-app"> <div id="collection-details-region"></div> <div id="content-selection-region"></div> </div> <div id="content-display-region"></div>';
+      EditLayout.prototype.template = '<div class="teacher-app" id="teacher-app"> <div id="collection-details-region"></div> <div id="content-selection-region"></div> </div> <div id="content-display-region"></div>';
 
-      ContentGroupEditLayout.prototype.className = '';
+      EditLayout.prototype.className = '';
 
-      ContentGroupEditLayout.prototype.regions = {
+      EditLayout.prototype.regions = {
         collectionDetailsRegion: '#collection-details-region',
         contentSelectionRegion: '#content-selection-region',
         contentDisplayRegion: '#content-display-region'
       };
 
-      return ContentGroupEditLayout;
+      return EditLayout;
 
     })(Marionette.Layout);
     return NotEditView = (function(_super) {

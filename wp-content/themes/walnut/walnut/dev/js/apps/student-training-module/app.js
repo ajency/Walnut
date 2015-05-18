@@ -29,7 +29,14 @@ define(['app', 'apps/student-training-module/edit-module/module-edit-controller'
           });
         }
       },
-      editStudentModule: function(id) {},
+      editStudentModule: function(id) {
+        if ($.allowRoute('edit-module')) {
+          return App.execute('show:student:training:edit:module:controller', {
+            region: App.mainContentRegion,
+            id: id
+          });
+        }
+      },
       viewStudentModule: function(id) {},
       listStudentModules: function() {
         if ($.allowRoute('module-list')) {

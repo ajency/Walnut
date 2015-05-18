@@ -9,16 +9,16 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
 
       function GroupController() {
         this._showContentSelectionApp = __bind(this._showContentSelectionApp, this);
-        this._getContentGroupEditLayout = __bind(this._getContentGroupEditLayout, this);
+        this._getModuleEditLayout = __bind(this._getModuleEditLayout, this);
         this.showGroupDetailsApp = __bind(this.showGroupDetailsApp, this);
         this._getContentGroupCollection = __bind(this._getContentGroupCollection, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
       GroupController.prototype.initialize = function(options) {
-        this.group_id = options.group_id, this.groupType = options.groupType;
+        this.id = options.id, this.groupType = options.groupType;
         this.studentTrainingCollection = null;
-        this.studentTrainingModel = App.request("new:student:training:module");
+        this.studentTrainingModel = this.id ? App.request("get:student:training:by:id", this.id) : App.request("new:student:training:module");
         this.studentTrainingModel.set('type', 'student_training');
         return App.execute("when:fetched", this.studentTrainingModel, (function(_this) {
           return function() {
@@ -53,7 +53,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        this.layout = this._getContentGroupEditLayout();
+        this.layout = this._getModuleEditLayout();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
             return _this.showGroupDetailsApp();
@@ -78,8 +78,8 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
         });
       };
 
-      GroupController.prototype._getContentGroupEditLayout = function() {
-        return new Edit.Views.ContentGroupEditLayout;
+      GroupController.prototype._getModuleEditLayout = function() {
+        return new Edit.Views.EditLayout;
       };
 
       GroupController.prototype._showContentSelectionApp = function(model) {

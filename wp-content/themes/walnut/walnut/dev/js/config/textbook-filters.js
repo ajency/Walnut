@@ -177,7 +177,6 @@ define(['jquery', 'underscore'], function($, _) {
   return $.filterTableByTextbooks = function(_this, dataType) {
     var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type;
     filter_elements = _this.$el.find('select.textbook-filter');
-    console.log(dataType);
     if (dataType === 'teaching-modules') {
       filterCollection = App.request("get:content:modules:repository");
     } else if (dataType === 'student-training') {

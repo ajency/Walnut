@@ -1,7 +1,7 @@
 define ['app'],(App)->
-    App.module 'ContentModulesApp.Edit.Views',(Views,App)->
+    App.module 'StudentTrainingApp.Edit.Views',(Views,App)->
 
-        class Views.ContentGroupEditLayout extends Marionette.Layout
+        class Views.EditLayout extends Marionette.Layout
 
             template : '<div class="teacher-app" id="teacher-app">
                                                   <div id="collection-details-region"></div>
