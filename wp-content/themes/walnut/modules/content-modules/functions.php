@@ -264,6 +264,9 @@ function get_single_content_module($id, $division='', $user_id=0){
             if ($value->meta_key=='content_pieces' )
                 $data->content_pieces= $meta_val;
 
+            if ($value->meta_key=='content_layout' )
+                $data->content_layout= $meta_val;
+
         }
     }
 

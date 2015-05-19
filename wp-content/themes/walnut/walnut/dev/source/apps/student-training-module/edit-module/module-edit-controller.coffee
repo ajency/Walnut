@@ -7,19 +7,26 @@ define ['app'
 
 			initialize : (options) ->
 				{@id,@groupType} = options
-				@studentTrainingCollection = null
+				@contentLayoutItems = null
 				@studentTrainingModel = if @id then App.request "get:student:training:by:id", @id else App.request "new:student:training:module"				
 				@studentTrainingModel.set 'type', 'student_training'
 
 				App.execute "when:fetched", @studentTrainingModel, =>
-					@studentTrainingCollection = @_getContentGroupCollection()
+					@contentLayoutItems = @_getContentGroupCollection()
 
-					App.execute "when:fetched", @studentTrainingCollection, =>
+					App.execute "when:fetched", @contentLayoutItems, =>
 						@showContentGroupView()
 
 			_getContentGroupCollection:=>
-				@studentTrainingCollection = App.request "get:content:pieces:of:group", @studentTrainingModel
-				@studentTrainingCollection
+				@contentLayoutItems = new Backbone.Collection
+
+				_.each @studentTrainingModel.get('content_layout'),(content)=>
+					if content.type is 'content-piece'
+						itemModel = App.request "get:content:piece:by:id",content.id
+					else
+						itemModel = App.request "get:quiz:by:id",content.id
+					@contentLayoutItems.add itemModel
+				@contentLayoutItems
 
 			showContentGroupView : ->
 				breadcrumb_items =
@@ -34,10 +41,9 @@ define ['app'
 
 				@listenTo @layout, 'show', =>
 					@showGroupDetailsApp()
-	#                    if @id
-	#                        @_showContentSelectionApp @studentTrainingModel
+					@_showContentSelectionApp @studentTrainingModel if @id
 
-				#@listenTo @studentTrainingModel, 'change:id', @_showContentSelectionApp, @
+				@listenTo @studentTrainingModel, 'change:id', @_showContentSelectionApp, @
 
 				@listenTo @layout.collectionDetailsRegion, 'close:content:selection:app', =>
 					console.log 'close:content:selection:app '
@@ -49,24 +55,24 @@ define ['app'
 				App.execute "show:student:training:edit:description",
 					region : @layout.collectionDetailsRegion
 					model : @studentTrainingModel
-					studentTrainingCollection: @studentTrainingCollection
+					contentGroupCollection: @contentLayoutItems
 
 			_getModuleEditLayout : =>
 				new Edit.Views.EditLayout
 
 			_showContentSelectionApp : (model)=>
 
-				App.execute "when:fetched", @studentTrainingCollection, =>
+				App.execute "when:fetched", @contentLayoutItems, =>
 					if model.get('post_status') is 'underreview'
 						App.execute "show:content:selectionapp",
 							region : @layout.contentSelectionRegion
 							model : model
-							studentTrainingCollection : @studentTrainingCollection
+							contentGroupCollection : @contentLayoutItems
 
 					App.execute "show:editgroup:content:displayapp",
 						region : @layout.contentDisplayRegion
 						model : model
-						studentTrainingCollection : @studentTrainingCollection
+						contentGroupCollection : @contentLayoutItems
 
 
 		App.commands.setHandler 'show:student:training:edit:module:controller',(opts)->

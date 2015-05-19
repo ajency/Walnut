@@ -2,315 +2,304 @@ define ['app'
         'text!apps/student-training-module/edit-module/module-description/templates/collection-details.html'
 ],(App,collectionDetailsTpl)->
 
-    App.module 'StudentTrainingEditDescription.Views',(Views,App)->
+	App.module 'StudentTrainingEditDescription.Views',(Views,App)->
 
-        class Views.CollectionDetailsView extends Marionette.ItemView
+		class Views.CollectionDetailsView extends Marionette.ItemView
 
-            template : collectionDetailsTpl
+			template : collectionDetailsTpl
 
-            className : 'grid simple vertical green animated fadeIn'
+			className : 'grid simple vertical green animated fadeIn'
 
-            events :
-                'change #textbooks' : (e)->
-                    @trigger "fetch:chapters", $(e.target).val()
+			events :
+				'change #textbooks' : (e)->
+					@trigger "fetch:chapters", $(e.target).val()
 
-                'change #chapters' : (e)->
-                    @trigger "fetch:sections", $(e.target).val()
+				'change #chapters' : (e)->
+					@trigger "fetch:sections", $(e.target).val()
 
-                'change #secs' : (e)->
-                    @trigger "fetch:subsections", $(e.target).val()
+				'change #secs' : (e)->
+					@trigger "fetch:subsections", $(e.target).val()
 
-                'click #save-content-collection' : 'save_content'
-                'click .customMsgLink' : '_openCustomMsgPopup'
+				'click #save-content-collection' : 'save_content'
+				'click .customMsgLink' : '_openCustomMsgPopup'
 
-                'change input[name="negMarksEnable"]' : (e)->
-                    e.stopPropagation()
-                    @_toggleNegativeMarks $(e.target)
-                'change #msgs' : (e)->
-                    @_showCustomMessages $(e.target)
+				'change input[name="negMarksEnable"]' : (e)->
+					e.stopPropagation()
+					@_toggleNegativeMarks $(e.target)
+				'change #msgs' : (e)->
+					@_showCustomMessages $(e.target)
 
-                'click .checkbox.perm' : 'permissionSelected'
+				'click .checkbox.perm' : 'permissionSelected'
 
-            modelEvents :
-                'change:post_status' : 'statusChanged'
-                'change:content_layout' : '_changeLayout'
+			modelEvents :
+				'change:post_status' : 'statusChanged'
+				'change:content_layout' : '_changeLayout'
 
-            mixinTemplateHelpers : (data)->
-                data = super data
+			mixinTemplateHelpers : (data)->
+				data = super data
 
-                data.heading = if @model.isNew() then 'Create a' else 'Edit a'
+				data.heading = if @model.isNew() then 'Create a' else 'Edit a'
 
-                data.isModule = true if data.type is 'teaching-module'
+				data.type = _.titleize _.humanize data.type
 
-                data.isQuiz = true if data.type is 'quiz'
+				if data.isQuiz and data.permissions
+					#display value is allow_skip which is opposite of single_attempt so the value is negated and shown
+					data.permissions['single_attempt'] = ! data.permissions['single_attempt'] 
 
-                data.type = _.titleize _.humanize data.type
+				# add status values
 
-                if data.isQuiz and data.permissions
-                    #display value is allow_skip which is opposite of single_attempt so the value is negated and shown
-                    data.permissions['single_attempt'] = ! data.permissions['single_attempt'] 
+				data.textBookSelected = ->
+					return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
-                # add status values
+				data.defaultRandomize = =>
+					return 'checked="checked"' if data.isQuiz and @model.isNew()
 
-                data.textBookSelected = ->
-                    return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
+				data
 
-                data.defaultRandomize = =>
-                    return 'checked="checked"' if data.isQuiz and @model.isNew()
+			permissionSelected:(e)=>
+				permName= $(e.target)
+				.closest '.checkbox.perm' 
+				.find 'input' 
+				.attr 'id'
 
-                data
+				switch permName
+					when 'resubmit' then @unSelectCheckbox 'answer'
 
-            permissionSelected:(e)=>
-                permName= $(e.target)
-                .closest '.checkbox.perm' 
-                .find 'input' 
-                .attr 'id'
+					when 'answer' then @unSelectCheckbox 'resubmit'
 
-                switch permName
-                    when 'resubmit' then @unSelectCheckbox 'answer'
+			unSelectCheckbox:(checkboxID)->
+				@$el.find 'input#'+checkboxID
+				.attr 'checked', false
 
-                    when 'answer' then @unSelectCheckbox 'resubmit'
 
-            unSelectCheckbox:(checkboxID)->
-                @$el.find 'input#'+checkboxID
-                .attr 'checked', false
 
+			onShow : ->
+				Backbone.Syphon.deserialize @, @model.toJSON()
 
+				@$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
-            onShow : ->
-                Backbone.Syphon.deserialize @, @model.toJSON()
+				if @model.get('type') is 'quiz'
 
-                @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
+					@_toggleNegativeMarks @$el.find 'input[name="negMarksEnable"]:checked'
 
-                if @model.get('type') is 'quiz'
+				@$el.find('select:not(#qType,#status)').select2()
 
-                    @_toggleNegativeMarks @$el.find 'input[name="negMarksEnable"]:checked'
+				#Multi Select
+				@$el.find("#secs,#subsecs").val([]).select2()
 
-                @$el.find('select:not(#qType,#status)').select2()
+				if @model.isNew()
 
-                #Multi Select
-                @$el.find("#secs,#subsecs").val([]).select2()
+					@$el.find 'select#status option[value="publish"]'
+					.prop 'disabled', true
 
-                if @model.isNew()
+					@$el.find 'select#status option[value="archive"]'
+					.prop 'disabled', true
 
-                    @$el.find 'select#status option[value="publish"]'
-                    .prop 'disabled', true
 
-                    @$el.find 'select#status option[value="archive"]'
-                    .prop 'disabled', true
+				@statusChanged()
+				@_changeLayout() if @model.get('type') is 'quiz'
 
+			statusChanged : ->
+				if @model.get('post_status') in ['publish', 'archive']
+					@$el.find 'input, textarea, select'
+					.prop 'disabled', true
 
-                @statusChanged()
-                @_changeLayout() if @model.get('type') is 'quiz'
+					@$el.find 'select#status'
+					.prop 'disabled', false
 
-            statusChanged : ->
-                if @model.get('post_status') in ['publish', 'archive']
-                    @$el.find 'input, textarea, select'
-                    .prop 'disabled', true
+					@$el.find 'select#status option[value="underreview"]'
+					.prop 'disabled', true
 
-                    @$el.find 'select#status'
-                    .prop 'disabled', false
+			onFetchChaptersComplete : (chapters)->
 
-                    @$el.find 'select#status option[value="underreview"]'
-                    .prop 'disabled', true
+				@$el.find '#chapters, #secs, #subsecs'
+				.select2 'data', null
 
-            onFetchChaptersComplete : (chapters)->
+				@$el.find '#chapters, #secs, #subsecs'
+				.html ''
 
-                @$el.find '#chapters, #secs, #subsecs'
-                .select2 'data', null
+				chapterElement= @$el.find '#chapters'
+				termIDs= @model.get 'term_ids'
+				currentChapter= termIDs['chapter']
 
-                @$el.find '#chapters, #secs, #subsecs'
-                .html ''
+				$.populateChaptersOrSections(chapters,chapterElement, currentChapter);
 
-                chapterElement= @$el.find '#chapters'
-                termIDs= @model.get 'term_ids'
-                currentChapter= termIDs['chapter']
+			setChapterValue : ->
+				if @model.get('term_ids')['chapter']
+					@$el.find('#chapters').val @model.get('term_ids')['chapter']
+					@$el.find('#chapters').select2()
+					@$el.find('#chapters').trigger 'change'
 
-                $.populateChaptersOrSections(chapters,chapterElement, currentChapter);
+			onFetchSectionsComplete : (sections)->
 
-            setChapterValue : ->
-                if @model.get('term_ids')['chapter']
-                    @$el.find('#chapters').val @model.get('term_ids')['chapter']
-                    @$el.find('#chapters').select2()
-                    @$el.find('#chapters').trigger 'change'
+				@$el.find '#secs, #subsecs'
+				.select2 'data', null
 
-            onFetchSectionsComplete : (sections)->
+				@$el.find '#secs, #subsecs'
+				.html ''
 
-                @$el.find '#secs, #subsecs'
-                .select2 'data', null
+				term_ids= @model.get 'term_ids'
 
-                @$el.find '#secs, #subsecs'
-                .html ''
+				sectionIDs = term_ids['sections'] if term_ids?
 
-                term_ids= @model.get 'term_ids'
+				sectionsElement     = @$el.find '#secs'
 
-                sectionIDs = term_ids['sections'] if term_ids?
+				$.populateChaptersOrSections(sections,sectionsElement, sectionIDs);
 
-                sectionsElement     = @$el.find '#secs'
+			onFetchSubsectionsComplete : (subsections)->
 
-                $.populateChaptersOrSections(sections,sectionsElement, sectionIDs);
+				@$el.find '#subsecs'
+				.select2 'data', null
 
-            onFetchSubsectionsComplete : (subsections)->
+				@$el.find '#subsecs'
+				.html ''
 
-                @$el.find '#subsecs'
-                .select2 'data', null
+				term_ids= @model.get 'term_ids'
 
-                @$el.find '#subsecs'
-                .html ''
+				subSectionIDs = term_ids['subsections'] if term_ids?
 
-                term_ids= @model.get 'term_ids'
+				subsectionsElemnet  = @$el.find '#subsecs'
+				$.populateChaptersOrSections(subsections,subsectionsElemnet, subSectionIDs);
 
-                subSectionIDs = term_ids['subsections'] if term_ids?
+			markSelected : (element, sections)->
+				return '' if @model.isNew()
+				$("#" + element).val(@model.get('term_ids')[sections]).select2()
 
-                subsectionsElemnet  = @$el.find '#subsecs'
-                $.populateChaptersOrSections(subsections,subsectionsElemnet, subSectionIDs);
 
-            markSelected : (element, sections)->
-                return '' if @model.isNew()
-                $("#" + element).val(@model.get('term_ids')[sections]).select2()
+			save_content : (e)->
 
+				@$el.find('#saved-success').remove();
+				e.preventDefault()
 
-            save_content : (e)->
+				$('#s2id_textbooks .select2-choice,#s2id_chapters .select2-choice')
+				.removeClass 'error'
 
-                @$el.find('#saved-success').remove();
-                e.preventDefault()
+				required_fields = true
 
-                $('#s2id_textbooks .select2-choice,#s2id_chapters .select2-choice')
-                .removeClass 'error'
+				if _.isEmpty @$el.find('#textbooks').val()
+					$('#s2id_textbooks .select2-choice')
+					.addClass 'error'
 
-                required_fields = true
+					required_fields= false
 
-                if _.isEmpty @$el.find('#textbooks').val()
-                    $('#s2id_textbooks .select2-choice')
-                    .addClass 'error'
+				if _.isEmpty @$el.find('#chapters').val()
+					$('#s2id_chapters .select2-choice')
+					.addClass 'error'
 
-                    required_fields= false
+					required_fields= false
 
-                if _.isEmpty @$el.find('#chapters').val()
-                    $('#s2id_chapters .select2-choice')
-                    .addClass 'error'
 
-                    required_fields= false
-                
+				if @$el.find('form').valid() and required_fields
 
-                if @$el.find('form').valid() and required_fields
+					@$el.find '#save-content-collection i'
+					.addClass 'fa-spin fa-spinner'
 
-                    @$el.find '#save-content-collection i'
-                    .addClass 'fa-spin fa-spinner'
+					data = Backbone.Syphon.serialize (@)
+					#data.term_ids= _.compact(data.term_ids)
 
-                    data = Backbone.Syphon.serialize (@)
-                    #data.term_ids= _.compact(data.term_ids)
+					if @model.get('type') is 'quiz'
+						single_attempt=data.permissions['single_attempt']
 
-                    if @model.get('type') is 'quiz'
-                        single_attempt=data.permissions['single_attempt']
+						#display value is allow_skip which is opposite of single_attempt so the value is negated and saved
+						data.permissions['single_attempt'] = !single_attempt
 
-                        #display value is allow_skip which is opposite of single_attempt so the value is negated and saved
-                        data.permissions['single_attempt'] = !single_attempt
+						data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
 
-                        data.negMarks = 0 if data.negMarksEnable is 'true' and data.negMarks is '' and @model.get('type') is 'quiz'
+					if data.post_status is 'publish'
+						if @model.get('type') is 'quiz' and _.isEmpty @model.get 'content_layout'
+							@_cannotPublish()
+							return false
 
-                    if data.post_status is 'publish'
-                        if @model.get('type') is 'quiz' and _.isEmpty @model.get 'content_layout'
-                            @_cannotPublish()
-                            return false
+						if @model.get('type') is 'teaching-module' and _.isEmpty @model.get 'content_pieces'
+							@_cannotPublish()
+							return false
 
-                        if @model.get('type') is 'teaching-module' and _.isEmpty @model.get 'content_pieces'
-                            @_cannotPublish()
-                            return false
+					@trigger "save:content:collection:details", data
 
-                    @trigger "save:content:collection:details", data
+			_cannotPublish:->
 
-            _cannotPublish:->
+				item = if @model.get('type') is 'quiz' then 'questions' else 'Content Pieces'
 
-                item = if @model.get('type') is 'quiz' then 'questions' else 'Content Pieces'
+				module = _.titleize _.humanize @model.get 'type'
 
-                module = _.titleize _.humanize @model.get 'type'
+				@$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
+						Cannot Publish '+module+'. No '+item+' Added.
+					</div>'
 
-                @$el.find('.grid-title').prepend '<div id="saved-success" class="text-error">
-                        Cannot Publish '+module+'. No '+item+' Added.
-                    </div>'
+				$("html, body").animate scrollTop: 0 , 700
 
-                $("html, body").animate scrollTop: 0 , 700
+				@$el.find '#save-content-collection i'
+				.removeClass 'fa-spin fa-spinner'
 
-                @$el.find '#save-content-collection i'
-                .removeClass 'fa-spin fa-spinner'
+			_toggleNegativeMarks : (el)->
 
-            _toggleNegativeMarks : (el)->
+					if $(el).val() is 'true'
+						@$el.find("#negPercent").removeClass("none").addClass "inline"
+					else
+						@$el.find("#negPercent").addClass("none").removeClass "inline"
 
-                    if $(el).val() is 'true'
-                        @$el.find("#negPercent").removeClass("none").addClass "inline"
-                    else
-                        @$el.find("#negPercent").addClass("none").removeClass "inline"
+			_openCustomMsgPopup : (e)->
+				e.stopPropagation()
+				@trigger 'show:custom:msg:popup',
+					slug : $(e.target).closest('.customMsgLink').attr 'data-slug'
 
-            _openCustomMsgPopup : (e)->
-                e.stopPropagation()
-                @trigger 'show:custom:msg:popup',
-                    slug : $(e.target).closest('.customMsgLink').attr 'data-slug'
 
+			_changeLayout : ->
 
-            _changeLayout : ->
+#				contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
+#
+#				totalQuestions = 0
+#				_.each @model.get('content_layout'),(content)=>
+#					if content.type is 'content-piece'
+#						totalQuestions += 1
+#					else
+#						totalQuestions += parseInt content.data.lvl1
+#						totalQuestions += parseInt content.data.lvl2
+#						totalQuestions += parseInt content.data.lvl3
+#				@$el.find('#total-question-number').val totalQuestions
+#
+#				marks=0
+#				time=0
+#
+#				contentGroupCollection.each (m)->
+#					if m.get('post_type') is 'content_set'
+#
+#						if m.get 'avg_marks'
+#							marks+= parseInt m.get 'avg_marks'
+#
+#						if m.get 'avg_duration'
+#							time += parseInt m.get 'avg_duration'
+#
+#					else
+#						if m.get 'marks'
+#							marks+= parseInt m.get 'marks'
+#
+#						if m.get 'duration'
+#							time += parseInt m.get 'duration'
+#
+#				@$el.find('#total-marks').val marks
+#				@$el.find('#total-time').val time
 
-                contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
-                totalQuestions = 0
-                _.each @model.get('content_layout'),(content)=>
-                    if content.type is 'content-piece'
-                        totalQuestions += 1
-                    else
-                        totalQuestions += parseInt content.data.lvl1
-                        totalQuestions += parseInt content.data.lvl2
-                        totalQuestions += parseInt content.data.lvl3
-                @$el.find('#total-question-number').val totalQuestions
+			onSavedContentGroup : (model) ->
+				@$el.find('#saved-success').remove();
 
-                marks=0
-                time=0
+				@$el.find 'select#status option'
+				.prop 'disabled', false
 
-                contentGroupCollection.each (m)->
-                    if m.get('post_type') is 'content_set'
+				if @model.get('post_status') in ['publish', 'archive']
+					@$el.find 'select#status option[value="underreview"]'
+					.prop 'disabled', true
 
-                        if m.get 'avg_marks'
-                            marks+= parseInt m.get 'avg_marks'
+				@$el.find '#save-content-collection i'
+				.removeClass 'fa-spin fa-spinner' 
+				.addClass 'fa-check'
 
-                        if m.get 'avg_duration'
-                            time += parseInt m.get 'avg_duration'
+				attrs= model.changedAttributes()
 
-                    else
-                        if m.get 'marks'
-                            marks+= parseInt m.get 'marks'
+				msg= if attrs.id then 'saved' else 'updated'
 
-                        if m.get 'duration'
-                            time += parseInt m.get 'duration'
+				@$el.find('.grid-title').prepend '<div id="saved-success">Student training module '+msg+'. Click here
+						to <a href="#view-student-training-module/' + model.get('id') + '">view module.</a><hr></div>'
 
-                @$el.find('#total-marks').val marks
-                @$el.find('#total-time').val time
-
-
-            onSavedContentGroup : (model) ->
-                @$el.find('#saved-success').remove();
-
-                @$el.find 'select#status option'
-                .prop 'disabled', false
-
-                if @model.get('post_status') in ['publish', 'archive']
-                    @$el.find 'select#status option[value="underreview"]'
-                    .prop 'disabled', true
-
-                @$el.find '#save-content-collection i'
-                .removeClass 'fa-spin fa-spinner' 
-                .addClass 'fa-check'
-
-                attrs= model.changedAttributes()
-
-                msg= if attrs.id then 'saved' else 'updated'
-
-                if model.get('type') is 'teaching-module'
-                    @$el.find('.grid-title').prepend '<div id="saved-success">Training module '+msg+'.
-                        Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>'
-
-                if model.get('type') is 'quiz'
-                    @$el.find('.grid-title').prepend '<div id="saved-success">Quiz '+msg+'. Click here
-                        to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>'
-
-
-                $("html, body").animate({ scrollTop: 0 }, 700);
-
+				$("html, body").animate({ scrollTop: 0 }, 700);

@@ -17,13 +17,13 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
 
       GroupController.prototype.initialize = function(options) {
         this.id = options.id, this.groupType = options.groupType;
-        this.studentTrainingCollection = null;
+        this.contentLayoutItems = null;
         this.studentTrainingModel = this.id ? App.request("get:student:training:by:id", this.id) : App.request("new:student:training:module");
         this.studentTrainingModel.set('type', 'student_training');
         return App.execute("when:fetched", this.studentTrainingModel, (function(_this) {
           return function() {
-            _this.studentTrainingCollection = _this._getContentGroupCollection();
-            return App.execute("when:fetched", _this.studentTrainingCollection, function() {
+            _this.contentLayoutItems = _this._getContentGroupCollection();
+            return App.execute("when:fetched", _this.contentLayoutItems, function() {
               return _this.showContentGroupView();
             });
           };
@@ -31,8 +31,19 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
       };
 
       GroupController.prototype._getContentGroupCollection = function() {
-        this.studentTrainingCollection = App.request("get:content:pieces:of:group", this.studentTrainingModel);
-        return this.studentTrainingCollection;
+        this.contentLayoutItems = new Backbone.Collection;
+        _.each(this.studentTrainingModel.get('content_layout'), (function(_this) {
+          return function(content) {
+            var itemModel;
+            if (content.type === 'content-piece') {
+              itemModel = App.request("get:content:piece:by:id", content.id);
+            } else {
+              itemModel = App.request("get:quiz:by:id", content.id);
+            }
+            return _this.contentLayoutItems.add(itemModel);
+          };
+        })(this));
+        return this.contentLayoutItems;
       };
 
       GroupController.prototype.showContentGroupView = function() {
@@ -56,9 +67,13 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
         this.layout = this._getModuleEditLayout();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            return _this.showGroupDetailsApp();
+            _this.showGroupDetailsApp();
+            if (_this.id) {
+              return _this._showContentSelectionApp(_this.studentTrainingModel);
+            }
           };
         })(this));
+        this.listenTo(this.studentTrainingModel, 'change:id', this._showContentSelectionApp, this);
         this.listenTo(this.layout.collectionDetailsRegion, 'close:content:selection:app', (function(_this) {
           return function() {
             console.log('close:content:selection:app ');
@@ -74,7 +89,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
         return App.execute("show:student:training:edit:description", {
           region: this.layout.collectionDetailsRegion,
           model: this.studentTrainingModel,
-          studentTrainingCollection: this.studentTrainingCollection
+          contentGroupCollection: this.contentLayoutItems
         });
       };
 
@@ -83,19 +98,19 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
       };
 
       GroupController.prototype._showContentSelectionApp = function(model) {
-        return App.execute("when:fetched", this.studentTrainingCollection, (function(_this) {
+        return App.execute("when:fetched", this.contentLayoutItems, (function(_this) {
           return function() {
             if (model.get('post_status') === 'underreview') {
               App.execute("show:content:selectionapp", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,
-                studentTrainingCollection: _this.studentTrainingCollection
+                contentGroupCollection: _this.contentLayoutItems
               });
             }
             return App.execute("show:editgroup:content:displayapp", {
               region: _this.layout.contentDisplayRegion,
               model: model,
-              studentTrainingCollection: _this.studentTrainingCollection
+              contentGroupCollection: _this.contentLayoutItems
             });
           };
         })(this));

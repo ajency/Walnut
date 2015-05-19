@@ -157,10 +157,12 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
         $content_meta= get_post_meta($id,'content_piece_meta',true);
 
         $content_meta= maybe_unserialize($content_meta);
-
-        $excerpts[] = $content_meta['post_tags'];
-
-        $excerpts[] = $content_meta['instructions'];
+        
+        if(isset($content_meta['post_tags'])) 
+            $excerpts[] = $content_meta['post_tags'];
+        
+        if(isset($content_meta['instructions'])) 
+            $excerpts[] = $content_meta['instructions'];
 
         $excerpts = __u::flatten($excerpts);
 

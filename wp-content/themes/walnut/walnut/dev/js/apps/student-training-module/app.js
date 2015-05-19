@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'apps/student-training-module/edit-module/module-edit-controller', 'apps/content-modules/modules-listing/app'], function(App) {
+define(['app', 'apps/student-training-module/edit-module/module-edit-controller', 'apps/student-training-module/view-module/single-module-controller', 'apps/content-modules/modules-listing/app'], function(App) {
   return App.module("StudentTrainingApp", function(StudentTrainingApp, App) {
     var Controller, StudentTrainingRouter;
     StudentTrainingRouter = (function(_super) {
@@ -37,7 +37,30 @@ define(['app', 'apps/student-training-module/edit-module/module-edit-controller'
           });
         }
       },
-      viewStudentModule: function(id) {},
+      viewStudentModule: function(id) {
+        var breadcrumb_items;
+        this.studentTrainingModel = App.request("get:student:training:by:id", id);
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript:;'
+            }, {
+              'label': 'View Student Training Module',
+              'link': 'javascript:;',
+              'active': 'active'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
+        return App.execute("show:student:training:module", {
+          region: App.mainContentRegion,
+          model: this.studentTrainingModel
+        });
+      },
       listStudentModules: function() {
         if ($.allowRoute('module-list')) {
           return App.execute("show:module:listing:app", {

@@ -1,5 +1,6 @@
 define ['app',
 		'apps/student-training-module/edit-module/module-edit-controller'
+		'apps/student-training-module/view-module/single-module-controller'
         'apps/content-modules/modules-listing/app'
 		
 ], (App)->
@@ -28,7 +29,21 @@ define ['app',
 						id		: id
 
 			viewStudentModule:(id)->
+				@studentTrainingModel = App.request "get:student:training:by:id", id
 
+				breadcrumb_items =
+					'items': [
+						{'label': 'Dashboard', 'link': 'javascript://'},
+						{'label': 'Content Management', 'link': 'javascript:;'},
+						{'label': 'View Student Training Module', 'link': 'javascript:;', 'active': 'active'}
+					]
+
+				App.execute "update:breadcrumb:model", breadcrumb_items
+
+				App.execute "show:student:training:module",
+					region: App.mainContentRegion
+					model: @studentTrainingModel
+					
 			listStudentModules:->
 				if $.allowRoute 'module-list'
 					App.execute "show:module:listing:app",

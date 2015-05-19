@@ -46,12 +46,6 @@ define(['app', 'text!apps/student-training-module/edit-module/module-description
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
         data = CollectionDetailsView.__super__.mixinTemplateHelpers.call(this, data);
         data.heading = this.model.isNew() ? 'Create a' : 'Edit a';
-        if (data.type === 'teaching-module') {
-          data.isModule = true;
-        }
-        if (data.type === 'quiz') {
-          data.isQuiz = true;
-        }
         data.type = _.titleize(_.humanize(data.type));
         if (data.isQuiz && data.permissions) {
           data.permissions['single_attempt'] = !data.permissions['single_attempt'];
@@ -228,44 +222,7 @@ define(['app', 'text!apps/student-training-module/edit-module/module-description
         });
       };
 
-      CollectionDetailsView.prototype._changeLayout = function() {
-        var contentGroupCollection, marks, time, totalQuestions;
-        contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
-        totalQuestions = 0;
-        _.each(this.model.get('content_layout'), (function(_this) {
-          return function(content) {
-            if (content.type === 'content-piece') {
-              return totalQuestions += 1;
-            } else {
-              totalQuestions += parseInt(content.data.lvl1);
-              totalQuestions += parseInt(content.data.lvl2);
-              return totalQuestions += parseInt(content.data.lvl3);
-            }
-          };
-        })(this));
-        this.$el.find('#total-question-number').val(totalQuestions);
-        marks = 0;
-        time = 0;
-        contentGroupCollection.each(function(m) {
-          if (m.get('post_type') === 'content_set') {
-            if (m.get('avg_marks')) {
-              marks += parseInt(m.get('avg_marks'));
-            }
-            if (m.get('avg_duration')) {
-              return time += parseInt(m.get('avg_duration'));
-            }
-          } else {
-            if (m.get('marks')) {
-              marks += parseInt(m.get('marks'));
-            }
-            if (m.get('duration')) {
-              return time += parseInt(m.get('duration'));
-            }
-          }
-        });
-        this.$el.find('#total-marks').val(marks);
-        return this.$el.find('#total-time').val(time);
-      };
+      CollectionDetailsView.prototype._changeLayout = function() {};
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
         var attrs, msg, _ref;
@@ -277,12 +234,7 @@ define(['app', 'text!apps/student-training-module/edit-module/module-description
         this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner').addClass('fa-check');
         attrs = model.changedAttributes();
         msg = attrs.id ? 'saved' : 'updated';
-        if (model.get('type') === 'teaching-module') {
-          this.$el.find('.grid-title').prepend('<div id="saved-success">Training module ' + msg + '. Click here to <a href="#view-group/' + model.get('id') + '">view module</a><hr></div>');
-        }
-        if (model.get('type') === 'quiz') {
-          this.$el.find('.grid-title').prepend('<div id="saved-success">Quiz ' + msg + '. Click here to <a href="#view-quiz/' + model.get('id') + '">view the Quiz</a><hr></div>');
-        }
+        this.$el.find('.grid-title').prepend('<div id="saved-success">Student training module ' + msg + '. Click here to <a href="#view-student-training-module/' + model.get('id') + '">view module.</a><hr></div>');
         return $("html, body").animate({
           scrollTop: 0
         }, 700);
