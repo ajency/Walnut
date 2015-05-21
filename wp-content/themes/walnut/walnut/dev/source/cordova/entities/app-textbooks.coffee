@@ -186,7 +186,7 @@ define ['underscore'], ( _) ->
 						directoryPath = _.getSynapseMediaDirectoryPath()
 						attachmenturl = directoryPath + url.substr(url.indexOf("uploads/"))
 						attachmenturl = '<img src="'+attachmenturl+'" 
-						onerror="this.onerror=null;this.src=\'/images/img-not-found.jpg\';">'
+						onerror="this.onerror=null;this.src=\'./images/img-not-found.jpg\';">'
 
 					options = 
 						author: option_value.author
