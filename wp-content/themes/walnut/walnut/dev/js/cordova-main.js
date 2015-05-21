@@ -1,6 +1,6 @@
 require.config({
   urlArgs: "ver=" + ((new Date()).getTime()),
-  baseUrl: '/dev/js',
+  baseUrl: './dev/js',
   paths: {
     jquery: 'plugins/jquery',
     jqueryui: 'plugins/jquery.ui',

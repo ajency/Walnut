@@ -23,7 +23,7 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			if _.getSchoolLogoSrc() isnt null
 				$("#logo").attr('src', _.getSchoolLogoSrc())
 			else 
-				$("#logo").attr('src', '/images/synapse-logo-main.png')
+				$("#logo").attr('src', './images/synapse-logo-main.png')
 
 
 

@@ -9,7 +9,7 @@ require.config
 	urlArgs: "ver=#{(new Date()).getTime()}"
 
 	#Url for Synapse App
-	baseUrl: '/dev/js'
+	baseUrl: './dev/js'
 
 	paths:
 		jquery: 'plugins/jquery'

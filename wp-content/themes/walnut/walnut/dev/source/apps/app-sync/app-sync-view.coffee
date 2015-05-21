@@ -34,12 +34,9 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 
 				# Hide breadcrumb region
 				App.breadcrumbRegion.close()
-
 				
 				#Disable Selectbox StorageOption
 				$('#storageOption').prop("disabled",false)
-
-
 
 				_.getDeviceStorageOptions()
 				.then (storageOptions)->
@@ -95,17 +92,18 @@ define ['app', 'controllers/region-controller','text!apps/app-sync/templates/app
 						# $("#storageOption option[value='external']").remove();
 						# $("#storageOption").removeOption("external");
 
-
-
 				
 				_.cordovaHideSplashscreen()
-
 				_.disableCordovaBackbuttonNavigation()
 				
 				# Display app version number
-				cordova.getAppVersion().then((version)-> 
-					$('#app-version').text("Version: "+version)
-				)
+				cordova.getAppVersion()
+				.then (version)->
+					if AJAXURL.indexOf("http://synapselearning") is 0
+						appInfo = "Version: Production - #{version}"
+					else if AJAXURL.indexOf("http://synapsedu") is 0
+						appInfo = "Version: Development - #{version}"
+					$('#app-version').text appInfo
 				
 				# Invoke synchronization controller
 				App.request "get:sync:controller"

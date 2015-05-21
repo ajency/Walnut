@@ -39,12 +39,12 @@ define(['marionette'], function(Marionette) {
           _.cordovaOpenPrepopulatedDatabase();
           _.cordovaLocalStorage();
           FastClick.attach(document.body);
-          cordova.getAppVersion().then(function(version) {
-            if (version.indexOf('Production') === 0) {
-              AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";;
-            }
-            if (version.indexOf('Staging') === 0) {
-              return AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";;
+          cordova.getAppVersion.getPackageName().then(function(packageName) {
+            switch (packageName) {
+              case 'com.synapse.learning':
+                return window.AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";
+              case 'com.synapse.edu':
+                return window.AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";
             }
           });
           if (_.isNull(_.getUserID()) || _.getUserID() === 'null') {

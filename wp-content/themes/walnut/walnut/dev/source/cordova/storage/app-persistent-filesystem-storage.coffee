@@ -15,7 +15,7 @@ define ['underscore'], ( _) ->
 				_.cordovaCreateDirectory("SynapseAssets/SynapseMedia")
 				.then (mediaDirectoryPath)->
 
-					defer.resolve(_.setSynapseMediaDirectoryPath(mediaDirectoryPath+'/'))
+					defer.resolve(_.setSynapseMediaDirectoryPath(mediaDirectoryPath))
 
 
 			defer.promise()

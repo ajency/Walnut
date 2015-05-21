@@ -78,7 +78,13 @@ define(['app', 'controllers/region-controller', 'text!apps/app-sync/templates/ap
         _.cordovaHideSplashscreen();
         _.disableCordovaBackbuttonNavigation();
         cordova.getAppVersion().then(function(version) {
-          return $('#app-version').text("Version: " + version);
+          var appInfo;
+          if (AJAXURL.indexOf("http://synapselearning") === 0) {
+            appInfo = "Version: Production - " + version;
+          } else if (AJAXURL.indexOf("http://synapsedu") === 0) {
+            appInfo = "Version: Development - " + version;
+          }
+          return $('#app-version').text(appInfo);
         });
         return App.request("get:sync:controller");
       };

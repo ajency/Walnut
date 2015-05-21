@@ -58,22 +58,20 @@ define ['marionette'], (Marionette)->
 				# 'FastClick' helps to reduce the 400ms click delay.
 				FastClick.attach(document.body)
 
-				# Change 'AJAXURL' based on version name
-				cordova.getAppVersion().then((version)->
-
-					if version.indexOf('Production') is 0
-						`AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php";`
-
-					if version.indexOf('Staging') is 0
-						`AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php";`
-				)
+				# Change 'AJAXURL' based on package name
+				cordova.getAppVersion.getPackageName()
+				.then (packageName)->
+					switch packageName
+						when 'com.synapse.learning'
+							window.AJAXURL = "http://synapselearning.net/wp-admin/admin-ajax.php"
+						when 'com.synapse.edu'
+							window.AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php"
 
 				# _.setSynapseMediaDirectoryPathToLocalStorage().done ->
 				# 	console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
 
-					# If the UserId is null or 'null' i.e id not set in local storage then the app
-					# is either installed for the first time or user has logged out.
-				
+				# If the UserId is null or 'null' i.e id not set in local storage then the app
+				# is either installed for the first time or user has logged out.
 				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
 					# If the blog_id is not set then the app is installed for the very first time.
 					# Navigate to main login screen if blog id is null, else show list of users view.
@@ -125,7 +123,6 @@ define ['marionette'], (Marionette)->
 			# or if the operation is 'file_import' i.e sync process is not completed, then the user should
 			# not be allowed to navigate else where in the app and only the sync screen should be visible
 			# to the user.
-
 			_.getLastSyncOperation().done (typeOfOperation)->
 				console.log 'getLastSyncOperation done [walnut-app.coffee]'
 				

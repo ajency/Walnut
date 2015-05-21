@@ -66,7 +66,7 @@ define ['app'
 			serializeData: ->
 				data = super()
 				data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png'
-				data.logourl = SITEURL + '/images/synapse_logo.png' if _.platform() is 'DEVICE'
+				data.logourl = SITEURL + './images/synapse_logo.png' if _.platform() is 'DEVICE'
 				data
 
 			onShow: ->

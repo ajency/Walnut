@@ -14,7 +14,7 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
       if (_.getSchoolLogoSrc() !== null) {
         return $("#logo").attr('src', _.getSchoolLogoSrc());
       } else {
-        return $("#logo").attr('src', '/images/synapse-logo-main.png');
+        return $("#logo").attr('src', './images/synapse-logo-main.png');
       }
     },
     cordovaHideSplashscreen: function() {

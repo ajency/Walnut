@@ -97,7 +97,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
         data = HeaderView.__super__.serializeData.call(this);
         data.logourl = SITEURL + '/wp-content/themes/walnut/images/synapse_logo.png';
         if (_.platform() === 'DEVICE') {
-          data.logourl = SITEURL + '/images/synapse_logo.png';
+          data.logourl = SITEURL + './images/synapse_logo.png';
         }
         return data;
       };

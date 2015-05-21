@@ -5,7 +5,7 @@ define(['underscore'], function(_) {
       defer = $.Deferred();
       _.cordovaCreateDirectory("SynapseAssets").then(function() {
         return _.cordovaCreateDirectory("SynapseAssets/SynapseMedia").then(function(mediaDirectoryPath) {
-          return defer.resolve(_.setSynapseMediaDirectoryPath(mediaDirectoryPath + '/'));
+          return defer.resolve(_.setSynapseMediaDirectoryPath(mediaDirectoryPath));
         });
       });
       return defer.promise();
