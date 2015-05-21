@@ -78,8 +78,14 @@ define ['app'], (App)->
                     if $(element).find('form input[name="element"]').val() in ['Fib','Mcq','Sort','Hotspot','BigAnswer'] and $(element).find('form input[name="complete"]').val() is 'false'
                         $('#saved-successfully').remove()
                         $('#save-failure').remove()
+
+                        msg = 'Ensure you have set the marks and added valid answers to save the question';
+                        error_info= $(element).find('form input[name="error_info"]').val()
+                        
+                        msg = error_info if not _.isEmpty error_info
+
                         $(".page-title").before '<div id="save-failure" style="text-align:center;"
-                            class="alert alert-failure">Ensure you have set the marks and added valid answers to save the question</div>'
+                            class="alert alert-failure">'+msg+'</div>'
                         return false
                     else
                         return true

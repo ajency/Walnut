@@ -44,14 +44,20 @@ function validate_quiz_response_csv_row( $quiz_response_data ) {
 
 function convert_csv_row_to_quiz_response_format( $quiz_response_data ) {
 
+    $status = wp_unslash($quiz_response_data[6]);
+    $status = str_replace("};","}",$status);
+
+    $question_response = wp_unslash($quiz_response_data[3]);
+    $question_response = str_replace("};","}",$question_response);
+
     return array(
         'qr_id'             => $quiz_response_data[0],
         'summary_id'        => $quiz_response_data[1],
         'content_piece_id'  => $quiz_response_data[2],
-        'question_response' => wp_unslash($quiz_response_data[3]),
+        'question_response' => $question_response,
         'time_taken'        => $quiz_response_data[4],
         'marks_scored'      => $quiz_response_data[5],
-        'status'            => wp_unslash($quiz_response_data[6])
+        'status'            => $status
     );
 }
 

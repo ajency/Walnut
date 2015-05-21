@@ -40,23 +40,16 @@ define ['marionette'], (Marionette)->
 	App.commands.setHandler "unregister:instance", (instance, id) ->
 		App.unregister instance, id
 
-	# App.addInitializer (options) ->
 	App.on "initialize:after", (options) ->
-		
+
 		App.startHistory()
 
 		if _.platform() is 'DEVICE'
 
 			onDeviceReady = =>
-
-				# Open pre-populated SQLite database file.
-				_.cordovaOpenPrepopulatedDatabase()
-
-				# Cordova local storage
-				_.cordovaLocalStorage()
-
-				# 'FastClick' helps to reduce the 400ms click delay.
 				FastClick.attach(document.body)
+				_.cordovaOpenPrepopulatedDatabase()
+				_.cordovaLocalStorage()
 
 				# Change 'AJAXURL' based on package name
 				cordova.getAppVersion.getPackageName()
@@ -67,9 +60,6 @@ define ['marionette'], (Marionette)->
 						when 'com.synapse.edu'
 							window.AJAXURL = "http://synapsedu.info/wp-admin/admin-ajax.php"
 
-				# _.setSynapseMediaDirectoryPathToLocalStorage().done ->
-				# 	console.log 'setSynapseMediaDirectoryPathToLocalStorage done'
-
 				# If the UserId is null or 'null' i.e id not set in local storage then the app
 				# is either installed for the first time or user has logged out.
 				if _.isNull(_.getUserID()) or _.getUserID() is 'null'
@@ -78,7 +68,6 @@ define ['marionette'], (Marionette)->
 					@rootRoute = 'app-login'
 					@rootRoute = 'login' if _.isNull _.getBlogID()
 					App.navigate(@rootRoute, trigger: true)
-
 				else
 					#If User ID is set, then navigate to dashboard.
 					author_id  = _.getUserID()
@@ -118,37 +107,30 @@ define ['marionette'], (Marionette)->
 	App.vent.on "show:dashboard", (user_role) =>
 
 		if _.platform() is 'DEVICE'
-
 			# If the last sync operation is 'none' i.e sync is not performed for the first time
 			# or if the operation is 'file_import' i.e sync process is not completed, then the user should
 			# not be allowed to navigate else where in the app and only the sync screen should be visible
 			# to the user.
-			_.getLastSyncOperation().done (typeOfOperation)->
+			_.getLastSyncOperation().done (syncOp)->
 				console.log 'getLastSyncOperation done [walnut-app.coffee]'
-				
-				if typeOfOperation is 'none' or typeOfOperation isnt 'file_import'
-					App.navigate('sync', trigger: true)
-				else
-					App.navigate('teachers/dashboard', trigger: true)
+				route = if syncOp is 'none' or syncOp isnt 'file_import' then 'sync' else 'teachers/dashboard'
+				App.navigate route, trigger: true
 
 		else
-
-			user = App.request "get:user:model"
-
-			if user.current_user_can('administrator') or user.current_user_can('school-admin')
+			if App.request('current:user:can','administrator') or App.request('current:user:can','school-admin') or App.request('current:user:can','content-creator')
 				App.navigate('textbooks', trigger: true)
 
-			if user.current_user_can 'teacher'
+			if App.request 'current:user:can','teacher'
 				App.navigate('teachers/dashboard', trigger: true)     
 
-			if user.current_user_can 'student'
+			if App.request 'current:user:can','student'
 				App.navigate('students/dashboard', trigger: true)             
 
 		App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
 		App.execute "show:headerapp", region: App.headerRegion
 		App.execute "show:leftnavapp", region: App.leftNavRegion
 
-		if typeof Pace isnt 'undefined'
+		if !_.isUndefined Paçe
 			Pace.on 'hide', ()->
 				$("#site_main_container").addClass("showAll");
 

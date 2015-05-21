@@ -2,6 +2,8 @@
 
 function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 
+	global $aj_comm;
+	
 	$template_data['name'] 		= 'taught-in-class-parent-mail'; 
 
 	$blog_data= get_blog_details($comm_data['blog_id']);
@@ -11,7 +13,10 @@ function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
     
-	$template_data['global_merge_vars'] = get_taught_in_class_template_data($comm_data);
+    $module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
+	$division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
+
+	$template_data['global_merge_vars'] = get_taught_in_class_template_data($comm_data,$module_id,$division);
 
 	$template_data['merge_vars'] = array();
 
@@ -39,7 +44,8 @@ function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 }
 
 function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
-        global $aj_comm;
+    
+    global $aj_comm;
     
 	$template_data['name'] 		= 'taught-in-class-parent-mail';
 
@@ -50,7 +56,10 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse Learning';
 
-	$template_data['global_merge_vars'] = get_taught_in_class_template_data($comm_data);
+	$module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
+	$division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
+
+	$template_data['global_merge_vars'] = get_taught_in_class_template_data($comm_data, $module_id, $division);
 
 	$template_data['merge_vars'] = array();
 
@@ -104,17 +113,16 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 }
 
 
-function get_taught_in_class_template_data($comm_data){
-	
-	global $aj_comm;
+function get_taught_in_class_template_data($comm_data, $module_id, $division){
 
-	$data = array();
+    $data = array();
 
-	$module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
-	$division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
+    switch_to_blog($comm_data['blog_id']);
 
-	$module_details= get_single_content_module($module_id);
+    $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
 
+    $module_details= get_single_content_module($module_id,$division,$school_admin);
+    
     $module_end_date = get_module_end_date($module_id, $comm_data['blog_id']);
 
     $terms= $module_details->term_ids;
@@ -123,15 +131,18 @@ function get_taught_in_class_template_data($comm_data){
 
     $chapter_id = $terms['chapter'];
 
+    switch_to_blog(1);
     $textbook_name = get_term_field('name', $textbook_id, 'textbook');
 
     if($chapter_id)
     	$chapter_name = get_term_field('name', $chapter_id, 'textbook');
    	else
    		$chapter_name = ' -- ';
+   	restore_current_blog();
 
     $subject = get_textbook_subject($textbook_id);
 
+    
     $division_data = fetch_single_division($division,$comm_data['blog_id']);
     $division  = $division_data['division'];
 
@@ -190,7 +201,7 @@ function getvars_teaching_modules_report($recipients_email,$comm_data){
 	        "content" 	=> base64_encode(file_get_contents($zipfile))
 	    );
 
-	    #unlink($zipfile);
+	    unlink($zipfile);
 	}
 
 	$template_data['global_merge_vars'][] = get_mail_header($comm_data['blog_id']);

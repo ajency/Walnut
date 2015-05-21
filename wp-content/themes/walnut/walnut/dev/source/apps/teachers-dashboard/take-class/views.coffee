@@ -30,9 +30,9 @@ define ['app'
 
 				mode = Marionette.getOption @, 'mode'
 
-				if mode is 'take-quiz' 
-					data.take_quiz = true
+				data.take_quiz = true if mode is 'take-quiz' 
 
+				data.training_mode = true if mode is 'training'
 
 				data
 
@@ -61,7 +61,8 @@ define ['app'
 				mode = Marionette.getOption @,'mode'
 
 				data.take_quiz = true if mode is 'take-quiz' 
-
+				data.training_mode = true if mode is 'training'
+				
 				data
 
 

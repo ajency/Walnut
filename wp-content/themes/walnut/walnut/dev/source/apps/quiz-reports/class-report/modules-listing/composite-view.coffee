@@ -29,20 +29,22 @@
                 @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
 
             mixinTemplateHelpers:(data)->
-                user = App.request "get:user:model"
 
-                if user.current_user_can('school-admin') or user.current_user_can('teacher')
-                    data.can_schedule = true
+                data.can_schedule = true if App.request 'current:user:can','schedule_quiz'                    
 
                 data
 
             onShow : ->
+
                 @$el.find '#content-pieces-table'
                 .tablesorter();
 
                 @onUpdatePager()
 
             onUpdatePager:->
+
+                @$el.find '.communication_sent'
+                .remove()
 
                 @$el.find "#content-pieces-table"
                 .trigger "updateCache"
@@ -71,22 +73,30 @@
             saveCommunications:(e)->
 
                 data = []
-                data.quizIDs= $.getCheckedItems @$el.find '#content-pieces-table'
+
+                @$el.find '.communication_sent'
+                .remove()
+
+                allQuizIDs= _.map $.getCheckedItems(@$el.find('#content-pieces-table')), (m)-> parseInt m
+
+                excludeIDs = _.chain @collection.where 'taken_by':0
+                        .pluck 'id'
+                        .value()
+
+                data.quizIDs = _.difference allQuizIDs,excludeIDs 
 
                 data.division = @$el.find '#divisions-filter'
                         .val()
 
-                if e.target.id is 'send-email'
+                if $(e.target).hasClass 'send-email'
                     data.communication_mode = 'email'
                 else
                     data.communication_mode = 'sms'
 
-                if data.quizIDs
+                if _.isEmpty data.quizIDs
+                    @$el.find '.send-email'
+                    .after '<span class="m-l-40 text-error small communication_sent">
+                            Selected quizzes have not been taken by any student</span>'
+
+                else
                     @trigger "save:communications", data
-
-                    @$el.find '#communication_sent'
-                    .remove()
-
-                    @$el.find '#send-email'
-                    .after '<span class="m-l-40 small" id="communication_sent">
-                            Your '+data.communication_mode+' has been queued successfully</span>'

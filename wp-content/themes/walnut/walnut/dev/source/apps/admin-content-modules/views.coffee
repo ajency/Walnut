@@ -271,10 +271,3 @@ define ['app',
 
                 if data.moduleIDs
                     @trigger "save:communications", data
-
-                    @$el.find '#communication_sent'
-                    .remove()
-
-                    @$el.find '#send-email'
-                    .after '<span class="m-l-40 small" id="communication_sent">
-                            Your '+data.communication_mode+' has been queued successfully</span>'

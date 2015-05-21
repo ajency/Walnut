@@ -45,8 +45,11 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         this.show(view, {
           loading: true
         });
-        return this.listenTo(view, 'end:quiz', function() {
+        this.listenTo(view, 'end:quiz', function() {
           return this.region.trigger('end:quiz');
+        });
+        return this.listenTo(view, 'show:single:quiz:app', function() {
+          return this.region.trigger('show:single:quiz:app');
         });
       };
 
@@ -85,7 +88,7 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.className = 'timerBox';
 
-      QuizTimerView.prototype.template = '<div class="bold small-text text-center p-t-10"> Quiz Time</div> {{#completed_quiz}} <div class="b-grey m-b-10 p-b-5" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-replay" class="btn btn-white block h-center"> End Replay </button> </div> {{/completed_quiz}} {{^completed_quiz}} <div id="downUpTimer" timerdirection=""></div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div> {{/completed_quiz}}';
+      QuizTimerView.prototype.template = '<div class="container-grey"> <div class="timerStrip"><span class="fa fa-clock-o"></span></div> <div class="bold small-text text-center p-t-10"> Quiz Time</div> {{#completed_quiz}} <div class="b-grey m-b-10 p-b-5" id="completed-quiz"> <div class="qstnStatus text-center"><i class="fa fa-check-circle"></i> Completed</div> </div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-replay" class="btn btn-white block h-center"> End Replay </button> </div> {{/completed_quiz}} {{^completed_quiz}} <div id="downUpTimer" timerdirection=""></div> <div class="endQuiz b-grey b-t p-t-10 p-b-10"> <button type="button" id="end-quiz" class="btn btn-white block h-center"> End Quiz </button> </div> {{/completed_quiz}} </div> <div class="container-grey m-b-5 m-t-5 p-t-10 p-r-10 p-b-10 p-l-20"> <label class="form-label bold small-text muted no-margin inline">Question Info: </label> <p class="inline text-grey small">Testing Question instruction. with hints and comment.</p> </div>';
 
       QuizTimerView.prototype.events = {
         'click #end-quiz': 'endQuiz',
@@ -122,10 +125,11 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
 
       QuizTimerView.prototype.quizTimedOut = function() {
         var msgContent;
+        this.trigger("end:quiz");
         msgContent = this.model.getMessageContent('quiz_time_up');
         return bootbox.alert(msgContent, (function(_this) {
           return function() {
-            return _this.trigger("end:quiz");
+            return _this.trigger("show:single:quiz:app");
           };
         })(this));
       };
@@ -136,14 +140,15 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
         return bootbox.confirm(msgContent, (function(_this) {
           return function(result) {
             if (result) {
-              return _this.trigger("end:quiz");
+              _this.trigger("end:quiz");
+              return _this.trigger("show:single:quiz:app");
             }
           };
         })(this));
       };
 
       QuizTimerView.prototype.endReplay = function() {
-        return this.trigger("end:quiz");
+        return this.trigger("show:single:quiz:app");
       };
 
       return QuizTimerView;

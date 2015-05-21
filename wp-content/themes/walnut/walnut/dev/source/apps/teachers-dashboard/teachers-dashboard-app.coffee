@@ -23,18 +23,16 @@ define ['app'
         Controller =
 
             dashboardRedirect:->
-                
-                user = App.request "get:user:model"
 
                 if $.allowRoute 'dashboard'
-                    if user.current_user_can('administrator') or user.current_user_can('school-admin') or user.current_user_can('content-creator')
+                    if App.request 'current:user:can','view_all_textbooks'
                         App.navigate('textbooks', trigger: true)
 
-                    if user.current_user_can 'teacher'
+                    if App.request 'current:user:can', 'teacher'
                         App.navigate 'teachers/dashboard'
-                        @teachersDashboard()  
+                        @teachersDashboard()
 
-                    if user.current_user_can 'student'
+                    if App.request 'current:user:can', 'student'
                         App.navigate 'students/dashboard'
                         @studentsDashboard()
 

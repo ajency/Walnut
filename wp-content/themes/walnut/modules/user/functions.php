@@ -112,17 +112,31 @@ function get_user_by_id( $id ) {
 
 
 function user_extend_profile_fields($user){
-
-    $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
-    $user_divisions = maybe_unserialize(get_user_meta( $user->ID, 'divisions',true));
-    $user_student_division = maybe_unserialize(get_user_meta( $user->ID, 'student_division',true));
-    $user_student_rollno = get_user_meta( $user->ID, 'roll_no',true);
-    $user_student_parentemail1 = get_user_meta( $user->ID, 'parent_email1',true);
-    $user_student_parentemail2 = get_user_meta( $user->ID, 'parent_email2',true);
-    $user_student_parentemail3 = get_user_meta( $user->ID, 'parent_email3',true);
-    $user_student_parentphone1 = get_user_meta( $user->ID, 'parent_phone1',true);
-    $user_student_parentphone2 = get_user_meta( $user->ID, 'parent_phone2',true);
- 
+    
+    # set the values to the submitted items to populate the fields with previously entered data
+    # incase of error while saving
+    if(isset($_POST) && $_POST['action']=='createuser'){
+        if(isset($_POST['textbooks']))          $user_textbooks         = $_POST['textbooks'];
+        if(isset($_POST['divisions']))          $user_divisions         = $_POST['divisions'];
+        if(isset($_POST['student_division']))   $user_student_division  = $_POST['student_division'];
+        if(isset($_POST['student_rollno']))     $user_student_rollno    = $_POST['student_rollno'];
+        if(isset($_POST['parent_email1']))      $user_student_parentemail1  = $_POST['parent_email1'];
+        if(isset($_POST['parent_email2']))      $user_student_parentemail2  = $_POST['parent_email2'];
+        if(isset($_POST['parent_phone1']))      $user_student_parentphone1  = $_POST['parent_phone1'];
+        if(isset($_POST['parent_phone2']))      $user_student_parentphone2  = $_POST['parent_phone2'];
+        
+    }
+    else{
+        $user_textbooks = maybe_unserialize(get_user_meta( $user->ID, 'textbooks',true));
+        $user_divisions = maybe_unserialize(get_user_meta( $user->ID, 'divisions',true));
+        $user_student_division = maybe_unserialize(get_user_meta( $user->ID, 'student_division',true));
+        $user_student_rollno = get_user_meta( $user->ID, 'roll_no',true);
+        $user_student_parentemail1 = get_user_meta( $user->ID, 'parent_email1',true);
+        $user_student_parentemail2 = get_user_meta( $user->ID, 'parent_email2',true);
+        $user_student_parentemail3 = get_user_meta( $user->ID, 'parent_email3',true);
+        $user_student_parentphone1 = get_user_meta( $user->ID, 'parent_phone1',true);
+        $user_student_parentphone2 = get_user_meta( $user->ID, 'parent_phone2',true);
+    }
       if(!is_array($user_textbooks)){
             $user_textbooks = array();
       }
@@ -137,7 +151,7 @@ function user_extend_profile_fields($user){
          $user_divisions = array_map('intval', $user_divisions);
       }     
       $hide_textbooks="style='display:none'";
-      if(user_can($user->ID,'teacher'))
+      if(user_can($user->ID,'teacher') || (isset($_POST['role']) && $_POST['role']=='teacher'))
         $hide_textbooks= "";
       
       switch_to_blog(1);
@@ -349,18 +363,9 @@ function user_extend_profile_fields_save($user_id) {
                  if( $parent_id = email_exists( $_POST['parent_email_'.$i] )) {
                      
                      $saved_parent_email = get_user_meta($user_id, 'parent_email'.$i,true);
-                     if($saved_parent_email != '' && $saved_parent_email != $_POST['parent_email_'.$i]){
-                         unset_userid_parent_of_meta($saved_parent_email,$user_id);
-                     }
                      
                      update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
-                         
-                     $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
-                     $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-                        
-                     array_push($parent_of_meta, (string)$user_id);
-                     $parent_of_meta = array_unique($parent_of_meta);                     
-                     update_user_meta( $parent_id, 'parent_of', $parent_of_meta );
+                      
                     }
                  elseif(is_email($_POST['parent_email_'.$i])){
                      $password = wp_generate_password( 12, true );
@@ -377,13 +382,6 @@ function user_extend_profile_fields_save($user_id) {
                      
                      //$parent_user->set_role( 'parent' );
                      update_user_meta( $user_id, 'parent_email'.$i, $_POST['parent_email_'.$i] );
-                     
-                     $parent_of_meta = get_user_meta($new_parent_id,'parent_of',true);
-                     $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-                        
-                     array_push($parent_of_meta, (string)$user_id);
-                     $parent_of_meta = array_unique($parent_of_meta);                     
-                     update_user_meta( $new_parent_id, 'parent_of', $parent_of_meta );
 
                  }             
             }  
@@ -429,24 +427,25 @@ function get_parents_by_student_ids($student_ids){
 
     $parents = array();
 
-    foreach($student_ids as $id)
-    $parents[]=get_parent_for_student($id);
+    if(!is_array($student_ids))
+        $student_ids = array($student_ids);
 
+    foreach($student_ids as $id){
+        $p1_email = get_user_meta($id, 'parent_email1',true);
+        $p2_email = get_user_meta($id, 'parent_email2',true);
+        
+        $p1= get_user_by('email',$p1_email);
+        if ($p1){
+            $p1->student_id = $id;
+            $parents[]= $p1;
+        }
 
-    return $parents;
-
-}
-
-function get_parent_for_student($id){
-
-    $args= array(
-        'role' => 'parent',
-        'meta_key' => 'parent_of',
-        'meta_value' => '"'.$id.'";',
-        'meta_compare' => 'LIKE'
-    );
-
-    $parents = get_users( $args );
+        $p2= get_user_by('email',$p2_email);
+        if ($p2){
+            $p2->student_id = $id;
+            $parents[]= $p2;
+        }
+    }
 
     return $parents;
 
@@ -576,31 +575,22 @@ function set_meta_user_activation($user_id, $password, $meta)
     $updatemetafields = array('divisions','textbooks','student_division','student_rollno','parent_email1','parent_email',
                             'parent_email2','parent_email3','parent_phone1','parent_phone2'
                         );
-    $updateparentof = array('child_of1','child_of2','child_of3');
+
     $signup_tbl = $wpdb->base_prefix."signups";
     $users_tbl = $wpdb->base_prefix."users";
 
     //Query to get the custom fields stored in the signup table
-    $metadata = $wpdb->get_var("SELECT meta FROM ".$signup_tbl." WHERE user_login=(SELECT user_login FROM $users_tbl "
+    $signupData = $wpdb->get_row("SELECT signup_id,meta FROM ".$signup_tbl." WHERE user_login=(SELECT user_login FROM $users_tbl "
                                 . "WHERE ID=".$user_id.")");
 
-    $user_meta = unserialize($metadata);
+    $user_meta = unserialize($signupData->meta);
     
     foreach($updatemetafields as $field => $value){
      if(isset($user_meta[$value]))
          update_usermeta( $user_id, $value, $user_meta[$value] );
     }
     
-    foreach($updateparentof as $field => $value){
-        if(isset($user_meta[$value])){
-            $parent_of_meta = get_user_meta($user_meta[$value],'parent_of',true);
-            $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-
-            array_push($parent_of_meta, (string)$user_id);
-            $parent_of_meta = array_unique($parent_of_meta);            
-            update_usermeta( $user_meta[$value], 'parent_of', $parent_of_meta );
-        }
-    }
+    $wpdb->delete($signup_tbl,array( 'signup_id' => $signupData->signup_id ));
 
 }
 add_action( 'wpmu_activate_user', 'set_meta_user_activation', 10, 3);
@@ -667,18 +657,6 @@ function getLoggedInUserModel(){
     
 }
 
-function unset_userid_parent_of_meta($parent_email,$user_id){
-    $parent_id = email_exists($parent_email);
-    if($parent_id){
-        $parent_of_meta = get_user_meta($parent_id,'parent_of',true);
-        $parent_of_meta =  get_parent_of_formated($parent_of_meta);
-        
-        if(($key = array_search($user_id, $parent_of_meta)) !== false) {
-            unset($parent_of_meta[$key]);
-        }
-        update_usermeta( $parent_id, 'parent_of', $parent_of_meta );
-    }
-}
 
 //////custom logo on login page//////
 function custom_login_logo() {
@@ -711,4 +689,11 @@ function get_parent_of_formated($parent_of_meta){
    }
    
    return $parent_of_meta;
+}
+
+function get_school_admin_for_cronjob($blog_id=0){
+    
+    if(!$blog_id) $blog_id= get_current_blog_id ();
+    $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID','blog_id'=>$blog_id));
+    return $school_admin[0];
 }

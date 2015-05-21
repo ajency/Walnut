@@ -250,6 +250,10 @@ function get_book( $book, $division=0,$user_id=0) {
         SUM( CASE
                 WHEN m.meta_value = 'test' 
                 THEN 1 ELSE 0  END
+            ) as test,
+        SUM( CASE
+                WHEN m.meta_value = 'class_test' 
+                THEN 1 ELSE 0  END
             ) as class_test
 
         FROM `{$wpdb->base_prefix}content_collection` c, {$wpdb->base_prefix}collection_meta m
@@ -265,6 +269,7 @@ function get_book( $book, $division=0,$user_id=0) {
 
     $book_dets->class_test_count = (int) $quizzes_count->class_test;
     $book_dets->practice_count = (int) $quizzes_count->practice;
+    $book_dets->take_at_home_count = (int) $quizzes_count->test;
 
     $questions_count = $wpdb->get_row( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=" . $book_id );
     $book_dets->questions_count = (int) $questions_count->count;
@@ -298,9 +303,9 @@ function get_book( $book, $division=0,$user_id=0) {
 
     if($user_id){
         $quizzes_status = quiz_status_for_textbook($book_id,$user_id);
-        $book_dets->class_test_completed    = $quizzes_status['class_test_completed'];
-        $book_dets->class_test_in_progress  = $quizzes_status['class_test_in_progress'];
-        $book_dets->class_test_not_started = $quizzes_count->class_test - ($quizzes_status['class_test_completed']+$quizzes_status['class_test_in_progress']);
+        $book_dets->home_test_completed    = $quizzes_status['home_test_completed'];
+        $book_dets->home_test_in_progress  = $quizzes_status['home_test_in_progress'];
+        $book_dets->home_test_not_started = $quizzes_count->test - ($quizzes_status['home_test_completed']+$quizzes_status['home_test_in_progress']);
 
         $book_dets->practice_completed    = $quizzes_status['practice_completed'];
         $book_dets->practice_in_progress  = $quizzes_status['practice_in_progress'];
@@ -437,7 +442,7 @@ function get_assigned_textbooks( $user_id = '' ) {
     if ($user_id == '')
         $user_id = get_current_user_id();
     
-    if(current_user_can('administrator') || current_user_can('school-admin') || current_user_can('content-creator')){
+    if(user_can($user_id, 'administrator') || user_can($user_id, 'school-admin') || user_can($user_id, 'content-creator')){
 
         switch_to_blog(1);
         $txtbook_ids = get_terms(
@@ -449,7 +454,7 @@ function get_assigned_textbooks( $user_id = '' ) {
         restore_current_blog();
     }
     
-    elseif(current_user_can('student')){
+    elseif(user_can($user_id, 'student')){
         
         $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
         $division = fetch_single_division($division_id);

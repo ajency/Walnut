@@ -43,12 +43,15 @@ function validate_quiz_summary_csv_row( $quiz_summary_data ) {
 
 function convert_csv_row_to_quiz_summary_format( $quiz_summary_data ) {
 
+    $quiz_meta = wp_unslash($quiz_summary_data[4]);
+    $quiz_meta = str_replace("};","}",$quiz_meta);
+    
     return array(
         'summary_id'    => $quiz_summary_data[0],
         'collection_id' => $quiz_summary_data[1],
         'student_id'    => $quiz_summary_data[2],
         'taken_on'      => $quiz_summary_data[3],
-        'quiz_meta'     => wp_unslash($quiz_summary_data[4])
+        'quiz_meta'     => $quiz_meta
     );
 }
 

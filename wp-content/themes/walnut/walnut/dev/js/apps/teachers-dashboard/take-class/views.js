@@ -32,6 +32,9 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
         if (mode === 'take-quiz') {
           data.take_quiz = true;
         }
+        if (mode === 'training') {
+          data.training_mode = true;
+        }
         return data;
       };
 
@@ -78,6 +81,9 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
         mode = Marionette.getOption(this, 'mode');
         if (mode === 'take-quiz') {
           data.take_quiz = true;
+        }
+        if (mode === 'training') {
+          data.training_mode = true;
         }
         return data;
       };

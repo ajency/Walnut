@@ -20,14 +20,14 @@ define ['app'
 				# 'click' :(e)->
 				# 	e.stopPropagation()
 				# 	@trigger 'show:table:property'
-				'click @ui.editableData,@ui.editableHead' : 'showEditor'
-				'click .cke_editable' : (e)->
+				'focus @ui.editableData,@ui.editableHead' : 'showEditor'
+				'focus .cke_editable' : (e)->
 					e.stopPropagation()
 
 				'click a': (e)->
 					e.preventDefault()
 
-				'click .table-holder' : 'destroyEditor'
+				'focus .table-holder' : 'destroyEditor'
 
 				'column:resize:stop.rc table' : 'saveTableMarkup'
 
@@ -45,6 +45,8 @@ define ['app'
 
 			onShow :->
 				@$el.find('.table-holder').html _.stripslashes @model.get 'content'
+
+				@$el.find('.table-holder tr div').attr 'tabindex', 0
 		
 				@$el.find('table').resizableColumns()
 				# @$el.find('select').selectpicker()
@@ -61,7 +63,7 @@ define ['app'
 					while currentRows isnt rows			
 						html = '<tr>'
 						for index in [1..model.get('column')]
-							html += '<td><div>demo</div></td>'
+							html += '<td><div tabindex=0>demo</div></td>'
 						html += '</tr>'
 						@$el.find('tbody').append html
 						@saveTableMarkup()
@@ -86,10 +88,10 @@ define ['app'
 
 				else if currentColumns < columns
 					while currentColumns isnt columns
-						@$el.find('thead tr').append '<th><div>demo</div></th>'
+						@$el.find('thead tr').append '<th><div tabindex=0>demo</div></th>'
 						tableRows = @$el.find('tbody tr')
 						_.each tableRows,(row,index)->
-							$(row).append '<td><div>demo</div></td>'
+							$(row).append '<td><div tabindex=0>demo</div></td>'
 
 						@$el.find('table').resizableColumns('destroy')
 						@$el.find('table').resizableColumns()

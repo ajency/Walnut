@@ -156,16 +156,15 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.onPauseSessionClick = function() {
-        if (_.platform() === 'BROWSER') {
-          return this.trigger("goto:previous:route");
-        } else {
+        if (_.platform() === 'DEVICE') {
           console.log('Invoked onPauseSessionClick');
           _.audioQueuesSelection('Click-Pause');
-          this.trigger("goto:previous:route");
           _.clearMediaDirectory('videos-web');
           _.clearMediaDirectory('audio-web');
-          return document.removeEventListener("backbutton", this.onPauseSessionClick, false);
+          this.trigger("goto:previous:route");
+          document.removeEventListener("backbutton", this.onPauseSessionClick, false);
         }
+        return this.trigger("goto:previous:route");
       };
 
       ModuleDescriptionView.prototype.cordovaEventsForModuleDescriptionView = function() {

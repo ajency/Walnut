@@ -5,20 +5,19 @@ define ['app'
 
         class Views.AttemptsMainView extends Marionette.CompositeView
 
-            template : '<div class="col-lg-12">
-                            <table class="table table-bordered tiles white" id="attempts-list-table" >                                
-                                <thead>
-                                    <tr>
-                                        <th>Attempted On</th>
-                                        <th>Marks Obtained</th>
-                                        <th>Time Taken</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="list-attempts" class="rowlink"></tbody>
-                            </table>'
+            template : '<table class="table table-bordered tiles white" id="attempts-list-table" >                                
+                            <thead>
+                                <tr>
+                                    <th>Attempted On</th>
+                                    <th>Marks Obtained</th>
+                                    <th>Time Taken</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-attempts" class="rowlink"></tbody>
+                        </table>'
 
-            className: 'row'
+            className: 'row col-lg-12'
 
             itemView            : Views.AttemptsItemView
 

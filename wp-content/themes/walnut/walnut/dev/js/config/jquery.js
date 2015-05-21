@@ -172,7 +172,7 @@ define(['jquery', 'underscore'], function($, _) {
           }
           break;
         case 'admin/view-all-modules':
-          if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+          if (App.request('current:user:can', 'administrator') || App.request('current:user:can', 'school-admin')) {
             return true;
           }
       }

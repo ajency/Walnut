@@ -1,10 +1,8 @@
 define ['app'
 		'controllers/region-controller'
 		'text!apps/take-module-item/module-description/templates/module-description-template.html'
-		'bootbox'], (App, RegionController, moduleDescriptionTemplate, bootbox)->
-	
+		'bootbox'], (App, RegionController, moduleDescriptionTemplate,bootbox)->
 	App.module "TeacherTeachingApp.ModuleDescription", (ModuleDescription, App)->
-		
 		class ModuleDescriptionController extends RegionController
 
 			initialize: (opts)->
@@ -61,7 +59,7 @@ define ['app'
 
 					templateHelpers:
 						showPauseButton:=>
-							pauseBtn= '';
+							pauseBtn = '';
 							if @display_mode is 'class_mode'
 								pauseBtn= '<button type="button" id="pause-session" class="btn btn-white
 									action h-center block m-t-5"><i class="fa fa-pause"></i> Pause</button>'
@@ -107,7 +105,6 @@ define ['app'
 					@$el.find "#question-done"
 					.remove()
 
-
 				stickyHeaderTop = @$el.find("#module-details-region").height()
 				$(window).scroll ->
 					if $(window).scrollTop() > stickyHeaderTop
@@ -118,46 +115,27 @@ define ['app'
 						$("#question-details-region").css "margin-top", 0
 					return
 
-				
 				if _.platform() is 'DEVICE'
-
 					$('body').css('height' : 'auto')
-
 					@cordovaEventsForModuleDescriptionView()
 
-
 			onPauseSessionClick : =>
-
-				if _.platform() is 'BROWSER'
-					@trigger "goto:previous:route"
-
-				else
+				if _.platform() is 'DEVICE'
 					console.log 'Invoked onPauseSessionClick'
-
 					_.audioQueuesSelection 'Click-Pause'
-
-					@trigger "goto:previous:route"
-
 					_.clearMediaDirectory 'videos-web'
 					_.clearMediaDirectory 'audio-web'
+					@trigger "goto:previous:route"
+					document.removeEventListener "backbutton", @onPauseSessionClick, false
+				
+				@trigger "goto:previous:route"
 
-					document.removeEventListener("backbutton", @onPauseSessionClick, false)
-
-
-			
 			cordovaEventsForModuleDescriptionView : ->
+				navigator.app.overrideBackbutton true
+				document.addEventListener "backbutton", @onPauseSessionClick, false
+				document.addEventListener "pause", @onPauseSessionClick, false
 
-				# Cordova backbutton event
-				navigator.app.overrideBackbutton(true)
-				document.addEventListener("backbutton", @onPauseSessionClick, false)
-
-				# Cordova pause event
-				document.addEventListener("pause", @onPauseSessionClick, false)
-
-
-
-			questionCompleted : =>
-
+			questionCompleted: =>
 				_.audioQueuesSelection('Click-Next') if _.platform() is 'DEVICE'
 
 				if Marionette.getOption(@, 'display_mode') is 'class_mode'
@@ -166,7 +144,6 @@ define ['app'
 
 				else @trigger "question:completed"
 
-			
 			onQuestionChanged: (nextItemID)->
 
 				if not nextItemID

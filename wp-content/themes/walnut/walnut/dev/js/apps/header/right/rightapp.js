@@ -49,7 +49,9 @@ define(['app', 'controllers/region-controller', 'text!apps/header/right/template
       RightHeaderView.prototype.mixinTemplateHelpers = function(data) {
         data = RightHeaderView.__super__.mixinTemplateHelpers.call(this, data);
         if ((typeof IS_STANDALONE_SITE !== "undefined" && IS_STANDALONE_SITE !== null) && IS_STANDALONE_SITE === true) {
-          data.syncUrl = SITEURL + '/sync-site-content';
+          if (App.request('current:user:can', 'sync_site_content')) {
+            data.syncUrl = SITEURL + '/sync-site-content';
+          }
         }
         return data;
       };

@@ -51,12 +51,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         }
       };
 
-      ListItemView.prototype.onShow = function() {
-        if (this.model.get('quiz_type') !== 'test') {
-          return this.$el.find('.tab_checkbox').attr('disabled', true);
-        }
-      };
-
       return ListItemView;
 
     })(Marionette.ItemView);

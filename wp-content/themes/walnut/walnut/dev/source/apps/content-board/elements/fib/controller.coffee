@@ -11,11 +11,13 @@ define ['app'
                 {answerWreqrObject,@answerModel} = options
 
                 @answerModel = App.request "create:new:answer" if not @answerModel
-
+                @multiplicationFactor = 0
+                
                 if answerWreqrObject
                     
-                    @displayAnswer = answerWreqrObject.options.displayAnswer
-                    
+                    @displayAnswer = answerWreqrObject.displayAnswer
+                    @multiplicationFactor = answerWreqrObject.multiplicationFactor
+
                     answerWreqrObject.setHandler "get:question:answer",=>
 
                         blanks= @view.$el.find 'input'
@@ -28,7 +30,14 @@ define ['app'
                             @answerModel.get('answer').push($(blank).val())
 
                         answer = _.compact @answerModel.get 'answer'
+                        
+                        @layout.model.set 'multiplicationFactor' :answerWreqrObject.multiplicationFactor
 
+                        if not @layout.model.get 'marks_set'
+                            @layout.model.set 'marks': @layout.model.get('marks')*answerWreqrObject.multiplicationFactor
+
+                        @layout.model.set 'marks_set' : true
+                        
                         if _.isEmpty answer
                             emptyOrIncomplete = 'empty' 
 
@@ -36,6 +45,8 @@ define ['app'
                             emptyOrIncomplete = 'incomplete' 
 
                         else emptyOrIncomplete = 'complete'
+                        
+                        @layout.model.setMultiplicationFactor @multiplicationFactor
 
                         data=
                             'emptyOrIncomplete' : emptyOrIncomplete
@@ -49,6 +60,9 @@ define ['app'
 
 
                 super options
+
+                if not @layout.model.get 'marks_set'
+                    @layout.model.set 'multiplicationFactor' :1
 
             renderElement : ->
 
@@ -84,10 +98,13 @@ define ['app'
                 _.each blanksArray,(blank)->
                     blank.blank_index = parseInt blank.blank_index if blank.blank_index?
                     blank.blank_size = parseInt blank.blank_size if blank.blank_size?
-                    blank.marks = parseInt blank.marks if blank.marks?
+                    blank.marks = parseFloat blank.marks if blank.marks?
 
 
             _submitAnswer :(displayAnswer=true) ->
+
+                @layout.model.setMultiplicationFactor @multiplicationFactor
+
                 enableIndividualMarks = @layout.model.get('enableIndividualMarks')
                 @caseSensitive = @layout.model.get 'case_sensitive'
 
@@ -130,7 +147,7 @@ define ['app'
                         # console.log correctAnswersArray
 
                         if @_checkAnswer $(blank).val(), correctAnswersArray
-                            @answerModel.set 'marks', @answerModel.get('marks') + blankModel.get('marks')
+                            @answerModel.set 'marks', @answerModel.get('marks') + parseInt(blankModel.get('marks'))*@layout.model.get 'multiplicationFactor'
                             $(blank).addClass('ansRight')
                         else
                             $(blank).addClass('ansWrong')

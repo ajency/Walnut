@@ -114,31 +114,30 @@ define ['app'
 			_saveQuestionResponse : (status) =>
 				elapsedTime = @timerObject.request "get:elapsed:time"
 
-				data =
+				data=
 					time_taken : elapsedTime
 					status : status
 					end_date: moment().format("YYYY-MM-DD") if status is 'completed'
 					teacher_name: App.request "get:user:data", "display_name"
 
 				questionResponseModel.set data
+
 				questionResponseCollection.add questionResponseModel
 
 				if not moment(questionResponseModel.get('start_date')).isValid()
 					data.start_date = moment().format("YYYY-MM-DD")
-				
+
 				if _.platform is 'BROWSER'
 					questionResponseModel.save data,
 						wait : true
 						success :(model)=>
 							if model.get('status') is 'paused'
 								@_startViewModuleApp()
-
 				else
 					questionResponseModel.save data
-
 					if status is 'paused'
 						@_startViewModuleApp()
-			   
+
 
 			_startViewModuleApp:=>
 
@@ -288,10 +287,3 @@ define ['app'
 
 				@$el.find '#instructions'
 				.html contentPiece.get 'instructions'
-
-
-
-
-		
-
-

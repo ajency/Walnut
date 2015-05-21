@@ -185,7 +185,6 @@ define ['underscore', 'csvparse'], ( _) ->
 					_.insertIntoWpPostMeta()
 				)
 
-
 		
 		insertIntoWpPostMeta : ->
 

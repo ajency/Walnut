@@ -58,11 +58,6 @@ define ['app'
 
                 'click .view-attempts' :(e)-> @trigger "view:attempts", @model.id
 
-            onShow:->
-                if @model.get('quiz_type') isnt 'test'
-                    @$el.find '.tab_checkbox'
-                    .attr 'disabled',true
-
         class Views.EmptyView extends Marionette.ItemView
 
             template: "This student hasn't taken any quizzes yet"

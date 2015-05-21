@@ -93,8 +93,14 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         data.total_time_taken = $.timeMinSecs(responseSummary.get('total_time_taken'));
         data.negMarksEnable = _.toBool(data.negMarksEnable);
-        if (!_.isEmpty(data.content_pieces)) {
-          data.hasQuestions = true;
+        if (_.isEmpty(data.content_pieces)) {
+          data.takeQuizError = 'Sorry this quiz has no questions in it.';
+        } else {
+          if (!data.status === 'completed' || App.request("current:user:can", "view_all_quizzes")) {
+            if (data.quiz_type === 'class_test' && !IS_STANDALONE_SITE) {
+              data.takeQuizError = 'Class tests can be taken from school site only';
+            }
+          }
         }
         if (responseSummary.get('status') === 'completed') {
           data.responseSummary = true;

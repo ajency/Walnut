@@ -32,10 +32,7 @@ define ['app'
 
                     data.marks_obtained= parseFloat parseFloat(marks_obtained).toFixed 1
 
-                    all_marks  = _.compact _.pluck @model.get('layout'), 'marks'
-                    total_marks= 0
-                    if all_marks.length>0
-                        total_marks= _.reduce all_marks, (memo, num)-> parseInt(memo) + parseInt(num) 
+                    total_marks= @model.get 'marks'
                     
                     data.total_marks= parseFloat total_marks.toFixed 1
 

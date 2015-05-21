@@ -7,7 +7,7 @@ function test_comm(){
     if(isset($_GET['testing'])){
         #cron_quizzes_taken_report();
 
-        cron_teaching_modules_report_mail();
+        #cron_teaching_modules_report_mail();
     
         $aj_comm->cron_process_communication_queue();
         echo "test";
@@ -25,13 +25,37 @@ function add_taught_in_class_student_mail($data, $comm_data){
     $meta = $data['additional_data'];
     $meta_data['division'] = $meta['division'];
 
-    $recipients = get_student_recipients($division=$meta['division']);
+    $raw_recipients = $meta['raw_recipients'];
 
     foreach($meta['module_ids'] as $module_id){
+        $recipients = array();
 
         $meta_data['module_id']= $module_id;
 
-        $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        if(sizeof($raw_recipients)>0){
+
+            foreach($raw_recipients as $key=>$user){
+
+                if($user['module_id']==$module_id){
+
+                    $student_id     = $user['student_id'];
+                    $recipient_ids  = __u::pluck($recipients, 'user_id');
+
+                    if(!in_array($student_id, $recipient_ids)){
+
+                        $recipients[] = array(                
+                                'user_id'   => $user['student_id'],
+                                'type'      => 'email',
+                                'value'     => $user['student_email']
+                            ); 
+                    }
+                    unset($raw_recipients[$key]);
+                }
+            }
+
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        }
+        
     }
 
     return $comm;
@@ -46,13 +70,30 @@ function add_taught_in_class_parent_mail($data,$comm_data){
     $meta = $data['additional_data'];
     $meta_data['division'] = $meta['division'];
 
-    $recipients=get_parent_recipients($division=$meta['division']);
+    $raw_recipients = $meta['raw_recipients'];
 
     foreach($meta['module_ids'] as $module_id){
+        $recipients = array();
 
         $meta_data['module_id']= $module_id;
 
-        $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        if(sizeof($raw_recipients)>0){
+
+            foreach($raw_recipients as $key=>$user){
+
+                if($user['module_id']==$module_id){
+                    $recipients[] = array(                
+                            'user_id'   => $user['parent_id'],
+                            'type'      => 'email',
+                            'value'     => $user['parent_email']
+                        ); 
+                    unset($raw_recipients[$key]);
+                }
+            }
+
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        }
+        
     }
 
     return $comm;
@@ -131,7 +172,6 @@ function get_teaching_modules_report_zip($blog_id){
     $random= rand(9999,99999);
 
     $upload_path= '/tmp/reports/teaching-modules-report-'.$random.date('Ymdhis').'.zip';
-
     $zip = create_zip($files,$upload_directory.$upload_path);
 
     return $zip;
@@ -145,9 +185,11 @@ function get_teaching_modules_report_csv($blog_id){
     $files = array();
 
     switch_to_blog($blog_id);
-
-    $divisions= get_all_divisions();
-
+    
+    $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
+    
+    $divisions= get_all_divisions($school_admin);
+    
     $headers = array('Training module name',
                 'Status',
                 'Teacher'
@@ -176,7 +218,7 @@ function get_teaching_modules_report_csv($blog_id){
 
                 foreach($moduleIDs as $moduleID){
 
-                    $row = get_teaching_module_report_data($moduleID, $div['id']);
+                    $row = get_teaching_module_report_data($moduleID, $div['id'],$blog_id);
 
                     if($row)
                         $output .= str_putcsv($row);
@@ -196,11 +238,12 @@ function get_teaching_modules_report_csv($blog_id){
 
 }
 
-function get_teaching_module_report_data($moduleID, $division){
-
-    $moduleData = get_single_content_module($moduleID, $division);
-
-    $taken_by= get_module_taken_by($moduleID,$division);
+function get_teaching_module_report_data($moduleID, $division,$blog_id){
+    
+    $school_admin = get_school_admin_for_cronjob($blog_id);
+    switch_to_blog($blog_id);
+    $moduleData = get_single_content_module($moduleID, $division,$school_admin);
+    $taken_by= get_module_taken_by($moduleID,$division,$blog_id);
 
     if($moduleData->status == 'completed')
         $status = 'Completed';
@@ -220,5 +263,68 @@ function get_teaching_module_report_data($moduleID, $division){
         return false;
 
     return $row;
+
+}
+
+function prepare_taught_in_class_parent_mail_recipients($data){
+
+    $recipients= array();
+
+    $division = $data['additional_data']['division'];
+    $module_ids = $data['additional_data']['module_ids'];
+    foreach ($module_ids as $module_id){
+        #$users = quiz_completed_parent_mail_recipients($module_id,$division);
+        $students = get_students_by_division($division);
+
+        $users = array();
+
+        if(is_array($students)){
+            $studentIDs = __u::pluck($students, 'ID');
+            $users = get_parents_by_student_ids($studentIDs);
+        }
+
+        foreach($users as $user){
+            $student = get_userdata($user->student_id);
+            $data=array(
+                'parent_name'   => $user->display_name,
+                'parent_id'     => $user->ID,
+                'parent_email'  => $user->user_email,
+                'module_id'     => $module_id,
+                'module_name'   => get_module_name($module_id),
+                'student_id'    => $user->student_id,
+                'student_name'  => $student->display_name,
+                'student_email'  => $student->user_email
+                );
+            $recipients[]=$data;
+        }
+        
+    }
+
+    return $recipients;
+}
+
+function taught_in_class_parent_mail_preview($data){
+
+    require_once get_template_directory()."/ajcm_components/teaching_modules.php";
+
+    $comm_data = array(
+        'component'=>$data['component'],
+        'communication_type'=>$data['communication_type']
+        );
+
+    $recipient=$data['additional_data']['preview_recipient'];
+    $division =$data['additional_data']['division'];
+
+    $template_data['template_name']              = 'taught-in-class-parent-mail'; 
+    $template_data['template_content']           = array(); 
+
+    $template_data['merge_vars'] = get_taught_in_class_template_data($comm_data,$recipient['module_id'], $division);
+
+    $template_data['merge_vars'][]=array(
+        'name'=>'STUDENT_NAME',
+        'content'=>$recipient['student_name']
+        );
+
+    return $template_data;
 
 }

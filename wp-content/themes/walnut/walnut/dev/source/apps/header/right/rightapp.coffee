@@ -29,8 +29,9 @@ define ['app'
 
             mixinTemplateHelpers:(data)->
                 data = super data
-
-                data.syncUrl= SITEURL + '/sync-site-content' if IS_STANDALONE_SITE? and IS_STANDALONE_SITE is true
+                if IS_STANDALONE_SITE? and IS_STANDALONE_SITE is true
+                  if App.request 'current:user:can','sync_site_content'
+                    data.syncUrl= SITEURL + '/sync-site-content' 
 
                 data
 

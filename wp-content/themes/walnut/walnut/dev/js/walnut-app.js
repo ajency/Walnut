@@ -36,9 +36,9 @@ define(['marionette'], function(Marionette) {
       onDeviceReady = (function(_this) {
         return function() {
           var author_id, displayName;
+          FastClick.attach(document.body);
           _.cordovaOpenPrepopulatedDatabase();
           _.cordovaLocalStorage();
-          FastClick.attach(document.body);
           cordova.getAppVersion.getPackageName().then(function(packageName) {
             switch (packageName) {
               case 'com.synapse.learning':
@@ -99,33 +99,27 @@ define(['marionette'], function(Marionette) {
   });
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
-      var user;
       if (_.platform() === 'DEVICE') {
-        _.getLastSyncOperation().done(function(typeOfOperation) {
+        _.getLastSyncOperation().done(function(syncOp) {
+          var route;
           console.log('getLastSyncOperation done [walnut-app.coffee]');
-          if (typeOfOperation === 'none' || typeOfOperation !== 'file_import') {
-            return App.navigate('sync', {
-              trigger: true
-            });
-          } else {
-            return App.navigate('teachers/dashboard', {
-              trigger: true
-            });
-          }
+          route = syncOp === 'none' || syncOp !== 'file_import' ? 'sync' : 'teachers/dashboard';
+          return App.navigate(route, {
+            trigger: true
+          });
         });
       } else {
-        user = App.request("get:user:model");
-        if (user.current_user_can('administrator') || user.current_user_can('school-admin')) {
+        if (App.request('current:user:can', 'administrator') || App.request('current:user:can', 'school-admin') || App.request('current:user:can', 'content-creator')) {
           App.navigate('textbooks', {
             trigger: true
           });
         }
-        if (user.current_user_can('teacher')) {
+        if (App.request('current:user:can', 'teacher')) {
           App.navigate('teachers/dashboard', {
             trigger: true
           });
         }
-        if (user.current_user_can('student')) {
+        if (App.request('current:user:can', 'student')) {
           App.navigate('students/dashboard', {
             trigger: true
           });
@@ -140,7 +134,7 @@ define(['marionette'], function(Marionette) {
       App.execute("show:leftnavapp", {
         region: App.leftNavRegion
       });
-      if (typeof Pace !== 'undefined') {
+      if (!_.isUndefined(Paçe)) {
         return Pace.on('hide', function() {
           return $("#site_main_container").addClass("showAll");
         });

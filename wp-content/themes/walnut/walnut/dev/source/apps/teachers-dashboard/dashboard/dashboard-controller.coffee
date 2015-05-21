@@ -2,8 +2,7 @@ define ['app'
 		'controllers/region-controller'
 		'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html',
 		'apps/teachers-dashboard/dashboard/dashboard-take-class-app',
-		'apps/teachers-dashboard/dashboard/dashboard-start-training-app',
-		'apps/teachers-dashboard/dashboard/class-progress-app'
+		'apps/teachers-dashboard/dashboard/dashboard-start-training-app'
 ], (App, RegionController, teachersDashboardTpl)->
 	App.module "TeachersDashboardApp.View", (View, App)->
 		class View.DashboardController extends RegionController
@@ -30,10 +29,6 @@ define ['app'
 						region: @layout.start_training_region
 						divisionsCollection: @divisionsCollection
 
-					App.execute "show:dashboard:class:progress:app",
-						region: @layout.class_progress_region
-
-
 			_getTeachersDashboardLayout:  ->
 				new TeachersDashboardLayout()
 
@@ -46,7 +41,6 @@ define ['app'
 			regions:
 				take_class_region: '#take-class-region'
 				start_training_region: '#start-training-region'
-				class_progress_region: '#class-progress-region'
 
 			events:
 				'click #teacherOptns a': 'changeTab'
@@ -61,15 +55,9 @@ define ['app'
 				.addClass 'active'
 					.tab 'show'
 
-
 			onShow : ->
-
 				if _.platform() is "DEVICE"
-					
 					_.cordovaHideSplashscreen()
-
 					_.removeCordovaBackbuttonEventListener()
-					
 					_.enableCordovaBackbuttonNavigation()
-
 

@@ -276,9 +276,7 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
           data.communication_mode = 'sms';
         }
         if (data.moduleIDs) {
-          this.trigger("save:communications", data);
-          this.$el.find('#communication_sent').remove();
-          return this.$el.find('#send-email').after('<span class="m-l-40 small" id="communication_sent"> Your ' + data.communication_mode + ' has been queued successfully</span>');
+          return this.trigger("save:communications", data);
         }
       };
 
