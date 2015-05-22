@@ -2,6 +2,7 @@ define ['app'
         'controllers/region-controller'
         'apps/student-training-module/view-module/module-description/description-app'
         'apps/student-training-module/view-module/content-display/content-display-app'
+		'apps/student-training-module/take-module/take-module-controller'
 ], (App, RegionController)->
 	App.module "StudentTrainingApp.View", (View, App)->
 		class View.GroupController extends RegionController
@@ -15,18 +16,12 @@ define ['app'
 				$.showHeaderAndLeftNav()
 
 				#mode refers to "training" mode or "take-class" mode
-				{model,@classID, @mode, @division,@studentCollection,@questionResponseCollection} = opts
+				{model,@classID, @mode, @division,@questionResponseCollection} = opts
 
 				if not @questionResponseCollection
 					@questionResponseCollection = App.request "get:question:response:collection",
 						'division': @division
 						'collection_id': model.get 'id'
-
-				if not @studentCollection
-					if @mode is 'training'
-						@studentCollection = App.request "get:dummy:students"
-					else
-						@studentCollection = App.request "get:user:collection", ('role': 'student', 'division': @division)
 
 				App.execute "when:fetched", model, =>
 
@@ -43,11 +38,11 @@ define ['app'
 					@layout = layout = @_getContentGroupViewLayout()
 
 					@show @layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
-															 @textbookNames, @studentCollection])
+															 @textbookNames])
 
 					@listenTo @layout, 'show', @showContentGroupViews
 
-					@listenTo @layout.collectionDetailsRegion, 'start:teaching:module', @startTeachingModule
+					@listenTo @layout.collectionDetailsRegion, 'start:training:module', @startTrainingModule
 
 					@listenTo @layout.contentDisplayRegion, 'goto:question:readonly', (questionID)=>
 						#App.navigate App.getCurrentRoute() + '/question'
@@ -64,7 +59,7 @@ define ['app'
 					@contentLayoutItems.add itemModel
 				@contentLayoutItems
 				
-			startTeachingModule: =>
+			startTrainingModule: =>
 				responseCollection= @questionResponseCollection.where "status":"completed"
 				window.f = responseCollection
 				responseQuestionIDs = _.chain responseCollection
@@ -85,19 +80,17 @@ define ['app'
 					@gotoTrainingModule nextQuestion, 'class_mode'
 
 			gotoTrainingModule: (question, display_mode)=>
-				display_mode = 'training' if @mode is 'training'
-
-
-				App.execute "start:teacher:teaching:app",
-					region: App.mainContentRegion
-					division: @division
-					contentPiece: groupContentCollection.get question
+			
+				App.execute "start:student:training:app",
+					region				: App.mainContentRegion
+					division			: @division
+					contentPiece		: groupContentCollection.get question
 					questionResponseCollection: @questionResponseCollection
-					contentGroupModel: model
-					questionsCollection: groupContentCollection
-					classID: @classID
-					studentCollection: @studentCollection
-					display_mode: display_mode # when display mode is readonly, the save response options are not shown
+					contentGroupModel	: model
+					questionsCollection	: groupContentCollection
+					classID				: @classID
+					display_mode		: 'training' # when display mode is readonly, the save response options are not shown
+
 			# only when display mode is class_mode response changes can be done
 
 			showContentGroupViews: =>

@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/student-training-module/view-module/module-description/description-app', 'apps/student-training-module/view-module/content-display/content-display-app'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/student-training-module/view-module/module-description/description-app', 'apps/student-training-module/view-module/content-display/content-display-app', 'apps/student-training-module/take-module/take-module-controller'], function(App, RegionController) {
   return App.module("StudentTrainingApp.View", function(View, App) {
     var ContentGroupViewLayout;
     View.GroupController = (function(_super) {
@@ -14,7 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         this._getContentGroupViewLayout = __bind(this._getContentGroupViewLayout, this);
         this.showContentGroupViews = __bind(this.showContentGroupViews, this);
         this.gotoTrainingModule = __bind(this.gotoTrainingModule, this);
-        this.startTeachingModule = __bind(this.startTeachingModule, this);
+        this.startTrainingModule = __bind(this.startTrainingModule, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
@@ -24,22 +24,12 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
 
       GroupController.prototype.initialize = function(opts) {
         $.showHeaderAndLeftNav();
-        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.studentCollection = opts.studentCollection, this.questionResponseCollection = opts.questionResponseCollection;
+        model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.questionResponseCollection = opts.questionResponseCollection;
         if (!this.questionResponseCollection) {
           this.questionResponseCollection = App.request("get:question:response:collection", {
             'division': this.division,
             'collection_id': model.get('id')
           });
-        }
-        if (!this.studentCollection) {
-          if (this.mode === 'training') {
-            this.studentCollection = App.request("get:dummy:students");
-          } else {
-            this.studentCollection = App.request("get:user:collection", {
-              'role': 'student',
-              'division': this.division
-            });
-          }
         }
         return App.execute("when:fetched", model, (function(_this) {
           return function() {
@@ -56,10 +46,10 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
             _this.layout = layout = _this._getContentGroupViewLayout();
             _this.show(_this.layout, {
               loading: true,
-              entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames, _this.studentCollection]
+              entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames]
             });
             _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
-            _this.listenTo(_this.layout.collectionDetailsRegion, 'start:teaching:module', _this.startTeachingModule);
+            _this.listenTo(_this.layout.collectionDetailsRegion, 'start:training:module', _this.startTrainingModule);
             return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
               return _this.gotoTrainingModule(questionID, 'readonly');
             });
@@ -83,7 +73,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         return this.contentLayoutItems;
       };
 
-      GroupController.prototype.startTeachingModule = function() {
+      GroupController.prototype.startTrainingModule = function() {
         var content_piece_ids, content_pieces, nextQuestion, responseCollection, responseQuestionIDs;
         responseCollection = this.questionResponseCollection.where({
           "status": "completed"
@@ -107,10 +97,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
       };
 
       GroupController.prototype.gotoTrainingModule = function(question, display_mode) {
-        if (this.mode === 'training') {
-          display_mode = 'training';
-        }
-        return App.execute("start:teacher:teaching:app", {
+        return App.execute("start:student:training:app", {
           region: App.mainContentRegion,
           division: this.division,
           contentPiece: groupContentCollection.get(question),
@@ -118,8 +105,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
           contentGroupModel: model,
           questionsCollection: groupContentCollection,
           classID: this.classID,
-          studentCollection: this.studentCollection,
-          display_mode: display_mode
+          display_mode: 'training'
         });
       };
 
