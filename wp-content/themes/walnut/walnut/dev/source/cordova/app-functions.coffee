@@ -199,21 +199,19 @@ define ['underscore', 'backbone', 'unserialize'], ( _, Backbone) ->
 			defer = $.Deferred()
 
 			decrypt.startDecryption(source, destination
-				, ->
+				, ()->
 					console.log 'Decrypted File: '+destination
 					defer.resolve destination
 
 				, (message) ->
-
+					console.log 'Decryption error'
+					console.log message
 					defer.resolve destination
-					# defer.resolve(console.log('FILE DECRYPTION ERROR: '+message))
-					# navigator.notification.activityStop()
 			)
-
 
 			defer.promise()
 
-		#Get Path From The PLugin
+		#Get Path From The Plugin
 		getDeviceStorageOptions : ->
 			
 			defer = $.Deferred()

@@ -163,6 +163,8 @@ define(['underscore', 'backbone', 'unserialize'], function(_, Backbone) {
         console.log('Decrypted File: ' + destination);
         return defer.resolve(destination);
       }, function(message) {
+        console.log('Decryption error');
+        console.log(message);
         return defer.resolve(destination);
       });
       return defer.promise();

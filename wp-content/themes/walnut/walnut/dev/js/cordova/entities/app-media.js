@@ -9,16 +9,29 @@ define(['underscore'], function(_) {
         defer.resolve(result);
       } else {
         forEach = function(mediaId, index) {
-          return _.getMediaById(mediaId).then(function(mediaData) {
-            console.log('getMediaById done');
-            result[index] = mediaData;
+          if (_.isNaN(mediaId)) {
+            result.push({
+              id: mediaId,
+              url: ''
+            });
             index = index + 1;
             if (index < length) {
               return forEach(ids[index], index);
             } else {
               return defer.resolve(result);
             }
-          });
+          } else {
+            return _.getMediaById(mediaId).then(function(mediaData) {
+              console.log('getMediaById done');
+              result.push(mediaData);
+              index = index + 1;
+              if (index < length) {
+                return forEach(ids[index], index);
+              } else {
+                return defer.resolve(result);
+              }
+            });
+          }
         };
         forEach(ids[0], 0);
       }

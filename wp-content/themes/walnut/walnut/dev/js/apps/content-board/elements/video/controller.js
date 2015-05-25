@@ -8,6 +8,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       __extends(Controller, _super);
 
       function Controller() {
+        this._getVideoUrls = __bind(this._getVideoUrls, this);
         this.renderElement = __bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
@@ -57,15 +58,32 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         videoCollection = this._getVideoCollection();
         return videoCollection.p.done((function(_this) {
           return function() {
-            var view;
+            var urls, view;
+            urls = _this._getVideoUrls(videoCollection);
             _this.layout.model.set({
-              'videoUrl': _.first(videoCollection.pluck('url'))
+              'videoUrl': _.first(urls)
             });
             _this.layout.model.set({
-              'videoUrls': videoCollection.pluck('url')
+              'videoUrls': urls
             });
             view = _this._getVideoView();
             return _this.layout.elementRegion.show(view);
+          };
+        })(this));
+      };
+
+      Controller.prototype._getVideoUrls = function(collection) {
+        var urls;
+        urls = collection.pluck('url');
+        return urls = _.map(urls, (function(_this) {
+          return function(url, index) {
+            var titles;
+            titles = _this.layout.model.get('title');
+            if (_.str.contains(titles[index], 'youtube.com') && !url) {
+              return titles[index];
+            } else {
+              return url;
+            }
           };
         })(this));
       };

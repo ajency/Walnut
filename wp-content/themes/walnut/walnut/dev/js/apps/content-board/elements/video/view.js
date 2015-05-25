@@ -10,7 +10,6 @@ define(['app'], function(App) {
 
       function VideoView() {
         this.onError = __bind(this.onError, this);
-        this.ontimeUpdate = __bind(this.ontimeUpdate, this);
         this._playVideo = __bind(this._playVideo, this);
         this._playClickedVideo = __bind(this._playClickedVideo, this);
         this._playNextVideo = __bind(this._playNextVideo, this);
@@ -22,7 +21,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="/images/video-poster.jpg" data-setup="{}"> </video> {{/videoUrl}} <img src="/images/video-unavailable.png" alt="no video" class="hidden" width="100%"/> <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <div class="videoContainer"></div> {{/videoUrl}} <img src="./images/video-unavailable.png" alt="no video" class="hidden" width="100%"/> <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -33,100 +32,21 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype.onShow = function() {
-        $('img').addClass('hidden');
-        $('video').removeClass('hidden');
         if (!this.model.get('video_ids').length) {
           return;
         }
         this.videos = this.model.get('videoUrls');
         this.index = 0;
-        this.count = 0;
-        this.timeUpdateValue = 0;
-        this.$el.find('video').on('ended', (function(_this) {
-          return function() {
-            return _this._playNextVideo();
-          };
-        })(this));
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
-        this.$el.find('video')[0].currentTime;
-        this.$el.find('video')[0].addEventListener('timeupdate', this.ontimeUpdate);
-        this.$el.find('video')[0].addEventListener('error', this.onError, true);
-        if (_.platform() === 'DEVICE') {
-          return this._initLocalVideos();
+        if (_.platform() === 'BROWSER') {
+          this._addVideoElement(this.videos[0]);
         }
-      };
-
-      VideoView.prototype._initLocalVideos = function() {
-        var heightRatio, runFunc, setHeight, widthRatio;
-        navigator.notification.activityStart("Please wait", "loading content...");
-        widthRatio = 16;
-        heightRatio = 9;
-        setHeight = (this.$el.find('video').width() * heightRatio) / widthRatio;
-        this.$el.find('video').attr('height', setHeight);
-        runFunc = (function(_this) {
-          return function() {
-            return $.Deferred(function(d) {
-              var deferreds;
-              deferreds = [];
-              return _.createVideosWebDirectory().done(function() {
-                _.each(_this.videos, function(videoSource, index) {
-                  return (function(videoSource) {
-                    var decryptFile, decryptedPath, decryptedVideoPath, encryptedPath, encryptedVideoPath, option, url, value, videoUrl, videosWebUrl;
-                    url = videoSource.replace("media-web/", "");
-                    videosWebUrl = url.substr(url.indexOf("uploads/"));
-                    videoUrl = videosWebUrl.replace("videos-web", "videos");
-                    encryptedPath = "SynapseAssets/SynapseMedia/" + videoUrl;
-                    decryptedPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
-                    value = _.getStorageOption();
-                    option = JSON.parse(value);
-                    encryptedVideoPath = '';
-                    decryptedVideoPath = '';
-                    if (option.internal) {
-                      encryptedVideoPath = option.internal + '/' + encryptedPath;
-                      decryptedVideoPath = option.internal + '/' + decryptedPath;
-                    } else if (option.external) {
-                      encryptedVideoPath = option.external + '/' + encryptedPath;
-                      decryptedVideoPath = option.external + '/' + decryptedPath;
-                    }
-                    decryptFile = _.decryptLocalFile(encryptedVideoPath, decryptedVideoPath);
-                    return deferreds.push(decryptFile);
-                  })(videoSource);
-                });
-                return $.when.apply($, deferreds).done(function() {
-                  var videoPaths;
-                  videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-                  _.each(videoPaths, function(localVideoPath, index) {
-                    return (function(localVideoPath, index) {
-                      return _this.videos[index] = 'file://' + localVideoPath;
-                    })(localVideoPath, index);
-                  });
-                  return d.resolve(_this.videos);
-                });
-              });
-            });
-          };
-        })(this);
-        return $.when(runFunc()).done((function(_this) {
-          return function() {
-            console.log('_initLocalVideos done');
-            return navigator.notification.activityStop();
-          };
-        })(this)).fail(_.failureHandler);
-      };
-
-      VideoView.prototype._playFirstVideo = function() {
-        if (this.count === 0) {
-          this.count++;
-          this.$el.find('video')[0].src = this.videos[0];
-          this.$el.find('video')[0].load();
-          return setTimeout((function(_this) {
-            return function() {
-              return _this.$el.find('video')[0].play();
-            };
-          })(this), 300);
+        if (_.platform() === 'DEVICE') {
+          this.count = 0;
+          return this._decryptLocalVideoFiles();
         }
       };
 
@@ -146,14 +66,20 @@ define(['app'], function(App) {
         return this.$el.find('.playlist-hidden').toggle();
       };
 
-      VideoView.prototype._playPrevVideo = function(e) {
-        $('img').addClass('hidden');
-        $('video').removeClass('hidden');
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
+      VideoView.prototype._playFirstVideo = function() {
+        if (this.count === 0) {
+          this.count++;
+          this.$el.find('video')[0].src = this.videos[0];
+          this.$el.find('video')[0].load();
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.$el.find('video')[0].play();
+            };
+          })(this), 300);
         }
-        this.$el.find('video')[0].currentTime;
-        this.timeUpdateValue = 0;
+      };
+
+      VideoView.prototype._playPrevVideo = function(e) {
         e.stopPropagation();
         if (this.index > 0) {
           this.index--;
@@ -162,13 +88,6 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playNextVideo = function(e) {
-        $('img').addClass('hidden');
-        $('video').removeClass('hidden');
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
-        this.$el.find('video')[0].currentTime;
-        this.timeUpdateValue = 0;
         if (e != null) {
           e.stopPropagation();
         }
@@ -181,13 +100,6 @@ define(['app'], function(App) {
 
       VideoView.prototype._playClickedVideo = function(e) {
         var index;
-        $('img').addClass('hidden');
-        $('video').removeClass('hidden');
-        if (_.platform() === 'DEVICE') {
-          this.$el.find('video').attr('height', 'auto !important');
-        }
-        this.$el.find('video')[0].currentTime;
-        this.timeUpdateValue = 0;
         e.stopPropagation();
         index = parseInt($(e.target).attr('data-index'));
         this.index = index;
@@ -195,40 +107,110 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._playVideo = function() {
-        this.count++;
         this.$el.find('.playlist-video').removeClass('currentVid');
         this.$el.find(".playlist-video[data-index='" + this.index + "']").addClass('currentVid');
         this.$el.find('#now-playing-tag').text(this.model.get('title')[this.index]);
         if (_.platform() === 'BROWSER') {
           this.$el.find('video').attr('src', this.videos[this.index]);
-          this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
-        } else {
-          this.$el.find('video')[0].src = this.videos[this.index];
+          if (!this.videos[this.index]) {
+            this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
+          }
         }
-        this.$el.find('video')[0].load();
-        return this.$el.find('video')[0].play();
+        return this._addVideoElement(this.videos[this.index], true);
       };
 
-      VideoView.prototype.ontimeUpdate = function() {
-        this.videoTimeUpdate = this.$el.find('video')[0].currentTime;
-        this.timeUpdateValue = this.timeUpdateValue + 1;
-        if (this.timeUpdateValue === 1) {
-          return setTimeout((function(_this) {
-            return function() {
-              return _this.ontimeUpdate();
-            };
-          })(this), 1000);
-        } else {
-          setTimeout((function(_this) {
-            return function() {
-              _this.videoTimeUpdate = _this.$el.find('video')[0].currentTime;
-              if (_this.videoTimeUpdate === 0) {
-                $('img').removeClass('hidden');
-                return $('video').addClass('hidden');
+      VideoView.prototype._decryptLocalVideoFiles = function() {
+        var deferreds, youtubeVideoDeferred;
+        navigator.notification.activityStart("Please wait", "loading content...");
+        deferreds = [];
+        youtubeVideoDeferred = function(videoSource) {
+          var defer;
+          defer = $.Deferred();
+          defer.resolve(videoSource);
+          return defer.promise();
+        };
+        return _.createVideosWebDirectory().done((function(_this) {
+          return function() {
+            _.each(_this.videos, function(videoSource, index) {
+              var decryptedPath, decryptedVideoPath, encryptedPath, encryptedVideoPath, option, url, value, videoUrl, videosWebUrl;
+              if (videoSource.indexOf('youtube.com') < 0) {
+                url = videoSource.replace("media-web/", "");
+                videosWebUrl = url.substr(url.indexOf("uploads/"));
+                videoUrl = videosWebUrl.replace("videos-web", "videos");
+                encryptedPath = "SynapseAssets/SynapseMedia/" + videoUrl;
+                decryptedPath = "SynapseAssets/SynapseMedia/" + videosWebUrl;
+                value = _.getStorageOption();
+                option = JSON.parse(value);
+                encryptedVideoPath = decryptedVideoPath = '';
+                if (option.internal) {
+                  encryptedVideoPath = option.internal + '/' + encryptedPath;
+                  decryptedVideoPath = option.internal + '/' + decryptedPath;
+                } else if (option.external) {
+                  encryptedVideoPath = option.external + '/' + encryptedPath;
+                  decryptedVideoPath = option.external + '/' + decryptedPath;
+                }
+                return deferreds.push(_.decryptLocalFile(encryptedVideoPath, decryptedVideoPath));
+              } else {
+                return deferreds.push(youtubeVideoDeferred(videoSource));
               }
+            });
+            return $.when.apply($, deferreds).done(function() {
+              var videoPaths;
+              videoPaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+              _.each(videoPaths, function(localVideoPath, index) {
+                if (localVideoPath.indexOf('youtube.com') < 0) {
+                  return _this.videos[index] = 'file://' + localVideoPath;
+                }
+              });
+              console.log('_decryptLocalVideoFiles done');
+              navigator.notification.activityStop();
+              return _this._addVideoElement(_this.videos[0]);
+            });
+          };
+        })(this));
+      };
+
+      VideoView.prototype._addVideoElement = function(videoUrl, autoplay) {
+        var ratio, setHeight, vidID;
+        if (autoplay == null) {
+          autoplay = false;
+        }
+        this.$el.find('.videoContainer').empty();
+        if (_.str.contains(videoUrl, 'youtube.com')) {
+          vidID = _.str.strRightBack(videoUrl, '?v=');
+          return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0&autoplay=1" frameborder="0"> </iframe></div>');
+        } else {
+          this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin" controls preload="none" width="100%" poster="./images/video-poster.jpg" data-setup="{}"> </video>');
+          if (_.platform() === 'BROWSER') {
+            this.$el.find('video')[0].load();
+            this.$el.find('video')[0].play();
+          }
+          if (_.platform() === 'DEVICE') {
+            this.count++;
+            ratio = {
+              width: 16,
+              height: 9
             };
-          })(this), 300);
-          return this.$el.find('video')[0].removeEventListener('timeupdate', this.ontimeUpdate, false);
+            setHeight = (this.$el.find('video').width() * ratio.height) / ratio.width;
+            this.$el.find('video').attr('height', setHeight);
+            setTimeout((function(_this) {
+              return function() {
+                $('img').addClass('hidden');
+                $('video').removeClass('hidden');
+                _this.$el.find('video')[0].src = _this.videos[_this.index];
+                _this.$el.find('video')[0].addEventListener('error', _this.onError, true);
+                _this.$el.find('video').on('ended', function() {
+                  return _this._playNextVideo();
+                });
+                return _this.$el.find('video')[0].load();
+              };
+            })(this), 300);
+            return setTimeout((function(_this) {
+              return function() {
+                return _this.$el.find('video')[0].play();
+              };
+            })(this), 600);
+          }
         }
       };
 

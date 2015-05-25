@@ -3,36 +3,38 @@ define ['underscore'], ( _) ->
 	#Functions related to media entity
 
 	_.mixin
-	
 
 		getListOfMediaByID : (ids)->
-
 			defer = $.Deferred()
-
 			result = []
-
 			length = ids.length
 
 			if length is 0
 				defer.resolve result
 			else
 				forEach = (mediaId, index)->
-
-					_.getMediaById(mediaId)
-					.then (mediaData)->
-						console.log 'getMediaById done'
-
-						result[index] = mediaData
-
+					if _.isNaN mediaId
+						result.push id: mediaId, url: ''
+						
 						index = index + 1
 						if index < length
 							forEach ids[index], index
 						else 
 							defer.resolve result
+					else
+						_.getMediaById(mediaId)
+						.then (mediaData)->
+							console.log 'getMediaById done'
 
+							result.push mediaData
+
+							index = index + 1
+							if index < length
+								forEach ids[index], index
+							else 
+								defer.resolve result
 
 				forEach ids[0], 0
-
 
 			defer.promise()
 
