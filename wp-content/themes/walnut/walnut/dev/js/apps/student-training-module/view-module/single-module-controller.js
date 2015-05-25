@@ -33,7 +33,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         }
         return App.execute("when:fetched", model, (function(_this) {
           return function() {
-            var layout;
+            var groupContentCollectionFetch;
             if (model.get('code') === 'ERROR') {
               App.execute("show:no:permissions:app", {
                 region: App.mainContentRegion,
@@ -42,35 +42,60 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
               });
               return false;
             }
-            groupContentCollection = _this._getContentItems(model);
-            _this.layout = layout = _this._getContentGroupViewLayout();
-            _this.show(_this.layout, {
-              loading: true,
-              entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames]
-            });
-            _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
-            _this.listenTo(_this.layout.collectionDetailsRegion, 'start:training:module', _this.startTrainingModule);
-            return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:question:readonly', function(questionID) {
-              return _this.gotoTrainingModule(questionID, 'readonly');
+            groupContentCollectionFetch = _this._getContentItems(model);
+            return groupContentCollectionFetch.done(function(groupContent) {
+              var layout;
+              groupContentCollection = groupContent;
+              _this.layout = layout = _this._getContentGroupViewLayout();
+              _this.show(_this.layout, {
+                loading: true,
+                entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames]
+              });
+              _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
+              _this.listenTo(_this.layout.collectionDetailsRegion, 'start:training:module', _this.startTrainingModule);
+              return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:item', function(data) {
+                return _this.gotoTrainingModule(data, 'readonly');
+              });
             });
           };
         })(this));
       };
 
       GroupController.prototype._getContentItems = function(model) {
+        var defs;
         this.contentLayoutItems = new Backbone.Collection;
-        _.each(model.get('content_layout'), (function(_this) {
-          return function(content) {
+        this.contentLayoutItems.comparator = 'order';
+        this.deferContent = $.Deferred();
+        if (groupContentCollection) {
+          this.deferContent.resolve(groupContentCollection);
+          return this.deferContent.promise();
+        }
+        this.defer = {};
+        defs = _.map(model.get('content_layout'), (function(_this) {
+          return function(content, index) {
             var itemModel;
+            _this.defer[index] = $.Deferred();
             if (content.type === 'content-piece') {
               itemModel = App.request("get:content:piece:by:id", content.id);
             } else {
               itemModel = App.request("get:quiz:by:id", content.id);
             }
-            return _this.contentLayoutItems.add(itemModel);
+            App.execute("when:fetched", itemModel, function() {
+              itemModel.set({
+                'order': index + 1
+              });
+              _this.contentLayoutItems.add(itemModel);
+              return _this.defer[index].resolve(itemModel);
+            });
+            return _this.defer[index].promise();
           };
         })(this));
-        return this.contentLayoutItems;
+        $.when.apply($, this.defer).done((function(_this) {
+          return function() {
+            return _this.deferContent.resolve(_this.contentLayoutItems);
+          };
+        })(this));
+        return this.deferContent.promise();
       };
 
       GroupController.prototype.startTrainingModule = function() {
@@ -96,11 +121,19 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         }
       };
 
-      GroupController.prototype.gotoTrainingModule = function(question, display_mode) {
+      GroupController.prototype.gotoTrainingModule = function(data, display_mode) {
+        var currentItem;
+        currentItem = _.first(groupContentCollection.filter(function(model) {
+          var modelType;
+          modelType = data.type === 'quiz' ? 'type' : 'post_type';
+          if (model.id === parseInt(data.id) && model.get(modelType) === data.type) {
+            return model;
+          }
+        }));
         return App.execute("start:student:training:app", {
           region: App.mainContentRegion,
           division: this.division,
-          contentPiece: groupContentCollection.get(question),
+          currentItem: currentItem,
           questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: model,
           questionsCollection: groupContentCollection,

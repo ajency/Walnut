@@ -22,9 +22,9 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
           loading: true,
           entities: [groupContentCollection, questionResponseCollection]
         });
-        return this.listenTo(this.view, 'view:question:readonly', (function(_this) {
-          return function(questionID) {
-            return _this.region.trigger('goto:question:readonly', questionID);
+        return this.listenTo(this.view, 'view:item', (function(_this) {
+          return function(data) {
+            return _this.region.trigger('goto:item', data);
           };
         })(this));
       };
@@ -92,7 +92,7 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       __extends(ContentDisplayView, _super);
 
       function ContentDisplayView() {
-        this.viewQuestionReadOnly = __bind(this.viewQuestionReadOnly, this);
+        this.viewItem = __bind(this.viewItem, this);
         this.getResults = __bind(this.getResults, this);
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
@@ -162,7 +162,7 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       };
 
       ContentDisplayView.prototype.events = {
-        'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
+        'click .cbp_tmlabel.completed': 'viewItem'
       };
 
       ContentDisplayView.prototype.onShow = function() {
@@ -197,10 +197,14 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
         }
       };
 
-      ContentDisplayView.prototype.viewQuestionReadOnly = function(e) {
-        var questionID;
-        questionID = $(e.target).closest('.contentPiece').attr('data-id');
-        return this.trigger("view:question:readonly", questionID);
+      ContentDisplayView.prototype.viewItem = function(e) {
+        var itemID, itemType;
+        itemID = $(e.target).closest('.contentPiece').attr('data-id');
+        itemType = $(e.target).closest('.contentPiece').attr('data-type');
+        return this.trigger("view:item", {
+          id: itemID,
+          type: itemType
+        });
       };
 
       return ContentDisplayView;

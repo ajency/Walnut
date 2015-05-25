@@ -33,31 +33,52 @@ define ['app'
 
 						return false
 
-					groupContentCollection = @_getContentItems model
+					groupContentCollectionFetch = @_getContentItems model
+					groupContentCollectionFetch.done (groupContent)=> 
+						groupContentCollection = groupContent
+						@layout = layout = @_getContentGroupViewLayout()
 
-					@layout = layout = @_getContentGroupViewLayout()
+						@show @layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
+																 @textbookNames])
 
-					@show @layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
-															 @textbookNames])
+						@listenTo @layout, 'show', @showContentGroupViews
 
-					@listenTo @layout, 'show', @showContentGroupViews
+						@listenTo @layout.collectionDetailsRegion, 'start:training:module', @startTrainingModule
 
-					@listenTo @layout.collectionDetailsRegion, 'start:training:module', @startTrainingModule
-
-					@listenTo @layout.contentDisplayRegion, 'goto:question:readonly', (questionID)=>
-						#App.navigate App.getCurrentRoute() + '/question'
-						@gotoTrainingModule questionID, 'readonly'
+						@listenTo @layout.contentDisplayRegion, 'goto:item', (data)=>
+							@gotoTrainingModule data, 'readonly'
 
 			_getContentItems :(model)->
 				@contentLayoutItems = new Backbone.Collection
+				@contentLayoutItems.comparator = 'order'
+				@deferContent= $.Deferred()
+				
+				if groupContentCollection
+					@deferContent.resolve groupContentCollection
+					return @deferContent.promise()
+				
+				@defer={}
+				
+				defs= _.map model.get('content_layout'),(content,index)=>
+							
+							@defer[index]= $.Deferred()
 
-				_.each model.get('content_layout'),(content)=>
-					if content.type is 'content-piece'
-						itemModel = App.request "get:content:piece:by:id",content.id
-					else
-						itemModel = App.request "get:quiz:by:id",content.id
-					@contentLayoutItems.add itemModel
-				@contentLayoutItems
+							if content.type is 'content-piece'
+								itemModel = App.request "get:content:piece:by:id",content.id
+							else
+								itemModel = App.request "get:quiz:by:id",content.id
+
+							App.execute "when:fetched", itemModel, => 
+								itemModel.set 'order': index+1
+								@contentLayoutItems.add itemModel
+								@defer[index].resolve itemModel
+								
+							@defer[index].promise()
+					
+				$.when(@defer...).done =>
+					@deferContent.resolve @contentLayoutItems
+					
+				@deferContent.promise()
 				
 			startTrainingModule: =>
 				responseCollection= @questionResponseCollection.where "status":"completed"
@@ -79,12 +100,16 @@ define ['app'
 				else
 					@gotoTrainingModule nextQuestion, 'class_mode'
 
-			gotoTrainingModule: (question, display_mode)=>
-			
+			gotoTrainingModule: (data, display_mode)=>
+				
+				currentItem = _.first groupContentCollection.filter (model)->
+									modelType = if data.type is 'quiz' then 'type' else 'post_type' 
+									model if model.id is parseInt(data.id) and model.get(modelType) is data.type
+
 				App.execute "start:student:training:app",
 					region				: App.mainContentRegion
 					division			: @division
-					contentPiece		: groupContentCollection.get question
+					currentItem			: currentItem
 					questionResponseCollection: @questionResponseCollection
 					contentGroupModel	: model
 					questionsCollection	: groupContentCollection
@@ -92,7 +117,6 @@ define ['app'
 					display_mode		: 'training' # when display mode is readonly, the save response options are not shown
 
 			# only when display mode is class_mode response changes can be done
-
 			showContentGroupViews: =>
 				textbook_termIDs = _.flatten model.get 'term_ids'
 				@textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs

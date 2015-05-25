@@ -13,8 +13,8 @@ define ['app'
 
 				@show view, (loading: true, entities: [groupContentCollection, questionResponseCollection])
 
-				@listenTo @view, 'view:question:readonly', (questionID)=>
-					@region.trigger 'goto:question:readonly', questionID
+				@listenTo @view, 'view:item', (data)=>
+					@region.trigger 'goto:item', data
 
 			_getCollectionContentDisplayView: (model, collection, responseCollection) =>
 				new ContentDisplayView
@@ -120,7 +120,7 @@ define ['app'
 				correct_answer
 
 			events:
-				'click .cbp_tmlabel.completed': 'viewQuestionReadOnly'
+				'click .cbp_tmlabel.completed': 'viewItem'
 
 			onShow: ->
 				responseCollection = Marionette.getOption @, 'responseCollection'
@@ -150,12 +150,16 @@ define ['app'
 
 
 
-			viewQuestionReadOnly: (e)=>
-				questionID = $ e.target
+			viewItem: (e)=>
+				itemID = $ e.target
 				.closest '.contentPiece'
-					.attr 'data-id'
+				.attr 'data-id'
 
-				@trigger "view:question:readonly", questionID
+				itemType = $ e.target
+				.closest '.contentPiece'
+				.attr 'data-type'
+
+				@trigger "view:item", id: itemID, type: itemType
 
 
 

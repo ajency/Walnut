@@ -15,7 +15,7 @@ define ['app'
 		studentCollection = null
 		questionsCollection = null
 		questionResponseCollection = null
-		contentPiece = null
+		currentItem = null
 		questionResponseModel = null
 
 		class TakeModule.Controller extends RegionController
@@ -23,17 +23,26 @@ define ['app'
 			initialize : (opts)->
 				{@division,@classID,@moduleID,contentGroupModel,
 				questionsCollection,questionResponseCollection,
-				contentPiece,@display_mode,studentCollection} = opts
-				console.log 'take student training module'
+				currentItem,@display_mode,studentCollection} = opts
 				App.leftNavRegion.reset()
 				App.headerRegion.reset()
 
-				App.execute "when:fetched", [questionResponseCollection, contentPiece], =>
+				App.execute "when:fetched", [questionResponseCollection, currentItem], =>
 					#checking if model exists in collection. if so, replacing the empty model
-					@_getOrCreateModel contentPiece.get 'ID'
+					@_getOrCreateModel currentItem.get 'ID'
 
 				@layout = layout = @_getTakeSingleQuestionLayout()
-
+				
+				@listenTo App.vent.bind "next:item:student:training:module", (data)=>
+					@stopListening App.vent, "next:item:student:training:module"
+					#modify the current content piece with the current data so that we can find the next piece
+					currentItem.set 'ID': data.id, 'post_type': data.type
+					@_changeQuestion()
+					
+				if currentItem.get('type') is 'quiz'
+					@_showQuiz()
+					return
+					
 				@show @layout, (
 					loading : true
 					entities : [
@@ -42,7 +51,7 @@ define ['app'
 						questionsCollection
 						questionResponseCollection
 						questionResponseModel
-						contentPiece
+						currentItem
 					]
 				)
 
@@ -51,12 +60,12 @@ define ['app'
 				@listenTo @layout, "show", @_showModuleDescriptionView
 
 				@listenTo @layout, 'show', =>
-					if contentPiece.get('content_type') is 'content_piece'
+					if currentItem.get('content_type') is 'content_piece'
 						@_showTeacherTrainingFooter()
 					else
 						@_showStudentsListView questionResponseModel
 
-				@listenTo @layout, "show", @_showQuestionDisplayView contentPiece
+				@listenTo @layout, "show", @_showQuestionDisplayView currentItem
 
 				@listenTo @layout.moduleDetailsRegion, "goto:previous:route", @_gotoViewModule
 
@@ -65,7 +74,8 @@ define ['app'
 				@listenTo @layout.moduleDetailsRegion, "goto:next:question", @_changeQuestion
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
-
+				
+				
 			_changeQuestion : =>
 				if @display_mode is 'class_mode'
 					@_saveQuestionResponse "completed"
@@ -73,21 +83,13 @@ define ['app'
 				nextItem = @_getNextItem()
 
 				if nextItem
-					if nextItem.type is 'quiz'
-						App.navigate "view-quiz/#{nextItem.id}", true 
-						return
+					@_showQuestionDisplayView nextItem
+					@layout.triggerMethod "change:content:piece", currentItem
 
-					contentPiece = questionsCollection.get nextItem.id
-
-					questionResponseModel = @_getOrCreateModel nextItem.id
-
-					@_showQuestionDisplayView contentPiece
-					@layout.triggerMethod "change:content:piece", contentPiece
-
-					if @display_mode is 'training' or contentPiece.get('content_type') is 'content_piece'
+					if @display_mode is 'training' or currentItem.get('content_type') is 'content_piece'
 						@_showTeacherTrainingFooter()
 
-					# else if contentPiece.get('question_type') is 'multiple_eval'
+					# else if currentItem.get('question_type') is 'multiple_eval'
 					#   @_showStudentsListView questionResponseModel
 
 				else
@@ -97,7 +99,7 @@ define ['app'
 				contentLayout = contentGroupModel.get 'content_layout'
 				
 				item = _.filter contentLayout, (item)->
-							item if item.type is 'content-piece' && parseInt(item.id) is contentPiece.id
+							item if item.type is currentItem.get('post_type') && parseInt(item.id) is currentItem.id
 							
 				pieceIndex = _.indexOf contentLayout,item[0]
 				
@@ -142,14 +144,9 @@ define ['app'
 				#get the header and left nav back incase it was hidden for quiz view
 				$.showHeaderAndLeftNav()
 
-				App.execute "show:single:module:app",
+				App.execute "show:student:training:module",
 					region: App.mainContentRegion
 					model: contentGroupModel
-					mode: @display_mode
-					division: @division
-					classID: @classID
-					studentCollection: studentCollection
-					questionResponseCollection: questionResponseCollection
 
 
 			_getOrCreateModel : (content_piece_id)=>
@@ -183,15 +180,26 @@ define ['app'
 						questionResponseCollection : questionResponseCollection
 						display_mode : @display_mode
 
-
 			_showQuestionDisplayView : (model) =>
+				if model instanceof Backbone.Model
+					currentItem = model
+				else
+					currentItem = _.first questionsCollection.filter (item)-> 
+								modelType = if model.type is 'quiz' then 'type' else 'post_type' 
+								item if item.id is parseInt(model.id) and item.get(modelType) is model.type
+								
+				if currentItem.get('type') is 'quiz'
+					@_showQuiz()
+					return
 
+				questionResponseModel = @_getOrCreateModel currentItem.id
+				
 				if not questionResponseModel
-					@_getOrCreateModel model.ID
+					@_getOrCreateModel currentItem.ID
 
 				App.execute "show:top:panel",
 					region : @layout.topPanelRegion
-					model : contentPiece
+					model : currentItem
 					questionResponseModel : questionResponseModel
 					timerObject : @timerObject
 					display_mode : @display_mode
@@ -200,14 +208,14 @@ define ['app'
 
 				App.execute "when:fetched", questionResponseModel, =>
 
-					if contentPiece.get('question_type') is 'multiple_eval'
+					if currentItem.get('question_type') is 'multiple_eval'
 						App.execute "show:single:question:multiple:evaluation:app",
 							region : @layout.contentBoardRegion
 							questionResponseModel : questionResponseModel
 							studentCollection : studentCollection
 							display_mode : @display_mode
 							timerObject : @timerObject
-							evaluationParams : contentPiece.get 'grading_params'
+							evaluationParams : currentItem.get 'grading_params'
 
 						@layout.studentsListRegion.reset()
 
@@ -215,15 +223,19 @@ define ['app'
 					else
 						App.execute "show:content:board",
 							region : @layout.contentBoardRegion
-							model : contentPiece
+							model : currentItem
 
 						@_showStudentsListView questionResponseModel
-
-
+						
+			_showQuiz :=>
+				App.execute "show:single:quiz:app",
+					region	: App.mainContentRegion
+					quizModel : currentItem
+					studentTrainingModule: contentGroupModel
 
 			_showStudentsListView : (questionResponseModel)=>
-				App.execute "when:fetched", contentPiece, =>
-					question_type = contentPiece.get('question_type')
+				App.execute "when:fetched", currentItem, =>
+					question_type = currentItem.get('question_type')
 
 					if question_type is 'individual'
 						App.execute "show:single:question:student:list:app",
@@ -242,18 +254,18 @@ define ['app'
 
 
 			_showTeacherTrainingFooter : =>
-				App.execute "when:fetched", contentPiece, =>
-					question_type = contentPiece.get('question_type')
+				App.execute "when:fetched", currentItem, =>
+					question_type = currentItem.get('question_type')
 					nextItem = @_getNextItem()
 					App.execute 'show:teacher:training:footer:app',
 						region : @layout.studentsListRegion
-						contentPiece : contentPiece
+						contentPiece : currentItem
 						nextItemID : nextItem.id
 
 
 			_getTakeSingleQuestionLayout : ->
 				new SingleQuestionLayout
-					model: contentPiece
+					model: currentItem
 
 		class SingleQuestionLayout extends Marionette.Layout
 
@@ -276,15 +288,15 @@ define ['app'
 				$('.page-content').addClass 'condensed expand-page'
 				@onChangeContentPiece @model
 
-			onChangeContentPiece:(contentPiece)->
-				instructionsLabel = if contentPiece.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
+			onChangeContentPiece:(currentItem)->
+				instructionsLabel = if currentItem.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
 
 				if instructionsLabel
 					@$el.find '#instructions-label'
 					.html instructionsLabel
 
 				@$el.find '#instructions'
-				.html contentPiece.get 'instructions'
+				.html currentItem.get 'instructions'
 
 
 		# set handlers

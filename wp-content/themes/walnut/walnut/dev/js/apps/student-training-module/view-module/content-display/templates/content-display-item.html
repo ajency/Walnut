@@ -1,5 +1,5 @@
 {{#isContentPiece}}
-<div class="contentPiece" data-id="{{ID}}">
+<div class="contentPiece" data-type="content-piece" data-id="{{ID}}">
     <time class="cbp_tmtime" datetime="">
         <span class="time">{{duration}} <span class="semi-bold">mins</span></span>
     </time>
@@ -20,7 +20,7 @@
 </div>
 {{/isContentPiece}}
 {{^isContentPiece}}
-<div class="contentPiece" data-id="{{id}}">
+<div class="contentPiece" data-type="quiz" data-id="{{id}}">
     <time class="cbp_tmtime" datetime="">
         <span class="time">{{duration}} <span class="semi-bold">mins</span></span>
     </time>

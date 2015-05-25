@@ -19,8 +19,12 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       QuizViewLayout.prototype.mixinTemplateHelpers = function(data) {
-        var display_mode, student;
+        var display_mode, student, studentTrainingModule;
         display_mode = Marionette.getOption(this, 'display_mode');
+        studentTrainingModule = Marionette.getOption(this, 'studentTrainingModule');
+        if (studentTrainingModule) {
+          data.studentTrainingModule = true;
+        }
         if (display_mode === 'quiz_report') {
           student = Marionette.getOption(this, 'student');
           data.studentName = student.get('display_name');
@@ -31,6 +35,14 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.practice_mode = true;
         }
         return data;
+      };
+
+      QuizViewLayout.prototype.events = function() {
+        return {
+          'click .continue-student-training-module': function() {
+            return this.trigger("goto:next:item:student:training:module");
+          }
+        };
       };
 
       return QuizViewLayout;

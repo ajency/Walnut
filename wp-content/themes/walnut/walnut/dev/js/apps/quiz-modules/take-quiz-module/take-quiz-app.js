@@ -4,7 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
-    var TakeQuizLayout, pausedQuestionTime, questionIDs, questionModel, questionResponseModel, questionsCollection, quizModel, quizResponseSummary, timeBeforeCurrentQuestion;
+    var TakeQuizLayout, pausedQuestionTime, questionIDs, questionModel, questionResponseModel, questionsCollection, quizModel, quizResponseSummary, studentTrainingModule, timeBeforeCurrentQuestion;
     quizModel = null;
     quizResponseSummary = null;
     questionsCollection = null;
@@ -13,6 +13,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
     questionIDs = null;
     timeBeforeCurrentQuestion = null;
     pausedQuestionTime = 0;
+    studentTrainingModule = null;
     View.TakeQuizController = (function(_super) {
       __extends(TakeQuizController, _super);
 
@@ -25,7 +26,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       TakeQuizController.prototype.initialize = function(opts) {
-        quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode;
+        quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, studentTrainingModule = opts.studentTrainingModule;
         return this._startTakeQuiz();
       };
 
@@ -224,7 +225,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           questionsCollection: questionsCollection,
           questionResponseCollection: this.questionResponseCollection,
           quizResponseSummary: quizResponseSummary,
-          display_mode: this.display_mode
+          display_mode: this.display_mode,
+          studentTrainingModule: studentTrainingModule
         });
       };
 
