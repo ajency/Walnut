@@ -9,7 +9,7 @@ define ['app'
 				{@id,@groupType} = options
 				@contentLayoutItems = null
 				@studentTrainingModel = if @id then App.request "get:student:training:by:id", @id else App.request "new:student:training:module"				
-				@studentTrainingModel.set 'type', 'student_training'
+				@studentTrainingModel.set 'type', 'student-training'
 
 				App.execute "when:fetched", @studentTrainingModel, =>
 					@contentLayoutItems = @_getContentGroupCollection()

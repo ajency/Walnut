@@ -33,8 +33,8 @@ define ['app'
 
 				@layout = layout = @_getTakeSingleQuestionLayout()
 				
-				@listenTo App.vent.bind "next:item:student:training:module", (data)=>
-					@stopListening App.vent, "next:item:student:training:module"
+				App.vent.bind "next:item:student:training:module", (data)=>
+					App.vent.unbind "next:item:student:training:module"
 					#modify the current content piece with the current data so that we can find the next piece
 					currentItem.set 'ID': data.id, 'post_type': data.type
 					@_changeQuestion()

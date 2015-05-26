@@ -19,7 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
         this.id = options.id, this.groupType = options.groupType;
         this.contentLayoutItems = null;
         this.studentTrainingModel = this.id ? App.request("get:student:training:by:id", this.id) : App.request("new:student:training:module");
-        this.studentTrainingModel.set('type', 'student_training');
+        this.studentTrainingModel.set('type', 'student-training');
         return App.execute("when:fetched", this.studentTrainingModel, (function(_this) {
           return function() {
             _this.contentLayoutItems = _this._getContentGroupCollection();
@@ -101,6 +101,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
         return App.execute("when:fetched", this.contentLayoutItems, (function(_this) {
           return function() {
             if (model.get('post_status') === 'underreview') {
+              console.log(model);
               App.execute("show:content:selectionapp", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,

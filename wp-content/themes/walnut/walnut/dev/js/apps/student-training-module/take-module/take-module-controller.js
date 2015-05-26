@@ -39,16 +39,16 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           };
         })(this));
         this.layout = layout = this._getTakeSingleQuestionLayout();
-        this.listenTo(App.vent.bind("next:item:student:training:module", (function(_this) {
+        App.vent.bind("next:item:student:training:module", (function(_this) {
           return function(data) {
-            _this.stopListening(App.vent, "next:item:student:training:module");
+            App.vent.unbind("next:item:student:training:module");
             currentItem.set({
               'ID': data.id,
               'post_type': data.type
             });
             return _this._changeQuestion();
           };
-        })(this)));
+        })(this));
         if (currentItem.get('type') === 'quiz') {
           this._showQuiz();
           return;
