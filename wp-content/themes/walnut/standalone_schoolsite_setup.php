@@ -41,7 +41,14 @@ function run_standalone_school_setup(){
     add_pages_to_main_site();
 
     activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
-
+    
+    activate_plugins(array(
+        'custom-taxonomy-order-ne/customtaxorder.php',
+        'wp-crontrol/wp-crontrol.php'));
+    
+    #schedule the communication cron
+    wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'ajcm_process_communication_queue');
+    
     //wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
 }
 

@@ -280,9 +280,6 @@ if ( !wp_is_mobile() ) {
 jQuery(document).ready(function() {
 	jQuery("#install_wordpress").on('click',function(e){
 		e.preventDefault();
-		
-	var SERVER_AJAXURL = 'http://synapsedu.info/wp-admin/admin-ajax.php';
-		
 		data ={};
         data['txtusername'] = jQuery.trim(jQuery('#user_login').val());
         data['txtpassword'] = jQuery('#pass1').val();

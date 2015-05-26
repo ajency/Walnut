@@ -1125,7 +1125,7 @@ function sds_validate_terms_csv_row( $terms_data ) {
         return new WP_Error("", "Not a valid record");
 
     // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $terms_data ) !== 4)
+    if (count( $terms_data ) !== 5)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid
@@ -1143,7 +1143,8 @@ function sds_convert_csv_row_to_terms_format( $terms_data ) {
         'term_id' => $terms_data[0],
         'name' => $terms_data[1],
         'slug' => $terms_data[2],
-        'term_group' => $terms_data[3]
+        'term_group' => $terms_data[3],
+        'term_order' => $terms_data[4]
     );
 }
 
