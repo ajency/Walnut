@@ -134,7 +134,7 @@ define(['marionette'], function(Marionette) {
       App.execute("show:leftnavapp", {
         region: App.leftNavRegion
       });
-      if (!_.isUndefined(Paçe)) {
+      if (typeof Pace !== "undefined" && Pace !== null) {
         return Pace.on('hide', function() {
           return $("#site_main_container").addClass("showAll");
         });

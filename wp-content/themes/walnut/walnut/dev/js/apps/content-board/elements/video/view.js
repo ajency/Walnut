@@ -121,7 +121,7 @@ define(['app'], function(App) {
 
       VideoView.prototype._decryptLocalVideoFiles = function() {
         var deferreds, youtubeVideoDeferred;
-        navigator.notification.activityStart("Please wait", "loading content...");
+        navigator.notification.activityStart("Please wait", "Loading content...");
         deferreds = [];
         youtubeVideoDeferred = function(videoSource) {
           var defer;
@@ -180,7 +180,7 @@ define(['app'], function(App) {
           vidID = _.str.strRightBack(videoUrl, '?v=');
           return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0&autoplay=1" frameborder="0"> </iframe></div>');
         } else {
-          this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin" controls preload="none" width="100%" poster="./images/video-poster.jpg" data-setup="{}"> </video>');
+          this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin" controls preload="none" width="100%" poster="./images/video-poster.jpg" src="' + videoUrl + '" data-setup="{}"> </video>');
           if (_.platform() === 'BROWSER') {
             this.$el.find('video')[0].load();
             this.$el.find('video')[0].play();
@@ -193,23 +193,20 @@ define(['app'], function(App) {
             };
             setHeight = (this.$el.find('video').width() * ratio.height) / ratio.width;
             this.$el.find('video').attr('height', setHeight);
-            setTimeout((function(_this) {
+            $('img').addClass('hidden');
+            $('video').removeClass('hidden');
+            this.$el.find('video')[0].addEventListener('error', this.onError, true);
+            this.$el.find('video').on('ended', (function(_this) {
               return function() {
-                $('img').addClass('hidden');
-                $('video').removeClass('hidden');
-                _this.$el.find('video')[0].src = _this.videos[_this.index];
-                _this.$el.find('video')[0].addEventListener('error', _this.onError, true);
-                _this.$el.find('video').on('ended', function() {
-                  return _this._playNextVideo();
-                });
-                return _this.$el.find('video')[0].load();
+                return _this._playNextVideo();
               };
-            })(this), 300);
+            })(this));
+            this.$el.find('video')[0].load();
             return setTimeout((function(_this) {
               return function() {
                 return _this.$el.find('video')[0].play();
               };
-            })(this), 600);
+            })(this), 500);
           }
         }
       };

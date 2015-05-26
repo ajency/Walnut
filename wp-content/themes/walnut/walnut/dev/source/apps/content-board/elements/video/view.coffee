@@ -128,7 +128,7 @@ define ['app'], (App)->
 
 
 			_decryptLocalVideoFiles : ->
-				navigator.notification.activityStart "Please wait", "loading content..."
+				navigator.notification.activityStart "Please wait", "Loading content..."
 				deferreds = []
 
 				youtubeVideoDeferred = (videoSource)->
@@ -182,7 +182,7 @@ define ['app'], (App)->
 					</iframe></div>'
 				else
 					@$el.find('.videoContainer').html '<video class="video-js vjs-default-skin" controls preload="none" width="100%"
-									poster="./images/video-poster.jpg" data-setup="{}">
+									poster="./images/video-poster.jpg" src="'+videoUrl+'" data-setup="{}">
 								</video>'
 
 					if _.platform() is 'BROWSER'
@@ -195,21 +195,17 @@ define ['app'], (App)->
 						setHeight = (@$el.find('video').width() * ratio.height) / ratio.width
 						@$el.find('video').attr 'height', setHeight
 
-						setTimeout =>
-							$('img').addClass 'hidden'
-							$('video').removeClass 'hidden'
-							
-							@$el.find('video')[0].src = @videos[@index]
-							@$el.find('video')[0].addEventListener 'error', @onError, true
-							@$el.find('video').on 'ended', =>
-								@_playNextVideo()
+						$('img').addClass 'hidden'
+						$('video').removeClass 'hidden'
+						
+						@$el.find('video')[0].addEventListener 'error', @onError, true
+						@$el.find('video').on 'ended', =>
+							@_playNextVideo()
 
-							@$el.find('video')[0].load()
-						, 300
-
+						@$el.find('video')[0].load()
 						setTimeout =>
 							@$el.find('video')[0].play()
-						, 600
+						, 500
 
 
 			onError : (evt)=>

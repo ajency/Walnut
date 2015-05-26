@@ -59,6 +59,7 @@ require.config
 		walnutGlobal        : 'plugins/walnutapp-global'
 
 
+
 	shim:
 		underscore:
 			exports: '_'
