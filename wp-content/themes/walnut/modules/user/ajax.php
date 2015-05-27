@@ -82,7 +82,12 @@ function ajax_auth_sync_user(){
 	
 	$blog_details = get_blog_details($blog_id);
 	
-	$username = $blog_details->blogname.'syncuser';
+	if(!$blog_details)
+        return wp_send_json(array('error'=>'invalid blog'));
+
+    $domain = explode('.',$blog_details->domain);
+    $username = $domain[0].'syncuser';
+
     if(empty($username) || empty($password)){
         return false;
     } else {
@@ -157,13 +162,7 @@ function ajax_auth_sync_user(){
 
         }
 
-        $response = json_encode( $response );
-
-        header( "Content-Type: application/json" );
-
-        echo $response;
-
-        exit;
+        return wp_send_json($response);
 
     }   
 }
