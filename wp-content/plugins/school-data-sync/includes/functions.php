@@ -131,8 +131,12 @@ function sds_download_file_local($sync_id){
     $status = $sync_record->status;
     
     $uploads_dir=wp_upload_dir();
+
     $upload_directory = str_replace('/images', '', $uploads_dir['basedir']);
     
+    if(!file_exists($upload_directory))
+        mkdir($upload_directory,0755);
+
     if(!file_exists($upload_directory.'/tmplocal/'))
         mkdir($upload_directory.'/tmplocal',0755);
 

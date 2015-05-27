@@ -168,6 +168,9 @@ function ajax_sds_data_sync_local_export(){
 
     $random= rand(9999,99999);
 
+    if(!file_exists($upload_directory))
+        mkdir($upload_directory,0755);
+
     if(!file_exists($upload_directory.'/tmplocal/'))
         mkdir($upload_directory.'/tmplocal',0755);
 
