@@ -324,8 +324,10 @@ function get_modules_containing_content_piece($content_id){
         }
 
         if($valid){
-            $m['id']=$module_meta->collection_id;
-            $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
+            $module_dets= get_single_content_module($module_meta->collection_id);
+            $m['id']=$module_dets->id;
+            $m['name']=$module_dets->name;
+            $m['type']=$module_dets->type;
             $modules[]=$m;
         }
 
