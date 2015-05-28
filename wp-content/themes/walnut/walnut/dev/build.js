@@ -52,7 +52,10 @@
         spinedit            : 'plugins/bootstrap-spinedit',
         resizablecolumns : 'plugins/jquery.resizableColumns.min',
         bootbox : 'plugins/bootbox.min',
-        jPages: 'plugins/jPages.min'
+        jPages: 'plugins/jPages.min',
+        modenizr: 'plugins/bookBlock/modernizr.custom',
+        jquerypp : 'plugins/bookBlock/jquerypp.custom',
+        bookblock : 'plugins/bookBlock/jquery.bookblock'
     },
     shim: {
         underscore: {
@@ -100,6 +103,8 @@
         resizablecolumns : ['jquery'],
         bootbox : ['jquery','bootstrap'],
         jPages: ['jquery'],
+        jquerypp : ['jquery'],
+        bookblock :['jquery'],
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
     }
 })

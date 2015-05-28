@@ -21,9 +21,6 @@ define ['app'
 				@listenTo @view, "goto:previous:route", =>
 					@region.trigger "goto:previous:route"
 
-				@listenTo @region, "init:book:block", =>
-					@view.triggerMethod "init:book:block"
-
 				@listenTo view, "question:completed", @_changeQuestion
 
 			_changeQuestion:=>
@@ -100,12 +97,10 @@ define ['app'
 				'click #question-done': 'questionCompleted'
 
 			onShow:->
-				@isLastContentPiece = false
-
+			
 				if not Marionette.getOption(@, 'nextItemID')
-					@isLastContentPiece = true
-					@$el.find "#question-done"
-					.html '<i class="fa fa-forward"></i> Finish Module'
+                    @$el.find "#question-done"
+                    .html '<i class="fa fa-forward"></i> Finish Module'
 
 				if @model.get('post_status') is 'archive'
 					@$el.find "#question-done"
@@ -123,31 +118,17 @@ define ['app'
 
 			questionCompleted: =>
 
-				if Marionette.getOption(@, 'display_mode') is 'class_mode'
-					bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
-						@decidePageFlip() if result
+                if Marionette.getOption(@, 'display_mode') is 'class_mode'
+                    bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
+                        @trigger("question:completed") if result
 
-				else @decidePageFlip()
+                else @trigger "question:completed"
 
-			decidePageFlip : =>
-				$bookBlock = $('#bb-bookblock')
-				if @isLastContentPiece or _.size($bookBlock) is 0
-					@trigger "question:completed"
-				else $bookBlock.bookblock 'next'
+            onQuestionChanged: (nextItemID)->
 
-			onQuestionChanged: (nextItemID)->
-				if not nextItemID
-					@isLastContentPiece = true
-					@$el.find "#question-done"
-					.html '<i class="fa fa-forward"></i> Finish Module'
-
-			onInitBookBlock : ->
-				$('#bb-bookblock').bookblock
-					speed : 1000
-					shadowSides : 0.8
-					shadowFlip : 0.7
-					onEndFlip: =>
-						@trigger "question:completed"
+                if not nextItemID
+                    @$el.find "#question-done"
+                    .html '<i class="fa fa-forward"></i> Finish Module'
 
 
 		# set handlers

@@ -34,7 +34,7 @@ define ['app'
 				@layout = layout = @_getTakeSingleQuestionLayout()
 				
 				App.vent.bind "next:item:student:training:module", (data)=>
-					App.vent.unbind "next:item:student:training:module"
+					#App.vent.unbind "next:item:student:training:module"
 					#modify the current content piece with the current data so that we can find the next piece
 					currentItem.set 'ID': data.id, 'post_type': data.type
 					@_changeQuestion()
@@ -75,6 +75,8 @@ define ['app'
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 				
+				@listenTo @layout.contentBoardRegion, "init:book:block", =>
+					@layout.moduleDetailsRegion.trigger "init:book:block"
 				
 			_changeQuestion : =>
 				if @display_mode is 'class_mode'

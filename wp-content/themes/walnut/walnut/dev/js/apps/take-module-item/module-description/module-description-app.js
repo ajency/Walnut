@@ -30,11 +30,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
             return _this.region.trigger("goto:previous:route");
           };
         })(this));
-        this.listenTo(this.region, "init:book:block", (function(_this) {
-          return function() {
-            return _this.view.triggerMethod("init:book:block");
-          };
-        })(this));
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
@@ -108,7 +103,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       __extends(ModuleDescriptionView, _super);
 
       function ModuleDescriptionView() {
-        this.decidePageFlip = __bind(this.decidePageFlip, this);
         this.questionCompleted = __bind(this.questionCompleted, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
@@ -136,9 +130,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.onShow = function() {
         var stickyHeaderTop;
-        this.isLastContentPiece = false;
         if (!Marionette.getOption(this, 'nextItemID')) {
-          this.isLastContentPiece = true;
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
         if (this.model.get('post_status') === 'archive') {
@@ -161,43 +153,19 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
           return bootbox.confirm('This item will be marked as complete. Continue?', (function(_this) {
             return function(result) {
               if (result) {
-                return _this.decidePageFlip();
+                return _this.trigger("question:completed");
               }
             };
           })(this));
         } else {
-          return this.decidePageFlip();
-        }
-      };
-
-      ModuleDescriptionView.prototype.decidePageFlip = function() {
-        var $bookBlock;
-        $bookBlock = $('#bb-bookblock');
-        if (this.isLastContentPiece || _.size($bookBlock) === 0) {
           return this.trigger("question:completed");
-        } else {
-          return $bookBlock.bookblock('next');
         }
       };
 
       ModuleDescriptionView.prototype.onQuestionChanged = function(nextItemID) {
         if (!nextItemID) {
-          this.isLastContentPiece = true;
           return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
-      };
-
-      ModuleDescriptionView.prototype.onInitBookBlock = function() {
-        return $('#bb-bookblock').bookblock({
-          speed: 1000,
-          shadowSides: 0.8,
-          shadowFlip: 0.7,
-          onEndFlip: (function(_this) {
-            return function() {
-              return _this.trigger("question:completed");
-            };
-          })(this)
-        });
       };
 
       return ModuleDescriptionView;
