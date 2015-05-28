@@ -35,4 +35,7 @@ define [
     'spinedit'
     'bootbox'
     'jPages'
+    'modenizr'
+    'jquerypp'
+    'bookblock'
 ], ->
