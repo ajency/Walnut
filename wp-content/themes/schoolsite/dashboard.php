@@ -60,6 +60,11 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+
+    <!-- BEGIN BOOK BLOCK -->
+    <link href="./wp-content/themes/walnut/walnut/dev/css/bookBlock/custom.css" rel="stylesheet" type="text/css">
+    <link href="./wp-content/themes/walnut/walnut/dev/css/bookBlock/bookblock.css" rel="stylesheet" type="text/css">
+    <!-- END BOOK BLOCK -->
 </head>
 <body class="">
 <div id="site_main_container">
