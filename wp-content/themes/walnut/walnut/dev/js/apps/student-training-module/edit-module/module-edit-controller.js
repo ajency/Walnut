@@ -101,7 +101,6 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ed
         return App.execute("when:fetched", this.contentLayoutItems, (function(_this) {
           return function() {
             if (model.get('post_status') === 'underreview') {
-              console.log(model);
               App.execute("show:content:selectionapp", {
                 region: _this.layout.contentSelectionRegion,
                 model: model,
