@@ -1,7 +1,7 @@
 define ['app'
-        'controllers/region-controller'
-        'text!apps/take-module-item/module-description/templates/module-description-template.html'
-        'bootbox'], (App, RegionController, moduleDescriptionTemplate,bootbox)->
+		'controllers/region-controller'
+		'text!apps/take-module-item/module-description/templates/module-description-template.html'
+		'bootbox'], (App, RegionController, moduleDescriptionTemplate,bootbox)->
 	App.module "TeacherTeachingApp.ModuleDescription", (ModuleDescription, App)->
 		class ModuleDescriptionController extends RegionController
 
@@ -62,7 +62,7 @@ define ['app'
 
 					templateHelpers:
 						showPauseButton:=>
-							pauseBtn='';
+							pauseBtn = '';
 							if @display_mode is 'class_mode'
 								pauseBtn= '<button type="button" id="pause-session" class="btn btn-white
 									action h-center block m-t-5"><i class="fa fa-pause"></i> Pause</button>'
