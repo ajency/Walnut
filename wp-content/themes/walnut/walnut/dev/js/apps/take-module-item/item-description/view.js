@@ -15,6 +15,16 @@ define(['app', 'text!apps/take-module-item/item-description/templates/top-panel.
 
       TopPanelView.prototype.template = TopPanelTemplate;
 
+      TopPanelView.prototype.events = function() {
+        return {
+          'click #top-panel-question-done': (function(_this) {
+            return function() {
+              return _this.trigger('top:panel:question:done');
+            };
+          })(this)
+        };
+      };
+
       TopPanelView.prototype.mixinTemplateHelpers = function(data) {
         data = TopPanelView.__super__.mixinTemplateHelpers.call(this, data);
         if (data.question_type === 'multiple_eval') {

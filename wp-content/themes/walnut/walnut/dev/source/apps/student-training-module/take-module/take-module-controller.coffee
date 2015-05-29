@@ -74,6 +74,9 @@ define ['app'
 				@listenTo @layout.moduleDetailsRegion, "goto:next:question", @_changeQuestion
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
+
+				@listenTo @layout.topPanelRegion, "top:panel:question:done", =>
+					@layout.moduleDetailsRegion.trigger "top:panel:question:done"
 				
 				@listenTo @layout.contentBoardRegion, "init:book:block", =>
 					@layout.moduleDetailsRegion.trigger "init:book:block"

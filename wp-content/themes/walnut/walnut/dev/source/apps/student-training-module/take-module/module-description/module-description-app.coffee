@@ -24,6 +24,9 @@ define ['app'
 				@listenTo @region, "init:book:block", =>
 					@view.triggerMethod "init:book:block"
 
+				@listenTo @region, "top:panel:question:done", =>
+					@view.triggerMethod "top:panel:question:done"
+
 				@listenTo view, "question:completed", @_changeQuestion
 
 			_changeQuestion:=>
@@ -108,6 +111,8 @@ define ['app'
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
+					@topPanelQuestionDoneButton()
+
 				if @model.get('post_status') is 'archive'
 					@$el.find "#question-done"
 					.remove()
@@ -122,9 +127,17 @@ define ['app'
 						$("#question-details-region").css "margin-top", 0
 					return
 
+				$('#collapseView').on 'hidden.bs.collapse', ->
+					$('#accordionToggle').text 'Expand'
+
+				$('#collapseView').on 'shown.bs.collapse', ->
+					$('#accordionToggle').text 'Collapse'
+
+
+			onTopPanelQuestionDone : =>
+				@questionCompleted()
 
 			questionCompleted: =>
-
 				if Marionette.getOption(@, 'display_mode') is 'class_mode'
 					bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
 						@decidePageFlip() if result
@@ -132,7 +145,6 @@ define ['app'
 				else @decidePageFlip()
 
 			decidePageFlip : =>
-				
 				$bookBlock = $('#bb-bookblock')
 				if @isLastContentPiece or _.size($bookBlock) is 0
 					@trigger "question:completed"
@@ -144,6 +156,8 @@ define ['app'
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
+					@topPanelQuestionDoneButton()
+
 			onInitBookBlock : ->
 				$('#bb-bookblock').bookblock
 					speed : 1000
@@ -151,6 +165,12 @@ define ['app'
 					shadowFlip : 0.7
 					onEndFlip: =>
 						@trigger "question:completed"
+
+			topPanelQuestionDoneButton : ->
+				setTimeout ->
+					$ "#top-panel-question-done"
+					.html '<i class="fa fa-forward"></i> Finish Module'
+				, 400
 
 		# set handlers
 		App.commands.setHandler "show:student:training:module:description", (opt = {})->

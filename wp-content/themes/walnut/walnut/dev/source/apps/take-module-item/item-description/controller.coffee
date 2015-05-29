@@ -22,6 +22,9 @@ define ['app'
                 @listenTo @view, 'show',->
                     @view.triggerMethod 'show:total:marks',@marks
 
+                @listenTo @view, "top:panel:question:done",->
+                    @region.trigger "top:panel:question:done"
+
                 App.execute "when:fetched", [@textbookNames, @textbookModel], =>
                     @show @view, (loading : true)
 

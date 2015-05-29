@@ -21,6 +21,9 @@ define ['app'
 				@listenTo @view, "goto:previous:route", =>
 					@region.trigger "goto:previous:route"
 
+				@listenTo @region, "top:panel:question:done", =>
+					@view.triggerMethod "top:panel:question:done"
+
 				@listenTo view, "question:completed", @_changeQuestion
 
 			_changeQuestion:=>
@@ -99,8 +102,10 @@ define ['app'
 			onShow:->
 			
 				if not Marionette.getOption(@, 'nextItemID')
-                    @$el.find "#question-done"
-                    .html '<i class="fa fa-forward"></i> Finish Module'
+					@$el.find "#question-done"
+					.html '<i class="fa fa-forward"></i> Finish Module'
+
+					@topPanelQuestionDoneButton()
 
 				if @model.get('post_status') is 'archive'
 					@$el.find "#question-done"
@@ -116,19 +121,35 @@ define ['app'
 						$("#question-details-region").css "margin-top", 0
 					return
 
+				$('#collapseView').on 'hidden.bs.collapse', ->
+					$('#accordionToggle').text 'Expand'
+
+				$('#collapseView').on 'shown.bs.collapse', ->
+					$('#accordionToggle').text 'Collapse'
+
+			onTopPanelQuestionDone : =>
+				@questionCompleted()
+
 			questionCompleted: =>
+				if Marionette.getOption(@, 'display_mode') is 'class_mode'
+					bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
+						@trigger("question:completed") if result
 
-                if Marionette.getOption(@, 'display_mode') is 'class_mode'
-                    bootbox.confirm 'This item will be marked as complete. Continue?', (result)=>
-                        @trigger("question:completed") if result
+				else @trigger "question:completed"
 
-                else @trigger "question:completed"
+			onQuestionChanged: (nextItemID)->
 
-            onQuestionChanged: (nextItemID)->
+				if not nextItemID
+					@$el.find "#question-done"
+					.html '<i class="fa fa-forward"></i> Finish Module'
 
-                if not nextItemID
-                    @$el.find "#question-done"
-                    .html '<i class="fa fa-forward"></i> Finish Module'
+					@topPanelQuestionDoneButton()
+
+			topPanelQuestionDoneButton : ->
+				setTimeout ->
+					$ "#top-panel-question-done"
+					.html '<i class="fa fa-forward"></i> Finish Module'
+				, 500
 
 
 		# set handlers

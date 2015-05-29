@@ -57,7 +57,12 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoViewModule);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoViewModule);
         this.listenTo(this.layout.moduleDetailsRegion, "goto:next:question", this._changeQuestion);
-        return this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        return this.listenTo(this.layout.topPanelRegion, "top:panel:question:done", (function(_this) {
+          return function() {
+            return _this.layout.moduleDetailsRegion.trigger("top:panel:question:done");
+          };
+        })(this));
       };
 
       TeacherTeachingController.prototype._changeQuestion = function() {

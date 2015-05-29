@@ -30,6 +30,11 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
             return _this.region.trigger("goto:previous:route");
           };
         })(this));
+        this.listenTo(this.region, "top:panel:question:done", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("top:panel:question:done");
+          };
+        })(this));
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
@@ -104,6 +109,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       function ModuleDescriptionView() {
         this.questionCompleted = __bind(this.questionCompleted, this);
+        this.onTopPanelQuestionDone = __bind(this.onTopPanelQuestionDone, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -132,12 +138,13 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         var stickyHeaderTop;
         if (!Marionette.getOption(this, 'nextItemID')) {
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+          this.topPanelQuestionDoneButton();
         }
         if (this.model.get('post_status') === 'archive') {
           this.$el.find("#question-done").remove();
         }
         stickyHeaderTop = this.$el.find("#module-details-region").height();
-        return $(window).scroll(function() {
+        $(window).scroll(function() {
           if ($(window).scrollTop() > stickyHeaderTop) {
             $("#module-details-region").addClass("condensed animated slideInDown");
             $("#question-details-region").css("margin-top", stickyHeaderTop + 15);
@@ -146,6 +153,16 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
             $("#question-details-region").css("margin-top", 0);
           }
         });
+        $('#collapseView').on('hidden.bs.collapse', function() {
+          return $('#accordionToggle').text('Expand');
+        });
+        return $('#collapseView').on('shown.bs.collapse', function() {
+          return $('#accordionToggle').text('Collapse');
+        });
+      };
+
+      ModuleDescriptionView.prototype.onTopPanelQuestionDone = function() {
+        return this.questionCompleted();
       };
 
       ModuleDescriptionView.prototype.questionCompleted = function() {
@@ -164,8 +181,15 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.onQuestionChanged = function(nextItemID) {
         if (!nextItemID) {
-          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
+          return this.topPanelQuestionDoneButton();
         }
+      };
+
+      ModuleDescriptionView.prototype.topPanelQuestionDoneButton = function() {
+        return setTimeout(function() {
+          return $("#top-panel-question-done").html('<i class="fa fa-forward"></i> Finish Module');
+        }, 500);
       };
 
       return ModuleDescriptionView;

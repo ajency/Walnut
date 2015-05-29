@@ -4,6 +4,11 @@ define ['app'
         class Views.TopPanelView extends Marionette.ItemView
 
             template: TopPanelTemplate
+
+            events :->
+                'click #top-panel-question-done': =>
+                    @trigger 'top:panel:question:done'
+
             mixinTemplateHelpers:(data)->
                 data = super data
                 

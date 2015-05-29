@@ -66,6 +66,9 @@ define ['app'
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
+				@listenTo @layout.topPanelRegion, "top:panel:question:done", =>
+					@layout.moduleDetailsRegion.trigger "top:panel:question:done"
+
 			_changeQuestion : =>
 				if @display_mode is 'class_mode'
 					@_saveQuestionResponse "completed"
