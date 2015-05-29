@@ -183,6 +183,21 @@
   background: #d0d0d0;
   border: none;
 }
+#content-board #myCanvas .column,
+#content-board.quizContent #myCanvas .column,
+#content-builder #myCanvas .column {
+  padding: 0 5px;
+}
+#content-board #myCanvas .column:first-child,
+#content-board.quizContent #myCanvas .column:first-child,
+#content-builder #myCanvas .column:first-child {
+  padding-left: 15px;
+}
+#content-board #myCanvas .column:last-child,
+#content-board.quizContent #myCanvas .column:last-child,
+#content-builder #myCanvas .column:last-child {
+  padding-right: 15px;
+}
 .createParameters {
   background: #ffffff;
   max-width: 760px;
@@ -804,19 +819,6 @@
   background-color: #f8f8f8;
   border-bottom: 1px solid #e5e9ec;
 }
-.videoWrapper {
-	position: relative;
-	padding-bottom: 56.25%; /* 16:9 */
-	padding-top: 25px;
-	height: 0;
-}
-.videoWrapper iframe {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
 .playlistToggle {
   position: relative;
   top: -45px;
@@ -1404,7 +1406,7 @@ p.mcq-option-text {
 #content-board .element-wrapper {
   border: none;
   padding: 0 7px;
-  margin: 2px 0 15px;
+  margin: 2px 0 5px;
 }
 #content-board .imagewithtext .image-placeholder {
   cursor: default;
@@ -2972,3 +2974,18 @@ select:before {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
   margin-left: 0;
 }
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/*# sourceMappingURL=custom.css.map */
