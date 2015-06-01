@@ -43,7 +43,8 @@ define ['app'], (App)->
 				data
 
 			events:
-				'click': 'imageClick'
+				'click .image-placeholder, .pull-left': 'imageClick'
+				
 
 			initialize :(options)->
 				@imageHeightRatio = Marionette.getOption @,'imageHeightRatio'

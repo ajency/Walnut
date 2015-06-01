@@ -39,7 +39,7 @@ define(['app'], function(App) {
       };
 
       ImageView.prototype.events = {
-        'click': 'imageClick'
+        'click .image-placeholder, .pull-left': 'imageClick'
       };
 
       ImageView.prototype.initialize = function(options) {
