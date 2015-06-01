@@ -1,56 +1,68 @@
-{{#practice_mode}}
-    <div class="well text-center">
-        <h4><span class="bold">This is a practice quiz.
-            It is designed to help you train for the class tests.</span></h4>
-    </div>
-{{/practice_mode}}
-
-<div class="moduleInfo quizHeader m-b-20">
-    <div class="detailsStrip">Quiz Details</div>
-	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
-        <div class="modTime pause">
-            <a class="btn btn-small btn-block btn-white m-t-10"><h4 class="semi-bold text-info no-margin">{{name}}</h4></a>
+<div id="collapseView" class="panel-collapse collapse">
+    
+    <!--  -->
+    {{#practice_mode}}
+        <div class="well text-center">
+            <h4><span class="bold">This is a practice quiz.
+                It is designed to help you train for the class tests.</span></h4>
         </div>
+    {{/practice_mode}}
 
-        <div class="pull-left b-grey b-l " style="width:80%;">
-            <div class="row m-l-0 m-r-0">
-                <div class="col-xs-6 b-grey b-r">
-                    <p class="bold small-text muted no-margin inline">Textbook: </p>
-                    {{getTextbookName}}
-                </div>
-                <div class="col-xs-6">
-                    <p class="bold small-text muted no-margin inline">Chapter: </p>
-                    {{getChapterName}}
-                </div>
+    <div class="moduleInfo quizHeader">
+        <div class="detailsStrip">Quiz Details</div>
+    	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
+            <div class="modTime pause">
+                <a class="btn btn-small btn-block btn-white m-t-10"><h4 class="semi-bold text-info no-margin">{{name}}</h4></a>
             </div>
-            <div class="row m-l-0 m-r-0">
-                <div class="col-xs-6 b-grey b-r">
-                    <p class="bold small-text muted no-margin inline">Section: </p>
-                    {{getSectionsNames}}
-                </div>
-                <div class="col-xs-6">
-                    <p class="bold small-text muted no-margin inline">Sub-Section: </p>
-                    {{getSubSectionsNames}}
-                </div>
-            </div>
-            <div class="row m-l-0 m-r-0 m-t-5">
-                <div class="col-xs-6 b-grey b-r">
-                    <p class="bold small-text muted no-margin inline">Advised time for current question:</p>
-                    <i class="fa fa-clock-o"></i> <span id="time-on-question">{{getQuestionDuration}}</span> m
-                </div>
-                <div class="col-xs-3 b-grey b-r">
-                    <p class="bold small-text muted no-margin inline">Marks for question:</p>
-                    <span id="marks-for-question">{{getQuestionMarks}}</span>
-                </div>
-                <div class="col-xs-3">
-                    <p class="bold small-text muted no-margin inline">Total Quiz Marks:</p>
-                    <span>{{marks}}</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="clearfix"></div>
-		<div class="row">
+            <div class="pull-left b-grey b-l " style="width:80%;">
+                <div class="row m-l-0 m-r-0">
+                    <div class="col-xs-6 b-grey b-r">
+                        <p class="bold small-text muted no-margin inline">Textbook: </p>
+                        {{getTextbookName}}
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="bold small-text muted no-margin inline">Chapter: </p>
+                        {{getChapterName}}
+                    </div>
+                </div>
+                <div class="row m-l-0 m-r-0">
+                    <div class="col-xs-6 b-grey b-r">
+                        <p class="bold small-text muted no-margin inline">Section: </p>
+                        {{getSectionsNames}}
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="bold small-text muted no-margin inline">Sub-Section: </p>
+                        {{getSubSectionsNames}}
+                    </div>
+                </div>
+                <div class="row m-l-0 m-r-0 m-t-5">
+                    <div class="col-xs-6 b-grey b-r">
+                        <p class="bold small-text muted no-margin inline">Advised time for current question:</p>
+                        <i class="fa fa-clock-o"></i> <span id="time-on-question">{{getQuestionDuration}}</span> m
+                    </div>
+                    <div class="col-xs-3 b-grey b-r">
+                        <p class="bold small-text muted no-margin inline">Marks for question:</p>
+                        <span id="marks-for-question">{{getQuestionMarks}}</span>
+                    </div>
+                    <div class="col-xs-3">
+                        <p class="bold small-text muted no-margin inline">Total Quiz Marks:</p>
+                        <span>{{marks}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+    		<div class="row">
+        	</div>
     	</div>
-	</div>
+    </div>
+    <!--  -->
+
+</div>
+
+<div class="text-center m-b-5" style="background-color: #f3f3f3; padding:2px 0;">
+    <a id="accordionToggle" data-toggle="collapse" href="#collapseView" aria-expanded="true" aria-controls="collapseView" style="display:block; color:#000" class="h6">
+        Expand        
+    </a>
 </div>
