@@ -69,6 +69,9 @@ define ['app'
 				@listenTo @layout.topPanelRegion, "top:panel:question:done", =>
 					@layout.moduleDetailsRegion.trigger "top:panel:question:done"
 
+				@listenTo @layout.topPanelRegion, "top:panel:check:last:question", =>
+					@layout.moduleDetailsRegion.trigger "top:panel:check:last:question"
+
 			_changeQuestion : =>
 				if @display_mode is 'class_mode'
 					@_saveQuestionResponse "completed"

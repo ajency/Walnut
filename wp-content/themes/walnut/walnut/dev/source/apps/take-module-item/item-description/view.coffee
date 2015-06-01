@@ -35,6 +35,8 @@ define ['app'
                     if timeLeftOrElapsed < 0
                         @countUp timeLeftOrElapsed
                     else @countDown timeLeftOrElapsed
+                    
+                @trigger 'top:panel:check:last:question'
 
             countDown:(time)=>
 

@@ -29,6 +29,9 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/item-desc
         this.listenTo(this.view, "top:panel:question:done", function() {
           return this.region.trigger("top:panel:question:done");
         });
+        this.listenTo(this.view, "top:panel:check:last:question", function() {
+          return this.region.trigger("top:panel:check:last:question");
+        });
         App.execute("when:fetched", [this.textbookNames, this.textbookModel], (function(_this) {
           return function() {
             return _this.show(_this.view, {

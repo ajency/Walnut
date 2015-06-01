@@ -77,6 +77,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             return _this.layout.moduleDetailsRegion.trigger("top:panel:question:done");
           };
         })(this));
+        this.listenTo(this.layout.topPanelRegion, "top:panel:check:last:question", (function(_this) {
+          return function() {
+            return _this.layout.moduleDetailsRegion.trigger("top:panel:check:last:question");
+          };
+        })(this));
         return this.listenTo(this.layout.contentBoardRegion, "init:book:block", (function(_this) {
           return function() {
             return _this.layout.moduleDetailsRegion.trigger("init:book:block");

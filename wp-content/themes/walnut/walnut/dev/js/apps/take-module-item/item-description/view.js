@@ -52,11 +52,12 @@ define(['app', 'text!apps/take-module-item/item-description/templates/top-panel.
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         if (this.mode === 'class_mode') {
           if (timeLeftOrElapsed < 0) {
-            return this.countUp(timeLeftOrElapsed);
+            this.countUp(timeLeftOrElapsed);
           } else {
-            return this.countDown(timeLeftOrElapsed);
+            this.countDown(timeLeftOrElapsed);
           }
         }
+        return this.trigger('top:panel:check:last:question');
       };
 
       TopPanelView.prototype.countDown = function(time) {

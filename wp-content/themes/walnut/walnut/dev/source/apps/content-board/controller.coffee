@@ -33,6 +33,7 @@ define ['app'
 					
 					fillElements = @startFillingElements()
 					fillElements.done =>
+						
 						setTimeout ->
 							$('#loading-content-board').remove()
 							$('#question-area').removeClass 'vHidden'

@@ -27,6 +27,9 @@ define ['app'
 				@listenTo @region, "top:panel:question:done", =>
 					@view.triggerMethod "top:panel:question:done"
 
+				@listenTo @region, "top:panel:check:last:question", =>
+					@view.triggerMethod "top:panel:check:last:question"
+
 				@listenTo view, "question:completed", @_changeQuestion
 
 			_changeQuestion:=>
@@ -94,6 +97,7 @@ define ['app'
 
 			initialize : ->
 				@display_mode = Marionette.getOption @, 'display_mode'
+				@isLastContentPiece = false
 
 
 			events:
@@ -104,14 +108,10 @@ define ['app'
 
 			onShow:->
 
-				@isLastContentPiece = false
-
 				if not Marionette.getOption(@, 'nextItemID')
 					@isLastContentPiece = true
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
-
-					@topPanelQuestionDoneButton()
 
 				if @model.get('post_status') is 'archive'
 					@$el.find "#question-done"
@@ -156,8 +156,6 @@ define ['app'
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
-					@topPanelQuestionDoneButton()
-
 			onInitBookBlock : ->
 				$('#bb-bookblock').bookblock
 					speed : 1000
@@ -166,11 +164,10 @@ define ['app'
 					onEndFlip: =>
 						@trigger "question:completed"
 
-			topPanelQuestionDoneButton : ->
-				setTimeout ->
+			onTopPanelCheckLastQuestion : ->
+				if @isLastContentPiece
 					$ "#top-panel-question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
-				, 400
 
 		# set handlers
 		App.commands.setHandler "show:student:training:module:description", (opt = {})->

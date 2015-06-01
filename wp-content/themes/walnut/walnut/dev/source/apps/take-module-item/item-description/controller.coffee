@@ -25,6 +25,9 @@ define ['app'
                 @listenTo @view, "top:panel:question:done",->
                     @region.trigger "top:panel:question:done"
 
+                @listenTo @view, "top:panel:check:last:question",->
+                    @region.trigger "top:panel:check:last:question"
+
                 App.execute "when:fetched", [@textbookNames, @textbookModel], =>
                     @show @view, (loading : true)
 

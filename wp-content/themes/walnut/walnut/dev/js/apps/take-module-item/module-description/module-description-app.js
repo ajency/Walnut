@@ -35,6 +35,11 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
             return _this.view.triggerMethod("top:panel:question:done");
           };
         })(this));
+        this.listenTo(this.region, "top:panel:check:last:question", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("top:panel:check:last:question");
+          };
+        })(this));
         return this.listenTo(view, "question:completed", this._changeQuestion);
       };
 
@@ -124,7 +129,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.initialize = function() {
-        return this.display_mode = Marionette.getOption(this, 'display_mode');
+        this.display_mode = Marionette.getOption(this, 'display_mode');
+        return this.isLastContentPiece = false;
       };
 
       ModuleDescriptionView.prototype.events = {
@@ -137,8 +143,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       ModuleDescriptionView.prototype.onShow = function() {
         var stickyHeaderTop;
         if (!Marionette.getOption(this, 'nextItemID')) {
+          this.isLastContentPiece = true;
           this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
-          this.topPanelQuestionDoneButton();
         }
         if (this.model.get('post_status') === 'archive') {
           this.$el.find("#question-done").remove();
@@ -181,15 +187,15 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.onQuestionChanged = function(nextItemID) {
         if (!nextItemID) {
-          this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
-          return this.topPanelQuestionDoneButton();
+          this.isLastContentPiece = true;
+          return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
       };
 
-      ModuleDescriptionView.prototype.topPanelQuestionDoneButton = function() {
-        return setTimeout(function() {
+      ModuleDescriptionView.prototype.onTopPanelCheckLastQuestion = function() {
+        if (this.isLastContentPiece) {
           return $("#top-panel-question-done").html('<i class="fa fa-forward"></i> Finish Module');
-        }, 500);
+        }
       };
 
       return ModuleDescriptionView;
