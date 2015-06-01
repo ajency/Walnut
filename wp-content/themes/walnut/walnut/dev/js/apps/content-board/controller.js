@@ -37,6 +37,9 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
           return function() {
             var fillElements;
             _this.region.trigger('init:book:block');
+            if (!$("#bb-bookblock").hasClass("bb-vertical")) {
+              $('#bb-bookblock').bookblock();
+            }
             fillElements = _this.startFillingElements();
             return fillElements.done(function() {
               return setTimeout(function() {

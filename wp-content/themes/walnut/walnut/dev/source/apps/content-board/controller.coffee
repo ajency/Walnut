@@ -28,12 +28,16 @@ define ['app'
 						.trigger 'click'
 						
 				@listenTo @view, 'dependencies:fetched', =>
-					
-					@region.trigger 'init:book:block'
+					# Bookblock is currently initialized only for student training.
+					# And without initialization, content (question area, feedback area) can't be seen.
+					@region.trigger 'init:book:block' 
+
+					# Checks if bookblock is initialized
+					if !$("#bb-bookblock").hasClass "bb-vertical"
+						$('#bb-bookblock').bookblock()
 					
 					fillElements = @startFillingElements()
 					fillElements.done =>
-						
 						setTimeout ->
 							$('#loading-content-board').remove()
 							$('#question-area').removeClass 'vHidden'
