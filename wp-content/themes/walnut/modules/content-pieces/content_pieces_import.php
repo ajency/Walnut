@@ -23,6 +23,5 @@ function get_content_pieces_import_page_html_data(){
 }
 
 function import_content_piece($type, $file){
-	echo $type;
-	echo "test import"; exit;
+	echo "Importing $type Content Piece"; exit;
 }
