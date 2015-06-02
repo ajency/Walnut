@@ -34,16 +34,17 @@ define ['app'], (App)->
 					# @sizes['full'].url
 
 					data.alignclass = ->
-						switch @alignment
-							when 'left'
-								return 'pull-left'
-							when 'right'
-								return 'pull-right'
+						return ''
+						# switch @alignment
+						# 	when 'left'
+						# 		return 'pull-left'
+						# 	when 'right'
+						# 		return 'pull-right'
 
 				data
 
 			events:
-				'click .image-placeholder, .pull-left': 'imageClick'
+				'click .image-placeholder, .img-responsive': 'imageClick'
 				
 
 			initialize :(options)->
