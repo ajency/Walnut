@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
@@ -9,7 +8,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListItemView, _super);
 
       function ListItemView() {
-        this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -79,39 +77,15 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListItemView.prototype.events = {
-        'click a.cloneModule': 'cloneModule',
+        'click a.cloneModule': function() {
+          return this.model.duplicate();
+        },
         'click a.archiveModule': 'archiveModule'
       };
 
       ListItemView.prototype.initialize = function(options) {
         this.textbooks = options.textbooksCollection;
         return this.chapters = options.chaptersCollection;
-      };
-
-      ListItemView.prototype.cloneModule = function() {
-        return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
-          return function(result) {
-            var contentPieceData;
-            if (result) {
-              _this.cloneModel = App.request("new:content:piece");
-              contentPieceData = _this.model.toJSON();
-              _this.clonedData = _.omit(contentPieceData, ['ID', 'guid', 'last_modified_by', 'post_author', 'post_author_name', 'post_date', 'post_date_gmt', 'published_by']);
-              _this.clonedData.post_status = "pending";
-              _this.clonedData.clone_id = _this.model.id;
-              return App.execute("when:fetched", _this.cloneModel, function() {
-                return _this.cloneModel.save(_this.clonedData, {
-                  wait: true,
-                  success: _this.successSaveFn,
-                  error: _this.errorFn
-                });
-              });
-            }
-          };
-        })(this));
-      };
-
-      ListItemView.prototype.successSaveFn = function(model) {
-        return document.location = SITEURL + ("/content-creator/#edit-content/" + model.id);
       };
 
       ListItemView.prototype.archiveModule = function() {

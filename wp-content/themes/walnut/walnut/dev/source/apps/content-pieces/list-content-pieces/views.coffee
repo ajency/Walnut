@@ -81,35 +81,13 @@ define ['app'
 				data
 
 			events:
-				'click a.cloneModule'	: 'cloneModule'
+				'click a.cloneModule'	:-> @model.duplicate()
 				'click a.archiveModule' : 'archiveModule'
 
 			initialize : (options)->
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
-
-			cloneModule :->
-				bootbox.confirm "Are you sure you want to clone '#{@model.get('post_excerpt')}' ?", (result)=>
-					if(result)
-						@cloneModel = App.request "new:content:piece"
-						contentPieceData = @model.toJSON()
-
-						@clonedData = _.omit contentPieceData,
-									  ['ID', 'guid', 'last_modified_by', 'post_author',
-									   'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
-
-						@clonedData.post_status = "pending"
-						@clonedData.clone_id =@model.id
-
-						App.execute "when:fetched", @cloneModel, =>
-							@cloneModel.save @clonedData,
-								wait : true
-								success : @successSaveFn
-								error : @errorFn
-
-			successSaveFn : (model)=>
-				document.location = SITEURL+ "/content-creator/#edit-content/#{model.id}"
-		
+				
 			archiveModule:->
 				bootbox.confirm "Are you sure you want to archive '#{@model.get('post_excerpt')}' ?", (result)=>
 					if result
