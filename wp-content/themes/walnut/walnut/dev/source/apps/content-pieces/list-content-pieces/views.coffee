@@ -26,7 +26,7 @@ define ['app'
 							{{/is_published}}
 							<span class="nonDevice">|</span>
 							<a target="_blank"  class="nonDevice cloneModule">Clone</a>
-
+							<i class="fa spinner"></i>
 						</td>'
 
 			serializeData:->
@@ -96,9 +96,14 @@ define ['app'
 			changeModuleStatus:(status)->
 				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('post_excerpt')}' ?", (result)=>
 					if result
+						@$el.find '.spinner'
+						.addClass 'fa-spin fa-spinner'
 						@model.save post_status: status,
 							success:=> @changeStatusLabel status								
 							error:(resp)-> console.log resp
+							complete:=>
+								@$el.find '.spinner'
+								.removeClass 'fa-spin fa-spinner'
 			
 			changeStatusLabel:(status)->
 				switch (status)

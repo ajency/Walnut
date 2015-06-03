@@ -18,10 +18,10 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> {{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}} <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> {{#isQuiz}}<td>{{marks}}</td>{{/isQuiz}} <td>{{&statusMessage}}</td> <td><a target="_blank" href="{{view_url}}">View</a> <span class="nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="nonDevice">Edit</a> {{#archivedModule}}<span class="nonDevice">|</span><a target="_blank"  class="nonDevice cloneModule">Clone</a>{{/archivedModule}}</td>';
+      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> {{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}} <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> {{#isQuiz}}<td>{{marks}}</td>{{/isQuiz}} <td>{{&statusMessage}}</td> <td><a target="_blank" class="view-content-piece" href="{{view_url}}">View</a> {{#is_editable}} <span class="editLinkSpan nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="editLink nonDevice">Edit</a> {{/is_editable}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule"> Archive</a> {{/is_published}} <span class="nonDevice">|</span><a target="_blank" class="nonDevice cloneModule"> Clone</a> <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data, _ref;
+        var data;
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
@@ -63,15 +63,21 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         }
         data.statusMessage = function() {
           if (data.post_status === 'underreview') {
-            return '<span class="label label-important">Under Review</span>';
+            return '<span class="post-status label label-important">Under Review</span>';
           } else if (data.post_status === 'publish') {
-            return '<span class="label label-info">Published</span>';
+            return '<span class="post-status label label-info">Published</span>';
           } else if (data.post_status === 'archive') {
-            return '<span class="label label-success">Archived</span>';
+            return '<span class="post-status label label-success">Archived</span>';
           }
         };
-        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
-          data.archivedModule = true;
+        if (data.post_status === 'publish') {
+          data.is_published = true;
+        }
+        if (data.post_status === 'underreview') {
+          data.is_under_review = true;
+        }
+        if (data.post_status === 'underreview') {
+          data.is_editable = true;
         }
         return data;
       };
@@ -85,7 +91,13 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.events = {
-        'click a.cloneModule': 'cloneModule'
+        'click a.cloneModule': 'cloneModule',
+        'click a.publishModule': function() {
+          return this.changeModuleStatus('publish');
+        },
+        'click a.archiveModule': function() {
+          return this.changeModuleStatus('archive');
+        }
       };
 
       ListItemView.prototype.initialize = function(options) {
@@ -149,6 +161,42 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.errorFn = function() {
         return console.log('error');
+      };
+
+      ListItemView.prototype.changeModuleStatus = function(status) {
+        return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('name')) + "' ?", (function(_this) {
+          return function(result) {
+            if (result) {
+              _this.$el.find('.spinner').addClass('fa-spin fa-spinner');
+              return _this.model.save({
+                post_status: status,
+                changed: 'module_details'
+              }, {
+                success: function() {
+                  return _this.changeStatusLabel(status);
+                },
+                error: function(resp) {
+                  return console.log(resp);
+                },
+                complete: function() {
+                  return _this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
+                }
+              });
+            }
+          };
+        })(this));
+      };
+
+      ListItemView.prototype.changeStatusLabel = function(status) {
+        switch (status) {
+          case 'archive':
+            this.$el.find('.post-status').removeClass('label-info').addClass('label-success').html('Archived');
+            return this.$el.find('.archiveModule, .archiveModuleSpan').remove();
+          case 'publish':
+            this.$el.find('.post-status').removeClass('label-important').addClass('label-info').html('Published');
+            this.$el.find('.view-content-piece').after('<span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a>');
+            return this.$el.find('.publishModule, .publishModuleSpan, .editLink, .editLinkSpan').remove();
+        }
       };
 
       return ListItemView;
