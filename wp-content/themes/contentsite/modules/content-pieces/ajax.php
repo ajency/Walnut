@@ -3,25 +3,10 @@
 require_once 'functions.php';
 
 function ajax_save_content_element() {
-    global $wpdb;
+    
     unset($_POST['action']);
-    
     $element_details = $_POST;
-    #make sure all post values are without slashes before serializing
-    foreach($element_details as $key=>$value)
-        $element_details[$key]= wp_unslash($value);
-
-    $meta_id = $_POST['meta_id'];
-    
-    if($meta_id)
-        update_metadata_by_mid('post', $meta_id, $element_details, 'content_element');
-
-    else{
-        $element_details=  maybe_serialize($element_details);
-        $query= $wpdb->prepare("insert into {$wpdb->prefix}postmeta values ('',%d,'content_element',%s)", array(0,$element_details));
-        $wpdb->query($query);
-        $meta_id= $wpdb->insert_id;
-    }
+    $meta_id = save_content_element($element_details);
     wp_send_json(array('meta_id'=>$meta_id));
 }
 add_action('wp_ajax_update-element', 'ajax_save_content_element');
