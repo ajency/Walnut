@@ -92,18 +92,23 @@ define ['app'
 			initialize : (options)->
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
-				
+			
+			addSpinner:->
+				@$el.find '.spinner'
+				.addClass 'fa-spin fa-spinner'
+			
+			removeSpinner:=>
+				@$el.find '.spinner'
+				.removeClass 'fa-spin fa-spinner'
+			
 			changeModuleStatus:(status)->
 				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('post_excerpt')}' ?", (result)=>
 					if result
-						@$el.find '.spinner'
-						.addClass 'fa-spin fa-spinner'
+						@addSpinner()
 						@model.save post_status: status,
 							success:=> @changeStatusLabel status								
 							error:(resp)-> console.log resp
-							complete:=>
-								@$el.find '.spinner'
-								.removeClass 'fa-spin fa-spinner'
+							complete:@removeSpinner
 			
 			changeStatusLabel:(status)->
 				switch (status)

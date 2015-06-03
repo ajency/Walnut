@@ -9,6 +9,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       __extends(ListItemView, _super);
 
       function ListItemView() {
+        this.removeSpinner = __bind(this.removeSpinner, this);
         this.successUpdateFn = __bind(this.successUpdateFn, this);
         this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
@@ -107,33 +108,36 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.cloneModule = function() {
-        var _ref;
-        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
-          return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?", (function(_this) {
-            return function(result) {
-              var groupData;
-              if (result) {
-                if (_this.groupType === 'teaching-module') {
-                  _this.cloneModel = App.request("new:content:group");
+        return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('name')) + "' ?", (function(_this) {
+          return function(result) {
+            var groupData;
+            if (result) {
+              _this.addSpinner();
+              _this.cloneModel = (function() {
+                switch (this.groupType) {
+                  case 'teaching-module':
+                    return App.request("new:content:group");
+                  case 'quiz':
+                    return App.request("new:quiz");
+                  case 'student-training':
+                    return App.request("new:student:training:module");
                 }
-                if (_this.groupType === 'quiz') {
-                  _this.cloneModel = App.request("new:quiz");
-                }
-                groupData = _this.model.toJSON();
-                _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-                _this.clonedData.name = "" + _this.clonedData.name + " clone";
-                _this.clonedData.post_status = "underreview";
-                return App.execute("when:fetched", _this.cloneModel, function() {
-                  return _this.cloneModel.save(_this.clonedData, {
-                    wait: true,
-                    success: _this.successSaveFn,
-                    error: _this.errorFn
-                  });
+              }).call(_this);
+              groupData = _this.model.toJSON();
+              _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
+              _this.clonedData.name = "" + _this.clonedData.name + " clone";
+              _this.clonedData.post_status = "underreview";
+              return App.execute("when:fetched", _this.cloneModel, function() {
+                return _this.cloneModel.save(_this.clonedData, {
+                  wait: true,
+                  success: _this.successSaveFn,
+                  error: _this.errorFn,
+                  complete: _this.removeSpinner
                 });
-              }
-            };
-          })(this));
-        }
+              });
+            }
+          };
+        })(this));
       };
 
       ListItemView.prototype.successSaveFn = function(model) {
@@ -148,26 +152,37 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.successUpdateFn = function(model) {
-        if (this.groupType === 'teaching-module') {
-          return App.navigate("edit-module/" + (model.get('id')), {
-            trigger: true
-          });
-        } else {
-          return App.navigate("edit-quiz/" + (model.get('id')), {
-            trigger: true
-          });
-        }
+        var url;
+        url = (function() {
+          switch (this.groupType) {
+            case 'teaching-module':
+              return "edit-module";
+            case 'quiz':
+              return "edit-quiz";
+            case 'student-training':
+              return "edit-student-training-module";
+          }
+        }).call(this);
+        return App.navigate("" + url + "/" + model.id, true);
       };
 
       ListItemView.prototype.errorFn = function() {
         return console.log('error');
       };
 
+      ListItemView.prototype.addSpinner = function() {
+        return this.$el.find('.spinner').addClass('fa-spin fa-spinner');
+      };
+
+      ListItemView.prototype.removeSpinner = function() {
+        return this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
+      };
+
       ListItemView.prototype.changeModuleStatus = function(status) {
         return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('name')) + "' ?", (function(_this) {
           return function(result) {
             if (result) {
-              _this.$el.find('.spinner').addClass('fa-spin fa-spinner');
+              _this.addSpinner();
               return _this.model.save({
                 post_status: status,
                 changed: 'module_details'
@@ -178,9 +193,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
                 error: function(resp) {
                   return console.log(resp);
                 },
-                complete: function() {
-                  return _this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
-                }
+                complete: _this.removeSpinner
               });
             }
           };

@@ -1,4 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
@@ -8,6 +9,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListItemView, _super);
 
       function ListItemView() {
+        this.removeSpinner = __bind(this.removeSpinner, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -96,11 +98,19 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return this.chapters = options.chaptersCollection;
       };
 
+      ListItemView.prototype.addSpinner = function() {
+        return this.$el.find('.spinner').addClass('fa-spin fa-spinner');
+      };
+
+      ListItemView.prototype.removeSpinner = function() {
+        return this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
+      };
+
       ListItemView.prototype.changeModuleStatus = function(status) {
         return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
           return function(result) {
             if (result) {
-              _this.$el.find('.spinner').addClass('fa-spin fa-spinner');
+              _this.addSpinner();
               return _this.model.save({
                 post_status: status
               }, {
@@ -110,9 +120,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
                 error: function(resp) {
                   return console.log(resp);
                 },
-                complete: function() {
-                  return _this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
-                }
+                complete: _this.removeSpinner
               });
             }
           };

@@ -97,24 +97,26 @@ define ['app'
 				@groupType = options.groupType
 
 			cloneModule :->
-				if @model.get('post_status') in ['publish','archive']
-					bootbox.confirm "Are you sure you want to clone '#{@model.get('name')}' ?", (result)=>
-						if(result)
-							@cloneModel = App.request "new:content:group" if @groupType is 'teaching-module'
+				bootbox.confirm "Are you sure you want to clone '#{@model.get('name')}' ?", (result)=>
+					if(result)
+						@addSpinner()			
+						@cloneModel = switch @groupType
+										when 'teaching-module'	then App.request "new:content:group"
+										when 'quiz'				then App.request "new:quiz"
+										when 'student-training' then App.request "new:student:training:module"
 
-							@cloneModel = App.request "new:quiz" if @groupType is 'quiz'
+						groupData = @model.toJSON()
+						@clonedData = _.omit groupData,
+						  ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
+						@clonedData.name = "#{@clonedData.name} clone"
+						@clonedData.post_status = "underreview"
 
-							groupData = @model.toJSON()
-							@clonedData = _.omit groupData,
-							  ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
-							@clonedData.name = "#{@clonedData.name} clone"
-							@clonedData.post_status = "underreview"
-
-							App.execute "when:fetched", @cloneModel, =>
-								@cloneModel.save @clonedData,
-									wait : true
-									success : @successSaveFn
-									error : @errorFn
+						App.execute "when:fetched", @cloneModel, =>
+							@cloneModel.save @clonedData,
+								wait : true
+								success : @successSaveFn
+								error : @errorFn
+								complete: @removeSpinner
 									
 			successSaveFn : (model)=>
 				model.set('content_pieces', @clonedData.content_pieces)
@@ -124,28 +126,32 @@ define ['app'
 					error : @errorFn
 
 			successUpdateFn : (model)=>
-				if @groupType is 'teaching-module'
-					App.navigate "edit-module/#{model.get('id')}",
-						trigger : true
-
-				else
-					App.navigate "edit-quiz/#{model.get('id')}",
-						trigger : true
-
+				url = switch @groupType
+						when 'teaching-module'	then "edit-module"
+						when 'quiz'				then "edit-quiz"
+						when 'student-training' then "edit-student-training-module"
+				
+				App.navigate "#{url}/#{model.id}", true
+				
 			errorFn : ->
 				console.log 'error'
-		
+			
+			addSpinner:->
+				@$el.find '.spinner'
+				.addClass 'fa-spin fa-spinner'
+			
+			removeSpinner:=>
+				@$el.find '.spinner'
+				.removeClass 'fa-spin fa-spinner'
+			
 			changeModuleStatus:(status)->
 				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('name')}' ?", (result)=>
 					if result
-						@$el.find '.spinner'
-						.addClass 'fa-spin fa-spinner'
+						@addSpinner()
 						@model.save {post_status: status, changed: 'module_details'},
 							success:=> @changeStatusLabel status								
 							error:(resp)-> console.log resp
-							complete:=>
-								@$el.find '.spinner'
-								.removeClass 'fa-spin fa-spinner'
+							complete: @removeSpinner
 			
 			changeStatusLabel:(status)->
 				switch (status)
