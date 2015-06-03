@@ -8,22 +8,26 @@ define ['app'
 			className: 'gradeX odd'
 
 			template:   '<td class="cpHeight">{{&post_excerpt}}</td>
-									<td class="cpHeight">{{&present_in_str}}</td>
-									<td>{{textbookName}}</td>
-									<td>{{chapterName}}</td>
-									<td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
-									<td>{{&statusMessage}}</td>
-									<td data-id="{{ID}}" class="text-center">
-										<a target="_blank" href="{{view_url}}" class="view-content-piece">View</a>
-										{{&edit_link}}
-										{{#is_published}}
-											<span class="nonDevice archiveModuleSpan">|</span>
-											<a target="_blank"  class="nonDevice archiveModule">Archive</a>
-										{{/is_published}}
-										<span class="nonDevice">|</span>
-										<a target="_blank"  class="nonDevice cloneModule">Clone</a>
+						<td class="cpHeight">{{&present_in_str}}</td>
+						<td>{{textbookName}}</td>
+						<td>{{chapterName}}</td>
+						<td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
+						<td>{{&statusMessage}}</td>
+						<td data-id="{{ID}}" class="text-center">
+							<a target="_blank" href="{{view_url}}" class="view-content-piece">View</a>
+							{{&edit_link}}
+							{{#is_under_review}}
+								<span class="nonDevice publishModuleSpan">|</span>
+								<a target="_blank" class="nonDevice publishModule">Publish</a>
+							{{/is_under_review}}
+							{{#is_published}}
+								<span class="nonDevice archiveModuleSpan">|</span>
+								<a target="_blank" class="nonDevice archiveModule">Archive</a>
+							{{/is_published}}
+							<span class="nonDevice">|</span>
+							<a target="_blank"  class="nonDevice cloneModule">Clone</a>
 
-									</td>'
+						</td>'
 
 			serializeData:->
 				data= super()
@@ -44,7 +48,7 @@ define ['app'
 				data.edit_link= ''
 
 				if data.post_status is 'pending'
-					data.edit_link= ' <span class="nonDevice">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice">Edit</a>'
+					data.edit_link= ' <span class="nonDevice editLinkSpan">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice editLink">Edit</a>'
 
 				data.textbookName = =>
 					if data.term_ids.textbook
@@ -68,7 +72,7 @@ define ['app'
 						return '<span class="label post-status label-success">Archived</span>'
 
 				data.is_published = true if data.post_status is 'publish'
-
+				data.is_under_review  = true if data.post_status is 'pending'
 				modules=[]
 				_.each data.present_in_modules, (ele,index)->
 					modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
@@ -82,25 +86,43 @@ define ['app'
 
 			events:
 				'click a.cloneModule'	:-> @model.duplicate()
-				'click a.archiveModule' : 'archiveModule'
+				'click a.archiveModule' :-> @changeModuleStatus 'archive'
+				'click a.publishModule' :-> @changeModuleStatus 'publish'
 
 			initialize : (options)->
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
 				
-			archiveModule:->
-				bootbox.confirm "Are you sure you want to archive '#{@model.get('post_excerpt')}' ?", (result)=>
+			changeModuleStatus:(status)->
+				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('post_excerpt')}' ?", (result)=>
 					if result
-						@model.save post_status: 'archive',
-							success:=>
-								@$el.find '.post-status'
-								.removeClass 'label-info'
-								.addClass 'label-success'
-								.html 'Archived'
-								@$el.find '.archiveModule, .archiveModuleSpan'
-								.remove()
+						@model.save post_status: status,
+							success:=> @changeStatusLabel status								
 							error:(resp)-> console.log resp
-		
+			
+			changeStatusLabel:(status)->
+				switch (status)
+					when 'archive'
+						@$el.find '.post-status'
+						.removeClass 'label-info'
+						.addClass 'label-success'
+						.html 'Archived'
+						@$el.find '.archiveModule, .archiveModuleSpan'
+						.remove()
+						
+					when 'publish'
+						@$el.find '.post-status'
+						.removeClass 'label-important'
+						.addClass 'label-info'
+						.html 'Published'
+						
+						@$el.find '.view-content-piece'
+						.after '<span class="nonDevice archiveModuleSpan">|</span>
+								<a target="_blank" class="nonDevice archiveModule">Archive</a>'
+								
+						@$el.find '.publishModule, .publishModuleSpan, .editLink, .editLinkSpan'
+						.remove()
+						
 		class EmptyView extends Marionette.ItemView
 
 			template: 'No Content Available'
