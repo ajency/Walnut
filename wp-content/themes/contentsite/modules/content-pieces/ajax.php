@@ -1,6 +1,7 @@
 <?php
 
 require_once 'functions.php';
+require_once 'content_pieces_import.php';
 
 function ajax_save_content_element() {
     global $wpdb;

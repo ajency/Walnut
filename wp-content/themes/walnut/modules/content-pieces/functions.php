@@ -594,10 +594,3 @@ function create_new_element(&$ele)
 
     return $wpdb->insert_id;
 }
-
-function get_content_pieces_import_page_html(){
-    
-    require 'content_pieces_import.php';
-    return get_content_pieces_import_page_html_data();
-    
-}
