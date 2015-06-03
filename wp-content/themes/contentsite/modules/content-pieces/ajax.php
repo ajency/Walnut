@@ -53,6 +53,18 @@ function ajax_save_content_piece() {
     wp_send_json(array('ID'=>$content_id));
 
 }
-
 add_action('wp_ajax_save-content-piece-json', 'ajax_save_content_piece');
 add_action('wp_ajax_create-content-piece', 'ajax_save_content_piece');
+
+function ajax_update_content_piece(){
+    
+    #currently this is used only to update the status.
+    #for the actual create/update functions refer to function ajax_save_content_piece()
+    
+    $data= array('ID'=>$_POST['ID'],'post_status'=>$_POST['post_status']);
+    $content_id = wp_update_post($data);
+    
+    wp_send_json(array('ID'=>$content_id));
+    
+}
+add_action('wp_ajax_update-content-piece', 'ajax_update_content_piece');
