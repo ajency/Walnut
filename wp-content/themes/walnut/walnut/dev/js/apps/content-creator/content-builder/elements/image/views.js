@@ -27,19 +27,14 @@ define(['app'], function(App) {
           data.image = true;
           data.imageurl = '';
           data.alignclass = function() {
-            switch (this.alignment) {
-              case 'left':
-                return 'pull-left';
-              case 'right':
-                return 'pull-right';
-            }
+            return '';
           };
         }
         return data;
       };
 
       ImageView.prototype.events = {
-        'click .image-placeholder, .pull-left': 'imageClick'
+        'click .image-placeholder, .img-responsive': 'imageClick'
       };
 
       ImageView.prototype.initialize = function(options) {

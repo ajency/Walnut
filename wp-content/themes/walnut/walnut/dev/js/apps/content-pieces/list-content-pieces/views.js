@@ -1,5 +1,4 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
+var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
@@ -9,7 +8,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListItemView, _super);
 
       function ListItemView() {
-        this.successSaveFn = __bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -17,10 +15,10 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#archivedModule}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> {{/archivedModule}} </td>';
+      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> </td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data, edit_url, modules, _ref;
+        var data, edit_url, modules;
         data = ListItemView.__super__.serializeData.call(this);
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
@@ -32,7 +30,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         edit_url = SITEURL + '/content-creator/#edit-content/' + data.ID;
         data.edit_link = '';
         if (data.post_status === 'pending') {
-          data.edit_link = ' <span class="nonDevice">|</span> <a target="_blank" href="' + edit_url + '" class="nonDevice">Edit</a>';
+          data.edit_link = ' <span class="nonDevice editLinkSpan">|</span> <a target="_blank" href="' + edit_url + '" class="nonDevice editLink">Edit</a>';
         }
         data.textbookName = (function(_this) {
           return function() {
@@ -60,15 +58,18 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         })(this);
         data.statusMessage = function() {
           if (data.post_status === 'pending') {
-            return '<span class="label label-important">Under Review</span>';
+            return '<span class="label post-status label-important">Under Review</span>';
           } else if (data.post_status === 'publish') {
-            return '<span class="label label-info">Published</span>';
+            return '<span class="label post-status label-info">Published</span>';
           } else if (data.post_status === 'archive') {
-            return '<span class="label label-success">Archived</span>';
+            return '<span class="label post-status label-success">Archived</span>';
           }
         };
-        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
-          data.archivedModule = true;
+        if (data.post_status === 'publish') {
+          data.is_published = true;
+        }
+        if (data.post_status === 'pending') {
+          data.is_under_review = true;
         }
         modules = [];
         _.each(data.present_in_modules, function(ele, index) {
@@ -79,7 +80,15 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListItemView.prototype.events = {
-        'click a.cloneModule': 'cloneModule'
+        'click a.cloneModule': function() {
+          return this.model.duplicate();
+        },
+        'click a.archiveModule': function() {
+          return this.changeModuleStatus('archive');
+        },
+        'click a.publishModule': function() {
+          return this.changeModuleStatus('publish');
+        }
       };
 
       ListItemView.prototype.initialize = function(options) {
@@ -87,33 +96,35 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return this.chapters = options.chaptersCollection;
       };
 
-      ListItemView.prototype.cloneModule = function() {
-        var _ref;
-        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
-          return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
-            return function(result) {
-              var contentPieceData;
-              if (result) {
-                _this.cloneModel = App.request("new:content:piece");
-                contentPieceData = _this.model.toJSON();
-                _this.clonedData = _.omit(contentPieceData, ['ID', 'guid', 'last_modified_by', 'post_author', 'post_author_name', 'post_date', 'post_date_gmt', 'published_by']);
-                _this.clonedData.post_status = "pending";
-                _this.clonedData.clone_id = _this.model.id;
-                return App.execute("when:fetched", _this.cloneModel, function() {
-                  return _this.cloneModel.save(_this.clonedData, {
-                    wait: true,
-                    success: _this.successSaveFn,
-                    error: _this.errorFn
-                  });
-                });
-              }
-            };
-          })(this));
-        }
+      ListItemView.prototype.changeModuleStatus = function(status) {
+        return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
+          return function(result) {
+            if (result) {
+              return _this.model.save({
+                post_status: status
+              }, {
+                success: function() {
+                  return _this.changeStatusLabel(status);
+                },
+                error: function(resp) {
+                  return console.log(resp);
+                }
+              });
+            }
+          };
+        })(this));
       };
 
-      ListItemView.prototype.successSaveFn = function(model) {
-        return document.location = SITEURL + ("/content-creator/#edit-content/" + model.id);
+      ListItemView.prototype.changeStatusLabel = function(status) {
+        switch (status) {
+          case 'archive':
+            this.$el.find('.post-status').removeClass('label-info').addClass('label-success').html('Archived');
+            return this.$el.find('.archiveModule, .archiveModuleSpan').remove();
+          case 'publish':
+            this.$el.find('.post-status').removeClass('label-important').addClass('label-info').html('Published');
+            this.$el.find('.view-content-piece').after('<span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a>');
+            return this.$el.find('.publishModule, .publishModuleSpan, .editLink, .editLinkSpan').remove();
+        }
       };
 
       return ListItemView;

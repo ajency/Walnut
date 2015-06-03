@@ -10,6 +10,12 @@ define [
     #single view of quiz and listing of quizzes & take a quiz
     'apps/quiz-modules/quiz-module-app'
     
+    #create/update/view/list student trainig modules
+    'apps/student-training-module/app'
+	
+    #view/list student trainig modules
+    'apps/student-app-training-modules/app'
+	
     #the main content area where the question/content piece will be displayed
     #used in both content piece preview and take a question/ quiz
     'apps/content-board/controller'

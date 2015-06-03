@@ -28,6 +28,12 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         'change #qType': '_changeOfQuestionType',
         'click  #save-question': 'saveQuestionSettings',
         'click #preview-question': 'previewQuestion',
+        'click #clone-question': function() {
+          var cpModel;
+          cpModel = App.request("new:content:piece");
+          cpModel.set(this.model.toJSON());
+          return cpModel.duplicate();
+        },
         'click a.tabs': '_changeTabs',
         'change #hint_enable': '_hintEnable',
         'change #comment_enable': '_commentEnable'
@@ -35,7 +41,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype.modelEvents = {
         'change:ID': function() {
-          return this.$el.find('#preview-question').show();
+          return this.$el.find('#preview-question, #clone-question').show();
         }
       };
 
@@ -68,7 +74,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#question_type_column').remove();
         }
         if (!this.model.isNew()) {
-          return this.$el.find('#preview-question').show();
+          return this.$el.find('#preview-question, #clone-question').show();
         }
       };
 

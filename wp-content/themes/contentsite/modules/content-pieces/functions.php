@@ -89,3 +89,27 @@ function save_content_piece($data){
 
     return $content_id;
 }
+
+function save_content_element($element_details){
+    
+    global $wpdb;
+    
+    #make sure all post values are without slashes before serializing
+    foreach($element_details as $key=>$value)
+        $element_details[$key]= wp_unslash($value);
+
+    $meta_id = (isset($element_details['meta_id']))?$element_details['meta_id']:0;
+    
+    if($meta_id)
+        update_metadata_by_mid('post', $meta_id, $element_details, 'content_element');
+
+    else{
+        $element_details=  maybe_serialize($element_details);
+        $query= $wpdb->prepare("insert into {$wpdb->prefix}postmeta values ('',%d,'content_element',%s)", array(0,$element_details));
+        $wpdb->query($query);
+        $meta_id= $wpdb->insert_id;
+    }
+    
+    return $meta_id;
+    
+}
