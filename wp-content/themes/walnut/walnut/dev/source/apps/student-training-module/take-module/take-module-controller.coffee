@@ -4,7 +4,7 @@ define ['app'
         'apps/take-module-item/teacher-training-footer/training-footer-controller'
         'apps/student-training-module/take-module/module-description/module-description-app'
         'apps/take-module-item/chorus-options/chorus-options-app'
-        'apps/take-module-item/item-description/controller'
+        'apps/student-training-module/take-module/item-description/controller'
         'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
         
 ], (App, RegionController)->
@@ -75,6 +75,9 @@ define ['app'
 
 				@listenTo @layout.studentsListRegion, "goto:next:question", @_changeQuestion
 
+				@listenTo @layout.topPanelRegion, "top:panel:previous", =>
+					@_showPrevQuestion()
+
 				@listenTo @layout.topPanelRegion, "top:panel:question:done", =>
 					@layout.moduleDetailsRegion.trigger "top:panel:question:done"
 
@@ -117,6 +120,30 @@ define ['app'
 					nextItem = false
 					
 				nextItem
+
+			_showPrevQuestion:->
+				prevItem = @_getPrevItem()
+
+				if prevItem
+					@_showQuestionDisplayView prevItem
+					@layout.triggerMethod "change:content:piece", currentItem
+				else
+					@_gotoViewModule()
+
+			_getPrevItem : ->
+				contentLayout = contentGroupModel.get 'content_layout'
+				
+				item = _.filter contentLayout, (item)->
+							item if item.type is currentItem.get('post_type') && parseInt(item.id) is currentItem.id
+							
+				pieceIndex = _.indexOf contentLayout,item[0]
+				
+				prevItem = contentLayout[pieceIndex - 1]
+				
+				if not prevItem
+					prevItem = false
+					
+				prevItem
 
 			_gotoViewModule : =>
 				if @display_mode is 'class_mode' and questionResponseModel.get('status') isnt 'completed'
@@ -205,7 +232,7 @@ define ['app'
 				if not questionResponseModel
 					@_getOrCreateModel currentItem.ID
 
-				App.execute "show:top:panel",
+				App.execute "show:student:top:panel",
 					region : @layout.topPanelRegion
 					model : currentItem
 					questionResponseModel : questionResponseModel

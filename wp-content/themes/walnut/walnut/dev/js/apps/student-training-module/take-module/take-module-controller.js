@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/student-training-module/take-module/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/take-module-item/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/student-training-module/take-module/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/student-training-module/take-module/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
   return App.module("StudentTrainingApp.TakeModule", function(TakeModule, App) {
     var SingleQuestionLayout, contentGroupModel, currentItem, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     contentGroupModel = null;
@@ -72,6 +72,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoViewModule);
         this.listenTo(this.layout.moduleDetailsRegion, "goto:next:question", this._changeQuestion);
         this.listenTo(this.layout.studentsListRegion, "goto:next:question", this._changeQuestion);
+        this.listenTo(this.layout.topPanelRegion, "top:panel:previous", (function(_this) {
+          return function() {
+            return _this._showPrevQuestion();
+          };
+        })(this));
         this.listenTo(this.layout.topPanelRegion, "top:panel:question:done", (function(_this) {
           return function() {
             return _this.layout.moduleDetailsRegion.trigger("top:panel:question:done");
@@ -120,6 +125,33 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           nextItem = false;
         }
         return nextItem;
+      };
+
+      Controller.prototype._showPrevQuestion = function() {
+        var prevItem;
+        prevItem = this._getPrevItem();
+        if (prevItem) {
+          this._showQuestionDisplayView(prevItem);
+          return this.layout.triggerMethod("change:content:piece", currentItem);
+        } else {
+          return this._gotoViewModule();
+        }
+      };
+
+      Controller.prototype._getPrevItem = function() {
+        var contentLayout, item, pieceIndex, prevItem;
+        contentLayout = contentGroupModel.get('content_layout');
+        item = _.filter(contentLayout, function(item) {
+          if (item.type === currentItem.get('post_type') && parseInt(item.id) === currentItem.id) {
+            return item;
+          }
+        });
+        pieceIndex = _.indexOf(contentLayout, item[0]);
+        prevItem = contentLayout[pieceIndex - 1];
+        if (!prevItem) {
+          prevItem = false;
+        }
+        return prevItem;
       };
 
       Controller.prototype._gotoViewModule = function() {
@@ -220,7 +252,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         if (!questionResponseModel) {
           this._getOrCreateModel(currentItem.ID);
         }
-        App.execute("show:top:panel", {
+        App.execute("show:student:top:panel", {
           region: this.layout.topPanelRegion,
           model: currentItem,
           questionResponseModel: questionResponseModel,

@@ -2,7 +2,7 @@ define ['app'
 		'controllers/region-controller'
 		'text!apps/take-module-item/module-description/templates/module-description-template.html'
 		'bootbox'], (App, RegionController, moduleDescriptionTemplate,bootbox)->
-	App.module "TeacherTeachingApp.ModuleDescription", (ModuleDescription, App)->
+	App.module "StudentTrainingApp.ModuleDescription", (ModuleDescription, App)->
 		class ModuleDescriptionController extends RegionController
 
 			initialize: (opts)->
