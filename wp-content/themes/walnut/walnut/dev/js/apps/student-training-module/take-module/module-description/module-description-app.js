@@ -197,7 +197,12 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         if (this.isLastContentPiece || _.size($bookBlock) === 0) {
           return this.trigger("question:completed");
         } else {
-          return $bookBlock.bookblock('next');
+          $bookBlock.bookblock('next');
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.trigger("question:completed");
+            };
+          })(this), 1000);
         }
       };
 
@@ -212,12 +217,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
         return $('#bb-bookblock').bookblock({
           speed: 1000,
           shadowSides: 0.8,
-          shadowFlip: 0.7,
-          onEndFlip: (function(_this) {
-            return function() {
-              return _this.trigger("question:completed");
-            };
-          })(this)
+          shadowFlip: 0.7
         });
       };
 

@@ -9,7 +9,10 @@ define ['app'
                 'click #top-panel-question-done': =>
                     @trigger 'top:panel:question:done'
                 'click #top-panel-previous': =>
-                    @trigger 'top:panel:previous'
+                    $('#bb-bookblock').bookblock 'prev'
+                    setTimeout =>
+                        @trigger 'top:panel:previous'
+                    ,1000
 
             mixinTemplateHelpers:(data)->
                 data = super data

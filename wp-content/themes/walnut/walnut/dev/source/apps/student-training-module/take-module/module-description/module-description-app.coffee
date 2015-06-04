@@ -148,7 +148,11 @@ define ['app'
 				$bookBlock = $('#bb-bookblock')
 				if @isLastContentPiece or _.size($bookBlock) is 0
 					@trigger "question:completed"
-				else $bookBlock.bookblock 'next'
+				else 
+					$bookBlock.bookblock 'next'
+					setTimeout =>
+						@trigger "question:completed"
+					,1000
 
 			onQuestionChanged: (nextItemID)->
 				if not nextItemID
@@ -161,8 +165,7 @@ define ['app'
 					speed : 1000
 					shadowSides : 0.8
 					shadowFlip : 0.7
-					onEndFlip: =>
-						@trigger "question:completed"
+						
 
 			onTopPanelCheckLastQuestion : ->
 				if @isLastContentPiece
