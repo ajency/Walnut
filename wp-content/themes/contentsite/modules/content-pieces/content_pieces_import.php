@@ -1,27 +1,29 @@
 <?php
 
+function theme_add_csv_components($defined_csv_components){
 
-function get_content_pieces_import_page_html_data(){
-   
-	if(isset($_POST['submit']) && !empty($_POST)){
-		check_admin_referer( 'content-pieces-import' );
-		import_content_piece($_FILES["csv_file"]);
-	}
-	?>
-   <h2>Content Pieces Import</h2>
-   
-   <form enctype="multipart/form-data"  method="post" action="" >
-   		
-   		<label>MCQ</label>: 
-   		<input type="file" name="csv_file">
-   		<?php wp_nonce_field( 'content-pieces-import' );?>
-   		<input name="type" type="hidden" value="mcq">
-   		<input name="submit" type="submit">
-   		
-   </form>
-   
-   <?php
+    $defined_csv_components['mcq'] = array(
+            'Textbook','Chapter','Section','Subsection','Tags','Duration','Difficulty','Instructions','Status'
+        );
+    return $defined_csv_components;
+
 }
+add_filter('add_csv_components_filter','theme_add_csv_components',10,1);
+
+function import_csv_mcq_record($import_response,$record){
+ 
+	//THEME BASED RECORD IMPORT FOR A CSV COMPONENT
+	if($record[0] > 7){
+            $import_response['imported'] = false;
+            $import_response['reason'] = 'Roll No greater than 7';
+ 	}
+	else{
+            $import_response['imported'] = true;
+	}
+        
+	return $import_response;
+ }
+add_filter('ajci_import_record_mcq','import_csv_mcq_record',10,2);
 
 function import_content_piece($file_path){
 

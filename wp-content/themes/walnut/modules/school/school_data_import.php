@@ -1,5 +1,7 @@
 <?php
-require_once 'CSV.php';
+
+if(!class_exists('Coseva\CSV'))
+    require_once 'CSV.php';
 
 function parseCSV($filepath) {
 

@@ -18,12 +18,6 @@ function school_divisions_addedit_menu() {
 }
 add_action( 'admin_menu', 'school_divisions_addedit_menu' );
 
-function content_pieces_import_menu() {
-    add_options_page( 'Content Piecs Option', 'Content Pieces', 'manage_options', 'content_pieces', 
-            'admin_content_pieces_import_page' );
-}
-add_action( 'admin_menu', 'content_pieces_import_menu' );
-
 function admin_content_pieces_import_page(){
     
     if ( !current_user_can( 'manage_options' ) )  {
