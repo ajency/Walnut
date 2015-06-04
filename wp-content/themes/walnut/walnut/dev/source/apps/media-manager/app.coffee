@@ -110,6 +110,10 @@ define ['app'
 					@$el.find '.upload-tab'
 					.hide()
 
+				if Marionette.getOption(@, 'mediaType') in ['audio','image']
+					@$el.find '.youtube-video'
+					.hide()
+
 			onClose: ->
 				#stop listening to event
 				App.vent.trigger "stop:listening:to:media:manager"

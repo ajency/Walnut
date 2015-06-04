@@ -123,9 +123,12 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       };
 
       OuterLayout.prototype.onShow = function() {
-        var _ref;
+        var _ref, _ref1;
         if ((_ref = Marionette.getOption(this, 'mediaType')) === 'audio' || _ref === 'video') {
-          return this.$el.find('.upload-tab').hide();
+          this.$el.find('.upload-tab').hide();
+        }
+        if ((_ref1 = Marionette.getOption(this, 'mediaType')) === 'audio' || _ref1 === 'image') {
+          return this.$el.find('.youtube-video').hide();
         }
       };
 
