@@ -25,6 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
       GroupController.prototype.initialize = function(opts) {
         $.showHeaderAndLeftNav();
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.questionResponseCollection = opts.questionResponseCollection;
+        groupContentCollection = null;
         if (!this.questionResponseCollection) {
           this.questionResponseCollection = App.request("get:question:response:collection", {
             'division': this.division,

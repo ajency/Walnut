@@ -79,8 +79,12 @@ function get_all_content_modules($args=array(),$type= 'teaching-module'){
     
     $content_modules_ids_array = __u::flatten($content_modules_ids_array);
     
-    foreach($content_modules_ids_array as $id)
-        $content_data[]=  get_single_content_module($id, $division);
+    foreach($content_modules_ids_array as $id){
+        $m=  get_single_content_module($id, $division);
+        if(!is_wp_error($m))
+            $content_data[]=$m;
+
+    }
 
     return $content_data;
 }

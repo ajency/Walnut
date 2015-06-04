@@ -18,6 +18,7 @@ define ['app'
 				#mode refers to "training" mode or "take-class" mode
 				{model,@classID, @mode, @division,@questionResponseCollection} = opts
 
+				groupContentCollection=null
 				if not @questionResponseCollection
 					@questionResponseCollection = App.request "get:question:response:collection",
 						'division': @division
