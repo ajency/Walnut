@@ -35,38 +35,52 @@ add_filter('ajci_import_record_mcq','import_csv_mcq_record',10,2);
 
 function mcq_import_convert_record_to_dataset($record){
    
-
-    $data=array(
-      
-      'question' => $record[0],
-      'textbook' => $record[1],
-      'chapter'  => $record[2],
-      'sections' => $record[3],
-      'subsections' => $record[4],
-      'option1' => $record[5],
-      'option2' => $record[6],
-      'option3' => $record[7],
-      'option4' => $record[8],
-      'option5' => $record[9],
-      'option6' => $record[10],
-      'colums' => $record[11],
-      'corect' => $record[12],
-      'individual_marks' => $record[13],
-      'mark1' => $record[14],
-      'mark2' => $record[15],
-      'mark3' =>  $record[16],
-      'mark4' => $record[17],
-      'mark5' => $record[18],
-      'mark6' => $record[19],
-      'totalmarks' => $record[20],
-      'level' => $record[21],
-      'tags' => $record[22],
-      'hint' => $record[23],
-      'comment' => $record[24],
-      'duration' => $record[25],
+    #TODO: make an array of options like 
+    #$data['options']= array( 
+    #                       array(
+    #                           'option'=> 'a',
+    #                           'marks'=> 1    
+    #                       ),
+    #                       array(
+    #                           'option'=> 'a',
+    #                           'marks'=> 0   
+    #                       )
+    #                  );
+    #);
     
+    $data=array(
+        'question'      => $record[0],
+        'textbook'      => $record[1],
+        'chapter'       => $record[2],
+        'sections'      => $record[3],
+        'subsections'   => $record[4],
+        'option1'       => $record[5],
+        'option2'       => $record[6],
+        'option3'       => $record[7],
+        'option4'       => $record[8],
+        'option5'       => $record[9],
+        'option6'       => $record[10],
+        'columns'       => $record[11],
+        'correct'       => $record[12],
+        'multiple'      => $record[13],
+        'mark1'         => $record[14],
+        'mark2'         => $record[15],
+        'mark3'         => $record[16],
+        'mark4'         => $record[17],
+        'mark5'         => $record[18],
+        'mark6'         => $record[19],
+        'totalmarks'    => $record[20],
+        'level'         => $record[21],
+        'tags'          => $record[22],
+        'hint'          => $record[23],
+        'comment'       => $record[24],
+        'duration'      => $record[25],
     );
-  
+    
+    if(!$data['columns']) $data['columns']=2;
+    
+    $data['multiple']= (strtolower($data['multiple'])=='yes')?'true':'false';
+    
   return $data;
   
 }
@@ -78,9 +92,11 @@ function mcq_import_validate_data($record)
       $validation['is_valid']=true;
       $validation['reason']=array();
       
+      #TODO:
+      #duration is required field
+      #correct answer requires atleast one value
+      #total marks need to be >= 1
       
-
-
       if(empty($record['question']))
       {
               $validation['is_valid']=false;
@@ -98,25 +114,11 @@ function mcq_import_validate_data($record)
               $import_response['imported'] = false;
               $import_response['reason'] = 'chapter id needs to be an integer';
       }
-      else if(!is_numeric($record['sections']))
-      {
-              $import_response['imported'] = false;
-              $import_response['reason'] = 'section id needs to be an integer';
-      }
-      else if(!is_numeric($record['subsections']))
-      {
-              $import_response['imported'] = false;
-              $import_response['reason'] = 'subsection needs to be integer';
-      }
-      else if(!is_numeric($record['colums']))
+      
+      else if(!is_numeric($record['columns']))
       {
               $import_response['imported'] = false;
               $import_response['reason'] = 'columns needs to be integer';
-      }
-      else if(empty($record['individual_marks']))
-      {
-              $import_response['imported'] = false;
-              $import_response['reason'] = 'Pleas enter individual marks';
       }
       else if(empty($record['option1']))
       {
@@ -172,7 +174,7 @@ function get_question_text_id($record)
         $data = array();
         $data['style'] = '';
         $data['draggable'] = 'true';
-        $data['element'] = 'text';
+        $data['element'] = 'Text';
         $data['content'] = $record['question'];
         $data['bottom_margin'] = '';
         $data['top_margin'] = '';
@@ -258,17 +260,16 @@ function get_mcq_outline_id($record)
 
         $data['optioncount'] = $count;
 
-        $data['columncount'] = $record['colums'];
+        $data['columncount'] = $record['columns'];
 
         $data['options'] = $optionArray;
-
-        $tmarks = $record['corect'];
-        $a = explode(",",$tmarks);
+        
+        $correct = $record['correct'];
+        $correctArray = explode(",",$correct);
 
         $data['marks'] = $record['totalmarks']; 
-        $data['multiple'] = 'false';
-        $data['correct_answer'] = $a;
-        $data['complete'] = true;
+        $data['multiple'] = $record['multiple'];
+        $data['correct_answer'] = $correctArray;
         $data['bottom_margin'] = '';
         $data['top_margin'] = '';
         $data['left_margin'] = '';
@@ -296,7 +297,7 @@ function content_layout($question_text_id,$mcq_outline_id,$record)
             {
                 $data['style'] = '';
                 $data['draggable'] = 'true';
-                $data['element'] = 'text';
+                $data['element'] = 'Text';
                 $data['content'] = $record[$optionKey[$i]]; 
                 $data['bottom_margin'] = '';
                 $data['top_margin']   = '';
@@ -306,22 +307,16 @@ function content_layout($question_text_id,$mcq_outline_id,$record)
                 $OPTION_ID = save_content_element($data);
 
                 $layout = array();
-                $layout['element'] = 'Text';
-                $layout['meta_id'] = $OPTION_ID;
+                $layout[0]['element'] = 'Text';
+                $layout[0]['meta_id'] = $OPTION_ID;
 
                 array_push($options_layout,$layout);
            }
         }
-
         
-
-        
-
         $content_layout = array();
         $content_layout[0] = array('element' => 'Text','meta_id'=> $question_text_id[0]);
         $content_layout[1] = array('element' => 'Mcq','meta_id'=> $mcq_outline_id[0],'elements'=>$options_layout);
-
-       
 
         $data = array();
         $data = array(
@@ -343,13 +338,8 @@ function content_layout($question_text_id,$mcq_outline_id,$record)
                       'comment'=>$record['comment'],
                      );
         $data['json'] = $content_layout;
-
-         //_log('*******************');
-         //_log($data);
-
-         save_content_piece($data);
-
-
+        
+        save_content_piece($data);
 }
 
 
