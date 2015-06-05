@@ -49,6 +49,8 @@ define ['app',
 
 			onShow:->
 				ele = @$el.find ".instructions"
+				@$el.find '#subs'
+				.trigger 'change'
 
 				$(ele).css 'height' : $(ele).prop('scrollHeight') + "px";
 
@@ -105,6 +107,8 @@ define ['app',
 				currentChapter= if termIDs then termIDs['chapter'] else ''
 
 				$.populateChaptersOrSections(chapters,chapterElement, currentChapter);
+				@$el.find '#chaps'
+				.trigger 'change'
 
 			onFetchSectionsComplete : (sections)->
 
@@ -121,6 +125,8 @@ define ['app',
 				sectionsElement     = @$el.find '#secs'
 
 				$.populateChaptersOrSections(sections,sectionsElement, sectionIDs);
+				@$el.find '#secs'
+				.trigger 'change'
 
 			onFetchSubsectionsComplete : (subsections)->
 

@@ -57,6 +57,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.onShow = function() {
         var ele;
         ele = this.$el.find(".instructions");
+        this.$el.find('#subs').trigger('change');
         $(ele).css({
           'height': $(ele).prop('scrollHeight') + "px"
         });
@@ -110,7 +111,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         chapterElement = this.$el.find('#chaps');
         termIDs = this.model.get('term_ids');
         currentChapter = termIDs ? termIDs['chapter'] : '';
-        return $.populateChaptersOrSections(chapters, chapterElement, currentChapter);
+        $.populateChaptersOrSections(chapters, chapterElement, currentChapter);
+        return this.$el.find('#chaps').trigger('change');
       };
 
       OptionsBarView.prototype.onFetchSectionsComplete = function(sections) {
@@ -122,7 +124,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           sectionIDs = term_ids['sections'];
         }
         sectionsElement = this.$el.find('#secs');
-        return $.populateChaptersOrSections(sections, sectionsElement, sectionIDs);
+        $.populateChaptersOrSections(sections, sectionsElement, sectionIDs);
+        return this.$el.find('#secs').trigger('change');
       };
 
       OptionsBarView.prototype.onFetchSubsectionsComplete = function(subsections) {
