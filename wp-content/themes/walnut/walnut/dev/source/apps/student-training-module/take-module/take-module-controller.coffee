@@ -11,7 +11,6 @@ define ['app'
 	App.module "StudentTrainingApp.TakeModule", (TakeModule, App)->
 
 		#iSngle Question description and answers
-		contentGroupModel = null
 		studentCollection = null
 		questionsCollection = null
 		questionResponseCollection = null
@@ -21,7 +20,7 @@ define ['app'
 		class TakeModule.Controller extends RegionController
 
 			initialize : (opts)->
-				{@division,@classID,@moduleID,contentGroupModel,
+				{@division,@classID,@moduleID,@contentGroupModel,
 				questionsCollection,questionResponseCollection,
 				currentItem,@display_mode,studentCollection} = opts
 				App.leftNavRegion.reset()
@@ -46,7 +45,7 @@ define ['app'
 				@show @layout, (
 					loading : true
 					entities : [
-						contentGroupModel
+						@contentGroupModel
 						studentCollection
 						questionsCollection
 						questionResponseCollection
@@ -84,9 +83,6 @@ define ['app'
 				@listenTo @layout.topPanelRegion, "top:panel:check:last:question", =>
 					@layout.moduleDetailsRegion.trigger "top:panel:check:last:question"
 				
-				@listenTo @layout.contentBoardRegion, "init:book:block", =>
-					@layout.moduleDetailsRegion.trigger "init:book:block"
-				
 			_changeQuestion : =>
 				if @display_mode is 'class_mode'
 					@_saveQuestionResponse "completed"
@@ -107,7 +103,7 @@ define ['app'
 					@_gotoViewModule()
 
 			_getNextItem : ->
-				contentLayout = contentGroupModel.get 'content_layout'
+				contentLayout = @contentGroupModel.get 'content_layout'
 				
 				item = _.filter contentLayout, (item)->
 							item if item.type is currentItem.get('post_type') && parseInt(item.id) is currentItem.id
@@ -125,13 +121,13 @@ define ['app'
 				prevItem = @_getPrevItem()
 
 				if prevItem
-					@_showQuestionDisplayView prevItem
+					@_showQuestionDisplayView prevItem,direction:'rtl'
 					@layout.triggerMethod "change:content:piece", currentItem
 				else
 					@_gotoViewModule()
 
 			_getPrevItem : ->
-				contentLayout = contentGroupModel.get 'content_layout'
+				contentLayout = @contentGroupModel.get 'content_layout'
 				
 				item = _.filter contentLayout, (item)->
 							item if item.type is currentItem.get('post_type') && parseInt(item.id) is currentItem.id
@@ -181,7 +177,7 @@ define ['app'
 
 				App.execute "show:student:training:module",
 					region: App.mainContentRegion
-					model: contentGroupModel
+					model: @contentGroupModel
 
 
 			_getOrCreateModel : (content_piece_id)=>
@@ -191,7 +187,7 @@ define ['app'
 				#if model doesnt exist in collection setting default values
 				if not questionResponseModel
 					modelData = {
-						collection_id : contentGroupModel.get 'id'
+						collection_id : @contentGroupModel.get 'id'
 						content_piece_id : content_piece_id
 						division : @division
 					}
@@ -206,16 +202,16 @@ define ['app'
 
 
 			_showModuleDescriptionView : =>
-				App.execute "when:fetched", contentGroupModel, =>
+				App.execute "when:fetched", @contentGroupModel, =>
 					App.execute "show:student:training:module:description",
 						region : @layout.moduleDetailsRegion
-						model : contentGroupModel
+						model : @contentGroupModel
 						timerObject : @timerObject
 						questionResponseModel : questionResponseModel
 						questionResponseCollection : questionResponseCollection
 						display_mode : @display_mode
 
-			_showQuestionDisplayView : (model) =>
+			_showQuestionDisplayView : (model,direction='ltr') =>
 				if model instanceof Backbone.Model
 					currentItem = model
 				else
@@ -259,6 +255,7 @@ define ['app'
 						App.execute "show:content:board",
 							region : @layout.contentBoardRegion
 							model : currentItem
+							direction:direction
 
 						@_showStudentsListView questionResponseModel
 						
@@ -266,7 +263,7 @@ define ['app'
 				App.execute "show:single:quiz:app",
 					region	: App.mainContentRegion
 					quizModel : currentItem
-					studentTrainingModule: contentGroupModel
+					studentTrainingModule: @contentGroupModel
 
 			_showStudentsListView : (questionResponseModel)=>
 				App.execute "when:fetched", currentItem, =>
@@ -310,7 +307,8 @@ define ['app'
 							<label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label>
 							<span class="small-text" id="instructions"></span>
 						</div>
-						<div id="content-board"></div>
+						<div id="content-board">
+						</div>
 						<div id="students-list-region"></div>'
 
 			regions :

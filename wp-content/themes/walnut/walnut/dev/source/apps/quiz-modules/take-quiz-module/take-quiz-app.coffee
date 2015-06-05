@@ -120,7 +120,7 @@ define ['app'
 				_changeQuestion:(changeToQuestion)=>
 					#save results here of previous question / skip the question
 					questionModel = questionsCollection.get changeToQuestion
-					@_showSingleQuestionApp questionModel
+					@_showSingleQuestionApp()
 
 
 				_submitQuestion:(answer)->
@@ -172,7 +172,7 @@ define ['app'
 
 					if nextQuestionID
 						questionModel= questionsCollection.get nextQuestionID
-						@_showSingleQuestionApp questionModel
+						@_showSingleQuestionApp()
 
 					else
 						@_showSingleQuizApp()
@@ -252,7 +252,7 @@ define ['app'
 
 					if prevQuestionID
 						questionModel= questionsCollection.get prevQuestionID
-						@_showSingleQuestionApp questionModel
+						@_showSingleQuestionApp direction: 'rtl'
 
 				_getNextItemID : ->
 					pieceIndex = _.indexOf(questionIDs, questionModel.id)
@@ -273,7 +273,7 @@ define ['app'
 					prevID = parseInt questionIDs[pieceIndex - 1] if pieceIndex>0
 
 
-				_showSingleQuestionApp:->
+				_showSingleQuestionApp:(direction='ltr')->
 
 					display_mode = if @display_mode is 'quiz_report' then 'replay' else @display_mode
 
@@ -284,6 +284,7 @@ define ['app'
 							quizModel               : quizModel
 							questionResponseCollection   : @questionResponseCollection
 							display_mode            : display_mode
+							direction				: direction
 
 						@layout.quizProgressRegion.trigger "question:changed", questionModel
 						@layout.quizDescriptionRegion.trigger "question:changed", questionModel
@@ -311,7 +312,7 @@ define ['app'
 						timerObject : @timerObject
 						quizResponseSummary         : quizResponseSummary
 
-					@_showSingleQuestionApp questionModel
+					@_showSingleQuestionApp()
 
 			class TakeQuizLayout extends Marionette.Layout
 

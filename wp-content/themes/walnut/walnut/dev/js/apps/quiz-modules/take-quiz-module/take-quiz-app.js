@@ -124,7 +124,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._changeQuestion = function(changeToQuestion) {
         questionModel = questionsCollection.get(changeToQuestion);
-        return this._showSingleQuestionApp(questionModel);
+        return this._showSingleQuestionApp();
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
@@ -174,7 +174,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         }
         if (nextQuestionID) {
           questionModel = questionsCollection.get(nextQuestionID);
-          return this._showSingleQuestionApp(questionModel);
+          return this._showSingleQuestionApp();
         } else {
           return this._showSingleQuizApp();
         }
@@ -265,7 +265,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         }
         if (prevQuestionID) {
           questionModel = questionsCollection.get(prevQuestionID);
-          return this._showSingleQuestionApp(questionModel);
+          return this._showSingleQuestionApp({
+            direction: 'rtl'
+          });
         }
       };
 
@@ -292,8 +294,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         }
       };
 
-      TakeQuizController.prototype._showSingleQuestionApp = function() {
+      TakeQuizController.prototype._showSingleQuestionApp = function(direction) {
         var display_mode;
+        if (direction == null) {
+          direction = 'ltr';
+        }
         display_mode = this.display_mode === 'quiz_report' ? 'replay' : this.display_mode;
         if (questionModel) {
           new View.SingleQuestion.Controller({
@@ -301,7 +306,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             model: questionModel,
             quizModel: quizModel,
             questionResponseCollection: this.questionResponseCollection,
-            display_mode: display_mode
+            display_mode: display_mode,
+            direction: direction
           });
           this.layout.quizProgressRegion.trigger("question:changed", questionModel);
           return this.layout.quizDescriptionRegion.trigger("question:changed", questionModel);
@@ -330,7 +336,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           timerObject: this.timerObject,
           quizResponseSummary: quizResponseSummary
         });
-        return this._showSingleQuestionApp(questionModel);
+        return this._showSingleQuestionApp();
       };
 
       return TakeQuizController;

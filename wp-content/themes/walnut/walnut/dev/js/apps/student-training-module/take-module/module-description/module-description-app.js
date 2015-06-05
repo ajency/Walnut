@@ -30,11 +30,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
             return _this.region.trigger("goto:previous:route");
           };
         })(this));
-        this.listenTo(this.region, "init:book:block", (function(_this) {
-          return function() {
-            return _this.view.triggerMethod("init:book:block");
-          };
-        })(this));
         this.listenTo(this.region, "top:panel:question:done", (function(_this) {
           return function() {
             return _this.view.triggerMethod("top:panel:question:done");
@@ -192,17 +187,10 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       };
 
       ModuleDescriptionView.prototype.decidePageFlip = function() {
-        var $bookBlock;
-        $bookBlock = $('#bb-bookblock');
-        if (this.isLastContentPiece || _.size($bookBlock) === 0) {
+        if (this.isLastContentPiece) {
           return this.trigger("question:completed");
         } else {
-          $bookBlock.bookblock('next');
-          return setTimeout((function(_this) {
-            return function() {
-              return _this.trigger("question:completed");
-            };
-          })(this), 1000);
+          return this.trigger("question:completed");
         }
       };
 
@@ -211,14 +199,6 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
           this.isLastContentPiece = true;
           return this.$el.find("#question-done").html('<i class="fa fa-forward"></i> Finish Module');
         }
-      };
-
-      ModuleDescriptionView.prototype.onInitBookBlock = function() {
-        return $('#bb-bookblock').bookblock({
-          speed: 1000,
-          shadowSides: 0.8,
-          shadowFlip: 0.7
-        });
       };
 
       ModuleDescriptionView.prototype.onTopPanelCheckLastQuestion = function() {

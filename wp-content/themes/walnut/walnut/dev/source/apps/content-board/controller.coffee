@@ -14,7 +14,7 @@ define ['app'
 			answerModel       = null
 
 			initialize : (options)->
-				{@model,answerWreqrObject, answerModel, @quizModel}=options
+				{@model,answerWreqrObject, answerModel, @quizModel,@direction}=options
 
 				@view = @_getContentBoardView()
 
@@ -30,17 +30,19 @@ define ['app'
 				@listenTo @view, 'dependencies:fetched', =>
 					# Bookblock is currently initialized only for student training.
 					# And without initialization, content (question area, feedback area) can't be seen.
-					@region.trigger 'init:book:block' 
-
-					# Checks if bookblock is initialized
-					if !$("#bb-bookblock").hasClass "bb-vertical"
-						$('#bb-bookblock').bookblock()
-					
+					$('.bb-bookblock').bookblock
+						speed : 1000
+						shadowSides : 0.8
+						shadowFlip : 0.7
+						direction: @direction
+						
 					fillElements = @startFillingElements()
 					fillElements.done =>
 						setTimeout ->
+						
 							$('#loading-content-board').remove()
 							$('#question-area').removeClass 'vHidden'
+							$('.bb-bookblock').bookblock 'jump',2
 						,500
 
 				#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData

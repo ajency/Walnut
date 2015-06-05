@@ -24,10 +24,7 @@ define(['app', 'text!apps/student-training-module/take-module/item-description/t
           })(this),
           'click #top-panel-previous': (function(_this) {
             return function() {
-              $('#bb-bookblock').bookblock('prev');
-              return setTimeout(function() {
-                return _this.trigger('top:panel:previous');
-              }, 1000);
+              return _this.trigger('top:panel:previous');
             };
           })(this)
         };

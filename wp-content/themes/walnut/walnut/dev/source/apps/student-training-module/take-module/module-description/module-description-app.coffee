@@ -21,9 +21,6 @@ define ['app'
 				@listenTo @view, "goto:previous:route", =>
 					@region.trigger "goto:previous:route"
 
-				@listenTo @region, "init:book:block", =>
-					@view.triggerMethod "init:book:block"
-
 				@listenTo @region, "top:panel:question:done", =>
 					@view.triggerMethod "top:panel:question:done"
 
@@ -145,14 +142,10 @@ define ['app'
 				else @decidePageFlip()
 
 			decidePageFlip : =>
-				$bookBlock = $('#bb-bookblock')
-				if @isLastContentPiece or _.size($bookBlock) is 0
+				if @isLastContentPiece
 					@trigger "question:completed"
 				else 
-					$bookBlock.bookblock 'next'
-					setTimeout =>
-						@trigger "question:completed"
-					,1000
+					@trigger "question:completed"
 
 			onQuestionChanged: (nextItemID)->
 				if not nextItemID
@@ -160,11 +153,7 @@ define ['app'
 					@$el.find "#question-done"
 					.html '<i class="fa fa-forward"></i> Finish Module'
 
-			onInitBookBlock : ->
-				$('#bb-bookblock').bookblock
-					speed : 1000
-					shadowSides : 0.8
-					shadowFlip : 0.7
+			
 						
 
 			onTopPanelCheckLastQuestion : ->

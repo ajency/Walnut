@@ -4,8 +4,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/student-training-module/take-module/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/student-training-module/take-module/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
   return App.module("StudentTrainingApp.TakeModule", function(TakeModule, App) {
-    var SingleQuestionLayout, contentGroupModel, currentItem, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
-    contentGroupModel = null;
+    var SingleQuestionLayout, currentItem, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     studentCollection = null;
     questionsCollection = null;
     questionResponseCollection = null;
@@ -30,7 +29,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, currentItem = opts.currentItem, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
+        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, this.contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, currentItem = opts.currentItem, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
         App.leftNavRegion.reset();
         App.headerRegion.reset();
         App.execute("when:fetched", [questionResponseCollection, currentItem], (function(_this) {
@@ -54,7 +53,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         }
         this.show(this.layout, {
           loading: true,
-          entities: [contentGroupModel, studentCollection, questionsCollection, questionResponseCollection, questionResponseModel, currentItem]
+          entities: [this.contentGroupModel, studentCollection, questionsCollection, questionResponseCollection, questionResponseModel, currentItem]
         });
         this.timerObject = new Backbone.Wreqr.RequestResponse();
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
@@ -82,14 +81,9 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             return _this.layout.moduleDetailsRegion.trigger("top:panel:question:done");
           };
         })(this));
-        this.listenTo(this.layout.topPanelRegion, "top:panel:check:last:question", (function(_this) {
+        return this.listenTo(this.layout.topPanelRegion, "top:panel:check:last:question", (function(_this) {
           return function() {
             return _this.layout.moduleDetailsRegion.trigger("top:panel:check:last:question");
-          };
-        })(this));
-        return this.listenTo(this.layout.contentBoardRegion, "init:book:block", (function(_this) {
-          return function() {
-            return _this.layout.moduleDetailsRegion.trigger("init:book:block");
           };
         })(this));
       };
@@ -113,7 +107,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
 
       Controller.prototype._getNextItem = function() {
         var contentLayout, item, nextItem, pieceIndex;
-        contentLayout = contentGroupModel.get('content_layout');
+        contentLayout = this.contentGroupModel.get('content_layout');
         item = _.filter(contentLayout, function(item) {
           if (item.type === currentItem.get('post_type') && parseInt(item.id) === currentItem.id) {
             return item;
@@ -131,7 +125,9 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         var prevItem;
         prevItem = this._getPrevItem();
         if (prevItem) {
-          this._showQuestionDisplayView(prevItem);
+          this._showQuestionDisplayView(prevItem, {
+            direction: 'rtl'
+          });
           return this.layout.triggerMethod("change:content:piece", currentItem);
         } else {
           return this._gotoViewModule();
@@ -140,7 +136,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
 
       Controller.prototype._getPrevItem = function() {
         var contentLayout, item, pieceIndex, prevItem;
-        contentLayout = contentGroupModel.get('content_layout');
+        contentLayout = this.contentGroupModel.get('content_layout');
         item = _.filter(contentLayout, function(item) {
           if (item.type === currentItem.get('post_type') && parseInt(item.id) === currentItem.id) {
             return item;
@@ -192,7 +188,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         $.showHeaderAndLeftNav();
         return App.execute("show:student:training:module", {
           region: App.mainContentRegion,
-          model: contentGroupModel
+          model: this.contentGroupModel
         });
       };
 
@@ -203,7 +199,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         });
         if (!questionResponseModel) {
           modelData = {
-            collection_id: contentGroupModel.get('id'),
+            collection_id: this.contentGroupModel.get('id'),
             content_piece_id: content_piece_id,
             division: this.division
           };
@@ -218,11 +214,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       Controller.prototype._showModuleDescriptionView = function() {
-        return App.execute("when:fetched", contentGroupModel, (function(_this) {
+        return App.execute("when:fetched", this.contentGroupModel, (function(_this) {
           return function() {
             return App.execute("show:student:training:module:description", {
               region: _this.layout.moduleDetailsRegion,
-              model: contentGroupModel,
+              model: _this.contentGroupModel,
               timerObject: _this.timerObject,
               questionResponseModel: questionResponseModel,
               questionResponseCollection: questionResponseCollection,
@@ -232,7 +228,10 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         })(this));
       };
 
-      Controller.prototype._showQuestionDisplayView = function(model) {
+      Controller.prototype._showQuestionDisplayView = function(model, direction) {
+        if (direction == null) {
+          direction = 'ltr';
+        }
         if (model instanceof Backbone.Model) {
           currentItem = model;
         } else {
@@ -276,7 +275,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             } else {
               App.execute("show:content:board", {
                 region: _this.layout.contentBoardRegion,
-                model: currentItem
+                model: currentItem,
+                direction: direction
               });
               return _this._showStudentsListView(questionResponseModel);
             }
@@ -288,7 +288,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return App.execute("show:single:quiz:app", {
           region: App.mainContentRegion,
           quizModel: currentItem,
-          studentTrainingModule: contentGroupModel
+          studentTrainingModule: this.contentGroupModel
         });
       };
 
@@ -348,7 +348,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board"></div> <div id="students-list-region"></div>';
+      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board"> </div> <div id="students-list-region"></div>';
 
       SingleQuestionLayout.prototype.regions = {
         moduleDetailsRegion: '#module-details-region',
