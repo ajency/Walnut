@@ -3,7 +3,7 @@
 function theme_add_csv_components($defined_csv_components){
 
     $defined_csv_components['mcq'] = array(
-            'Question','textbook','chapter','sections','subsections','Option1','Option2','Option3','Option4','Option5','Option6','Columns','Correct','Individual Marks','Mark_1','Mark_2','Mark_3','Mark_4','Mark_5','Mark_6','Total Marks','Level','Tags','Hint','Comment','Duration'
+            'Question','textbook','chapter','sections','subsections','Option1','Option2','Option3','Option4','Option5','Option6','Columns','Correct','Multiple Correct Answers','Mark_1','Mark_2','Mark_3','Mark_4','Mark_5','Mark_6','Total Marks','Level','Tags','Hint','Comment','Duration'
         );
     return $defined_csv_components;
 
