@@ -5,6 +5,7 @@ function theme_add_csv_components($defined_csv_components){
    $defined_csv_components['mcq'] = array(
       'Question','textbook','chapter','sections','subsections','total marks','Multiple Correct Answers','Correct','Option1','mark1','Option2','mark2','Option3','mark3','Option4','mark4','Option5','mark5','Option6','mark6','Columns','Level','Tags','Hint','Comment','Duration'
             );
+
     return $defined_csv_components;
 
 }
@@ -117,25 +118,14 @@ function mcq_import_validate_data($record)
               $validation['reason'][] ='please enter at least two options.';
       }
 
-      $validateArry = array('sections'=>'please enter sections.', 'subsections'=>'please enter subsection.');
-
-      foreach ($validateArry as $columnname => $reason)
-      {
-        
-        if(empty($record[$columnname][0]))
-          {
-                $validation['is_valid']=false;
-                $validation['reason'][] = $reason;
-          }
-      }
-
+     
       if( (int)$record['totalmarks'] <= 1 )
       {
               $validation['is_valid']=false;
-              $validation['reason'][] ='total marks should be greater than one';
+              $validation['reason'][] ='total marks should be greater than or equal to one';
       }
 
-      $validateArry = array('question'=>'please enter question.', 'multiple'=>'Please enter multiple correct answer column.','correct' =>'Please enter correct vaues.');
+      $validateArry = array('question'=>'please enter question.','correct' =>'Please enter correct vaues.');
 
       foreach ($validateArry as $columnname => $reason)
       {
@@ -147,7 +137,7 @@ function mcq_import_validate_data($record)
           }
       }
 
-      $validateArry = array('textbook'=>'please enter textbookid.', 'chapter'=>'Please enter chapter id.');
+      $validateArry = array('textbook'=>'please enter textbookid as integer.', 'chapter'=>'Please enter chapter id as integer.');
 
       foreach ($validateArry as $columnname => $reason)
       {
