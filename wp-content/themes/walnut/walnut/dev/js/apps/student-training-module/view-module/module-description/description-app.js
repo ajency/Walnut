@@ -16,9 +16,9 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
         var view;
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         this.view = view = this._getCollectionDetailsView();
-        this.listenTo(view, 'start:teaching:module', (function(_this) {
+        this.listenTo(view, 'start:training:module', (function(_this) {
           return function() {
-            return _this.region.trigger("start:teaching:module");
+            return _this.region.trigger("start:training:module");
           };
         })(this));
         this.listenTo(view, 'goto:previous:route', this._gotoPreviousRoute);
@@ -91,30 +91,6 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
                 return chapterName = chapter.get('name');
               }
             };
-          })(this),
-          startScheduleButton: (function(_this) {
-            return function() {
-              var actionButtons, allContentPieces, answeredIDs, answeredPieces, unanswered;
-              actionButtons = '';
-              allContentPieces = _this.model.get('content_pieces');
-              allContentPieces = _.map(allContentPieces, function(m) {
-                return parseInt(m);
-              });
-              answeredPieces = _this.questionResponseCollection.where({
-                "status": "completed"
-              });
-              if (answeredPieces) {
-                answeredIDs = _.chain(answeredPieces).map(function(m) {
-                  return m.toJSON();
-                }).pluck('content_piece_id').value();
-              }
-              answeredPieces = _this.questionResponseCollection.pluck('content_piece_id');
-              unanswered = _.difference(allContentPieces, answeredIDs);
-              if (_.size(unanswered) > 0 && _this.mode !== 'training' && _this.model.get('post_status') !== 'archive') {
-                actionButtons = '<button type="button" id="start-module" class="btn btn-success action btn-block m-t-10"> <i class="fa fa-play"></i> Start </button>';
-              }
-              return actionButtons;
-            };
           })(this)
         };
       };
@@ -153,7 +129,7 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       CollectionDetailsView.prototype.startModule = function() {
         var currentRoute;
         currentRoute = App.getCurrentRoute();
-        return this.trigger("start:teaching:module");
+        return this.trigger("start:training:module");
       };
 
       return CollectionDetailsView;

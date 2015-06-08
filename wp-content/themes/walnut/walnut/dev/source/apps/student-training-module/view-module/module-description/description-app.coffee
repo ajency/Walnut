@@ -12,8 +12,8 @@ define ['app'
 				
                 @view = view = @_getCollectionDetailsView()
 
-                @listenTo view, 'start:teaching:module', =>
-                    @region.trigger "start:teaching:module"
+                @listenTo view, 'start:training:module', =>
+                    @region.trigger "start:training:module"
 
                 @listenTo view, 'goto:previous:route', @_gotoPreviousRoute
 
@@ -66,34 +66,6 @@ define ['app'
                     chapter = @textbookNames.get options.terms.chapter
                     chapterName = chapter.get 'name' if chapter?
 
-
-                startScheduleButton : =>
-                    actionButtons = ''
-
-                    allContentPieces = @model.get 'content_pieces'
-                    allContentPieces = _.map allContentPieces, (m)->
-                        parseInt m
-                    answeredPieces = @questionResponseCollection.where "status" : "completed"
-
-                    if answeredPieces
-                        answeredIDs = _.chain answeredPieces
-                        .map (m)->
-                                m.toJSON()
-                        .pluck 'content_piece_id'
-                            .value()
-
-
-                    answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
-
-                    unanswered = _.difference allContentPieces, answeredIDs
-
-                    if _.size(unanswered) > 0 and @mode isnt 'training' and @model.get('post_status') isnt 'archive'
-                        actionButtons = '<button type="button" id="start-module" class="btn btn-success action btn-block m-t-10">
-                                                                                                                                                                                                            <i class="fa fa-play"></i> Start
-                                                                                                                                                                                                        </button>'
-                    actionButtons
-
-
         class CollectionDetailsView extends Marionette.ItemView
 
             template : collectionDetailsTpl
@@ -117,7 +89,7 @@ define ['app'
             startModule : =>
                 currentRoute = App.getCurrentRoute()
 
-                @trigger "start:teaching:module"
+                @trigger "start:training:module"
 
 
         # set handlers

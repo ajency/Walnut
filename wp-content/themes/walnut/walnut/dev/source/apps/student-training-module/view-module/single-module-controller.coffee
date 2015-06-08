@@ -82,24 +82,10 @@ define ['app'
 				@deferContent.promise()
 				
 			startTrainingModule: =>
-				responseCollection= @questionResponseCollection.where "status":"completed"
-				window.f = responseCollection
-				responseQuestionIDs = _.chain responseCollection
-									.map (m)->m.toJSON()
-									.pluck 'content_piece_id'
-									.value()
-
-				content_pieces = model.get 'content_pieces'
-				if content_pieces
-					content_piece_ids= _.map content_pieces, (m)-> parseInt m
-
-				nextQuestion = _.first _.difference content_piece_ids, responseQuestionIDs
-
-				if model.get('post_status') is 'archive'
-					@gotoTrainingModule nextQuestion, 'readonly'
-
-				else
-					@gotoTrainingModule nextQuestion, 'class_mode'
+			
+				content_layout = model.get 'content_layout'
+				nextQuestion = _.first content_layout
+				@gotoTrainingModule nextQuestion, 'class_mode'
 
 			gotoTrainingModule: (data, display_mode)=>
 				

@@ -100,26 +100,10 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
       };
 
       GroupController.prototype.startTrainingModule = function() {
-        var content_piece_ids, content_pieces, nextQuestion, responseCollection, responseQuestionIDs;
-        responseCollection = this.questionResponseCollection.where({
-          "status": "completed"
-        });
-        window.f = responseCollection;
-        responseQuestionIDs = _.chain(responseCollection).map(function(m) {
-          return m.toJSON();
-        }).pluck('content_piece_id').value();
-        content_pieces = model.get('content_pieces');
-        if (content_pieces) {
-          content_piece_ids = _.map(content_pieces, function(m) {
-            return parseInt(m);
-          });
-        }
-        nextQuestion = _.first(_.difference(content_piece_ids, responseQuestionIDs));
-        if (model.get('post_status') === 'archive') {
-          return this.gotoTrainingModule(nextQuestion, 'readonly');
-        } else {
-          return this.gotoTrainingModule(nextQuestion, 'class_mode');
-        }
+        var content_layout, nextQuestion;
+        content_layout = model.get('content_layout');
+        nextQuestion = _.first(content_layout);
+        return this.gotoTrainingModule(nextQuestion, 'class_mode');
       };
 
       GroupController.prototype.gotoTrainingModule = function(data, display_mode) {
