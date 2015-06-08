@@ -188,7 +188,8 @@ function get_single_content_piece($id){
     $content_piece= get_post($id);
 
     $authordata = get_userdata($content_piece->post_author);
-
+    
+    $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($content_piece->post_modified)));
     $content_piece->post_author_name = $authordata->display_name;
 
     $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);

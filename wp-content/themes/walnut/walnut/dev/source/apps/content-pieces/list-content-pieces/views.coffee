@@ -11,6 +11,7 @@ define ['app'
 						<td class="cpHeight">{{&present_in_str}}</td>
 						<td>{{textbookName}}</td>
 						<td>{{chapterName}}</td>
+						<td>{{contentType}}</td>
 						<td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
 						<td>{{&statusMessage}}</td>
 						<td data-id="{{ID}}" class="text-center">
@@ -31,9 +32,9 @@ define ['app'
 
 			serializeData:->
 				data= super()
-
+				
 				#this is for display purpose only
-				data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
+				data.modified_date= moment(data.post_modified).format("Do MMM YYYY, h:mm a")
 
 				#for sorting the column date-wise
 				data.sort_date= moment(data.post_modified).format "YYYYMMDD"
@@ -81,7 +82,7 @@ define ['app'
 					if _.size(modules)>0
 					then _.toSentence(modules)
 					else 'Not added to a module yet'
-
+				data.contentType = _.str.titleize _.str.humanize data.content_type
 				data
 
 			events:
