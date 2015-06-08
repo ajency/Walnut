@@ -12,7 +12,7 @@ define ['app'
 						<td>{{textbookName}}</td>
 						<td>{{chapterName}}</td>
 						<td>{{contentType}}</td>
-						<td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
+						<td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td>
 						<td>{{&statusMessage}}</td>
 						<td data-id="{{ID}}" class="text-center">
 							<a target="_blank" href="{{view_url}}" class="view-content-piece">View</a>
@@ -34,7 +34,7 @@ define ['app'
 				data= super()
 				
 				#this is for display purpose only
-				data.modified_date= moment(data.post_modified).format("Do MMM YYYY, h:mm a")
+				data.modified_date= moment(data.post_modified).format("Do MMM YYYY <br/> h:mm a")
 
 				#for sorting the column date-wise
 				data.sort_date= moment(data.post_modified).format "YYYYMMDD"
