@@ -25,7 +25,7 @@ define ["app", 'backbone', 'bootbox'], (App, Backbone,bootbox) ->
 				@
 
 			duplicate:->
-				bootbox.confirm "Are you sure you want to clone '#{@.get('post_excerpt')}' ?", (result)=>
+				bootbox.confirm "Are you sure you want to clone this content piece ?", (result)=>
 					if(result)
 						@cloneModel = App.request "new:content:piece"
 						contentPieceData = @.toJSON()

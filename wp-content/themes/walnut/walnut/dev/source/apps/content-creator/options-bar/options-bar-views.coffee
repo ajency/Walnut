@@ -1,5 +1,5 @@
 define ['app',
-		'text!apps/content-creator/options-bar/templates/options-bar.html'], (App, optionsBarTpl)->
+		'text!apps/content-creator/options-bar/templates/options-bar.html', 'bootbox'], (App, optionsBarTpl,bootbox)->
 	App.module "ContentCreator.OptionsBar.Views", (Views, App)->
 
 		class Views.OptionsBarView extends Marionette.ItemView
@@ -21,6 +21,10 @@ define ['app',
 				'click  #save-question': 'saveQuestionSettings'
 
 				'click #preview-question' : 'previewQuestion'
+				
+				'click #close-content-creator' :-> 
+					bootbox.confirm 'Are you sure you want to close the content creator? Caution: Unsaved content will be lost.', (result)->
+						App.navigate '',true if result
 				
 				'click #clone-question':-> 
 					cpModel = App.request "new:content:piece"
@@ -62,7 +66,6 @@ define ['app',
 				@$el.find('input.tagsinput').tagsinput()
 
 				if @model.get 'hint_enable'
-					console.log 'hint'
 					@$el.find('#hint_enable').trigger 'click'
 
 				if @model.get 'comment_enable'

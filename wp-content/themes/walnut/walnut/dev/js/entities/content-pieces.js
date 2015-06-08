@@ -37,7 +37,7 @@ define(["app", 'backbone', 'bootbox'], function(App, Backbone, bootbox) {
       };
 
       ItemModel.prototype.duplicate = function() {
-        return bootbox.confirm("Are you sure you want to clone '" + (this.get('post_excerpt')) + "' ?", (function(_this) {
+        return bootbox.confirm("Are you sure you want to clone this content piece ?", (function(_this) {
           return function(result) {
             var contentPieceData;
             if (result) {
