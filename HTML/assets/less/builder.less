@@ -795,6 +795,9 @@
 		cursor: pointer;
 		//height: 92px;
 		background-color: @preview-grey;
+		height: 145px;
+		overflow: hidden;
+		margin-bottom: 0;
 		&::after{
 			clear: both;
 		}
@@ -827,6 +830,11 @@
 		.imaTitle{
 			display: none;
 		}
+		.edit-image, .delete-image{
+			font-size: 14px;
+			display: inline-block;
+			margin-bottom: 15px;
+		}
 	}
 	.single-img{
 		position: relative;
@@ -843,7 +851,7 @@
 	}
 	.ui-selected{
 		a{
-			border: 2px solid @color-info;
+			border: 1px solid @color-info;
 		}
 		.ticker{
 			display: block;
