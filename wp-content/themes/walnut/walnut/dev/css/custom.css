@@ -910,6 +910,9 @@
 #all-media-region .thumbnail {
   cursor: pointer;
   background-color: #f3f3f3;
+  height: 145px;
+  overflow: hidden;
+  margin-bottom: 0;
 }
 #all-media-region .thumbnail::after {
   clear: both;
@@ -941,6 +944,12 @@
 #all-media-region .col-sm-2 .imaTitle {
   display: none;
 }
+#all-media-region .col-sm-2 .edit-image,
+#all-media-region .col-sm-2 .delete-image {
+  font-size: 14px;
+  display: inline-block;
+  margin-bottom: 15px;
+}
 #all-media-region .single-img {
   position: relative;
 }
@@ -955,7 +964,7 @@
   display: none;
 }
 #all-media-region .ui-selected a {
-  border: 2px solid #0090d9;
+  border: 1px solid #0090d9;
 }
 #all-media-region .ui-selected .ticker {
   display: block;
