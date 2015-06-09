@@ -134,6 +134,95 @@
   src: local('CinzelDecorative'), local('CinzelDecorative-Regular'), url(../fonts/CinzelDecorative-Regular.ttf) format('True Type');
   src: local('CinzelDecorative'), local('CinzelDecorative-Regular'), url(../fonts/CinzelDecorative-Regular.woff) format('woff');
 }
+
+@font-face {
+  font-family: 'Aksharyogini';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.eot) format('embedded-opentype');
+  src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.ttf) format('True Type');
+  src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Garamond';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.eot) format('embedded-opentype');
+  src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.ttf) format('True Type');
+  src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Calibri';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Calibri'), local('Calibri-Normal'), url(../fonts/Calibri.eot) format('embedded-opentype');
+  src: local('Calibri'), local('Calibri-Normal'), url(../fonts/Calibri.ttf) format('True Type');
+  src: local('Calibri'), local('Calibri-Normal'), url(../fonts/Calibri.woff) format('woff');
+}
+@font-face {
+  font-family: 'Days Later';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.eot) format('embedded-opentype');
+  src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.ttf) format('True Type');
+  src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Days Ago';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.eot) format('embedded-opentype');
+  src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.ttf) format('True Type');
+  src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Bedizen';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.eot) format('embedded-opentype');
+  src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.ttf) format('True Type');
+  src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Braveheart DNA';
+  font-style: normal;
+  font-weight: 400;
+  src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.eot) format('embedded-opentype');
+  src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.ttf) format('True Type');
+  src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Cardo';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.eot) format('embedded-opentype');
+  src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.ttf) format('True Type');
+  src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Corporate Rounded';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Corporate Rounded'), local('CorporateRounded-Normal'), url(../fonts/CorporateRounded.eot) format('embedded-opentype');
+  src: local('Corporate Rounded'), local('CorporateRounded-Normal'), url(../fonts/CorporateRounded.ttf) format('True Type');
+  src: local('Corporate Rounded'), local('CorporateRounded-Normal'), url(../fonts/CorporateRounded.woff) format('woff');
+}
+@font-face {
+  font-family: 'Lane Humouresque';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.eot) format('embedded-opentype');
+  src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.ttf) format('True Type');
+  src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.woff) format('woff');
+}
+
 .creator {
   position: relative;
 }
