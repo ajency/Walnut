@@ -18,7 +18,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
 
       Controller.prototype.initialize = function(opts) {
         var displayAnswer, layout;
-        this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection, this.display_mode = opts.display_mode;
+        this.model = opts.model, this.quizModel = opts.quizModel, this.questionResponseCollection = opts.questionResponseCollection, this.display_mode = opts.display_mode, this.direction = opts.direction;
         this.questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': this.model.id
         });
@@ -26,7 +26,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
         this.answerWreqrObject.displayAnswer = displayAnswer;
         this.answerWreqrObject.multiplicationFactor = this.model.get('multiplicationFactor');
-        this.layout = layout = this._showSingleQuestionLayout(this.model);
+        this.layout = layout = this._showSingleQuestionLayout(this.model, this.direction);
         this.answerModel = App.request("create:new:answer");
         if (this.questionResponseModel && this.questionResponseModel.get('status') !== 'paused') {
           if (this.display_mode === 'class_mode' && !this.quizModel.hasPermission('single_attempt')) {
@@ -43,7 +43,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         this.show(layout, {
           loading: true
         });
-        this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject));
+        this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject, this.direction));
         this.listenTo(this.region, "silent:save:question", (function(_this) {
           return function() {
             var answer_status;
@@ -141,13 +141,17 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         return status;
       };
 
-      Controller.prototype._showContentBoard = function(model, answerWreqrObject) {
+      Controller.prototype._showContentBoard = function(model, answerWreqrObject, direction) {
+        if (direction == null) {
+          direction = 'ltr';
+        }
         return App.execute("show:content:board", {
           region: this.layout.contentBoardRegion,
           model: model,
           answerWreqrObject: answerWreqrObject,
           answerModel: this.answerModel,
-          quizModel: this.quizModel
+          quizModel: this.quizModel,
+          direction: direction
         });
       };
 

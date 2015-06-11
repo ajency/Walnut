@@ -157,10 +157,12 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
         $content_meta= get_post_meta($id,'content_piece_meta',true);
 
         $content_meta= maybe_unserialize($content_meta);
-
-        $excerpts[] = $content_meta['post_tags'];
-
-        $excerpts[] = $content_meta['instructions'];
+        
+        if(isset($content_meta['post_tags'])) 
+            $excerpts[] = $content_meta['post_tags'];
+        
+        if(isset($content_meta['instructions'])) 
+            $excerpts[] = $content_meta['instructions'];
 
         $excerpts = __u::flatten($excerpts);
 
@@ -186,7 +188,8 @@ function get_single_content_piece($id){
     $content_piece= get_post($id);
 
     $authordata = get_userdata($content_piece->post_author);
-
+    
+    $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($content_piece->post_modified)));
     $content_piece->post_author_name = $authordata->display_name;
 
     $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);
@@ -322,8 +325,10 @@ function get_modules_containing_content_piece($content_id){
         }
 
         if($valid){
-            $m['id']=$module_meta->collection_id;
-            $m['name']=wp_unslash(get_module_name($module_meta->collection_id));
+            $module_dets= get_single_content_module($module_meta->collection_id);
+            $m['id']=$module_dets->id;
+            $m['name']=$module_dets->name;
+            $m['type']=$module_dets->type;
             $modules[]=$m;
         }
 

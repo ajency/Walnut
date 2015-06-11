@@ -6,7 +6,7 @@
  * Time: 2:07 PM
  */
 
-function get_all_content_modules($args=array()){
+function get_all_content_modules($args=array(),$type= 'teaching-module'){
 
     global $wpdb;
 
@@ -15,7 +15,7 @@ function get_all_content_modules($args=array()){
     if(isset($args['post_status']))
         $post_status = $args['post_status'];
 
-    $content_modules_ids_array = get_modules_by_post_status($post_status);
+    $content_modules_ids_array = get_modules_by_post_status($post_status,$type);
 
     if(isset($args['search_str']) && trim($args['search_str']) !=''){
         $content_modules_ids_array = get_modules_by_search_string($args['search_str'],$content_modules_ids_array);
@@ -79,8 +79,12 @@ function get_all_content_modules($args=array()){
     
     $content_modules_ids_array = __u::flatten($content_modules_ids_array);
     
-    foreach($content_modules_ids_array as $id)
-        $content_data[]=  get_single_content_module($id, $division);
+    foreach($content_modules_ids_array as $id){
+        $m=  get_single_content_module($id, $division);
+        if(!is_wp_error($m))
+            $content_data[]=$m;
+
+    }
 
     return $content_data;
 }
@@ -263,6 +267,9 @@ function get_single_content_module($id, $division='', $user_id=0){
 
             if ($value->meta_key=='content_pieces' )
                 $data->content_pieces= $meta_val;
+
+            if ($value->meta_key=='content_layout' )
+                $data->content_layout= $meta_val;
 
         }
     }

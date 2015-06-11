@@ -68,6 +68,17 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         videoCollection = this._getVideoCollection();
         return App.execute("when:fetched", videoCollection, (function(_this) {
           return function() {
+            videoCollection.each(function(model, index) {
+              var titles;
+              titles = _this.layout.model.get('title');
+              if (_.str.contains(titles[index], 'youtube.com') && !model.get('url')) {
+                return model.set({
+                  'title': titles[index],
+                  'name': titles[index],
+                  'url': titles[index]
+                });
+              }
+            });
             _this.view = _this._getVideoView();
             _this.listenTo(_this.view, "show:media:manager", function() {
               return App.execute("show:media:collection:manager", {

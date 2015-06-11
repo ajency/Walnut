@@ -23,7 +23,6 @@ define(['app'], function(App) {
         },
         'change .filters': function(e) {
           if (e.target.id !== 'divisions-filter') {
-            console.log(e.target.id);
             return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
           }
         },

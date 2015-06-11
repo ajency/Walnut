@@ -68,15 +68,22 @@ function get_user_list( $data ) {
 
     $args['blog_id'] = get_current_blog_id();
 
-    if (isset($data['role']))
-        $args['role'] = $data['role'];
-
     if (isset($data['division'])) {
         $args['meta_key'] = 'student_division';
         $args['meta_value'] = $data['division'];
     }
-
-    $users = get_users( $args );
+    if (isset($data['role']))
+        $args['role'] = $data['role'];
+    
+    if(isset($data['role']) && is_array($data['role'])){
+        $users= array();
+        foreach($data['role'] as $role){
+            $args['role'] = $role;
+            $users = array_merge($users,get_users( $args ));
+        }
+    }
+    else
+        $users = get_users( $args );
     
     $user_data = array();
     foreach ($users as $user) {
@@ -90,11 +97,14 @@ function get_user_list( $data ) {
 function get_user_by_id( $id ) {
 
     $user = get_userdata( $id );
-
+    
+    $roles = array_values($user->roles);
     $user_data['ID']            = $user->ID;
     $user_data['display_name']  = $user->display_name;
-    $user_data['role']          = $user->roles;
-    $user_data['user_email']    = $user->user_email;
+    $user_data['first_name']    = $user->first_name;
+    $user_data['last_name']     = $user->last_name;
+    $user_data['role']          = $roles;
+    $user_data['user_role']     = $roles[0];
     $user_data['user_email']    = $user->user_email;
     $user_data['roll_no']       = get_user_meta($id, 'roll_no', true);
 
@@ -696,4 +706,45 @@ function get_school_admin_for_cronjob($blog_id=0){
     if(!$blog_id) $blog_id= get_current_blog_id ();
     $school_admin = get_users(array('role'=>'school-admin','fields'=>'ID','blog_id'=>$blog_id));
     return $school_admin[0];
+}
+
+function create_parent_user($data){
+    
+    $userdata = array(
+        'first_name' => $data['first_name'],
+        'last_name' => $data['last_name'],
+        'display_name'=> trim($data['first_name'].' '.$data['last_name'])
+    );
+
+    #parents need to have unique email id which is also used as the login
+    if(username_exists($data['user_email']))
+        return new WP_Error( 'email_exists', __( "Parents need to have unique email id. {$data['user_email']} already exists. Please try another one." ) ); 
+
+    $userdata=array_merge($userdata,
+            array(
+                'user_login'=>$data['user_email'],
+                'user_pass'=> wp_generate_password( 12, true ),
+                'role' => $data['user_role'],
+                'user_email' => $data['user_email']
+            ));
+
+    $id = wp_insert_user($userdata);
+
+    if(!is_wp_error($id) && isset($data['ID']))
+        wp_new_user_notification($id, $userdata['user_pass']);
+
+    return $id;
+}
+
+function update_parent_user($data){
+    
+    $userdata = array(
+        'ID'            => $data['ID'],
+        'first_name'    => $data['first_name'],
+        'last_name'     => $data['last_name'],
+        'display_name'  => trim($data['first_name'].' '.$data['last_name'])
+    );
+    
+    return wp_update_user($userdata);
+    
 }

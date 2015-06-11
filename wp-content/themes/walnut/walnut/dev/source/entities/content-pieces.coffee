@@ -1,145 +1,166 @@
-define ["app", 'backbone'], (App, Backbone) ->
-    App.module "Entities.ContentPiece", (ContentPiece, App, Backbone, Marionette, $, _)->
+define ["app", 'backbone', 'bootbox'], (App, Backbone,bootbox) ->
+	App.module "Entities.ContentPiece", (ContentPiece, App, Backbone, Marionette, $, _)->
 
-        # ContentPiece model
-        class ContentPiece.ItemModel extends Backbone.Model
+		# ContentPiece model
+		class ContentPiece.ItemModel extends Backbone.Model
 
-            idAttribute : 'ID'
+			idAttribute : 'ID'
 
-            defaults :
-                post_title : ''
-                post_author : ''
-                post_author_name : ''
-                post_modified : ''
-                post_date : ''
-                post_tags : ''
-                order : ''
+			defaults :
+				post_title : ''
+				post_author : ''
+				post_author_name : ''
+				post_modified : ''
+				post_date : ''
+				post_tags : ''
+				order : ''
 
-            name : 'content-piece'
+			name : 'content-piece'
 
-            setMarks:(multiplicationFactor)->
+			setMarks:(multiplicationFactor)->
 
-                @.set 'marks'               : multiplicationFactor * @.get 'marks'
-                @.set 'multiplicationFactor': multiplicationFactor
+				@.set 'marks'               : multiplicationFactor * @.get 'marks'
+				@.set 'multiplicationFactor': multiplicationFactor
 
-                @
+				@
 
-        # ContentPiece collection class
-        class ContentPiece.ItemCollection extends Backbone.Collection
-            model : ContentPiece.ItemModel
-            comparator : 'order'
-            url : ->
-                AJAXURL + '?action=get-content-pieces'
+			duplicate:->
+				bootbox.confirm "Are you sure you want to clone this content piece ?", (result)=>
+					if(result)
+						@cloneModel = App.request "new:content:piece"
+						contentPieceData = @.toJSON()
 
-        contentPiecesRepository= new ContentPiece.ItemCollection
+						@clonedData = _.omit contentPieceData,
+									  ['ID', 'guid', 'last_modified_by', 'post_author',
+									   'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
 
-        # collection of content pieces in a content group. eg. questions in a quiz
-        class ContentPiece.GroupItemCollection extends Backbone.Collection
-            model : ContentPiece.ItemModel
-            comparator : 'order'
+						@clonedData.post_status = "pending"
+						@clonedData.clone_id =@.id
 
-            initialize : ->
-                console.log 'content piece '
-                @on('remove', @removedModel, @)
-                @on('add', @addedPieces, @)
-
-            removedModel : (model)=>
-                @trigger "content:pieces:of:group:removed", model
-
-            addedPieces : (model)=>
-                @trigger "content:pieces:of:group:added", model
+						App.execute "when:fetched", @cloneModel, =>
+							@cloneModel.save @clonedData,
+								wait : true
+								success :(model)->
+									document.location = SITEURL+ "/content-creator/#edit-content/#{model.id}"
+								error :(error)->console.log error
 
 
-        # API
-        API =
-        # get all content pieces
-            getContentPieces : (param = {})->
-                contentPieceCollection = new ContentPiece.ItemCollection
-                
-                contentPieceCollection.fetch
-                    add : true
-                    remove : false
-                    data : param
-                    type : 'post'
-                    success:(resp)-> 
-                        if not param.search_str
-                            contentPiecesRepository.reset resp.models
+		# ContentPiece collection class
+		class ContentPiece.ItemCollection extends Backbone.Collection
+			model : ContentPiece.ItemModel
+			comparator : 'order'
+			url : ->
+				AJAXURL + '?action=get-content-pieces'
 
-                contentPieceCollection
+		contentPiecesRepository= new ContentPiece.ItemCollection
 
-        # get all content pieces belonging to particular group
-            getContentPiecesOfGroup : (groupModel)->
-                contentPiecesOfGroup = new ContentPiece.GroupItemCollection
+		# collection of content pieces in a content group. eg. questions in a quiz
+		class ContentPiece.GroupItemCollection extends Backbone.Collection
+			model : ContentPiece.ItemModel
+			comparator : 'order'
 
-                contentIDs = groupModel.get('content_pieces')
+			initialize : ->
+				console.log 'content piece '
+				@on('remove', @removedModel, @)
+				@on('add', @addedPieces, @)
 
-                if contentIDs
-                    for contentID in contentIDs
-                        contentModel = new ContentPiece.ItemModel 'ID' : contentID
-                        contentModel.fetch()
+			removedModel : (model)=>
+				@trigger "content:pieces:of:group:removed", model
 
-                        contentPiecesOfGroup.add contentModel
-
-                contentPiecesOfGroup
+			addedPieces : (model)=>
+				@trigger "content:pieces:of:group:added", model
 
 
+		# API
+		API =
+		# get all content pieces
+			getContentPieces : (param = {})->
+				contentPieceCollection = new ContentPiece.ItemCollection
 
-            getContentPieceByID : (id)->
-                contentPiece = contentPiecesRepository.get id
+				contentPieceCollection.fetch
+					add : true
+					remove : false
+					data : param
+					type : 'post'
+					success:(resp)-> 
+						if not param.search_str
+							contentPiecesRepository.reset resp.models
 
-                if not contentPiece
-                    contentPiece = new ContentPiece.ItemModel ID : id
-                    contentPiece.fetch
-                        success:(resp)->contentPiecesRepository.add resp
+				contentPieceCollection
 
-                contentPiece
+		# get all content pieces belonging to particular group
+			getContentPiecesOfGroup : (groupModel)->
+				contentPiecesOfGroup = new ContentPiece.GroupItemCollection
 
-            getContentPiecesByIDs : (ids = [])->
-                
-                contentPieces = new ContentPiece.ItemCollection
-                
-                for id in ids
-                    model= contentPiecesRepository.get id
-                    if model
-                        contentPieces.add model
-                        ids = _.without ids, id
+				contentIDs = groupModel.get('content_pieces')
 
-                if _.size(ids) > 0
-                    contentPieces.fetch
-                        add : true
-                        remove : false
-                        data :
-                            ids : ids
+				if contentIDs
+					for contentID in contentIDs
+						contentModel = new ContentPiece.ItemModel 'ID' : contentID
+						contentModel.fetch()
 
-                contentPieces
+						contentPiecesOfGroup.add contentModel
 
-            newContentPiece:->
-                contentPiece = new ContentPiece.ItemModel
-
-            emptyContentCollection:->
-                contentPieces = new ContentPiece.ItemCollection
+				contentPiecesOfGroup
 
 
-        # request handler to get all ContentPieces
-        App.reqres.setHandler "get:content:pieces", (opt) ->
-            API.getContentPieces(opt)
+
+			getContentPieceByID : (id)->
+				contentPiece = contentPiecesRepository.get id
+
+				if not contentPiece
+					contentPiece = new ContentPiece.ItemModel ID : id
+					contentPiece.fetch
+						success:(resp)->contentPiecesRepository.add resp
+
+				contentPiece
+
+			getContentPiecesByIDs : (ids = [])->
+
+				contentPieces = new ContentPiece.ItemCollection
+
+				for id in ids
+					model= contentPiecesRepository.get id
+					if model
+						contentPieces.add model
+						ids = _.without ids, id
+
+				if _.size(ids) > 0
+					contentPieces.fetch
+						add : true
+						remove : false
+						data :
+							ids : ids
+
+				contentPieces
+
+			newContentPiece:->
+				contentPiece = new ContentPiece.ItemModel
+
+			emptyContentCollection:->
+				contentPieces = new ContentPiece.ItemCollection
 
 
-        # request handler to get all ContentPieces
-        App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->
-            API.getContentPiecesOfGroup(groupModel)
+		# request handler to get all ContentPieces
+		App.reqres.setHandler "get:content:pieces", (opt) ->
+			API.getContentPieces(opt)
 
-        App.reqres.setHandler "get:content:piece:by:id", (id)->
-            API.getContentPieceByID id
 
-        App.reqres.setHandler "get:content:pieces:by:ids", (ids)->
-            API.getContentPiecesByIDs ids
+		# request handler to get all ContentPieces
+		App.reqres.setHandler "get:content:pieces:of:group", (groupModel) ->
+			API.getContentPiecesOfGroup(groupModel)
 
-        App.reqres.setHandler "new:content:piece",->
-            API.newContentPiece()
+		App.reqres.setHandler "get:content:piece:by:id", (id)->
+			API.getContentPieceByID id
 
-        App.reqres.setHandler "empty:content:pieces:collection",->
-            API.emptyContentCollection()
+		App.reqres.setHandler "get:content:pieces:by:ids", (ids)->
+			API.getContentPiecesByIDs ids
 
-        App.reqres.setHandler "get:content:pieces:repository",->
-            contentPiecesRepository.clone()
+		App.reqres.setHandler "new:content:piece",->
+			API.newContentPiece()
+
+		App.reqres.setHandler "empty:content:pieces:collection",->
+			API.emptyContentCollection()
+
+		App.reqres.setHandler "get:content:pieces:repository",->
+			contentPiecesRepository.clone()

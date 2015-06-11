@@ -1,6 +1,6 @@
 {{#imagePreview}}
     <a class="thumbnail">
-        <div class="imgthumb"><img src="{{sizes.thumbnail.url}}" class="img-responsive"/></div>
+        <div class="imgthumb"><img src="{{imageUrl}}" class="img-responsive"/></div>
         <div class="imaTitle"><span>{{title}}</span></div>
         <div class="ticker">
             <span class="glyphicon glyphicon-ok"></span>
@@ -9,9 +9,6 @@
     </a>
     <div class="edit-image clearfix">
     <span class="glyphicon glyphicon-edit edit"></span> Edit
-    </div>
-    <div class="delete-media-img">
-       <span class="glyphicon glyphicon-trash delete"></span> Delete
     </div>
 {{/imagePreview}}
 {{#videoPreview}}

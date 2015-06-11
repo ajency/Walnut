@@ -22,4 +22,5 @@ define [
     'entities/grading-parameter'
     'entities/communications'
     'entities/quiz'
+    'entities/student-training'
 ], ->

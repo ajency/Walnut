@@ -39,10 +39,20 @@ define(['app', 'bootbox'], function(App, bootbox) {
         'change:column': 'columnChanged',
         'change:bordered': 'changeBordered',
         'change:striped': 'changeStriped',
-        'change:style': 'changeStyle'
+        'change:style': 'changeStyle',
+        'destroy': function() {
+          return $('#myCanvas').unbind("click");
+        }
       };
 
       TableView.prototype.onShow = function() {
+        $('#myCanvas').bind("click", (function(_this) {
+          return function(evt) {
+            if (!$.contains($('#myCanvas')[0], evt.target)) {
+              return _this.destroyEditor(evt);
+            }
+          };
+        })(this));
         this.$el.find('.table-holder').html(_.stripslashes(this.model.get('content')));
         this.$el.find('.table-holder tr div').attr('tabindex', 0);
         return this.$el.find('table').resizableColumns();
@@ -138,7 +148,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('td div, th div').removeAttr('contenteditable').removeAttr('style').removeAttr('id');
           this.saveTableMarkup();
         }
-        console.log('showEditor');
         id = _.uniqueId('text-');
         $(evt.target).closest('td,th').find('div').attr('contenteditable', 'true').attr('id', id);
         CKEDITOR.on('instanceCreated', this.configureEditor);
@@ -158,9 +167,10 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.destroyEditor = function(evt) {
+        console.log('destroy editor');
         evt.stopPropagation();
         this.trigger('show:table:property');
-        if (this.editor) {
+        if (this.editor && !($(evt.target).hasClass('cke_editable'))) {
           this.editor.destroy();
           this.editor = null;
           console.log('editor destroyed');
@@ -172,7 +182,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.saveTableMarkup = function() {
-        console.log('save table');
         return this.trigger('save:table', this.$el.find('.table-holder'));
       };
 

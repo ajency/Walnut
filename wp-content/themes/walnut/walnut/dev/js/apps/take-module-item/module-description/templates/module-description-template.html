@@ -1,46 +1,57 @@
-{{#isTraining}}
-    <div class="well text-center m-b-0 p-b-5 p-t-5">
-        <h4><span class="bold">This is practice mode.
-                It is designed to help you train for the class</span></h4>
-    </div>
-{{/isTraining}}
-<div class="moduleInfo m-b-20">
-	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
-            <div class="modTime pause">
-                <a id="back-to-module" class="btn btn-small btn-block btn-white m-t-10"><h4 class="semi-bold text-info no-margin"><span class="fa fa-pause"></span> {{name}}</h4></a>
-                
-                <!-- {{&showPauseButton}} -->
-            </div>
-            <div class="modTime b-grey b-l text-center">
-                <p class="bold small-text muted no-margin">Module Time</p>
-                <h3 class="bold text-grey no-margin">
-                    <span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>
-                </h3>
-            </div>
-            <div class="modTime b-grey b-l text-center">
-                {{^isTraining}}
-                    <div class="modProgress h-center">
-                        <p class="bold small-text muted">Progress</p>
-                        <div class="progress progress-large w100 m-b-0">
-                            <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{getProgressPercentage}}" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+<div id="collapseView" class="panel-collapse collapse">
+
+    <!--  -->
+    {{#isTraining}}
+        <div class="well text-center m-b-0 p-b-5 p-t-5">
+            <h4><span class="bold">This is practice mode.
+                    It is designed to help you train for the class</span></h4>
+        </div>
+    {{/isTraining}}
+    <div class="moduleInfo" style="border-bottom:none;">
+    	<div class="b-grey b-b no-margin p-l-15 p-r-15 p-b-5 p-t-10">
+                <div class="modTime pause">
+                    <a id="back-to-module" class="btn btn-small btn-block btn-white m-t-10"><h4 class="semi-bold text-info no-margin"><span class="fa fa-pause"></span> {{name}}</h4></a>
+                    
+                    <!-- {{&showPauseButton}} -->
+                </div>
+                <div class="modTime b-grey b-l text-center">
+                    <p class="bold small-text muted no-margin">Module Time</p>
+                    <h3 class="bold text-grey no-margin">
+                        <span class="animate-number" data-animation-duration="1200">{{total_minutes}} mins</span>
+                    </h3>
+                </div>
+                <div class="modTime b-grey b-l text-center">
+                    {{^isTraining}}
+                        <div class="modProgress h-center">
+                            <p class="bold small-text muted">Progress</p>
+                            <div class="progress progress-large w100 m-b-0">
+                                <div data-percentage="{{getProgressPercentage}}%" style="width: {{getProgressPercentage}}%;" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{getProgressPercentage}}" aria-valuemin="0" aria-valuemax="100">{{getProgressData}}</div>
+                            </div>
                         </div>
-                    </div>
-                {{/isTraining}}
-            </div>
-            <div class="modTime b-grey b-l b-r text-center">
-                {{^isTraining}}
-                <p class="bold small-text muted no-margin">Completed Time</p>
-                <h3 class="bold text-grey no-margin">
-                    <span class="animate-number" data-animation-duration="1200">{{moduleTime}}</span>
-                </h3>
-                {{/isTraining}}
-            </div>
-            <div class="modTime next">
-                <button type="button" id="question-done"  class="btn btn-block btn-success m-t-10">
-                    <i class="fa fa-forward"></i> Next
-                </button>
-            </div>
-            <div class="clearfix"></div>
-	</div>
-	
+                    {{/isTraining}}
+                </div>
+                <div class="modTime b-grey b-l b-r text-center">
+                    {{^isTraining}}
+                    <p class="bold small-text muted no-margin">Completed Time</p>
+                    <h3 class="bold text-grey no-margin">
+                        <span class="animate-number" data-animation-duration="1200">{{moduleTime}}</span>
+                    </h3>
+                    {{/isTraining}}
+                </div>
+                <!-- <div class="modTime next">
+                    <button type="button" id="question-done"  class="btn btn-block btn-success m-t-10">
+                        <i class="fa fa-forward"></i> Next
+                    </button>
+                </div> -->
+                <div class="clearfix"></div>
+    	</div>
+    </div>
+    <!--  -->
+
+</div>
+
+<div class="text-center m-b-5" style="background-color: #f3f3f3; padding:2px 0;">
+    <a id="accordionToggle" data-toggle="collapse" href="#collapseView" aria-expanded="true" aria-controls="collapseView" style="display:block; color:#000" class="h6">
+        Expand        
+    </a>
 </div>

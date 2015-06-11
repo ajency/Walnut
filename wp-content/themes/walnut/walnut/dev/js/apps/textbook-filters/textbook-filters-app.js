@@ -131,7 +131,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             _this.listenTo(_this.view, "fetch:chapters:or:sections", _this.fetchSectionOrSubsection);
             _this.listenTo(_this.view, "fetch:new:content", function(textbook_id, post_status) {
               var division, newContent;
-              console.log(post_status);
               if (!post_status) {
                 post_status = _this.post_status;
               }
@@ -148,6 +147,8 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
               }
               if (_this.dataType === 'teaching-modules') {
                 newContent = App.request("get:content:groups", data);
+              } else if (_this.dataType === 'student-training') {
+                newContent = App.request("get:student:training:modules", data);
               } else if (_this.dataType === 'quiz') {
                 newContent = App.request("get:quizes", data);
               } else {

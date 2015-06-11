@@ -94,6 +94,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         return data;
       };
 
+      ModuleDescriptionView.prototype.onShow = function() {
+        $('#collapseView').on('hidden.bs.collapse', function() {
+          return $('#accordionToggle').text('Expand');
+        });
+        return $('#collapseView').on('shown.bs.collapse', function() {
+          return $('#accordionToggle').text('Collapse');
+        });
+      };
+
       ModuleDescriptionView.prototype.onQuestionChange = function(model) {
         this.$el.find("#time-on-question").html(model.get('duration'));
         return this.$el.find("#marks-for-question").html(parseFloat(model.get('marks')).toFixed(1));

@@ -12,7 +12,7 @@ define(['app'], function(App) {
 
       VideoView.prototype.className = 'video';
 
-      VideoView.prototype.template = '    {{#videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
+      VideoView.prototype.template = '    {{#videoUrl}} <div class="videoContainer"></div> {{/videoUrl}} {{^videoUrl}} <video  class="video-js vjs-default-skin" controls preload="none" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png" data-setup="{}" controls src="{{videoUrl}}"> </video> {{/videoUrl}} <div class="clearfix"></div>';
 
       VideoView.prototype.events = {
         'click .show-playlist': 'togglePlaylist',
@@ -35,7 +35,8 @@ define(['app'], function(App) {
         if (_.size(this.videos) > 1) {
           this._setVideoList();
         }
-        return this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
+        return this._addVideoElement(this.videos[0]);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -88,8 +89,23 @@ define(['app'], function(App) {
         if (!this.videos[this.index]) {
           this.$el.find('video').attr('poster', SITEURL + '/wp-content/themes/walnut/images/video-unavailable.png');
         }
-        this.$el.find('video')[0].load();
-        return this.$el.find('video')[0].play();
+        return this._addVideoElement(this.videos[this.index], true);
+      };
+
+      VideoView.prototype._addVideoElement = function(videoUrl, autoplay) {
+        var vidID;
+        if (autoplay == null) {
+          autoplay = false;
+        }
+        this.$el.find('.videoContainer').empty();
+        if (_.str.contains(videoUrl, 'youtube.com')) {
+          vidID = _.str.strRightBack(videoUrl, '?v=');
+          return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0&autoplay=1" frameborder="0"> </iframe></div>');
+        } else {
+          this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
+          this.$el.find('video')[0].load();
+          return this.$el.find('video')[0].play();
+        }
       };
 
       return VideoView;

@@ -18,6 +18,7 @@ require_once 'modules/question-response/ajax.php';
 require_once 'modules/sync-data/sync-data-ajax.php';
 require_once 'modules/communications/functions.php';
 require_once 'modules/quiz/ajax.php';
+require_once 'modules/student-training/ajax.php';
 require_once 'custom_configs.php';
 require_once 'modules/school/school_data_import.php';
 

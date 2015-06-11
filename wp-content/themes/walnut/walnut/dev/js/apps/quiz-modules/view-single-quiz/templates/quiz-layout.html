@@ -26,12 +26,22 @@
         {{/practice_mode}}
 
     {{/quiz_report}}
+    {{^studentTrainingModule}}
     <button type="button" class="btn btn-white btn-cons goto-prev-page">
         <h4 class="bold text-info no-margin">
             <span class="fa fa-arrow-circle-left"></span>
             Back to List of Quizzes
         </h4>
     </button>
+    {{/studentTrainingModule}}
+    {{#studentTrainingModule}}
+    <button type="button" class="btn btn-white btn-cons pull-right continue-student-training-module">
+        <h4 class="bold text-info no-margin">
+            <span class="fa fa-arrow-circle-right pull-right p-t-5"></span>
+            Continue Training Module
+        </h4>
+    </button>
+    {{/studentTrainingModule}}
     <div id="attempts-region"></div>
     <div id="quiz-details-region"></div>
 </div>

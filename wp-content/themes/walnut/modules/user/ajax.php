@@ -203,3 +203,28 @@ function reset_user_password(){
 
 }
 add_action('wp_ajax_nopriv_reset-user-password', 'reset_user_password');
+
+function ajax_create_user() {
+    
+    if(!isset($_POST['user_role']))
+        wp_send_json(new WP_Error( 'required_field_missing', __( "User Role is a required field" ) ));
+    
+    $role = $_POST['user_role'];
+    
+    $action = isset($_POST['ID'])?'update':'create';
+    $functionName = "{$action}_{$role}_user";
+    
+    if(!function_exists($functionName))
+        wp_send_json(new WP_Error( 'function_doesnt_exist', __( "function $functionName doesnt exist" ) ));
+        
+    $id = $functionName($_POST);
+    
+    if(is_wp_error($id))
+        wp_send_json(array('code' => 'ERROR','message'=> $id->get_error_message()));
+    
+    wp_send_json(array('code' => 'OK', 'data' => get_user_by_id( $id )));
+
+} 
+
+add_action( 'wp_ajax_create-user', 'ajax_create_user' );
+add_action( 'wp_ajax_update-user', 'ajax_create_user' );

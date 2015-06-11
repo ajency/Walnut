@@ -53,6 +53,20 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
               };
             }
           });
+        } else if (this.model.get('type') === 'student-training') {
+          content = this.contentGroupCollection.map(function(item) {
+            if (item.get('post_type') === 'content-piece') {
+              return {
+                type: 'content-piece',
+                id: item.id
+              };
+            } else {
+              return {
+                type: 'quiz',
+                id: item.id
+              };
+            }
+          });
         } else {
           content = this.contentGroupCollection.pluck('ID');
         }
@@ -89,10 +103,11 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
       };
 
       CollectionEditContentDisplayController.prototype.saveContentPieces = function(content) {
+        var _ref;
         if (this.model.get('type') === 'teaching-module') {
           this.model.set('content_pieces', content);
         }
-        if (this.model.get('type') === 'quiz') {
+        if ((_ref = this.model.get('type')) === 'quiz' || _ref === 'student-training') {
           this.model.set('content_layout', content);
         }
         return this.model.save({
@@ -153,6 +168,9 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
               lvl--;
             }
           }
+        }
+        if (this.groupType === 'student-training' && data.quiz_type) {
+          data.isStudentTrainingQuiz = true;
         }
         if (this.groupType === 'quiz') {
           data.isQuiz = true;

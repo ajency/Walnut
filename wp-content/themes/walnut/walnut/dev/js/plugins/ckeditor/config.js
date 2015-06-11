@@ -63,7 +63,23 @@ CKEDITOR.editorConfig = function( config ) {
 
 
 
-    config.font_names = config.font_names+' ;Chelsea Market; Indie Flower; Just Another Hand; Sacramento'
+    config.font_names = config.font_names+'; \
+                            Aksharyogini; \
+                            Bedizen; \
+                            Braveheart DNA; \
+                            Chelsea Market;  \
+                            Calibri; \
+                            Cardo; \
+                            Corporate Rounded;\
+                            Days Ago; \
+                            Days Later; \
+                            Garamond; \
+                            Indie Flower; \
+                            Just Another Hand; \
+                            Lane Humouresque; \
+                            Sacramento;'
+    
+    
     config.fontSize_defaultLabel = '22';
 };
 

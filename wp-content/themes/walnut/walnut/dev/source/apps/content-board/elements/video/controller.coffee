@@ -55,8 +55,18 @@ define ['app'
 				videoCollection = @_getVideoCollection()
 
 				App.execute "when:fetched", videoCollection, =>
-					@layout.model.set 'videoUrl' : _.first videoCollection.pluck 'url'
-					@layout.model.set 'videoUrls' : videoCollection.pluck 'url'
+					urls = @_getVideoUrls videoCollection
+					@layout.model.set 'videoUrl' : _.first urls
+					@layout.model.set 'videoUrls' : urls
 					view = @_getVideoView()
 
 					@layout.elementRegion.show view
+					
+			_getVideoUrls:(collection)=>
+				
+				urls= collection.pluck 'url'
+				urls = _.map urls, (url,index)=>
+							titles= @layout.model.get 'title'
+							if _.str.contains(titles[index], 'youtube.com') and not url
+								return titles[index]
+							else url
