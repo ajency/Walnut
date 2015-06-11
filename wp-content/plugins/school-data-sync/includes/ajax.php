@@ -445,3 +445,10 @@ function ajax_save_standalone_school_sync_cookies(){
 
 }
 add_action ('wp_ajax_save_standalone_school_sync_cookies', 'ajax_save_standalone_school_sync_cookies');
+
+#deregister heartbeat api so that wordpress doesnt log you out automatically before sync is complete
+add_action( 'init', 'stop_heartbeat', 1 );
+function stop_heartbeat() {
+    if(isset($_REQUEST['action']) && $_REQUEST['action']=='sds_data_sync_import')
+        wp_deregister_script('heartbeat');
+}

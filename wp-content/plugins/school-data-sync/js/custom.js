@@ -75,6 +75,7 @@ jQuery(document).ready(function() {
     });
     
     jQuery("#sync-data").on('click',function(){
+        jQuery(this).attr('disabled', true)
         var lastsync = jQuery(this).attr('data-lastsync');
         var lastsync_id = jQuery(this).attr('data-lastsync-id');
         var syncstatus = jQuery(this).attr('data-syncstatus');
