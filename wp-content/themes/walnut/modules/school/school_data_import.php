@@ -144,7 +144,7 @@ function getTeacherCsvContent($csvJson){
     $i=1;
     while ($i <= count($csvData)-1 ) {
 		$user_table = $wpdb->prefix ."users";
-        $user_pass = "ajency";
+        $user_pass = "12345";
         $user_login = $csvData[$i][0];
         $user_email = $csvData[$i][1];
         $blogId = $csvData[$i][2];
