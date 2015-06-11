@@ -116,7 +116,7 @@ function import_student_csv($file_path){
         }
         
 	$user_table = $wpdb->base_prefix ."users";
-        $user_pass = "ajency";
+        $user_pass = "12345";
         $user_login = $csvData[$i][0];
         $first_name = $csvData[$i][1];
         $last_name = $csvData[$i][2];
