@@ -56,6 +56,7 @@ function ajax_sds_data_sync_import() {
     $zip->extractTo( $extract_path );
 
     // save current logged in user's data to set the user's session after re-importing the users and usermeta table
+    define('SYNC_IN_PROGRESS',true);
     $logged_in_user_data = get_userdata(get_current_user_id());
 
 
@@ -449,6 +450,12 @@ add_action ('wp_ajax_save_standalone_school_sync_cookies', 'ajax_save_standalone
 #deregister heartbeat api so that wordpress doesnt log you out automatically before sync is complete
 add_action( 'init', 'stop_heartbeat', 1 );
 function stop_heartbeat() {
-    if(isset($_REQUEST['action']) && $_REQUEST['action']=='sds_data_sync_import')
+    
+    global $pagenow;
+    if($pagenow=='options-general.php' && isset($_GET['page']) && $_GET['page']=='school_data_sync')
+         wp_deregister_script('heartbeat');
+     
+    if(defined('SYNC_IN_PROGRESS') || (isset($_REQUEST['action']) && $_REQUEST['action']=='sds_data_sync_import'))
         wp_deregister_script('heartbeat');
+    
 }
