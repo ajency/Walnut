@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-board/element/controller', 'apps/content-board/view', 'apps/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
-    return ContentBoard.Controller = (function(_super) {
+    return ContentBoard.Controller = (function(superClass) {
       var API, answerModel, answerWreqrObject;
 
-      __extends(Controller, _super);
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getContentBoardView = __bind(this._getContentBoardView, this);
+        this._getContentBoardView = bind(this._getContentBoardView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -36,18 +36,11 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
           return function() {
             var fillElements;
-            $('.bb-bookblock').bookblock({
-              speed: 1000,
-              shadowSides: 0.8,
-              shadowFlip: 0.7,
-              direction: _this.direction
-            });
             fillElements = _this.startFillingElements();
             return fillElements.done(function() {
               return setTimeout(function() {
                 $('#loading-content-board').remove();
-                $('#question-area').removeClass('vHidden');
-                return $('.bb-bookblock').bookblock('jump', 2);
+                return $('#question-area').removeClass('vHidden');
               }, 500);
             });
           };
