@@ -198,7 +198,7 @@ function get_mcq_outline_id($record)
                 $count++;
                 $singleOptionArray = array();
                 $singleOptionArray['optionNo'] = $count;
-                $singleOptionArray['class'] = '4';
+                $singleOptionArray['class'] = 12/ (int) $record['columns'];
                 $singleOptionArray['marks'] = $arr['mark'];
                 $singleOptionArray['text'] = $arr['option'];
                 array_push($optionArray,$singleOptionArray);
