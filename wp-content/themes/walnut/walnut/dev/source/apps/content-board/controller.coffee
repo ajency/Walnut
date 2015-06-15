@@ -30,11 +30,11 @@ define ['app'
 				@listenTo @view, 'dependencies:fetched', =>
 					# Bookblock is currently initialized only for student training.
 					# And without initialization, content (question area, feedback area) can't be seen.
-					$('.bb-bookblock').bookblock
-						speed : 1000
-						shadowSides : 0.8
-						shadowFlip : 0.7
-						direction: @direction
+					# $('.bb-bookblock').bookblock
+					# 	speed : 1000
+					# 	shadowSides : 0.8
+					# 	shadowFlip : 0.7
+					# 	direction: @direction
 						
 					fillElements = @startFillingElements()
 					fillElements.done =>
@@ -42,7 +42,7 @@ define ['app'
 						
 							$('#loading-content-board').remove()
 							$('#question-area').removeClass 'vHidden'
-							$('.bb-bookblock').bookblock 'jump',2
+							# $('.bb-bookblock').bookblock 'jump',2
 						,500
 
 				#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
