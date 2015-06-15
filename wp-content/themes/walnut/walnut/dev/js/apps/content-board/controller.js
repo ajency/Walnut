@@ -1,16 +1,16 @@
-var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 define(['app', 'controllers/region-controller', 'apps/content-board/element/controller', 'apps/content-board/view', 'apps/content-board/elements-loader'], function(App, RegionController) {
   return App.module("ContentPreview.ContentBoard", function(ContentBoard, App, Backbone, Marionette, $, _) {
-    return ContentBoard.Controller = (function(superClass) {
+    return ContentBoard.Controller = (function(_super) {
       var API, answerModel, answerWreqrObject;
 
-      extend(Controller, superClass);
+      __extends(Controller, _super);
 
       function Controller() {
-        this._getContentBoardView = bind(this._getContentBoardView, this);
+        this._getContentBoardView = __bind(this._getContentBoardView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 

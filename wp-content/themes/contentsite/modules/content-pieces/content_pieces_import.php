@@ -59,45 +59,19 @@ function mcq_import_convert_record_to_dataset($record){
     );
 
     $data['options']= array();
-
-      if(!empty($record[8])){
-        $data['options'][]=array(
-                                'option'=> $record[8],
-                                'mark'=> $record[9]   
+    $optionCols = array(8,10,12,14,16,18);
+    foreach($optionCols as $optCol){
+        if(!empty($record[$optCol])){
+            $data['options'][]=array(
+                                'option'=> $record[$optCol],
+                                'mark'=> $$record[$optCol+1]   
                               );
-      }
-      if(!empty($record[10])){
-        $data['options'][]=array(
-                                'option'=> $record[10],
-                                'mark'=> $record[11]  
-                              );
-      }
-      if(!empty($record[12])){
-        $data['options'][]=array(
-                                'option'=> $record[14],
-                                'mark'=> $record[15] 
-                              );
-      }
-      if(!empty($record[16])){
-        $data['options'][]=array(
-                                'option'=> $record[16],
-                                'mark'=> $record[17]    
-                              );
-      }
-      if(!empty($record[18])){
-        $data['options'][]=array(
-                                'option'=> $record[18],
-                                'mark'=> $record[19]    
-                              );
-      }
-      if(!empty($record[8])){
-        $data['options'][]=array(
-                                'option'=> $record[8],
-                                'mark'=> $record[9]   
-                              );
-      }
+          }
+    }
 
     if(!$data['columns']) $data['columns']=2;
+    
+    if(!$data['duration']) $data['duration']=1;
     
     $data['multiple']= (strtolower($data['multiple'])=='yes')?'true':'false';
     
