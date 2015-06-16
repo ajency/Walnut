@@ -76,11 +76,16 @@ CKEDITOR.editorConfig = function( config ) {
                             Garamond; \
                             Indie Flower; \
                             Just Another Hand; \
+                            KG Corner of the Sky; \
                             Lane Humouresque; \
+                            Qarmic Sans Free; \
                             Sacramento;'
     
     
     config.fontSize_defaultLabel = '22';
+    config.font_defaultLabel = 'Qarmic Sans Free';
+    config.contentsCss
 };
 
+CKEDITOR.addCss( '.cke_editable { font-family: "Qarmic Sans Free" }' );
 
