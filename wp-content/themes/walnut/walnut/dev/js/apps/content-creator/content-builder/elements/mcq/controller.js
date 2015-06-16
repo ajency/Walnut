@@ -21,20 +21,20 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         _.defaults(options.modelData, {
           element: 'Mcq',
           optioncount: 4,
-          columncount: 3,
+          columncount: 2,
           options: [
             {
               optionNo: 1,
-              "class": 4
+              "class": 6
             }, {
               optionNo: 2,
-              "class": 4
+              "class": 6
             }, {
               optionNo: 3,
-              "class": 4
+              "class": 6
             }, {
               optionNo: 4,
-              "class": 4
+              "class": 6
             }
           ],
           elements: [],

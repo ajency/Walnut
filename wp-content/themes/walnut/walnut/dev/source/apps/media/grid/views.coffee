@@ -46,6 +46,9 @@ define ['app'
 					data.audioPreview  = true
 					data.title_show  = _.prune data.title , 50
 
+				if data.type is 'image'
+					data.title_show  = _.prune data.title , 22
+
 				data
 
 			_whenImageClicked : (e)->

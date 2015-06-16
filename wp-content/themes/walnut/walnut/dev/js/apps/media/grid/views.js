@@ -53,6 +53,9 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
           data.audioPreview = true;
           data.title_show = _.prune(data.title, 50);
         }
+        if (data.type === 'image') {
+          data.title_show = _.prune(data.title, 22);
+        }
         return data;
       };
 
