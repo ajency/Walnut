@@ -1,6 +1,6 @@
 define ['app'
-        'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'
-        'bootbox'
+		'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html'
+		'bootbox'
 ], (App, contentListTpl,bootbox)->
 	App.module "ContentModulesApp.ModulesListing.Views", (Views, App, Backbone, Marionette, $, _)->
 		class ListItemView extends Marionette.ItemView
@@ -8,11 +8,11 @@ define ['app'
 			tagName : 'tr'
 			className : 'gradeX odd'
 
-			template : '<!--<td class="v-align-middle"><div class="checkbox check-default">
+			template : '<td class="v-align-middle"><div class="checkbox check-default">
 							<input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}">
 							<label for="checkbox{{id}}"></label>
 						  </div>
-						</td>-->
+						</td>
 						<td>{{name}}</td>
 						{{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}}
 						<td>{{textbookName}}</td>
@@ -213,8 +213,10 @@ define ['app'
 				'change .textbook-filter' :(e)->
 					@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
-				'change #check_all_div'     : 'checkAll'
-				'change #content-post-status-filter'  : 'setFilteredContent'
+				'change #check_all_div'     :-> $.toggleCheckAll @$el.find 'table'
+				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
+				'change #content-post-status-filter'  	: 'setFilteredContent'
+				'click .change-status button'			: 'changeStatus'
 
 			initialize : ->
 				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -259,17 +261,6 @@ define ['app'
 
 				@onUpdatePager()
 
-			checkAll: ->
-				if @$el.find '#check_all'
-				.is ':checked'
-					@$el.find '.table-striped .tab_checkbox'
-					.trigger 'click'
-						.prop 'checked', true
-
-				else
-					@$el.find '.table-striped .tab_checkbox'
-					.removeAttr 'checked'
-
 
 			onUpdatePager:->
 
@@ -281,3 +272,55 @@ define ['app'
 
 				@$el.find "#content-pieces-table"
 				.tablesorterPager pagerOptions
+
+			showSubmitButton:->
+				if @$el.find '.tab_checkbox'
+				.is ':checked'
+					@$el.find '.change-status'
+					.show()
+
+				else
+					@$el.find '.change-status'
+					.hide()
+
+			changeStatus:(e)=>
+				data = {}
+				data.IDs= $.getCheckedItems @$el.find 'table'
+				data.status= $(e.target).closest('.change-status').find('select').val()
+
+				msg = "Are you sure you want to #{data.status} the selected modules ?"
+
+				if data.status is 'publish'
+					data.IDs = _.filter data.IDs, (id)=>return id if @collection.get(id).get('post_status') is 'underreview'
+					msg += "<div class='small m-t-10'>
+								Note: Only modules with status 'Under Review' will be changed to publish
+							</div>"
+
+					if 0 is _.size data.IDs
+						bootbox.alert 'None of the selected modules can be published'
+						return
+
+				bootbox.confirm msg, (result)=>
+					if result
+						$(e.target).find '.fa'
+						.addClass 'fa-spin fa-spinner'
+
+						data.action = 'update-content-module-status'
+						$.post AJAXURL, data
+						.success (resp)=>
+							@updateStatusValues data.IDs, data.status
+						.fail (resp)->
+							console.log 'some error occurred'
+							console.log resp
+						.done ->							
+							$(e.target).find '.fa'
+							.removeClass 'fa-spin fa-spinner'
+							.addClass 'fa-check'
+
+			updateStatusValues:(IDs, status)->
+				_.each IDs, (id)=>
+					model= @collection.get parseInt id
+					model.set 'post_status': status
+
+				@collection.reset @collection.models
+				@onUpdatePager()

@@ -19,7 +19,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<!--<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td>--> <td>{{name}}</td> {{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}} <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> {{#isQuiz}}<td>{{marks}}</td>{{/isQuiz}} <td>{{&statusMessage}}</td> <td><a target="_blank" class="view-content-piece" href="{{view_url}}">View</a> {{#is_editable}} <span class="editLinkSpan nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="editLink nonDevice">Edit</a> {{/is_editable}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule"> Archive</a> {{/is_published}} <span class="nonDevice">|</span><a target="_blank" class="nonDevice cloneModule"> Clone</a> <i class="fa spinner"></i> </td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> {{#isQuiz}}<td>{{quiz_type}}</td>{{/isQuiz}} <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{durationRounded}} {{minshours}}</td> {{#isQuiz}}<td>{{marks}}</td>{{/isQuiz}} <td>{{&statusMessage}}</td> <td><a target="_blank" class="view-content-piece" href="{{view_url}}">View</a> {{#is_editable}} <span class="editLinkSpan nonDevice">|</span> <a target="_blank" href="{{edit_url}}" class="editLink nonDevice">Edit</a> {{/is_editable}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule"> Archive</a> {{/is_published}} <span class="nonDevice">|</span><a target="_blank" class="nonDevice cloneModule"> Clone</a> <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
         var data;
@@ -237,6 +237,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       __extends(ModulesListingView, _super);
 
       function ModulesListingView() {
+        this.changeStatus = __bind(this.changeStatus, this);
         return ModulesListingView.__super__.constructor.apply(this, arguments);
       }
 
@@ -272,8 +273,12 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
-        'change #check_all_div': 'checkAll',
-        'change #content-post-status-filter': 'setFilteredContent'
+        'change #check_all_div': function() {
+          return $.toggleCheckAll(this.$el.find('table'));
+        },
+        'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
+        'change #content-post-status-filter': 'setFilteredContent',
+        'click .change-status button': 'changeStatus'
       };
 
       ModulesListingView.prototype.initialize = function() {
@@ -323,14 +328,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         return this.onUpdatePager();
       };
 
-      ModulesListingView.prototype.checkAll = function() {
-        if (this.$el.find('#check_all').is(':checked')) {
-          return this.$el.find('.table-striped .tab_checkbox').trigger('click').prop('checked', true);
-        } else {
-          return this.$el.find('.table-striped .tab_checkbox').removeAttr('checked');
-        }
-      };
-
       ModulesListingView.prototype.onUpdatePager = function() {
         var pagerOptions;
         this.$el.find("#content-pieces-table").trigger("updateCache");
@@ -339,6 +336,66 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           output: '{startRow} to {endRow} of {totalRows}'
         };
         return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
+      };
+
+      ModulesListingView.prototype.showSubmitButton = function() {
+        if (this.$el.find('.tab_checkbox').is(':checked')) {
+          return this.$el.find('.change-status').show();
+        } else {
+          return this.$el.find('.change-status').hide();
+        }
+      };
+
+      ModulesListingView.prototype.changeStatus = function(e) {
+        var data, msg;
+        data = {};
+        data.IDs = $.getCheckedItems(this.$el.find('table'));
+        data.status = $(e.target).closest('.change-status').find('select').val();
+        msg = "Are you sure you want to " + data.status + " the selected modules ?";
+        if (data.status === 'publish') {
+          data.IDs = _.filter(data.IDs, (function(_this) {
+            return function(id) {
+              if (_this.collection.get(id).get('post_status') === 'underreview') {
+                return id;
+              }
+            };
+          })(this));
+          msg += "<div class='small m-t-10'> Note: Only modules with status 'Under Review' will be changed to publish </div>";
+          if (0 === _.size(data.IDs)) {
+            bootbox.alert('None of the selected modules can be published');
+            return;
+          }
+        }
+        return bootbox.confirm(msg, (function(_this) {
+          return function(result) {
+            if (result) {
+              $(e.target).find('.fa').addClass('fa-spin fa-spinner');
+              data.action = 'update-content-module-status';
+              return $.post(AJAXURL, data).success(function(resp) {
+                return _this.updateStatusValues(data.IDs, data.status);
+              }).fail(function(resp) {
+                console.log('some error occurred');
+                return console.log(resp);
+              }).done(function() {
+                return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
+              });
+            }
+          };
+        })(this));
+      };
+
+      ModulesListingView.prototype.updateStatusValues = function(IDs, status) {
+        _.each(IDs, (function(_this) {
+          return function(id) {
+            var model;
+            model = _this.collection.get(parseInt(id));
+            return model.set({
+              'post_status': status
+            });
+          };
+        })(this));
+        this.collection.reset(this.collection.models);
+        return this.onUpdatePager();
       };
 
       return ModulesListingView;
