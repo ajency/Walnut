@@ -17,7 +17,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, edit_url, modules;
@@ -165,6 +165,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListView, _super);
 
       function ListView() {
+        this.changeStatus = __bind(this.changeStatus, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
@@ -189,7 +190,12 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         'change #content-post-status-filter, #difficulty-level-filter': 'setFilteredContent',
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
-        }
+        },
+        'change #check_all_div': function() {
+          return $.toggleCheckAll(this.$el.find('table'));
+        },
+        'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
+        'click .change-status button': 'changeStatus'
       };
 
       ListView.prototype.initialize = function() {
@@ -247,6 +253,66 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           output: '{startRow} to {endRow} of {totalRows}'
         };
         return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
+      };
+
+      ListView.prototype.showSubmitButton = function() {
+        if (this.$el.find('.tab_checkbox').is(':checked')) {
+          return this.$el.find('.change-status').show();
+        } else {
+          return this.$el.find('.change-status').hide();
+        }
+      };
+
+      ListView.prototype.changeStatus = function(e) {
+        var data, msg;
+        data = {};
+        data.IDs = $.getCheckedItems(this.$el.find('table'));
+        data.status = $(e.target).closest('.change-status').find('select').val();
+        msg = "Are you sure you want to " + data.status + " the selected content pieces ?";
+        if (data.status === 'publish') {
+          data.IDs = _.filter(data.IDs, (function(_this) {
+            return function(id) {
+              if (_this.collection.get(id).get('post_status') === 'pending') {
+                return id;
+              }
+            };
+          })(this));
+          msg += "<div class='small m-t-10'> Note: Only content pieces with status 'Under Review' will be changed to publish </div>";
+          if (0 === _.size(data.IDs)) {
+            bootbox.alert('None of the selected items can be published');
+            return;
+          }
+        }
+        return bootbox.confirm(msg, (function(_this) {
+          return function(result) {
+            if (result) {
+              $(e.target).find('.fa').addClass('fa-spin fa-spinner');
+              data.action = 'update-content-piece-status';
+              return $.post(AJAXURL, data).success(function(resp) {
+                return _this.updateStatusValues(data.IDs, data.status);
+              }).fail(function(resp) {
+                console.log('some error occurred');
+                return console.log(resp);
+              }).done(function() {
+                return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
+              });
+            }
+          };
+        })(this));
+      };
+
+      ListView.prototype.updateStatusValues = function(IDs, status) {
+        _.each(IDs, (function(_this) {
+          return function(id) {
+            var model;
+            model = _this.collection.get(parseInt(id));
+            return model.set({
+              'post_status': status
+            });
+          };
+        })(this));
+        this.collection.reset(this.collection.models);
+        return this.onUpdatePager();
       };
 
       return ListView;

@@ -380,7 +380,11 @@ function get_all_quiz_modules($args){
             $result[] = $quiz_data;
         
     }
-
+    
+    $result= __u::sortBy($result, function($item){
+                        return $item->last_modified_on;
+                    });
+                    
     return $result;
 }
 

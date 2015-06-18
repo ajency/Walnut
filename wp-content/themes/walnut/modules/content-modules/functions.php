@@ -19,8 +19,6 @@ function get_all_content_modules($args=array(),$type= 'teaching-module'){
 
     if(isset($args['search_str']) && trim($args['search_str']) !=''){
         $content_modules_ids_array = get_modules_by_search_string($args['search_str'],$content_modules_ids_array);
-
-
     }
 
     $content_module_ids = join(',',__u::flatten($content_modules_ids_array));
@@ -85,6 +83,10 @@ function get_all_content_modules($args=array(),$type= 'teaching-module'){
             $content_data[]=$m;
 
     }
+    
+    $content_data= __u::sortBy($content_data, function($item){
+                        return $item->last_modified_on;
+                    });
 
     return $content_data;
 }

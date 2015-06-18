@@ -10,12 +10,12 @@ define ['app'
                 _.defaults options.modelData,
                     element : 'Mcq'
                     optioncount : 4
-                    columncount : 3
+                    columncount : 2
                     options : [
-                        { optionNo : 1 , class : 4 }
-                        { optionNo : 2 , class : 4 }
-                        { optionNo : 3 , class : 4 }
-                        { optionNo : 4 , class : 4 }
+                        { optionNo : 1 , class : 6 }
+                        { optionNo : 2 , class : 6 }
+                        { optionNo : 3 , class : 6 }
+                        { optionNo : 4 , class : 6 }
                     ]
                     elements : []
                     marks : 1

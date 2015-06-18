@@ -36,18 +36,11 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         this.listenTo(this.view, 'dependencies:fetched', (function(_this) {
           return function() {
             var fillElements;
-            $('.bb-bookblock').bookblock({
-              speed: 1000,
-              shadowSides: 0.8,
-              shadowFlip: 0.7,
-              direction: _this.direction
-            });
             fillElements = _this.startFillingElements();
             return fillElements.done(function() {
               return setTimeout(function() {
                 $('#loading-content-board').remove();
-                $('#question-area').removeClass('vHidden');
-                return $('.bb-bookblock').bookblock('jump', 2);
+                return $('#question-area').removeClass('vHidden');
               }, 500);
             });
           };
