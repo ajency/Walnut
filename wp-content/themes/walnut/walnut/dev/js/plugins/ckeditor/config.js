@@ -61,8 +61,6 @@ CKEDITOR.editorConfig = function( config ) {
             // # 			# { name: 'about', items: [ 'About' ] }
                     ]
 
-
-
     config.font_names = config.font_names+'; \
                             Aksharyogini; \
                             Bedizen; \
@@ -80,7 +78,14 @@ CKEDITOR.editorConfig = function( config ) {
                             Lane Humouresque; \
                             Qarmic Sans Free; \
                             Sacramento;'
-    
+
+    fontsArray = (config.font_names).split(';')
+
+    font_names= [];
+
+    for (i in fontsArray) font_names.push(fontsArray[i].trim());
+
+    config.font_names= font_names.sort().join(';');
     
     config.fontSize_defaultLabel = '22';
     config.font_defaultLabel = 'Qarmic Sans Free';
