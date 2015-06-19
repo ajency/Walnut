@@ -1,22 +1,9 @@
-{{#isTeacherQuestion}}
-<h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br>
-<small>Create questions for training module to be taken during the class</small></h3>
-{{/isTeacherQuestion}}
-
-{{#isContentPiece}}
-<h3 class="m-t-0">Create <span class="semi-bold">Content</span><br>
-<small>Create content for training modules. This will not have any student interaction like teacher question</small></h3>
-{{/isContentPiece}}
-
 {{#isStudentQuestion}}
-<h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br>
-<small>Create questions for quizzes to be taken by the students</small></h3>
 <ul class="nav nav-tabs" id="subProps">
     <li class="active" id="settings-tab"><a class="tabs" href="#settings-tab-pane">Settings</a></li>
     <li class="" id="more-tab"><a class="tabs" href="#more-tab-pane">Hints and comments</a></li>
 </ul>
 {{/isStudentQuestion}}
-
 <form name="contentpiece-settings">
     <div class="tab-content ">
         <div class="tab-pane active" id="settings-tab-pane">
@@ -154,20 +141,17 @@
         {{/isStudentQuestion}}
     </div>
 </form>
-
-<div class="builder_actions pull-right">
-    <button type="button" class="btn btn-info btn-cons2" id="save-question">
-        <i class="fa fa-check"></i> Save</button>
-        
-    <button type="button" class="btn btn-info btn-cons2 none" id="clone-question">Clone</button>
-        
-    <button type="button" id="preview-question" class="btn btn-info btn-cons2 none">
-        <i class="fa fa-eye"></i> Preview</button>
-        
-    <button type="button" id="close-content-creator" class="btn btn-danger btn-cons2">
-        <i class="fa"></i> Cancel</button>
-</div>
-
-<div class="page-title">
-    <h3>Add <span class="semi-bold">Question</span></h3>
+<div class="row">
+    <div class="builder_actions pull-right">
+        <button type="button" class="btn btn-info btn-cons2" id="save-question">
+            <i class="fa fa-check"></i> Save</button>
+            
+        <button type="button" class="btn btn-info btn-cons2 none" id="clone-question">Clone</button>
+            
+        <button type="button" id="preview-question" class="btn btn-info btn-cons2 none">
+            <i class="fa fa-eye"></i> Preview</button>
+            
+        <button type="button" id="close-content-creator" class="btn btn-danger btn-cons2">
+            <i class="fa"></i> Cancel</button>
+    </div>
 </div>

@@ -53,9 +53,10 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var optionCollection, optionsObj;
         optionsObj = this.layout.model.get('options');
         this._parseOptions(optionsObj);
-        optionCollection = App.request("create:new:option:collection", optionsObj);
-        this.layout.model.set('options', optionCollection);
-        console.log(this.layout.model);
+        if (!(optionsObj instanceof Backbone.Collection)) {
+          optionCollection = App.request("create:new:option:collection", optionsObj);
+          this.layout.model.set('options', optionCollection);
+        }
         this.view = this._getMcqView();
         this.listenTo(this.view, "show show:this:mcq:properties", (function(_this) {
           return function(options) {
@@ -75,6 +76,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype._parseOptions = function(optionsObj) {
+        if (optionsObj instanceof Backbone.Collection) {
+          optionsObj = optionsObj.toJSON();
+        }
         _.each(optionsObj, function(option) {
           if (option.marks != null) {
             option.marks = parseFloat(option.marks);

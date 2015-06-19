@@ -46,6 +46,7 @@ require.config
 		sidr: 'plugins/jquery.sidr.min'
 		resizablecolumns : 'plugins/jquery.resizableColumns.min'
 		bootbox : 'plugins/bootbox.min'
+		moment: 'plugins/moment.min'
 
 		# wordpress cropping js
 		imageareaselect : '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min'

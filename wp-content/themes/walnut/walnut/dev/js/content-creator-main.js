@@ -37,6 +37,7 @@ require.config({
     sidr: 'plugins/jquery.sidr.min',
     resizablecolumns: 'plugins/jquery.resizableColumns.min',
     bootbox: 'plugins/bootbox.min',
+    moment: 'plugins/moment.min',
     imageareaselect: '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min',
     imageedit: '../../../../../../wp-admin/js/image-edit',
     json2: '../../../../../../wp-includes/js/json2',

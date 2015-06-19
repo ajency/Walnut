@@ -4,6 +4,7 @@ define ['app'
         'apps/content-creator/content-builder/app'
         'apps/content-creator/property-dock/controller'
         'apps/content-creator/options-bar/options-bar-app'
+        'apps/content-creator/content-pieces-listing/app'
         'apps/content-creator/grading-parameter/grading-parameter-controller'
 ], (App, RegionController)->
 	App.module "ContentCreator.Controller", (Controller, App)->
@@ -40,35 +41,22 @@ define ['app'
 				# listen to "show" event of the layout and start the
 				# elementboxapp passing the region
 				@listenTo @layout, 'show', =>
-					App.execute "show:options:bar",
-						region : @layout.optionsBarRegion
-						contentType : @contentType
-						contentPieceModel : @contentPieceModel
 
-					App.execute "show:element:box",
-						region : @layout.elementBoxRegion
-						contentType : @contentPieceModel.get 'content_type'
-						eventObj : @eventObj
+					if not @contentPieceModel.isNew()
+						App.execute "show:content:creator:pieces:listing",
+							region : @layout.contentPiecesListRegion
+							contentPieceModel : @contentPieceModel
 
-					App.execute "show:content:builder",
-						region : @layout.contentBuilderRegion
-						contentPieceModel : @contentPieceModel
-						eventObj : @eventObj
-
-					# if @contentPieceModel.get('content_type') is 'student_question'
-					App.execute "show:property:dock",
-						region : @layout.PropertyRegion
-						contentPieceModel : @contentPieceModel
-
-					if @contentPieceModel.get('question_type')? and
-					@contentPieceModel.get('question_type') is 'multiple_eval'
-						@_showGradingParameter()
-
+					@_showViews()
 
 				@listenTo @layout.optionsBarRegion , 'show:grading:parameter',@_showGradingParameter
 
 				@listenTo @layout.optionsBarRegion, 'close:grading:parameter', @_closeGradingParameter
 
+				@listenTo @layout.contentPiecesListRegion, 'change:content:piece', (model)=>
+					App.navigate "edit-content/#{model.id}"
+					@contentPieceModel = model
+					@_showViews()
 
 				# show the layout
 				App.execute "when:fetched", @contentPieceModel, =>
@@ -80,7 +68,7 @@ define ['app'
 						@show @layout, loading : true
 
 			_getContentCreatorLayout : ->
-				new ContentCreatorLayout
+				new ContentCreatorLayout model : @contentPieceModel
 
 			_showGradingParameter : ->
 
@@ -96,17 +84,64 @@ define ['app'
 
 				@layout.gradingParameterRegion.reset()
 
+			_showViews:->
+				App.execute "show:options:bar",
+					region : @layout.optionsBarRegion
+					contentType : @contentType
+					contentPieceModel : @contentPieceModel
+
+				App.execute "show:element:box",
+					region : @layout.elementBoxRegion
+					contentType : @contentPieceModel.get 'content_type'
+					eventObj : @eventObj
+
+				App.execute "show:content:builder",
+					region : @layout.contentBuilderRegion
+					contentPieceModel : @contentPieceModel
+					eventObj : @eventObj
+
+				# if @contentPieceModel.get('content_type') is 'student_question'
+				App.execute "show:property:dock",
+					region : @layout.PropertyRegion
+					contentPieceModel : @contentPieceModel
+
+				if @contentPieceModel.get('question_type')? and
+				@contentPieceModel.get('question_type') is 'multiple_eval'
+					@_showGradingParameter()
+
 		class ContentCreatorLayout extends Marionette.Layout
 
 			className : 'content-creator-layout'
 
-			template : '<div id="options-bar-region"></div>
-									<div class="creator">
-									<div class="tiles" id="toolbox"></div>
-									<div class="" id="content-builder"></div>
-									<div id="grading-parameter"></div>
-									<div id="property-dock"></div>
-									</div>'
+			template : '<div id="content-pieces-list-region"></div>
+						<div class="row m-t-20">
+							<div class="col-md-8">
+								{{#isTeacherQuestion}}
+								<h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br>
+								<small>Create questions for training module to be taken during the class</small></h3>
+								{{/isTeacherQuestion}}
+
+								{{#isContentPiece}}
+								<h3 class="m-t-0">Create <span class="semi-bold">Content</span><br>
+								<small>Create content for training modules. This will not have any student interaction like teacher question</small></h3>
+								{{/isContentPiece}}
+
+								{{#isStudentQuestion}}
+								<h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br>
+								<small>Create questions for quizzes to be taken by the students</small></h3>
+								{{/isStudentQuestion}}
+							</div>
+						</div>
+						<div id="options-bar-region"></div>
+						<div class="page-title">
+						    <h3>Add <span class="semi-bold">Question</span></h3>
+						</div>
+						<div class="creator">
+							<div class="tiles" id="toolbox"></div>
+							<div class="" id="content-builder"></div>
+							<div id="grading-parameter"></div>
+							<div id="property-dock"></div>
+						</div>'
 
 			regions :
 				elementBoxRegion : '#toolbox'
@@ -114,7 +149,17 @@ define ['app'
 				PropertyRegion : '#property-dock'
 				optionsBarRegion : '#options-bar-region'
 				gradingParameterRegion : '#grading-parameter'
+				contentPiecesListRegion: '#content-pieces-list-region'
 				
+
+			mixinTemplateHelpers:(data)->
+				data = super data
+				data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
+				data.isTeacherQuestion = if @model.get('content_type') is 'teacher_question' then true else false
+				data.isContentPiece = if @model.get('content_type') is 'content_piece' then true else false
+				
+				data
+
 		class CannotEditView extends Marionette.ItemView
 			
 			template : '<div class="tiles white grid simple vertical green animated slideInRight">

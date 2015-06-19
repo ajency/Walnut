@@ -37,10 +37,9 @@ define ['app'
 
                 @_parseOptions optionsObj
 
-                optionCollection = App.request "create:new:option:collection", optionsObj
-                @layout.model.set 'options', optionCollection
-
-                console.log @layout.model
+                if not (optionsObj instanceof Backbone.Collection)
+                    optionCollection = App.request "create:new:option:collection", optionsObj
+                    @layout.model.set 'options', optionCollection
 
 
                 # get the view
@@ -64,6 +63,10 @@ define ['app'
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->
+
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.toJSON()
+
                 _.each optionsObj,(option)->
                     option.marks = parseFloat option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?

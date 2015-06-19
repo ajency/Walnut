@@ -32,9 +32,10 @@ define ['app'
 
                 @_parseOptions blanksArray
 
-                @blanksCollection = App.request "create:new:question:element:collection", blanksArray
+                if not (blanksArray instanceof Backbone.Collection)
+                    @blanksCollection = App.request "create:new:question:element:collection", blanksArray
 
-                @layout.model.set 'blanksArray', @blanksCollection
+                    @layout.model.set 'blanksArray', @blanksCollection
 
                 console.log @blanksCollection
                 # get the view

@@ -184,12 +184,14 @@ function get_single_content_piece($id){
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
+    
+    global $wpdb;
 
     $content_piece= get_post($id);
 
     $authordata = get_userdata($content_piece->post_author);
-    
-    $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($content_piece->post_modified)));
+    $post_modified= $content_piece->post_modified; 
+    $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($post_modified)));
     $content_piece->post_author_name = $authordata->display_name;
 
     $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);
@@ -282,9 +284,9 @@ function get_single_content_piece($id){
         $excerpt='No excerpt';
     else
         $excerpt.='...';
-
+    
     $content_piece->post_excerpt =$excerpt;
-
+    
     switch_to_blog($current_blog_id);
 
     return $content_piece;

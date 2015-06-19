@@ -40,13 +40,14 @@ define ['app'
 
                 @_parseArray optionCollectionArray, textCollectionArray, imageCollectionArray
 
-                @optionCollection = App.request "create:new:hotspot:element:collection", optionCollectionArray
-                @textCollection = App.request "create:new:hotspot:element:collection", textCollectionArray
-                @imageCollection = App.request "create:new:hotspot:element:collection", imageCollectionArray
+                if not (optionCollectionArray instanceof Backbone.Collection)
+                    @optionCollection = App.request "create:new:hotspot:element:collection", optionCollectionArray
+                    @textCollection = App.request "create:new:hotspot:element:collection", textCollectionArray
+                    @imageCollection = App.request "create:new:hotspot:element:collection", imageCollectionArray
 
-                @layout.model.set 'optionCollection', @optionCollection
-                @layout.model.set 'textCollection', @textCollection
-                @layout.model.set 'imageCollection', @imageCollection
+                    @layout.model.set 'optionCollection', @optionCollection
+                    @layout.model.set 'textCollection', @textCollection
+                    @layout.model.set 'imageCollection', @imageCollection
                 # @removeSpinner()
                 # get menu
                 @view = @_getHotspotView()

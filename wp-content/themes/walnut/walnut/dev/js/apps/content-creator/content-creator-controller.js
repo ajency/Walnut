@@ -1,7 +1,7 @@
 var __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller', 'apps/content-creator/options-bar/options-bar-app', 'apps/content-creator/grading-parameter/grading-parameter-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller', 'apps/content-creator/options-bar/options-bar-app', 'apps/content-creator/content-pieces-listing/app', 'apps/content-creator/grading-parameter/grading-parameter-controller'], function(App, RegionController) {
   return App.module("ContentCreator.Controller", function(Controller, App) {
     var CannotEditView, ContentCreatorLayout;
     Controller.ContentCreatorController = (function(_super) {
@@ -48,32 +48,24 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         this.eventObj = App.createEventObject();
         this.listenTo(this.layout, 'show', (function(_this) {
           return function() {
-            App.execute("show:options:bar", {
-              region: _this.layout.optionsBarRegion,
-              contentType: _this.contentType,
-              contentPieceModel: _this.contentPieceModel
-            });
-            App.execute("show:element:box", {
-              region: _this.layout.elementBoxRegion,
-              contentType: _this.contentPieceModel.get('content_type'),
-              eventObj: _this.eventObj
-            });
-            App.execute("show:content:builder", {
-              region: _this.layout.contentBuilderRegion,
-              contentPieceModel: _this.contentPieceModel,
-              eventObj: _this.eventObj
-            });
-            App.execute("show:property:dock", {
-              region: _this.layout.PropertyRegion,
-              contentPieceModel: _this.contentPieceModel
-            });
-            if ((_this.contentPieceModel.get('question_type') != null) && _this.contentPieceModel.get('question_type') === 'multiple_eval') {
-              return _this._showGradingParameter();
+            if (!_this.contentPieceModel.isNew()) {
+              App.execute("show:content:creator:pieces:listing", {
+                region: _this.layout.contentPiecesListRegion,
+                contentPieceModel: _this.contentPieceModel
+              });
             }
+            return _this._showViews();
           };
         })(this));
         this.listenTo(this.layout.optionsBarRegion, 'show:grading:parameter', this._showGradingParameter);
         this.listenTo(this.layout.optionsBarRegion, 'close:grading:parameter', this._closeGradingParameter);
+        this.listenTo(this.layout.contentPiecesListRegion, 'change:content:piece', (function(_this) {
+          return function(model) {
+            App.navigate("edit-content/" + model.id);
+            _this.contentPieceModel = model;
+            return _this._showViews();
+          };
+        })(this));
         return App.execute("when:fetched", this.contentPieceModel, (function(_this) {
           return function() {
             var present_in, view;
@@ -93,7 +85,9 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       };
 
       ContentCreatorController.prototype._getContentCreatorLayout = function() {
-        return new ContentCreatorLayout;
+        return new ContentCreatorLayout({
+          model: this.contentPieceModel
+        });
       };
 
       ContentCreatorController.prototype._showGradingParameter = function() {
@@ -109,6 +103,31 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         return this.layout.gradingParameterRegion.reset();
       };
 
+      ContentCreatorController.prototype._showViews = function() {
+        App.execute("show:options:bar", {
+          region: this.layout.optionsBarRegion,
+          contentType: this.contentType,
+          contentPieceModel: this.contentPieceModel
+        });
+        App.execute("show:element:box", {
+          region: this.layout.elementBoxRegion,
+          contentType: this.contentPieceModel.get('content_type'),
+          eventObj: this.eventObj
+        });
+        App.execute("show:content:builder", {
+          region: this.layout.contentBuilderRegion,
+          contentPieceModel: this.contentPieceModel,
+          eventObj: this.eventObj
+        });
+        App.execute("show:property:dock", {
+          region: this.layout.PropertyRegion,
+          contentPieceModel: this.contentPieceModel
+        });
+        if ((this.contentPieceModel.get('question_type') != null) && this.contentPieceModel.get('question_type') === 'multiple_eval') {
+          return this._showGradingParameter();
+        }
+      };
+
       return ContentCreatorController;
 
     })(RegionController);
@@ -121,14 +140,23 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
       ContentCreatorLayout.prototype.className = 'content-creator-layout';
 
-      ContentCreatorLayout.prototype.template = '<div id="options-bar-region"></div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
+      ContentCreatorLayout.prototype.template = '<div id="content-pieces-list-region"></div> <div class="row m-t-20"> <div class="col-md-8"> {{#isTeacherQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br> <small>Create questions for training module to be taken during the class</small></h3> {{/isTeacherQuestion}} {{#isContentPiece}} <h3 class="m-t-0">Create <span class="semi-bold">Content</span><br> <small>Create content for training modules. This will not have any student interaction like teacher question</small></h3> {{/isContentPiece}} {{#isStudentQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br> <small>Create questions for quizzes to be taken by the students</small></h3> {{/isStudentQuestion}} </div> </div> <div id="options-bar-region"></div> <div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
 
       ContentCreatorLayout.prototype.regions = {
         elementBoxRegion: '#toolbox',
         contentBuilderRegion: '#content-builder',
         PropertyRegion: '#property-dock',
         optionsBarRegion: '#options-bar-region',
-        gradingParameterRegion: '#grading-parameter'
+        gradingParameterRegion: '#grading-parameter',
+        contentPiecesListRegion: '#content-pieces-list-region'
+      };
+
+      ContentCreatorLayout.prototype.mixinTemplateHelpers = function(data) {
+        data = ContentCreatorLayout.__super__.mixinTemplateHelpers.call(this, data);
+        data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
+        data.isTeacherQuestion = this.model.get('content_type') === 'teacher_question' ? true : false;
+        data.isContentPiece = this.model.get('content_type') === 'content_piece' ? true : false;
+        return data;
       };
 
       return ContentCreatorLayout;

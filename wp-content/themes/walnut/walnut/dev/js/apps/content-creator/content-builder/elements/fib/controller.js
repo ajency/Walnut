@@ -34,8 +34,10 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         var blanksArray, view;
         blanksArray = this.layout.model.get('blanksArray');
         this._parseOptions(blanksArray);
-        this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
-        this.layout.model.set('blanksArray', this.blanksCollection);
+        if (!(blanksArray instanceof Backbone.Collection)) {
+          this.blanksCollection = App.request("create:new:question:element:collection", blanksArray);
+          this.layout.model.set('blanksArray', this.blanksCollection);
+        }
         console.log(this.blanksCollection);
         view = this._getFibView(this.layout.model);
         this.listenTo(view, 'show show:this:fib:properties', (function(_this) {

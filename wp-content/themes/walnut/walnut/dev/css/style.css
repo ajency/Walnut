@@ -7375,3 +7375,5 @@ input[type="checkbox"] {
 .cbp_tmtimeline .action-links li:last-child:after {
   content: "";
 }
+
+a.browse-content-pieces-item{height:120px;}
