@@ -33,4 +33,5 @@ define [
 	'panzerlist'
 	'resizablecolumns'
 	'bootbox'
+    'moment'
 ], ->

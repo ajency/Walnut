@@ -36,10 +36,6 @@ function get_blog_media() {
     $media = wp_prepare_attachment_for_js ( $id );
     
     $enc_media_types = array('audio','video');
-    
-    if(in_array($media['type'], $enc_media_types) && !is_multisite()){
-            $media = modify_media_url($media,$media['type']);
-    }
 
     switch_to_blog($current_blog_id);
 
@@ -89,10 +85,7 @@ function change_uploads_directory( $uploads_dir ) {
     // or if requested mediatype is video
 
     if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video' || $_REQUEST['mediaType'] == 'audio'){
-        if(is_multisite())
-            $folder_name= '/media-web';
-        else
-            $folder_name= '';
+        $folder_name= '/media-web';
     }
 
 
@@ -116,11 +109,6 @@ function get_media_by_ids(){
     foreach ($ids as $id){
 
         $media_file=wp_prepare_attachment_for_js( $id );
-
-        if(in_array($media_file['type'], $enc_media_types) && !is_multisite()){
-             
-            $media_file = modify_media_url($media_file,$media_file['type']); // change the media url to the decrypted file path
-        }
         
         $file_url= $media_file['url'];
         
@@ -128,18 +116,10 @@ function get_media_by_ids(){
         
         $directory= $upload_dir['basedir'];
         
-        if(is_multisite()){
-            if($media_file['type'] === 'video')
-                $file_path= $directory.'/videos-web/'.$media_file['filename'];
-            else
-                $file_path= $directory.'/audio-web/'.$media_file['filename'];
-        }
-        else{
-             if($media_file['type'] === 'video')
-                $file_path= $directory.'/videos/'.$media_file['filename'];
-            else
-                $file_path= $directory.'/audios/'.$media_file['filename'];
-        }
+        if($media_file['type'] === 'video')
+            $file_path= $directory.'/videos-web/'.$media_file['filename'];
+        else
+            $file_path= $directory.'/audio-web/'.$media_file['filename'];
         
         if(file_exists($file_path) and $media_file)
             $media[] = $media_file;

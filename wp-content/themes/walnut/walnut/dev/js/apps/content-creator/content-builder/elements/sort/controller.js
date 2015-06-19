@@ -44,10 +44,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         }
         console.log(optionsObj);
         this._parseOptions(optionsObj);
-        optionCollection = App.request("create:new:option:collection", optionsObj);
-        optionCollection.comparator = 'index';
-        optionCollection.sort();
-        this.layout.model.set('elements', optionCollection);
+        if (!(optionsObj instanceof Backbone.Collection)) {
+          optionCollection = App.request("create:new:option:collection", optionsObj);
+          optionCollection.comparator = 'index';
+          optionCollection.sort();
+          this.layout.model.set('elements', optionCollection);
+        }
         this.view = this._getSortView();
         this.listenTo(this.view, 'show show:this:sort:properties', (function(_this) {
           return function() {

@@ -30,6 +30,10 @@ function alter_content_piece_duration(){
     foreach($content_pieces as $id){
         
         if($id > $resume_from){
+            $content_type  = get_post_meta($id,'content_type',true);
+            
+            if($content_type !== 'student_question')
+                continue;
             
             $additional_content = get_post_meta($id,'content_piece_meta',true);
             
