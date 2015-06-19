@@ -24,7 +24,7 @@ define ['app'], (App)->
 				@$el.addClass 'active' if Marionette.getOption @, 'isCurrentItem'
 
 			mixinTemplateHelpers:(data)->
-				data.excerpt = _.prune data.post_excerpt, 25
+				data.excerpt = _.prune data.post_excerpt, 50
 				data.contentType = _.str.titleize _.str.humanize data.content_type
 				data.date_modified= moment(data.post_modified).format("Do MMM YYYY h:mm a")
 				data
