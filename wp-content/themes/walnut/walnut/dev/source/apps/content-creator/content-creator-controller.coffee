@@ -114,24 +114,6 @@ define ['app'
 			className : 'content-creator-layout'
 
 			template : '<div id="content-pieces-list-region"></div>
-						<div class="row m-t-20">
-							<div class="col-md-8">
-								{{#isTeacherQuestion}}
-								<h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br>
-								<small>Create questions for training module to be taken during the class</small></h3>
-								{{/isTeacherQuestion}}
-
-								{{#isContentPiece}}
-								<h3 class="m-t-0">Create <span class="semi-bold">Content</span><br>
-								<small>Create content for training modules. This will not have any student interaction like teacher question</small></h3>
-								{{/isContentPiece}}
-
-								{{#isStudentQuestion}}
-								<h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br>
-								<small>Create questions for quizzes to be taken by the students</small></h3>
-								{{/isStudentQuestion}}
-							</div>
-						</div>
 						<div id="options-bar-region"></div>
 						<div class="page-title">
 						    <h3>Add <span class="semi-bold">Question</span></h3>
@@ -151,14 +133,6 @@ define ['app'
 				gradingParameterRegion : '#grading-parameter'
 				contentPiecesListRegion: '#content-pieces-list-region'
 				
-
-			mixinTemplateHelpers:(data)->
-				data = super data
-				data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
-				data.isTeacherQuestion = if @model.get('content_type') is 'teacher_question' then true else false
-				data.isContentPiece = if @model.get('content_type') is 'content_piece' then true else false
-				
-				data
 
 		class CannotEditView extends Marionette.ItemView
 			

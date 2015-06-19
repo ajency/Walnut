@@ -140,7 +140,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
       ContentCreatorLayout.prototype.className = 'content-creator-layout';
 
-      ContentCreatorLayout.prototype.template = '<div id="content-pieces-list-region"></div> <div class="row m-t-20"> <div class="col-md-8"> {{#isTeacherQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br> <small>Create questions for training module to be taken during the class</small></h3> {{/isTeacherQuestion}} {{#isContentPiece}} <h3 class="m-t-0">Create <span class="semi-bold">Content</span><br> <small>Create content for training modules. This will not have any student interaction like teacher question</small></h3> {{/isContentPiece}} {{#isStudentQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br> <small>Create questions for quizzes to be taken by the students</small></h3> {{/isStudentQuestion}} </div> </div> <div id="options-bar-region"></div> <div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
+      ContentCreatorLayout.prototype.template = '<div id="content-pieces-list-region"></div> <div id="options-bar-region"></div> <div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
 
       ContentCreatorLayout.prototype.regions = {
         elementBoxRegion: '#toolbox',
@@ -149,14 +149,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         optionsBarRegion: '#options-bar-region',
         gradingParameterRegion: '#grading-parameter',
         contentPiecesListRegion: '#content-pieces-list-region'
-      };
-
-      ContentCreatorLayout.prototype.mixinTemplateHelpers = function(data) {
-        data = ContentCreatorLayout.__super__.mixinTemplateHelpers.call(this, data);
-        data.isStudentQuestion = this.model.get('content_type') === 'student_question' ? true : false;
-        data.isTeacherQuestion = this.model.get('content_type') === 'teacher_question' ? true : false;
-        data.isContentPiece = this.model.get('content_type') === 'content_piece' ? true : false;
-        return data;
       };
 
       return ContentCreatorLayout;
