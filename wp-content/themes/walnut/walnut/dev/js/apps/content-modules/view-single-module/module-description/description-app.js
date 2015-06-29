@@ -133,11 +133,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      CollectionDetailsView.prototype.events = {
-        'click #start-module': 'startModule',
-        'click #go-back-button': function() {
-          return this.trigger("goto:previous:route");
-        }
+      CollectionDetailsView.prototype.events = function() {
+        return {
+          'click #start-module': 'startModule',
+          'click #go-back-button': function() {
+            return this.trigger("goto:previous:route");
+          }
+        };
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {

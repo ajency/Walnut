@@ -133,7 +133,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         this.textbookNames = App.request("get:textbook:names:by:ids", textbook_termIDs);
         return App.execute("when:fetched", this.textbookNames, (function(_this) {
           return function() {
-            App.execute("show:viewgroup:content:group:detailsapp", {
+            App.execute("show:student:training:content:group:detailsapp", {
               region: _this.layout.collectionDetailsRegion,
               model: model,
               mode: _this.mode,

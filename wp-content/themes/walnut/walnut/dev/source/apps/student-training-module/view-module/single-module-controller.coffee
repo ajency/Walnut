@@ -109,7 +109,7 @@ define ['app'
 				@textbookNames = App.request "get:textbook:names:by:ids", textbook_termIDs
 
 				App.execute "when:fetched", @textbookNames, =>
-					App.execute "show:viewgroup:content:group:detailsapp",
+					App.execute "show:student:training:content:group:detailsapp",
 						region: @layout.collectionDetailsRegion
 						model: model
 						mode: @mode

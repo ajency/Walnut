@@ -1,127 +1,128 @@
 define ['app'
-        'controllers/region-controller'
-        'text!apps/content-modules/view-single-module/module-description/templates/module-description.html'], (App, RegionController, collectionDetailsTpl)->
-    App.module "CollecionDetailsApp.Controller", (Controller, App)->
-        class Controller.ViewCollecionDetailsController extends RegionController
+		'controllers/region-controller'
+		'text!apps/content-modules/view-single-module/module-description/templates/module-description.html'], (App, RegionController, collectionDetailsTpl)->
+	App.module "CollecionDetailsApp.Controller", (Controller, App)->
+		class Controller.ViewCollecionDetailsController extends RegionController
 
-            initialize : (opts)->
+			initialize : (opts)->
+				console.log 'am i reaching here?'
+				# for take-class module the template changes a bit
+				# so based on this value (@mode) we set the template additional stuff
+				{@model,@mode,@questionResponseCollection,@textbookNames}= opts
+				console.log 'test'
+				@view = view = @_getCollectionDetailsView()
 
-                # for take-class module the template changes a bit
-                # so based on this value (@mode) we set the template additional stuff
-                {@model,@mode,@questionResponseCollection,@textbookNames}= opts
-                console.log 'test'
-                @view = view = @_getCollectionDetailsView()
+				@listenTo view, 'start:teaching:module', =>
+					@region.trigger "start:teaching:module"
 
-                @listenTo view, 'start:teaching:module', =>
-                    @region.trigger "start:teaching:module"
+				@listenTo view, 'goto:previous:route', @_gotoPreviousRoute
 
-                @listenTo view, 'goto:previous:route', @_gotoPreviousRoute
+				@show view, (loading : true, entities : [@textbookNames])
 
-                @show view, (loading : true, entities : [@textbookNames])
+			_gotoPreviousRoute : ->
 
-            _gotoPreviousRoute : ->
+				currRoute = App.getCurrentRoute()
 
-                currRoute = App.getCurrentRoute()
+				newRoute = _(currRoute).strLeft '/module'
 
-                newRoute = _(currRoute).strLeft '/module'
+				App.navigate newRoute, true
 
-                App.navigate newRoute, true
+			_getCollectionDetailsView : ->
+				terms = @model.get 'term_ids'
 
-            _getCollectionDetailsView : ->
-                terms = @model.get 'term_ids'
+				numOfQuestionsCompleted = _.size @questionResponseCollection.where "status" : "completed"
+				totalNumofQuestions = _.size @model.get 'content_pieces'
 
-                numOfQuestionsCompleted = _.size @questionResponseCollection.where "status" : "completed"
-                totalNumofQuestions = _.size @model.get 'content_pieces'
-
-                new CollectionDetailsView
-                    model : @model
-                    mode : @mode
-                    templateHelpers : @_getTemplateHelpers
-                        terms : terms
-                        numOfQuestionsCompleted : numOfQuestionsCompleted
-                        totalNumofQuestions : totalNumofQuestions
-
-
-            _getTemplateHelpers : (options)->
-                showElapsedTime : =>
-                    timeTakenArray = @questionResponseCollection.pluck('time_taken');
-                    totalTimeTakenForModule = 0
-                    if _.size(timeTakenArray) > 0
-                        totalTimeTakenForModule = _.reduce timeTakenArray, (memo, num)->
-                            parseInt memo + parseInt num
-
-                    display_time = $.timeMinSecs totalTimeTakenForModule
-
-                getProgressData : ->
-                    options.numOfQuestionsCompleted + '/' + options.totalNumofQuestions
-
-                getProgressPercentage : ->
-                    parseInt (options.numOfQuestionsCompleted / options.totalNumofQuestions) * 100
-
-                getTextbookName : =>
-                    textbook = @textbookNames.get options.terms.textbook
-                    texbookName = textbook.get 'name' if textbook?
-
-                getChapterName : =>
-                    chapter = @textbookNames.get options.terms.chapter
-                    chapterName = chapter.get 'name' if chapter?
+				new CollectionDetailsView
+					model : @model
+					mode : @mode
+					templateHelpers : @_getTemplateHelpers
+						terms : terms
+						numOfQuestionsCompleted : numOfQuestionsCompleted
+						totalNumofQuestions : totalNumofQuestions
 
 
-                startScheduleButton : =>
-                    actionButtons = ''
+			_getTemplateHelpers : (options)->
+				showElapsedTime : =>
+					timeTakenArray = @questionResponseCollection.pluck('time_taken');
+					totalTimeTakenForModule = 0
+					if _.size(timeTakenArray) > 0
+						totalTimeTakenForModule = _.reduce timeTakenArray, (memo, num)->
+							parseInt memo + parseInt num
 
-                    allContentPieces = @model.get 'content_pieces'
-                    allContentPieces = _.map allContentPieces, (m)->
-                        parseInt m
-                    answeredPieces = @questionResponseCollection.where "status" : "completed"
+					display_time = $.timeMinSecs totalTimeTakenForModule
 
-                    if answeredPieces
-                        answeredIDs = _.chain answeredPieces
-                        .map (m)->
-                                m.toJSON()
-                        .pluck 'content_piece_id'
-                            .value()
+				getProgressData : ->
+					options.numOfQuestionsCompleted + '/' + options.totalNumofQuestions
 
+				getProgressPercentage : ->
+					parseInt (options.numOfQuestionsCompleted / options.totalNumofQuestions) * 100
 
-                    answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
+				getTextbookName : =>
+					textbook = @textbookNames.get options.terms.textbook
+					texbookName = textbook.get 'name' if textbook?
 
-                    unanswered = _.difference allContentPieces, answeredIDs
-
-                    if _.size(unanswered) > 0 and @mode isnt 'training' and @model.get('post_status') isnt 'archive'
-                        actionButtons = '<button type="button" id="start-module" class="btn btn-success action btn-block m-t-10">
-                                                                                                                                                                                                            <i class="fa fa-play"></i> Start
-                                                                                                                                                                                                        </button>'
-                    actionButtons
+				getChapterName : =>
+					chapter = @textbookNames.get options.terms.chapter
+					chapterName = chapter.get 'name' if chapter?
 
 
-        class CollectionDetailsView extends Marionette.ItemView
+				startScheduleButton : =>
+					actionButtons = ''
 
-            template : collectionDetailsTpl
+					allContentPieces = @model.get 'content_pieces'
+					allContentPieces = _.map allContentPieces, (m)->
+						parseInt m
+					answeredPieces = @questionResponseCollection.where "status" : "completed"
 
-
-
-            events :
-                'click #start-module' : 'startModule'
-                'click #go-back-button' : ->
-                    @trigger "goto:previous:route"
-
-            mixinTemplateHelpers : (data)->
-                data = super(data)
-                data.takeClassModule = @mode
-                data.isTraining = if @mode is 'training' then true else false
-                data
-
-            initialize : ->
-                @mode = Marionette.getOption @, 'mode'
-
-            startModule : =>
-                currentRoute = App.getCurrentRoute()
-                #App.navigate currentRoute + "/question"
-
-                @trigger "start:teaching:module"
+					if answeredPieces
+						answeredIDs = _.chain answeredPieces
+						.map (m)->
+								m.toJSON()
+						.pluck 'content_piece_id'
+							.value()
 
 
-        # set handlers
-        App.commands.setHandler "show:viewgroup:content:group:detailsapp", (opt = {})->
-            new Controller.ViewCollecionDetailsController opt
+					answeredPieces = @questionResponseCollection.pluck 'content_piece_id'
+
+					unanswered = _.difference allContentPieces, answeredIDs
+
+					if _.size(unanswered) > 0 and @mode isnt 'training' and @model.get('post_status') isnt 'archive'
+						actionButtons = '<button type="button" id="start-module" class="btn btn-success action btn-block m-t-10">
+																																																			<i class="fa fa-play"></i> Start
+																																																		</button>'
+					actionButtons
+
+
+		class CollectionDetailsView extends Marionette.ItemView
+
+			template : collectionDetailsTpl
+
+
+
+			events :->
+				'click #start-module' : 'startModule'
+				'click #go-back-button' : ->
+					@trigger "goto:previous:route"
+
+			mixinTemplateHelpers : (data)->
+				data = super(data)
+				data.takeClassModule = @mode
+				data.isTraining = if @mode is 'training' then true else false
+				data
+
+			initialize : ->
+				console.log 'initialized description app'
+				@mode = Marionette.getOption @, 'mode'
+
+			startModule : =>
+				currentRoute = App.getCurrentRoute()
+				#App.navigate currentRoute + "/question"
+
+				@trigger "start:teaching:module"
+
+
+		# set handlers
+		App.commands.setHandler "show:viewgroup:content:group:detailsapp", (opt = {})->
+			new Controller.ViewCollecionDetailsController opt
 
