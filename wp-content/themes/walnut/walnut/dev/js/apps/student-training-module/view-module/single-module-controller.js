@@ -34,7 +34,11 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
           return function(data) {
             var nextItem;
             nextItem = _this._getNextItem(data);
-            return _this.gotoTrainingModule(nextItem);
+            if (nextItem) {
+              return _this.gotoTrainingModule(nextItem);
+            } else {
+              return _this.showLayout();
+            }
           };
         })(this));
         return App.execute("when:fetched", model, (function(_this) {
@@ -50,19 +54,25 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
             }
             groupContentCollectionFetch = _this._getContentItems(model);
             return groupContentCollectionFetch.done(function(groupContent) {
-              var layout;
               groupContentCollection = groupContent;
-              _this.layout = layout = _this._getContentGroupViewLayout();
-              _this.show(_this.layout, {
-                loading: true,
-                entities: [model, _this.questionResponseCollection, groupContentCollection, _this.textbookNames]
-              });
-              _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
-              _this.listenTo(_this.layout.collectionDetailsRegion, 'start:training:module', _this.startTrainingModule);
-              return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:item', function(data) {
-                return _this.gotoTrainingModule(data);
-              });
+              return _this.showLayout();
             });
+          };
+        })(this));
+      };
+
+      GroupController.prototype.showLayout = function() {
+        var layout;
+        this.layout = layout = this._getContentGroupViewLayout();
+        this.show(this.layout, {
+          loading: true,
+          entities: [model, this.questionResponseCollection, groupContentCollection, this.textbookNames]
+        });
+        this.listenTo(this.layout, 'show', this.showContentGroupViews);
+        this.listenTo(this.layout.collectionDetailsRegion, 'start:training:module', this.startTrainingModule);
+        return this.listenTo(this.layout.contentDisplayRegion, 'goto:item', (function(_this) {
+          return function(data) {
+            return _this.gotoTrainingModule(data);
           };
         })(this));
       };

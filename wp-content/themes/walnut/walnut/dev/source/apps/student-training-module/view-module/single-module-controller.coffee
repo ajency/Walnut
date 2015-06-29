@@ -22,11 +22,12 @@ define ['app'
 				if not @questionResponseCollection
 					@questionResponseCollection = App.request "get:empty:question:response:collection"
 				
+				#unbind so that multiple binds dont happen
 				App.vent.unbind "next:item:student:training:module"
 				
 				App.vent.bind "next:item:student:training:module", (data)=>
 					nextItem = @_getNextItem data
-					@gotoTrainingModule nextItem
+					if nextItem then @gotoTrainingModule nextItem else @showLayout()
 					
 				App.execute "when:fetched", model, =>
 
@@ -41,17 +42,20 @@ define ['app'
 					groupContentCollectionFetch = @_getContentItems model
 					groupContentCollectionFetch.done (groupContent)=> 
 						groupContentCollection = groupContent
-						@layout = layout = @_getContentGroupViewLayout()
+						@showLayout()
+			
+			showLayout:->
+				@layout = layout = @_getContentGroupViewLayout()
 
-						@show @layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
-																 @textbookNames])
+				@show @layout, (loading: true, entities: [model, @questionResponseCollection, groupContentCollection,
+														 @textbookNames])
 
-						@listenTo @layout, 'show', @showContentGroupViews
+				@listenTo @layout, 'show', @showContentGroupViews
 
-						@listenTo @layout.collectionDetailsRegion, 'start:training:module', @startTrainingModule
+				@listenTo @layout.collectionDetailsRegion, 'start:training:module', @startTrainingModule
 
-						@listenTo @layout.contentDisplayRegion, 'goto:item', (data)=>
-							@gotoTrainingModule data
+				@listenTo @layout.contentDisplayRegion, 'goto:item', (data)=>
+					@gotoTrainingModule data
 			
 			_getNextItem : (data)->
 				contentLayout = model.get 'content_layout'
