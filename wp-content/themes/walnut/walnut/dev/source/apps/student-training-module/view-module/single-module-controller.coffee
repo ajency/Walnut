@@ -20,10 +20,14 @@ define ['app'
 
 				groupContentCollection=null
 				if not @questionResponseCollection
-					@questionResponseCollection = App.request "get:question:response:collection",
-						'division': @division
-						'collection_id': model.get 'id'
-
+					@questionResponseCollection = App.request "get:empty:question:response:collection"
+				
+				App.vent.unbind "next:item:student:training:module"
+				
+				App.vent.bind "next:item:student:training:module", (data)=>
+					nextItem = @_getNextItem data
+					@gotoTrainingModule nextItem
+					
 				App.execute "when:fetched", model, =>
 
 					if model.get('code') is 'ERROR'
@@ -47,8 +51,23 @@ define ['app'
 						@listenTo @layout.collectionDetailsRegion, 'start:training:module', @startTrainingModule
 
 						@listenTo @layout.contentDisplayRegion, 'goto:item', (data)=>
-							@gotoTrainingModule data, 'readonly'
-
+							@gotoTrainingModule data
+			
+			_getNextItem : (data)->
+				contentLayout = model.get 'content_layout'
+				
+				item = _.filter contentLayout, (item)->
+							item if item.type is data.type && parseInt(item.id) is data.id
+							
+				pieceIndex = _.indexOf contentLayout,item[0]
+				
+				nextItem = contentLayout[pieceIndex + 1]
+				
+				if not nextItem
+					nextItem = false
+					
+				nextItem
+				
 			_getContentItems :(model)->
 				@contentLayoutItems = new Backbone.Collection
 				@contentLayoutItems.comparator = 'order'
@@ -87,7 +106,7 @@ define ['app'
 				nextQuestion = _.first content_layout
 				@gotoTrainingModule nextQuestion, 'class_mode'
 
-			gotoTrainingModule: (data, display_mode)=>
+			gotoTrainingModule: (data)=>
 				
 				currentItem = _.first groupContentCollection.filter (model)->
 									modelType = if data.type is 'quiz' then 'type' else 'post_type' 
@@ -95,14 +114,10 @@ define ['app'
 
 				App.execute "start:student:training:app",
 					region				: App.mainContentRegion
-					division			: @division
 					currentItem			: currentItem
-					questionResponseCollection: @questionResponseCollection
 					contentGroupModel	: model
 					questionsCollection	: groupContentCollection
-					classID				: @classID
-					display_mode		: 'training' # when display mode is readonly, the save response options are not shown
-
+					
 			# only when display mode is class_mode response changes can be done
 			showContentGroupViews: =>
 				textbook_termIDs = _.flatten model.get 'term_ids'

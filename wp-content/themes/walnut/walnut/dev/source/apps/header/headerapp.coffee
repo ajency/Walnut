@@ -9,8 +9,6 @@ define ['app'
             initialize: ->
                 @layout = layout = @_getHeaderView()
 
-                @school = App.request "get:current:school"
-
                 @listenTo layout, 'show', @_showLeftRightViews
 
                 @show layout
@@ -36,7 +34,6 @@ define ['app'
 
             _getHeaderView: =>
                 new HeaderView
-                    model: @school
                     templateHelpers:
                         show_user_name:->
                             user_model= App.request "get:user:model"

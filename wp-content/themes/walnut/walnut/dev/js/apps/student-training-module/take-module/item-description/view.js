@@ -84,8 +84,7 @@ define(['app', 'text!apps/student-training-module/take-module/item-description/t
       };
 
       TopPanelView.prototype.onShowTotalMarks = function(marks) {
-        console.log(marks);
-        return console.log(this.$el.find('#total-marks span').text(marks));
+        return console.log(marks);
       };
 
       return TopPanelView;

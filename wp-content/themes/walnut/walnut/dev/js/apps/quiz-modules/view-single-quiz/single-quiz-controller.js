@@ -39,9 +39,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
-        if (studentTrainingModule) {
-          console.log(studentTrainingModule);
-        }
         if (d_mode) {
           display_mode = d_mode;
         }
@@ -90,7 +87,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                   });
                   _this.listenTo(_this.layout, 'goto:next:item:student:training:module', function() {
                     var data;
-                    _this.region.close();
                     data = {
                       type: 'quiz',
                       id: quizModel.id
@@ -119,11 +115,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           multiplicationFactor = quizModel.get('marks') / actualMarks;
         }
         if (multiplicationFactor) {
-          questionsCollection.each(function(m) {
+          return questionsCollection.each(function(m) {
             return m.setMarks(multiplicationFactor);
           });
         }
-        return console.log(multiplicationFactor);
       };
 
       Controller.prototype._randomizeOrder = function() {

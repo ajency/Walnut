@@ -265,7 +265,7 @@ define ['app'
 							<label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label>
 							<span class="small-text" id="instructions"></span>
 						</div>
-						<div id="content-board"></div>
+						<div id="content-board" class="m-b-50"></div>
 						<div id="students-list-region"></div>'
 
 			regions :

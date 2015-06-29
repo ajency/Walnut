@@ -22,7 +22,7 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
             case 'teaching-module':
               return ['teacher_question', 'content_piece'];
             case 'student-training':
-              return ['content_piece'];
+              return ['content_piece', 'student_question'];
             default:
               return ['student_question'];
           }
@@ -48,9 +48,9 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
             });
             _this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
             _this.listenTo(_this.layout, "show", function() {
-              var filters, _ref1;
+              var filters;
               filters = ['textbooks', 'chapters', 'sections', 'subsections', 'content_type'];
-              if ((_ref1 = _this.model.get('type')) === 'quiz' || _ref1 === 'student-training') {
+              if (_this.model.get('type') === 'quiz') {
                 filters.pop();
               }
               App.execute("show:textbook:filters:app", {

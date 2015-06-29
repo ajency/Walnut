@@ -1,5 +1,6 @@
 define ['app'
         'controllers/region-controller'
+		'bootbox'
         'apps/take-module-item/student-list/student-list-app'
         'apps/take-module-item/teacher-training-footer/training-footer-controller'
         'apps/student-training-module/take-module/module-description/module-description-app'
@@ -7,10 +8,10 @@ define ['app'
         'apps/student-training-module/take-module/item-description/controller'
         'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'
         
-], (App, RegionController)->
+], (App, RegionController,bootbox)->
 	App.module "StudentTrainingApp.TakeModule", (TakeModule, App)->
 
-		#iSngle Question description and answers
+		#Single Question description and answers
 		studentCollection = null
 		questionsCollection = null
 		questionResponseCollection = null
@@ -21,27 +22,29 @@ define ['app'
 
 			initialize : (opts)->
 				{@division,@classID,@moduleID,@contentGroupModel,
-				questionsCollection,questionResponseCollection,
+				questionsCollection,
 				currentItem,@display_mode,studentCollection} = opts
 				App.leftNavRegion.reset()
 				App.headerRegion.reset()
-
-				App.execute "when:fetched", [questionResponseCollection, currentItem], =>
+				
+				@answerWreqrObject = new Backbone.Wreqr.RequestResponse()
+				@answerWreqrObject.displayAnswer= true
+				@answerWreqrObject.multiplicationFactor = 1
+				@answerModel = App.request "create:new:answer"
+				
+				#dummy. just so that the rest of the functionality doesnt break as it is copied from quiz/teacher training
+				questionResponseCollection = App.request "get:empty:question:response:collection"
+						
+				App.execute "when:fetched", [currentItem], =>
 					#checking if model exists in collection. if so, replacing the empty model
 					@_getOrCreateModel currentItem.get 'ID'
 
 				@layout = layout = @_getTakeSingleQuestionLayout()
 				
-				App.vent.bind "next:item:student:training:module", (data)=>
-					#App.vent.unbind "next:item:student:training:module"
-					#modify the current content piece with the current data so that we can find the next piece
-					currentItem.set 'ID': data.id, 'post_type': data.type
-					@_changeQuestion()
-					
 				if currentItem.get('type') is 'quiz'
 					@_showQuiz()
 					return
-					
+				
 				@show @layout, (
 					loading : true
 					entities : [
@@ -57,12 +60,6 @@ define ['app'
 				@timerObject = new Backbone.Wreqr.RequestResponse()
 
 				@listenTo @layout, "show", @_showModuleDescriptionView
-
-				@listenTo @layout, 'show', =>
-					if currentItem.get('content_type') is 'content_piece'
-						@_showTeacherTrainingFooter()
-					else
-						@_showStudentsListView questionResponseModel
 
 				@listenTo @layout, "show", @_showQuestionDisplayView currentItem
 
@@ -83,21 +80,16 @@ define ['app'
 				@listenTo @layout.topPanelRegion, "top:panel:check:last:question", =>
 					@layout.moduleDetailsRegion.trigger "top:panel:check:last:question"
 				
+				@listenTo @layout, "validate:answer",->
+					@answerWreqrObject.request "get:question:answer"
+					@answerWreqrObject.request "submit:answer"
+						
 			_changeQuestion : =>
-				if @display_mode is 'class_mode'
-					@_saveQuestionResponse "completed"
-
 				nextItem = @_getNextItem()
-
+				
 				if nextItem
 					@_showQuestionDisplayView nextItem
 					@layout.triggerMethod "change:content:piece", currentItem
-
-					if @display_mode is 'training' or currentItem.get('content_type') is 'content_piece'
-						@_showTeacherTrainingFooter()
-
-					# else if currentItem.get('question_type') is 'multiple_eval'
-					#   @_showStudentsListView questionResponseModel
 
 				else
 					@_gotoViewModule()
@@ -218,8 +210,9 @@ define ['app'
 					currentItem = _.first questionsCollection.filter (item)-> 
 								modelType = if model.type is 'quiz' then 'type' else 'post_type' 
 								item if item.id is parseInt(model.id) and item.get(modelType) is model.type
-								
-				if currentItem.get('type') is 'quiz'
+				
+				currentItemType= currentItem.get 'type'
+				if currentItemType? and currentItem.get('type') is 'quiz'
 					@_showQuiz()
 					return
 
@@ -238,62 +231,22 @@ define ['app'
 					classID  : @classID
 
 				App.execute "when:fetched", questionResponseModel, =>
-
-					if currentItem.get('question_type') is 'multiple_eval'
-						App.execute "show:single:question:multiple:evaluation:app",
-							region : @layout.contentBoardRegion
-							questionResponseModel : questionResponseModel
-							studentCollection : studentCollection
-							display_mode : @display_mode
-							timerObject : @timerObject
-							evaluationParams : currentItem.get 'grading_params'
-
-						@layout.studentsListRegion.reset()
-
-
-					else
-						App.execute "show:content:board",
-							region : @layout.contentBoardRegion
-							model : currentItem
-							direction:direction
-
-						@_showStudentsListView questionResponseModel
+					
+					if currentItem.get('content_type') is 'student_question'
+						quizModel = App.request "create:dummy:quiz:module", currentItem.id
+					
+					App.execute "show:content:board",
+						region : @layout.contentBoardRegion
+						model : currentItem
+						direction:direction
+						answerWreqrObject   : @answerWreqrObject
+						quizModel           : quizModel if quizModel
 						
 			_showQuiz :=>
 				App.execute "show:single:quiz:app",
 					region	: App.mainContentRegion
 					quizModel : currentItem
 					studentTrainingModule: @contentGroupModel
-
-			_showStudentsListView : (questionResponseModel)=>
-				App.execute "when:fetched", currentItem, =>
-					question_type = currentItem.get('question_type')
-
-					if question_type is 'individual'
-						App.execute "show:single:question:student:list:app",
-							region : @layout.studentsListRegion
-							questionResponseModel : questionResponseModel
-							studentCollection : studentCollection
-							display_mode : @display_mode
-							timerObject : @timerObject
-
-					else if question_type is 'chorus'
-						App.execute "show:single:question:chorus:options:app",
-							region : @layout.studentsListRegion
-							questionResponseModel : questionResponseModel
-							display_mode : @display_mode
-							timerObject : @timerObject
-
-
-			_showTeacherTrainingFooter : =>
-				App.execute "when:fetched", currentItem, =>
-					question_type = currentItem.get('question_type')
-					nextItem = @_getNextItem()
-					App.execute 'show:teacher:training:footer:app',
-						region : @layout.studentsListRegion
-						contentPiece : currentItem
-						nextItemID : nextItem.id
-
 
 			_getTakeSingleQuestionLayout : ->
 				new SingleQuestionLayout
@@ -309,21 +262,57 @@ define ['app'
 						</div>
 						<div id="content-board">
 						</div>
-						<div id="students-list-region"></div>'
+						
+						<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions none"> 
+							<button type="button" id="submit-question" class="btn btn-success pull-right">
+								Submit <i class="fa fa-forward"></i> 
+							</button>
+							
+							<div class="text-center">
+								{{#show_hint}}
+								<button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
+									<i class="fa fa-lightbulb-o"></i> Hint
+								</button>
+								{{/show_hint}}
+							</div>
+							<div class="clearfix"></div>
+						</div>'
 
 			regions :
 				moduleDetailsRegion : '#module-details-region'
 				contentBoardRegion : '#content-board'
 				studentsListRegion : '#students-list-region'
 				topPanelRegion : '#top-panel'
-
+				
+			events:->
+				'click #submit-question'    :(e)->
+					@$el.find '.quizActions'
+					.addClass 'none'
+					@trigger "validate:answer"
+				'click #skip-question'      :-> @trigger "skip:question"
+				'click #show-hint'          :-> 
+					bootbox.alert @model.get 'hint'
+					@trigger 'show:hint:dialog'
+			
+			mixinTemplateHelpers:(data)->
+				data.show_hint =true if _.trim data.hint
+				data
+			
 			onShow : ->
 				$('.page-content').addClass 'condensed expand-page'
 				@onChangeContentPiece @model
 
 			onChangeContentPiece:(currentItem)->
+				
 				instructionsLabel = if currentItem.get('content_type') is 'content_piece' then 'Procedure Summary' else 'Instructions'
-
+				
+				if currentItem.get('content_type') is 'student_question'
+					@$el.find '.quizActions'
+					.removeClass 'none'
+				else
+					@$el.find '.quizActions'
+					.addClass 'none'
+				
 				if instructionsLabel
 					@$el.find '#instructions-label'
 					.html instructionsLabel

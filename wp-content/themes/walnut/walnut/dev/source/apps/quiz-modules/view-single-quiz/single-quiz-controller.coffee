@@ -27,8 +27,6 @@ define ['app'
 
 				quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
-				console.log studentTrainingModule if studentTrainingModule
-
 				#incase the display mode is sent from router on page refresh
 				display_mode = d_mode if d_mode
 
@@ -86,7 +84,6 @@ define ['app'
 									@_showAttemptsRegion()
 								
 								@listenTo @layout, 'goto:next:item:student:training:module', =>
-									@region.close()
 									data = type: 'quiz', id: quizModel.id
 									App.vent.trigger "next:item:student:training:module", data
 									
@@ -106,8 +103,6 @@ define ['app'
 				if multiplicationFactor
 					questionsCollection.each (m)->
 						m.setMarks multiplicationFactor
-
-				console.log multiplicationFactor
 
 			_randomizeOrder:->
 				if quizResponseSummary.isNew() and quizModel.get('permissions').randomize

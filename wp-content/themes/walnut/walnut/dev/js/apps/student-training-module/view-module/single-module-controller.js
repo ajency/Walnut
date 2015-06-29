@@ -27,11 +27,16 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.questionResponseCollection = opts.questionResponseCollection;
         groupContentCollection = null;
         if (!this.questionResponseCollection) {
-          this.questionResponseCollection = App.request("get:question:response:collection", {
-            'division': this.division,
-            'collection_id': model.get('id')
-          });
+          this.questionResponseCollection = App.request("get:empty:question:response:collection");
         }
+        App.vent.unbind("next:item:student:training:module");
+        App.vent.bind("next:item:student:training:module", (function(_this) {
+          return function(data) {
+            var nextItem;
+            nextItem = _this._getNextItem(data);
+            return _this.gotoTrainingModule(nextItem);
+          };
+        })(this));
         return App.execute("when:fetched", model, (function(_this) {
           return function() {
             var groupContentCollectionFetch;
@@ -55,11 +60,27 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
               _this.listenTo(_this.layout, 'show', _this.showContentGroupViews);
               _this.listenTo(_this.layout.collectionDetailsRegion, 'start:training:module', _this.startTrainingModule);
               return _this.listenTo(_this.layout.contentDisplayRegion, 'goto:item', function(data) {
-                return _this.gotoTrainingModule(data, 'readonly');
+                return _this.gotoTrainingModule(data);
               });
             });
           };
         })(this));
+      };
+
+      GroupController.prototype._getNextItem = function(data) {
+        var contentLayout, item, nextItem, pieceIndex;
+        contentLayout = model.get('content_layout');
+        item = _.filter(contentLayout, function(item) {
+          if (item.type === data.type && parseInt(item.id) === data.id) {
+            return item;
+          }
+        });
+        pieceIndex = _.indexOf(contentLayout, item[0]);
+        nextItem = contentLayout[pieceIndex + 1];
+        if (!nextItem) {
+          nextItem = false;
+        }
+        return nextItem;
       };
 
       GroupController.prototype._getContentItems = function(model) {
@@ -106,7 +127,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         return this.gotoTrainingModule(nextQuestion, 'class_mode');
       };
 
-      GroupController.prototype.gotoTrainingModule = function(data, display_mode) {
+      GroupController.prototype.gotoTrainingModule = function(data) {
         var currentItem;
         currentItem = _.first(groupContentCollection.filter(function(model) {
           var modelType;
@@ -117,13 +138,9 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         }));
         return App.execute("start:student:training:app", {
           region: App.mainContentRegion,
-          division: this.division,
           currentItem: currentItem,
-          questionResponseCollection: this.questionResponseCollection,
           contentGroupModel: model,
-          questionsCollection: groupContentCollection,
-          classID: this.classID,
-          display_mode: 'training'
+          questionsCollection: groupContentCollection
         });
       };
 
