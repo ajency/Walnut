@@ -93,6 +93,6 @@ define ['app'
 
 
         # set handlers
-        App.commands.setHandler "show:viewgroup:content:group:detailsapp", (opt = {})->
+        App.commands.setHandler "show:student:training:content:group:detailsapp", (opt = {})->
             new Controller.ViewCollecionDetailsController opt
 

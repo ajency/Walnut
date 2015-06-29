@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/student-training-module/take-module/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/student-training-module/take-module/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/student-training-module/take-module/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/student-training-module/take-module/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController, bootbox) {
   return App.module("StudentTrainingApp.TakeModule", function(TakeModule, App) {
     var SingleQuestionLayout, currentItem, questionResponseCollection, questionResponseModel, questionsCollection, studentCollection;
     studentCollection = null;
@@ -14,8 +14,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       __extends(Controller, _super);
 
       function Controller() {
-        this._showTeacherTrainingFooter = __bind(this._showTeacherTrainingFooter, this);
-        this._showStudentsListView = __bind(this._showStudentsListView, this);
         this._showQuiz = __bind(this._showQuiz, this);
         this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
         this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
@@ -29,24 +27,20 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
 
       Controller.prototype.initialize = function(opts) {
         var layout;
-        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, this.contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, questionResponseCollection = opts.questionResponseCollection, currentItem = opts.currentItem, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
+        this.division = opts.division, this.classID = opts.classID, this.moduleID = opts.moduleID, this.contentGroupModel = opts.contentGroupModel, questionsCollection = opts.questionsCollection, currentItem = opts.currentItem, this.display_mode = opts.display_mode, studentCollection = opts.studentCollection;
         App.leftNavRegion.reset();
         App.headerRegion.reset();
-        App.execute("when:fetched", [questionResponseCollection, currentItem], (function(_this) {
+        this.answerWreqrObject = new Backbone.Wreqr.RequestResponse();
+        this.answerWreqrObject.displayAnswer = true;
+        this.answerWreqrObject.multiplicationFactor = 1;
+        this.answerModel = App.request("create:new:answer");
+        questionResponseCollection = App.request("get:empty:question:response:collection");
+        App.execute("when:fetched", [currentItem], (function(_this) {
           return function() {
             return _this._getOrCreateModel(currentItem.get('ID'));
           };
         })(this));
         this.layout = layout = this._getTakeSingleQuestionLayout();
-        App.vent.bind("next:item:student:training:module", (function(_this) {
-          return function(data) {
-            currentItem.set({
-              'ID': data.id,
-              'post_type': data.type
-            });
-            return _this._changeQuestion();
-          };
-        })(this));
         if (currentItem.get('type') === 'quiz') {
           this._showQuiz();
           return;
@@ -57,15 +51,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         });
         this.timerObject = new Backbone.Wreqr.RequestResponse();
         this.listenTo(this.layout, "show", this._showModuleDescriptionView);
-        this.listenTo(this.layout, 'show', (function(_this) {
-          return function() {
-            if (currentItem.get('content_type') === 'content_piece') {
-              return _this._showTeacherTrainingFooter();
-            } else {
-              return _this._showStudentsListView(questionResponseModel);
-            }
-          };
-        })(this));
         this.listenTo(this.layout, "show", this._showQuestionDisplayView(currentItem));
         this.listenTo(this.layout.moduleDetailsRegion, "goto:previous:route", this._gotoViewModule);
         this.listenTo(this.layout.studentsListRegion, "goto:previous:route", this._gotoViewModule);
@@ -81,25 +66,23 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             return _this.layout.moduleDetailsRegion.trigger("top:panel:question:done");
           };
         })(this));
-        return this.listenTo(this.layout.topPanelRegion, "top:panel:check:last:question", (function(_this) {
+        this.listenTo(this.layout.topPanelRegion, "top:panel:check:last:question", (function(_this) {
           return function() {
             return _this.layout.moduleDetailsRegion.trigger("top:panel:check:last:question");
           };
         })(this));
+        return this.listenTo(this.layout, "validate:answer", function() {
+          this.answerWreqrObject.request("get:question:answer");
+          return this.answerWreqrObject.request("submit:answer");
+        });
       };
 
       Controller.prototype._changeQuestion = function() {
         var nextItem;
-        if (this.display_mode === 'class_mode') {
-          this._saveQuestionResponse("completed");
-        }
         nextItem = this._getNextItem();
         if (nextItem) {
           this._showQuestionDisplayView(nextItem);
-          this.layout.triggerMethod("change:content:piece", currentItem);
-          if (this.display_mode === 'training' || currentItem.get('content_type') === 'content_piece') {
-            return this._showTeacherTrainingFooter();
-          }
+          return this.layout.triggerMethod("change:content:piece", currentItem);
         } else {
           return this._gotoViewModule();
         }
@@ -229,6 +212,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       };
 
       Controller.prototype._showQuestionDisplayView = function(model, direction) {
+        var currentItemType;
         if (direction == null) {
           direction = 'ltr';
         }
@@ -243,7 +227,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
             }
           }));
         }
-        if (currentItem.get('type') === 'quiz') {
+        currentItemType = currentItem.get('type');
+        if ((currentItemType != null) && currentItem.get('type') === 'quiz') {
           this._showQuiz();
           return;
         }
@@ -262,24 +247,17 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         });
         return App.execute("when:fetched", questionResponseModel, (function(_this) {
           return function() {
-            if (currentItem.get('question_type') === 'multiple_eval') {
-              App.execute("show:single:question:multiple:evaluation:app", {
-                region: _this.layout.contentBoardRegion,
-                questionResponseModel: questionResponseModel,
-                studentCollection: studentCollection,
-                display_mode: _this.display_mode,
-                timerObject: _this.timerObject,
-                evaluationParams: currentItem.get('grading_params')
-              });
-              return _this.layout.studentsListRegion.reset();
-            } else {
-              App.execute("show:content:board", {
-                region: _this.layout.contentBoardRegion,
-                model: currentItem,
-                direction: direction
-              });
-              return _this._showStudentsListView(questionResponseModel);
+            var quizModel;
+            if (currentItem.get('content_type') === 'student_question') {
+              quizModel = App.request("create:dummy:quiz:module", currentItem.id);
             }
+            return App.execute("show:content:board", {
+              region: _this.layout.contentBoardRegion,
+              model: currentItem,
+              direction: direction,
+              answerWreqrObject: _this.answerWreqrObject,
+              quizModel: quizModel ? quizModel : void 0
+            });
           };
         })(this));
       };
@@ -290,46 +268,6 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
           quizModel: currentItem,
           studentTrainingModule: this.contentGroupModel
         });
-      };
-
-      Controller.prototype._showStudentsListView = function(questionResponseModel) {
-        return App.execute("when:fetched", currentItem, (function(_this) {
-          return function() {
-            var question_type;
-            question_type = currentItem.get('question_type');
-            if (question_type === 'individual') {
-              return App.execute("show:single:question:student:list:app", {
-                region: _this.layout.studentsListRegion,
-                questionResponseModel: questionResponseModel,
-                studentCollection: studentCollection,
-                display_mode: _this.display_mode,
-                timerObject: _this.timerObject
-              });
-            } else if (question_type === 'chorus') {
-              return App.execute("show:single:question:chorus:options:app", {
-                region: _this.layout.studentsListRegion,
-                questionResponseModel: questionResponseModel,
-                display_mode: _this.display_mode,
-                timerObject: _this.timerObject
-              });
-            }
-          };
-        })(this));
-      };
-
-      Controller.prototype._showTeacherTrainingFooter = function() {
-        return App.execute("when:fetched", currentItem, (function(_this) {
-          return function() {
-            var nextItem, question_type;
-            question_type = currentItem.get('question_type');
-            nextItem = _this._getNextItem();
-            return App.execute('show:teacher:training:footer:app', {
-              region: _this.layout.studentsListRegion,
-              contentPiece: currentItem,
-              nextItemID: nextItem.id
-            });
-          };
-        })(this));
       };
 
       Controller.prototype._getTakeSingleQuestionLayout = function() {
@@ -348,13 +286,36 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board"> </div> <div id="students-list-region"></div>';
+      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board"> </div> <div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions none"> <button type="button" id="submit-question" class="btn btn-success pull-right"> Submit <i class="fa fa-forward"></i> </button> <div class="text-center"> {{#show_hint}} <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10"> <i class="fa fa-lightbulb-o"></i> Hint </button> {{/show_hint}} </div> <div class="clearfix"></div> </div>';
 
       SingleQuestionLayout.prototype.regions = {
         moduleDetailsRegion: '#module-details-region',
         contentBoardRegion: '#content-board',
         studentsListRegion: '#students-list-region',
         topPanelRegion: '#top-panel'
+      };
+
+      SingleQuestionLayout.prototype.events = function() {
+        return {
+          'click #submit-question': function(e) {
+            this.$el.find('.quizActions').addClass('none');
+            return this.trigger("validate:answer");
+          },
+          'click #skip-question': function() {
+            return this.trigger("skip:question");
+          },
+          'click #show-hint': function() {
+            bootbox.alert(this.model.get('hint'));
+            return this.trigger('show:hint:dialog');
+          }
+        };
+      };
+
+      SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
+        if (_.trim(data.hint)) {
+          data.show_hint = true;
+        }
+        return data;
       };
 
       SingleQuestionLayout.prototype.onShow = function() {
@@ -365,6 +326,11 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       SingleQuestionLayout.prototype.onChangeContentPiece = function(currentItem) {
         var instructionsLabel;
         instructionsLabel = currentItem.get('content_type') === 'content_piece' ? 'Procedure Summary' : 'Instructions';
+        if (currentItem.get('content_type') === 'student_question') {
+          this.$el.find('.quizActions').removeClass('none');
+        } else {
+          this.$el.find('.quizActions').addClass('none');
+        }
         if (instructionsLabel) {
           this.$el.find('#instructions-label').html(instructionsLabel);
         }

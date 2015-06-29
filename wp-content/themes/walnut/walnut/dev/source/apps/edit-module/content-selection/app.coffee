@@ -17,7 +17,7 @@ define ['app'
 				@contentSelectionType = @model.get 'type'
 				contentTypeArr = switch @contentSelectionType
 									when 'teaching-module' then ['teacher_question','content_piece']
-									when 'student-training' then ['content_piece']
+									when 'student-training' then ['content_piece','student_question']
 									else ['student_question']
 
 				@contentPiecesCollection = App.request "get:content:pieces",
@@ -41,7 +41,7 @@ define ['app'
 
 						filters = ['textbooks', 'chapters','sections','subsections','content_type']
 
-						filters.pop() if @model.get('type') in ['quiz','student-training']
+						filters.pop() if @model.get('type') is 'quiz'
 
 						App.execute "show:textbook:filters:app",
 							region: @layout.filtersRegion

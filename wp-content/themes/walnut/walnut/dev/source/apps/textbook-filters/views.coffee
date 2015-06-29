@@ -60,7 +60,9 @@ define ['app'], (App)->
                                     {{#content_type_filter}}
                                     <select class="content-type-filter select2-filters selectFilter" id="content-type-filter">
                                         <option value="">All Types</option>
-                                        <option value="teacher_question">Teacher Question</option>
+                                        {{#teacher_question}}
+											<option value="teacher_question">Teacher Question</option>
+                                        {{/teacher_question}}
                                         {{#student_question}}
                                            <option value="student_question">Student Question</option>
                                         {{/student_question}}
@@ -133,6 +135,7 @@ define ['app'], (App)->
                 data.content_type_filter = true if _.contains filters, 'content_type'
 
                 data.student_question = true if _.contains filters, 'student_question'
+                data.teacher_question = true if _.contains filters, 'teacher_question'
 
                 data.status_filter = true if _.contains filters, 'status'
 

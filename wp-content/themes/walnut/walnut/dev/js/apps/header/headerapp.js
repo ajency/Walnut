@@ -17,7 +17,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderController.prototype.initialize = function() {
         var layout;
         this.layout = layout = this._getHeaderView();
-        this.school = App.request("get:current:school");
         this.listenTo(layout, 'show', this._showLeftRightViews);
         this.show(layout);
         this.listenTo(this.layout.rightRegion, "user:logout", this._logoutCurrentUser);
@@ -50,7 +49,6 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
 
       HeaderController.prototype._getHeaderView = function() {
         return new HeaderView({
-          model: this.school,
           templateHelpers: {
             show_user_name: function() {
               var user_model, user_name;

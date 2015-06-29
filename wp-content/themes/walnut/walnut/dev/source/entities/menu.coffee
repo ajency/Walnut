@@ -22,19 +22,22 @@ define ["app", 'backbone'], (App, Backbone) ->
 				model : Menus.MenuItemModel
 				comparator : 'order'
 
+			menuCollection = new Menus.MenuItemCollection
 
 			# API 
 			API = 
 				# get all site menus
 				getMenus:(param = {})->
-					menuCollection = new Menus.MenuItemCollection
+					
+					if menuCollection.isEmpty()
+						menuCollection.url = AJAXURL + '?action=get-menus'
+						menuCollection.fetch
+								reset : true
+								data  : param
 
-					menuCollection.url = AJAXURL + '?action=get-menus'
-					menuCollection.fetch
-							reset : true
-							data  : param
-
-					menuCollection
+						menuCollection
+					else
+						menuCollection
 
 
 			# request handler to get all site menus

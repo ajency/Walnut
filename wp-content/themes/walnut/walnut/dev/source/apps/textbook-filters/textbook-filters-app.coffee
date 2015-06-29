@@ -10,7 +10,10 @@ define ['app'
 				@dataType, @contentSelectionType, @divisionsCollection,@post_status}=opts
 
 				@filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
-
+				
+				@filters.push 'student_question' if @contentSelectionType is 'student-training'
+				@filters.push 'teacher_question' if @contentSelectionType is 'teaching-module'
+				
 				if @divisionsCollection
 					class_id= @divisionsCollection.first().get('class_id') 
 
@@ -111,6 +114,9 @@ define ['app'
 
 						else if @contentSelectionType is 'teaching-module'
 							data.content_type= ['teacher_question','content_piece']
+
+						else if @contentSelectionType is 'student-training'
+							data.content_type= ['student_question','content_piece']
 
 
 						if @dataType is 'teaching-modules'

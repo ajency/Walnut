@@ -48,7 +48,6 @@ define ['app'
 				#                triggerOnce = _.once _.bind @triggerShowResponse, @, answerData
 
 				App.commands.setHandler "show:response", (marks, total)=>
-				   # console.log "#{marks}   #{total}"
 					@view.triggerMethod 'show:response', parseFloat(marks).toFixed(1), parseFloat(total).toFixed(1)
 
 				@show @view,
@@ -121,7 +120,6 @@ define ['app'
 			API =
 			# add a new element to the builder region
 				addNewElement : (container, type, modelData)=>
-					console.log type
 
 					new ContentBoard.Element[type].Controller
 						container            : container

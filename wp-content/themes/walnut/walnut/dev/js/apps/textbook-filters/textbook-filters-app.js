@@ -19,6 +19,12 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         if (!this.filters) {
           this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
         }
+        if (this.contentSelectionType === 'student-training') {
+          this.filters.push('student_question');
+        }
+        if (this.contentSelectionType === 'teaching-module') {
+          this.filters.push('teacher_question');
+        }
         if (this.divisionsCollection) {
           class_id = this.divisionsCollection.first().get('class_id');
           if (class_id) {
@@ -144,6 +150,8 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
                 data.content_type = ['teacher_question', 'content_piece'];
+              } else if (_this.contentSelectionType === 'student-training') {
+                data.content_type = ['student_question', 'content_piece'];
               }
               if (_this.dataType === 'teaching-modules') {
                 newContent = App.request("get:content:groups", data);

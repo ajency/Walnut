@@ -277,7 +277,7 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board"></div> <div id="students-list-region"></div>';
+      SingleQuestionLayout.prototype.template = '<div id="module-details-region"></div> <div class="" id="top-panel"></div> <div class="container-grey m-b-5  qstnInfo "> <label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label> <span class="small-text" id="instructions"></span> </div> <div id="content-board" class="m-b-50"></div> <div id="students-list-region"></div>';
 
       SingleQuestionLayout.prototype.regions = {
         moduleDetailsRegion: '#module-details-region',

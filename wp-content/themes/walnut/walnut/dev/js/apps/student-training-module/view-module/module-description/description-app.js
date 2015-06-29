@@ -135,7 +135,7 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       return CollectionDetailsView;
 
     })(Marionette.ItemView);
-    return App.commands.setHandler("show:viewgroup:content:group:detailsapp", function(opt) {
+    return App.commands.setHandler("show:student:training:content:group:detailsapp", function(opt) {
       if (opt == null) {
         opt = {};
       }

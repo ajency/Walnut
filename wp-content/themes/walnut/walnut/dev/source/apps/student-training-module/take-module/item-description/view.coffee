@@ -60,4 +60,3 @@ define ['app'
 
             onShowTotalMarks : (marks)->
                 console.log(marks)
-                console.log @$el.find('#total-marks span').text marks
