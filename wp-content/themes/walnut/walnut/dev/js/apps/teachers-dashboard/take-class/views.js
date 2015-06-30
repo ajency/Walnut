@@ -18,6 +18,9 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
       TextbooksItemView.prototype.template = listitemTpl;
 
       TextbooksItemView.prototype.onShow = function() {
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          this.$el.addClass('noCursor');
+        }
         this.$el.attr('data-name', this.model.get('name'));
         this.$el.attr('data-modules', this.model.get('modules_count'));
         return this.$el.attr('data-subjects', this.model.get('subjects'));

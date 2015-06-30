@@ -13,6 +13,8 @@ define ['app'
 			template : listitemTpl
 
 			onShow:->
+				@$el.addClass 'noCursor' if Marionette.getOption(@, 'mode') is 'take-quiz'
+				
 				@$el.attr 'data-name', @model.get 'name'
 
 				@$el.attr 'data-modules', @model.get 'modules_count'
