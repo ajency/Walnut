@@ -3,7 +3,14 @@
       {{&thumbnail}}
     </div>
     <div class="titles">
-      <h3 class="normal"><a class="textbook_titles" data-id="{{term_id}}" href="{{url}}">{{&name}}</a></h3>
+      <h3 class="normal">
+        {{#take_quiz}}
+          {{&name}}
+        {{/take_quiz}}
+        {{^take_quiz}}
+          <a class="textbook_titles" data-id="{{term_id}}" href="{{url}}">{{&name}}</a>
+        {{/take_quiz}}
+      </h3>
       <p class="small-text">{{author}}</p>
     </div>
 </div>
@@ -20,17 +27,18 @@
 
 {{#take_quiz}}
     <div class="meta modules rec">
-          <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Practice Quizzes: {{practice_count}}</h4>
-          <div class="pull-left text-success"><h5 class="no-margin">Completed</h5> {{practice_completed}}</div>
-          <div class="pull-left m-l-5 text-info"><h5 class="no-margin">Paused</h5> {{practice_in_progress}}</div>
-          <div class="pull-left m-l-5 text-error"><h5 class="no-margin">Not Started</h5> {{practice_not_started}}</div>
+      <div>
+        <h4 class="m-t-20">No. of Quizzes: {{total_quizzes}}</h4>
+        <a href="{{quizzes_url}}" class="btn btn-default">View Quizzes</a>
+      </div>
     </div>
     <div class="meta modules rec">
-          <h4 class="b-grey b-b p-b-10 m-t-20 m-b-10">Total Quizzes: {{take_at_home_count}}</h4>
-          <div class="pull-left text-success"><h5 class="no-margin">Completed</h5> {{home_test_completed}}</div>
-          <div class="pull-left m-l-5 text-info"><h5 class="no-margin">Paused</h5> {{home_test_in_progress}}</div>
-          <div class="pull-left m-l-5 text-error"><h5 class="no-margin">Not Started</h5> {{home_test_not_started}}</div>
+      <div>
+        <h4 class="m-t-20">No. of Training Modules: {{total_student_training_modules}}</h4>
+        <a href="{{training_modules_url}}" class="btn btn-default">View Training Modules</a>
+      </div>
     </div>
+
 {{/take_quiz}}
 
 {{^take_quiz}}

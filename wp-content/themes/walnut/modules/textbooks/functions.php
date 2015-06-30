@@ -265,6 +265,9 @@ function get_book( $book, $division=0,$user_id=0) {
             
         array('%"'. $book_id . '";%', 'publish', 'quiz', 'quiz_type')
     );
+        
+    ## UNCOMMENT BELOW LINES TO GET FULL DETAILS OF NUMBER OF QUIZZES FOR EACH QUIZ TYPE
+    ## COMMENTED OUT TO REDUCE QUERY TIME AS NOT NEEDED CURRENTLY
     $quizzes_count = $wpdb->get_row( $quiz_count_query );
 
     $book_dets->class_test_count = (int) $quizzes_count->class_test;
@@ -287,10 +290,19 @@ function get_book( $book, $division=0,$user_id=0) {
         $book_dets->chapters_completed = sizeof($textbook_status['completed']);
         $book_dets->chapters_in_progress = sizeof($textbook_status['in_progress']);
         $book_dets->chapters_not_started = sizeof($textbook_status['not_started']);
-
     }
-
-
+    
+    $modules_count_qry= $wpdb->prepare("SELECT COUNT(id) FROM"
+                . " {$wpdb->base_prefix}content_collection WHERE "
+                . "type=%s  AND "
+                . "post_status  =%s  AND "
+                . "term_ids like %s",
+                array( 'student-training', 'publish','%"' . $book_id . '";%')
+            );
+    
+    $counts_student_training_modules = $wpdb->get_var($modules_count_qry);
+    $book_dets->total_student_training_modules = $counts_student_training_modules;
+    $book_dets->total_quizzes =   $book_dets->class_test_count + $book_dets->practice_count + $book_dets->take_at_home_count;
     restore_current_blog();
 
     if ($division && $book_dets->parent === 0){
@@ -301,15 +313,17 @@ function get_book( $book, $division=0,$user_id=0) {
 
     }
 
+    ## UNCOMMENT BELOW LINES TO GET FULL DETAILS OF NUMBER OF QUIZZES FOR EACH QUIZ TYPE FOR STUDENTS DASHBOARD
+    ## COMMENTED OUT TO REDUCE QUERY TIME AS NOT NEEDED CURRENTLY
     if($user_id){
-        $quizzes_status = quiz_status_for_textbook($book_id,$user_id);
-        $book_dets->home_test_completed    = $quizzes_status['home_test_completed'];
-        $book_dets->home_test_in_progress  = $quizzes_status['home_test_in_progress'];
-        $book_dets->home_test_not_started = $quizzes_count->test - ($quizzes_status['home_test_completed']+$quizzes_status['home_test_in_progress']);
-
-        $book_dets->practice_completed    = $quizzes_status['practice_completed'];
-        $book_dets->practice_in_progress  = $quizzes_status['practice_in_progress'];
-        $book_dets->practice_not_started = $quizzes_count->practice - ($quizzes_status['practice_completed']+$quizzes_status['practice_in_progress']);
+//        $quizzes_status = quiz_status_for_textbook($book_id,$user_id);
+//        $book_dets->home_test_completed    = $quizzes_status['home_test_completed'];
+//        $book_dets->home_test_in_progress  = $quizzes_status['home_test_in_progress'];
+//        $book_dets->home_test_not_started = $quizzes_count->test - ($quizzes_status['home_test_completed']+$quizzes_status['home_test_in_progress']);
+//
+//        $book_dets->practice_completed    = $quizzes_status['practice_completed'];
+//        $book_dets->practice_in_progress  = $quizzes_status['practice_in_progress'];
+//        $book_dets->practice_not_started = $quizzes_count->practice - ($quizzes_status['practice_completed']+$quizzes_status['practice_in_progress']);
     
     }
 
