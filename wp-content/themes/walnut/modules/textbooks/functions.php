@@ -589,7 +589,49 @@ function user_has_access_to_textbook($textbook,$user_id=0){
 
         if(in_array($textbook, $assigned))
             $has_access = true;
-    
+
     return $has_access;
 
 }
+
+function textbooks_admin_search_filter($args){
+    
+    if(strpos($args['search'], 'parent:') !== FALSE){
+        $options = explode(',',$args['search']);
+
+        $searchArray = array();
+        foreach($options as $opt){
+            $arr = explode(':',$opt);
+            if(sizeof($arr)>=2 && trim($arr[0]) && trim($arr[1]))
+                $searchArray[trim($arr[0])] = trim($arr[1]);
+        }
+
+        $possible_parents= get_terms('textbook', array(
+                                'search'=>$searchArray['parent'],
+                                'fields'=>'ids',
+                                'hide_empty'=>false
+                            ));
+
+        $args['include']= array();
+
+        if(sizeof($possible_parents)==0){
+            #if parent search failed, no need to process further.
+            $args['include']=array(-1);
+            return $args;
+        }
+
+        foreach($possible_parents as $parent){
+            $ids = get_terms('textbook', array(
+                                    'parent'=>$parent,
+                                    'fields'=>'ids',
+                                    'hide_empty'=>false
+                                ));
+            $args['include']= array_merge($args['include'],$ids);
+        }
+        $args['search']= (isset($searchArray['name']))? $searchArray['name']: '';
+    }
+
+    return $args;
+}
+
+add_filter('get_terms_args','textbooks_admin_search_filter');
