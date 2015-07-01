@@ -81,8 +81,13 @@
                         <option value="archive">Archive</option>
                     </select>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <label class="form-label">Author:</label>{{post_author_name}}
+                </div>
+
+                <div class="col-sm-2">
+                    <label class="form-label">Last Modified By:</label>
+                    <span class="lastMod muted">{{last_modified_by}}</span>
                 </div>
 
             </div>
@@ -93,31 +98,18 @@
                         {{instructions}}
                     </textarea>
                 </div>
-                <div class="col-sm-2">
-                    <label class="form-label">Published By:</label>
-                    <span class="lastMod muted">{{published_by}}</span>
-                </div>
-                <div class="col-sm-2">
-                    <label class="form-label">Last Modified By:</label>
-                    <span class="lastMod muted">{{last_modified_by}}</span>
+                <div class="col-sm-4">
+                    <label class="form-label" for="hint_enable">Autoplay Audio/ Video</label>
+                    <div class="checkbox check-info">
+                        <input type="checkbox" name="autoplay_audio">
+                        <label class="form-label" for="autoplay_audio">Audio Autoplay</label>
+                    </div>
+                    <div class="checkbox check-info">
+                        <input type="checkbox" name="autoplay_video">
+                        <label class="form-label" for="autoplay_video">Video Autoplay</label>
+                    </div>
                 </div>
             </div>
-            <!--{{#studentQuestion}}-->
-                <!--<div class="row">-->
-                    <!--<div class="col-sm-6">-->
-                        <!--<label class="form-label">Negative Marks</label>-->
-                        <!--<select required name="negative_marks" id="negativeMarks" class="form-control select2" >-->
-                            <!--<option value="0">0</option>-->
-                            <!--<option value="1">-1</option>-->
-                            <!--<option value="2">-2</option>-->
-                            <!--<option value="3">-3</option>-->
-                            <!--<option value="4">-4</option>-->
-                            <!--<option value="5">-5</option>-->
-                        <!--</select>-->
-
-                    <!--</div>-->
-                <!--</div>-->
-            <!--{{/studentQuestion}}-->
         </div>
         {{#isStudentQuestion}}
         <div class="tab-pane" id="more-tab-pane">
@@ -145,12 +137,12 @@
     <div class="builder_actions pull-right">
         <button type="button" class="btn btn-info btn-cons2" id="save-question">
             <i class="fa fa-check"></i> Save</button>
-            
+
         <button type="button" class="btn btn-info btn-cons2 none" id="clone-question">Clone</button>
-            
+
         <button type="button" id="preview-question" class="btn btn-info btn-cons2 none">
             <i class="fa fa-eye"></i> Preview</button>
-            
+
         <button type="button" id="close-content-creator" class="btn btn-danger btn-cons2">
             <i class="fa"></i> Cancel</button>
     </div>

@@ -233,6 +233,9 @@ function get_single_content_piece($id){
 
     $content_piece->last_modified_by='';
 
+    $content_piece->autoplay_audio	= (isset($autoplay_audio))? $autoplay_audio === "true" :false;
+    $content_piece->autoplay_video	= (isset($autoplay_video))? $autoplay_video === "true" :false;
+
     if(isset($last_modified_by)){
         $last_modified_by_user=get_userdata($last_modified_by);
         $content_piece->last_modified_by = $last_modified_by_user->display_name;

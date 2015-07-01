@@ -71,7 +71,9 @@ function save_content_piece($data){
         'hint'              => $data['hint'],
         'comment_enable'    => $data['comment_enable'],
         'comment'           => $data['comment'],
-        'last_modified_by'  => $post_author
+        'last_modified_by'  => $post_author,
+		'autoplay_audio'	=> $data['autoplay_audio'],
+		'autoplay_video'	=> $data['autoplay_video']
     );
 
     if($data['post_status']=='publish')

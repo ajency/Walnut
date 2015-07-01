@@ -10,7 +10,7 @@ define ['app'], (App)->
             className: 'audio'
 
             template: '{{#audio}}
-                        <audio title="{{title}}" class="audio1" controls>
+                        <audio title="{{title}}" class="audio1" controls autoplay>
                             <source src="{{audioUrl}}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
@@ -31,7 +31,6 @@ define ['app'], (App)->
                     _.each arrays, (array)->
                         audioArray.push _.object ['title', 'audioUrl'], array
                     data.audio = audioArray
-                    console.log audioArray
 
                 data
 
@@ -39,16 +38,11 @@ define ['app'], (App)->
 
             onShow: ->
                 @$el.find('audio').panzerlist
-                    theme: 'light'
-                    layout: 'big'
-                    expanded: true
-                    showduration: true
+                    theme          : 'light'
+                    layout         : 'big'
+                    expanded       : true
+                    showduration   : true
                     show_prev_next : true
+                    auto_start     : @model.get 'autoplay'
 
 #
-
-
-
-
-
-

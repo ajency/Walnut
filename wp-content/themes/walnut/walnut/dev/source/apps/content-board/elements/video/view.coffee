@@ -47,12 +47,10 @@ define ['app'], (App)->
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
-				
-				@_addVideoElement @videos[0]
+
+				@_addVideoElement @videos[0], @model.get 'autoplay'
 
 			_setVideoList : ->
-				console.log '@model'
-				console.log @model
 				@$el.append('<div id="playlist-hover" class="playlistHover">
 								<div class="row m-l-0 m-r-0 p-b-5 m-b-5">
 									<div class="col-sm-8 nowPlaying">
@@ -113,17 +111,18 @@ define ['app'], (App)->
 
 				if not @videos[@index]
 					@$el.find('video').attr 'poster', SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png'
-				
+
 				@_addVideoElement @videos[@index], true
 
 			_addVideoElement:(videoUrl, autoplay=false)->
-			
+
 				@$el.find('.videoContainer').empty()
 				if _.str.contains videoUrl, 'youtube.com'
+					autoplay = if autoplay then 1 else 0
 					vidID= _.str.strRightBack videoUrl,'?v='
 					@$el.find('.videoContainer').html '<div class="videoWrapper">
-					<iframe width="100%" height="349" 
-						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0&autoplay=1" 
+					<iframe width="100%" height="349"
+						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0&autoplay='+autoplay+'"
 						frameborder="0">
 					</iframe></div>'
 				else
@@ -132,6 +131,6 @@ define ['app'], (App)->
 												data-setup="{}" controls src="'+videoUrl+'">
 
 								</video>'
-								
+
 					@$el.find('video')[0].load()
-					@$el.find('video')[0].play()
+					@$el.find('video')[0].play() if autoplay

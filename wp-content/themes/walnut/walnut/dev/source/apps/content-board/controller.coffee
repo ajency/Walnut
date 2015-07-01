@@ -76,6 +76,11 @@ define ['app'
 						nestedItems.done =>
 							itemsDeferred.resolve()
 					else
+						if element.element is 'Audio' and @view.model.get 'autoplay_audio'
+							element.autoplay = true
+						if element.element is 'Video' and @view.model.get 'autoplay_video'
+							element.autoplay = true
+
 						App.request "add:new:element", container, element.element, element
 						itemsDeferred.resolve()
 
@@ -106,6 +111,11 @@ define ['app'
 							addedElement.done =>
 								nestedDef.resolve()
 						else
+							if ele.element is 'Audio' and @view.model.get 'autoplay_audio'
+								ele.autoplay = true
+							if ele.element is 'Video' and @view.model.get 'autoplay_video'
+								ele.autoplay = true
+
 							App.request "add:new:element", container, ele.element, ele
 							nestedDef.resolve()
 
