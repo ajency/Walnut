@@ -37,20 +37,24 @@ jQuery(document).ready ($)->
         else
             $('.textbook_fields').hide();
 
-
     if (window.location.href).substring 'edit-tags.php?taxonomy=textbook'
-        $('.search-form #tag-search-input').css('margin-left','40px');
-        filters = '<form method="get" style="float:left; margin-right:20px">';
+
+        $('#col-container').prepend '<div style="float:right; width:285px">
+                                    Advanced Search : p=English, n=Syllables<br>
+                                    where p= Name or ID of parent and <br>n= name of chapter or section</div>'
+
+        filters = '<form method="get" style="float:right">';
         filters += '<input type="hidden" name="taxonomy" value="textbook">';
         filters += '<input type="hidden" name="post_type" value="content-piece">';
         filters += ' Textbook: <select class="tags_texbook_filters" id="tags_texbook_filter"></select>';
         filters += ' Chapter: <select class="tags_texbook_filters" id="tags_chapter_filter"><option  value="">--select--</option></select>';
         filters += ' Section: <select class="tags_texbook_filters" id="tags_section_filter"><option value="">--select--</option></select>';
         filters += '<input type="hidden" id="tags_filter_search_box" name="s" value="p=15">';
-        filters += '<input type="submit" style="margin-left:10px" class="button" value="List Textbooks">';
-        filters += '</form>';
-        $('#tag-search-input').before(filters);
-        $('#tag-search-input, #tags_filter_search_box').val ''
+        filters += '<input type="submit" class="button" value="List Textbooks">';
+        filters += '</form><br class="clear"><br>';
+
+        $('.search-form').before(filters);
+        $('#tags_filter_search_box').val ''
 
         $.get ajaxurl + '?action=get-textbooks&fetch_all=true', ( resp )->
                 html = '<option value="">--select--</option>'
