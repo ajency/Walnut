@@ -39,9 +39,9 @@ jQuery(document).ready ($)->
 
     if (window.location.href).substring 'edit-tags.php?taxonomy=textbook'
 
-        $('#col-container').prepend '<div style="float:right; width:285px">
+        $('#col-container').prepend '<div style="float:right; width:430px">
                                     Advanced Search : p=English, n=Syllables<br>
-                                    where p= Name or ID of parent and <br>n= name of chapter or section</div>'
+                                    where p= Name or ID of parent and n= name of chapter or section</div>'
 
         filters = '<form method="get" style="float:right">';
         filters += '<input type="hidden" name="taxonomy" value="textbook">';
@@ -55,6 +55,7 @@ jQuery(document).ready ($)->
 
         $('.search-form').before(filters);
         $('#tags_filter_search_box').val ''
+        $('#tag-search-input').css 'width', '300px'
 
         $.get ajaxurl + '?action=get-textbooks&fetch_all=true', ( resp )->
                 html = '<option value="">--select--</option>'

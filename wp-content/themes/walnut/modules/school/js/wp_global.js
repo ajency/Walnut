@@ -40,7 +40,7 @@ jQuery(document).ready(function($) {
     }
   });
   if (window.location.href.substring('edit-tags.php?taxonomy=textbook')) {
-    $('#col-container').prepend('<div style="float:right; width:285px"> Advanced Search : p=English, n=Syllables<br> where p= Name or ID of parent and <br>n= name of chapter or section</div>');
+    $('#col-container').prepend('<div style="float:right; width:430px"> Advanced Search : p=English, n=Syllables<br> where p= Name or ID of parent and n= name of chapter or section</div>');
     filters = '<form method="get" style="float:right">';
     filters += '<input type="hidden" name="taxonomy" value="textbook">';
     filters += '<input type="hidden" name="post_type" value="content-piece">';
@@ -52,6 +52,7 @@ jQuery(document).ready(function($) {
     filters += '</form><br class="clear"><br>';
     $('.search-form').before(filters);
     $('#tags_filter_search_box').val('');
+    $('#tag-search-input').css('width', '300px');
     $.get(ajaxurl + '?action=get-textbooks&fetch_all=true', function(resp) {
       var html, item, _i, _len, _ref;
       html = '<option value="">--select--</option>';

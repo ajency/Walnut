@@ -156,6 +156,13 @@ define ['app',
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
 					@trigger "save:data:to:model", data
+				else
+					firstErr = _.first @$el.find '.form-control.error'
+					$(firstErr).focus()
+					if _.str.contains firstErr.id, 's2id'
+						eleID = _.str.strRight firstErr.id,'_'
+						@$el.find "##{eleID}"
+						.data('select2').open()
 
 			previewQuestion:->
 				if @model.get('content_type') is 'student_question'
