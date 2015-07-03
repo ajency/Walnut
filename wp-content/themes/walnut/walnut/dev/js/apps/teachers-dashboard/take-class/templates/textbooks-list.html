@@ -1,19 +1,14 @@
 <div class="list" id="textbooks">
 	<!-- "TABLE" HEADER CONTAINING SORT BUTTONS (HIDDEN IN GRID MODE)-->
 	<div class="list_header">
-		<div class="meta name active desc" id="SortByName"> 
-			Name &nbsp; 
-			<span class="sort anim150 asc active" data-sort="data-name" data-order="desc"></span> 
-			<span class="sort anim150 desc" data-sort="data-name" data-order="asc"></span> 
+		<div class="meta name active desc" id="SortByName">
+			Name &nbsp;
+			<span class="sort anim150 asc active" data-sort="data-name" data-order="desc"></span>
+			<span class="sort anim150 desc" data-sort="data-name" data-order="asc"></span>
 		</div>
 
-		<div class="meta modules">Subjects
-			<span class="sort anim150 asc" data-sort="data-subjects" data-order="desc"></span> 
-			<span class="sort anim150 desc" data-sort="data-subjects" data-order="asc"></span>
-		</div>
-	
 		{{^take_quiz}}
-		<div class="meta rec">Status 
+		<div class="meta rec">Status
 			<span class="sort anim150 asc" data-sort="data-modules" data-order="desc"></span>
 			<span class="sort anim150 desc" data-sort="data-modules" data-order="asc"></span>
 		</div>
@@ -24,7 +19,7 @@
 			<div class="meta rec"> Quizzes</div>
 			<div class="meta modules rec">Training Modules</div>
 		{{/take_quiz}}
-		
+
 	</div>
 
 	<div class="fail_element anim250">Sorry &mdash; we could not find any Textbooks matching matching these criteria</div>

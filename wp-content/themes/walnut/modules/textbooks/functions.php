@@ -232,8 +232,6 @@ function get_book( $book, $division=0,$user_id=0) {
                 where textbook_id=" . $book_id, ARRAY_A );
 
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
-    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
-
 
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
