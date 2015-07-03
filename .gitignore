@@ -13,7 +13,7 @@ composer.phar
 wp-content/themes/walnut/vendor
 wp-content/themes/walnut/csvupload
 wp-content/debug.log
-
+tags
+.tags_swap
 
 /nbproject
-

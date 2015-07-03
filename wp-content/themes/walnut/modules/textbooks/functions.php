@@ -118,7 +118,7 @@ function get_textbooks( $args = array() ) {
     $args = wp_parse_args( $args, $defaults );
     $textbooks_for_blog = get_textbooksids_for_current_blog();
 
-    if($args['parent'] ==0 && current_user_can('administrator')==false)
+    if($args['parent'] ==0 && current_user_can('view_all_textbooks')==false)
         $args['include']=$textbooks_for_blog;
 
     extract( $args );
@@ -456,7 +456,7 @@ function get_assigned_textbooks( $user_id = '' ) {
     if ($user_id == '')
         $user_id = get_current_user_id();
 
-    if(user_can($user_id, 'administrator') || user_can($user_id, 'school-admin') || user_can($user_id, 'content-creator')){
+    if(user_can($user_id, 'view_all_textbooks')){
 
         switch_to_blog(1);
         $txtbook_ids = get_terms(
