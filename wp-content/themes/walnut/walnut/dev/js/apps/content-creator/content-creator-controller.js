@@ -60,10 +60,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         this.listenTo(this.layout.optionsBarRegion, 'show:grading:parameter', this._showGradingParameter);
         this.listenTo(this.layout.optionsBarRegion, 'close:grading:parameter', this._closeGradingParameter);
         this.listenTo(this.layout.contentPiecesListRegion, 'change:content:piece', (function(_this) {
-          return function(model) {
-            App.navigate("edit-content/" + model.id);
-            _this.contentPieceModel = model;
-            return _this._showViews();
+          return function(nextID) {
+            return _this.layout.optionsBarRegion.trigger("change:content:piece", nextID);
           };
         })(this));
         return App.execute("when:fetched", this.contentPieceModel, (function(_this) {

@@ -14,6 +14,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         this._fetchSections = __bind(this._fetchSections, this);
         this._fetchChapters = __bind(this._fetchChapters, this);
         this.showView = __bind(this.showView, this);
+        this._beforeChangeContentPiece = __bind(this._beforeChangeContentPiece, this);
+        this._saveBeforeUnload = __bind(this._saveBeforeUnload, this);
         return OptionsBarController.__super__.constructor.apply(this, arguments);
       }
 
@@ -24,6 +26,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
           "fetch_all": true
         });
         App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
+        this.listenTo(this.region, "change:content:piece", this._saveBeforeUnload);
         this.listenTo(this.view, "save:data:to:model", (function(_this) {
           return function(data) {
             _this.contentPieceModel.set(data);
@@ -43,19 +46,34 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         return $(window).on('beforeunload', (function(_this) {
           return function() {
             var message;
-            if (_this.contentPieceModel.isNew()) {
-              message = 'You are in the middle of creating a new content piece. If you reload the page your changes will be lost.';
-            } else {
-              _this.view.triggerMethod('save:question:settings');
-              if ((!_this.view.$el.find('form').valid()) || $('form input[name="complete"]').val() === 'false') {
-                message = 'Error occured saving your content. Some content may be lost if you refresh.';
-              } else {
-                message = 'All changes are saved successfully.';
-              }
-            }
+            message = _this._beforeChangeContentPiece();
             return message;
           };
         })(this));
+      };
+
+      OptionsBarController.prototype._saveBeforeUnload = function(nextID) {
+        var msg;
+        msg = this._beforeChangeContentPiece();
+        msg += " Are you sure you want to leave this question?";
+        if (confirm(msg)) {
+          return App.navigate("edit-content/" + nextID, true);
+        }
+      };
+
+      OptionsBarController.prototype._beforeChangeContentPiece = function() {
+        var message;
+        if (this.contentPieceModel.isNew()) {
+          message = 'You are in the middle of creating a new content piece. If you reload the page your changes will be lost.';
+        } else {
+          this.view.triggerMethod('save:question:settings');
+          if ((!this.view.$el.find('form').valid()) || $('form input[name="complete"]').val() === 'false') {
+            message = 'Error occured saving your content. Some content may be lost if you refresh.';
+          } else {
+            message = 'All changes are saved successfully.';
+          }
+        }
+        return message;
       };
 
       OptionsBarController.prototype.showView = function() {

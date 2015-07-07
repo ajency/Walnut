@@ -15,6 +15,9 @@ define ['app'
 
                 App.execute "when:fetched", [@textbooksCollection, @contentPieceModel], @showView
 
+                @listenTo @region, "change:content:piece",@_saveBeforeUnload
+
+
                 @listenTo @view, "save:data:to:model", (data)=>
                     @contentPieceModel.set data
                     App.execute "save:question"
@@ -27,18 +30,26 @@ define ['app'
 
 
                 $(window).on 'beforeunload', =>
-
-                    if @contentPieceModel.isNew()
-                        message = 'You are in the middle of creating a new content piece. 
-                                If you reload the page your changes will be lost.'
-                    else
-                        @view.triggerMethod 'save:question:settings'
-                        if (not @view.$el.find('form').valid()) or $('form input[name="complete"]').val() is 'false'
-                            message = 'Error occured saving your content. Some content may be lost if you refresh.'
-                        else
-                            message = 'All changes are saved successfully.'
-
+                    message = @_beforeChangeContentPiece()
                     return message
+
+            _saveBeforeUnload:(nextID)=>
+                msg= @_beforeChangeContentPiece()
+                msg += " Are you sure you want to leave this question?"
+                App.navigate "edit-content/#{nextID}",true if confirm msg
+
+            _beforeChangeContentPiece:=>
+                if @contentPieceModel.isNew()
+                    message = 'You are in the middle of creating a new content piece.
+                            If you reload the page your changes will be lost.'
+                else
+                    @view.triggerMethod 'save:question:settings'
+                    if (not @view.$el.find('form').valid()) or $('form input[name="complete"]').val() is 'false'
+                        message = 'Error occured saving your content. Some content may be lost if you refresh.'
+                    else
+                        message = 'All changes are saved successfully.'
+
+                message
 
 
             showView: =>

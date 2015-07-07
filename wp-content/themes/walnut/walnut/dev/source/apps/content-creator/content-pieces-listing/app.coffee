@@ -38,7 +38,7 @@ define ['app'
                     modelsFetch.done (resp)=>
                         @contentPiecesCollection.add resp.items
                         @contentPiecesCollection.sort()
-                        
+
                         if direction is 'next'
                             items= (@contentPiecesCollection.models).slice @currentIndex, @currentIndex+12
                         else
@@ -50,7 +50,7 @@ define ['app'
 
                         collection = App.request "empty:content:pieces:collection"
                         collection.reset items
-                        @defer.resolve collection 
+                        @defer.resolve collection
                 else
                     collection = App.request "empty:content:pieces:collection"
                     collection.reset models
@@ -62,17 +62,17 @@ define ['app'
 
                 @deferAJAX = $.Deferred()
 
-                data= 
+                data=
                     'action'    : 'get-adjacent-content-pieces'
                     'ID'        : fromID
                     'direction' : direction
 
                 $.get AJAXURL, data
-                .done (resp)=>  
+                .done (resp)=>
                     @deferAJAX.resolve resp
-                
+
                 @deferAJAX.promise()
-                
+
             _showViews:(collection)=>
                 collection.comparator = 'post_modified'
                 collection.sort()
@@ -82,29 +82,23 @@ define ['app'
 
                 @show @view
 
-                @listenTo @view, "itemview:change:content:piece", (iv,model)=>  
+                @listenTo @view, "itemview:change:content:piece", (iv,model)=>
                     @contentPieceModel = model
                     iv.model.set 'isActive':true
-                    App.navigate "edit-content/#{model.id}", true
-                    #@region.trigger 'change:content:piece', model
+                    @region.trigger 'change:content:piece', model.id
 
-                @listenTo @view, "change:content:piece", (direction)=>     
+                @listenTo @view, "change:content:piece", (direction)=>
                     currentIndex = _.indexOf @contentPiecesCollection.models, @contentPiecesCollection.get @contentPieceModel.id
                     nextIndex = if direction is 'next' then currentIndex+1 else currentIndex-1
                     model = @contentPiecesCollection.at nextIndex
-                    console.log model
-                    console.log 'testing change content piece'
 
                     if model
-                        #model.set 'isActive':true
-                        #@contentPieceModel = model
-                        App.navigate "edit-content/#{model.id}", true
-                        #@region.trigger 'change:content:piece', model
-                    else                        
+                        @region.trigger 'change:content:piece', model.id
+                    else
                         getItems= @_getMoreItems @contentPieceModel.id,direction
-                        getItems.done (resp)->
-                            if resp.items.length > 0 
-                                App.navigate "edit-content/#{resp.items[0].ID}", true
+                        getItems.done (resp)=>
+                            if resp.items.length > 0
+                                @region.trigger 'change:content:piece', resp.items[0].ID
 
 
                 @listenTo @view, "browse:more", @_browseMore

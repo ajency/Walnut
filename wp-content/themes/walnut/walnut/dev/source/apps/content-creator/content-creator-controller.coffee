@@ -51,10 +51,8 @@ define ['app'
 
 				@listenTo @layout.optionsBarRegion, 'close:grading:parameter', @_closeGradingParameter
 
-				@listenTo @layout.contentPiecesListRegion, 'change:content:piece', (model)=>
-					App.navigate "edit-content/#{model.id}"
-					@contentPieceModel = model
-					@_showViews()
+				@listenTo @layout.contentPiecesListRegion, 'change:content:piece',(nextID) =>
+					@layout.optionsBarRegion.trigger "change:content:piece", nextID
 
 				# show the layout
 				App.execute "when:fetched", @contentPieceModel, =>

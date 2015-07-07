@@ -103,7 +103,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
             iv.model.set({
               'isActive': true
             });
-            return App.navigate("edit-content/" + model.id, true);
+            return _this.region.trigger('change:content:piece', model.id);
           };
         })(this));
         this.listenTo(this.view, "change:content:piece", (function(_this) {
@@ -112,15 +112,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
             currentIndex = _.indexOf(_this.contentPiecesCollection.models, _this.contentPiecesCollection.get(_this.contentPieceModel.id));
             nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
             model = _this.contentPiecesCollection.at(nextIndex);
-            console.log(model);
-            console.log('testing change content piece');
             if (model) {
-              return App.navigate("edit-content/" + model.id, true);
+              return _this.region.trigger('change:content:piece', model.id);
             } else {
               getItems = _this._getMoreItems(_this.contentPieceModel.id, direction);
               return getItems.done(function(resp) {
                 if (resp.items.length > 0) {
-                  return App.navigate("edit-content/" + resp.items[0].ID, true);
+                  return _this.region.trigger('change:content:piece', resp.items[0].ID);
                 }
               });
             }
