@@ -9,7 +9,7 @@ define ['app'
             initialize: (options)->
                 {@contentPieceModel}= options
                 @contentPiecesCollection = App.request "empty:content:pieces:collection"
-                @contentPiecesCollection.comparator = 'post_modified'
+                @contentPiecesCollection.comparator = 'ID'
                 @contentPiecesCollection.fetch_next = true
                 @contentPiecesCollection.fetch_prev = true
                 fetchModels = @_getModels @contentPieceModel.id
@@ -20,16 +20,15 @@ define ['app'
                 @defer = $.Deferred()
 
                 models = @contentPiecesCollection.models;
-                @currentIndex = 0
 
                 if not _.isEmpty models
-                    @currentIndex = _.indexOf @contentPiecesCollection.models, @contentPiecesCollection.get fromID
+                    currentIndex = _.indexOf @contentPiecesCollection.models, @contentPiecesCollection.get fromID
                     if direction is 'next'
-                        @currentIndex++
-                        models= (@contentPiecesCollection.models).slice @currentIndex, @currentIndex+12
+                        currentIndex++
+                        models= (@contentPiecesCollection.models).slice currentIndex, currentIndex+12
                     else
-                        @currentIndex=@currentIndex-12
-                        models= (@contentPiecesCollection.models).slice @currentIndex, @currentIndex+12
+                        currentIndex=currentIndex-12
+                        models= (@contentPiecesCollection.models).slice currentIndex, currentIndex+12
 
 
                 if models.length<12 and @contentPiecesCollection["fetch_#{direction}"]
@@ -37,13 +36,16 @@ define ['app'
                     modelsFetch = @_getMoreItems fromID, direction
                     modelsFetch.done (resp)=>
                         @contentPiecesCollection.add resp.items
+                        @contentPiecesCollection.comparator = 'ID'
                         @contentPiecesCollection.sort()
 
+                        currentIndex = _.indexOf @contentPiecesCollection.models, @contentPiecesCollection.get fromID
+
                         if direction is 'next'
-                            items= (@contentPiecesCollection.models).slice @currentIndex, @currentIndex+12
+                            items= (@contentPiecesCollection.models).slice currentIndex, currentIndex+12
                         else
-                            @currentIndex=@currentIndex-12
-                            items= (@contentPiecesCollection.models).slice @currentIndex, @currentIndex+12
+                            currentIndex=currentIndex-12
+                            items= (@contentPiecesCollection.models).slice currentIndex, currentIndex+12
 
                         if resp.status is 'over'
                             @contentPiecesCollection["fetch_#{direction}"]=false
@@ -74,7 +76,7 @@ define ['app'
                 @deferAJAX.promise()
 
             _showViews:(collection)=>
-                collection.comparator = 'post_modified'
+                collection.comparator = 'ID'
                 collection.sort()
                 @view = new ContentPieces.Views.ContentPieces
                         model: @contentPieceModel

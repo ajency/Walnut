@@ -34,7 +34,9 @@ define ['app'], (App)->
 			template: '<div class="col-md-12">
 						<div class="browse-thru none">
 							<div class="row">
-								<h4>Navigate between editable content pieces</h4>
+								<h4>Navigate between editable content pieces <br>
+									<span id="textbookNames">{{&textbookNames}}</span>
+								</h4>
 								<div class="list-group" id="list-content-pieces">
 								</div>
 							</div>
@@ -81,6 +83,13 @@ define ['app'], (App)->
 				'click .next-item'		:->@trigger "change:content:piece", "next"
 				'click .browse-all'		:->@$el.find('.browse-thru').toggle()
 
+			collectionEvents:->
+				'reset':->
+					textbookNames = _.unique @collection.pluck 'textbookName'
+					chapterNames = _.unique @collection.pluck 'chapterName'
+					@$el.find '#textbookNames'
+					.html "Textbook(s): <b>#{textbookNames}</b><br>Chapter(s): <b>#{chapterNames}</b>"
+
 			itemViewOptions : (model,index)->
 				data={}
 				data.isCurrentItem = true if @model.id is model.id
@@ -91,5 +100,9 @@ define ['app'], (App)->
 				data.isStudentQuestion = if @model.get('content_type') is 'student_question' then true else false
 				data.isTeacherQuestion = if @model.get('content_type') is 'teacher_question' then true else false
 				data.isContentPiece = if @model.get('content_type') is 'content_piece' then true else false
-				
+				textbookNames = _.unique @collection.pluck 'textbookName'
+				chapterNames = _.unique @collection.pluck 'chapterName'
+				data.textbookNames =
+					"Textbook(s): <b>#{textbookNames}</b><br>
+					Chapter(s): <b>#{chapterNames}</b>"
 				data

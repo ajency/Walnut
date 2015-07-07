@@ -19,7 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
         var fetchModels;
         this.contentPieceModel = options.contentPieceModel;
         this.contentPiecesCollection = App.request("empty:content:pieces:collection");
-        this.contentPiecesCollection.comparator = 'post_modified';
+        this.contentPiecesCollection.comparator = 'ID';
         this.contentPiecesCollection.fetch_next = true;
         this.contentPiecesCollection.fetch_prev = true;
         fetchModels = this._getModels(this.contentPieceModel.id);
@@ -27,21 +27,20 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
       };
 
       ContentPiecesController.prototype._getModels = function(fromID, direction) {
-        var collection, models, modelsFetch;
+        var collection, currentIndex, models, modelsFetch;
         if (direction == null) {
           direction = 'next';
         }
         this.defer = $.Deferred();
         models = this.contentPiecesCollection.models;
-        this.currentIndex = 0;
         if (!_.isEmpty(models)) {
-          this.currentIndex = _.indexOf(this.contentPiecesCollection.models, this.contentPiecesCollection.get(fromID));
+          currentIndex = _.indexOf(this.contentPiecesCollection.models, this.contentPiecesCollection.get(fromID));
           if (direction === 'next') {
-            this.currentIndex++;
-            models = this.contentPiecesCollection.models.slice(this.currentIndex, this.currentIndex + 12);
+            currentIndex++;
+            models = this.contentPiecesCollection.models.slice(currentIndex, currentIndex + 12);
           } else {
-            this.currentIndex = this.currentIndex - 12;
-            models = this.contentPiecesCollection.models.slice(this.currentIndex, this.currentIndex + 12);
+            currentIndex = currentIndex - 12;
+            models = this.contentPiecesCollection.models.slice(currentIndex, currentIndex + 12);
           }
         }
         if (models.length < 12 && this.contentPiecesCollection["fetch_" + direction]) {
@@ -50,12 +49,14 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
             return function(resp) {
               var collection, items;
               _this.contentPiecesCollection.add(resp.items);
+              _this.contentPiecesCollection.comparator = 'ID';
               _this.contentPiecesCollection.sort();
+              currentIndex = _.indexOf(_this.contentPiecesCollection.models, _this.contentPiecesCollection.get(fromID));
               if (direction === 'next') {
-                items = _this.contentPiecesCollection.models.slice(_this.currentIndex, _this.currentIndex + 12);
+                items = _this.contentPiecesCollection.models.slice(currentIndex, currentIndex + 12);
               } else {
-                _this.currentIndex = _this.currentIndex - 12;
-                items = _this.contentPiecesCollection.models.slice(_this.currentIndex, _this.currentIndex + 12);
+                currentIndex = currentIndex - 12;
+                items = _this.contentPiecesCollection.models.slice(currentIndex, currentIndex + 12);
               }
               if (resp.status === 'over') {
                 _this.contentPiecesCollection["fetch_" + direction] = false;
@@ -90,7 +91,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
       };
 
       ContentPiecesController.prototype._showViews = function(collection) {
-        collection.comparator = 'post_modified';
+        collection.comparator = 'ID';
         collection.sort();
         this.view = new ContentPieces.Views.ContentPieces({
           model: this.contentPieceModel,
