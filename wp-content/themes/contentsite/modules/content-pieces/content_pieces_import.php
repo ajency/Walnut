@@ -13,19 +13,19 @@ add_filter('add_csv_components_filter','theme_add_csv_components',10,1);
 
 function import_csv_mcq_record($import_response,$record){
 
-      $data= mcq_import_convert_record_to_dataset($record); 
+      $data= mcq_import_convert_record_to_dataset($record);
       $validation = mcq_import_validate_data($data);
 
       if($validation['is_valid'])
       {
           import_content_piece($data);
-      } 
+      }
 
       $import_response['imported'] = $validation['is_valid'];
-  
+
       if(!$validation['is_valid'])
           $import_response['reason'] = $validation['reason'];
-  
+
       return $import_response;
  }
 
@@ -40,7 +40,7 @@ function mcq_import_convert_record_to_dataset($record){
 
       $section = $record[3];
       $sectionArray = explode(",",$section);
-    
+
      $data=array(
         'question'      => $record[0],
         'textbook'      => $record[1],
@@ -64,36 +64,36 @@ function mcq_import_convert_record_to_dataset($record){
         if(!empty($record[$optCol])){
             $data['options'][]=array(
                                 'option'=> $record[$optCol],
-                                'mark'=> $$record[$optCol+1]   
+                                'mark'=> $record[$optCol+1]
                               );
           }
     }
 
     if(!$data['columns']) $data['columns']=2;
-    
+
     if(!$data['duration']) $data['duration']=1;
-    
+
     $data['multiple']= (strtolower($data['multiple'])=='yes')?'true':'false';
-    
+
     return $data;
- 
+
 }
 
 function mcq_import_validate_data($record)
 {
       $validation= array();
-      
+
       $validation['is_valid']=true;
       $validation['reason']=array();
 
-      if(sizeof($record['options']) <= 2 )
+      if(sizeof($record['options']) < 2 )
       {
               $validation['is_valid']=false;
               $validation['reason'][] ='please enter at least two options.';
       }
 
-     
-      if( (int)$record['totalmarks'] <= 1 )
+
+      if( (int)$record['totalmarks'] < 1 )
       {
               $validation['is_valid']=false;
               $validation['reason'][] ='total marks should be greater than or equal to one';
@@ -126,7 +126,7 @@ function mcq_import_validate_data($record)
      $validation['reason'] = implode(" ",$validation['reason']);
 
      return $validation;
-  
+
 }
 
 function import_content_piece($record)
@@ -152,7 +152,7 @@ function get_question_text_id($record)
              );
         $question_text_id = save_content_element($data);
 
-        return $question_text_id;   
+        return $question_text_id;
 }
 
 function get_mcq_outline_id($record)
@@ -177,18 +177,18 @@ function get_mcq_outline_id($record)
                 $singleOptionArray['text'] = $arr['option'];
                 array_push($optionArray,$singleOptionArray);
             }
-        }    
+        }
 
         $data['optioncount'] = $count;
 
         $data['columncount'] = $record['columns'];
 
         $data['options'] = $optionArray;
-        
+
         $correct = $record['correct'];
         $correctArray = explode(",",$correct);
 
-        $data['marks'] = $record['totalmarks']; 
+        $data['marks'] = $record['totalmarks'];
         $data['multiple'] = $record['multiple'];
         $data['correct_answer'] = $correctArray;
         $data['bottom_margin'] = '';
@@ -198,13 +198,13 @@ function get_mcq_outline_id($record)
 
         $mcq_layout_id = save_content_element($data);
         return  $mcq_layout_id;
-        
+
 }
 
 function content_layout($question_text_id,$mcq_outline_id,$record)
 {
         $question_text_id = (array)$question_text_id;
-        $mcq_outline_id = (array)$mcq_outline_id; 
+        $mcq_outline_id = (array)$mcq_outline_id;
         $data = array($mcq_outline_id);
 
         $options_layout = array();
@@ -216,7 +216,7 @@ function content_layout($question_text_id,$mcq_outline_id,$record)
                 $data['style'] = '';
                 $data['draggable'] = 'true';
                 $data['element'] = 'Text';
-                $data['content'] = $arr['option']; 
+                $data['content'] = $arr['option'];
                 $data['bottom_margin'] = '';
                 $data['top_margin']   = '';
                 $data['left_margin']  = '';
@@ -231,7 +231,7 @@ function content_layout($question_text_id,$mcq_outline_id,$record)
                 array_push($options_layout,$layout);
            }
         }
-        
+
         $content_layout = array();
         $content_layout[0] = array('element' => 'Text','meta_id'=> $question_text_id[0]);
         $content_layout[1] = array('element' => 'Mcq','meta_id'=> $mcq_outline_id[0],'elements'=>$options_layout);
@@ -257,12 +257,8 @@ function content_layout($question_text_id,$mcq_outline_id,$record)
                      );
         $data['hint_enable'] = (!empty($data['hint']))?'true':'false';
 
-        $data['comment_enable'] = (!empty($data['comment']))?'true':'false';  
+        $data['comment_enable'] = (!empty($data['comment']))?'true':'false';
         $data['json'] = $content_layout;
         save_content_piece($data);
-        
+
 }
-
-
-
-
