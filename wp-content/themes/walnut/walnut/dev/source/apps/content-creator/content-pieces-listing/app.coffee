@@ -84,7 +84,6 @@ define ['app'
 
                 @listenTo @view, "itemview:change:content:piece", (iv,model)=>
                     @contentPieceModel = model
-                    iv.model.set 'isActive':true
                     @region.trigger 'change:content:piece', model.id
 
                 @listenTo @view, "change:content:piece", (direction)=>

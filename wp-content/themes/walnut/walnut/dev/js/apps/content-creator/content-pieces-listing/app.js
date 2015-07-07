@@ -100,9 +100,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
         this.listenTo(this.view, "itemview:change:content:piece", (function(_this) {
           return function(iv, model) {
             _this.contentPieceModel = model;
-            iv.model.set({
-              'isActive': true
-            });
             return _this.region.trigger('change:content:piece', model.id);
           };
         })(this));
