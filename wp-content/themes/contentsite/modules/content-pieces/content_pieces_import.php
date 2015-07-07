@@ -195,6 +195,7 @@ function get_mcq_outline_id($record)
         $data['top_margin'] = '';
         $data['left_margin'] = '';
         $data['right_margin'] = '';
+        $data['complete'] = 'true';
 
         $mcq_layout_id = save_content_element($data);
         return  $mcq_layout_id;
