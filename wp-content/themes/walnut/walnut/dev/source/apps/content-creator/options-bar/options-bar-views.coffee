@@ -18,7 +18,7 @@ define ['app',
 
 				'change #qType'           : '_changeOfQuestionType'
 
-				'click #save-question'    : 'saveQuestionSettings'
+				'click #save-question'    : 'onSaveQuestionSettings'
 
 				'click #preview-question' : 'previewQuestion'
 
@@ -152,7 +152,7 @@ define ['app',
 				else
 					@trigger 'close:grading:parameter'
 
-			saveQuestionSettings:->
+			onSaveQuestionSettings:->
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
 					@trigger "save:data:to:model", data

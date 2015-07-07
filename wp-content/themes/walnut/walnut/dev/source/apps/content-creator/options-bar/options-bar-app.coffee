@@ -26,6 +26,19 @@ define ['app'
                     @region.trigger 'close:grading:parameter'
 
 
+                $(window).on 'beforeunload', =>
+
+                    if @contentPieceModel.isNew()
+                        message = 'You are in the middle of creating a new content piece. 
+                                If you reload the page your changes will be lost.'
+                    else
+                        @view.triggerMethod 'save:question:settings'
+                        if (not @view.$el.find('form').valid()) or $('form input[name="complete"]').val() is 'false'
+                            message = 'Error occured saving your content. Some content may be lost if you refresh.'
+                        else
+                            message = 'All changes are saved successfully.'
+
+                    return message
 
 
             showView: =>

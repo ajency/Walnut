@@ -26,7 +26,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           return this.trigger("fetch:subsections", $(e.target).val());
         },
         'change #qType': '_changeOfQuestionType',
-        'click #save-question': 'saveQuestionSettings',
+        'click #save-question': 'onSaveQuestionSettings',
         'click #preview-question': 'previewQuestion',
         'click #close-content-creator': function() {
           return bootbox.confirm('Are you sure you want to close the content creator? Caution: Unsaved content will be lost.', function(result) {
@@ -154,7 +154,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         }
       };
 
-      OptionsBarView.prototype.saveQuestionSettings = function() {
+      OptionsBarView.prototype.onSaveQuestionSettings = function() {
         var data, eleID, firstErr;
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);

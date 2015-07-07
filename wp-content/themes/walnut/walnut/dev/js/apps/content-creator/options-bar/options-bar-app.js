@@ -35,9 +35,25 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
             return _this.region.trigger('show:grading:parameter');
           };
         })(this));
-        return this.listenTo(this.view, 'close:grading:parameter', (function(_this) {
+        this.listenTo(this.view, 'close:grading:parameter', (function(_this) {
           return function() {
             return _this.region.trigger('close:grading:parameter');
+          };
+        })(this));
+        return $(window).on('beforeunload', (function(_this) {
+          return function() {
+            var message;
+            if (_this.contentPieceModel.isNew()) {
+              message = 'You are in the middle of creating a new content piece. If you reload the page your changes will be lost.';
+            } else {
+              _this.view.triggerMethod('save:question:settings');
+              if ((!_this.view.$el.find('form').valid()) || $('form input[name="complete"]').val() === 'false') {
+                message = 'Error occured saving your content. Some content may be lost if you refresh.';
+              } else {
+                message = 'All changes are saved successfully.';
+              }
+            }
+            return message;
           };
         })(this));
       };
