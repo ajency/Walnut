@@ -11,7 +11,7 @@ define(['app'], function(App) {
         return ContentPiecesIV.__super__.constructor.apply(this, arguments);
       }
 
-      ContentPiecesIV.prototype.template = '{{&excerpt}}<br> <label class="form-label list-group-item-text"> {{textbookName}} | {{chapterName}} | {{contentType}} </label> <label>Last Modified: {{date_modified}}</label>';
+      ContentPiecesIV.prototype.template = '{{&excerpt}}<br> <label class="form-label list-group-item-text"> {{contentType}} </label>';
 
       ContentPiecesIV.prototype.className = 'col-md-2 list-group-item browse-content-pieces-item';
 
@@ -57,7 +57,7 @@ define(['app'], function(App) {
         return ContentPieces.__super__.constructor.apply(this, arguments);
       }
 
-      ContentPieces.prototype.template = '<div class="col-md-12"> <div class="browse-thru none"> <div class="row"> <h4>Navigate between editable content pieces <br> <span id="textbookNames">{{&textbookNames}}</span> </h4> <div class="list-group" id="list-content-pieces"> </div> </div> <div class="row"> <div class"col-md-10"> <a class="pull-left btn btn-default browse-prev"><i class="fa fa-backward"></i> Browse Previous</a> <a class="pull-right btn btn-default browse-next"><i class="fa fa-forward"></i> Browse Next</a> </div> </div> </div> <div class="row m-t-20"> <div class="col-md-8"> {{#isTeacherQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br> <small>Create questions for training module to be taken during the class</small></h3> {{/isTeacherQuestion}} {{#isContentPiece}} <h3 class="m-t-0">Create <span class="semi-bold">Content</span><br> <small>Create content for training modules. This will not have any student interaction like teacher question</small></h3> {{/isContentPiece}} {{#isStudentQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br> <small>Create questions for quizzes to be taken by the students</small></h3> {{/isStudentQuestion}} </div> <div class="pull-right md-col-4"> <a class="btn btn-default previous-item"><i class="fa fa-backward"></i> Previous Question</a> <a class="btn btn-default next-item"><i class="fa fa-forward"></i> Next Question</a> <a class="btn btn-default browse-all">Browse</a> </div> </div> </div>';
+      ContentPieces.prototype.template = '<div class="col-md-12"> <div class="browse-thru none"> <div class="row"> <h4>Navigate between editable content pieces: <span class="m-l-10" id="textbookNames">{{&textbookNames}}</span> </h4> <div class="list-group" id="list-content-pieces"> </div> </div> <div class="row"> <div class"col-md-10"> <a class="pull-left btn btn-default browse-prev"><i class="fa fa-backward"></i> Browse Previous</a> <a class="pull-right btn btn-default browse-next"><i class="fa fa-forward"></i> Browse Next</a> </div> </div> </div> <div class="row m-t-20"> <div class="col-md-8"> {{#isTeacherQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Teacher</span> Question<br> <small>Create questions for training module to be taken during the class</small></h3> {{/isTeacherQuestion}} {{#isContentPiece}} <h3 class="m-t-0">Create <span class="semi-bold">Content</span><br> <small>Create content for training modules. This will not have any student interaction like teacher question</small></h3> {{/isContentPiece}} {{#isStudentQuestion}} <h3 class="m-t-0">Create a <span class="semi-bold">Student</span> Question<br> <small>Create questions for quizzes to be taken by the students</small></h3> {{/isStudentQuestion}} </div> <div class="pull-right md-col-4"> <a class="btn btn-default previous-item"><i class="fa fa-backward"></i> Previous Question</a> <a class="btn btn-default next-item"><i class="fa fa-forward"></i> Next Question</a> <a class="btn btn-default browse-all">Browse</a> </div> </div> </div>';
 
       ContentPieces.prototype.className = 'row m-b-20';
 
@@ -91,7 +91,7 @@ define(['app'], function(App) {
             var chapterNames, textbookNames;
             textbookNames = _.unique(this.collection.pluck('textbookName'));
             chapterNames = _.unique(this.collection.pluck('chapterName'));
-            return this.$el.find('#textbookNames').html("Textbook(s): <b>" + textbookNames + "</b><br>Chapter(s): <b>" + chapterNames + "</b>");
+            return this.$el.find('#textbookNames').html("Textbook: <b>" + textbookNames + "</b> | Chapter: <b>" + chapterNames + "</b>");
           }
         };
       };
@@ -113,7 +113,7 @@ define(['app'], function(App) {
         data.isContentPiece = this.model.get('content_type') === 'content_piece' ? true : false;
         textbookNames = _.unique(this.collection.pluck('textbookName'));
         chapterNames = _.unique(this.collection.pluck('chapterName'));
-        data.textbookNames = "Textbook(s): <b>" + textbookNames + "</b><br> Chapter(s): <b>" + chapterNames + "</b>";
+        data.textbookNames = "Textbook: <b>" + textbookNames + "</b> | Chapter: <b>" + chapterNames + "</b>";
         return data;
       };
 

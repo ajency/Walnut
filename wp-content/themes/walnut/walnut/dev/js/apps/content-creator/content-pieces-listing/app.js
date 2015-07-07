@@ -91,8 +91,19 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
       };
 
       ContentPiecesController.prototype._showViews = function(collection) {
+        var models;
         collection.comparator = 'ID';
         collection.sort();
+        this.textbookName = collection.first().get('textbookName');
+        this.chapterName = collection.first().get('chapterName');
+        models = collection.filter((function(_this) {
+          return function(model) {
+            if (model.get('textbookName') === _this.textbookName && model.get('chapterName') === _this.chapterName) {
+              return model;
+            }
+          };
+        })(this));
+        collection.reset(models);
         this.view = new ContentPieces.Views.ContentPieces({
           model: this.contentPieceModel,
           collection: collection
@@ -131,8 +142,16 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
         fetchModels = this._getModels(fromModel.id, direction);
         return fetchModels.done((function(_this) {
           return function(collection) {
-            if (collection.length > 0) {
-              return _this.view.collection.reset(collection.models);
+            var models;
+            _this.textbookName = collection.first().get('textbookName');
+            _this.chapterName = collection.first().get('chapterName');
+            models = collection.filter(function(model) {
+              if (model.get('textbookName') === _this.textbookName && model.get('chapterName') === _this.chapterName) {
+                return model;
+              }
+            });
+            if (models.length > 0) {
+              return _this.view.collection.reset(models);
             }
           };
         })(this));

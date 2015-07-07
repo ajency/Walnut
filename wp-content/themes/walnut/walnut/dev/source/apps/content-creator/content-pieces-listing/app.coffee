@@ -78,6 +78,15 @@ define ['app'
             _showViews:(collection)=>
                 collection.comparator = 'ID'
                 collection.sort()
+
+                @textbookName = collection.first().get 'textbookName'
+                @chapterName = collection.first().get 'chapterName'
+
+                models = collection.filter (model)=>
+                            return model if model.get('textbookName') is @textbookName and model.get('chapterName') is @chapterName
+
+                collection.reset models
+
                 @view = new ContentPieces.Views.ContentPieces
                         model: @contentPieceModel
                         collection: collection
@@ -108,7 +117,13 @@ define ['app'
                 fromModel = if direction is 'next' then @view.collection.last() else @view.collection.first()
                 fetchModels = @_getModels fromModel.id, direction
                 fetchModels.done (collection)=>
-                    @view.collection.reset collection.models if collection.length >0
+                    @textbookName = collection.first().get 'textbookName'
+                    @chapterName = collection.first().get 'chapterName'
+
+                    models = collection.filter (model)=>
+                                return model if model.get('textbookName') is @textbookName and model.get('chapterName') is @chapterName
+
+                    @view.collection.reset models if models.length >0
 
         App.commands.setHandler "show:content:creator:pieces:listing", (options)->
             new ContentPiecesController options

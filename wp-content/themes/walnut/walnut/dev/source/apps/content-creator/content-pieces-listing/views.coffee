@@ -5,9 +5,8 @@ define ['app'], (App)->
 
 			template: '{{&excerpt}}<br>
 						<label class="form-label list-group-item-text">
-							{{textbookName}} | {{chapterName}} | {{contentType}}
-						</label>
-						<label>Last Modified: {{date_modified}}</label>'
+							{{contentType}}
+						</label>'
 
 			className: 'col-md-2 list-group-item browse-content-pieces-item'
 			tagName: 'a'
@@ -34,8 +33,8 @@ define ['app'], (App)->
 			template: '<div class="col-md-12">
 						<div class="browse-thru none">
 							<div class="row">
-								<h4>Navigate between editable content pieces <br>
-									<span id="textbookNames">{{&textbookNames}}</span>
+								<h4>Navigate between editable content pieces:
+									<span class="m-l-10" id="textbookNames">{{&textbookNames}}</span>
 								</h4>
 								<div class="list-group" id="list-content-pieces">
 								</div>
@@ -88,7 +87,7 @@ define ['app'], (App)->
 					textbookNames = _.unique @collection.pluck 'textbookName'
 					chapterNames = _.unique @collection.pluck 'chapterName'
 					@$el.find '#textbookNames'
-					.html "Textbook(s): <b>#{textbookNames}</b><br>Chapter(s): <b>#{chapterNames}</b>"
+					.html "Textbook: <b>#{textbookNames}</b> | Chapter: <b>#{chapterNames}</b>"
 
 			itemViewOptions : (model,index)->
 				data={}
@@ -103,6 +102,6 @@ define ['app'], (App)->
 				textbookNames = _.unique @collection.pluck 'textbookName'
 				chapterNames = _.unique @collection.pluck 'chapterName'
 				data.textbookNames =
-					"Textbook(s): <b>#{textbookNames}</b><br>
-					Chapter(s): <b>#{chapterNames}</b>"
+					"Textbook: <b>#{textbookNames}</b> |
+					Chapter: <b>#{chapterNames}</b>"
 				data
