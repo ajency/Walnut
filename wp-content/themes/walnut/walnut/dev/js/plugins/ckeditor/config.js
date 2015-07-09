@@ -52,7 +52,7 @@ CKEDITOR.editorConfig = function( config ) {
                         '/'
                     ,
                         {name: 'styles',
-                        items: [ 'Styles',  'Font', 'FontSize' ] }
+                        items: [ 'Styles',  'Font','FontAwesome', 'FontSize' ] }
                     ,
                         {name: 'colors',
                         items: [ 'TextColor', 'BGColor' ] }
@@ -86,11 +86,13 @@ CKEDITOR.editorConfig = function( config ) {
     for (i in fontsArray) font_names.push(fontsArray[i].trim());
 
     config.font_names= font_names.sort().join(';');
-    
+
     config.fontSize_defaultLabel = '22';
     config.font_defaultLabel = 'Qarmic Sans Free';
-    config.contentsCss
+
+	config.extraPlugins = 'fontawesome';
+	config.contentsCss = 'fontawesome/css/font-awesome.min.css';
+	config.allowedContent = true;
 };
 
 CKEDITOR.addCss( '.cke_editable { font-family: "Qarmic Sans Free" }' );
-

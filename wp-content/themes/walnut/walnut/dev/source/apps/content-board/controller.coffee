@@ -35,11 +35,14 @@ define ['app'
 					# 	shadowSides : 0.8
 					# 	shadowFlip : 0.7
 					# 	direction: @direction
-						
+
 					fillElements = @startFillingElements()
+					@view.$el.find '.cke_widget_drag_handler_container'
+					.remove()
+
 					fillElements.done =>
 						setTimeout ->
-						
+
 							$('#loading-content-board').remove()
 							$('#question-area').removeClass 'vHidden'
 							# $('.bb-bookblock').bookblock 'jump',2
