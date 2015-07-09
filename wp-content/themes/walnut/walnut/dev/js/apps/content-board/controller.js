@@ -80,12 +80,6 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
                 return itemsDeferred.resolve();
               });
             } else {
-              if (element.element === 'Audio' && _this.view.model.get('autoplay_audio')) {
-                element.autoplay = true;
-              }
-              if (element.element === 'Video' && _this.view.model.get('autoplay_video')) {
-                element.autoplay = true;
-              }
               App.request("add:new:element", container, element.element, element);
               itemsDeferred.resolve();
             }
@@ -118,12 +112,6 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
                   return nestedDef.resolve();
                 });
               } else {
-                if (ele.element === 'Audio' && _this.view.model.get('autoplay_audio')) {
-                  ele.autoplay = true;
-                }
-                if (ele.element === 'Video' && _this.view.model.get('autoplay_video')) {
-                  ele.autoplay = true;
-                }
                 App.request("add:new:element", container, ele.element, ele);
                 return nestedDef.resolve();
               }

@@ -17,6 +17,9 @@ define(['app'], function(App) {
       AudioView.prototype.mixinTemplateHelpers = function(data) {
         var arrays, audioArray;
         data = AudioView.__super__.mixinTemplateHelpers.call(this, data);
+        this.model.set({
+          'autoplay': _.toBool(this.model.get('autoplay'))
+        });
         if (this.model.get('audio_ids').length) {
           arrays = _.zip(this.model.get('title'), this.model.get('audioUrls'));
           audioArray = new Array();

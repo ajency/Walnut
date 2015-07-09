@@ -25,6 +25,9 @@ define(['app'], function(App) {
         if (!this.model.get('video_ids').length) {
           return;
         }
+        this.model.set({
+          'autoplay': _.toBool(this.model.get('autoplay'))
+        });
         this.videos = this.model.get('videoUrls');
         this.index = 0;
         this.$el.find('video').on('ended', (function(_this) {
@@ -91,16 +94,32 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._addVideoElement = function(videoUrl, autoplay) {
-        var vidID;
+        var params, startTime, vidID;
         if (autoplay == null) {
           autoplay = false;
         }
         this.$el.find('.videoContainer').empty();
         if (_.str.contains(videoUrl, 'youtube.com')) {
           autoplay = autoplay ? 1 : 0;
+          params = "&autoplay=" + autoplay;
+          startTime = this.model.get('startTime') ? this.model.get('startTime') : 0;
+          params += "&start=" + startTime;
+          if (this.model.get('endTime') && this.model.get('endTime') !== '0') {
+            params += "&end=" + this.model.get('endTime');
+          }
           vidID = _.str.strRightBack(videoUrl, '?v=');
-          return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0&autoplay=' + autoplay + '" frameborder="0"> </iframe></div>');
+          return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0' + params + '" frameborder="0"> </iframe></div>');
         } else {
+          videoUrl += "#t=";
+          if (this.model.get('startTime')) {
+            videoUrl += this.model.get('startTime');
+          } else {
+            videoUrl += 0;
+          }
+          if (this.model.get('endTime') && this.model.get('endTime') !== '0') {
+            videoUrl += "," + this.model.get('endTime');
+          }
+          console.log(videoUrl);
           this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
           this.$el.find('video')[0].load();
           if (autoplay) {

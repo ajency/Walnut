@@ -6,7 +6,7 @@ define ['app'
 ], (App, RegionController)->
 
 	#used for preview of content pieces and taking of quiz/teaching-module
-	
+
 	App.module "ContentPreview.ContentBoard", (ContentBoard, App, Backbone, Marionette, $, _)->
 		class ContentBoard.Controller extends RegionController
 
@@ -20,13 +20,13 @@ define ['app'
 
 				@listenTo @view, "add:new:element", (container, type)->
 					App.request "add:new:element", container, type
-					
-				@listenTo @view, "close", => 
+
+				@listenTo @view, "close", =>
 					audioEls = @view.$el.find '.audio'
 					_.each audioEls,(el, ind)->
 						$(el).find '.pause'
 						.trigger 'click'
-						
+
 				@listenTo @view, 'dependencies:fetched', =>
 					# Bookblock is currently initialized only for student training.
 					# And without initialization, content (question area, feedback area) can't be seen.
@@ -79,11 +79,6 @@ define ['app'
 						nestedItems.done =>
 							itemsDeferred.resolve()
 					else
-						if element.element is 'Audio' and @view.model.get 'autoplay_audio'
-							element.autoplay = true
-						if element.element is 'Video' and @view.model.get 'autoplay_video'
-							element.autoplay = true
-
 						App.request "add:new:element", container, element.element, element
 						itemsDeferred.resolve()
 
@@ -114,11 +109,6 @@ define ['app'
 							addedElement.done =>
 								nestedDef.resolve()
 						else
-							if ele.element is 'Audio' and @view.model.get 'autoplay_audio'
-								ele.autoplay = true
-							if ele.element is 'Video' and @view.model.get 'autoplay_video'
-								ele.autoplay = true
-
 							App.request "add:new:element", container, ele.element, ele
 							nestedDef.resolve()
 

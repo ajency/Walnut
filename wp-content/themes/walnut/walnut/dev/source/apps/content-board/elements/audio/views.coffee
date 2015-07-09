@@ -21,7 +21,7 @@ define ['app'], (App)->
             # override serializeData to set holder property for the view
             mixinTemplateHelpers: (data)->
                 data = super data
-
+                @model.set 'autoplay': _.toBool @model.get 'autoplay'
                 if @model.get('audio_ids').length
 #                    arrayz = ['http://html.cerchez.com/rockstar/tmp/preview1.mp3',
 #                              'http://html.cerchez.com/rockstar/tmp/preview2.mp3']
