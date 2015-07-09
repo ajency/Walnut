@@ -1,8 +1,9 @@
 define ['app'
         'controllers/region-controller'
+        'bootbox'
         'apps/content-creator/options-bar/options-bar-views'
 
-], (App, RegionController)->
+], (App, RegionController,bootbox)->
     App.module "ContentCreator.OptionsBar", (OptionsBar, App, Backbone, Marionette, $, _)->
         class OptionsBarController extends RegionController
 
@@ -15,7 +16,7 @@ define ['app'
 
                 App.execute "when:fetched", [@textbooksCollection, @contentPieceModel], @showView
 
-                @listenTo @region, "change:content:piece",@_saveBeforeUnload
+                @listenTo @region, "change:content:piece",@_beforeChangeContentPiece
 
 
                 @listenTo @view, "save:data:to:model", (data)=>
@@ -28,28 +29,16 @@ define ['app'
                 @listenTo @view, 'close:grading:parameter',()=>
                     @region.trigger 'close:grading:parameter'
 
-
-                $(window).on 'beforeunload', =>
-                    message = @_beforeChangeContentPiece()
-                    return message
-
-            _saveBeforeUnload:(nextID)=>
-                msg= @_beforeChangeContentPiece()
-                msg += " Are you sure you want to leave this question?"
-                App.navigate "edit-content/#{nextID}",true if confirm msg
-
-            _beforeChangeContentPiece:=>
+            _beforeChangeContentPiece:(nextID)=>
                 if @contentPieceModel.isNew()
                     message = 'You are in the middle of creating a new content piece.
                             If you reload the page your changes will be lost.'
                 else
                     @view.triggerMethod 'save:question:settings'
                     if (not @view.$el.find('form').valid()) or $('form input[name="complete"]').val() is 'false'
-                        message = 'Error occured saving your content. Some content may be lost if you refresh.'
+                        bootbox.alert 'Error occured saving your content'
                     else
-                        message = 'All changes are saved successfully.'
-
-                message
+                        App.navigate "edit-content/#{nextID}", true
 
 
             showView: =>

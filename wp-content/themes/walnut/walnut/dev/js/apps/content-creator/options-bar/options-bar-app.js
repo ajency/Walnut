@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/options-bar/options-bar-views'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator/options-bar/options-bar-views'], function(App, RegionController, bootbox) {
   return App.module("ContentCreator.OptionsBar", function(OptionsBar, App, Backbone, Marionette, $, _) {
     var OptionsBarController;
     OptionsBarController = (function(_super) {
@@ -15,7 +15,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         this._fetchChapters = __bind(this._fetchChapters, this);
         this.showView = __bind(this.showView, this);
         this._beforeChangeContentPiece = __bind(this._beforeChangeContentPiece, this);
-        this._saveBeforeUnload = __bind(this._saveBeforeUnload, this);
         return OptionsBarController.__super__.constructor.apply(this, arguments);
       }
 
@@ -26,7 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
           "fetch_all": true
         });
         App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
-        this.listenTo(this.region, "change:content:piece", this._saveBeforeUnload);
+        this.listenTo(this.region, "change:content:piece", this._beforeChangeContentPiece);
         this.listenTo(this.view, "save:data:to:model", (function(_this) {
           return function(data) {
             _this.contentPieceModel.set(data);
@@ -38,42 +37,25 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
             return _this.region.trigger('show:grading:parameter');
           };
         })(this));
-        this.listenTo(this.view, 'close:grading:parameter', (function(_this) {
+        return this.listenTo(this.view, 'close:grading:parameter', (function(_this) {
           return function() {
             return _this.region.trigger('close:grading:parameter');
           };
         })(this));
-        return $(window).on('beforeunload', (function(_this) {
-          return function() {
-            var message;
-            message = _this._beforeChangeContentPiece();
-            return message;
-          };
-        })(this));
       };
 
-      OptionsBarController.prototype._saveBeforeUnload = function(nextID) {
-        var msg;
-        msg = this._beforeChangeContentPiece();
-        msg += " Are you sure you want to leave this question?";
-        if (confirm(msg)) {
-          return App.navigate("edit-content/" + nextID, true);
-        }
-      };
-
-      OptionsBarController.prototype._beforeChangeContentPiece = function() {
+      OptionsBarController.prototype._beforeChangeContentPiece = function(nextID) {
         var message;
         if (this.contentPieceModel.isNew()) {
-          message = 'You are in the middle of creating a new content piece. If you reload the page your changes will be lost.';
+          return message = 'You are in the middle of creating a new content piece. If you reload the page your changes will be lost.';
         } else {
           this.view.triggerMethod('save:question:settings');
           if ((!this.view.$el.find('form').valid()) || $('form input[name="complete"]').val() === 'false') {
-            message = 'Error occured saving your content. Some content may be lost if you refresh.';
+            return bootbox.alert('Error occured saving your content');
           } else {
-            message = 'All changes are saved successfully.';
+            return App.navigate("edit-content/" + nextID, true);
           }
         }
-        return message;
       };
 
       OptionsBarController.prototype.showView = function() {
