@@ -52,9 +52,9 @@ function create_content_piece_post_type() {
 add_action('init', 'create_content_piece_post_type');
 
 function get_content_pieces($args = array()) {
-    
+
     global $wpdb;
-    
+
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
@@ -67,13 +67,13 @@ function get_content_pieces($args = array()) {
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
     }
-    
+
     if(isset($args['textbook'])){
-        
+
         $post_ids= $wpdb->prepare(
                 "SELECT post_id from {$wpdb->base_prefix}postmeta WHERE meta_key LIKE %s
                     AND meta_value like %s",
-                array('term_ids', '%"'.$args['textbook'].'";%')                
+                array('term_ids', '%"'.$args['textbook'].'";%')
         );
         $textbook_posts=$wpdb->get_col($post_ids);
         if($textbook_posts)
@@ -84,11 +84,11 @@ function get_content_pieces($args = array()) {
 
         unset($args['textbook']);
     }
-    
+
     if(isset($args['content_type'])){
 
         $content_type_meta_array = array('relation' => 'OR');
-        
+
         foreach($args['content_type'] as $content_type){
             $content_type_meta_array[]= array(
                 'key'     => 'content_type',
@@ -104,9 +104,9 @@ function get_content_pieces($args = array()) {
 
     if(!isset($args['post_status']))
         $args['post_status'] = 'any';
-     
+
     $content_items = get_posts($args);
-    
+
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
 
@@ -157,11 +157,11 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
         $content_meta= get_post_meta($id,'content_piece_meta',true);
 
         $content_meta= maybe_unserialize($content_meta);
-        
-        if(isset($content_meta['post_tags'])) 
+
+        if(isset($content_meta['post_tags']))
             $excerpts[] = $content_meta['post_tags'];
-        
-        if(isset($content_meta['instructions'])) 
+
+        if(isset($content_meta['instructions']))
             $excerpts[] = $content_meta['instructions'];
 
         $excerpts = __u::flatten($excerpts);
@@ -184,13 +184,13 @@ function get_single_content_piece($id){
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
-    
+
     global $wpdb;
 
     $content_piece= get_post($id);
 
     $authordata = get_userdata($content_piece->post_author);
-    $post_modified= $content_piece->post_modified; 
+    $post_modified= $content_piece->post_modified;
     $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($post_modified)));
     $content_piece->post_author_name = $authordata->display_name;
 
@@ -264,8 +264,8 @@ function get_single_content_piece($id){
 
     if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
-        $content_piece->marks = 0; 
-        
+        $content_piece->marks = 0;
+
         if($content_elements['marks'] > 0)
            $content_piece->marks = $content_elements['marks'];
 
@@ -287,9 +287,9 @@ function get_single_content_piece($id){
         $excerpt='No excerpt';
     else
         $excerpt.='...';
-    
+
     $content_piece->post_excerpt =$excerpt;
-    
+
     switch_to_blog($current_blog_id);
 
     return $content_piece;
@@ -607,7 +607,7 @@ function get_adjacent_chapter($chapterID,$direction='next'){
 
     if(!is_wp_error( $chapter )){
         $adjChapterID = get_adjacent_textbook_term_id($chapter,$direction);
-        
+
         if(!$adjChapterID){
             $textbook = get_term($chapter->parent,'textbook');
             $adjTextbookID = get_adjacent_textbook_term_id($textbook,$direction);
@@ -622,13 +622,13 @@ function get_adjacent_chapter($chapterID,$direction='next'){
                     'number'     =>1
                 );
                 $chapters = get_terms('textbook',$args);
-                if(sizeof($chapters)>0) $chapterID= $chapters[0];
+                if(sizeof($chapters)>0)
+                    $adjChapterID= $chapters[0];
                 else $adjChapterID= 0;
             }
             else $adjChapterID = 0;
         }
     }
-
     return $adjChapterID;
 
 }
