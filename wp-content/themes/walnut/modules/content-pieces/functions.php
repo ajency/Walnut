@@ -600,3 +600,54 @@ function create_new_element(&$ele)
 
     return $wpdb->insert_id;
 }
+
+function get_adjacent_chapter($chapterID,$direction='next'){
+
+    $chapter= get_term($chapterID,'textbook');
+
+    if(!is_wp_error( $chapter )){
+        $adjChapterID = get_adjacent_textbook_term_id($chapter,$direction);
+        
+        if(!$adjChapterID){
+            $textbook = get_term($chapter->parent,'textbook');
+            $adjTextbookID = get_adjacent_textbook_term_id($textbook,$direction);
+
+            if($adjTextbookID){
+                $args = array(
+                    'parent'     =>$adjTextbookID,
+                    'fields'     =>'ids',
+                    'order_by'   =>'name',
+                    'order'      =>($direction=='next')?'asc':'desc',
+                    'hide_empty' =>false,
+                    'number'     =>1
+                );
+                $chapters = get_terms('textbook',$args);
+                if(sizeof($chapters)>0) $chapterID= $chapters[0];
+                else $adjChapterID= 0;
+            }
+            else $adjChapterID = 0;
+        }
+    }
+
+    return $adjChapterID;
+
+}
+
+function get_adjacent_textbook_term_id($term, $direction='next'){
+
+    $args = array(
+        'parent'     => $term->parent,
+        'order_by'   => 'name',
+        'fields'     => 'ids',
+        'hide_empty' => false
+    );
+    $siblings = get_terms('textbook',$args);
+
+    $currentIndex = array_search($term->term_id, $siblings);
+
+    $step = ($direction=='next')?$currentIndex+1:$currentIndex-1;
+
+    $adjTermID= $siblings[$step];
+
+    return $adjTermID;
+}

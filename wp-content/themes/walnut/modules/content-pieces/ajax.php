@@ -31,61 +31,43 @@ add_action('wp_ajax_read-content-piece', 'ajax_get_single_content_piece');
 
 function ajax_get_adjacent_content_pieces(){
 
-    if(!isset($_GET['ID']))
-        return new WP_Error('Invalid_Arguments', __('ID is a required request parameter') );
-    global $wpdb;
+    if(!isset($_GET['chapterID']))
+        return wp_send_json(array('error'=>'chapterID is a required request parameter'));
 
-    $current_post= $_GET['ID'];
+    $direction = (isset($_GET['direction']))?$_GET['direction']:'current';
 
-    $direction = (isset($_GET['direction']))? $_GET['direction']:'next';
+    $chapterID= $_GET['chapterID'];
 
-    if($direction == 'next'){
-        $orderDir = 'asc';
-        $operator = '>=';
-        $lastItemDir='desc'; //to find last item we need in descending order limit 1
-    }
-    else{
-        $orderDir = 'desc';
-        $operator = '<=';
-        $lastItemDir='asc'; //to find first item we need in asc order limit 1
-    }
+    if(in_array($direction,array('next','prev')))
+        $chapterID = get_adjacent_chapter($chapterID,$direction);
 
-    $lastItemQry = $wpdb->prepare(
-                    "SELECT ID FROM `{$wpdb->base_prefix}posts` "
-                    . "WHERE post_status = 'pending' AND "
-                    . "ID $operator %d order by ID $lastItemDir limit 1",
-                   $current_post
-            );
+    if(!$chapterID) return wp_send_json(array('status'=>'over', 'items'=>array()));
 
-    $lastItem= $wpdb->get_var($lastItemQry);
-
-    $query = $wpdb->prepare(
-                    "SELECT ID FROM `{$wpdb->base_prefix}posts` "
-                    . "WHERE post_status = 'pending' AND "
-                    . "ID $operator %d order by ID $orderDir limit 120",
-                   $current_post
-            );
-
-    $ids= $wpdb->get_col($query);
-
-    $args=array(
-        'ids'=>$ids,
-        'post_type'=>'content-piece'
+    $args = array(
+        'post_type' => 'content-piece',
+        'textbook'  => $chapterID,
+        'post_status'=> 'pending'
     );
-    $content_pieces= get_content_pieces($args);
 
+    $content_pieces = get_content_pieces($args);
     foreach($content_pieces as $item){
         $textbook = get_term($item->term_ids['textbook'],'textbook');
-        if(!is_wp_error( $textbook ))
+        $item->textbookName = $item->chapterName= '';
+        $item->textbookID = $item->chapterID = 0;
+        if(!is_wp_error( $textbook )){
             $item->textbookName = $textbook->name;
-
+            $item->textbookID = $item->term_ids['textbook'];
+        }
         $chapter =  get_term($item->term_ids['chapter'],'textbook');
-        if(!is_wp_error( $chapter ))
+        if(!is_wp_error( $chapter )){
             $item->chapterName = $chapter->name;
+            $item->chapterID = $item->term_ids['chapter'];
+        }
     }
+    wp_send_json(array(
+        'status'=>'pending',
+        'chapterID'=>$chapterID,
+        'items'=>$content_pieces));
 
-    $status=($lastItem == __u::last($ids))?'over':'pending';
-
-    wp_send_json(array('status'=>$status,'items'=>$content_pieces));
 }
 add_action('wp_ajax_get-adjacent-content-pieces', 'ajax_get_adjacent_content_pieces');

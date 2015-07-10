@@ -119,7 +119,6 @@ define(['app'], function(App) {
           if (this.model.get('endTime') && this.model.get('endTime') !== '0') {
             videoUrl += "," + this.model.get('endTime');
           }
-          console.log(videoUrl);
           this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
           this.$el.find('video')[0].load();
           if (autoplay) {
