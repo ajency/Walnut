@@ -147,10 +147,11 @@ function num_students_taken_quiz($quiz_id, $division){
         if(sizeof($student_ids)>0){
             $students_str= join($student_ids,',');
 
-            $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id) 
+            $taken_by_query = $wpdb->prepare("SELECT count(DISTINCT student_id)
                 FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
+                AND quiz_meta like '%s'
                 AND student_id in ($students_str)",
-                $quiz_id);
+                $quiz_id, '%completed%');
 
             $taken_by=(int) $wpdb->get_var($taken_by_query);
         }
@@ -456,16 +457,16 @@ function read_quiz_response_summary($summary_id){
     $quiz_response_summary->questions_order = $quiz_meta['questions_order'];
 
     $additional_details_qry = $wpdb->prepare(
-        "SELECT 
+        "SELECT
             SUM(marks_scored) as total_marks_scored,
 
             SUM(
                 CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as negative_scored,
 
-            SUM( 
-               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END 
-            ) as marks_scored, 
+            SUM(
+               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as marks_scored,
 
             SUM(time_taken) as total_time_taken
             FROM {$wpdb->prefix}quiz_question_response
@@ -476,14 +477,14 @@ function read_quiz_response_summary($summary_id){
 
     $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
 
-    $additional_details= $wpdb->get_row($additional_details_qry);   
+    $additional_details= $wpdb->get_row($additional_details_qry);
 
     $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;
 
     $quiz_response_summary->negative_scored = (float) $additional_details->negative_scored;
 
     $quiz_response_summary->total_marks_scored = (float) $additional_details->total_marks_scored;
-    
+
     $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
 
     $questions_skipped_qry = $wpdb->prepare(
@@ -501,13 +502,13 @@ function write_quiz_response_summary($args){
     global $wpdb;
     if(!isset($args['student_id'])){
         $args['student_id'] = get_current_user_id();
-    }   
+    }
 
     $quiz_type = get_module_meta($args['collection_id'], 'quiz_type');
-    
+
     $quiz_meta['status'] = $args['status'];
     $quiz_meta['questions_order'] = array_map('intval', $args['questions_order']);
-    
+
 
     if(!isset($args['summary_id'])){
 
@@ -515,7 +516,7 @@ function write_quiz_response_summary($args){
 
         if ($quiz_type=='practice')
             $summary_id = $summary_id . '_' . date('dmyhis');
-        
+
         $data = array(
             'summary_id' => $summary_id,
             'collection_id' => $args['collection_id'],
@@ -523,8 +524,8 @@ function write_quiz_response_summary($args){
             'quiz_meta' => maybe_serialize($quiz_meta)
             );
 
-        //handling sync status for standalone sites. 
-        if (!is_multisite()) 
+        //handling sync status for standalone sites.
+        if (!is_multisite())
             $data['sync']=0;
 
         $wpdb->insert(($wpdb->prefix).'quiz_response_summary', $data );
@@ -532,9 +533,9 @@ function write_quiz_response_summary($args){
     else{
         $summary_id = $args['summary_id'];
         $data = array('quiz_meta' => maybe_serialize($quiz_meta));
-        
-        //handling sync status for standalone sites. 
-        if (!is_multisite()) 
+
+        //handling sync status for standalone sites.
+        if (!is_multisite())
             $data['sync']=0;
 
         $where_array = array('summary_id' => $summary_id);
@@ -561,10 +562,10 @@ function write_quiz_question_response($args){
             'marks_scored' => $args['marks_scored'],
             'status' => $args['status']    );
 
-    //handling sync status for standalone sites. 
-    if (!is_multisite()) 
+    //handling sync status for standalone sites.
+    if (!is_multisite())
         $data['sync']=0;
-    
+
     // save
     if(!isset($args['qr_id'])){
         $qr_id = 'CP'.$args['content_piece_id'].$args['summary_id'];
@@ -582,11 +583,11 @@ function write_quiz_question_response($args){
                     where qr_id = %s",$args['qr_id']);
 
         $question_response = $wpdb->get_row($check_qry);
-        
+
         if($question_response->status == 'paused' && $args['status'] == 'paused'){
 
-            //handling sync status for standalone sites. 
-            if (!is_multisite()) 
+            //handling sync status for standalone sites.
+            if (!is_multisite())
                 $paused_data['sync']=0;
 
             $paused_data = array('status'=>'paused','time_taken' => $args['time_taken']);
@@ -599,9 +600,9 @@ function write_quiz_question_response($args){
                 //check for single attempt permission
                 if ($quiz_module->permissions['single_attempt']){
                     return false;
-                }                
+                }
 
-                if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')            
+                if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')
                     return false;
             }
 
@@ -651,20 +652,20 @@ function quiz_status_for_textbook($book_id,$student_id){
     global $wpdb;
 
     $query= $wpdb->prepare(
-        "SELECT cc.id,cm.meta_value as quiz_type, qr.quiz_meta 
-            FROM  {$wpdb->prefix}quiz_response_summary qr, 
+        "SELECT cc.id,cm.meta_value as quiz_type, qr.quiz_meta
+            FROM  {$wpdb->prefix}quiz_response_summary qr,
                 {$wpdb->base_prefix}content_collection cc,
-                {$wpdb->base_prefix}collection_meta cm 
+                {$wpdb->base_prefix}collection_meta cm
             WHERE qr.collection_id = cc.id
-                AND cm.collection_id = cc.id 
+                AND cm.collection_id = cc.id
                 AND cm.meta_key like %s
-                AND cc.post_status LIKE %s 
+                AND cc.post_status LIKE %s
                 AND qr.student_id = %d
                 AND cc.term_ids like %s",
 
         array('quiz_type','publish',$student_id, '%"'.$book_id.'";%' )
     );
-    
+
     $result= $wpdb->get_results($query);
 
     $home_test_completed = $practice_completed =$home_test_in_progress = $practice_in_progress = array();
@@ -701,14 +702,14 @@ function quiz_status_for_textbook($book_id,$student_id){
         $count_practice_in_progress = sizeof(__u::uniq($practice_in_progress));
 
     $data=array(
-        'home_test_completed'      => sizeof($home_test_completed), 
+        'home_test_completed'      => sizeof($home_test_completed),
         'practice_completed'        => $count_practice_completed,
         'home_test_in_progress'    => sizeof($home_test_in_progress),
         'practice_in_progress'      => $count_practice_in_progress,
     );
 
     return $data;
-        
+
 }
 
 function delete_quiz_response_summary($summary_id){
@@ -753,10 +754,10 @@ function save_quiz_schedule($data){
         'schedule_to'   => $to
         );
 
-    if (!is_multisite()) 
+    if (!is_multisite())
         $scheduledata['sync']=0;
 
-    $check_query = $wpdb->prepare("SELECT quiz_id FROM {$wpdb->prefix}quiz_schedules 
+    $check_query = $wpdb->prepare("SELECT quiz_id FROM {$wpdb->prefix}quiz_schedules
                                         WHERE quiz_id = %d AND division_id = %d",
                                     array($data['quiz_id'],$data['division'])
                                 );
@@ -767,8 +768,8 @@ function save_quiz_schedule($data){
         $schedule_id = (int) $schedule_exists;
 
         $save = $wpdb->update(
-            $wpdb->prefix.'quiz_schedules', 
-            $scheduledata, 
+            $wpdb->prefix.'quiz_schedules',
+            $scheduledata,
             array(
                 'quiz_id'       => $data['quiz_id'],
                 'division_id'   => $data['division']
@@ -781,7 +782,7 @@ function save_quiz_schedule($data){
         $schedule_id= $wpdb->insert_id;
     }
 
-    return $schedule_id; 
+    return $schedule_id;
 
 }
 
