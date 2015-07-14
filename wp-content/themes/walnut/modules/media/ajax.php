@@ -3,7 +3,7 @@
 include_once 'functions.php';
 
 function query_attachments() {
-	
+
 	$query = array ();
     $media_type= 'image';
     if(isset($_REQUEST['mediaType']))
@@ -17,10 +17,10 @@ function query_attachments() {
     $search_string= $_REQUEST['searchStr'];
 
 	$media = get_site_media ( $query, $search_string );
-	
+
 	wp_send_json ( array (
 			'code' => 'OK',
-			'data' => $media 
+			'data' => $media
 	) );
 }
 
@@ -34,7 +34,7 @@ function get_blog_media() {
     switch_to_blog(1);
 
     $media = wp_prepare_attachment_for_js ( $id );
-    
+
     $enc_media_types = array('audio','video');
 
     switch_to_blog($current_blog_id);
@@ -78,16 +78,14 @@ add_filter( 'option_uploads_use_yearmonth_folders', 'change_uploads_use_yearmont
 
 function change_uploads_directory( $uploads_dir ) {
 
-    $folder_name = '/images';
+    $folder_name = '';
 
     // Change the default uploads path to videos-web folder if
     // current page is mediafromftp (the plugin)
     // or if requested mediatype is video
-
-    if($_GET['page'] =='mediafromftp' || $_REQUEST['mediaType'] == 'video' || $_REQUEST['mediaType'] == 'audio'){
+    //
+    if($_GET['page'] =='mediafromftp' && !isset($_REQUEST['adddb']))
         $folder_name= '/media-web';
-    }
-
 
     $uploads_dir['path'] = $uploads_dir['path'] . $folder_name;
     $uploads_dir['url'] = $uploads_dir['url'] . $folder_name;
@@ -109,28 +107,23 @@ function get_media_by_ids(){
     foreach ($ids as $id){
 
         $media_file=wp_prepare_attachment_for_js( $id );
-        
+
         $file_url= $media_file['url'];
-        
+
         $upload_dir=wp_upload_dir();
-        
-        $directory= $upload_dir['basedir'];
-        
-        if($media_file['type'] === 'video')
-            $file_path= $directory.'/videos-web/'.$media_file['filename'];
-        else
-            $file_path= $directory.'/audio-web/'.$media_file['filename'];
-        
+
+        $directory= $upload_dir['basedir'].'/media-web';
+
         if(file_exists($file_path) and $media_file)
             $media[] = $media_file;
-        
-        else 
+
+        else
             $media[]= array('error'=>'file doesnt exist','url'=>false);
-        
+
     }
-    
+
     switch_to_blog($current_blog_id);
-    
+
     wp_send_json( array(
         'code' => 'OK',
         'data' => $media
@@ -141,16 +134,16 @@ function get_media_by_ids(){
 add_action('wp_ajax_get_media_by_ids','get_media_by_ids');
 /*
  * function to delete a decrypted file
- * @param string $_POST['source']  temporary decrypted file path 
+ * @param string $_POST['source']  temporary decrypted file path
  */
-function ajax_decrypt_file_delete(){  
-     
+function ajax_decrypt_file_delete(){
+
     $src_file_info = pathinfo($_POST['source']);
 
     $user_id = get_current_user_id();
-            
+
     $temp_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$user_id.DIRECTORY_SEPARATOR.$mediatype;
-    
+
     if (file_exists($temp_path.DIRECTORY_SEPARATOR.$src_file_info['filename'])) {
         unlink($temp_path.DIRECTORY_SEPARATOR.$src_file_info['filename']);
             wp_send_json( array(
@@ -163,5 +156,5 @@ function ajax_decrypt_file_delete(){
             'code' => 'ERROR',
             'data' => 'file does not exist'
             ) );
-    }    
+    }
 }
