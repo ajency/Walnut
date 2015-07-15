@@ -108,8 +108,8 @@ function change_uploads_directory( $uploads_dir ) {
 
 
     $uploads_dir['path'] = $uploads_dir['path'] . $path;
-    $uploads_dir['url'] = $uploads_dir['url'];
-    $uploads_dir['basedir'] = $uploads_dir['basedir'];
+    $uploads_dir['url'] = $uploads_dir['url'] . $path;
+    $uploads_dir['basedir'] = $uploads_dir['basedir']. $baseurl;
     $uploads_dir['baseurl'] = $uploads_dir['baseurl']. $baseurl;
 
     return $uploads_dir;
