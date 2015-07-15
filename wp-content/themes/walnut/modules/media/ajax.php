@@ -78,19 +78,39 @@ add_filter( 'option_uploads_use_yearmonth_folders', 'change_uploads_use_yearmont
 
 function change_uploads_directory( $uploads_dir ) {
 
-    $folder_name = '';
+    $path = $baseurl= '';
 
-    // Change the default uploads path to videos-web folder if
-    // current page is mediafromftp (the plugin)
-    // or if requested mediatype is video
-    //
+    // change uploads directory to media-web for list of folders in mediafromftp dropdown
+    // so that the other non-media folders aren't displayed in the list
+    // doesnt effect the upload process
     if($_GET['page'] =='mediafromftp' && !isset($_REQUEST['adddb']))
-        $folder_name= '/media-web';
+        $baseurl = '/media-web';
 
-    $uploads_dir['path'] = $uploads_dir['path'] . $folder_name;
-    $uploads_dir['url'] = $uploads_dir['url'] . $folder_name;
-    $uploads_dir['basedir'] = $uploads_dir['basedir'] . $folder_name;
-    $uploads_dir['baseurl'] = $uploads_dir['baseurl'] . $folder_name;
+	#if upload is done thru async-upload
+	#change default upload directory based on filetype
+	global $pagenow;
+	if($pagenow=='async-upload.php'){
+		$fileType= get_media_file_type($_REQUEST['name']);
+        switch ($fileType) {
+            case 'video':
+                $path ='/media-web/videos-web';
+                break;
+
+            case 'audio':
+                $path ='/media-web/audio-web';
+                break;
+
+            case 'image':
+                $path ='/media-web/images-web';
+                break;
+        }
+	}
+
+
+    $uploads_dir['path'] = $uploads_dir['path'] . $path;
+    $uploads_dir['url'] = $uploads_dir['url'];
+    $uploads_dir['basedir'] = $uploads_dir['basedir'];
+    $uploads_dir['baseurl'] = $uploads_dir['baseurl']. $baseurl;
 
     return $uploads_dir;
 }
@@ -112,9 +132,9 @@ function get_media_by_ids(){
 
         $upload_dir=wp_upload_dir();
 
-        $directory= $upload_dir['basedir'].'/media-web';
+        $directory= $upload_dir['basedir'];
 
-        if(file_exists($file_path) and $media_file)
+        if(file_exists($directory.$file_path) and $media_file)
             $media[] = $media_file;
 
         else

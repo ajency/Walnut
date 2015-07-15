@@ -195,6 +195,15 @@ function aes_file_decrypt($src_url,$mediatype){
 
 }
 
+function get_media_file_type($filename){
+    $type='';
+    $ft= wp_check_filetype($filename);
+    if($ft['type']){
+        $ftype = explode('/',$ft['type']);
+        $type = $ftype[0];
+    }
+    return $type;
+}
 
 function modify_media_url($mediaresponse,$media_type){
     $temp_media_folder = array('audio'=>'audios','video'=>'videos');

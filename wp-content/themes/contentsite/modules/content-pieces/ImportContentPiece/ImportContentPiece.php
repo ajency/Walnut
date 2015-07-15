@@ -77,7 +77,7 @@ class ImportContentPiece {
 
     private function get_media_base_url($path){
         #get file type of attachment
-        $type = $this->get_media_file_type($path);
+        $type = get_media_file_type($path);
         $base_url = 'media-web/';
         switch ($type) {
             case 'video':
@@ -97,16 +97,6 @@ class ImportContentPiece {
 
     }
 
-    private function get_media_file_type($path){
-        $type='';
-        $ft= wp_check_filetype($path);
-        if($ft['type']){
-            $ftype = explode('/',$ft['type']);
-            $type = $ftype[0];
-        }
-        return $type;
-    }
-
     #path to the media file
     #creates an media element for the content piece and returns postmetaid
     public function create_media_element($media_path){
@@ -115,7 +105,7 @@ class ImportContentPiece {
         if(!$attachment_id)
             return false;
 
-        $type = $this->get_media_file_type($media_path);
+        $type = get_media_file_type($media_path);
         $attachment_url =  wp_get_attachment_url( $attachment_id );
 
         $data= array(
