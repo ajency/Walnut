@@ -32,7 +32,7 @@ class ImportMCQ extends ImportContentPiece {
         $this->options= array();
         $optionCols = array(9,12,15,18,21,24);
         foreach($optionCols as $optCol){
-            if(!empty($record[$optCol])){
+            if(!empty($record[$optCol]) || !empty($record[$optCol+1])){
                 $this->options[]=array(
                                     'option' => $record[$optCol],
                                     'media'  => $record[$optCol+1],
@@ -125,7 +125,7 @@ class ImportMCQ extends ImportContentPiece {
         $data['element'] = 'Mcq';
         foreach ($this->options as $arr)
         {
-            if(!empty($arr['option']))
+            if(!empty($arr['option']) || !empty($arr['media']))
             {
                 $count++;
                 $singleOptionArray = array();
