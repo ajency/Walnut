@@ -9,6 +9,10 @@ define ['app'
 
                 @view = @_getView()
 
+                @listenTo @region, "update:collection", =>
+                    filters = @selectedFilterParamsObject.request 'get:selected:parameters'
+                    @view.triggerMethod 'set:level:count'
+
                 @listenTo @view,'get:textbook:filter',->
                     filters = @selectedFilterParamsObject.request 'get:selected:parameters'
                     @view.triggerMethod 'add:set',filters
@@ -88,11 +92,11 @@ define ['app'
 
             onShow:->
                 @listenTo @collection, 'add remove',=>
-                    @_setLevelCount()
+                    @onSetLevelCount()
 
-                @_setLevelCount()
+                @onSetLevelCount()
 
-            _setLevelCount : ->
+            onSetLevelCount : ->
                 levelCount = @collection.countBy 'difficulty_level'
                 @$el.find('#selectAll').prop 'checked',false
 

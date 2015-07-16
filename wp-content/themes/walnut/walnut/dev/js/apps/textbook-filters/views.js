@@ -23,6 +23,7 @@ define(['app'], function(App) {
         },
         'change .filters': function(e) {
           if (e.target.id !== 'divisions-filter') {
+            this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
             return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
           }
         },
@@ -130,7 +131,8 @@ define(['app'], function(App) {
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);
         this.collection.reset(filtered_data);
-        return this.trigger("update:pager");
+        this.trigger("update:pager");
+        return this.$el.find('.loading-collection').remove();
       };
 
       TextbookFiltersView.prototype.onNewContentFetched = function() {
