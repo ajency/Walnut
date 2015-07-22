@@ -15,8 +15,8 @@ class ImportMCQ extends ImportContentPiece {
 
         $this->question       = $record[0];
         $this->question_media_path = $record[1];
-        $this->textbook       = (int) $record[2];
-        $this->chapter        = (int) $record[3];
+        $this->textbook       = $record[2];
+        $this->chapter        = $record[3];
         $this->sections       = $sectionArray;
         $this->subsections    = $subsectionsArray;
         $this->totalmarks     = (int) $record[6];

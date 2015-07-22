@@ -42,8 +42,8 @@ class ImportContentPiece {
             );
 
         $data['json'] = $content_layout;
-        _log($data);
         $id = save_content_piece($data);
+        _log('content piece id');
         _log($id);
 
     }
