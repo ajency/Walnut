@@ -101,6 +101,14 @@
 <?php global $class_ids;
 global $chorus_options; ?>
 <script>
+
+    <?php if(is_multisite()){?>
+        IS_STANDALONE_SITE = false
+    <? }
+    else { ?>
+        IS_STANDALONE_SITE = true
+    <?php }?>
+
     AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
     SITEURL = '<?php echo site_url() ?>';
     THEMEURL = '<?php echo get_template_directory_uri()?>';

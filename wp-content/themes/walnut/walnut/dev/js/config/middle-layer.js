@@ -46,7 +46,7 @@ define(['detect', 'jquery'], function(detect, $) {
   return $.middle_layer = function(url, data, response) {
     switch (checkPlatform()) {
       case 'Desktop':
-        if (isOnline()) {
+        if (isOnline() || IS_STANDALONE_SITE) {
           return $.post(url, data, response, 'json');
         } else {
           return 'connection_error';
