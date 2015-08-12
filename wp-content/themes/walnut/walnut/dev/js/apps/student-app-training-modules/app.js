@@ -13,7 +13,7 @@ define(['app', 'apps/student-training-module/view-module/single-module-controlle
 
       StudentTrainingRouter.prototype.appRoutes = {
         'students/training-module/:id': 'viewStudentModule',
-        'students/training-modules': 'listStudentModules'
+        'students/training-modules/textbook/:tid': 'listStudentModules'
       };
 
       return StudentTrainingRouter;
@@ -41,11 +41,12 @@ define(['app', 'apps/student-training-module/view-module/single-module-controlle
           model: this.studentTrainingModel
         });
       },
-      listStudentModules: function() {
+      listStudentModules: function(tid) {
         if ($.allowRoute('quiz-list')) {
           return App.execute("show:student:app:training:modules", {
             region: App.mainContentRegion,
-            groupType: 'student-training'
+            groupType: 'student-training',
+            textbookID: tid
           });
         }
       }

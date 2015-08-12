@@ -79,7 +79,9 @@ define ['app'
 								contentGroupCollection : @contentGroupCollection
 								selectedFilterParamsObject : @selectedFilterParamsObject
 
-					@listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
+					@listenTo @layout.filtersRegion, "update:pager",=>
+                        @layout.allContentRegion.trigger "update:pager"
+                        @layout.addSetRegion.trigger "update:collection"
 
 			_getContentSelectionLayout:->
 				new ContentSelectionLayout

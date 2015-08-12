@@ -54,7 +54,7 @@ define ['detect', 'jquery'], (detect, $)->
     $.middle_layer = (url, data, response) ->
         switch checkPlatform()
             when 'Desktop'
-                if isOnline()
+                if isOnline() or IS_STANDALONE_SITE
                     $.post url, data, response, 'json'
                 else
                     return 'connection_error'

@@ -8,6 +8,7 @@ define(['app'], function(App) {
       __extends(VideoView, _super);
 
       function VideoView() {
+        this._showProperties = __bind(this._showProperties, this);
         this._playVideo = __bind(this._playVideo, this);
         return VideoView.__super__.constructor.apply(this, arguments);
       }
@@ -32,7 +33,10 @@ define(['app'], function(App) {
         'click .show-playlist': 'togglePlaylist',
         'click #prev': '_playPrevVideo',
         'click #next': '_playNextVideo',
-        'click .playlist-video': '_playClickedVideo'
+        'click .playlist-video': '_playClickedVideo',
+        'click': function() {
+          return this.trigger("show:video:properties");
+        }
       };
 
       VideoView.prototype.onShow = function() {
@@ -50,7 +54,9 @@ define(['app'], function(App) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
-        return this._addVideoElement(this.videos[0]);
+        this._addVideoElement(this.videos[0]);
+        this.$el.closest('.element-wrapper').off('click', this._showProperties);
+        return this.$el.closest('.element-wrapper').on('click', this._showProperties);
       };
 
       VideoView.prototype._setVideoList = function() {
@@ -119,6 +125,11 @@ define(['app'], function(App) {
           this.$el.find('video')[0].load();
           return this.$el.find('video')[0].play();
         }
+      };
+
+      VideoView.prototype._showProperties = function(evt) {
+        this.trigger("show:video:properties");
+        return evt.stopPropagation();
       };
 
       return VideoView;

@@ -7,7 +7,6 @@ function extra_tax_fields( $tag ) {
     $term_meta = get_option( "taxonomy_$t_id" );
     $res = $wpdb->get_results( "select class_id, tags from {$wpdb->prefix}textbook_relationships where textbook_id=" . $t_id, ARRAY_A );
     $classes = maybe_unserialize( $res[0]['class_id'] );
-    $subjects = maybe_unserialize( $res[0]['tags'] );
 
     $textbook_fields = '';
     if ($tag->parent != 0)
@@ -66,26 +65,6 @@ function extra_tax_fields( $tag ) {
             <br>
             <span class="description"><?php _e( 'classes for which this textbook is suitable for' ); ?></span>
         </td>
-    </tr>
-    <tr>
-        <td>Subject :</td>
-        <td>
-            <?
-            global $all_subjects;
-            for ($i = 0; $i < sizeof( $all_subjects ); $i++) {
-                $selected = '';
-
-                if ($subjects)
-                    $selected = in_array( $all_subjects[$i], $subjects ) ? "checked" : '';
-                ?>
-                <input style="width:20px" type="checkbox" name="term_tags[]"
-                       value="<?= $all_subjects[$i] ?>" <?= $selected ?> /> <?= $all_subjects[$i] ?><br>
-            <? } ?>
-            <br>
-            <span class="description"><?php _e( 'subjects which this textbook belongs to' ); ?></span>
-
-        </td>
-
     </tr>
 <?php
 }

@@ -60,10 +60,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         this.listenTo(this.layout.optionsBarRegion, 'show:grading:parameter', this._showGradingParameter);
         this.listenTo(this.layout.optionsBarRegion, 'close:grading:parameter', this._closeGradingParameter);
         this.listenTo(this.layout.contentPiecesListRegion, 'change:content:piece', (function(_this) {
-          return function(model) {
-            App.navigate("edit-content/" + model.id);
-            _this.contentPieceModel = model;
-            return _this._showViews();
+          return function(nextID) {
+            return _this.layout.optionsBarRegion.trigger("change:content:piece", nextID);
           };
         })(this));
         return App.execute("when:fetched", this.contentPieceModel, (function(_this) {
@@ -140,7 +138,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
 
       ContentCreatorLayout.prototype.className = 'content-creator-layout';
 
-      ContentCreatorLayout.prototype.template = '<div id="content-pieces-list-region"></div> <div id="options-bar-region"></div> <div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
+      ContentCreatorLayout.prototype.template = '<div id="content-pieces-list-region"></div> <div id="options-bar-region"></div> <input type="hidden" name = "cp_not_saved" value= false data-description="content piece modified but not saved" /> <div class="page-title"> <h3>Add <span class="semi-bold">Question</span></h3> </div> <div class="creator"> <div class="tiles" id="toolbox"></div> <div class="" id="content-builder"></div> <div id="grading-parameter"></div> <div id="property-dock"></div> </div>';
 
       ContentCreatorLayout.prototype.regions = {
         elementBoxRegion: '#toolbox',

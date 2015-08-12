@@ -8,8 +8,8 @@ define ['app',
 		class StudentTrainingRouter extends Marionette.AppRouter
 
 			appRoutes:
-				'students/training-module/:id'	: 'viewStudentModule'
-				'students/training-modules'		: 'listStudentModules'
+				'students/training-module/:id'				: 'viewStudentModule'
+				'students/training-modules/textbook/:tid'	: 'listStudentModules'
 
 
 		Controller =
@@ -29,11 +29,12 @@ define ['app',
 					region: App.mainContentRegion
 					model: @studentTrainingModel
 
-			listStudentModules:->
+			listStudentModules:(tid)->
 				if $.allowRoute 'quiz-list'
 					App.execute "show:student:app:training:modules",
 						region: App.mainContentRegion
-						groupType : 'student-training'
+						groupType	: 'student-training'
+						textbookID	: tid
 
 		StudentAppTrainingModules.on "start", ->
 			new StudentTrainingRouter

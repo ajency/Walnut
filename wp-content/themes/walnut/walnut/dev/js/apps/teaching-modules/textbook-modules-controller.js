@@ -19,6 +19,8 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
         var textbookID;
         textbookID = opts.textbookID, this.classID = opts.classID, this.division = opts.division, this.mode = opts.mode;
         $.showHeaderAndLeftNav();
+        $(window).off('beforeunload');
+        App.vent.trigger("closed:quiz");
         this.textbook = App.request("get:textbook:by:id", textbookID);
         if (this.mode === 'training') {
           this.contentGroupsCollection = App.request("get:content:groups", {

@@ -12,7 +12,7 @@ define(['app', 'text!apps/student-app-training-modules/templates/training-list.h
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{textbookName}}</td> <td class="v-align-middle">{{chapterName}}</td> <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> View {{moduleType}} </button> </td>';
+      ContentGroupsItemView.prototype.template = '<td class="v-align-middle">{{name}}</td> <td class="v-align-middle">{{chapterName}}</td> <td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td> <td> <button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training"> View {{moduleType}} </button> </td>';
 
       ContentGroupsItemView.prototype.tagName = 'tr';
 
@@ -43,17 +43,6 @@ define(['app', 'text!apps/student-app-training-modules/templates/training-list.h
         var data;
         data = ContentGroupsItemView.__super__.serializeData.call(this);
         this.textbooks = Marionette.getOption(this, 'textbookNames');
-        data.textbookName = (function(_this) {
-          return function() {
-            var textbook;
-            textbook = _this.textbooks.findWhere({
-              "id": data.term_ids.textbook
-            });
-            if (textbook != null) {
-              return textbook.get('name');
-            }
-          };
-        })(this);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
@@ -166,7 +155,7 @@ define(['app', 'text!apps/student-app-training-modules/templates/training-list.h
           this.$el.find('.status_label, .training-date, #status_header, .dateInfo').remove();
         }
         textbookFiltersHTML = $.showTextbookFilters({
-          textbooks: Marionette.getOption(this, 'chaptersCollection')
+          chapters: Marionette.getOption(this, 'chaptersCollection')
         });
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         console.log(this.fullCollection);
@@ -182,9 +171,6 @@ define(['app', 'text!apps/student-app-training-modules/templates/training-list.h
 
       ContentGroupsView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
         switch (filterType) {
-          case 'textbooks-filter':
-            $.populateChapters(filteredCollection, this.$el);
-            break;
           case 'chapters-filter':
             $.populateSections(filteredCollection, this.$el);
             break;
