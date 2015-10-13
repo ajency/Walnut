@@ -53,7 +53,7 @@ function school_data_sync_menu() {
     add_options_page( 'School Sync', 'School Sync', 'manage_options', 'school_data_sync', 
             'school_data_sync_screen' );
 }
-add_action( 'admin_menu', 'school_data_sync_menu' );
+//add_action( 'admin_menu', 'school_data_sync_menu' );
 
 function check_data_sync($redirect_to, $request, $user) {
     global $wpdb;
@@ -67,5 +67,5 @@ function check_data_sync($redirect_to, $request, $user) {
 	return $redirect_to;
 
 }
-add_action( 'login_redirect', 'check_data_sync', 10,3 );
+//add_action( 'login_redirect', 'check_data_sync', 10,3 );
 ?>

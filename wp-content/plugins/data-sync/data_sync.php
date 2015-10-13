@@ -52,17 +52,17 @@ function data_sync_menu() {
 }
 add_action( 'admin_menu', 'data_sync_menu' );
 
-/*function new_check_data_sync($redirect_to, $request, $user) {
+function new_check_data_sync($redirect_to, $request, $user) {
     global $wpdb;
-    $sync_count = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}sync_data where status='imported'" );
+    $sync_count = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}sync_data where status='success'" );
     
     if($sync_count[0] == 0){
-        $redirect_to = site_url().'/wp-admin/options-general.php?page=data_sync';
+        $redirect_to = site_url().'/wp-admin/options-general.php?page=data_update';
 		
     }
 	
 	return $redirect_to;
 
-}*/
-//add_action( 'login_redirect', 'new_check_data_sync', 10,3 );
+}
+add_action( 'login_redirect', 'new_check_data_sync', 10,3 );
 ?>
