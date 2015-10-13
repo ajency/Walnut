@@ -2,6 +2,7 @@
 wp-config.php
 wp-content/themes/walnut/walnut/dev/node_modules
 wp-content/uploads
+tmp/
 .idea
 .ssh
 .bash_history
@@ -16,3 +17,4 @@ tags
 .tags_swap
 
 /nbproject
+/.project

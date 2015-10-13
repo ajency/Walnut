@@ -79,7 +79,7 @@
                 <div class="content">
                     <?php if(!is_multisite()) :?>
                         <?php if(!school_is_syncd()) : ?>
-                        <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">School Data Sync</a> <p> 
+                        <!-- <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">School Data Sync</a> <p>  -->
                         <?php endif; ?>
                     <?php endif;?>
                             
