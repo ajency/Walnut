@@ -236,10 +236,23 @@ if($file !== 'options.csv'){
 $wpdb->query("TRUNCATE TABLE ".$table."");
 }
 
+/*if($file == 'options.csv'){
+update_options_csv($target.'/'.$file);
+}else{*/
 $tables[] = load_csv_to_table($target.'/'.$file,$table);
+//}
 
 
 }
+
+//set homepage
+$homepage = get_page_by_title( 'Dashboard' );
+if ( $homepage )
+{
+    update_option( 'page_on_front', $homepage->ID );
+    update_option( 'show_on_front', 'page' );
+}
+
 
 deleteDir($target);
 
@@ -296,3 +309,30 @@ function deleteDir($path) {
             @unlink($path) :
             array_map(__FUNCTION__, glob($path.'/*')) == @rmdir($path);
 }
+
+
+
+
+function update_options_csv($file) {
+
+$delimiter = ',';
+$enclosure = '"';
+
+if (($handle = fopen($file, "r")) !== FALSE) { 
+    $i = 0; 
+    while (($lineArray = fgetcsv($handle, 4000, $delimiter, $enclosure)) !== FALSE) { 
+        
+        update_option( $lineArray[1], $lineArray[2], $lineArray[3] );
+
+        $i++; 
+    } 
+    fclose($handle); 
+} 
+
+}
+
+
+
+
+
+

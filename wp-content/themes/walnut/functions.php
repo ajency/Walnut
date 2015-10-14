@@ -101,3 +101,28 @@ if(!function_exists('_log')){
 }
 
 
+
+
+
+
+
+add_action( 'admin_init', function() {
+
+if ( !is_user_logged_in() )
+return;
+
+require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+$my_plugin = 'data-sync/data_sync.php';
+if(!is_plugin_active($my_plugin)){
+   activate_plugin($my_plugin);
+
+   global $wpdb;
+    $sync_count = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}sync_data where status='success'" );
+    
+    if($sync_count[0] == 0){
+        $redirect_to = site_url().'/wp-admin/options-general.php?page=data_update';
+        wp_redirect( $redirect_to ); 
+        exit;
+    } 
+}
+});
