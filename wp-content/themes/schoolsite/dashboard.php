@@ -17,8 +17,6 @@
   Template Name: Dashboard
  */
 ?>
-
-<!DOCTYPE html>
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,7 +77,8 @@
                         <?php if(!school_is_syncd()) : ?>
                     <!-- <p align="center">You may not see any data if you have not synced.</p> 
                     <p align="center">Sync data from the drop down on the top right corner after logging in<p> --> 
-                    <iframe style="position:absolute;top:-5000px" src="<?= site_url() ?>/wp-admin/options-permalink.php"></iframe>    
+                    
+                    <iframe style="position:absolute;top:-5000px" src="<?php echo site_url() ?>/wp-admin/options-permalink.php"></iframe>    
                         <?php endif; ?>
                     <?php endif;?>
                                           
@@ -96,7 +95,6 @@
 </div>
 <?php global $class_ids;
 global $chorus_options; 
-
 ?>
 <script>
     AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
