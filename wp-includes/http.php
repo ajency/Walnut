@@ -338,7 +338,7 @@ function get_http_origin() {
 	 *
 	 * @param string $origin The original origin for the request.
 	 */
-	return apply_filters( 'http_origin', $origin );
+	return apply_filters( 'http_origin', 'localhost' );
 }
 
 /**
