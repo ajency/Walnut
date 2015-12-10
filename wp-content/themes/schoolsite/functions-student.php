@@ -37,7 +37,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 	$query       = $wpdb->prepare(
 			     "SELECT collection.id, collection.name as quiz_name, collection.term_ids, collection.duration, meta.meta_value as quiz_type 
 			      FROM wp_content_collection collection
-			      INNER JOIN wp_content_collection meta on collection.id = meta.collection_id and meta.meta_key=%s
+			      INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta.meta_key=%s
 			      WHERE term_ids like %s and type=%s and post_status=%s",
 			      array('quiz_type','%"'.$texbook_id.'";%', 'quiz', 'publish'));
  
@@ -165,7 +165,7 @@ function student_my_upcoming_quizes($texbook_ids){
 	$today = date("Y-m-d H:i:s");
 	$query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
-		INNER JOIN wp_content_collection meta on collection.id = meta.collection_id and meta_key='content_layout'
+		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
 		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
 		WHERE collection.type='quiz' and post_status='publish' ".$term_ids."  and  summary.summary_id is null
 		and schedule_from > '".$today."'
