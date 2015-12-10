@@ -94,7 +94,7 @@ function student_fetch_lectures_by_textbook_id($texbook_id) {
 	global $wpdb;
 	$query       = $wpdb->prepare(
 			     "SELECT id, name as lecture_name, term_ids, duration 
-			      FROM {$wpdb->prefix}content_collection
+			      FROM wp_content_collection
 			      WHERE term_ids like %s and type=%s and post_status=%s",
 			      array('%"'.$texbook_id.'";%', 'student-training', 'publish'));
 	$result      = $wpdb->get_results($query);	
