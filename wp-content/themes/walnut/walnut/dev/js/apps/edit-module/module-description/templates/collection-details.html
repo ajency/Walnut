@@ -140,7 +140,7 @@
         <div class="row m-b-10">
             <div class="col-md-6">
                 <label class="form-label">Marks<span class="text-error">*</span></label>
-                <input id="" name="marks" class="pull-left" placeholder="Enter Marks" type="text" min="1" />
+                <input id="total-marks-final" name="marks" class="pull-left" placeholder="Enter Marks" type="text"  />
             </div>
             <div class="col-md-6">
                 <label class="form-label">Total Marks</label>
@@ -150,8 +150,8 @@
         <div class="row m-b-10">
             <div class="col-md-6">
                 <label class="form-label">Duration<span class="text-error">*</span></label>
-                <input name="duration" class="pull-left" placeholder="Enter Duration" type="text"
-                       min="1" /> &nbsp;{{minshours}}
+                <input id="total-time-marks-set" type="hidden" value="0"/>
+                <input id="total-time-final" name="duration" class="pull-left" placeholder="Enter Duration" type="text"/> &nbsp;{{minshours}}
                 <div class="clearfix"></div>
             </div>
             <div class="col-md-6">

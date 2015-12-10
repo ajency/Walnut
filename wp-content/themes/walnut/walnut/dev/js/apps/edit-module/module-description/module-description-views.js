@@ -264,6 +264,12 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           }
         });
         this.$el.find('#total-marks').val(marks);
+        if($("#total-time-marks-set").val()==0){
+          $("#total-time-marks-set").val(1);
+        }else{
+          this.$el.find('#total-marks-final').val(marks);//added by kapil for auto calculation of total marks(Editable) 
+          this.$el.find('#total-time-final').val(time);//added by kapil for auto calculation of total time(Editable)   
+        }
         return this.$el.find('#total-time').val(time);
       };
 
