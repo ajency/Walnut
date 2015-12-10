@@ -17,8 +17,6 @@
   Template Name: Dashboard
  */
 ?>
-
-<!DOCTYPE html>
 <!DOCTYPE html>
 <html>
 <head>
