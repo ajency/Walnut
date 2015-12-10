@@ -107,6 +107,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
       };
 
+
       ListItemView.prototype.changeModuleStatus = function(status) {
         return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
           return function(result) {
