@@ -234,6 +234,19 @@ function get_book( $book, $division=0,$user_id=0) {
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
     $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
+    //added by kapil to fetch textbook names with class name starts
+    $class_names_applicable="";
+    $book_dets->classes_applicable = $class_names_applicable;
+    $class_names_applicable_arr = array();
+    foreach ($book_dets->classes as $book_dets_key => $book_dets_value) {
+       $class_names_applicable_arr[]=$classids[$book_dets_value]['label'];
+    }
+    if(count($class_names_applicable_arr)!=0){
+     $class_names_applicable = implode(", ", $class_names_applicable_arr);        
+     $book_dets->classes_applicable = "(".$class_names_applicable.")";
+    }
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+    //added by kapil to fetch textbook names with class name ends
     
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
