@@ -68,6 +68,7 @@ define(['marionette'], function(Marionette) {
           trigger: true
         });*/
         /*Code Commented By Kapil To Redirect student to the new layout*/
+        alert(SITEURL+"/dashboard-student/");
         location.href=SITEURL+"/dashboard-student/";
       }
       App.execute("show:breadcrumbapp", {
