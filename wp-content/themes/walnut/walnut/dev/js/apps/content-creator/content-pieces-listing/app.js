@@ -108,9 +108,12 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
         })(this));
         this.listenTo(this.view, "change:content:piece", (function(_this) {
           return function(direction) {
-            var currentIndex, getItems, model, nextIndex;
+
+            var currentIndex=0, getItems, model, nextIndex;
+ 
             currentIndex = _.indexOf(_this.contentPiecesCollection.models, _this.contentPiecesCollection.get(_this.contentPieceModel.id));
-            nextIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+            nextIndex = direction === 'next' ? currentIndex - 1 : currentIndex + 1;
+            console.log(_this.contentPiecesCollection);
             model = _this.contentPiecesCollection.at(nextIndex);
             console.log(model);
             console.log('testing change content piece');
@@ -128,6 +131,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-pi
         })(this));
         return this.listenTo(this.view, "browse:more", this._browseMore);
       };
+
 
       ContentPiecesController.prototype._browseMore = function(direction) {
         var fetchModels, fromModel;

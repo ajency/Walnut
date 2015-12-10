@@ -17,7 +17,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a>{{^is_used}}<span class="nonDevice">|</span> <a target="_blank"  class="nonDevice deleteModule">Delete</a>{{/is_used}} <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, edit_url, modules;
@@ -79,6 +79,13 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         });
         data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : 'Not added to a module yet';
         data.contentType = _.str.titleize(_.str.humanize(data.content_type));
+
+       if(modules.length>0){
+          data.is_used = true;
+        }else{
+          data.is_used = false;
+        }      
+          
         return data;
       };
 
@@ -86,6 +93,9 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         'click a.cloneModule': function() {
           return this.model.duplicate();
         },
+        'click a.deleteModule': function() {
+           return this.deleteModule();
+        },        
         'click a.archiveModule': function() {
           return this.changeModuleStatus('archive');
         },
@@ -107,7 +117,28 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
       };
 
-
+      ListItemView.prototype.deleteModule = function(status) {
+        return bootbox.confirm("Are you sure you want to completely  delete " + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
+          return function(result) {
+            if (result) {
+              _this.addSpinner();
+              var model_id = _this.model.id;
+              var data = {};
+              data.action = 'delete-content-module';
+              data.id= model_id;  
+              return $.post(AJAXURL, data).success(function(resp) {
+                return _this.model.destroy();
+              }).fail(function(resp) {
+                console.log('some error occurred');
+                return console.log(resp);
+              }).done(function() {
+                 return _this.changeStatusLabel(status);
+              });
+            }
+          };
+        })(this));
+      };
+      
       ListItemView.prototype.changeModuleStatus = function(status) {
         return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
           return function(result) {
