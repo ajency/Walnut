@@ -125,7 +125,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
               }).call(_this);
               groupData = _this.model.toJSON();
               _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-              _this.clonedData.name = "" + _this.clonedData.name + " clone";
+              _this.clonedData.name = "" + _this.clonedData.name;//removed text + " clone" by kapil 
               _this.clonedData.post_status = "underreview";
               return App.execute("when:fetched", _this.cloneModel, function() {
                 return _this.cloneModel.save(_this.clonedData, {
