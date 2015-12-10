@@ -36,7 +36,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 	$current_user = wp_get_current_user();	
 	$query       = $wpdb->prepare(
 			     "SELECT collection.id, collection.name as quiz_name, collection.term_ids, collection.duration, meta.meta_value as quiz_type 
-			      FROM {$wpdb->prefix}content_collection collection
+			      FROM wp_content_collection collection
 			      INNER JOIN {$wpdb->prefix}collection_meta meta on collection.id = meta.collection_id and meta.meta_key=%s
 			      WHERE term_ids like %s and type=%s and post_status=%s",
 			      array('quiz_type','%"'.$texbook_id.'";%', 'quiz', 'publish'));
@@ -163,7 +163,7 @@ function student_my_upcoming_quizes($texbook_ids){
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
 	$today = date("Y-m-d H:i:s");
-	$query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM {$wpdb->prefix}content_collection collection  
+	$query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
 		INNER JOIN {$wpdb->prefix}collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
 		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
@@ -191,7 +191,7 @@ function student_last_quiz_taken_on($book_id){
 	$current_user = wp_get_current_user($book_id);
 
 	$query = $wpdb->prepare(
-		"SELECT taken_on FROM {$wpdb->prefix}quiz_response_summary  summary INNER JOIN {$wpdb->prefix}content_collection collection on summary.collection_id = collection.id
+		"SELECT taken_on FROM {$wpdb->prefix}quiz_response_summary  summary INNER JOIN wp_content_collection collection on summary.collection_id = collection.id
 		 WHERE student_id = %d  and term_ids like %s ORDER BY taken_on desc limit 1", 
 		
 		array($current_user->ID, '%"'.$book_id.'";%')
