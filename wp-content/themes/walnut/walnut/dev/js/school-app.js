@@ -66,6 +66,7 @@ define(['marionette'], function(Marionette) {
         });
       }
       if (user.current_user_can('student')) {
+        alert();
         App.navigate('students/dashboard', {
           trigger: true
         });
