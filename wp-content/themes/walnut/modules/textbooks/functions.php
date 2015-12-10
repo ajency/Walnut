@@ -159,6 +159,7 @@ function get_textbooks( $args = array() ) {
         foreach ($textbooks as $book){
             $book= get_book( $book,$division,$user_id );
             if($book)
+                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name 
                 $data[]= $book;
         }
 
