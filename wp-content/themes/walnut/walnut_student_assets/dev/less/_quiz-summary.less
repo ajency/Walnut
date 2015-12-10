@@ -1,0 +1,149 @@
+ //   ____        _        _____                                            
+ //  / __ \      (_)      / ____|                                           
+ // | |  | |_   _ _ ____ | (___  _   _ _ __ ___  _ __ ___   __ _ _ __ _   _ 
+ // | |  | | | | | |_  /  \___ \| | | | '_ ` _ \| '_ ` _ \ / _` | '__| | | |
+ // | |__| | |_| | |/ /   ____) | |_| | | | | | | | | | | | (_| | |  | |_| |
+ //  \___\_\\__,_|_/___| |_____/ \__,_|_| |_| |_|_| |_| |_|\__,_|_|   \__, |
+ //                                                                    __/ |
+ //                                                                   |___/ 
+
+
+
+
+
+ // ---------------------------
+ // QUIZ SUMMARY STYLES -----------
+ // ---------------------------
+
+
+
+ // ---------------------------
+ // QUIZ DETAILS STYLING -----------
+ // ---------------------------
+
+
+.teacher-app {
+	  #quiz-details-region {
+			& > div:last-child{
+				#try-again{
+					margin: 18px 0px 18px 30px;
+				    background: @dashboard-color;
+				    .box-shadow(0px 1px 1px 5px rgba(50, 50, 50, 0.2));
+				    border: 0;
+				    line-height: 45px;
+				    &:after{
+				    	content: "\f0ec";
+					    font: normal normal normal 1.5em FontAwesome;
+					    text-rendering: auto;
+					    -webkit-font-smoothing: antialiased;
+					    padding-left: 10px;
+					    color: lighten(@dashboard-color, 10%);
+				    }
+				}
+			}
+			& > div{
+				.grid{
+					.grid-body{
+						.summary-section{
+							text-transform: uppercase;
+							font-size: 1em;
+							margin: 10px 0px !important;
+							span{
+								font-size:1em;
+								font-weight: bold;
+								color: @quiz-link-color3 !important;
+								span{
+									color: @quiz-link-color1 !important;
+									padding-left: 5px;
+								}
+								&.text-danger{
+									color: #D82A07 !important;
+								}
+							}
+						}
+					}
+				}
+			}
+	  }
+}
+
+
+
+
+ // ---------------------------
+ // TIMELINE RESULTS -----------
+ // ---------------------------
+
+
+#myCanvas-miki{
+	 .cbp_tmtimeline {
+	     & > li {
+	         .contentPiece {
+	            .cbp_tmlabel {
+	            	@media @i-tab-landscape{
+	            		margin: 0 0 55px 28%;
+	            	}
+	                 & > div:last-child {
+	                    background: #F0F0F0;
+					    border: 1px solid #ccc;
+					    width: 80%;
+					    border-top: 0;
+					    .box-shadow(0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
+					    .muted{
+					    	font-size: 0.8em;
+						    text-transform: uppercase;
+						    color: @quiz-link-color3;
+						    .question-type-div:last-child{
+						    	color: @quiz-link-color1;
+						    }
+					    }
+	                 }
+	                 & > div:last-child{
+	                    @media @i-tab-landscape{
+	                            width: 85%;
+	                        }	                 	
+		            }
+	             }
+	             .qstnStatus{
+	             	right: -64px;
+	             	text-align: center;
+	             	line-height: 40px;
+	             	@media @i-tab-landscape{
+						right: -100px;
+	             	}
+	             	& > i{
+	             		display: block;
+	             		font-size: 1.2em;
+	             	}
+	             	& > label{
+	             		color: @quiz-link-color3 !important;
+	             		& > span{
+							color: @quiz-link-color1;
+	             		}
+	             	}	             	
+	             }
+	             .text-warning{
+					i{
+						&:before{
+							content: "\f0a9";
+						}
+					}
+	             }
+	             .text-error{
+					i{
+						&:before{
+							content: "\f057";
+						}
+					}	             	
+	             }
+	             .text-success{
+					i{
+						&:before{
+							content: "\f058";
+						}
+					}	             	
+	             }	             
+	         }
+	     }
+	 }
+}

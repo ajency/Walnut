@@ -1,0 +1,188 @@
+//  _               _                     _____ _         _           
+// | |             | |                   / ____| |       | |          
+// | |     ___  ___| |_ _   _ _ __ ___  | (___ | |_ _   _| | ___  ___ 
+// | |    / _ \/ __| __| | | | '__/ _ \  \___ \| __| | | | |/ _ \/ __|
+// | |___|  __/ (__| |_| |_| | | |  __/  ____) | |_| |_| | |  __/\__ \
+// |______\___|\___|\__|\__,_|_|  \___| |_____/ \__|\__, |_|\___||___/
+//                                                   __/ |            
+//                                                  |___/      
+
+
+
+       
+// ---------------------------
+// Lectures and quiz cards -----------
+// ---------------------------
+.l-q-cards {
+    .box-shadow(0 1px 6px 0 rgba(0, 0, 0, .12), 0 1px 6px 0 rgba(0, 0, 0, .12));
+    .display(flex);
+    .flex-direction(column);
+    display: block;
+    margin-bottom: 30px;
+    font: 1.2em open-sans, arial;
+    position: relative;
+    @media @i-tab-landscape {
+        font-size: 1.1em;
+    }
+    .lecture--card {
+        .justify-content(center);
+    }
+    &__title {
+        .display(flex);
+        .flex-direction(column);
+        .justify-content(space-between);
+        // .align-items(flex-start);
+        text-align: left;
+        .flex(1 1 70%);
+        height: 160px;
+        padding: 10px 20px;
+        background: @quiz-color;
+        word-wrap: break-word;
+        font-weight: bold;
+        .lecture, .chapter, {
+            // &:extend(.chapter);
+            .display(flex);
+            margin: 8px 0;
+            span{
+                color: @quiz-link-color3;
+            }
+            span:first-child {
+                .flex-basis(22%);
+                @media @i-tab-landscape {
+                    .flex-basis(30%);
+                }
+                @media @desktop, {
+                    .flex-basis(30%);
+                }
+            }
+            span:nth-child(2n) {
+                // text-align: left;
+                .flex-basis(78%);
+                @media @i-tab-landscape {
+                    .flex-basis(70%);
+                }
+                @media @desktop {
+                    .flex-basis(70%);
+                }
+            }
+        }
+        .last-seen {
+            margin: 8px 0;
+            color: #938234;
+            .display(flex);
+            .align-items(center);
+            .justify-content(flex-start);
+            font-size: 0.8em;
+            font-weight: bold;
+            div:last-child {
+                padding-left: 30px;
+            }
+        }
+    }
+    &__details {
+        .display(flex);
+        .justify-content(flex-start);
+        .align-items(center);
+        .flex(1 1 30%);
+        padding: 0 20px;
+        height: 75px;
+        font-size: 1.1em;
+        font-weight: bold;
+        @media @i-tab-landscape {
+            font-size: 15px;
+        }
+        >div {
+            >span:first-child {
+                padding-left: 15px;
+            }
+        }
+        .timing {
+            color: @quiz-link-color1;
+            padding-right: 15px;
+        }
+        .attempts {
+            color: @quiz-link-color2;
+            text-transform: uppercase;
+            border-left: 1px solid #000;
+        }
+    }
+    .view {
+        position: absolute;
+        bottom: 40px;
+        right: 0;
+        >a {
+            img {
+                width: 65%;
+                .transition(all .2s ease-in-out);
+                &:hover {
+                    .transform(scale(1.1));
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------
+// Sidebar spacing -----------
+// ---------------------------
+.spacing {
+    padding: 30px 15px;
+}
+
+// ---------------------------
+// Sidebar panel -----------
+// ---------------------------
+.sidebar-panel {
+    &.panel-group {
+        .panel {
+            .box-shadow(0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
+            .border-radius(0);
+            font: bold 1em open-sans, arial;
+            text-align: left;
+            color: #752C03;
+            .panel-heading {
+                background: @quiz-color;
+                padding: 0;
+                .box-shadow(0 0px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.12));
+                .panel-title {
+                    a {
+                        display: block;
+                        padding: 15px 25px;
+                        text-decoration: none;
+                        .drop-icon {
+                            i {
+                                font-size: 33px;
+                                font-weight: bold;
+                                .transition(transform 0.7s ease);
+                            }
+                            .is-open {
+                                transform: rotate(90deg);
+                            }
+                        }
+                    }
+                }
+            }
+            .panel-collapse {
+                .panel-body {
+                    padding: 12px 25px;
+                    cursor: pointer;
+                    .flex-family();
+                    .chapter-names {
+                        .flex(1 85%);
+                        line-height: 22px;
+                    }
+                    .checked {
+                        color: #61BBB9;
+                        font-size: 20px;
+                        opacity: 0;
+                        .flex(1 5%);
+                        .transition(opacity 0.7s ease);
+                    }
+                    .is-checked {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}

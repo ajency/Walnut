@@ -34,7 +34,7 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
 
     <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
     <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
@@ -79,7 +79,7 @@
                         <?php if(!school_is_syncd()) : ?>
                     <p align="center">You may not see any data if you have not synced.</p> 
                     <p align="center">Sync data from the drop down on the top right corner after logging in<p> 
-                    <iframe style="position:absolute;top:-5000px" src="<?= site_url() ?>/wp-admin/options-permalink.php"></iframe>    
+                    <iframe style="position:absolute;top:-5000px" src="<?php  site_url() ?>/wp-admin/options-permalink.php"></iframe>    
                         <?php endif; ?>
                     <?php endif;?>
                                           
@@ -105,12 +105,12 @@ global $chorus_options;
 
     <?php if(is_multisite()){?>
         IS_STANDALONE_SITE = false
-    <? }
+    <?php }
     else { ?>
         IS_STANDALONE_SITE = true
     <?php }?>
 
-    <?=getLoggedInUserModel()?>
+    <?php getLoggedInUserModel()?>
 
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
