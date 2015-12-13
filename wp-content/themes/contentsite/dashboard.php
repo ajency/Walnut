@@ -16,6 +16,5 @@
 /*
   Template Name: Dashboard
  */
-
 ?>
 <?php require_once('home.php'); ?>
