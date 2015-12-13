@@ -13,7 +13,7 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
     <link href="./wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
 
     <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
     <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
@@ -79,7 +79,7 @@ global $chorus_options; ?>
     SITEURL = '<?php echo site_url() ?>';
     THEMEURL = '<?php echo get_template_directory_uri()?>';
 
-    <?=getLoggedInUserModel()?>
+    <?php getLoggedInUserModel()?>
 
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
