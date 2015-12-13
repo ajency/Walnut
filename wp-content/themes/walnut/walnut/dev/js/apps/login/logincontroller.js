@@ -50,6 +50,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               if (response.blog_details.site_url !== SITEURL) {
                 return window.location = response.blog_details.site_url;
               } else {
+                  alert();
                 _this.view.close();
                 return App.vent.trigger('show:dashboard');
               }
@@ -83,6 +84,21 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginView.prototype.onShow = function() {
+        //added by kapil to make textbox effects work
+        $(".mat-input").focus(function() {
+            $(this).parent().addClass("is-active is-completed");
+        });
+        $(".mat-input").focusout(function() {
+            if ($(this).val() === "") $(this).parent().removeClass("is-completed");
+            $(this).parent().removeClass("is-active");
+        });
+
+         $( ".mat-input" ).each(function( index ) {
+            if($(this).val()!==""){
+                $( this ).parent().addClass("is-active is-completed");
+            }
+        });        
+        //added by kapil to make textbox effects work        
         $('body').addClass('error-body no-top');
         return $('.page-content').addClass('condensed');
       };

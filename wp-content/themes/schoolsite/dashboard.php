@@ -63,6 +63,9 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
 
 </head>
+<?php 
+//require_once('header-student.php');
+?>
 <body class="">
 <div id="site_main_container">
     <div>
