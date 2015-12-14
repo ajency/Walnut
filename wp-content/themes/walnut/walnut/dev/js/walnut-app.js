@@ -48,7 +48,6 @@ define(['marionette'], function(Marionette) {
       }
       return App.loginRegion.close();
     } else {
-      return false;
       return App.vent.trigger("show:login");
     }
   });

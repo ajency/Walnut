@@ -79,7 +79,7 @@ global $chorus_options; ?>
     SITEURL = '<?php echo site_url() ?>';
     THEMEURL = '<?php echo get_template_directory_uri()?>';
 
-    <?php getLoggedInUserModel()?>
+    <?php print_r(getLoggedInUserModel())?>
 
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>

@@ -106,7 +106,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
         var data;
         e.preventDefault();
         if (this.$el.find('form').valid()) {
-          alert();
           this.$el.find('#checking_login').remove();
           this.$el.find('#login-submit').append('<i id="checking_login" class="fa fa-spinner fa fa-1x fa-spin"></i>');
           data = Backbone.Syphon.serialize(this);
