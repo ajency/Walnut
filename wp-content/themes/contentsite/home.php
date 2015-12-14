@@ -43,7 +43,9 @@
     <link href="/wp-content/themes/walnut/walnut/dev/css/bookBlock/bookblock.css" rel="stylesheet" type="text/css">
     <!-- END BOOK BLOCK -->
     
-    <link href="/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+    <link href="/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>    
+
+    
 </head>
 <body class="">
 <div id="site_main_container">
