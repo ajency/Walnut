@@ -2,10 +2,10 @@
    /*
      Template Name: Login Page
     */
-?>
+   ?>
  <?php if(!is_user_logged_in()): ?>  
 <!DOCTYPE html>
-<html>
+<html lang="en">
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -136,15 +136,17 @@
       <?php 
          wp_footer();
          ?>
-<?php global $class_ids;
-global $chorus_options; ?>
-<script>
-    AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
-    SITEURL = '<?php echo site_url() ?>';
-    THEMEURL = '<?php echo get_template_directory_uri()?>';
-
-    <?php print_r(getLoggedInUserModel())?>
-
+      <?php
+         global $chorus_options; 
+         ?>
+      <script>
+         AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
+         SITEURL = '<?php echo site_url() ?>';
+         THEMEURL = '<?php echo get_template_directory_uri()?>';
+         
+         
+             <?php print_r(getLoggedInUserModel())?>
+         
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
     CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
@@ -154,8 +156,14 @@ global $chorus_options; ?>
     <?php foreach($chorus_options as $key=>$value){ ?>
     CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
     <?php } ?>
-
-</script>
+         
+      </script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
+      <!-- Bootstrap Core JavaScript -->
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/bootstrap.min.js"></script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/script.js"></script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/scrollReveal.js"></script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/nprogress.js"></script>
 <script type="text/javascript" src="/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
 <script>
     Pace.on('hide', function () {
@@ -179,3 +187,8 @@ if (ENV == 'dev') {
 
 </body>
 </html>
+<?php endif; ?>
+
+ <?php if(is_user_logged_in()): ?>
+<?php require_once('home.php'); ?>
+ <?php endif;?>
