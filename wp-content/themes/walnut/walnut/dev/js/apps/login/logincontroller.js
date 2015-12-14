@@ -50,7 +50,6 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
               if (response.blog_details.site_url !== SITEURL) {
                 return window.location = response.blog_details.site_url;
               } else {
-                  alert();
                 _this.view.close();
                 return App.vent.trigger('show:dashboard');
               }
