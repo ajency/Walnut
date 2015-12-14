@@ -186,7 +186,7 @@
       <script src="<?php echo STUDENT_ASSET_PATH ;?>js/scrollReveal.js"></script>
       <script src="<?php echo STUDENT_ASSET_PATH ;?>js/nprogress.js"></script>
 
-   </body>
+   </body> 
 </html>
 <?php endif; ?>
 
