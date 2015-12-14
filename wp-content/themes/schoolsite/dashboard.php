@@ -105,13 +105,13 @@ global $chorus_options;
     THEMEURL = '<?php echo get_template_directory_uri()?>';
 
     <?php if(is_multisite()){?>
-        IS_STANDALONE_SITE = false
+        IS_STANDALONE_SITE = false;
     <?php }
     else { ?>
-        IS_STANDALONE_SITE = true
+        IS_STANDALONE_SITE = true;
     <?php }?>
 
-    <?php getLoggedInUserModel()?>
+    <?php print_r(getLoggedInUserModel());?>
 
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
