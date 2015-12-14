@@ -104,7 +104,7 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
 
       LoginView.prototype.submitLogin = function(e) {
         var data;
-        e.preventDefault();
+        e.defaultPrevented;
         if (this.$el.find('form').valid()) {
           this.$el.find('#checking_login').remove();
           this.$el.find('#login-submit').append('<i id="checking_login" class="fa fa-spinner fa fa-1x fa-spin"></i>');
