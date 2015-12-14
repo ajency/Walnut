@@ -80,7 +80,7 @@
                                  <div class="profile-pic">
                                     <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" alt="" class="img-responsive center-block">
                                  </div>
-                                 <h5><a href="<?php echo site_url() ?>/walnut">At Shivane</a></h5>
+                                 <h5><a href="http://walnut.synapsedu.info">At Shivane</a></h5>
                               </div>
                            </div>
                            <div class="col-sm-6 col-lg-6">
