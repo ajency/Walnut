@@ -53,6 +53,11 @@
          //240935906580-i8f78p42fftas8p4llu8d6va4ldbnp0g.apps.googleusercontent.com
          //mQWjHa1kosS0LofU3NrgG-F-
          ?>
+        <script>var theChampGoogleKey = '240935906580-i8f78p42fftas8p4llu8d6va4ldbnp0g.apps.googleusercontent.com'; var theChampGoogleErrorMessage = 'Follow steps 11 and 12 at GooglePlus app configuration page, about to open' </script>
+        <script> var theChampFBKey = '921957491185313', theChampFBLang = 'en_US', theChampFbLikeMycred = 0, theChampSsga = 0, theChampCommentNotification = 0, theChampFbIosLogin = 0; </script>
+            <script>var theChampFBCommentUrl = 'http://synapsedu.info/social-login-student/'; var theChampFBCommentColor = ''; var theChampFBCommentNumPosts = ''; var theChampFBCommentWidth = '100%'; var theChampFBCommentOrderby = ''; var theChampCommentingTabs = "wordpress,facebook,googleplus,disqus", theChampGpCommentsUrl = 'http://synapsedu.info/social-login-student/', theChampDisqusShortname = '', theChampScEnabledTabs = 'wordpress,fb', theChampScLabel = 'Leave a reply', theChampScTabLabels = {"wordpress":"Default Comments (0)","fb":"Facebook Comments (<fb:comments-count href=http:\/\/localhost\/standalone_site\/social-login-student\/><\/fb:comments-count>)","googleplus":"G+ Comments","disqus":"Disqus Comments"}, theChampGpCommentsWidth = 0, theChampCommentingId = 'respond'</script>
+            <script> var theChampSharingAjaxUrl = 'http://synapsedu.info/wp-admin/admin-ajax.php', theChampCloseIconPath = 'http://synapsedu.info/wp-content/plugins/super-socializer/images/close.png', theChampPluginIconPath = 'http://synapsedu.info/wp-content/plugins/super-socializer/images/logo.png', theChampHorizontalSharingCountEnable = 1, theChampVerticalSharingCountEnable = 0, theChampSharingOffset = -10, theChampCounterOffset = -10 </script>
+      
    </head>
    <body>
     <header>
