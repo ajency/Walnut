@@ -5,121 +5,188 @@
    ?>
  <?php if(!is_user_logged_in()): ?>  
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Synapse</title>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
-
-    <link href="/wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
-    <link href="/wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
-    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
-
-    <link href="/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="/wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="/wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
-          media="screen"/>
-    <link href="/wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
-          media="screen"/>
-    <link href="/wp-content/themes/walnut/walnut/dev/css/jquery.mmenu.all.css" rel="stylesheet" type="text/css"
-          media="screen"/>
-    <!-- BEGIN CORE CSS FRAMEWORK -->
-    <link href="/wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
-    <link href="/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css">
-
-
-    <!-- END CORE CSS FRAMEWORK -->
-
-    <!-- BEGIN CSS TEMPLATE -->
-    <link href="/wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
-
-    <!-- BEGIN BOOK BLOCK -->
-    <link href="/wp-content/themes/walnut/walnut/dev/css/bookBlock/custom.css" rel="stylesheet" type="text/css">
-    <link href="/wp-content/themes/walnut/walnut/dev/css/bookBlock/bookblock.css" rel="stylesheet" type="text/css">
-    <!-- END BOOK BLOCK -->
-    
-    <link href="/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-</head>
-<body class="">
-<div id="site_main_container">
-    <div>
-        <div id="header-region"></div>
-        <div class="page-container row-fluid">
-            <div id="left-nav-region"></div>
-            <a href="#" class="scrollup">Scroll</a>
-
-            <div class="page-content">
-                <div class="content">
-                    <?php if(!is_multisite()) :?>
-                        <?php if(!school_is_syncd()) : ?>
-                        <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">School Data Sync</a> <p> 
-                        <?php endif; ?>
-                    <?php endif;?>
-                            
-                    <div id="login-region"></div>
-                    <div id="breadcrumb-region"></div>
-                    <div id="main-content-region"></div>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <title>Walnut Dashboard</title>
+      <?php
+         global $post;
+         $page_slug=$post->post_name;
+         $current_user = wp_get_current_user();
+         $login_header_pages = array('register-redirect-student', 'login','dashboard');
+         if ( is_user_logged_in() ) {
+             array_pop($login_header_pages);
+         }
+         define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/");
+         define("ANIMATED_LIBRARY", get_template_directory_uri()."/walnut/dev/");
+         ?>        
+      <script type="text/javascript">
+         function logout(){
+           y = confirm("Do you really wish to logout?");    
+           if(y){
+             location.href="<?php echo wp_logout_url(); ?>";
+           }
+         }
+         
+      </script>
+      <!-- Sites Styles -->
+      <!-- Bootstrap Core CSS -->
+      <link rel="stylesheet" href="<?php echo STUDENT_ASSET_PATH ;?>css/bootstrap.min.css" type="text/css">
+      <!-- Custom Css -->
+      <link rel="stylesheet" href="<?php echo STUDENT_ASSET_PATH ;?>css/style.css">
+      <!-- Animation library -->
+      <link href="<?php echo ANIMATED_LIBRARY ;?>css/animate.min.css" rel="stylesheet" type="text/css">
+      <!-- Custom Fonts -->
+      <link rel="stylesheet" href="<?php echo STUDENT_ASSET_PATH ;?>css/font-awesome.min.css" type="text/css">
+      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+      <?php
+         wp_head();
+         //240935906580-i8f78p42fftas8p4llu8d6va4ldbnp0g.apps.googleusercontent.com
+         //mQWjHa1kosS0LofU3NrgG-F-
+         ?>
+   </head>
+   <body>
+    <header>
+        <nav class="navbar navbar-default wallnut-nav">
+            <div class="container-fluid signin-header">
+                <div class="logo">
+                    <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" class="img-responsive center-block" alt="">
+                </div>
+                <div class="slogan">
+                    Tough Outside. Smart Inside
                 </div>
             </div>
-        </div>
-    </div>
+        </nav>
+    </header>   
+      <!-- Dashboard-Header -->
+      <div class="signin-card">
+         <div class="signin-wrapper">
+            <div class="container-fluid">
+               <form action="">
+                  <div class="row">
+                     <div class="col-sm-6 col-sm-offset-3 col-lg-6 col-lg-offset-3 wrapped">
+                        <div class="row text-center">
+                           <div class="col-sm-6 col-lg-6 border-rl">
+                              <div class="school-details">
+                                 <div class="profile-pic">
+                                    <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" alt="" class="img-responsive center-block">
+                                 </div>
+                                 <h5><a href="<?php echo site_url() ?>/walnut">At Shivane</a></h5>
+                              </div>
+                           </div>
+                           <div class="col-sm-6 col-lg-6">
+                              <div class="school-details">
+                                 <div class="profile-pic">
+                                    <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" alt="" class="img-responsive center-block">
+                                 </div>
+                                 <h5><a href="">At Fursungi</a></h5>
+                              </div>
+                           </div>
+                        </div>
+                        <hr>
+                        <!--center>Sign In/ Sign Up for Open School</center-->
+                        <div class="row text-center">
+                           <div class="col-sm-6 col-lg-6">
+                              <div class="social-signup">
+                                 <div class="the_champ_login_container">
+                                    <ul class="the_champ_login_ul">
+                                       <i id="theChampGoogleButton" class="fa fa-google-plus btn g-plus " alt="Login with Google" title="Login with Google" onclick="theChampInitiateLogin(this)" >
+                                       Sign in with google
+                                       </i>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-sm-6 col-lg-6">
+                              <div class="social-signup">
+                                 <div class="the_champ_login_container">
+                                    <ul class="the_champ_login_ul">
+                                       <i id="theChampFacebookButton" class="fa fa-facebook btn fb " alt="Login with Facebook" title="Login with Facebook" onclick="theChampInitiateLogin(this)" >
+                                       Sign in with facebook
+                                       </i>
+                                    </ul>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </form>
+               <!-- Support Emails     -->
+               <div class="row text-center">
+                  <div class="col-sm-12 col-lg-12">
+                     <div class="support-email">
+                        <h5>Support Emails</h5>
+                        <h5><a href="mailto:walnut@info.com">walnut@info.com</a>/<a href="mailto:helpdesk@walnut.com">helpdesk@walnut.com</a></h5>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <?php 
+         wp_footer();
+         ?>
+      <?php
+         global $chorus_options; 
+         ?>
+      <script>
+         AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
+         SITEURL = '<?php echo site_url() ?>';
+         THEMEURL = '<?php echo get_template_directory_uri()?>';
+         
+         
+         <?php print_r(getLoggedInUserModel())?>
+         
+         CLASS_LABEL = {};
+         <?php foreach($class_ids as $class){ ?>
+         CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
+         <?php } ?>
+         
+         CHORUS_OPTIONS = {};
+         <?php foreach($chorus_options as $key=>$value){ ?>
+         CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
+         <?php } ?>
+         
+      </script>
+      <script type="text/javascript" src="/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+      <script>
+          Pace.on('hide', function () {
+              document.getElementById("site_main_container").setAttribute('class', 'showAll');
+          })
+      </script>
+      <?php
 
-    <div id="dialog-region">
-    </div>
-</div>
-<?php global $class_ids;
-global $chorus_options; ?>
-<script>
-    AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
-    SITEURL = '<?php echo site_url() ?>';
-    THEMEURL = '<?php echo get_template_directory_uri()?>';
+      if (ENV == 'dev') {
+          ?>
+          <script type="text/javascript"
+                  data-main="/wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
+                  src="/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+      <?php
+      } else {
 
-    <?php print_r(getLoggedInUserModel())?>
+      ?>
+          <script type="text/javascript"
+                  src="/wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
+      <?php } ?>
 
-    CLASS_LABEL = {};
-    <?php foreach($class_ids as $class){ ?>
-    CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
-    <?php } ?>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
+      <!-- Bootstrap Core JavaScript -->
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/bootstrap.min.js"></script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/script.js"></script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/scrollReveal.js"></script>
+      <script src="<?php echo STUDENT_ASSET_PATH ;?>js/nprogress.js"></script>
 
-    CHORUS_OPTIONS = {};
-    <?php foreach($chorus_options as $key=>$value){ ?>
-    CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
-    <?php } ?>
-
-</script>
-<script type="text/javascript" src="/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-<script>
-    Pace.on('hide', function () {
-        document.getElementById("site_main_container").setAttribute('class', 'showAll');
-    })
-</script>
-<?php
-
-if (ENV == 'dev') {
-    ?>
-    <script type="text/javascript"
-            data-main="/wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
-            src="/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
-<?php
-} else {
-
-?>
-    <script type="text/javascript"
-            src="/wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
-<?php } ?>
-
-</body>
+   </body>
 </html>
 <?php endif; ?>
 
