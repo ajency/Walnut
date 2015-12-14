@@ -146,7 +146,7 @@ function student_fetch_division(){
 	global $wpdb;
 	$current_user = wp_get_current_user();	
 	$query        = "SELECT division FROM {$wpdb->prefix}class_divisions divisions 
-			         INNER JOIN {$wpdb->prefix}usermeta usermeta on divisions.id = usermeta.meta_value 
+			         INNER JOIN wp_usermeta usermeta on divisions.id = usermeta.meta_value 
 			         AND meta_key='student_division' and usermeta.user_id='". $current_user->ID ."'";	
 	$result       = $wpdb->get_results($query);	
 	$division     = $result[0]->division;
