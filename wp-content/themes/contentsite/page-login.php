@@ -133,9 +133,11 @@
             </div>
          </div>
       </div>
+      <script type="text/javascript" src="http://synapsedu.info/wp-content/plugins/super-socializer/js/front/social_login/google.js?ver=6.6.4"></script>
       <?php 
-         wp_footer();
+         wp_footer();         
          ?>
+
       <?php
          global $chorus_options; 
          ?>
