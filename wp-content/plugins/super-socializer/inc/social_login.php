@@ -649,7 +649,7 @@ add_action('the_champ_before_registration', 'heateor_ss_disable_social_registrat
 
 
 function social_role_updation($userId, $userdata, $profileData){
-
+	$meta = get_user_meta($userId);
 	if(isset($meta['primary_blog'])){
 		update_user_meta( $userId, 'primary_blog', '14');
 	}else{
