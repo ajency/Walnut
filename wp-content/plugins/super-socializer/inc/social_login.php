@@ -651,9 +651,9 @@ add_action('the_champ_before_registration', 'heateor_ss_disable_social_registrat
 function social_role_updation($userId, $userdata, $profileData){
 	$meta = get_user_meta($userId);
 	if(isset($meta['primary_blog'])){
-		update_user_meta( $userId, 'primary_blog', '14');
+		update_user_meta( $userId, 'primary_blog', 14);
 	}else{
-		add_user_meta( $userId, 'primary_blog', '14');
+		add_user_meta( $userId, 'primary_blog', 14);
 	}
 
 	if(isset($meta['source_domain'])){
@@ -661,7 +661,7 @@ function social_role_updation($userId, $userdata, $profileData){
 	}else{
 		add_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
 	}
-
+wp_redirect(site_url().'/register-redirect-student');
 }
 
 add_action('the_champ_user_successfully_created','social_role_updation');
