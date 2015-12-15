@@ -649,6 +649,10 @@ add_action('the_champ_before_registration', 'heateor_ss_disable_social_registrat
 
 
 function social_role_updation($userId, $userdata, $profileData){
+
+print_r($userId);
+print_r($userdata);
+print_r($profileData);	
 $userdata['ID'] = $userId;
 $userdata['role'] = 'student';
 $userdata['primary_blog']= '14';
