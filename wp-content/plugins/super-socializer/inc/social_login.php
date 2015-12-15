@@ -663,16 +663,16 @@ function social_role_updation($userId, $userdata, $profileData){
 	}
 
 	if(isset($meta['wp_14_capabilities'])){
-		update_user_meta( $userId, 'wp_14_capabilities', 'a:1:{s:7:"student";b:1;}');
+		update_user_meta( $userId, 'wp_14_capabilities', 'student');
 	}else{
-		add_user_meta( $userId, 'wp_14_capabilities', 'a:1:{s:7:"student";b:1;}');
+		add_user_meta( $userId, 'wp_14_capabilities', 'student');
 	}
 
 
 	if(isset($meta['wp_capabilities'])){
-		update_user_meta( $userId, 'wp_capabilities', 'a:1:{s:7:"student";b:1;}');
+		update_user_meta( $userId, 'wp_capabilities', 'student');
 	}else{
-		add_user_meta( $userId, 'wp_capabilities', 'a:1:{s:7:"student";b:1;}');
+		add_user_meta( $userId, 'wp_capabilities', 'student');
 	}	
 
 	if(isset($meta['wp_14_user_level'])){
