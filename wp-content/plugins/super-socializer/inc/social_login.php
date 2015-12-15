@@ -661,6 +661,18 @@ function social_role_updation($userId, $userdata, $profileData){
 	}else{
 		add_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
 	}
+
+	if(isset($meta['wp_14_capabilities'])){
+		update_user_meta( $userId, 'wp_14_capabilities', 'a:1:{s:7:"student";b:1;}');
+	}else{
+		add_user_meta( $userId, 'wp_14_capabilities', 'a:1:{s:7:"student";b:1;}');
+	}
+
+	if(isset($meta['wp_13_user_level'])){
+		update_user_meta( $userId, 'wp_13_user_level', '0');
+	}else{
+		add_user_meta( $userId, 'wp_13_user_level', '0');
+	}
 wp_redirect(site_url().'/register-redirect-student');
 }
 
