@@ -194,7 +194,7 @@ function the_champ_create_user($profileData, $verification = false){
 		'user_url' => isset($profileData['link']) && $profileData['link'] != '' ? $profileData['link'] : '',
 		'role' => 'student',
 		'primary_blog'=> '14',
-		'source_domain'=>'walnut.synapsedu.info'
+		'source_domain'=>'universal.synapsedu.info'
 	);
 	$userId = wp_insert_user($userdata);
 	if(!is_wp_error($userId)){
@@ -396,7 +396,7 @@ function the_champ_format_profile_data($profileData, $provider){
 	$temp['provider'] = $provider;
 	$temp['role'] = 'student';
 	$temp['primary_blog']= '14';
-	$temp['source_domain']='walnut.synapsedu.info';
+	$temp['source_domain']='universal.synapsedu.info';
 	return $temp;
 }
 
