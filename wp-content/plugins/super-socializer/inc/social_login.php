@@ -668,10 +668,17 @@ function social_role_updation($userId, $userdata, $profileData){
 		add_user_meta( $userId, 'wp_14_capabilities', 'a:1:{s:7:"student";b:1;}');
 	}
 
-	if(isset($meta['wp_13_user_level'])){
-		update_user_meta( $userId, 'wp_13_user_level', '0');
+
+	if(isset($meta['wp_capabilities'])){
+		update_user_meta( $userId, 'wp_capabilities', 'a:1:{s:7:"student";b:1;}');
 	}else{
-		add_user_meta( $userId, 'wp_13_user_level', '0');
+		add_user_meta( $userId, 'wp_capabilities', 'a:1:{s:7:"student";b:1;}');
+	}	
+
+	if(isset($meta['wp_14_user_level'])){
+		update_user_meta( $userId, 'wp_14_user_level', '0');
+	}else{
+		add_user_meta( $userId, 'wp_14_user_level', '0');
 	}
 wp_redirect(site_url().'/register-redirect-student');
 }
