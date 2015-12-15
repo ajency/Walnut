@@ -652,7 +652,7 @@ function social_role_updation($userId, $userdata, $profileData){
 
 print_r($userId);
 print_r($userdata);
-print_r($profileData);	
+print_r($profileData);	exit;
 $userdata['ID'] = $userId;
 $userdata['role'] = 'student';
 $userdata['primary_blog']= '14';
