@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </nav>
-                </header>
+                </header> 
 
                 <!-- Signin/Signup -->
                 <div class="signin-card">
