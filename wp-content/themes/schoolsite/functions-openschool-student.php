@@ -2,7 +2,7 @@
 function fetch_all_divisions(){
 	global $wpdb;
 	$current_user = wp_get_current_user();	
-	$result       = $wpdb->get_results("SELECT * FROM {wp_class_divisions");
+	$result       = $wpdb->get_results("SELECT * FROM wp_class_divisions");
 	return $result;
 }
 
