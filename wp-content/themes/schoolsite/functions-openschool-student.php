@@ -33,7 +33,7 @@ function student_redirect(){
 	$meta = get_user_meta($current_user->ID);
 	if(isset($meta['thechamp_provider']) && $current_user->ID!=0 && !isset($meta['student_division']) && !strpos($_SERVER['REDIRECT_URL'],'register-redirect-student')){
 	   
-		print_r($_SERVER['REDIRECT_URL']);
+		print_r($_SERVER);
 		exit;
 	//    wp_redirect(site_url().'/register-redirect-student');
 	    exit;
