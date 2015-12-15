@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-selection/templates/content-selection.html'], function(App, RegionController, contentSelectionTpl) {
   return App.module("ContentSelectionApp.AllContent", function(AllContent, App, Backbone, Marionette, $, _) {
     var DataContentItemView, DataContentTableView, NoDataItemView;
-    AllContent.Controller = (function(_super) {
-      __extends(Controller, _super);
+    AllContent.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getContentSelectionView = __bind(this._getContentSelectionView, this);
-        this.contentPieceRemoved = __bind(this.contentPieceRemoved, this);
+        this._getContentSelectionView = bind(this._getContentSelectionView, this);
+        this.contentPieceRemoved = bind(this.contentPieceRemoved, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -55,8 +55,8 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       return Controller;
 
     })(RegionController);
-    DataContentItemView = (function(_super) {
-      __extends(DataContentItemView, _super);
+    DataContentItemView = (function(superClass) {
+      extend(DataContentItemView, superClass);
 
       function DataContentItemView() {
         return DataContentItemView.__super__.constructor.apply(this, arguments);
@@ -67,12 +67,12 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       DataContentItemView.prototype.tagName = 'tr';
 
       DataContentItemView.prototype.serializeData = function() {
-        var data, modules, type, _ref;
+        var data, modules, ref, type;
         data = DataContentItemView.__super__.serializeData.call(this);
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if ((_ref = this.groupType) === 'teaching-module' || _ref === 'student-training') {
+        if ((ref = this.groupType) === 'teaching-module' || ref === 'student-training') {
           data.isModule = true;
         }
         if (this.groupType === 'student-training') {
@@ -102,8 +102,8 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       return DataContentItemView;
 
     })(Marionette.ItemView);
-    NoDataItemView = (function(_super) {
-      __extends(NoDataItemView, _super);
+    NoDataItemView = (function(superClass) {
+      extend(NoDataItemView, superClass);
 
       function NoDataItemView() {
         return NoDataItemView.__super__.constructor.apply(this, arguments);
@@ -120,12 +120,12 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       return NoDataItemView;
 
     })(Marionette.ItemView);
-    DataContentTableView = (function(_super) {
-      __extends(DataContentTableView, _super);
+    DataContentTableView = (function(superClass) {
+      extend(DataContentTableView, superClass);
 
       function DataContentTableView() {
-        this.onContentPieceRemoved = __bind(this.onContentPieceRemoved, this);
-        this.addContentPieces = __bind(this.addContentPieces, this);
+        this.onContentPieceRemoved = bind(this.onContentPieceRemoved, this);
+        this.addContentPieces = bind(this.addContentPieces, this);
         return DataContentTableView.__super__.constructor.apply(this, arguments);
       }
 
@@ -149,12 +149,12 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.mixinTemplateHelpers = function(data) {
-        var _ref;
+        var ref;
         data = DataContentTableView.__super__.mixinTemplateHelpers.call(this, data);
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if ((_ref = this.groupType) === 'teaching-module' || _ref === 'student-training') {
+        if ((ref = this.groupType) === 'teaching-module' || ref === 'student-training') {
           data.isModule = true;
         }
         return data;
@@ -178,12 +178,12 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.addContentPieces = function() {
-        var content_pieces, id, _i, _len;
+        var content_pieces, i, id, len;
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         if (content_pieces) {
           this.trigger("add:content:pieces", content_pieces);
-          for (_i = 0, _len = content_pieces.length; _i < _len; _i++) {
-            id = content_pieces[_i];
+          for (i = 0, len = content_pieces.length; i < len; i++) {
+            id = content_pieces[i];
             this.fullCollection.remove(id);
           }
         }

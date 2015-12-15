@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-modules/modules-listing/modules-listing-controller', 'apps/content-modules/modules-listing/search-results-app', 'apps/textbook-filters/textbook-filters-app'], function(App, RegionController) {
   return App.module("ContentModulesApp.ModulesListing", function(ModulesListing, App) {
     var ContentPiecesLayout;
-    ModulesListing.ListController = (function(_super) {
-      __extends(ListController, _super);
+    ModulesListing.ListController = (function(superClass) {
+      extend(ListController, superClass);
 
       function ListController() {
         return ListController.__super__.constructor.apply(this, arguments);
@@ -88,8 +88,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
       return ListController;
 
     })(RegionController);
-    ContentPiecesLayout = (function(_super) {
-      __extends(ContentPiecesLayout, _super);
+    ContentPiecesLayout = (function(superClass) {
+      extend(ContentPiecesLayout, superClass);
 
       function ContentPiecesLayout() {
         return ContentPiecesLayout.__super__.constructor.apply(this, arguments);

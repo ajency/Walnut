@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('ContentPreview.ContentBoard.Element.TeacherQuestion.Views', function(Views, App, Backbone, Marionette, $, _) {
     var RowView;
-    RowView = (function(_super) {
-      __extends(RowView, _super);
+    RowView = (function(superClass) {
+      extend(RowView, superClass);
 
       function RowView() {
-        this._removeButtonAndShowAnswer = __bind(this._removeButtonAndShowAnswer, this);
+        this._removeButtonAndShowAnswer = bind(this._removeButtonAndShowAnswer, this);
         return RowView.__super__.constructor.apply(this, arguments);
       }
 
@@ -47,8 +47,8 @@ define(['app'], function(App) {
       return RowView;
 
     })(Marionette.ItemView);
-    return Views.MainView = (function(_super) {
-      __extends(MainView, _super);
+    return Views.MainView = (function(superClass) {
+      extend(MainView, superClass);
 
       function MainView() {
         return MainView.__super__.constructor.apply(this, arguments);
@@ -61,21 +61,21 @@ define(['app'], function(App) {
       MainView.prototype.itemView = RowView;
 
       MainView.prototype.initialize = function(opt) {
-        var ro, row, _i, _len, _ref, _results;
+        var i, len, ref, results, ro, row;
         if (opt == null) {
           opt = {};
         }
         this.model = opt.model;
         this.collection = new Backbone.Collection;
-        _ref = opt.model.get('elements');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          row = _ref[_i];
+        ref = opt.model.get('elements');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          row = ref[i];
           ro = _.clone(row);
           delete ro.elements;
-          _results.push(this.collection.add(ro));
+          results.push(this.collection.add(ro));
         }
-        return _results;
+        return results;
       };
 
       return MainView;

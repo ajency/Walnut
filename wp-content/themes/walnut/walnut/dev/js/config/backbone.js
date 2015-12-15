@@ -2,7 +2,7 @@ define(["backbone"], function(Backbone) {
   var _sync;
   _.extend(Backbone.Model.prototype, {
     sync: function(method, model, options) {
-      var allData, idAttr, onlyChanged, params, xhr, _action, _ref, _ref1;
+      var _action, allData, idAttr, onlyChanged, params, ref, ref1, xhr;
       if (!this.name) {
         throw new Error("'name' property not set for the model");
       }
@@ -12,7 +12,7 @@ define(["backbone"], function(Backbone) {
         data: {}
       };
       params.url = AJAXURL;
-      _action = "" + method + "-" + this.name;
+      _action = method + "-" + this.name;
       params.data['action'] = _action;
       switch (method) {
         case 'read':
@@ -24,7 +24,7 @@ define(["backbone"], function(Backbone) {
           params.data = _.defaults(model.toJSON(), params.data);
           break;
         case 'update':
-          onlyChanged = (_ref = options.onlyChanged) != null ? _ref : false;
+          onlyChanged = (ref = options.onlyChanged) != null ? ref : false;
           if (onlyChanged) {
             if (model.hasChanged()) {
               params.data.changes = {};
@@ -37,7 +37,7 @@ define(["backbone"], function(Backbone) {
           }
           break;
         case 'delete':
-          allData = (_ref1 = options.allData) != null ? _ref1 : true;
+          allData = (ref1 = options.allData) != null ? ref1 : true;
           if (allData) {
             params.data = _.defaults(model.toJSON(), params.data);
           } else {

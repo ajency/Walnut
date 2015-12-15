@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Textbooks", function(Textbooks, App, Backbone, Marionette, $, _) {
     var API;
-    Textbooks.ItemModel = (function(_super) {
-      __extends(ItemModel, _super);
+    Textbooks.ItemModel = (function(superClass) {
+      extend(ItemModel, superClass);
 
       function ItemModel() {
         return ItemModel.__super__.constructor.apply(this, arguments);
@@ -26,12 +26,12 @@ define(["app", 'backbone'], function(App, Backbone) {
       ItemModel.prototype.name = 'textbook';
 
       ItemModel.prototype.getClasses = function() {
-        var classLabel, classes, classesArray, _i, _len;
+        var classLabel, classes, classesArray, i, len;
         classesArray = [];
         classes = this.get('classes');
         if (_.isArray(classes)) {
-          for (_i = 0, _len = classes.length; _i < _len; _i++) {
-            classLabel = classes[_i];
+          for (i = 0, len = classes.length; i < len; i++) {
+            classLabel = classes[i];
             classesArray.push(CLASS_LABEL[classLabel]);
           }
           classesArray.join();
@@ -42,8 +42,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemModel;
 
     })(Backbone.Model);
-    Textbooks.NameModel = (function(_super) {
-      __extends(NameModel, _super);
+    Textbooks.NameModel = (function(superClass) {
+      extend(NameModel, superClass);
 
       function NameModel() {
         return NameModel.__super__.constructor.apply(this, arguments);
@@ -58,8 +58,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return NameModel;
 
     })(Backbone.Model);
-    Textbooks.ItemCollection = (function(_super) {
-      __extends(ItemCollection, _super);
+    Textbooks.ItemCollection = (function(superClass) {
+      extend(ItemCollection, superClass);
 
       function ItemCollection() {
         return ItemCollection.__super__.constructor.apply(this, arguments);
@@ -88,8 +88,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return ItemCollection;
 
     })(Backbone.Collection);
-    Textbooks.NamesCollection = (function(_super) {
-      __extends(NamesCollection, _super);
+    Textbooks.NamesCollection = (function(superClass) {
+      extend(NamesCollection, superClass);
 
       function NamesCollection() {
         return NamesCollection.__super__.constructor.apply(this, arguments);
@@ -120,13 +120,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       NamesCollection.prototype.getSectionsNames = function(terms) {
-        var section, sectionName, sectionNames, sectionString, sections, term, _i, _len;
+        var i, len, section, sectionName, sectionNames, sectionString, sections, term;
         sections = _.flatten(terms.sections);
         sectionString = '';
         sectionNames = [];
         if (sections) {
-          for (_i = 0, _len = sections.length; _i < _len; _i++) {
-            section = sections[_i];
+          for (i = 0, len = sections.length; i < len; i++) {
+            section = sections[i];
             term = this.get(section);
             if (term != null) {
               sectionName = term.get('name');
@@ -138,13 +138,13 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       NamesCollection.prototype.getSubSectionsNames = function(terms) {
-        var sub, subSectionString, subsection, subsectionNames, subsections, _i, _len;
+        var i, len, sub, subSectionString, subsection, subsectionNames, subsections;
         subsections = _.flatten(terms.subsections);
         subSectionString = '';
         subsectionNames = [];
         if (subsections) {
-          for (_i = 0, _len = subsections.length; _i < _len; _i++) {
-            sub = subsections[_i];
+          for (i = 0, len = subsections.length; i < len; i++) {
+            sub = subsections[i];
             subsection = this.get(sub);
             if (subsection != null) {
               subsectionNames.push(subsection.get('name'));

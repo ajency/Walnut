@@ -1,17 +1,17 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator/content-pieces-listing/views'], function(App, RegionController, bootbox) {
   return App.module("ContentCreator.ContentPieces", function(ContentPieces, App, Backbone, Marionette, $, _) {
     var ContentPiecesController;
-    ContentPiecesController = (function(_super) {
-      __extends(ContentPiecesController, _super);
+    ContentPiecesController = (function(superClass) {
+      extend(ContentPiecesController, superClass);
 
       function ContentPiecesController() {
-        this._browseMore = __bind(this._browseMore, this);
-        this._showViews = __bind(this._showViews, this);
-        this._getMoreItems = __bind(this._getMoreItems, this);
+        this._browseMore = bind(this._browseMore, this);
+        this._showViews = bind(this._showViews, this);
+        this._getMoreItems = bind(this._getMoreItems, this);
         return ContentPiecesController.__super__.constructor.apply(this, arguments);
       }
 

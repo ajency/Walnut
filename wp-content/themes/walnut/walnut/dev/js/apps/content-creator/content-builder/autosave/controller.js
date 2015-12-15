@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.AutoSave', function(AutoSave, App, Backbone, Marionette, $, _) {
-    AutoSave.Controller = (function(_super) {
-      __extends(Controller, _super);
+    AutoSave.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
@@ -17,7 +17,7 @@ define(['app'], function(App) {
       };
 
       Controller.prototype.autoSave = function(contentPieceModel) {
-        var data, options, siteRegion, valid_content, _json;
+        var _json, data, options, siteRegion, valid_content;
         siteRegion = App.mainContentRegion.$el;
         _json = this._getPageJson(siteRegion);
         if (!_.isObject(_json)) {
@@ -66,8 +66,8 @@ define(['app'], function(App) {
         elements = App.mainContentRegion.$el.find('#myCanvas').find('form input[name="element"]');
         question_exists = false;
         _.each(elements, function(element, index) {
-          var _ref;
-          if ((_ref = $(element).val()) === 'Fib' || _ref === 'Mcq' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') {
+          var ref;
+          if ((ref = $(element).val()) === 'Fib' || ref === 'Mcq' || ref === 'Sort' || ref === 'Hotspot' || ref === 'BigAnswer') {
             return question_exists = true;
           }
         });
@@ -83,9 +83,9 @@ define(['app'], function(App) {
         var elements;
         elements = App.mainContentRegion.$el.find('#myCanvas').find('.element-wrapper');
         return _.every(elements, function(element) {
-          var error_info, msg, _ref;
+          var error_info, msg, ref;
           $('#saved-successfully, #save-fail').remove();
-          if (((_ref = $(element).find('form input[name="element"]').val()) === 'Fib' || _ref === 'Mcq' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') && $(element).find('form input[name="complete"]').val() === 'false') {
+          if (((ref = $(element).find('form input[name="element"]').val()) === 'Fib' || ref === 'Mcq' || ref === 'Sort' || ref === 'Hotspot' || ref === 'BigAnswer') && $(element).find('form input[name="complete"]').val() === 'false') {
             msg = 'Ensure you have set the marks and added valid answers to save the question';
             error_info = $(element).find('form input[name="error_info"]').val();
             if (!_.isEmpty(error_info)) {

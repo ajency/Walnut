@@ -21,16 +21,16 @@ define ['app'
 
                 divisionsCollection = App.request "get:divisions"
 
-                App.execute "when:fetched", divisionsCollection, @_fetchTextbooks                          
+                App.execute "when:fetched", divisionsCollection, @_fetchTextbooks
 
             _fetchTextbooks:=>
-                
+
                 class_id= divisionsCollection.first().get 'class_id'
                 division= divisionsCollection.first().get 'id'
 
                 textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
 
-                App.execute "when:fetched", textbooksCollection, => 
+                App.execute "when:fetched", textbooksCollection, =>
                     App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
 
             _fetchQuizzes:=>
@@ -38,14 +38,14 @@ define ['app'
                 textbook = textbooksCollection.first()
                 @division= divisionsCollection.first().get 'id'
                 
-                data = 
+                data =
                     'textbook'      : textbook.id
                     'division'      : @division
 
                 quizzes = App.request "get:quizes", data
 
                 students = App.request "get:students:by:division", divisionsCollection.first().get 'id'
-                App.execute "when:fetched", [quizzes,students], @_showViews 
+                App.execute "when:fetched", [quizzes,students], @_showViews
 
             _showViews:=>
                 #wreqr object to get the selected filter parameters so that search can be done using them
@@ -67,7 +67,7 @@ define ['app'
                         dataType : 'quiz'
                         filters : ['divisions','textbooks', 'chapters']
 
-                        
+
 
                         App.execute "when:fetched", students, =>
                             App.execute "show:student:filter:app",
@@ -85,7 +85,7 @@ define ['app'
                                 selectedFilterParamsObject: @selectedFilterParamsObject
 
                     @listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
-                    
+
                     @listenTo @layout.filtersRegion, "division:changed",(division)=>
                         @division = division
                         students = App.request "get:students:by:division", division
@@ -97,7 +97,7 @@ define ['app'
                     @listenTo @layout.searchResultsRegion, "show:quiz:report", @_showQuiz
 
                     @listenTo @layout.allContentRegion, "save:communications", (data)=>
-                        
+
                             data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_completed_parent_mail'
@@ -108,12 +108,12 @@ define ['app'
 
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
-                            
+
 
                     @listenTo @layout.allContentRegion, "schedule:quiz", @_showScheduleQuizApp
 
-                    @listenTo @layout.allContentRegion, "clear:schedule", (quizModel)=>   
-                        
+                    @listenTo @layout.allContentRegion, "clear:schedule", (quizModel)=>
+
                         clearSchedule = App.request "clear:quiz:schedule", quizModel.id, @division
 
                         clearSchedule.done (response)->
@@ -134,7 +134,7 @@ define ['app'
 
             _showQuiz:(quizModel)->
                 App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"
-                
+
                 App.execute "show:quiz:report:app",
                     region      : App.mainContentRegion
                     division    : divisionsCollection.get @division
@@ -147,4 +147,4 @@ define ['app'
 
         # set handlers
         App.commands.setHandler "show:class:report:app", (opt = {})->
-            new ClassReportApp.Controller opt    
+            new ClassReportApp.Controller opt

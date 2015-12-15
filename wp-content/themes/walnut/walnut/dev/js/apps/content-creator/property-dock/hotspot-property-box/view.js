@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.PropertyDock.HotspotPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
-    return Views.PropertyView = (function(_super) {
-      __extends(PropertyView, _super);
+    return Views.PropertyView = (function(superClass) {
+      extend(PropertyView, superClass);
 
       function PropertyView() {
-        this._delayUpdateTillMarksChange = __bind(this._delayUpdateTillMarksChange, this);
-        this._updateMarks = __bind(this._updateMarks, this);
+        this._delayUpdateTillMarksChange = bind(this._delayUpdateTillMarksChange, this);
+        this._updateMarks = bind(this._updateMarks, this);
         return PropertyView.__super__.constructor.apply(this, arguments);
       }
 

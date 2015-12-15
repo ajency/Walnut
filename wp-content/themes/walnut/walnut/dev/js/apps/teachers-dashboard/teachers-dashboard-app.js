@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/teachers-dashboard/take-class/take-class-controller', 'apps/teaching-modules/textbook-modules-controller', 'apps/content-modules/view-single-module/single-module-controller'], function(App) {
   return App.module("TeachersDashboardApp", function(TeachersDashboardApp, App) {
     var Controller, TeachersDashboardRouter;
-    TeachersDashboardRouter = (function(_super) {
-      __extends(TeachersDashboardRouter, _super);
+    TeachersDashboardRouter = (function(superClass) {
+      extend(TeachersDashboardRouter, superClass);
 
       function TeachersDashboardRouter() {
         return TeachersDashboardRouter.__super__.constructor.apply(this, arguments);

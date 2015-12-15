@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/edit-module/content-selection/all-content-app', 'apps/edit-module/content-selection/search-results-app', 'apps/edit-module/content-selection/add-set-app', 'apps/edit-module/content-selection/add-quiz-app', 'apps/textbook-filters/textbook-filters-app'], function(App, RegionController) {
   return App.module("ContentSelectionApp.Controller", function(Controller, App) {
-    Controller.ContentSelectionController = (function(_super) {
+    Controller.ContentSelectionController = (function(superClass) {
       var ContentSelectionLayout;
 
-      __extends(ContentSelectionController, _super);
+      extend(ContentSelectionController, superClass);
 
       function ContentSelectionController() {
         return ContentSelectionController.__super__.constructor.apply(this, arguments);
@@ -35,10 +35,10 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
         this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
         return App.execute("when:fetched", [this.contentPiecesCollection, this.contentGroupCollection], (function(_this) {
           return function() {
-            var model, _i, _len, _ref;
-            _ref = _this.contentGroupCollection.models;
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              model = _ref[_i];
+            var i, len, model, ref;
+            ref = _this.contentGroupCollection.models;
+            for (i = 0, len = ref.length; i < len; i++) {
+              model = ref[i];
               _this.contentPiecesCollection.remove(model);
             }
             _this.fullCollection = _this.contentPiecesCollection.clone();
@@ -106,8 +106,8 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
         });
       };
 
-      ContentSelectionLayout = (function(_super1) {
-        __extends(ContentSelectionLayout, _super1);
+      ContentSelectionLayout = (function(superClass1) {
+        extend(ContentSelectionLayout, superClass1);
 
         function ContentSelectionLayout() {
           return ContentSelectionLayout.__super__.constructor.apply(this, arguments);

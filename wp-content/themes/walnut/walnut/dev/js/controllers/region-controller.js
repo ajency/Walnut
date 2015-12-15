@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __slice = [].slice;
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  slice = [].slice;
 
 define(["marionette", "app"], function(Marionette, App) {
   var RegionController;
-  return RegionController = (function(_super) {
-    __extends(RegionController, _super);
+  return RegionController = (function(superClass) {
+    extend(RegionController, superClass);
 
     function RegionController(options) {
       if (options == null) {
@@ -19,7 +19,7 @@ define(["marionette", "app"], function(Marionette, App) {
 
     RegionController.prototype.close = function() {
       var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       delete this.region;
       delete this.options;
       App.commands.execute("unregister:instance", this, this._instance_id);

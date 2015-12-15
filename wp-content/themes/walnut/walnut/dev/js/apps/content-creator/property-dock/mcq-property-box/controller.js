@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/property-dock/mcq-property-box/views', 'apps/content-creator/property-dock/mcq-property-box/marksview'], function(App, RegionController) {
   return App.module("ContentCreator.PropertyDock.McqPropertyBox", function(McqPropertyBox, App, Backbone, Marionette, $, _) {
-    McqPropertyBox.Controller = (function(_super) {
-      __extends(Controller, _super);
+    McqPropertyBox.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
@@ -49,15 +49,15 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       };
 
       Controller.prototype.onClose = function() {
-        var ans, answers, elements, models, opt, optionCollection, optionElements, options, _i, _len;
+        var ans, answers, elements, i, len, models, opt, optionCollection, optionElements, options;
         if (this.model.get('marks') > 0 && this.model.get('correct_answer').length) {
           if (!this.model.get('multiple')) {
             this.model.set('complete', true);
           } else {
             answers = this.model.get('correct_answer');
             options = this.model.get('options');
-            for (_i = 0, _len = answers.length; _i < _len; _i++) {
-              ans = answers[_i];
+            for (i = 0, len = answers.length; i < len; i++) {
+              ans = answers[i];
               opt = options.get(ans);
               if (parseInt(opt.get('marks')) === 0) {
                 this.model.set('complete', false);

@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/single_views', 'apps/textbooks/textbook-single/chapters-list'], function(App, RegionController) {
   return App.module("TextbooksApp.Single", function(Single, App) {
-    return Single.SingleTextbook = (function(_super) {
-      __extends(SingleTextbook, _super);
+    return Single.SingleTextbook = (function(superClass) {
+      extend(SingleTextbook, superClass);
 
       function SingleTextbook() {
-        this._showChaptersView = __bind(this._showChaptersView, this);
-        this._showTextBookSingle = __bind(this._showTextBookSingle, this);
+        this._showChaptersView = bind(this._showChaptersView, this);
+        this._showTextBookSingle = bind(this._showTextBookSingle, this);
         return SingleTextbook.__super__.constructor.apply(this, arguments);
       }
 

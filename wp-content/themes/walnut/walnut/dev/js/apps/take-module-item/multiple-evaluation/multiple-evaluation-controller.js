@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-evaluation/student-list/student-list-controller', 'apps/take-module-item/multiple-evaluation/evaluation/evaluation-controller'], function(App, RegionController) {
   return App.module("SingleQuestionMultipleEvaluationApp", function(MultipleEval, App) {
     var MultipleEvalLayout, SingleQuestionMultipleEvalController;
-    SingleQuestionMultipleEvalController = (function(_super) {
-      __extends(SingleQuestionMultipleEvalController, _super);
+    SingleQuestionMultipleEvalController = (function(superClass) {
+      extend(SingleQuestionMultipleEvalController, superClass);
 
       function SingleQuestionMultipleEvalController() {
         return SingleQuestionMultipleEvalController.__super__.constructor.apply(this, arguments);
@@ -82,8 +82,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/multiple-
       return SingleQuestionMultipleEvalController;
 
     })(RegionController);
-    MultipleEvalLayout = (function(_super) {
-      __extends(MultipleEvalLayout, _super);
+    MultipleEvalLayout = (function(superClass) {
+      extend(MultipleEvalLayout, superClass);
 
       function MultipleEvalLayout() {
         return MultipleEvalLayout.__super__.constructor.apply(this, arguments);

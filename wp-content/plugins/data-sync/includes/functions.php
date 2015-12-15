@@ -7,9 +7,9 @@ function school_data_sync_screen_new(){
     if ( !current_user_can( 'manage_options' ) )  {
         wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
-    
+
     $school_url = preg_replace('#^https?://#', '', rtrim(get_site_url(),'/'));
-    
+
     ?>
     <script>
     SERVER_AJAXURL = '<?php echo NETWORK_SERVER_URL; ?>/wp-admin/admin-ajax.php';
@@ -19,7 +19,7 @@ function school_data_sync_screen_new(){
     <?php
 
 
-    
+
     $html = '<h3>School Data Update</h3>';
 
     $html .= '<div class="wrap">';
@@ -27,9 +27,9 @@ function school_data_sync_screen_new(){
     //$html .= '<div>There are 15 new content since you last updated.</div>';
 
     if($last_sync){
-     $html .= '<div>Last successfull update on: '.date('H:i a F j, Y', strtotime($last_sync)).'.</div>';   
+     $html .= '<div>Last successfull update on: '.date('H:i a F j, Y', strtotime($last_sync)).'.</div>';
     }
-    
+
 
     $html .= '<button type="button" id="vsync-data" style="margin-top:10px;">Update</button>';
 
@@ -110,9 +110,9 @@ add_action( 'wp_ajax_sync_initiate', 'sync_initiate_process' );
 function sync_initiate_process(){
 global $wpdb;
 
-$wpdb->insert( 
-    $wpdb->prefix.'sync_data', 
-    array( 
+$wpdb->insert(
+    $wpdb->prefix.'sync_data',
+    array(
         'status' => 'pending'
     ));
 
@@ -120,7 +120,7 @@ $response = json_encode(array('status'=>'success'));
     header("content-type: text/javascript; charset=utf-8");
     header("access-control-allow-origin: *");
     echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
- 
+
     // IMPORTANT: don't forget to "exit"
     exit;
 }
@@ -143,7 +143,7 @@ function download_each_tables(){
     $r_url = $_REQUEST['url'];
     $table = $_REQUEST['table'];
     $url = $r_url.'/'.$table.'.csv.gz';
-    
+
 
     if($table == 'terms'){
         $id = uniqid();
@@ -167,7 +167,7 @@ function download_each_tables(){
     curl_setopt($ch, CURLOPT_BINARYTRANSFER,true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_FILE, $zipResource);
     curl_exec($ch);
     curl_close($ch);
@@ -204,7 +204,7 @@ function extract_downloaded_data(){
     header("access-control-allow-origin: *");
     echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
     exit;
-} 
+}
 
 
 $tobeimported = array(
@@ -253,16 +253,22 @@ if ( $homepage )
     update_option( 'show_on_front', 'page' );
 }
 
+//Update User Roles
+// $optioncsv = array_map('str_getcsv', file($target.'/options.csv'));
+// $rolekey = array_search('wp_user_roles', array_column($optioncsv,1));
+// $user_roles = $optioncsv[$rolekey][2];
+// update_option( 'wp_user_roles', $user_roles );
+
 
 deleteDir($target);
 
 
 $last_sync_id = $wpdb->get_var( "SELECT id FROM ".$wpdb->prefix."sync_data ORDER BY id DESC LIMIT 1" );
-$wpdb->update( 
-    $wpdb->prefix.'sync_data', 
-    array( 
+$wpdb->update(
+    $wpdb->prefix.'sync_data',
+    array(
         'status' => 'success'
-    ), 
+    ),
     array( 'id' => $last_sync_id ));
 
 $response = json_encode(array('status'=>'success','last_id'=>$last_sync_id));
@@ -278,12 +284,12 @@ $response = json_encode(array('status'=>'success','last_id'=>$last_sync_id));
 
 function uncompress_gzip($file_name){
 $buffer_size = 4096;
-$out_file_name = str_replace('.gz', '', $file_name); 
+$out_file_name = str_replace('.gz', '', $file_name);
 $file = gzopen($file_name, 'rb');
-$out_file = fopen($out_file_name, 'wb'); 
+$out_file = fopen($out_file_name, 'wb');
 while(!gzeof($file)) {
   fwrite($out_file, gzread($file, $buffer_size));
-}  
+}
 fclose($out_file);
 gzclose($file);
 }
@@ -296,13 +302,13 @@ gzclose($file);
 function load_csv_to_table($file,$table){
 global $wpdb;
 $sql = "LOAD DATA INFILE '".$file."' INTO TABLE ".$table."
-        FIELDS TERMINATED BY ',' ENCLOSED BY '\"'"; 
+        FIELDS TERMINATED BY ',' ENCLOSED BY '\"'";
 return $wpdb->query($sql);
 }
 
 
 function deleteDir($path) {
-    if (empty($path)) { 
+    if (empty($path)) {
         return false;
     }
     return is_file($path) ?
@@ -318,21 +324,15 @@ function update_options_csv($file) {
 $delimiter = ',';
 $enclosure = '"';
 
-if (($handle = fopen($file, "r")) !== FALSE) { 
-    $i = 0; 
-    while (($lineArray = fgetcsv($handle, 4000, $delimiter, $enclosure)) !== FALSE) { 
-        
+if (($handle = fopen($file, "r")) !== FALSE) {
+    $i = 0;
+    while (($lineArray = fgetcsv($handle, 4000, $delimiter, $enclosure)) !== FALSE) {
+
         update_option( $lineArray[1], $lineArray[2], $lineArray[3] );
 
-        $i++; 
-    } 
-    fclose($handle); 
-} 
-
+        $i++;
+    }
+    fclose($handle);
 }
 
-
-
-
-
-
+}

@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/student-training-module/take-module/item-description/view'], function(App, RegionController) {
   return App.module("StudentTrainingApp.TopPanel", function(TopPanel, App, Backbone, Marionette, $, _) {
-    TopPanel.Controller = (function(_super) {
-      __extends(Controller, _super);
+    TopPanel.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getCompletedSummary = __bind(this._getCompletedSummary, this);
-        this._timeLeftOrElapsed = __bind(this._timeLeftOrElapsed, this);
-        this.getResults = __bind(this.getResults, this);
+        this._getCompletedSummary = bind(this._getCompletedSummary, this);
+        this._timeLeftOrElapsed = bind(this._timeLeftOrElapsed, this);
+        this.getResults = bind(this.getResults, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -63,7 +63,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ta
       };
 
       Controller.prototype.getResults = function() {
-        var ans, answeredCorrectly, correct_answer, name, names, response, studID, student_names, _i, _j, _len, _len1;
+        var ans, answeredCorrectly, correct_answer, i, j, len, len1, name, names, response, studID, student_names;
         correct_answer = 'No One';
         names = [];
         response = this.questionResponseModel.get('question_response');
@@ -72,13 +72,13 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/ta
             correct_answer = CHORUS_OPTIONS[response];
           }
         } else if (this.model.get('question_type') === 'individual') {
-          for (_i = 0, _len = response.length; _i < _len; _i++) {
-            studID = response[_i];
+          for (i = 0, len = response.length; i < len; i++) {
+            studID = response[i];
             answeredCorrectly = this.students.where({
               "ID": studID
             });
-            for (_j = 0, _len1 = answeredCorrectly.length; _j < _len1; _j++) {
-              ans = answeredCorrectly[_j];
+            for (j = 0, len1 = answeredCorrectly.length; j < len1; j++) {
+              ans = answeredCorrectly[j];
               name = ans.get('display_name');
             }
             names.push(name);

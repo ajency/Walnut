@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.PropertyDock.HotspotElementBox.Views", function(Views, App) {
-    Views.HotspotElementView = (function(_super) {
-      __extends(HotspotElementView, _super);
+    Views.HotspotElementView = (function(superClass) {
+      extend(HotspotElementView, superClass);
 
       function HotspotElementView() {
         return HotspotElementView.__super__.constructor.apply(this, arguments);
@@ -23,8 +23,8 @@ define(['app'], function(App) {
       return HotspotElementView;
 
     })(Marionette.ItemView);
-    return Views.HotspotElementBoxView = (function(_super) {
-      __extends(HotspotElementBoxView, _super);
+    return Views.HotspotElementBoxView = (function(superClass) {
+      extend(HotspotElementBoxView, superClass);
 
       function HotspotElementBoxView() {
         return HotspotElementBoxView.__super__.constructor.apply(this, arguments);

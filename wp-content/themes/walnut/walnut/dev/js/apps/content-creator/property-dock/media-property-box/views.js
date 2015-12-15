@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.PropertyDock.MediaPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
-    return Views.PropertyView = (function(_super) {
-      __extends(PropertyView, _super);
+    return Views.PropertyView = (function(superClass) {
+      extend(PropertyView, superClass);
 
       function PropertyView() {
         return PropertyView.__super__.constructor.apply(this, arguments);

@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/content-display/composite-view'], function(App, RegionController) {
   return App.module("QuizItemsDisplayApp", function(QuizItemsDisplayApp, App) {
-    QuizItemsDisplayApp.Controller = (function(_super) {
-      __extends(Controller, _super);
+    QuizItemsDisplayApp.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getCollectionContentDisplayView = __bind(this._getCollectionContentDisplayView, this);
+        this._getCollectionContentDisplayView = bind(this._getCollectionContentDisplayView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 

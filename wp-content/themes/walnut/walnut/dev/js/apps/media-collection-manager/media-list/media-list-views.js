@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app'], function(App) {
   return App.module('MediaCollectionManager.MediaList.Views', function(Views) {
     var MediaView, NoMediaView;
-    MediaView = (function(_super) {
-      __extends(MediaView, _super);
+    MediaView = (function(superClass) {
+      extend(MediaView, superClass);
 
       function MediaView() {
         return MediaView.__super__.constructor.apply(this, arguments);
@@ -42,8 +42,8 @@ define(['app'], function(App) {
       return MediaView;
 
     })(Marionette.ItemView);
-    NoMediaView = (function(_super) {
-      __extends(NoMediaView, _super);
+    NoMediaView = (function(superClass) {
+      extend(NoMediaView, superClass);
 
       function NoMediaView() {
         return NoMediaView.__super__.constructor.apply(this, arguments);
@@ -60,11 +60,11 @@ define(['app'], function(App) {
       return NoMediaView;
 
     })(Marionette.ItemView);
-    return Views.MediaListView = (function(_super) {
-      __extends(MediaListView, _super);
+    return Views.MediaListView = (function(superClass) {
+      extend(MediaListView, superClass);
 
       function MediaListView() {
-        this.mediaSorted = __bind(this.mediaSorted, this);
+        this.mediaSorted = bind(this.mediaSorted, this);
         return MediaListView.__super__.constructor.apply(this, arguments);
       }
 

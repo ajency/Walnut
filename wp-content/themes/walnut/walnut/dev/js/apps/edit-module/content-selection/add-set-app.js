@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module('ContentSelectionApp.AddSet', function(AddSet, App) {
     var SetView;
-    AddSet.Controller = (function(_super) {
-      __extends(Controller, _super);
+    AddSet.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._addNewSet = __bind(this._addNewSet, this);
+        this._addNewSet = bind(this._addNewSet, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -64,11 +64,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return Controller;
 
     })(RegionController);
-    SetView = (function(_super) {
-      __extends(SetView, _super);
+    SetView = (function(superClass) {
+      extend(SetView, superClass);
 
       function SetView() {
-        this._onSpinEditValueChanged = __bind(this._onSpinEditValueChanged, this);
+        this._onSpinEditValueChanged = bind(this._onSpinEditValueChanged, this);
         return SetView.__super__.constructor.apply(this, arguments);
       }
 
@@ -77,8 +77,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       SetView.prototype.events = {
         'change .level-selection input': '_onSpinEditValueChanged',
         'click #add-set-button': function() {
-          var _ref;
-          if ((_ref = this.$el.find('#total-questions').val()) !== 0 && _ref !== '0') {
+          var ref;
+          if ((ref = this.$el.find('#total-questions').val()) !== 0 && ref !== '0') {
             return this.trigger('get:textbook:filter');
           }
         },
@@ -97,12 +97,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SetView.prototype.onSetLevelCount = function() {
-        var count, i, levelCount, _i, _ref, _results;
+        var count, i, j, levelCount, ref, results;
         levelCount = this.collection.countBy('difficulty_level');
         this.$el.find('#selectAll').prop('checked', false);
-        _results = [];
-        for (i = _i = 1; _i <= 3; i = ++_i) {
-          count = (_ref = levelCount["" + i]) != null ? _ref : 0;
+        results = [];
+        for (i = j = 1; j <= 3; i = ++j) {
+          count = (ref = levelCount["" + i]) != null ? ref : 0;
           this.$el.find("#lvl" + i).find(" input, .spinedit").remove();
           this.$el.find("#lvl" + i).append("<input type='text'  />");
           this.$el.find("#lvl" + i + " input").spinedit({
@@ -110,9 +110,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             maximum: count,
             value: 0
           });
-          _results.push(this.$el.find("#lvl" + i + " span").text(count));
+          results.push(this.$el.find("#lvl" + i + " span").text(count));
         }
-        return _results;
+        return results;
       };
 
       SetView.prototype._onSpinEditValueChanged = function() {
@@ -125,12 +125,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SetView.prototype._selectAllForSet = function(e) {
-        var levelCount, _ref, _ref1, _ref2;
+        var levelCount, ref, ref1, ref2;
         if ($(e.target).is(':checked')) {
           levelCount = this.collection.countBy('difficulty_level');
-          this.$el.find("#lvl1 input").val((_ref = levelCount["1"]) != null ? _ref : 0);
-          this.$el.find("#lvl2 input").val((_ref1 = levelCount["2"]) != null ? _ref1 : 0);
-          this.$el.find("#lvl3 input").val((_ref2 = levelCount["3"]) != null ? _ref2 : 0);
+          this.$el.find("#lvl1 input").val((ref = levelCount["1"]) != null ? ref : 0);
+          this.$el.find("#lvl2 input").val((ref1 = levelCount["2"]) != null ? ref1 : 0);
+          this.$el.find("#lvl3 input").val((ref2 = levelCount["3"]) != null ? ref2 : 0);
           return this._onSpinEditValueChanged();
         } else {
           this.$el.find("#lvl1 input").val(0);
@@ -178,9 +178,9 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       SetView.prototype.getSetAvgs = function() {
-        var avgMarks, avgTime, lev, marks, models, numQuestions, setAvgs, time, _i;
+        var avgMarks, avgTime, j, lev, marks, models, numQuestions, setAvgs, time;
         avgMarks = avgTime = 0;
-        for (lev = _i = 1; _i <= 3; lev = ++_i) {
+        for (lev = j = 1; j <= 3; lev = ++j) {
           marks = time = 0;
           models = this.collection.where({
             'difficulty_level': lev

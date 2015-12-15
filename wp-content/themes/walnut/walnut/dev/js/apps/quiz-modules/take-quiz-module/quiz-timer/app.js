@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'bootbox'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.QuizTimer", function(QuizTimer, App) {
     var QuizTimerView;
-    QuizTimer.Controller = (function(_super) {
-      __extends(Controller, _super);
+    QuizTimer.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showQuizTimerView = __bind(this._showQuizTimerView, this);
-        this._timeLeftOrElapsed = __bind(this._timeLeftOrElapsed, this);
+        this._showQuizTimerView = bind(this._showQuizTimerView, this);
+        this._timeLeftOrElapsed = bind(this._timeLeftOrElapsed, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -77,12 +77,12 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
       return Controller;
 
     })(RegionController);
-    return QuizTimerView = (function(_super) {
-      __extends(QuizTimerView, _super);
+    return QuizTimerView = (function(superClass) {
+      extend(QuizTimerView, superClass);
 
       function QuizTimerView() {
-        this.quizTimedOut = __bind(this.quizTimedOut, this);
-        this.countDown = __bind(this.countDown, this);
+        this.quizTimedOut = bind(this.quizTimedOut, this);
+        this.countDown = bind(this.countDown, this);
         return QuizTimerView.__super__.constructor.apply(this, arguments);
       }
 
@@ -96,19 +96,19 @@ define(['app', 'controllers/region-controller', 'bootbox'], function(App, Region
       };
 
       QuizTimerView.prototype.mixinTemplateHelpers = function(data) {
-        var _ref;
+        var ref;
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if ((_ref = this.display_mode) === 'replay' || _ref === 'quiz_report') {
+        if ((ref = this.display_mode) === 'replay' || ref === 'quiz_report') {
           data.completed_quiz = true;
         }
         return data;
       };
 
       QuizTimerView.prototype.onShow = function() {
-        var timeLeftOrElapsed, _ref;
+        var ref, timeLeftOrElapsed;
         timeLeftOrElapsed = Marionette.getOption(this, 'timeLeftOrElapsed');
         this.display_mode = Marionette.getOption(this, 'display_mode');
-        if ((_ref = this.display_mode) !== 'replay' && _ref !== 'quiz_report') {
+        if ((ref = this.display_mode) !== 'replay' && ref !== 'quiz_report') {
           if (timeLeftOrElapsed >= 0) {
             return this.countDown(timeLeftOrElapsed);
           }

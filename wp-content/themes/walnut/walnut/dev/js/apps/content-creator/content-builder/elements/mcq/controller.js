@@ -1,19 +1,19 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements/mcq/views'], function(App, Element) {
   return App.module("ContentCreator.ContentBuilder.Element.Mcq", function(Mcq, App, Backbone, Marionette, $, _) {
-    return Mcq.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return Mcq.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._changeColumnCount = __bind(this._changeColumnCount, this);
-        this._changeMultipleAnswers = __bind(this._changeMultipleAnswers, this);
-        this._changeOptionCount = __bind(this._changeOptionCount, this);
-        this._optionUnchecked = __bind(this._optionUnchecked, this);
-        this._optionChecked = __bind(this._optionChecked, this);
-        this.renderElement = __bind(this.renderElement, this);
+        this._changeColumnCount = bind(this._changeColumnCount, this);
+        this._changeMultipleAnswers = bind(this._changeMultipleAnswers, this);
+        this._changeOptionCount = bind(this._changeOptionCount, this);
+        this._optionUnchecked = bind(this._optionUnchecked, this);
+        this._optionChecked = bind(this._optionChecked, this);
+        this.renderElement = bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -96,11 +96,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       };
 
       Controller.prototype.createRowStructure = function(options) {
-        var columnCount, columnElement, columnElements, controller, num, optionsInCurrentRow, rowElements, rowNumber, totalOptionsinMcq, _i;
+        var columnCount, columnElement, columnElements, controller, i, num, optionsInCurrentRow, ref, rowElements, rowNumber, totalOptionsinMcq;
         columnCount = parseInt(this.layout.model.get('columncount')) + 1;
         columnElements = (function() {
-          var _results;
-          _results = [];
+          var results;
+          results = [];
           while (columnCount -= 1) {
             console.log(columnCount);
             columnElement = {
@@ -109,9 +109,9 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               className: 12 / this.layout.model.get('columncount'),
               elements: []
             };
-            _results.push(columnElement);
+            results.push(columnElement);
           }
-          return _results;
+          return results;
         }).call(this);
         rowElements = {
           element: 'Row',
@@ -126,7 +126,7 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
           this._setColumnClassForRow(rowElements, rowNumber, optionsInCurrentRow);
           console.log(rowElements);
           controller = App.request("add:new:element", options.container, 'Row', null, rowElements);
-          for (num = _i = 1; 1 <= optionsInCurrentRow ? _i <= optionsInCurrentRow : _i >= optionsInCurrentRow; num = 1 <= optionsInCurrentRow ? ++_i : --_i) {
+          for (num = i = 1, ref = optionsInCurrentRow; 1 <= ref ? i <= ref : i >= ref; num = 1 <= ref ? ++i : --i) {
             this._iterateThruOptions(controller, rowNumber, num);
           }
           totalOptionsinMcq -= this.layout.model.get('columncount');
@@ -138,12 +138,12 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
       Controller.prototype._setColumnClassForRow = function(rowElements, rowNumber, optionsInCurrentRow) {
         var classRemaining, num, optionNumbers;
         optionNumbers = (function() {
-          var _i, _ref, _results;
-          _results = [];
-          for (num = _i = 1, _ref = this.layout.model.get('columncount'); 1 <= _ref ? _i <= _ref : _i >= _ref; num = 1 <= _ref ? ++_i : --_i) {
-            _results.push((rowNumber - 1) * this.layout.model.get('columncount') + num);
+          var i, ref, results;
+          results = [];
+          for (num = i = 1, ref = this.layout.model.get('columncount'); 1 <= ref ? i <= ref : i >= ref; num = 1 <= ref ? ++i : --i) {
+            results.push((rowNumber - 1) * this.layout.model.get('columncount') + num);
           }
-          return _results;
+          return results;
         }).call(this);
         classRemaining = 12;
         return _.each(optionNumbers, (function(_this) {

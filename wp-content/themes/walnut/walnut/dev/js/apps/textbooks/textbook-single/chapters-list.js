@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html', 'text!apps/textbooks/textbook-single/templates/chapter-list-item.html', 'text!apps/textbooks/textbook-single/templates/no-chapters.html'], function(App, chapterslistTpl, listitemTpl, nochaptersTpl) {
   return App.module("TextbooksApp.Single.Views", function(Views, App) {
     var ChapterListItemView, EmptyView;
-    ChapterListItemView = (function(_super) {
-      __extends(ChapterListItemView, _super);
+    ChapterListItemView = (function(superClass) {
+      extend(ChapterListItemView, superClass);
 
       function ChapterListItemView() {
         return ChapterListItemView.__super__.constructor.apply(this, arguments);
@@ -20,8 +20,8 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
       return ChapterListItemView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -34,8 +34,8 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
       return EmptyView;
 
     })(Marionette.ItemView);
-    return Views.ChapterListView = (function(_super) {
-      __extends(ChapterListView, _super);
+    return Views.ChapterListView = (function(superClass) {
+      extend(ChapterListView, superClass);
 
       function ChapterListView() {
         return ChapterListView.__super__.constructor.apply(this, arguments);

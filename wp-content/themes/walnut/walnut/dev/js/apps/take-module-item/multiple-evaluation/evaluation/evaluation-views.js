@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("SingleQuestionMultipleEvaluationApp.EvaluationApp.Views", function(Views, App) {
     var EvaluationItemView;
-    EvaluationItemView = (function(_super) {
-      __extends(EvaluationItemView, _super);
+    EvaluationItemView = (function(superClass) {
+      extend(EvaluationItemView, superClass);
 
       function EvaluationItemView() {
         return EvaluationItemView.__super__.constructor.apply(this, arguments);
@@ -60,8 +60,8 @@ define(['app'], function(App) {
       return EvaluationItemView;
 
     })(Marionette.ItemView);
-    return Views.EvaluationView = (function(_super) {
-      __extends(EvaluationView, _super);
+    return Views.EvaluationView = (function(superClass) {
+      extend(EvaluationView, superClass);
 
       function EvaluationView() {
         return EvaluationView.__super__.constructor.apply(this, arguments);
