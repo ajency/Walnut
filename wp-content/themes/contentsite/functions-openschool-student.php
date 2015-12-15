@@ -38,5 +38,5 @@ function student_redirect(){
 	    exit;
 	}*/
 }
-add_action('init', 'student_redirect');
+//add_action('init', 'student_redirect');
 ?>
