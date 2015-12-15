@@ -62,11 +62,11 @@
                                 <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" class="img-responsive center-block" alt="">
                             </div>
                             <div class="slogan">
-                                <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-tagline.png" class="img-responsive center-block" alt="">
+                                Tough Outside. Smart Inside
                             </div>
                         </div>
                     </nav>
-                </header> 
+                </header>
 
                 <!-- Signin/Signup -->
                 <div class="signin-card">
