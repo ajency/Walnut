@@ -2,15 +2,15 @@
 function fetch_all_divisions(){
 	global $wpdb;
 	$current_user = wp_get_current_user();	
-	$result       = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}class_divisions");
+	$result       = $wpdb->get_results("SELECT * FROM {wp_class_divisions");
 	return $result;
 }
 
 function my_profile() {
 	// reset a users password
 	if(isset($_POST['student_action']) && $_POST['student_action'] == 'update-my-profile') {
-		$_POST['primary_blog'] =13;
-		$_POST['source_domain']='walnut.synapselearning.net';
+		$_POST['primary_blog'] =14;
+		$_POST['source_domain']='universal.synapselearning.net';
 
 		$current_user = wp_get_current_user();
 		$meta = get_user_meta($current_user->ID);
