@@ -145,16 +145,16 @@ $(function() {
 
     //Notification popover
 
-    $('.notification').popover();
-    $('.notification').on('shown.bs.popover', function() {
-        setTimeout(function() {
-            $('.notification').popover('hide');
-        }, 5000);
-    });
-    $('.notification').popover({
-        placement: 'left',
-        trigger: 'click'
-    }).data('bs.popover').tip().addClass('dashboard-popover animated shake');
+    // $('.notification').popover();
+    // $('.notification').on('shown.bs.popover', function() {
+    //     setTimeout(function() {
+    //         $('.notification').popover('hide');
+    //     }, 5000);
+    // });
+    // $('.notification').popover({
+    //     placement: 'left',
+    //     trigger: 'click'
+    // }).data('bs.popover').tip().addClass('dashboard-popover animated shake');
 
 
 });
