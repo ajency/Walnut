@@ -646,3 +646,16 @@ function heateor_ss_disable_social_registration($profileData){
 	}
 }
 add_action('the_champ_before_registration', 'heateor_ss_disable_social_registration', 10, 1);
+
+
+function social_role_updation($userId, $userdata, $profileData){
+$userdata['ID'] = $userId;
+$userdata['role'] = 'student';
+$userdata['primary_blog']= '14';
+$userdata['source_domain']='universal.synapsedu.info';
+wp_update_user($userId,'role','student');
+wp_update_user($userId,'primary_blog','14');
+wp_update_user($userId,'source_domain','universal.synapsedu.info');
+}
+
+add_action('the_champ_user_successfully_created','social_role_updation');
