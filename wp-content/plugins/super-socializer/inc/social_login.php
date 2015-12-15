@@ -192,7 +192,8 @@ function the_champ_create_user($profileData, $verification = false){
 		'last_name' => $lastName,
 		'description' => isset($profileData['bio']) && $profileData['bio'] != '' ? $profileData['bio'] : '',
 		'user_url' => isset($profileData['link']) && $profileData['link'] != '' ? $profileData['link'] : '',
-		'role' => 'student'
+		'role' => 'student',
+		'primary_blog'=> '14'
 	);
 	$userId = wp_insert_user($userdata);
 	if(!is_wp_error($userId)){
