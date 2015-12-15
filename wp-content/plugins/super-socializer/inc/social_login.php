@@ -191,10 +191,7 @@ function the_champ_create_user($profileData, $verification = false){
 		'first_name' => $firstName,
 		'last_name' => $lastName,
 		'description' => isset($profileData['bio']) && $profileData['bio'] != '' ? $profileData['bio'] : '',
-		'user_url' => isset($profileData['link']) && $profileData['link'] != '' ? $profileData['link'] : '',
-		'role' => 'student',
-		'primary_blog'=> '14',
-		'source_domain'=>'universal.synapsedu.info'
+		'user_url' => isset($profileData['link']) && $profileData['link'] != '' ? $profileData['link'] : ''
 	);
 	$userId = wp_insert_user($userdata);
 	if(!is_wp_error($userId)){
@@ -394,9 +391,6 @@ function the_champ_format_profile_data($profileData, $provider){
 	$temp['first_name'] = isset($temp['first_name'][0]) && ctype_upper($temp['first_name'][0]) ? ucfirst(sanitize_user($temp['first_name'], true)) : sanitize_user($temp['first_name'], true);
 	$temp['last_name'] = isset($temp['last_name'][0]) && ctype_upper($temp['last_name'][0]) ? ucfirst(sanitize_user($temp['last_name'], true)) : sanitize_user($temp['last_name'], true);
 	$temp['provider'] = $provider;
-	$temp['role'] = 'student';
-	$temp['primary_blog']= '14';
-	$temp['source_domain']='universal.synapsedu.info';
 	return $temp;
 }
 
