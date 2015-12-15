@@ -12,7 +12,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="description" content="">
       <meta name="author" content="">
-      <title>Walnut Dashboard</title>
+      <title>Synapse Learning Institute</title>
       <?php
          global $post;
          $page_slug=$post->post_name;
@@ -62,7 +62,7 @@
                                 <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" class="img-responsive center-block" alt="">
                             </div>
                             <div class="slogan">
-                                Tough Outside. Smart Inside
+                                <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-tagline.png" class="img-responsive center-block" alt="">
                             </div>
                         </div>
                     </nav>
