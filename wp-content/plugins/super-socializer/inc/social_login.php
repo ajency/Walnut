@@ -650,16 +650,18 @@ add_action('the_champ_before_registration', 'heateor_ss_disable_social_registrat
 
 function social_role_updation($userId, $userdata, $profileData){
 
-print_r($userId);
-print_r($userdata);
-print_r($profileData);
-$userdata['ID'] = $userId;
-$userdata['role'] = 'student';
-$userdata['primary_blog']= '14';
-$userdata['source_domain']='universal.synapsedu.info';
-wp_update_user($userId,'role','student');
-wp_update_user($userId,'primary_blog','14');
-wp_update_user($userId,'source_domain','universal.synapsedu.info');
+	if(isset($meta['primary_blog'])){
+		update_user_meta( $userId, 'primary_blog', '14');
+	}else{
+		add_user_meta( $userId, 'primary_blog', '14');
+	}
+
+	if(isset($meta['source_domain'])){
+		update_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
+	}else{
+		add_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
+	}
+
 }
 
 add_action('the_champ_user_successfully_created','social_role_updation');
