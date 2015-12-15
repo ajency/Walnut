@@ -48,7 +48,7 @@ $userdata['primary_blog']= '14';
 $userdata['source_domain']='universal.synapsedu.info';
 wp_update_user($userId,'role','student');
 wp_update_user($userId,'primary_blog','14');
-wp_update_user($userId,'source_domain','universal.synapsedu.info');exit;
+wp_update_user($userId,'source_domain','universal.synapsedu.info');
 }
 
 add_action('the_champ_user_successfully_created','social_role_updation');
