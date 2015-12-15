@@ -32,7 +32,10 @@ function student_redirect(){
 	$current_user = wp_get_current_user();	
 	$meta = get_user_meta($current_user->ID);
 	if(isset($meta['thechamp_provider']) && $current_user->ID!=0 && !isset($meta['student_division']) && !strpos($_SERVER['REDIRECT_URL'],'register-redirect-student')){
-	    wp_redirect(site_url().'/register-redirect-student');
+	   
+		print_r($_SERVER['REDIRECT_URL']);
+		exit;
+	//    wp_redirect(site_url().'/register-redirect-student');
 	    exit;
 	}/*else if($current_user->ID == 0  && (!strpos($_SERVER['REDIRECT_URL'],'social-login-student' || !strpos($_SERVER['REDIRECT_URL'],'social-login-student'))){
 	    wp_redirect(site_url().'/social-login-student');
