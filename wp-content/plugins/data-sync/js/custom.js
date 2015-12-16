@@ -1,7 +1,7 @@
 
 
 jQuery(document).ready(function() {
-    
+
 
   jQuery("#vsync-data").on('click',function(){
 
@@ -83,33 +83,33 @@ function generate_terms(promiseResult) {
         url: SERVER_AJAXURL+'?action=sync_generate&table='+table,
     });
 }
- 
- 
+
+
 function generate_term_relationships(promiseResult) {
   var table = 'term_relationships';
   jQuery(".generatestatus").text('(2/17)');
   jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,
     });
 }
- 
- 
+
+
 function generate_term_taxonomy(promiseResult) {
   var table = 'term_taxonomy';
     jQuery(".generatestatus").text('(3/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,
     });
 }
- 
+
 function generate_textbook_relationships(promiseResult) {
   var table = 'textbook_relationships';
     jQuery(".generatestatus").text('(4/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,
     });
 }
 
@@ -118,7 +118,7 @@ function generate_class_divisions(promiseResult) {
     jQuery(".generatestatus").text('(5/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -127,7 +127,7 @@ function generate_quiz_schedules(promiseResult) {
    jQuery(".generatestatus").text('(6/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -136,7 +136,7 @@ function generate_question_response(promiseResult) {
   jQuery(".generatestatus").text('(7/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -145,7 +145,7 @@ function generate_question_response_meta(promiseResult) {
   jQuery(".generatestatus").text('(8/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -154,7 +154,7 @@ function generate_quiz_question_response(promiseResult) {
   jQuery(".generatestatus").text('(9/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -163,7 +163,7 @@ function generate_quiz_response_summary(promiseResult) {
   jQuery(".generatestatus").text('(10/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -173,7 +173,7 @@ function generate_content_collection(promiseResult) {
   jQuery(".generatestatus").text('(11/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,
     });
 }
 
@@ -182,7 +182,7 @@ function generate_collection_meta(promiseResult) {
   jQuery(".generatestatus").text('(12/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,
     });
 }
 
@@ -191,7 +191,7 @@ function generate_posts(promiseResult) {
   jQuery(".generatestatus").text('(13/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&school='+SCHOOL_URL,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&school='+SCHOOL_URL,
     });
 }
 
@@ -200,7 +200,7 @@ function generate_postmeta(promiseResult) {
   jQuery(".generatestatus").text('(14/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&school='+SCHOOL_URL,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&school='+SCHOOL_URL,
     });
 }
 
@@ -209,7 +209,7 @@ function generate_users(promiseResult) {
   jQuery(".generatestatus").text('(15/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -218,7 +218,7 @@ function generate_usermeta(promiseResult) {
   jQuery(".generatestatus").text('(16/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -227,7 +227,7 @@ function generate_options(promiseResult) {
   jQuery(".generatestatus").text('(17/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
     });
 }
 
@@ -251,33 +251,33 @@ function download_terms(promiseResult) {
         url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url,
     });
 }
- 
- 
+
+
 function download_term_relationships(promiseResult) {
   var table = 'term_relationships';
   jQuery(".downstatus").text(' (2/17)');
   jQuery(".curreentdtable").text(table);
      return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
- 
- 
+
+
 function download_term_taxonomy(promiseResult) {
   var table = 'term_taxonomy';
   jQuery(".downstatus").text(' (3/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
         return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
- 
+
 function download_textbook_relationships(promiseResult) {
   var table = 'textbook_relationships';
   jQuery(".downstatus").text(' (4/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
         return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
@@ -286,52 +286,52 @@ function download_class_divisions(promiseResult) {
   jQuery(".downstatus").text(' (5/17)');
   jQuery(".curreentdtable").text(table);
         return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_quiz_schedules(promiseResult) {
   var table = 'quiz_schedules';
   jQuery(".downstatus").text(' (6/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
         return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_question_response(promiseResult) {
   var table = 'question_response';
   jQuery(".downstatus").text(' (7/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_question_response_meta(promiseResult) {
   var table = 'question_response_meta';
   jQuery(".downstatus").text(' (8/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_quiz_question_response(promiseResult) {
   var table = 'quiz_question_response';
   jQuery(".downstatus").text(' (9/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_quiz_response_summary(promiseResult) {
   var table = 'quiz_response_summary';
   jQuery(".downstatus").text(' (10/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
@@ -339,63 +339,63 @@ function download_quiz_response_summary(promiseResult) {
 function download_content_collection(promiseResult) {
   var table = 'content_collection';
   jQuery(".downstatus").text(' (11/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_collection_meta(promiseResult) {
   var table = 'collection_meta';
   jQuery(".downstatus").text(' (12/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_posts(promiseResult) {
   var table = 'posts';
   jQuery(".downstatus").text(' (13/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_postmeta(promiseResult) {
   var table = 'postmeta';
   jQuery(".downstatus").text(' (14/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_users(promiseResult) {
   var table = 'users';
   jQuery(".downstatus").text(' (15/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_usermeta(promiseResult) {
   var table = 'usermeta';
   jQuery(".downstatus").text(' (16/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
 function download_options(promiseResult) {
   var table = 'options';
   jQuery(".downstatus").text(' (17/17)');
-  jQuery(".curreentdtable").text(table);  
+  jQuery(".curreentdtable").text(table);
       return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
     });
 }
 
@@ -414,7 +414,7 @@ function extract_data(promiseResult) {
     writeProgressMessage("Extracting data ",current);
     jQuery("." + current).prev().addClass('done');
     return jQuery.ajax({
-        url: ajaxurl+'?action=sync_extract_data&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=sync_extract_data&local_path='+promiseResult.localpath,
     });
 }
 
@@ -423,7 +423,7 @@ function import_downloaded_data(promiseResult) {
     writeProgressMessage("Applying changes ",current);
     jQuery("." + current).prev().addClass('done');
     return jQuery.ajax({
-        url: ajaxurl+'?action=sync_import_backup&local_path='+promiseResult.localpath,        
+        url: ajaxurl+'?action=sync_import_backup&local_path='+promiseResult.localpath,
     });
 }
 
@@ -435,12 +435,12 @@ function complete_sync_process(promiseResult) {
     jQuery("." + current).css('background','none');
     jQuery("#vsync-data").show();
 }
- 
 
- 
+
+
 function writeProgressMessage(msg,msgact) {
     jQuery("#syncstatus").append("<div class='syncstat "+msgact+"'>"+msg + "</div>");
-    console.log(msg);                
+    console.log(msg);
 }
 
 
@@ -451,6 +451,6 @@ function writeProgressMessage(msg,msgact) {
 
 
 
-   
-    
+
+
 });

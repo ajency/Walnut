@@ -254,10 +254,10 @@ if ( $homepage )
 }
 
 //Update User Roles
-// $optioncsv = array_map('str_getcsv', file($target.'/options.csv'));
-// $rolekey = array_search('wp_user_roles', array_column($optioncsv,1));
-// $user_roles = $optioncsv[$rolekey][2];
-// update_option( 'wp_user_roles', $user_roles );
+$optioncsv = array_map('str_getcsv', file($target.'/options.csv'));
+$rolekey = array_search('wp_'.get_option("blog_id").'_user_roles', array_column($optioncsv,1));
+$user_roles = unserialize($optioncsv[$rolekey][2]);
+update_option( 'wp_user_roles', $user_roles );
 
 
 deleteDir($target);
