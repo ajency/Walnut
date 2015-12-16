@@ -13,6 +13,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
+        $("#header-region").hide();
+        $("#left-nav-region").hide();
         this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, this.quizResponseSummary = opts.quizResponseSummary;
         this.view = view = this._getQuizDescriptionView();
         this.listenTo(view, 'start:quiz:module', (function(_this) {

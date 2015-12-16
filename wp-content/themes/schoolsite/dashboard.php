@@ -64,7 +64,10 @@
 
 </head>
 <?php 
-//require_once('header-student.php');
+$current_user = wp_get_current_user();
+if( isset($current_user->roles[0]) && $current_user->roles[0]=='student'){
+    require_once('header-student.php');    
+}
 ?>
 <body class="">
 <div id="site_main_container">
