@@ -1,5 +1,34 @@
 
 
+/* ---------------------------
+   ADMIN TABLE FIX FOR CONTENT PIECE -----------
+ ---------------------------
+*/
+
+
 #content-pieces-table{
 	table-layout: fixed;
+}
+
+#content-pieces-table > tr > th{
+	vertical-align: middle;
+	text-align: center;
+}
+
+#content-pieces-table .tablesorter-header-inner{
+	font-size: inherit;
+}
+
+
+#content-pieces-table > td{
+	font-size: 0.6em;
+	word-wrap: break-word;
+	text-align: center;
+}
+
+
+#content-pieces-table > td > span.label{
+	font-size: 0.9em;
+    padding: 7px;
+    min-width: inherit;
 }
