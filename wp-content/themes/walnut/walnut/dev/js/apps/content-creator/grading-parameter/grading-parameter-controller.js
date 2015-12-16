@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/grading-parameter/grading-parameter-view'], function(App, RegionController) {
   return App.module("ContentCreator.GradingParameter", function(GradingParameter, App) {
-    GradingParameter.Controller = (function(_super) {
-      __extends(Controller, _super);
+    GradingParameter.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
@@ -27,13 +27,13 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/grading-pa
       };
 
       Controller.prototype._setMinCollectionSizeAsTwo = function() {
-        var gradingParamsModel, _results;
-        _results = [];
+        var gradingParamsModel, results;
+        results = [];
         while (this.gradingParamsCollection.size() < 2) {
           gradingParamsModel = App.request("get:grading:parameter");
-          _results.push(this.gradingParamsCollection.push(gradingParamsModel));
+          results.push(this.gradingParamsCollection.push(gradingParamsModel));
         }
-        return _results;
+        return results;
       };
 
       Controller.prototype._getView = function() {

@@ -1,5 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/content-creator-controller', 'apps/content-creator/choose-content-type/choose-content-type-app'], function(App, RegionController) {
   return App.module("ContentCreator", function(ContentCreator, App, Backbone, Marionette, $, _) {
@@ -7,10 +7,10 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/content-cr
     ContentCreator.closequestionelementproperty = true;
     ContentCreator.closequestionelements = true;
     ContentCreator.closequestioneproperty = true;
-    return ContentCreatorRouter = (function(_super) {
+    return ContentCreatorRouter = (function(superClass) {
       var Controller;
 
-      __extends(ContentCreatorRouter, _super);
+      extend(ContentCreatorRouter, superClass);
 
       function ContentCreatorRouter() {
         return ContentCreatorRouter.__super__.constructor.apply(this, arguments);

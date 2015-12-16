@@ -1,17 +1,17 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-display/templates/content-display.html'], function(App, RegionController, contentDisplayItemTpl) {
   return App.module("CollectionContentDisplayApp.Controller", function(Controller, App) {
     var ContentDisplayView, ContentItemView;
-    Controller.CollectionEditContentDisplayController = (function(_super) {
-      __extends(CollectionEditContentDisplayController, _super);
+    Controller.CollectionEditContentDisplayController = (function(superClass) {
+      extend(CollectionEditContentDisplayController, superClass);
 
       function CollectionEditContentDisplayController() {
-        this.saveContentPieces = __bind(this.saveContentPieces, this);
-        this.contentOrderChanged = __bind(this.contentOrderChanged, this);
-        this.contentPiecesChanged = __bind(this.contentPiecesChanged, this);
+        this.saveContentPieces = bind(this.saveContentPieces, this);
+        this.contentOrderChanged = bind(this.contentOrderChanged, this);
+        this.contentPiecesChanged = bind(this.contentPiecesChanged, this);
         return CollectionEditContentDisplayController.__super__.constructor.apply(this, arguments);
       }
 
@@ -103,11 +103,11 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
       };
 
       CollectionEditContentDisplayController.prototype.saveContentPieces = function(content) {
-        var _ref;
+        var ref;
         if (this.model.get('type') === 'teaching-module') {
           this.model.set('content_pieces', content);
         }
-        if ((_ref = this.model.get('type')) === 'quiz' || _ref === 'student-training') {
+        if ((ref = this.model.get('type')) === 'quiz' || ref === 'student-training') {
           this.model.set('content_layout', content);
         }
         return this.model.save({
@@ -139,8 +139,8 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
       return CollectionEditContentDisplayController;
 
     })(RegionController);
-    ContentItemView = (function(_super) {
-      __extends(ContentItemView, _super);
+    ContentItemView = (function(superClass) {
+      extend(ContentItemView, superClass);
 
       function ContentItemView() {
         return ContentItemView.__super__.constructor.apply(this, arguments);
@@ -153,7 +153,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
       ContentItemView.prototype.className = 'sortable';
 
       ContentItemView.prototype.mixinTemplateHelpers = function(data) {
-        var i, lvl, _i;
+        var i, j, lvl;
         data = ContentItemView.__super__.mixinTemplateHelpers.call(this, data);
         if (data.post_type === 'content-piece') {
           data.isContentPiece = true;
@@ -161,7 +161,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
         if (data.post_type === 'content_set') {
           data.isSet = true;
           data.contentLevels = new Array();
-          for (i = _i = 1; _i <= 3; i = ++_i) {
+          for (i = j = 1; j <= 3; i = ++j) {
             lvl = parseInt(data["lvl" + i]);
             while (lvl > 0) {
               data.contentLevels.push("Level " + i);
@@ -199,11 +199,11 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
       return ContentItemView;
 
     })(Marionette.ItemView);
-    ContentDisplayView = (function(_super) {
-      __extends(ContentDisplayView, _super);
+    ContentDisplayView = (function(superClass) {
+      extend(ContentDisplayView, superClass);
 
       function ContentDisplayView() {
-        this.removeItem = __bind(this.removeItem, this);
+        this.removeItem = bind(this.removeItem, this);
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 

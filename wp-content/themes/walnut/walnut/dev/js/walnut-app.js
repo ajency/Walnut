@@ -64,12 +64,9 @@ define(['marionette'], function(Marionette) {
         });
       }
       if (App.request('current:user:can', 'student')) {
-        /*App.navigate('students/dashboard', {
+        App.navigate('students/dashboard', {
           trigger: true
-        });*/
-        /*Code Commented By Kapil To Redirect student to the new layout*/
-        $("body").hide();
-        location.href=SITEURL+"/dashboard-student/";
+        });
       }
       App.execute("show:breadcrumbapp", {
         region: App.breadcrumbRegion

@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
   return App.module("ContentPiecesApp.ContentList.Views", function(Views, App) {
     var EmptyView, ListItemView;
-    ListItemView = (function(_super) {
-      __extends(ListItemView, _super);
+    ListItemView = (function(superClass) {
+      extend(ListItemView, superClass);
 
       function ListItemView() {
-        this.removeSpinner = __bind(this.removeSpinner, this);
+        this.removeSpinner = bind(this.removeSpinner, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -17,7 +17,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a>{{^is_used}}<span class="nonDevice">|</span> <a target="_blank"  class="nonDevice deleteModule">Delete</a>{{/is_used}} <i class="fa spinner"></i> </td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} {{^is_used}} <span class="nonDevice deleteModuleSpan">|</span> <a target="_blank" class="nonDevice deleteModule">Delete</a> {{/is_used}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, edit_url, modules;
@@ -77,25 +77,21 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         _.each(data.present_in_modules, function(ele, index) {
           return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
         });
+        if (modules.length > 0) {
+          data.is_used = true;
+        }
         data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : 'Not added to a module yet';
         data.contentType = _.str.titleize(_.str.humanize(data.content_type));
-
-       if(modules.length>0){
-          data.is_used = true;
-        }else{
-          data.is_used = false;
-        }      
-          
         return data;
       };
 
       ListItemView.prototype.events = {
+        'click a.deleteModule': function() {
+          return this.deleteModule('delete');
+        },
         'click a.cloneModule': function() {
           return this.model.duplicate();
         },
-        'click a.deleteModule': function() {
-           return this.deleteModule();
-        },        
         'click a.archiveModule': function() {
           return this.changeModuleStatus('archive');
         },
@@ -118,27 +114,23 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListItemView.prototype.deleteModule = function(status) {
-        return bootbox.confirm("Are you sure you want to completely  delete " + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
+        return bootbox.confirm("Are you sure you want to delete '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
           return function(result) {
+            var data, model_id;
             if (result) {
               _this.addSpinner();
-              var model_id = _this.model.id;
-              var data = {};
+              model_id = _this.model.id;
+              data = {};
               data.action = 'delete-content-module';
-              data.id= model_id;  
+              data.id = model_id;
               return $.post(AJAXURL, data).success(function(resp) {
                 return _this.model.destroy();
-              }).fail(function(resp) {
-                console.log('some error occurred');
-                return console.log(resp);
-              }).done(function() {
-                 return _this.changeStatusLabel(status);
               });
             }
           };
         })(this));
       };
-      
+
       ListItemView.prototype.changeModuleStatus = function(status) {
         return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
           return function(result) {
@@ -175,8 +167,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       return ListItemView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -193,11 +185,11 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       return EmptyView;
 
     })(Marionette.ItemView);
-    return Views.ListView = (function(_super) {
-      __extends(ListView, _super);
+    return Views.ListView = (function(superClass) {
+      extend(ListView, superClass);
 
       function ListView() {
-        this.changeStatus = __bind(this.changeStatus, this);
+        this.changeStatus = bind(this.changeStatus, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 

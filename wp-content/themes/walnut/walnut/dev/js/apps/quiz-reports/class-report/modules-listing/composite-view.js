@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/outer-template.html', 'apps/quiz-reports/class-report/modules-listing/item-views'], function(App, contentListTpl) {
   return App.module("ClassQuizReportListing.Views", function(Views) {
-    return Views.ModulesListingView = (function(_super) {
-      __extends(ModulesListingView, _super);
+    return Views.ModulesListingView = (function(superClass) {
+      extend(ModulesListingView, superClass);
 
       function ModulesListingView() {
-        this.onResetTextbookNames = __bind(this.onResetTextbookNames, this);
+        this.onResetTextbookNames = bind(this.onResetTextbookNames, this);
         return ModulesListingView.__super__.constructor.apply(this, arguments);
       }
 

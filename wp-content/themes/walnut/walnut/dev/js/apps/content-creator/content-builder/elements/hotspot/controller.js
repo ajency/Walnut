@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/content-creator/content-builder/elements/hotspot/views'], function(App, Element) {
   return App.module('ContentCreator.ContentBuilder.Element.Hotspot', function(Hotspot, App, Backbone, Marionette, $, _) {
-    return Hotspot.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return Hotspot.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this.renderElement = __bind(this.renderElement, this);
+        this.renderElement = bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -98,13 +98,13 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         Floats = ['x', 'y'];
         Booleans = ['toDelete', 'correct'];
         return _.each(object, function(value, key) {
-          if (__indexOf.call(Integers, key) >= 0) {
+          if (indexOf.call(Integers, key) >= 0) {
             object[key] = parseInt(value);
           }
-          if (__indexOf.call(Floats, key) >= 0) {
+          if (indexOf.call(Floats, key) >= 0) {
             object[key] = parseFloat(value);
           }
-          if (__indexOf.call(Booleans, key) >= 0) {
+          if (indexOf.call(Booleans, key) >= 0) {
             return object[key] = _.toBoolean(value);
           }
         });

@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("StudentReportApp.QuizList.Views", function(Views, App) {
-    Views.ListItemView = (function(_super) {
-      __extends(ListItemView, _super);
+    Views.ListItemView = (function(superClass) {
+      extend(ListItemView, superClass);
 
       function ListItemView() {
         return ListItemView.__super__.constructor.apply(this, arguments);
@@ -54,8 +54,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return ListItemView;
 
     })(Marionette.ItemView);
-    return Views.EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    return Views.EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);

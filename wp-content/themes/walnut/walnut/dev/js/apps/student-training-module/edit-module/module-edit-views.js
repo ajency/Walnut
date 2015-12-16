@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('StudentTrainingApp.Edit.Views', function(Views, App) {
     var NotEditView;
-    Views.EditLayout = (function(_super) {
-      __extends(EditLayout, _super);
+    Views.EditLayout = (function(superClass) {
+      extend(EditLayout, superClass);
 
       function EditLayout() {
         return EditLayout.__super__.constructor.apply(this, arguments);
@@ -24,8 +24,8 @@ define(['app'], function(App) {
       return EditLayout;
 
     })(Marionette.Layout);
-    return NotEditView = (function(_super) {
-      __extends(NotEditView, _super);
+    return NotEditView = (function(superClass) {
+      extend(NotEditView, superClass);
 
       function NotEditView() {
         return NotEditView.__super__.constructor.apply(this, arguments);

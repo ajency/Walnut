@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('ContentCreator.GradingParameter.Views', function(Views, App) {
     var GradingParamsItemView;
-    GradingParamsItemView = (function(_super) {
-      __extends(GradingParamsItemView, _super);
+    GradingParamsItemView = (function(superClass) {
+      extend(GradingParamsItemView, superClass);
 
       function GradingParamsItemView() {
         return GradingParamsItemView.__super__.constructor.apply(this, arguments);
@@ -72,8 +72,8 @@ define(['app'], function(App) {
       return GradingParamsItemView;
 
     })(Marionette.ItemView);
-    return Views.GradingParamsView = (function(_super) {
-      __extends(GradingParamsView, _super);
+    return Views.GradingParamsView = (function(superClass) {
+      extend(GradingParamsView, superClass);
 
       function GradingParamsView() {
         return GradingParamsView.__super__.constructor.apply(this, arguments);

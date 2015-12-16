@@ -1,5 +1,5 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['marionette', 'mustache'], function(Marionette, Mustache) {
   _.extend(Marionette.Application.prototype, {
@@ -33,11 +33,11 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
       return delete this._registry[id];
     },
     resetRegistry: function() {
-      var controller, key, msg, oldCount, _ref;
+      var controller, key, msg, oldCount, ref;
       oldCount = this.getRegistrySize();
-      _ref = this._registry;
-      for (key in _ref) {
-        controller = _ref[key];
+      ref = this._registry;
+      for (key in ref) {
+        controller = ref[key];
         controller.region.close();
       }
       msg = "There were " + oldCount + " controllers in the registry, there are now " + (this.getRegistrySize());
@@ -60,11 +60,11 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
       return delete this._elementRegistry[id];
     },
     resetElementRegistry: function() {
-      var controller, key, msg, oldCount, _ref;
+      var controller, key, msg, oldCount, ref;
       oldCount = this.getElementRegistrySize();
-      _ref = this._elementRegistry;
-      for (key in _ref) {
-        controller = _ref[key];
+      ref = this._elementRegistry;
+      for (key in ref) {
+        controller = ref[key];
         controller.layout.close();
       }
       msg = "There were " + oldCount + " controllers in the registry, there are now " + (this.getElementRegistrySize());
@@ -113,8 +113,8 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
     }
     return template;
   };
-  return Marionette.FormView = (function(_super) {
-    __extends(FormView, _super);
+  return Marionette.FormView = (function(superClass) {
+    extend(FormView, superClass);
 
     function FormView() {
       return FormView.__super__.constructor.apply(this, arguments);

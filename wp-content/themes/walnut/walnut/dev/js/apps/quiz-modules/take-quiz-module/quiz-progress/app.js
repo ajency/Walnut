@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-quiz-module/quiz-progress/templates/quiz-progress-tpl.html'], function(App, RegionController, quizProgressTemplate) {
   return App.module("TakeQuizApp.QuizProgress", function(QuizProgress, App) {
     var QuestionProgressView, QuizProgressView;
-    QuizProgress.Controller = (function(_super) {
-      __extends(Controller, _super);
+    QuizProgress.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showQuizProgressView = __bind(this._showQuizProgressView, this);
+        this._showQuizProgressView = bind(this._showQuizProgressView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -43,8 +43,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       return Controller;
 
     })(RegionController);
-    QuestionProgressView = (function(_super) {
-      __extends(QuestionProgressView, _super);
+    QuestionProgressView = (function(superClass) {
+      extend(QuestionProgressView, superClass);
 
       function QuestionProgressView() {
         return QuestionProgressView.__super__.constructor.apply(this, arguments);
@@ -62,8 +62,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       return QuestionProgressView;
 
     })(Marionette.ItemView);
-    return QuizProgressView = (function(_super) {
-      __extends(QuizProgressView, _super);
+    return QuizProgressView = (function(superClass) {
+      extend(QuizProgressView, superClass);
 
       function QuizProgressView() {
         return QuizProgressView.__super__.constructor.apply(this, arguments);

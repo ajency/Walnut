@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/view'], function(App, RegionController) {
   return App.module("ContentCreator.ElementBox", function(ElementBox, App, Backbone, Marionette, $, _) {
     var ElementBoxController;
-    ElementBoxController = (function(_super) {
-      __extends(ElementBoxController, _super);
+    ElementBoxController = (function(superClass) {
+      extend(ElementBoxController, superClass);
 
       function ElementBoxController() {
         return ElementBoxController.__super__.constructor.apply(this, arguments);

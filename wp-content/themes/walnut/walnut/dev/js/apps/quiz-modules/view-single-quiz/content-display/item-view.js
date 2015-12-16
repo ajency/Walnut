@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayItemTpl) {
   return App.module("QuizItemsDisplayApp.ContentCompositeView.ContentItemView", function(ContentItemView, App) {
-    return ContentItemView.View = (function(_super) {
-      __extends(View, _super);
+    return ContentItemView.View = (function(superClass) {
+      extend(View, superClass);
 
       function View() {
         return View.__super__.constructor.apply(this, arguments);

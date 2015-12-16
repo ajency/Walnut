@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentPreview.ContentBoard.Element.Mcq.Views", function(Views, App, Backbone, Marionette, $, _) {
-    Views.McqView = (function(_super) {
-      __extends(McqView, _super);
+    Views.McqView = (function(superClass) {
+      extend(McqView, superClass);
 
       function McqView() {
         return McqView.__super__.constructor.apply(this, arguments);
@@ -71,8 +71,8 @@ define(['app'], function(App) {
       return McqView;
 
     })(Marionette.ItemView);
-    return Views.McqOptionView = (function(_super) {
-      __extends(McqOptionView, _super);
+    return Views.McqOptionView = (function(superClass) {
+      extend(McqOptionView, superClass);
 
       function McqOptionView() {
         return McqOptionView.__super__.constructor.apply(this, arguments);

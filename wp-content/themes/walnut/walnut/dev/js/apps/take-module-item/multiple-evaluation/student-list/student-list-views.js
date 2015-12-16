@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("SingleQuestionMultipleEvaluationApp.StudentList.Views", function(Views, App) {
     var StudentsEmptyView, StudentsItemView;
-    StudentsItemView = (function(_super) {
-      __extends(StudentsItemView, _super);
+    StudentsItemView = (function(superClass) {
+      extend(StudentsItemView, superClass);
 
       function StudentsItemView() {
         return StudentsItemView.__super__.constructor.apply(this, arguments);
@@ -18,8 +18,8 @@ define(['app'], function(App) {
       return StudentsItemView;
 
     })(Marionette.ItemView);
-    StudentsEmptyView = (function(_super) {
-      __extends(StudentsEmptyView, _super);
+    StudentsEmptyView = (function(superClass) {
+      extend(StudentsEmptyView, superClass);
 
       function StudentsEmptyView() {
         return StudentsEmptyView.__super__.constructor.apply(this, arguments);
@@ -30,8 +30,8 @@ define(['app'], function(App) {
       return StudentsEmptyView;
 
     })(Marionette.ItemView);
-    return Views.StudentsListView = (function(_super) {
-      __extends(StudentsListView, _super);
+    return Views.StudentsListView = (function(superClass) {
+      extend(StudentsListView, superClass);
 
       function StudentsListView() {
         return StudentsListView.__super__.constructor.apply(this, arguments);
@@ -48,10 +48,10 @@ define(['app'], function(App) {
       };
 
       StudentsListView.prototype.onShow = function() {
-        var ele, eleValue, _i, _j, _len, _len1, _ref, _ref1, _results;
-        _ref = this.$el.find('.tiles.single');
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          ele = _ref[_i];
+        var ele, eleValue, i, j, len, len1, ref, ref1, results;
+        ref = this.$el.find('.tiles.single');
+        for (i = 0, len = ref.length; i < len; i++) {
+          ele = ref[i];
           $(ele).addClass('selectable');
         }
         $(".students").listnav({
@@ -61,18 +61,18 @@ define(['app'], function(App) {
         console.log(this.correctAnswers);
         this.correctAnswers = _.pluck(this.correctAnswers, 'id');
         console.log(this.correctAnswers);
-        _ref1 = this.$el.find('.tiles.single');
-        _results = [];
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          ele = _ref1[_j];
+        ref1 = this.$el.find('.tiles.single');
+        results = [];
+        for (j = 0, len1 = ref1.length; j < len1; j++) {
+          ele = ref1[j];
           eleValue = parseInt($(ele).attr('data-id'));
           if (_.contains(this.correctAnswers, eleValue)) {
-            _results.push(this.markAsCorrectAnswer(ele));
+            results.push(this.markAsCorrectAnswer(ele));
           } else {
-            _results.push(void 0);
+            results.push(void 0);
           }
         }
-        return _results;
+        return results;
       };
 
       StudentsListView.prototype.markAsCorrectAnswer = function(student) {

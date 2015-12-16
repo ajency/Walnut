@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chorus-options/templates/chorus-options-template.html'], function(App, RegionController, chorusOptionsTemplate) {
   return App.module("SingleQuestionChorusOptionsApp", function(ChorusOptions, App) {
     var ChorusOptionsController, ChorusOptionsView;
-    ChorusOptionsController = (function(_super) {
-      __extends(ChorusOptionsController, _super);
+    ChorusOptionsController = (function(superClass) {
+      extend(ChorusOptionsController, superClass);
 
       function ChorusOptionsController() {
-        this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
-        this._showChorusOptionsView = __bind(this._showChorusOptionsView, this);
+        this._saveQuestionResponse = bind(this._saveQuestionResponse, this);
+        this._showChorusOptionsView = bind(this._showChorusOptionsView, this);
         return ChorusOptionsController.__super__.constructor.apply(this, arguments);
       }
 
@@ -46,8 +46,8 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
       return ChorusOptionsController;
 
     })(RegionController);
-    ChorusOptionsView = (function(_super) {
-      __extends(ChorusOptionsView, _super);
+    ChorusOptionsView = (function(superClass) {
+      extend(ChorusOptionsView, superClass);
 
       function ChorusOptionsView() {
         return ChorusOptionsView.__super__.constructor.apply(this, arguments);
@@ -62,11 +62,11 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/chor
       };
 
       ChorusOptionsView.prototype.onShow = function() {
-        var ele, responsePercentage, _i, _len, _ref;
+        var ele, i, len, ref, responsePercentage;
         if (Marionette.getOption(this, 'display_mode') !== 'readonly') {
-          _ref = this.$el.find('.tiles.single');
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            ele = _ref[_i];
+          ref = this.$el.find('.tiles.single');
+          for (i = 0, len = ref.length; i < len; i++) {
+            ele = ref[i];
             $(ele).addClass('selectable');
           }
         }

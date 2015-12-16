@@ -1,20 +1,20 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/layout', 'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app', 'apps/quiz-modules/view-single-quiz/content-display/content-display-app', 'apps/quiz-modules/view-single-quiz/attempts/app', 'apps/quiz-modules/take-quiz-module/take-quiz-app'], function(App, RegionController) {
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
-    ViewQuiz.Controller = (function(_super) {
+    ViewQuiz.Controller = (function(superClass) {
       var display_mode, questionsCollection, quizModel, quizResponseSummary, quizResponseSummaryCollection, studentModel, studentTrainingModule;
 
-      __extends(Controller, _super);
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showAttemptsRegion = __bind(this._showAttemptsRegion, this);
-        this.showQuizViews = __bind(this.showQuizViews, this);
-        this.startQuiz = __bind(this.startQuiz, this);
-        this._fetchQuestionResponseCollection = __bind(this._fetchQuestionResponseCollection, this);
-        this._fetchQuizResponseSummary = __bind(this._fetchQuizResponseSummary, this);
+        this._showAttemptsRegion = bind(this._showAttemptsRegion, this);
+        this.showQuizViews = bind(this.showQuizViews, this);
+        this.startQuiz = bind(this.startQuiz, this);
+        this._fetchQuestionResponseCollection = bind(this._fetchQuestionResponseCollection, this);
+        this._fetchQuizResponseSummary = bind(this._fetchQuizResponseSummary, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -178,16 +178,16 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         fetchResponses = this._fetchQuestionResponseCollection();
         return fetchResponses.done((function(_this) {
           return function() {
-            var m, reorderQuestions, _i, _len, _ref;
+            var i, len, m, ref, reorderQuestions;
             if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
               questionsCollection.each(function(e) {
                 return e.unset('order');
               });
               quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               reorderQuestions = [];
-              _ref = quizModel.get('content_pieces');
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                m = _ref[_i];
+              ref = quizModel.get('content_pieces');
+              for (i = 0, len = ref.length; i < len; i++) {
+                m = ref[i];
                 reorderQuestions.push(questionsCollection.get(m));
               }
               questionsCollection.reset(reorderQuestions);

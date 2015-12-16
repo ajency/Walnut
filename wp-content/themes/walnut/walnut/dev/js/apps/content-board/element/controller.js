@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/element-controller', 'apps/content-board/element/views'], function(App, ElementController) {
   return App.module('ContentPreview.ContentBoard.Element', function(Element, App, Backbone, Marionette, $, _) {
-    return Element.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return Element.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
@@ -24,15 +24,15 @@ define(['app', 'controllers/element-controller', 'apps/content-board/element/vie
         this.layout = this._getView(element);
         this.layout.elementRegion.on("show", (function(_this) {
           return function(view) {
-            var margin, model, _i, _len, _ref, _results;
+            var i, len, margin, model, ref, results;
             model = Marionette.getOption(_this.layout, 'model');
-            _ref = ['top_margin', 'left_margin', 'right_margin', 'bottom_margin'];
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              margin = _ref[_i];
-              _results.push(_this.layout.setMargin(model.get(margin)));
+            ref = ['top_margin', 'left_margin', 'right_margin', 'bottom_margin'];
+            results = [];
+            for (i = 0, len = ref.length; i < len; i++) {
+              margin = ref[i];
+              results.push(_this.layout.setMargin(model.get(margin)));
             }
-            return _results;
+            return results;
           };
         })(this));
         return this.add(this.layout, $(container));

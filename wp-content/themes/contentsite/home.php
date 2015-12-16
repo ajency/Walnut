@@ -45,7 +45,7 @@
     
     <link href="/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>    
 
-    
+    <?php wp_head();?>
 </head>
 <body class="">
 <div id="site_main_container">

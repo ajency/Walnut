@@ -1,17 +1,17 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/edit-module/module-edit-views', 'apps/edit-module/module-description/module-description-controller', 'apps/edit-module/content-selection/app', 'apps/edit-module/content-display/content-display-app'], function(App, RegionController) {
   return App.module("ContentModulesApp.Edit", function(Edit, App) {
-    Edit.GroupController = (function(_super) {
-      __extends(GroupController, _super);
+    Edit.GroupController = (function(superClass) {
+      extend(GroupController, superClass);
 
       function GroupController() {
-        this._showContentSelectionApp = __bind(this._showContentSelectionApp, this);
-        this._getContentGroupEditLayout = __bind(this._getContentGroupEditLayout, this);
-        this.showGroupDetailsApp = __bind(this.showGroupDetailsApp, this);
-        this._getContentGroupCollection = __bind(this._getContentGroupCollection, this);
+        this._showContentSelectionApp = bind(this._showContentSelectionApp, this);
+        this._getContentGroupEditLayout = bind(this._getContentGroupEditLayout, this);
+        this.showGroupDetailsApp = bind(this.showGroupDetailsApp, this);
+        this._getContentGroupCollection = bind(this._getContentGroupCollection, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 

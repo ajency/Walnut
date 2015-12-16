@@ -25,20 +25,33 @@ define ['app'
                         <td>{{#answered}}
                                 <button class="btn btn-success btn-small replay_quiz" data-summary-id={{summary_id}}>Replay</button>
                             {{/answered}}
-                            {{^answered}}Not Taken{{/answered}}
+                            {{#not_taken}}Not Taken{{/not_taken}}
+                           {{#started}}Started{{/started}}
                         </td>'
 
             mixinTemplateHelpers:(data)->
 
-                summaries= Marionette.getOption @, 'summaries'
+               summaries= Marionette.getOption @, 'summaries'
 
-                if not _.isEmpty summaries
-                    completed_summaries = _.map summaries, (m)-> m.toJSON() if m.get('status') is 'completed'
-                    data.answered = true
-                    data =_.extend data, _.last completed_summaries
-                    data.attempts = _.size summaries                    
-                    data.time_taken = $.timeMinSecs data.total_time_taken
-                data
+               if not _.isEmpty summaries
+
+                 started_summaries = _.map summaries, (m) ->
+                   if m.get('status') == 'started'
+                     true
+                   else
+                     false
+
+                 if started_summaries[0]
+                   data.started = true
+                 else
+                   completed_summaries = _.map summaries, (m)-> m.toJSON() if m.get('status') is 'completed'
+                   data.answered = true
+                   data =_.extend data, _.last completed_summaries
+                   data.attempts = _.size summaries
+                   data.time_taken = $.timeMinSecs data.total_time_taken
+               else
+                 data.not_taken = true
+               data
 
             events:
                 'click .replay_quiz' :(e)-> 

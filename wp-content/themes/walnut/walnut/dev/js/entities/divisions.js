@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Divisions", function(Divisions, App, Backbone, Marionette, $, _) {
     var API, DivisionCollection, DivisionModel;
-    DivisionModel = (function(_super) {
-      __extends(DivisionModel, _super);
+    DivisionModel = (function(superClass) {
+      extend(DivisionModel, superClass);
 
       function DivisionModel() {
         return DivisionModel.__super__.constructor.apply(this, arguments);
@@ -24,8 +24,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return DivisionModel;
 
     })(Backbone.Model);
-    DivisionCollection = (function(_super) {
-      __extends(DivisionCollection, _super);
+    DivisionCollection = (function(superClass) {
+      extend(DivisionCollection, superClass);
 
       function DivisionCollection() {
         return DivisionCollection.__super__.constructor.apply(this, arguments);

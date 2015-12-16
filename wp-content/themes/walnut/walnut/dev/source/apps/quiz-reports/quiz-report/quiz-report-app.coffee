@@ -42,7 +42,7 @@ define ['app'
 
                 App.execute "when:fetched", @quizResponseSummaries, =>
 
-                    @quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
+                    #@quizResponseSummaries.remove @quizResponseSummaries.where 'status':'started'
 
                     takenBy = _.size _.uniq @quizResponseSummaries.pluck 'student_id'
 

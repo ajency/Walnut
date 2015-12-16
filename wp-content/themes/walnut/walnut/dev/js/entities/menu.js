@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(["app", 'backbone'], function(App, Backbone) {
   App.module("Entities.Menus", function(Menus, App, Backbone, Marionette, $, _) {
     var API, menuCollection;
-    Menus.MenuItemModel = (function(_super) {
-      __extends(MenuItemModel, _super);
+    Menus.MenuItemModel = (function(superClass) {
+      extend(MenuItemModel, superClass);
 
       function MenuItemModel() {
         return MenuItemModel.__super__.constructor.apply(this, arguments);
@@ -26,8 +26,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return MenuItemModel;
 
     })(Backbone.Model);
-    Menus.MenuItemCollection = (function(_super) {
-      __extends(MenuItemCollection, _super);
+    Menus.MenuItemCollection = (function(superClass) {
+      extend(MenuItemCollection, superClass);
 
       function MenuItemCollection() {
         return MenuItemCollection.__super__.constructor.apply(this, arguments);
