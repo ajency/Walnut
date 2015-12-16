@@ -1,7 +1,7 @@
 <div class="tiles white grid simple animated fadeIn'">
     <div class="grid-title">
         <div class="row">
-            <div class="col-md-6 b-r b-grey">
+            <div class="col-md-4 b-r b-grey">
                 <h3 class="no-margin semi-bold">
                     <label class="form-label text-grey">Quiz Name</label>
                     {{name}} 
@@ -10,24 +10,25 @@
                     {{/responseSummary}} 
                 </h3>
             </div>
-            <div class="col-md-6 small-text">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label text-grey">Textbook</label>
-                            {{getTextbookName}}
-                        </div>
-                    <div class="col-md-6">
-                        <label class="form-label text-grey">Chapter</label>
-                            {{getChapterName}}
-                    </div>
-                </div>
+            <div class="col-md-4 b-r b-grey">
+                <h3 class="no-margin semi-bold">
+                    <label class="form-label text-grey">Textbook</label>
+                        {{getTextbookName}}
+                </h3>        
             </div>
+            <div class="col-md-4">
+                <h3 class="no-margin semi-bold">
+                    <label class="form-label text-grey">Chapter</label>
+                        {{getChapterName}}
+                </h3>        
+            </div>
+ 
         </div>        
     </div>
     
     <div class="grid-body" style="overflow: hidden; display: block;">
         <div class="row p-b-10">
-            <div class="col-md-3">
+            <div class="col-md-4">
                     <label class="form-label no-margin">No. of Questions: <h4 class="inline semi-bold no-margin">{{getQuestionsCount}}</h4> </label>
                     
                     {{#responseSummary}} 
@@ -35,7 +36,7 @@
                             <span class="text-info small no-margin inline">You attempted: <span class="bold">{{num_questions_answered}}</span></span></h3>
                     {{/responseSummary}}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                     <label class="form-label no-margin">Duration: <h4 class="inline semi-bold no-margin">{{total_minutes}} mins</h4></label>
                     
                     {{#incompleteQuiz}}
@@ -54,7 +55,7 @@
                         <h3 class="semi-bold no-margin quizSummRespnse"><span class="text-info small no-margin">Completed in: <span class="bold">{{total_time_taken}}</span></span></h3>
                     {{/responseSummary}}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                     <label class="form-label no-margin">Marks: <h4 class="inline semi-bold no-margin">{{marks}}</h4></label>
                     
                     {{#display_marks}} 
@@ -70,11 +71,11 @@
                         </h3>
                     {{/display_marks}}
             </div>
-            <div class="col-md-3 ">
+            <!--div class="col-md-3 ">
                 {{#negMarksEnable}}
                     <label class="form-label no-margin">Negative Marking: <h4 class="inline semi-bold no-margin">{{negMarks}}%</h4> </label>
                 {{/negMarksEnable}}
-            </div>
+            </div-->
         </div>
 
         <div class="row m-b-10 b-grey b-t">
