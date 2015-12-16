@@ -9,15 +9,33 @@
 
 
 
+
+ // ---------------------------
+ // QUIZ SECTION DIVIDER -----------
+ // ---------------------------
+
+
+.quiz-subj {
+    .box-shadow(10px 0 15px -6px #CCC, -12px 0 8px -4px #ccc);
+    height: 100vh;
+    padding: 0 30px;
+    border-right: 1px solid #ccc;    
+}
+
+
+
  // ---------------------------
  // QUIZ PAGE STYLES -----------
  // ---------------------------
+
+
  .teacher-app {
      & > .well {
          display: none; 
      }
      .direction {
          margin: 0;
+         padding-top: 30px;
      }
      // ---------------------------
      // IF QUIZES ARE ATTEMPTED THEN DETAIL DROPDOWN -----------
@@ -27,17 +45,30 @@
          .grid {
              &.vertical {
                  &.blue {
-                     border-left: 4px solid @quiz-link-color1;
-                     width: 81.5%;
-    				 margin: 0 auto;
+                     border-left: 0;
+                     padding: 0 12px !important;
+                     .grid-title{
+                        border-left: 4px solid @dashboard-color;
+                        padding: 8px;
+                        .tools{
+                            & > a{
+                                &.expand{
+                                    background-position: -95px -40px;
+                                }
+                                &.collapse{
+                                    background-position: -123px -40px;
+                                }
+                            }
+                        }
+                     }
     				 @media @i-tab-landscape{
-    				 	width: ~"calc(100% - 30px)";
+    				 	//width: ~"calc(100% - 30px)";
     				 }
                  }
              }
              .grid-title, .grid-body {
                  border: 2px solid #eee;
-                 padding: 10px;
+                 padding: 10px 15px;
                  .row {
                      label {
                          margin-bottom: 10px;
@@ -67,10 +98,14 @@
 
      #quiz-details-region {
          margin-top: 20px;
+        // @media @desktop-def{
+        //     padding-bottom: 80px;
+        // }
          & > div {
              padding-bottom: 5px;
              background: #F0F0F0;
              .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+             border-left: 4px solid @dashboard-color;
              .grid {
                  margin-bottom: 0;
                  .grid-title, .grid-body {
@@ -144,9 +179,10 @@
                  #take-quiz {
                      margin: 18px 0px;
                      background: @button-1-danger;
-                     .box-shadow(0px 1px 1px 5px rgba(50, 50, 50, 0.2));
+                     .box-shadow(0 3px 0 0 rgba(192, 204, 203, 0.9));
                      border: 0;
                      line-height: 45px;
+                    font-size: 1.1em;
                      &:before, &:after {
                          display: inline-block;
                          font: normal normal normal 2.5em FontAwesome;
@@ -185,3 +221,4 @@
          }
      }
  }
+

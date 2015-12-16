@@ -17,7 +17,7 @@
  // EXPAND SECTION HIDDEN -----------
  // ---------------------------
 
-#quiz-description-region{
+#quiz-description-region,.quizComment{
 	display: none;
 }
 
@@ -26,9 +26,31 @@
  // TOP SPACING , AS MARGIN HAS SOME ISSUES -----------
  // ---------------------------
 
+
 .sidebarContainer{
 	padding-top: 30px;
 }
+
+
+
+
+ // ---------------------------
+ // QUESTION REGION-CANVAS -----------
+ // ---------------------------
+
+
+#question-display-region{
+    position: relative;
+    & > div{
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        max-width: 660px;
+        
+    }
+}
+
 
 
 
@@ -54,7 +76,37 @@
 
  #quiz-progress-region {
      .quizProgress {
-         padding: 0;
+        padding: 0;
+
+        margin: 0;
+        float: none;
+        position: fixed;
+        top: 150px;
+        left: -298px;
+        z-index: 9999;
+        .transition-duration(0.3s);
+        &:hover{
+            left: 0;
+            .progressStrip{
+                left: 300px;
+            }
+        }
+
+         .progressStrip{
+            display: block;
+            position: fixed;
+            top: 150px;
+            left: 0px;
+            height: 60px;
+            width: 50px;
+            font-size: 28px;
+            text-align: center;
+            padding-top: 8px;
+            color: #ffffff;
+            background: #0090d9;
+            .transition-duration(0.3s);
+         }
+
          .modProgress {
              p {
                  background: #FE7E65;
@@ -247,9 +299,22 @@
  .timerBox {
  	background: #f3f3f3;
     .box-shadow(#dadada 0 0 0 3px);
+    // right: -302px;
+    // left: auto;
     .container-grey{
     	background: none;
     	box-shadow: none;
+        #completed-quiz{
+            margin:0;
+            padding: 0;
+            .qstnStatus{
+                font-size: 1.3em;
+                padding: 8px 0;
+                i{
+                    vertical-align: middle;
+                }
+            }
+        }
     }
     .small-text{
     	padding: 10px 0;
@@ -333,6 +398,9 @@
      .container-grey:last-child {
          padding: 20px;
      }
+     // &:hover{
+     //    right: 0;
+     // }
  }
  
 
@@ -344,6 +412,13 @@
  .timerBox, .quizProgress {
      width: 300px;
      height: 510px;
+    // margin: 0;
+    // float: none;
+    // position: fixed;
+    // top: 150px;
+    // left: -296px;
+    // z-index: 9999;
+    // .transition-duration(0.3s);
  }
  
 
@@ -356,7 +431,7 @@
  .quizActions{
  	background: none;
     box-shadow: none;
-    width: 40%;
+    // width: 40%;
     text-align: center;
     #previous-question,#next-question{
     	display: none !important;

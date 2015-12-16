@@ -1978,6 +1978,16 @@ lesshat-selector {
 .sidebarContainer {
   padding-top: 30px;
 }
+#question-display-region {
+  position: relative;
+}
+#question-display-region > div {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 660px;
+}
 #content-board.quizContent #myCanvas {
   border: 3px solid #eee;
   min-height: 460px !important;
@@ -1989,6 +1999,35 @@ lesshat-selector {
 }
 #quiz-progress-region .quizProgress {
   padding: 0;
+  margin: 0;
+  float: none;
+  position: fixed;
+  top: 150px;
+  left: -298px;
+  z-index: 9999;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+#quiz-progress-region .quizProgress:hover {
+  left: 0;
+}
+#quiz-progress-region .quizProgress:hover .progressStrip {
+  left: 300px;
+}
+#quiz-progress-region .quizProgress .progressStrip {
+  display: block;
+  position: fixed;
+  top: 150px;
+  left: 0px;
+  height: 60px;
+  width: 50px;
+  font-size: 28px;
+  text-align: center;
+  padding-top: 8px;
+  color: #ffffff;
+  background: #0090d9;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
 }
 #quiz-progress-region .quizProgress .modProgress p {
   background: #FE7E65;
@@ -2296,7 +2335,6 @@ lesshat-selector {
 .quizActions {
   background: none;
   box-shadow: none;
-  width: 40%;
   text-align: center;
 }
 .quizActions #previous-question,

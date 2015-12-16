@@ -6,65 +6,92 @@
  // |______\___/ \__, |_|_| |_| |_____/ \__|\__, |_|\___||___/
  //               __/ |                      __/ |            
  //              |___/                      |___/             
+ 
+
+ // ---------------------------
+ // SCHOOL LOGIN PAGE STYLES -----------
+ // ---------------------------
 
 
 
-// ---------------------------
-// School login page styles -----------
-// ---------------------------
+ // ---------------------------
+ // LOGO-CAPTION HEADER -----------
+ // ---------------------------
+
+
+ .signin-header {
+     padding: 15px 0 35px 0;
+     text-align: center;
+     .logo {
+         margin: 0;
+         & > img {
+             width: 7%;
+         }
+     }
+     .slogan {
+         margin: 10px 0;
+         & > img {
+             width: 12%;
+         }
+     }
+ }
+ 
+ 
+
+ // ---------------------------
+ // LOGIN CARD BODY -----------
+ // ---------------------------
 
 
 
-
-.school-login{
-    .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
-    background: #fff;
-    padding-top: 15px;
-    text-align: center;
-    font-family: open-sans;
-    h4{
-        color: @quiz-link-color3;
-        text-transform: capitalize;
-    }
-    .wrapper{
-        width: 65%;
-        margin: 0 auto;
-        >div{
-            margin: 15px 0;
-            .flex-family();
-            h5{
-                text-transform: capitalize;
-                margin: 15px 0 0 0;
-                font-size: 1.2em;
-                color: @quiz-link-color1;
-                flex: 1 50%;
-            }
-            .mat-holder{
-                flex: 1 50%;
-                .mat-label,.mat-input,&:before,&:after{
-                    width: 100%;
-                }
-
-            }
-        }
-    }
-    .update{
-        background: #f3f3f3;
-        padding: 12px 10px;
-                .reset-password{
-                    display: block;
-                    margin: 15px 0;
-                    cursor: pointer;
-                    color: @quiz-link-color1;
-                }
-                button {
-                    background: @button-2-theme;
-                    color: #fff;
-                    padding: 10px 25px;
-                    text-transform: uppercase;
-                    &:hover {
-                        background: lighten(@button-2-theme, 10%);
-                    }
-                }        
-    }
-}
+ .school-login {
+     .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+     background: #fff;
+     padding-top: 15px;
+     text-align: center;
+     font-family: open-sans;
+     h4 {
+         color: @quiz-link-color3;
+         text-transform: capitalize;
+     }
+     .wrapper {
+         width: 65%;
+         margin: 0 auto;
+         >div {
+             margin: 15px 0;
+             .flex-family();
+             h5 {
+                 text-transform: capitalize;
+                 margin: 15px 0 0 0;
+                 font-size: 1.2em;
+                 color: @quiz-link-color1;
+                 flex: 1 50%;
+             }
+             .mat-holder {
+                 flex: 1 50%;
+                 .mat-label, .mat-input, &:before, &:after {
+                     width: 100%;
+                 }
+             }
+         }
+     }
+     .update {
+         background: #f3f3f3;
+         padding: 12px 10px;
+         .reset-password {
+             display: block;
+             margin: 15px 0;
+             cursor: pointer;
+             color: @quiz-link-color1;
+         }
+         button {
+             background: @button-2-theme;
+             color: #fff;
+             padding: 10px 25px;
+             text-transform: uppercase;
+             &:hover {
+                 background: lighten(@button-2-theme, 10%);
+             }
+         }
+     }
+ }

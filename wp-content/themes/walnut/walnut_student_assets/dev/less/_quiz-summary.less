@@ -28,16 +28,18 @@
 				#try-again{
 					margin: 18px 0px 18px 30px;
 				    background: @dashboard-color;
-				    .box-shadow(0px 1px 1px 5px rgba(50, 50, 50, 0.2));
+				    .box-shadow(0 3px 0 0 rgba(192, 204, 203, 0.9));
 				    border: 0;
 				    line-height: 45px;
-				    &:after{
+				    font-size: 1.1em;
+				    &:before{
 				    	content: "\f0ec";
 					    font: normal normal normal 1.5em FontAwesome;
 					    text-rendering: auto;
 					    -webkit-font-smoothing: antialiased;
-					    padding-left: 10px;
+					    padding-right: 10px;
 					    color: lighten(@dashboard-color, 10%);
+					    vertical-align: inherit;
 				    }
 				}
 			}
