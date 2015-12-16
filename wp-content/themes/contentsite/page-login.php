@@ -62,7 +62,7 @@
                                 <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" class="img-responsive center-block" alt="">
                             </div>
                             <div class="slogan">
-                                Tough Outside. Smart Inside
+                               <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-tagline.png" class="img-responsive center-block" alt="">
                             </div>
                         </div>
                     </nav>
