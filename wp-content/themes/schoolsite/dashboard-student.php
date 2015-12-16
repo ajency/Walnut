@@ -23,6 +23,7 @@
             foreach ($upcoming_quizes as $key => $quiz) {
                 $textbook_id_to_name_map[$quiz['textbook_id']]++;
             }
+           $textbook_id_vs_name = array();
  ?>           
 <div class="container-fluid walnut-content">
                             <!-- Welcome text -->
@@ -41,6 +42,7 @@
                                             <div class="col-sm-6 col-md-6 col-lg-6">
                                                 <div class="quiz-cards animated bounceIn">
                                                     <?php $notifications =  $textbook_id_to_name_map[$textbook->term_id] ?>
+                                                    <?php $textbook_id_vs_name[$textbook->term_id]= $textbook->name; ?>
                                                    <?php if($notifications>0): ?>
                                                     <div class="notification"  data-scrollreveal="enter top and move 100px, wait 1.8s" data-toggle="popover" data-placement="left" title="New Update" data-content="Look here for latest quizzes avaliable!!!">
                                                         <?php echo $notifications ?>
@@ -102,7 +104,7 @@
                                         </div>
                                         <div class="subj-time">
                                             <a href="<?php echo site_url() ?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
-                                            <p> <?php echo $upcoming_quiz['textbook']; ?></p>
+                                            <p> <?php echo $textbook_id_vs_name[$upcoming_quiz['textbook_id']]; ?></p>
                                         
                                             </a>
                                         </div>
