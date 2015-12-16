@@ -17,7 +17,7 @@
  // EXPAND SECTION HIDDEN -----------
  // ---------------------------
 
-#quiz-description-region,.quizComment{
+.quizComment{
 	display: none;
 }
 
@@ -27,8 +27,19 @@
  // ---------------------------
 
 
-.sidebarContainer{
-	padding-top: 30px;
+// .sidebarContainer{
+// 	padding-top: 30px;
+// }
+
+
+
+ // ---------------------------
+ // EXPAND-COLLAPSE SECTION -----------
+ // ---------------------------
+
+#quiz-description-region{
+    margin: 0 auto;
+    max-width: 50%;
 }
 
 
@@ -46,8 +57,8 @@
         left: 0;
         right: 0;
         margin: 0 auto;
-        max-width: 660px;
-        
+        max-width: 50%;
+        z-index: 9999;
     }
 }
 
@@ -67,6 +78,18 @@
 } 
 
 
+ // ---------------------------
+ // QUIZ TOTAL SECTION HOLDER -----------
+ // ---------------------------
+
+
+#main-content-region{
+    .content{
+        position: absolute;
+        width: 100%;
+        top: 0;
+    }
+}
 
 
 
@@ -315,6 +338,28 @@
                 }
             }
         }
+        #downUpTimer{
+            position: absolute;
+            top: -90px;
+            z-index: 9999;
+            & > span{
+                // background: red;
+                & > span{
+                    background: #469290;
+                    border-radius: 5px;
+                    padding: 0 8px;
+                     font-weight: bold;
+                    color: #fff;
+                     font-size: 1em;
+                    &:first-child{
+                        margin-right: 2px;
+                    }
+                   & > span{
+                    color: #fff;
+                   }
+                }
+            }
+        }
     }
     .small-text{
     	padding: 10px 0;
@@ -322,14 +367,21 @@
     }
      .endQuiz {
         text-align: center;
-        border-bottom: 1px solid #dadada;
-    	border-top: 0;
+        // border-bottom: 1px solid #dadada;
+    	// border-top: 0;
+        position: absolute;
+        top: -86px;
+        z-index: 9999;
+        right: 16px;
+        border: 0;
          button {
-             background: @button-1-danger;
+            background: #7CC0BF;
+            border: 2px solid #fff;
+            border-radius: 10px;
              color: @color-white;
              padding: 12px 28px;
              &:hover{
-             	background: lighten(@button-1-danger, 10%);
+             	background: lighten(#7CC0BF, 10%);
              }
          }
      }

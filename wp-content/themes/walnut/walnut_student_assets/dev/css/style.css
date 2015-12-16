@@ -2102,12 +2102,12 @@ lesshat-selector {
   margin: 0 auto;
   top: 40px;
 }
-#quiz-description-region,
 .quizComment {
   display: none;
 }
-.sidebarContainer {
-  padding-top: 30px;
+#quiz-description-region {
+  margin: 0 auto;
+  max-width: 50%;
 }
 #question-display-region {
   position: relative;
@@ -2117,7 +2117,8 @@ lesshat-selector {
   left: 0;
   right: 0;
   margin: 0 auto;
-  max-width: 660px;
+  max-width: 50%;
+  z-index: 9999;
 }
 #content-board.quizContent #myCanvas {
   border: 3px solid #eee;
@@ -2127,6 +2128,11 @@ lesshat-selector {
   #content-board.quizContent #myCanvas {
     margin-top: 50px;
   }
+}
+#main-content-region .content {
+  position: absolute;
+  width: 100%;
+  top: 0;
 }
 #quiz-progress-region .quizProgress {
   padding: 0;
@@ -2311,22 +2317,46 @@ lesshat-selector {
 .timerBox .container-grey #completed-quiz .qstnStatus i {
   vertical-align: middle;
 }
+.timerBox .container-grey #downUpTimer {
+  position: absolute;
+  top: -90px;
+  z-index: 9999;
+}
+.timerBox .container-grey #downUpTimer > span > span {
+  background: #469290;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-weight: bold;
+  color: #fff;
+  font-size: 1em;
+}
+.timerBox .container-grey #downUpTimer > span > span:first-child {
+  margin-right: 2px;
+}
+.timerBox .container-grey #downUpTimer > span > span > span {
+  color: #fff;
+}
 .timerBox .small-text {
   padding: 10px 0;
   border-bottom: 1px solid #dadada;
 }
 .timerBox .endQuiz {
   text-align: center;
-  border-bottom: 1px solid #dadada;
-  border-top: 0;
+  position: absolute;
+  top: -86px;
+  z-index: 9999;
+  right: 16px;
+  border: 0;
 }
 .timerBox .endQuiz button {
-  background: #f2593a;
+  background: #7CC0BF;
+  border: 2px solid #fff;
+  border-radius: 10px;
   color: #ffffff;
   padding: 12px 28px;
 }
 .timerBox .endQuiz button:hover {
-  background: #f5816a;
+  background: #9ed1d0;
 }
 .timerBox .quiz-stats {
   display: -webkit-box;
