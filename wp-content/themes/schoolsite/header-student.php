@@ -89,7 +89,7 @@
                                     <?php endif;?>
 
                                     <?php if(in_array($page_slug, array('dashboard','change-password-student','dashboard-student','lecture-listview-student', 'quiz-listview-student', 'lecture-start-student', 'quiz-start-student'))): ?>
-                                    <li class="log-session"><a href="javascript:" onclick="logout()" class="btn fab-header"><i class="fa fa-power-off"></i></a></li>
+                                    <li class="log-session"><a href="<?php echo wp_logout_url()?>"  class="btn fab-header"><i class="fa fa-power-off"></i></a></li>
                                     <?php endif;?>
 
                        
