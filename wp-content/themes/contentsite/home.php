@@ -45,6 +45,12 @@
     
     <link href="/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>    
 
+
+    <!-- Begin Additional CSS For Admin Fix -->
+    <link href="/wp-content/themes/walnut/walnut/dev/css/admin.css" rel="stylesheet" type="text/css">
+    <!-- END Additional CSS For Admin Fix -->
+
+
     <?php wp_head();?>
 </head>
 <body class="">
