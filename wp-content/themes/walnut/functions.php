@@ -99,3 +99,221 @@ if(!function_exists('_log')){
     }
   }
 }
+
+
+
+
+
+
+// Remote sync module to generate table data which van be downloaded from local school site
+//Generating table data
+add_action( 'wp_ajax_sync_generate', 'generate_sync_data' );
+add_action( 'wp_ajax_nopriv_sync_generate', 'generate_sync_data' );
+
+function generate_sync_data(){
+    global $wpdb;
+    $table = $_REQUEST['table'];
+
+    $network_url = preg_replace('#^https?://#', '', rtrim(get_site_url(),'/'));
+
+
+    if(isset($_REQUEST['blog_id'])){
+        $prefix = $wpdb->prefix.$_REQUEST['blog_id'].'_';
+    }else{
+        $prefix = $wpdb->prefix;
+    }
+
+    if($table == 'terms'){
+        $id = uniqid();
+        $target = get_home_path().'tmp/'.$id;
+        $oldumask = umask(0);
+        mkdir($target, 0777);
+        umask($oldumask);
+    }else{
+        $target = $_REQUEST['path'];
+    }
+
+    $filename = $target.'/'.$table.'.csv';
+
+
+
+    if($table=='usermeta'){
+      $users = $wpdb->get_results( "SELECT ID FROM {$wpdb->prefix}users WHERE 1=1 AND {$wpdb->prefix}users.ID IN (
+       SELECT {$wpdb->prefix}usermeta.user_id FROM {$wpdb->prefix}usermeta
+       WHERE {$wpdb->prefix}usermeta.meta_key = 'primary_blog'
+       AND {$wpdb->prefix}usermeta.meta_value = {$_REQUEST['blog_id']})",ARRAY_A );
+      $f = fopen($filename, 'w');
+
+      foreach($users as $user){
+        $metas = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}usermeta WHERE user_id={$user['ID']}",ARRAY_A);
+        foreach ($metas as $line) {
+          if(strpos($line['meta_key'],$_REQUEST['blog_id'].'_') !== false){
+            $line['meta_key'] = str_replace($_REQUEST['blog_id'].'_', '', $line['meta_key']);
+          }
+          fputcsv($f, $line,',','"');
+        }
+      }
+      fclose($f);
+    }else{
+      if($table=='users'){
+        $data = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}users WHERE 1=1 AND {$wpdb->prefix}users.ID IN (
+         SELECT {$wpdb->prefix}usermeta.user_id FROM {$wpdb->prefix}usermeta
+         WHERE {$wpdb->prefix}usermeta.meta_key = 'primary_blog'
+         AND {$wpdb->prefix}usermeta.meta_value = {$_REQUEST['blog_id']})",ARRAY_A );
+
+      }else if($table=='options'){
+        /*$data= $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$prefix}$table
+                WHERE option_name LIKE %s OR option_name LIKE %s",
+            'taxonomy%', '%user_roles%'
+        ),ARRAY_A);*/
+
+      $optionprefix = $wpdb->prefix.$_REQUEST['blog_id'].'_';
+
+      $data= $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$optionprefix}options"
+        ),ARRAY_A);
+
+      }else{
+        $data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$prefix}$table"), ARRAY_A );
+      }
+
+
+
+      if($table=='posts'){
+        $f = fopen($filename, 'w');
+        foreach ($data as $line) {
+          $newline = str_replace($network_url, $_REQUEST['school'], $line);
+          fputcsv($f, $newline,',','"');
+        }
+        fclose($f);
+
+      }else if($table=='postmeta'){
+        $f = fopen($filename, 'w');
+        foreach ($data as $line) {
+
+          if($line['meta_key'] == 'content_element' && strpos($line['meta_value'],$network_url) !== false){
+            $raw_element = maybe_unserialize($line['meta_value']);
+            $newelement = str_replace($network_url, $_REQUEST['school'], $raw_element);
+            $line['meta_value'] = maybe_serialize($newelement);
+          }else if($line['meta_key'] == 'layout_json' && strpos($line['meta_value'],$network_url) !== false && strpos($line['meta_value'],'WP_Post') == false){
+            $raw_element = maybe_unserialize($line['meta_value']);
+            $newelement = str_replace_deep($network_url, $_REQUEST['school'], $raw_element);
+            $line['meta_value'] = maybe_serialize($newelement);
+          }else if($line['meta_key'] == '_menu_item_url' && strpos($line['meta_value'],$network_url) !== false){
+            $line['meta_value'] = str_replace($network_url, $_REQUEST['school'], $line['meta_value']);
+          }
+
+            fputcsv($f, $line,',','"');
+
+        }
+        fclose($f);
+
+      }else if($table=='options'){
+
+        $f = fopen($filename, 'w');
+        foreach ($data as $line) {
+
+          /*if(strpos($line['meta_value'],$network_url) !== false){
+            $raw_element = maybe_unserialize($line['meta_value']);
+            $newelement = str_replace_deep($network_url, $_REQUEST['school'], $raw_element);
+            $line['meta_value'] = maybe_serialize($newelement);
+          }*/
+
+          fputcsv($f, $line,',','"');
+        }
+        fclose($f);
+
+      }else{
+        if(count($data)>0){
+        $f = fopen($filename, 'w');
+        foreach ($data as $line) {
+          fputcsv($f, $line,',','"');
+        }
+        fclose($f);
+      }
+      }
+
+   }
+
+
+
+
+
+
+
+//Compressing file to gzip
+  gzCompressFile($target.'/'.$table.'.csv');
+
+//Removing csv file
+  unlink($target.'/'.$table.'.csv');
+
+//converting path to url
+  $filePath = str_replace('\\','/',$target);
+  $ssl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? true : false;
+  $sp = strtolower($_SERVER['SERVER_PROTOCOL']);
+  $protocol = substr($sp, 0, strpos($sp, '/')) . (($ssl) ? 's' : '');
+  $port = $_SERVER['SERVER_PORT'];
+  $stringPort = ((!$ssl && $port == '80') || ($ssl && $port == '443')) ? '' : ':' . $port;
+  $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+  $fileUrl = str_replace($_SERVER['DOCUMENT_ROOT'] ,$protocol . '://' . $host . $stringPort, $filePath);
+
+  $response = json_encode(array('status'=>'success','path'=>$target, 'url'=>$fileUrl, 'prefix'=>$prefix));
+  header("content-type: text/javascript; charset=utf-8");
+  header("access-control-allow-origin: *");
+  echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
+  exit;
+}
+
+
+
+
+
+function str_replace_deep($search, $replace, $subject)
+{
+    if (is_array($subject))
+    {
+        foreach($subject as &$oneSubject)
+            $oneSubject = str_replace_deep($search, $replace, $oneSubject);
+        unset($oneSubject);
+        return $subject;
+    } else {
+        return str_replace($search, $replace, $subject);
+    }
+}
+
+
+
+
+
+function gzCompressFile($source, $level = 9){
+    $dest = $source . '.gz';
+    $mode = 'wb' . $level;
+    $error = false;
+    if ($fp_out = gzopen($dest, $mode)) {
+        if ($fp_in = fopen($source,'rb')) {
+            while (!feof($fp_in))
+                gzwrite($fp_out, fread($fp_in, 1024 * 512));
+            fclose($fp_in);
+        } else {
+            $error = true;
+        }
+        gzclose($fp_out);
+    } else {
+        $error = true;
+    }
+    if ($error)
+        return false;
+    else
+        return $dest;
+}
+
+
+function deleteDir($path) {
+    if (empty($path)) {
+        return false;
+    }
+    return is_file($path) ?
+            @unlink($path) :
+            array_map(__FUNCTION__, glob($path.'/*')) == @rmdir($path);
+}
