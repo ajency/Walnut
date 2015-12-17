@@ -2109,6 +2109,10 @@ lesshat-selector {
   margin: 0 auto;
   max-width: 50%;
 }
+#quiz-description-region .pieceWrapper > div:first-child {
+  padding: 15px !important;
+  margin: 0;
+}
 #question-display-region {
   position: relative;
 }
@@ -2118,21 +2122,28 @@ lesshat-selector {
   right: 0;
   margin: 0 auto;
   max-width: 50%;
-  z-index: 9999;
 }
 #content-board.quizContent #myCanvas {
   border: 3px solid #eee;
   min-height: 460px !important;
+  max-width: 100%;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   #content-board.quizContent #myCanvas {
     margin-top: 50px;
   }
 }
+#content-board.quizContent #myCanvas #question-area .element-wrapper {
+  font-family: open-sans;
+}
+#content-board.quizContent #myCanvas #question-area .element-wrapper .text {
+  font-size: 1.3em;
+}
 #main-content-region .content {
   position: absolute;
   width: 100%;
-  top: 0;
+  top: -64px;
+  z-index: 1031;
 }
 #quiz-progress-region .quizProgress {
   padding: 0;
@@ -2141,7 +2152,7 @@ lesshat-selector {
   position: fixed;
   top: 150px;
   left: -298px;
-  z-index: 9999;
+  width: 260px;
   -webkit-transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
   -o-transition-duration: 0.3s;
@@ -2151,7 +2162,7 @@ lesshat-selector {
   left: 0;
 }
 #quiz-progress-region .quizProgress:hover .progressStrip {
-  left: 300px;
+  left: 260px;
 }
 #quiz-progress-region .quizProgress .progressStrip {
   display: block;
@@ -2298,6 +2309,7 @@ lesshat-selector {
 }
 .timerBox {
   background: #f3f3f3;
+  visibility: hidden;
   -webkit-box-shadow: #dadada 0 0 0 3px;
   -moz-box-shadow: #dadada 0 0 0 3px;
   box-shadow: #dadada 0 0 0 3px;
@@ -2318,9 +2330,10 @@ lesshat-selector {
   vertical-align: middle;
 }
 .timerBox .container-grey #downUpTimer {
+  visibility: visible;
   position: absolute;
-  top: -90px;
-  z-index: 9999;
+  top: -25px;
+  right: 152px;
 }
 .timerBox .container-grey #downUpTimer > span > span {
   background: #469290;
@@ -2341,15 +2354,15 @@ lesshat-selector {
   border-bottom: 1px solid #dadada;
 }
 .timerBox .endQuiz {
+  visibility: visible;
   text-align: center;
   position: absolute;
-  top: -86px;
-  z-index: 9999;
+  top: -20px;
   right: 16px;
   border: 0;
 }
 .timerBox .endQuiz button {
-  background: #7CC0BF;
+  background: #459290;
   border: 2px solid #fff;
   border-radius: 10px;
   color: #ffffff;
@@ -2519,7 +2532,8 @@ lesshat-selector {
 .quizActions {
   background: none;
   box-shadow: none;
-  text-align: center;
+  text-align: right;
+  max-width: 100%;
 }
 .quizActions #previous-question,
 .quizActions #next-question {
@@ -2532,6 +2546,7 @@ lesshat-selector {
   font-weight: bold;
   font-size: 1.1em;
   line-height: 1.5;
+  border-radius: 10px;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .quizActions button {
@@ -2543,23 +2558,33 @@ lesshat-selector {
   padding-left: 5px;
 }
 .quizActions #submit-question {
-  background: #69b8b5;
+  background: #FF8685;
 }
 .quizActions #submit-question:hover {
-  background: #8cc8c6;
+  background: #ffb9b8;
 }
 .quizActions #submit-question i:before {
   content: "\f00c";
 }
 .quizActions #skip-question {
-  background: #f2593a;
-  color: #ffffff;
+  background: transparent;
+  color: #AFABAB;
+  border: 2px solid #AFABAB;
 }
 .quizActions #skip-question:hover {
-  background: #f5816a;
+  background: #e6e6e6;
 }
 .quizActions #skip-question i:before {
   content: "\f04e";
+}
+.quizActions .submit2 {
+  position: absolute;
+  width: 25%;
+  top: -56px;
+  right: 10px;
+}
+.quizActions .submit2 #submit-question {
+  width: 100%;
 }
 .teacher-app #quiz-details-region > div:last-child #try-again {
   margin: 18px 0px 18px 30px;
