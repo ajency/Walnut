@@ -1817,6 +1817,9 @@ lesshat-selector {
   max-width: 95%;
   margin: 5px auto;
 }
+.qstnInfo {
+  display: none;
+}
 .video-holder {
   width: 95%;
   margin: 0 auto;
@@ -1905,47 +1908,122 @@ lesshat-selector {
   font-size: 1em;
   line-height: 20px;
 }
-.video-holder .qstnInfo {
-  display: none;
-}
-.video-holder #content-board {
-  margin: 0;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-flex: 1 50%;
-  -ms-flex: 1 50%;
-  flex: 1 50%;
-}
-.video-holder #content-board #myCanvas {
-  max-width: initial;
-  margin: 0 10px;
-  padding: 0;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:first-child {
+#content-board #myCanvas #question-area .element-wrapper:first-child {
   padding: 0;
   margin: 2px 0 2px;
 }
-.video-holder #content-board #myCanvas #question-area .element-wrapper:first-child .element-markup .video .videoWrapper {
-  padding-bottom: 41.2%;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child {
+#content-board #myCanvas #question-area .element-wrapper:last-child {
   padding: 15px 7px;
   -webkit-box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
   font-family: open-sans;
 }
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child .text {
+#content-board #myCanvas #question-area .element-wrapper:last-child .text {
   font-size: 1.3em;
   font-weight: bold;
 }
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child .text p {
+#content-board #myCanvas #question-area .element-wrapper:last-child .text p {
   color: #602f1a;
   line-height: 30px;
 }
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child .text p a {
+#content-board #myCanvas #question-area .element-wrapper:last-child .text p a {
   color: #69b8b5;
   display: block;
+}
+.video-sidebar {
+  position: absolute;
+  left: -265px;
+  z-index: 1;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.video-sidebar .video-lecture-parts {
+  background: #eee;
+  text-align: center;
+}
+.video-sidebar .open-sidebar {
+  width: 60px;
+  text-align: center;
+  padding-top: 10px;
+  color: #FFF;
+  background: #868686 none repeat scroll 0% 0%;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  height: 60px;
+}
+.video-sidebar .open-sidebar i {
+  font-size: 2.5em;
+}
+.contentTime,
+.contentInfo {
+  background: #fff;
+  box-shadow: none;
+  top: 261px;
+  padding: 0;
+}
+.contentTime {
+  left: 90px;
+}
+.contentInfo {
+  right: 90px;
+}
+.video-lecture-parts {
+  background: #fff;
+  padding: 25px;
+}
+.video-lecture-parts .modTime {
+  display: none;
+}
+.video-lecture-parts > div {
+  margin: 15px 0;
+}
+.video-lecture-parts .controls {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+.video-lecture-parts .controls > a img {
+  width: 80%;
+}
+.video-lecture-parts .lecture-details {
+  margin: 50px 0;
+}
+.video-lecture-parts .lecture-details > div {
+  margin: 15px 0;
+}
+.video-lecture-parts .lecture-details > div h4 {
+  margin: 0;
+  padding: 5px 0;
+  text-transform: uppercase;
+  font-weight: lighter;
+}
+.video-lecture-parts .lecture-details > div h4:first-child {
+  color: #602f1a;
+  font-size: 1.1em;
+}
+.video-lecture-parts .lecture-details > div h4:last-child {
+  color: #69b8b5;
+  font-size: 1em;
+  line-height: 20px;
 }
 .quiz-subj {
   -webkit-box-shadow: 10px 0 15px -6px #cccccc, -12px 0 8px -4px #cccccc;
