@@ -10,7 +10,7 @@
 	table-layout: fixed;
 }
 
-#content-pieces-table > tr > th{
+#content-pieces-table  tr  th{
 	vertical-align: middle;
 	text-align: center;
 }
@@ -20,14 +20,14 @@
 }
 
 
-#content-pieces-table > td{
+#content-pieces-table  td{
 	font-size: 0.6em;
 	word-wrap: break-word;
 	text-align: center;
 }
 
 
-#content-pieces-table > td > span.label{
+#content-pieces-table  td > span.label{
 	font-size: 0.9em;
     padding: 7px;
     min-width: inherit;
