@@ -178,6 +178,9 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   margin: 0;
   background: none;
   padding-bottom: 100px;
+  min-height: inherit;
+  overflow-x: inherit;
+  overflow: inherit;
 }
 @media only screen and (max-width: 1024px) {
   .page-content {
@@ -2105,13 +2108,59 @@ lesshat-selector {
 .quizComment {
   display: none;
 }
+@media (max-width: 1200px) {
+  .sidebarContainer {
+    position: static;
+    float: none;
+  }
+}
 #quiz-description-region {
   margin: 0 auto;
   max-width: 50%;
 }
-#quiz-description-region .pieceWrapper > div:first-child {
-  padding: 15px !important;
+#quiz-description-region .pieceWrapper .quiz-info {
+  padding: 20px !important;
   margin: 0;
+  background-color: #F2F2F2;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-pack: start;
+  -moz-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+#quiz-description-region .pieceWrapper .quiz-info > h3 {
+  margin: 0;
+  font-size: 1.5em;
+  padding-right: 10px;
+  color: #602f1a;
+}
+#quiz-description-region .pieceWrapper .quiz-info > a {
+  margin: 0;
+  display: inline-block !important;
+  color: #000;
+  font-size: 1.5em;
+  text-decoration: none;
+  color: #69b8b5 !important;
+}
+#quiz-description-region .pieceWrapper .quiz-info > a:after {
+  content: "\f107";
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  padding-left: 5px;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+#quiz-description-region .pieceWrapper #collapseView {
+  border-top: 2px solid #ccc;
 }
 #question-display-region {
   position: relative;
@@ -2123,21 +2172,36 @@ lesshat-selector {
   margin: 0 auto;
   max-width: 50%;
 }
-#content-board.quizContent #myCanvas {
-  border: 3px solid #eee;
+#question-display-region > div #content-board {
+  -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+}
+@media (max-width: 1200px) {
+  #question-display-region > div #content-board {
+    margin-top: 0;
+  }
+}
+#question-display-region > div #content-board.quizContent #myCanvas {
+  border: 0;
   min-height: 460px !important;
   max-width: 100%;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
-  #content-board.quizContent #myCanvas {
+  #question-display-region > div #content-board.quizContent #myCanvas {
     margin-top: 50px;
   }
 }
-#content-board.quizContent #myCanvas #question-area .element-wrapper {
+#question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
   font-family: open-sans;
 }
-#content-board.quizContent #myCanvas #question-area .element-wrapper .text {
-  font-size: 1.3em;
+#question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #602f1a;
+}
+#question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text > p > span {
+  font-size: inherit !important;
 }
 #main-content-region .content {
   position: absolute;
@@ -2159,7 +2223,7 @@ lesshat-selector {
   transition-duration: 0.3s;
 }
 #quiz-progress-region .quizProgress:hover {
-  left: 0;
+  left: 15px;
 }
 #quiz-progress-region .quizProgress:hover .progressStrip {
   left: 260px;
@@ -2171,15 +2235,23 @@ lesshat-selector {
   left: 0px;
   height: 60px;
   width: 50px;
-  font-size: 28px;
   text-align: center;
-  padding-top: 8px;
+  padding-top: 5px;
   color: #ffffff;
-  background: #0090d9;
+  background: #868686;
   -webkit-transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
+}
+#quiz-progress-region .quizProgress .progressStrip span:before {
+  content: 'Q';
+  font-size: 3em;
+}
+@media (max-width: 1200px) {
+  #quiz-progress-region .quizProgress .progressStrip span:before {
+    font-size: 1.5em;
+  }
 }
 #quiz-progress-region .quizProgress .modProgress p {
   background: #FE7E65;
@@ -2314,6 +2386,12 @@ lesshat-selector {
   -moz-box-shadow: #dadada 0 0 0 3px;
   box-shadow: #dadada 0 0 0 3px;
 }
+@media (max-width: 1200px) {
+  .timerBox {
+    float: right;
+    position: static;
+  }
+}
 .timerBox .container-grey {
   background: none;
   box-shadow: none;
@@ -2371,7 +2449,10 @@ lesshat-selector {
 .timerBox .endQuiz button:hover {
   background: #9ed1d0;
 }
-.timerBox .quiz-stats {
+.timerBox .container-grey:last-child {
+  padding: 20px;
+}
+.quiz-stats {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -2387,16 +2468,10 @@ lesshat-selector {
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  -webkit-box-direction: normal;
-  -moz-box-direction: normal;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  background: rgba(247, 247, 247, 0.74);
+  padding: 20px;
+  background: #F2F2F2;
 }
-.timerBox .quiz-stats .time-left {
+.quiz-stats .time-left {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -2423,7 +2498,7 @@ lesshat-selector {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.timerBox .quiz-stats .time-left button {
+.quiz-stats .time-left button {
   margin-top: 20px;
   padding: 12px 25px;
   color: #fff;
@@ -2431,7 +2506,7 @@ lesshat-selector {
   background: #f2593a;
   font-size: 1.2em;
 }
-.timerBox .quiz-stats .quiz-data {
+.quiz-stats .quiz-data {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -2447,10 +2522,9 @@ lesshat-selector {
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  flex-direction: column;
   padding: 10px 0;
 }
-.timerBox .quiz-stats .quiz-data > div {
+.quiz-stats .quiz-data > div {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -2469,7 +2543,7 @@ lesshat-selector {
   width: 100%;
   margin: 5px 0;
 }
-.timerBox .quiz-stats .quiz-data > div .icon-data {
+.quiz-stats .quiz-data > div .icon-data {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 40%;
@@ -2477,7 +2551,7 @@ lesshat-selector {
   flex: 1 40%;
   text-align: center;
 }
-.timerBox .quiz-stats .quiz-data > div .icon-data > div {
+.quiz-stats .quiz-data > div .icon-data > div {
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -2498,31 +2572,28 @@ lesshat-selector {
   width: 79px;
   margin: 0 auto;
 }
-.timerBox .quiz-stats .quiz-data > div .icon-data > div h3 {
+.quiz-stats .quiz-data > div .icon-data > div h3 {
   margin: 0;
   font-size: 1.5em;
   width: 70%;
   color: #602f1a;
 }
-.timerBox .quiz-stats .quiz-data > div .icon-data > div h3 span {
+.quiz-stats .quiz-data > div .icon-data > div h3 span {
   font-size: 0.6em;
   display: block;
 }
-.timerBox .quiz-stats .quiz-data > div h4 {
+.quiz-stats .quiz-data > div h4 {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 60%;
   -ms-flex: 1 60%;
   flex: 1 60%;
   text-align: left;
-  font-size: 1.1em;
+  font-size: 0.9em;
   text-transform: uppercase;
   color: #602f1a;
   line-height: 20px;
   margin: 0;
-}
-.timerBox .container-grey:last-child {
-  padding: 20px;
 }
 .timerBox,
 .quizProgress {
@@ -2546,7 +2617,7 @@ lesshat-selector {
   font-weight: bold;
   font-size: 1.1em;
   line-height: 1.5;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .quizActions button {
