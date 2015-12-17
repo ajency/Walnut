@@ -1597,6 +1597,7 @@ lesshat-selector {
 }
 .teacher-app #collection-details-region {
   margin-top: 50px;
+  padding-top: 5px;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .teacher-app #collection-details-region {
@@ -1908,28 +1909,16 @@ lesshat-selector {
   font-size: 1em;
   line-height: 20px;
 }
-#content-board #myCanvas #question-area .element-wrapper:first-child {
-  padding: 0;
-  margin: 2px 0 2px;
-}
-#content-board #myCanvas #question-area .element-wrapper:last-child {
-  padding: 15px 7px;
-  -webkit-box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
-  -moz-box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
-  font-family: open-sans;
-}
-#content-board #myCanvas #question-area .element-wrapper:last-child .text {
-  font-size: 1.3em;
-  font-weight: bold;
-}
-#content-board #myCanvas #question-area .element-wrapper:last-child .text p {
-  color: #602f1a;
-  line-height: 30px;
-}
-#content-board #myCanvas #question-area .element-wrapper:last-child .text p a {
-  color: #69b8b5;
-  display: block;
+.video-details {
+  position: absolute;
+  max-width: 760px;
+  text-align: left;
+  right: 0;
+  margin: 0 auto;
+  top: -55px;
+  left: 0;
+  padding: 18px 19px;
+  background: #eee;
 }
 .video-sidebar {
   position: absolute;
@@ -2000,6 +1989,12 @@ lesshat-selector {
   -webkit-justify-content: center;
   justify-content: center;
   margin-top: 30px;
+  text-align: center;
+}
+.video-lecture-parts .controls > a {
+  color: #fe9f99;
+  text-transform: uppercase;
+  text-decoration: none;
 }
 .video-lecture-parts .controls > a img {
   width: 80%;
@@ -2045,11 +2040,15 @@ lesshat-selector {
 }
 .teacher-app #attempts-region .grid.vertical.blue {
   border-left: 0;
-  padding: 0 12px !important;
+  margin: 0;
+  -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title {
   border-left: 4px solid #69b8b5;
-  padding: 8px;
+  padding: 20px 15px;
+  background: #eee;
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title .tools > a.expand {
   background-position: -95px -40px;
@@ -2070,13 +2069,11 @@ lesshat-selector {
 .teacher-app #attempts-region .grid .grid-body h4 {
   font-size: 1.2em;
   margin: 0;
+  color: #602f1a;
 }
 .teacher-app #attempts-region #attempts_list .row .p-b-5 button {
   background: #69b8b5;
   border: 0;
-}
-.teacher-app #quiz-details-region {
-  margin-top: 20px;
 }
 .teacher-app #quiz-details-region > div {
   padding-bottom: 5px;
@@ -2183,6 +2180,9 @@ lesshat-selector {
   margin: 0 auto;
   top: 40px;
 }
+.all-d-best {
+  margin: 30px 0;
+}
 .quizComment {
   display: none;
 }
@@ -2195,6 +2195,14 @@ lesshat-selector {
 #quiz-description-region {
   margin: 0 auto;
   max-width: 50%;
+}
+@media (max-width: 1230px) {
+  #quiz-description-region {
+    max-width: 80%;
+  }
+}
+#quiz-description-region .pieceWrapper {
+  display: block;
 }
 #quiz-description-region .pieceWrapper .quiz-info {
   padding: 20px !important;
@@ -2250,6 +2258,11 @@ lesshat-selector {
   margin: 0 auto;
   max-width: 50%;
 }
+@media (max-width: 1230px) {
+  #question-display-region > div {
+    max-width: 80%;
+  }
+}
 #question-display-region > div #content-board {
   -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
@@ -2265,9 +2278,9 @@ lesshat-selector {
   min-height: 460px !important;
   max-width: 100%;
 }
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+@media (max-width: 1230px) {
   #question-display-region > div #content-board.quizContent #myCanvas {
-    margin-top: 50px;
+    min-height: 360px !important;
   }
 }
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
@@ -2470,9 +2483,42 @@ lesshat-selector {
     position: static;
   }
 }
+@media (max-width: 1230px) {
+  .timerBox {
+    visibility: visible;
+    background: none;
+    box-shadow: none;
+  }
+}
 .timerBox .container-grey {
   background: none;
   box-shadow: none;
+}
+@media (max-width: 1230px) {
+  .timerBox .container-grey {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    margin: 0 auto;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-box-shadow: 0 0px 25px 8px rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 0px 25px 8px rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0px 25px 8px rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+    padding: 15px 0;
+  }
+}
+@media (max-width: 1230px) {
+  .timerBox .container-grey .timerStrip {
+    display: none;
+  }
+}
+.timerBox .container-grey .bold {
+  display: none;
 }
 .timerBox .container-grey #completed-quiz {
   margin: 0;
@@ -2491,6 +2537,14 @@ lesshat-selector {
   top: -25px;
   right: 152px;
 }
+@media (max-width: 1230px) {
+  .timerBox .container-grey #downUpTimer {
+    top: inherit;
+    position: static;
+    right: inherit;
+    padding: 8px;
+  }
+}
 .timerBox .container-grey #downUpTimer > span > span {
   background: #469290;
   border-radius: 5px;
@@ -2499,11 +2553,21 @@ lesshat-selector {
   color: #fff;
   font-size: 1em;
 }
+@media (max-width: 1230px) {
+  .timerBox .container-grey #downUpTimer > span > span {
+    font-size: 0.9em;
+  }
+}
 .timerBox .container-grey #downUpTimer > span > span:first-child {
   margin-right: 2px;
 }
 .timerBox .container-grey #downUpTimer > span > span > span {
   color: #fff;
+}
+@media (max-width: 1230px) {
+  .timerBox .container-grey:last-child {
+    display: none;
+  }
 }
 .timerBox .small-text {
   padding: 10px 0;
@@ -2516,6 +2580,13 @@ lesshat-selector {
   top: -20px;
   right: 16px;
   border: 0;
+}
+@media (max-width: 1230px) {
+  .timerBox .endQuiz {
+    position: static;
+    top: inherit;
+    right: inherit;
+  }
 }
 .timerBox .endQuiz button {
   background: #459290;
@@ -2696,12 +2767,6 @@ lesshat-selector {
   font-size: 1.1em;
   line-height: 1.5;
   border-radius: 8px;
-}
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
-  .quizActions button {
-    width: 32%;
-    font-size: 1em;
-  }
 }
 .quizActions button i:before {
   padding-left: 5px;
