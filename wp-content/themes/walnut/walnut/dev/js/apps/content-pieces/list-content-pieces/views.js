@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
   return App.module("ContentPiecesApp.ContentList.Views", function(Views, App) {
     var EmptyView, ListItemView;
-    ListItemView = (function(_super) {
-      __extends(ListItemView, _super);
+    ListItemView = (function(superClass) {
+      extend(ListItemView, superClass);
 
       function ListItemView() {
-        this.removeSpinner = __bind(this.removeSpinner, this);
+        this.removeSpinner = bind(this.removeSpinner, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -143,8 +143,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       return ListItemView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -161,11 +161,11 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       return EmptyView;
 
     })(Marionette.ItemView);
-    return Views.ListView = (function(_super) {
-      __extends(ListView, _super);
+    return Views.ListView = (function(superClass) {
+      extend(ListView, superClass);
 
       function ListView() {
-        this.changeStatus = __bind(this.changeStatus, this);
+        this.changeStatus = bind(this.changeStatus, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
