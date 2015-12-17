@@ -15,6 +15,8 @@ define ['app',
 		Controller =
 
 			viewStudentModule:(id)->
+				$("#header-region").hide()
+				$("#left-nav-region").hide()
 				@studentTrainingModel = App.request "get:student:training:by:id", id
 
 				breadcrumb_items =

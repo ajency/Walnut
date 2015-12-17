@@ -3,7 +3,7 @@ define [
     'apps/header/headerapp'
     'apps/left-nav/leftnavapp'
     'apps/teachers-dashboard/teachers-dashboard-app'
-
+    'apps/quiz-reports/app'
     #single view of teaching module & list of teaching modules
     'apps/content-modules/content-modules-app'
 

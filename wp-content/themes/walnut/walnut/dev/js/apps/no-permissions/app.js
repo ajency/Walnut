@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("NoPermissions.Controller", function(Controller, App) {
     var NoPermissionsView;
-    Controller.NoPermissionsController = (function(_super) {
-      __extends(NoPermissionsController, _super);
+    Controller.NoPermissionsController = (function(superClass) {
+      extend(NoPermissionsController, superClass);
 
       function NoPermissionsController() {
         return NoPermissionsController.__super__.constructor.apply(this, arguments);
@@ -34,8 +34,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return NoPermissionsController;
 
     })(RegionController);
-    NoPermissionsView = (function(_super) {
-      __extends(NoPermissionsView, _super);
+    NoPermissionsView = (function(superClass) {
+      extend(NoPermissionsView, superClass);
 
       function NoPermissionsView() {
         return NoPermissionsView.__super__.constructor.apply(this, arguments);

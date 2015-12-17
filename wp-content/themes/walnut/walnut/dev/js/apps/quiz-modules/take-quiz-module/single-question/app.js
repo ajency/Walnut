@@ -1,18 +1,18 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/take-quiz-module/single-question/views'], function(App, RegionController, bootbox) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
     var answer, answerData;
     answer = null;
     answerData = null;
-    return SingleQuestion.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return SingleQuestion.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showSingleQuestionLayout = __bind(this._showSingleQuestionLayout, this);
-        this._showContentBoard = __bind(this._showContentBoard, this);
+        this._showSingleQuestionLayout = bind(this._showSingleQuestionLayout, this);
+        this._showContentBoard = bind(this._showContentBoard, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 

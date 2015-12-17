@@ -1,20 +1,20 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/student-training-module/view-module/module-description/description-app', 'apps/student-training-module/view-module/content-display/content-display-app', 'apps/student-training-module/take-module/take-module-controller'], function(App, RegionController) {
   return App.module("StudentTrainingApp.View", function(View, App) {
     var ContentGroupViewLayout;
-    View.GroupController = (function(_super) {
+    View.GroupController = (function(superClass) {
       var groupContentCollection, model;
 
-      __extends(GroupController, _super);
+      extend(GroupController, superClass);
 
       function GroupController() {
-        this._getContentGroupViewLayout = __bind(this._getContentGroupViewLayout, this);
-        this.showContentGroupViews = __bind(this.showContentGroupViews, this);
-        this.gotoTrainingModule = __bind(this.gotoTrainingModule, this);
-        this.startTrainingModule = __bind(this.startTrainingModule, this);
+        this._getContentGroupViewLayout = bind(this._getContentGroupViewLayout, this);
+        this.showContentGroupViews = bind(this.showContentGroupViews, this);
+        this.gotoTrainingModule = bind(this.gotoTrainingModule, this);
+        this.startTrainingModule = bind(this.startTrainingModule, this);
         return GroupController.__super__.constructor.apply(this, arguments);
       }
 
@@ -188,8 +188,8 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
       return GroupController;
 
     })(RegionController);
-    ContentGroupViewLayout = (function(_super) {
-      __extends(ContentGroupViewLayout, _super);
+    ContentGroupViewLayout = (function(superClass) {
+      extend(ContentGroupViewLayout, superClass);
 
       function ContentGroupViewLayout() {
         return ContentGroupViewLayout.__super__.constructor.apply(this, arguments);

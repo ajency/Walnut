@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/grid/templates/layout-tpl.html'], function(App, mediaTpl, layoutTpl) {
   return App.module('Media.Grid.Views', function(Views, App) {
     var MediaView;
-    MediaView = (function(_super) {
-      __extends(MediaView, _super);
+    MediaView = (function(superClass) {
+      extend(MediaView, superClass);
 
       function MediaView() {
         return MediaView.__super__.constructor.apply(this, arguments);
@@ -68,12 +68,12 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
       return MediaView;
 
     })(Marionette.ItemView);
-    return Views.GridView = (function(_super) {
-      __extends(GridView, _super);
+    return Views.GridView = (function(superClass) {
+      extend(GridView, superClass);
 
       function GridView() {
-        this.onMediaCollectionFetched = __bind(this.onMediaCollectionFetched, this);
-        this.searchMedia = __bind(this.searchMedia, this);
+        this.onMediaCollectionFetched = bind(this.onMediaCollectionFetched, this);
+        this.searchMedia = bind(this.searchMedia, this);
         return GridView.__super__.constructor.apply(this, arguments);
       }
 

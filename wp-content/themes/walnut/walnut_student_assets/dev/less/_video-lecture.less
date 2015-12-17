@@ -1,0 +1,150 @@
+ // __      ___     _              _               _                  
+ // \ \    / (_)   | |            | |             | |                 
+ //  \ \  / / _  __| | ___  ___   | |     ___  ___| |_ _   _ _ __ ___ 
+ //   \ \/ / | |/ _` |/ _ \/ _ \  | |    / _ \/ __| __| | | | '__/ _ \
+ //    \  /  | | (_| |  __/ (_) | | |___|  __/ (__| |_| |_| | | |  __/
+ //     \/   |_|\__,_|\___|\___/  |______\___|\___|\__|\__,_|_|  \___|
+ //
+
+
+ // ---------------------------
+ // VIDEO LECTURE STYLES -----------
+ // ---------------------------                                                                   
+
+
+
+
+ // ---------------------------
+ // BACK BUTTON STYLING IN CENTER -----------
+ // --------------------------- 
+
+
+
+.direction-center{
+	max-width: 95%;
+    margin: 5px auto;
+}
+
+
+ // ---------------------------
+ // CONTAINER FOR BOTH VIDEO CONTROLS AND ACTUAL VIDEO -----------
+ // --------------------------- 
+
+.video-holder{
+	width: 95%;
+    margin: 0 auto;
+    .display(flex);
+    .flex-wrap(wrap);
+    .justify-content(center);
+
+ // ---------------------------
+ // VIDEO CONTROLS SECTION -----------
+ // --------------------------- 
+    
+	#top-panel{
+		.flex(1 10%);
+		.contentTime{
+			width: 80%;
+	    	text-align: center;
+	    	left: 0;
+	    	margin: 0 auto;
+	    	position: static;
+	        @media @i-tab-landscape{
+	        	width: 92%;    
+	        }	    	
+	    	.video-lecture-parts{
+			    background: #f3f3f3;
+			    padding: 25px;
+	    		.modTime{
+	    			display: none;
+	    		}			    
+			    >div {
+			        margin: 15px 0;
+			    }
+			    .controls{
+			        .flex-family();
+			        margin-top: 30px;
+			        >a{
+			            img{
+			                width: 65%;
+			            }
+			        }
+			    }
+			    .lecture-details {
+			        margin: 50px 0;
+			        >div {
+			            margin: 15px 0;
+			            h4 {
+			                margin: 0;
+			                padding: 5px 0;
+			                text-transform: uppercase;
+			                font-weight: lighter;
+			                &:first-child {
+			                    color: @quiz-link-color3;
+			                    font-size: 1.1em;
+			                }
+			                &:last-child {
+			                    color: @quiz-link-color1;
+			                    font-size: 1em;
+			                    line-height: 20px;
+			                }
+			            }
+			        }
+			    }	    		
+	    	}
+		}
+	}
+
+ // ---------------------------
+ // KEPT HIDDEN AS NOT REQUIRED IN VERSION 2.0 -----------
+ // --------------------------- 
+
+	.qstnInfo{
+		display: none;
+	}
+
+ // ---------------------------
+ // VIDEO PLAYER -----------
+ // --------------------------- 
+
+	#content-board{
+		margin:0;
+		.flex(1 50%);
+		#myCanvas{
+			max-width: initial;
+			margin: 0 10px;
+			padding: 0;
+			#question-area{
+				.element-wrapper:first-child{
+					padding:0;
+					margin:2px 0 2px;
+					.element-markup{
+						.video{
+							.videoWrapper{
+								padding-bottom: 41.2%;
+							}
+						}
+					}
+				}
+				.element-wrapper:last-child{
+					padding: 15px 7px;
+					.box-shadow(0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
+					font-family: open-sans;
+					.text{
+						font-size: 1.3em;
+    					font-weight: bold;
+						p{
+							color: @quiz-link-color3;
+							line-height: 30px;
+							a{
+								color: @quiz-link-color1;
+								display: block;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

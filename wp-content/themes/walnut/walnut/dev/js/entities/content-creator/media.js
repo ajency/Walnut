@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.Media", function(Media, App, Backbone, Marionette, $, _) {
     var API;
-    Media.MediaModel = (function(_super) {
-      __extends(MediaModel, _super);
+    Media.MediaModel = (function(superClass) {
+      extend(MediaModel, superClass);
 
       function MediaModel() {
         return MediaModel.__super__.constructor.apply(this, arguments);
@@ -42,8 +42,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return MediaModel;
 
     })(Backbone.Model);
-    Media.MediaCollection = (function(_super) {
-      __extends(MediaCollection, _super);
+    Media.MediaCollection = (function(superClass) {
+      extend(MediaCollection, superClass);
 
       function MediaCollection() {
         return MediaCollection.__super__.constructor.apply(this, arguments);
@@ -76,7 +76,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           params = {};
         }
         mediaCollection = new Media.MediaCollection;
-        mediaCollection.url = "" + AJAXURL + "?action=query_attachments";
+        mediaCollection.url = AJAXURL + "?action=query_attachments";
         _.defaults(params, mediaCollection.filters);
         mediaCollection.filters = params;
         mediaCollection.fetch({
@@ -107,7 +107,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           ids = [];
         }
         mediaCollection = new Media.MediaCollection;
-        mediaCollection.url = "" + AJAXURL + "?action=get_media_by_ids";
+        mediaCollection.url = AJAXURL + "?action=get_media_by_ids";
         if (_.size(ids) > 0) {
           mediaCollection.fetch({
             data: {

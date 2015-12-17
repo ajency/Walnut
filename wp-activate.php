@@ -18,6 +18,7 @@ if ( !is_multisite() ) {
 	die();
 }
 
+
 if ( is_object( $wp_object_cache ) )
 	$wp_object_cache->cache_enabled = false;
 

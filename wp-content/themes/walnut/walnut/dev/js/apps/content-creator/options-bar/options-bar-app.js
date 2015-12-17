@@ -1,19 +1,19 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/options-bar/options-bar-views'], function(App, RegionController) {
   return App.module("ContentCreator.OptionsBar", function(OptionsBar, App, Backbone, Marionette, $, _) {
     var OptionsBarController;
-    OptionsBarController = (function(_super) {
-      __extends(OptionsBarController, _super);
+    OptionsBarController = (function(superClass) {
+      extend(OptionsBarController, superClass);
 
       function OptionsBarController() {
-        this._getOptionsBarView = __bind(this._getOptionsBarView, this);
-        this._fetchSubsections = __bind(this._fetchSubsections, this);
-        this._fetchSections = __bind(this._fetchSections, this);
-        this._fetchChapters = __bind(this._fetchChapters, this);
-        this.showView = __bind(this.showView, this);
+        this._getOptionsBarView = bind(this._getOptionsBarView, this);
+        this._fetchSubsections = bind(this._fetchSubsections, this);
+        this._fetchSections = bind(this._fetchSections, this);
+        this._fetchChapters = bind(this._fetchChapters, this);
+        this.showView = bind(this.showView, this);
         return OptionsBarController.__super__.constructor.apply(this, arguments);
       }
 

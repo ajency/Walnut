@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("QuizReportApp.QuizDetails", function(QuizDetails, App) {
     var QuizDetailsView;
-    QuizDetails.Controller = (function(_super) {
-      __extends(Controller, _super);
+    QuizDetails.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
@@ -31,8 +31,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return Controller;
 
     })(RegionController);
-    return QuizDetailsView = (function(_super) {
-      __extends(QuizDetailsView, _super);
+    return QuizDetailsView = (function(superClass) {
+      extend(QuizDetailsView, superClass);
 
       function QuizDetailsView() {
         return QuizDetailsView.__super__.constructor.apply(this, arguments);

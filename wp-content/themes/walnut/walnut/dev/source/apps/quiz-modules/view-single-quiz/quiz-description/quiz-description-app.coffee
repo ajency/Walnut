@@ -5,7 +5,9 @@ define ['app'
         class Controller.ViewCollecionDetailsController extends RegionController
 
             initialize : (opts)->
-
+                $("#header-region").hide()
+                $("#left-nav-region").hide()
+                
                 {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
 
                 @view = view = @_getQuizDescriptionView()

@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, AppController) {
   return App.module("Media.Selected", function(Selected, App) {
     var EmptyView, SelectedMedia, SelectedSingle;
-    Selected.Controller = (function(_super) {
-      __extends(Controller, _super);
+    Selected.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
@@ -30,8 +30,8 @@ define(['app', 'controllers/region-controller'], function(App, AppController) {
       return Controller;
 
     })(AppController);
-    SelectedSingle = (function(_super) {
-      __extends(SelectedSingle, _super);
+    SelectedSingle = (function(superClass) {
+      extend(SelectedSingle, superClass);
 
       function SelectedSingle() {
         return SelectedSingle.__super__.constructor.apply(this, arguments);
@@ -59,8 +59,8 @@ define(['app', 'controllers/region-controller'], function(App, AppController) {
       return SelectedSingle;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -73,8 +73,8 @@ define(['app', 'controllers/region-controller'], function(App, AppController) {
       return EmptyView;
 
     })(Marionette.ItemView);
-    SelectedMedia = (function(_super) {
-      __extends(SelectedMedia, _super);
+    SelectedMedia = (function(superClass) {
+      extend(SelectedMedia, superClass);
 
       function SelectedMedia() {
         return SelectedMedia.__super__.constructor.apply(this, arguments);

@@ -1,20 +1,20 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/element-controller', 'apps/content-creator/content-builder/element/views'], function(App, ElementController) {
   return App.module('ContentCreator.ContentBuilder.Element', function(Element, App, Backbone, Marionette, $, _) {
-    return Element.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return Element.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this.setMargin = __bind(this.setMargin, this);
-        this.setDraggable = __bind(this.setDraggable, this);
+        this.setMargin = bind(this.setMargin, this);
+        this.setDraggable = bind(this.setDraggable, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
       Controller.prototype.initialize = function(opts) {
-        var container, element, modelData, options, _ref;
+        var container, element, modelData, options, ref;
         container = opts.container, modelData = opts.modelData, this.eventObj = opts.eventObj;
         options = {
           draggable: true,
@@ -25,7 +25,7 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
           right_margin: ''
         };
         _.defaults(modelData, options);
-        if ((_ref = modelData.element) === 'Mcq' || _ref === 'Fib' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer') {
+        if ((ref = modelData.element) === 'Mcq' || ref === 'Fib' || ref === 'Sort' || ref === 'Hotspot' || ref === 'BigAnswer') {
           this.eventObj.vent.trigger("question:element:added");
         }
         element = App.request("create:new:element", modelData);
@@ -53,15 +53,15 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
         })(this));
         this.layout.elementRegion.on("show", (function(_this) {
           return function(view) {
-            var margin, model, _i, _len, _ref1, _results;
+            var i, len, margin, model, ref1, results;
             model = Marionette.getOption(_this.layout, 'model');
-            _ref1 = ['top_margin', 'left_margin', 'right_margin', 'bottom_margin'];
-            _results = [];
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              margin = _ref1[_i];
-              _results.push(_this.layout.setMargin(model.get(margin)));
+            ref1 = ['top_margin', 'left_margin', 'right_margin', 'bottom_margin'];
+            results = [];
+            for (i = 0, len = ref1.length; i < len; i++) {
+              margin = ref1[i];
+              results.push(_this.layout.setMargin(model.get(margin)));
             }
-            return _results;
+            return results;
           };
         })(this));
         if (element.isNew()) {
@@ -101,20 +101,20 @@ define(['app', 'controllers/element-controller', 'apps/content-creator/content-b
       };
 
       Controller.prototype._getElementTemplate = function(eleModel) {
-        var model, style, styles, _ref;
+        var model, ref, style, styles;
         model = App.request("get:element:settings:options", eleModel.get('element'));
         styles = model.get('styles');
         style = _.findWhere(styles, {
           name: eleModel.get('style')
         });
-        return (_ref = style['template']) != null ? _ref : '';
+        return (ref = style['template']) != null ? ref : '';
       };
 
       Controller.prototype.removeSpinner = function() {};
 
       Controller.prototype.deleteElement = function(model) {
-        var _ref;
-        if ((_ref = model.get('element')) === 'Mcq' || _ref === 'Fib' || _ref === 'Sort' || _ref === 'Hotspot' || _ref === 'BigAnswer' || _ref === 'TeacherQuestion') {
+        var ref;
+        if ((ref = model.get('element')) === 'Mcq' || ref === 'Fib' || ref === 'Sort' || ref === 'Hotspot' || ref === 'BigAnswer' || ref === 'TeacherQuestion') {
           this.eventObj.vent.trigger("question:element:removed");
         }
         return model.destroy({

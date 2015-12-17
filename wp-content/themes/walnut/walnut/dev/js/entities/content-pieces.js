@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(["app", 'backbone', 'bootbox'], function(App, Backbone, bootbox) {
   return App.module("Entities.ContentPiece", function(ContentPiece, App, Backbone, Marionette, $, _) {
     var API, contentPiecesRepository;
-    ContentPiece.ItemModel = (function(_super) {
-      __extends(ItemModel, _super);
+    ContentPiece.ItemModel = (function(superClass) {
+      extend(ItemModel, superClass);
 
       function ItemModel() {
         return ItemModel.__super__.constructor.apply(this, arguments);
@@ -65,8 +65,8 @@ define(["app", 'backbone', 'bootbox'], function(App, Backbone, bootbox) {
       return ItemModel;
 
     })(Backbone.Model);
-    ContentPiece.ItemCollection = (function(_super) {
-      __extends(ItemCollection, _super);
+    ContentPiece.ItemCollection = (function(superClass) {
+      extend(ItemCollection, superClass);
 
       function ItemCollection() {
         return ItemCollection.__super__.constructor.apply(this, arguments);
@@ -84,12 +84,12 @@ define(["app", 'backbone', 'bootbox'], function(App, Backbone, bootbox) {
 
     })(Backbone.Collection);
     contentPiecesRepository = new ContentPiece.ItemCollection;
-    ContentPiece.GroupItemCollection = (function(_super) {
-      __extends(GroupItemCollection, _super);
+    ContentPiece.GroupItemCollection = (function(superClass) {
+      extend(GroupItemCollection, superClass);
 
       function GroupItemCollection() {
-        this.addedPieces = __bind(this.addedPieces, this);
-        this.removedModel = __bind(this.removedModel, this);
+        this.addedPieces = bind(this.addedPieces, this);
+        this.removedModel = bind(this.removedModel, this);
         return GroupItemCollection.__super__.constructor.apply(this, arguments);
       }
 
@@ -135,12 +135,12 @@ define(["app", 'backbone', 'bootbox'], function(App, Backbone, bootbox) {
         return contentPieceCollection;
       },
       getContentPiecesOfGroup: function(groupModel) {
-        var contentID, contentIDs, contentModel, contentPiecesOfGroup, _i, _len;
+        var contentID, contentIDs, contentModel, contentPiecesOfGroup, i, len;
         contentPiecesOfGroup = new ContentPiece.GroupItemCollection;
         contentIDs = groupModel.get('content_pieces');
         if (contentIDs) {
-          for (_i = 0, _len = contentIDs.length; _i < _len; _i++) {
-            contentID = contentIDs[_i];
+          for (i = 0, len = contentIDs.length; i < len; i++) {
+            contentID = contentIDs[i];
             contentModel = new ContentPiece.ItemModel({
               'ID': contentID
             });
@@ -166,13 +166,13 @@ define(["app", 'backbone', 'bootbox'], function(App, Backbone, bootbox) {
         return contentPiece;
       },
       getContentPiecesByIDs: function(ids) {
-        var contentPieces, id, model, _i, _len;
+        var contentPieces, i, id, len, model;
         if (ids == null) {
           ids = [];
         }
         contentPieces = new ContentPiece.ItemCollection;
-        for (_i = 0, _len = ids.length; _i < _len; _i++) {
-          id = ids[_i];
+        for (i = 0, len = ids.length; i < len; i++) {
+          id = ids[i];
           model = contentPiecesRepository.get(id);
           if (model) {
             contentPieces.add(model);

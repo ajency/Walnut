@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/dashboard/templates/teachers-dashboard.html', 'apps/teachers-dashboard/dashboard/dashboard-take-class-app', 'apps/teachers-dashboard/dashboard/dashboard-start-training-app'], function(App, RegionController, teachersDashboardTpl) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
     var TeachersDashboardLayout;
-    View.DashboardController = (function(_super) {
-      __extends(DashboardController, _super);
+    View.DashboardController = (function(superClass) {
+      extend(DashboardController, superClass);
 
       function DashboardController() {
         return DashboardController.__super__.constructor.apply(this, arguments);
@@ -48,8 +48,8 @@ define(['app', 'controllers/region-controller', 'text!apps/teachers-dashboard/da
       return DashboardController;
 
     })(RegionController);
-    return TeachersDashboardLayout = (function(_super) {
-      __extends(TeachersDashboardLayout, _super);
+    return TeachersDashboardLayout = (function(superClass) {
+      extend(TeachersDashboardLayout, superClass);
 
       function TeachersDashboardLayout() {
         return TeachersDashboardLayout.__super__.constructor.apply(this, arguments);

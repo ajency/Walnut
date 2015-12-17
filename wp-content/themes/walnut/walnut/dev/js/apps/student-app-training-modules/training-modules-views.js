@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/student-app-training-modules/templates/training-list.html'], function(App, listTrainingTpl) {
   return App.module("StudentsAppTrainingModule.View.TakeClassTextbookModules", function(TextbookModules, App) {
     var ContentGroupsItemView, EmptyView;
-    ContentGroupsItemView = (function(_super) {
-      __extends(ContentGroupsItemView, _super);
+    ContentGroupsItemView = (function(superClass) {
+      extend(ContentGroupsItemView, superClass);
 
       function ContentGroupsItemView() {
         return ContentGroupsItemView.__super__.constructor.apply(this, arguments);
@@ -75,8 +75,8 @@ define(['app', 'text!apps/student-app-training-modules/templates/training-list.h
       return ContentGroupsItemView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -97,12 +97,12 @@ define(['app', 'text!apps/student-app-training-modules/templates/training-list.h
       return EmptyView;
 
     })(Marionette.ItemView);
-    return TextbookModules.ContentGroupsView = (function(_super) {
-      __extends(ContentGroupsView, _super);
+    return TextbookModules.ContentGroupsView = (function(superClass) {
+      extend(ContentGroupsView, superClass);
 
       function ContentGroupsView() {
-        this.onShow = __bind(this.onShow, this);
-        this.startTraining = __bind(this.startTraining, this);
+        this.onShow = bind(this.onShow, this);
+        this.startTraining = bind(this.startTraining, this);
         return ContentGroupsView.__super__.constructor.apply(this, arguments);
       }
 

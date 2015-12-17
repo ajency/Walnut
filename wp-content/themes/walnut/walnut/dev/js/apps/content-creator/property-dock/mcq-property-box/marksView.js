@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.PropertyDock.McqPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
     var GridRow;
-    GridRow = (function(_super) {
-      __extends(GridRow, _super);
+    GridRow = (function(superClass) {
+      extend(GridRow, superClass);
 
       function GridRow() {
         return GridRow.__super__.constructor.apply(this, arguments);
@@ -24,8 +24,8 @@ define(['app'], function(App) {
       return GridRow;
 
     })(Marionette.ItemView);
-    return Views.MarksView = (function(_super) {
-      __extends(MarksView, _super);
+    return Views.MarksView = (function(superClass) {
+      extend(MarksView, superClass);
 
       function MarksView() {
         return MarksView.__super__.constructor.apply(this, arguments);

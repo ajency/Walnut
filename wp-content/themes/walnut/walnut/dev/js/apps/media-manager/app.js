@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'controllers/region-controller', 'text!apps/media-manager/templates/outer.html'], function(App, AppController, outerTpl) {
   return App.module('MediaManager', function(MediaManager, App, Backbone, Marionette, $, _) {
     var API, OuterLayout, ShowController;
-    MediaManager.Router = (function(_super) {
-      __extends(Router, _super);
+    MediaManager.Router = (function(superClass) {
+      extend(Router, superClass);
 
       function Router() {
         return Router.__super__.constructor.apply(this, arguments);
@@ -19,11 +19,11 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       return Router;
 
     })(Marionette.AppRouter);
-    ShowController = (function(_super) {
-      __extends(ShowController, _super);
+    ShowController = (function(superClass) {
+      extend(ShowController, superClass);
 
       function ShowController() {
-        this._getLayout = __bind(this._getLayout, this);
+        this._getLayout = bind(this._getLayout, this);
         return ShowController.__super__.constructor.apply(this, arguments);
       }
 
@@ -96,8 +96,8 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       return ShowController;
 
     })(AppController);
-    OuterLayout = (function(_super) {
-      __extends(OuterLayout, _super);
+    OuterLayout = (function(superClass) {
+      extend(OuterLayout, superClass);
 
       function OuterLayout() {
         return OuterLayout.__super__.constructor.apply(this, arguments);
@@ -123,11 +123,11 @@ define(['app', 'controllers/region-controller', 'text!apps/media-manager/templat
       };
 
       OuterLayout.prototype.onShow = function() {
-        var _ref, _ref1;
-        if ((_ref = Marionette.getOption(this, 'mediaType')) === 'audio' || _ref === 'video') {
+        var ref, ref1;
+        if ((ref = Marionette.getOption(this, 'mediaType')) === 'audio' || ref === 'video') {
           this.$el.find('.upload-tab').hide();
         }
-        if ((_ref1 = Marionette.getOption(this, 'mediaType')) === 'audio' || _ref1 === 'image') {
+        if ((ref1 = Marionette.getOption(this, 'mediaType')) === 'audio' || ref1 === 'image') {
           return this.$el.find('.youtube-video').hide();
         }
       };

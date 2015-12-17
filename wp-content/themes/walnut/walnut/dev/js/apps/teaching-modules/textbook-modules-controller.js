@@ -1,17 +1,17 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-modules-views'], function(App, RegionController) {
   return App.module("TeachersDashboardApp.View", function(View, App) {
     var ScheduleModalView;
-    View.textbookModulesController = (function(_super) {
-      __extends(textbookModulesController, _super);
+    View.textbookModulesController = (function(superClass) {
+      extend(textbookModulesController, superClass);
 
       function textbookModulesController() {
-        this._showScheduleModal = __bind(this._showScheduleModal, this);
-        this._getContentGroupsListingView = __bind(this._getContentGroupsListingView, this);
-        this._saveSchedule = __bind(this._saveSchedule, this);
+        this._showScheduleModal = bind(this._showScheduleModal, this);
+        this._getContentGroupsListingView = bind(this._getContentGroupsListingView, this);
+        this._saveSchedule = bind(this._saveSchedule, this);
         return textbookModulesController.__super__.constructor.apply(this, arguments);
       }
 
@@ -120,11 +120,11 @@ define(['app', 'controllers/region-controller', 'apps/teaching-modules/textbook-
       return textbookModulesController;
 
     })(RegionController);
-    ScheduleModalView = (function(_super) {
-      __extends(ScheduleModalView, _super);
+    ScheduleModalView = (function(superClass) {
+      extend(ScheduleModalView, superClass);
 
       function ScheduleModalView() {
-        this.saveScheduledDate = __bind(this.saveScheduledDate, this);
+        this.saveScheduledDate = bind(this.saveScheduledDate, this);
         return ScheduleModalView.__super__.constructor.apply(this, arguments);
       }
 

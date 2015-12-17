@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property-box/templates/optionview.html'], function(App, Template) {
   return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox.Views", function(Views, App, Backbone, Marionette, $, _) {
-    return Views.OptionView = (function(_super) {
-      __extends(OptionView, _super);
+    return Views.OptionView = (function(superClass) {
+      extend(OptionView, superClass);
 
       function OptionView() {
         return OptionView.__super__.constructor.apply(this, arguments);
@@ -74,8 +74,8 @@ define(['app', 'text!apps/content-creator/property-dock/hotspot-element-property
         this._initializeCorrectAnswer();
         this.$el.find('#correct-answer.radio input').on('change', (function(_this) {
           return function() {
-            var _ref;
-            _this.model.set('correct', (_ref = _this.$el.find('#correct-answer.radio input:checked').val() === "yes") != null ? _ref : {
+            var ref;
+            _this.model.set('correct', (ref = _this.$el.find('#correct-answer.radio input:checked').val() === "yes") != null ? ref : {
               "true": false
             });
             return _this._toggleMarks();

@@ -51,7 +51,11 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
                 return window.location = response.blog_details.site_url;
               } else {
                 _this.view.close();
-                return App.vent.trigger('show:dashboard');
+                App.vent.trigger('show:dashboard');
+                if (user.attributes.caps.student) {
+                  $("body").hide();
+                  return window.location.href = SITEURL + '/dashboard-student';
+                }
               }
             }
           };
@@ -83,6 +87,20 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginView.prototype.onShow = function() {
+        $('.mat-input').focus(function() {
+          $(this).parent().addClass('is-active is-completed');
+        });
+        $('.mat-input').focusout(function() {
+          if ($(this).val() === '') {
+            $(this).parent().removeClass('is-completed');
+          }
+          $(this).parent().removeClass('is-active');
+        });
+        $('.mat-input').each(function(index) {
+          if ($(this).val() !== '') {
+            $(this).parent().addClass('is-active is-completed');
+          }
+        });
         $('body').addClass('error-body no-top');
         return $('.page-content').addClass('condensed');
       };

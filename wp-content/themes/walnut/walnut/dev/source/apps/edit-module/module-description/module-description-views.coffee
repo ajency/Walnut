@@ -282,6 +282,12 @@ define ['app'
                             time += parseInt m.get 'duration'
 
                 @$el.find('#total-marks').val marks
+                if $("#total-time-marks-set").val()==0
+                    $("#total-time-marks-set").val(1);
+                else
+                    @.$el.find('#total-marks-final').val(marks);#added by kapil for auto calculation of total marks(Editable) 
+                    @.$el.find('#total-time-final').val(time);#added by kapil for auto calculation of total time(Editable)   
+                        
                 @$el.find('#total-time').val time
 
 

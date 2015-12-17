@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.Row.Views', function(Views, App, Backbone, Marionette, $, _) {
     var ColumnView;
-    ColumnView = (function(_super) {
-      __extends(ColumnView, _super);
+    ColumnView = (function(superClass) {
+      extend(ColumnView, superClass);
 
       function ColumnView() {
         return ColumnView.__super__.constructor.apply(this, arguments);
@@ -58,11 +58,11 @@ define(['app'], function(App) {
       return ColumnView;
 
     })(Marionette.ItemView);
-    return Views.RowView = (function(_super) {
-      __extends(RowView, _super);
+    return Views.RowView = (function(superClass) {
+      extend(RowView, superClass);
 
       function RowView() {
-        this.adjustColumnsInRow = __bind(this.adjustColumnsInRow, this);
+        this.adjustColumnsInRow = bind(this.adjustColumnsInRow, this);
         return RowView.__super__.constructor.apply(this, arguments);
       }
 
@@ -73,34 +73,34 @@ define(['app'], function(App) {
       RowView.prototype.itemView = ColumnView;
 
       RowView.prototype.initialize = function(opt) {
-        var col, column, i, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        var col, column, i, j, k, len, len1, ref, ref1, results, results1;
         if (opt == null) {
           opt = {};
         }
         this.collection = new Backbone.Collection;
         if (opt.model.get('elements').length === 0) {
-          _ref = [1, 2];
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            i = _ref[_i];
-            _results.push(this.collection.add({
+          ref = [1, 2];
+          results = [];
+          for (j = 0, len = ref.length; j < len; j++) {
+            i = ref[j];
+            results.push(this.collection.add({
               position: i,
               element: 'Column',
               className: 6,
               elements: []
             }));
           }
-          return _results;
+          return results;
         } else {
-          _ref1 = opt.model.get('elements');
-          _results1 = [];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            column = _ref1[_j];
+          ref1 = opt.model.get('elements');
+          results1 = [];
+          for (k = 0, len1 = ref1.length; k < len1; k++) {
+            column = ref1[k];
             col = _.clone(column);
             delete col.elements;
-            _results1.push(this.collection.add(col));
+            results1.push(this.collection.add(col));
           }
-          return _results1;
+          return results1;
         }
       };
 
@@ -114,7 +114,7 @@ define(['app'], function(App) {
         this.$el.on('row:is:moved', (function(_this) {
           return function(evt, id) {
             if (_this.$el.attr('id') === id) {
-              console.log("" + id + " is moved");
+              console.log(id + " is moved");
               return _this.setColumnResizer();
             }
           };
@@ -165,19 +165,19 @@ define(['app'], function(App) {
       };
 
       RowView.prototype.clearResizers = function() {
-        var resizer, _i, _len, _ref, _results;
-        _ref = this.getResizers();
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          resizer = _ref[_i];
+        var j, len, ref, resizer, results;
+        ref = this.getResizers();
+        results = [];
+        for (j = 0, len = ref.length; j < len; j++) {
+          resizer = ref[j];
           if ($(resizer).hasClass('ui-draggable')) {
             $(resizer).draggable('destroy');
-            _results.push($(resizer).remove());
+            results.push($(resizer).remove());
           } else {
-            _results.push(void 0);
+            results.push(void 0);
           }
         }
-        return _results;
+        return results;
       };
 
       RowView.prototype.destroySortableColumns = function() {
@@ -316,7 +316,7 @@ define(['app'], function(App) {
       };
 
       RowView.prototype.removeColumn = function($column) {
-        var column, _position;
+        var _position, column;
         _position = parseInt($column.attr('data-position'));
         column = this.collection.findWhere({
           position: _position
@@ -325,7 +325,7 @@ define(['app'], function(App) {
       };
 
       RowView.prototype.adjustColumnsInRow = function(count) {
-        var colClass, cols, colsToRemove, emptyColsLen, emptyColumns, extraColumns, i, nCols, requestedColumns, _i, _len, _ref;
+        var colClass, cols, colsToRemove, emptyColsLen, emptyColumns, extraColumns, i, j, len, nCols, ref, requestedColumns;
         requestedColumns = count;
         if (requestedColumns === this.columnCount()) {
           return;
@@ -341,9 +341,9 @@ define(['app'], function(App) {
             };
           })(this));
           count = this.columnCount();
-          _ref = _.range(extraColumns);
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            i = _ref[_i];
+          ref = _.range(extraColumns);
+          for (j = 0, len = ref.length; j < len; j++) {
+            i = ref[j];
             this.addNewColumn(colClass, count + i + 1);
           }
         } else if (requestedColumns < this.columnCount()) {

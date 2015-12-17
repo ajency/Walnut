@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/textbooks/list/templates/list_item.html', 'text!apps/textbooks/templates/no_textbooks.html'], function(App, textbooksListTpl, listitemTpl, notextbooksTpl) {
   return App.module("TextbooksApp.List.Views", function(Views, App) {
     var EmptyView, ListItemView;
-    ListItemView = (function(_super) {
-      __extends(ListItemView, _super);
+    ListItemView = (function(superClass) {
+      extend(ListItemView, superClass);
 
       function ListItemView() {
         return ListItemView.__super__.constructor.apply(this, arguments);
@@ -19,19 +19,19 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListItemView.prototype.template = listitemTpl;
 
       ListItemView.prototype.onShow = function() {
-        var class_id, class_ids, subject, subjects, _i, _j, _len, _len1;
+        var class_id, class_ids, i, j, len, len1, subject, subjects;
         this.$el.attr('data-name', this.model.get('name'));
         class_ids = this.model.get('classes');
         if (class_ids) {
-          for (_i = 0, _len = class_ids.length; _i < _len; _i++) {
-            class_id = class_ids[_i];
+          for (i = 0, len = class_ids.length; i < len; i++) {
+            class_id = class_ids[i];
             this.$el.addClass(_.slugify(CLASS_LABEL[class_id]));
           }
         }
         subjects = this.model.get('subjects');
         if (subjects) {
-          for (_j = 0, _len1 = subjects.length; _j < _len1; _j++) {
-            subject = subjects[_j];
+          for (j = 0, len1 = subjects.length; j < len1; j++) {
+            subject = subjects[j];
             this.$el.addClass(subject);
           }
         }
@@ -45,7 +45,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListItemView.prototype.serializeData = function() {
-        var class_id, class_ids, class_string, data, item_classes, _i, _len;
+        var class_id, class_ids, class_string, data, i, item_classes, len;
         data = ListItemView.__super__.serializeData.call(this);
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -53,8 +53,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
             return num;
           });
           class_string = '';
-          for (_i = 0, _len = item_classes.length; _i < _len; _i++) {
-            class_id = item_classes[_i];
+          for (i = 0, len = item_classes.length; i < len; i++) {
+            class_id = item_classes[i];
             class_string += CLASS_LABEL[class_id];
             if (_.last(item_classes) !== class_id) {
               class_string += ', ';
@@ -68,8 +68,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       return ListItemView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -80,11 +80,11 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       return EmptyView;
 
     })(Marionette.ItemView);
-    return Views.ListView = (function(_super) {
-      __extends(ListView, _super);
+    return Views.ListView = (function(superClass) {
+      extend(ListView, superClass);
 
       function ListView() {
-        this.filterBooks = __bind(this.filterBooks, this);
+        this.filterBooks = bind(this.filterBooks, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 

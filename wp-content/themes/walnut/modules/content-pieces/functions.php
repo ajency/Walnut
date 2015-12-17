@@ -123,6 +123,12 @@ function get_content_pieces($args = array()) {
                 }
             }
         }
+
+        //Start Kapils code to hide archived content pieces
+        if($cpiece->post_status == 'archive'){
+            continue;
+        }
+        //End Kapils code to hide archived content pieces        
         $content_pieces[]= $cpiece;
     }
 

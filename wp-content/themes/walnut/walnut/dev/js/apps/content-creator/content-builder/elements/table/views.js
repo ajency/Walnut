@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'bootbox'], function(App, bootbox) {
   return App.module('ContentCreator.ContentBuilder.Element.Table.Views', function(Views, App, Backbone, Marionette, $, _) {
-    return Views.TableView = (function(_super) {
-      __extends(TableView, _super);
+    return Views.TableView = (function(superClass) {
+      extend(TableView, superClass);
 
       function TableView() {
-        this.destroyEditor = __bind(this.destroyEditor, this);
-        this.configureEditor = __bind(this.configureEditor, this);
+        this.destroyEditor = bind(this.destroyEditor, this);
+        this.configureEditor = bind(this.configureEditor, this);
         return TableView.__super__.constructor.apply(this, arguments);
       }
 
@@ -59,35 +59,35 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.rowChanged = function(model, rows) {
-        var currentRows, html, index, _i, _ref, _results;
+        var currentRows, html, i, index, ref, results;
         currentRows = this.$el.find('tbody tr').length;
         if (currentRows === rows) {
 
         } else if (currentRows < rows) {
-          _results = [];
+          results = [];
           while (currentRows !== rows) {
             html = '<tr>';
-            for (index = _i = 1, _ref = model.get('column'); 1 <= _ref ? _i <= _ref : _i >= _ref; index = 1 <= _ref ? ++_i : --_i) {
+            for (index = i = 1, ref = model.get('column'); 1 <= ref ? i <= ref : i >= ref; index = 1 <= ref ? ++i : --i) {
               html += '<td><div tabindex=0>demo</div></td>';
             }
             html += '</tr>';
             this.$el.find('tbody').append(html);
             this.saveTableMarkup();
-            _results.push(currentRows++);
+            results.push(currentRows++);
           }
-          return _results;
+          return results;
         } else {
           return bootbox.confirm('Removing a ROW might cause a loss of data. Do you want to continue?', (function(_this) {
             return function(result) {
-              var _results1;
+              var results1;
               if (result) {
-                _results1 = [];
+                results1 = [];
                 while (currentRows !== rows) {
                   _this.$el.find('tbody tr:last-of-type').remove();
                   _this.saveTableMarkup();
-                  _results1.push(currentRows--);
+                  results1.push(currentRows--);
                 }
-                return _results1;
+                return results1;
               } else {
                 return model.set('row', currentRows);
               }
@@ -97,12 +97,12 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       TableView.prototype.columnChanged = function(model, columns) {
-        var currentColumns, tableRows, _results;
+        var currentColumns, results, tableRows;
         currentColumns = this.$el.find('thead th').length;
         if (currentColumns === columns) {
 
         } else if (currentColumns < columns) {
-          _results = [];
+          results = [];
           while (currentColumns !== columns) {
             this.$el.find('thead tr').append('<th><div tabindex=0>demo</div></th>');
             tableRows = this.$el.find('tbody tr');
@@ -113,24 +113,24 @@ define(['app', 'bootbox'], function(App, bootbox) {
             this.$el.find('table').resizableColumns();
             console.log('in columns increase');
             this.saveTableMarkup();
-            _results.push(currentColumns++);
+            results.push(currentColumns++);
           }
-          return _results;
+          return results;
         } else {
           return bootbox.confirm('Removing a COLUMN might cause a loss of data. Do you want to continue?', (function(_this) {
             return function(result) {
-              var _results1;
+              var results1;
               if (result) {
-                _results1 = [];
+                results1 = [];
                 while (currentColumns !== columns) {
                   _this.$el.find('thead tr th:last-of-type').remove();
                   tableRows = _this.$el.find('tbody tr td:last-of-type').remove();
                   _this.$el.find('table').resizableColumns('destroy');
                   _this.$el.find('table').resizableColumns();
                   _this.saveTableMarkup();
-                  _results1.push(currentColumns--);
+                  results1.push(currentColumns--);
                 }
-                return _results1;
+                return results1;
               } else {
                 return model.set('column', currentColumns);
               }

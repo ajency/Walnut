@@ -22,6 +22,8 @@ define(['app', 'apps/student-training-module/view-module/single-module-controlle
     Controller = {
       viewStudentModule: function(id) {
         var breadcrumb_items;
+        $("#header-region").hide();
+        $("#left-nav-region").hide();
         this.studentTrainingModel = App.request("get:student:training:by:id", id);
         breadcrumb_items = {
           'items': [

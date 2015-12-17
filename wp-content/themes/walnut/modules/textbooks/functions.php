@@ -1,5 +1,4 @@
 <?php
-
 function load_fileupload( $hook ) {
     if ($hook == 'edit-tags.php') {
         wp_enqueue_script( 'jquery-ui-widget' );
@@ -159,6 +158,7 @@ function get_textbooks( $args = array() ) {
         foreach ($textbooks as $book){
             $book= get_book( $book,$division,$user_id );
             if($book)
+                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name 
                 $data[]= $book;
         }
 
@@ -228,12 +228,26 @@ function get_book( $book, $division=0,$user_id=0) {
     $book_dets->cover_pic = wp_get_attachment_image( $coverid, 'large' );
     $book_dets->author = $additional['author'];
 
-    $classes = $wpdb->get_row( "select class_id, tags from {$wpdb->base_prefix}textbook_relationships
+    $classes = $wpdb->get_row( "select class_id, tags from wp_textbook_relationships
                 where textbook_id=" . $book_id, ARRAY_A );
 
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
     $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
+    //added by kapil to fetch textbook names with class name starts
+    $class_names_applicable="";
+    $book_dets->classes_applicable = $class_names_applicable;
+    $class_names_applicable_arr = array();
+    global $classids;
+    foreach ($book_dets->classes as $book_dets_key => $book_dets_value) {
+       $class_names_applicable_arr[]=$classids[$book_dets_value]['label'];
+    }
+    if(count($class_names_applicable_arr)!=0){
+     $class_names_applicable = implode(", ", $class_names_applicable_arr);        
+     $book_dets->classes_applicable = "(".$class_names_applicable.")";
+    }
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+    //added by kapil to fetch textbook names with class name ends
     
     $modules_count_query=$wpdb->prepare("
         SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`

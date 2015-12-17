@@ -1,7 +1,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/property-dock/mcq-property-box/views', 'apps/content-creator/property-dock/mcq-property-box/marksview'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'apps/content-creator/property-dock/mcq-property-box/views', 'apps/content-creator/property-dock/mcq-property-box/marksView'], function(App, RegionController) {
   return App.module("ContentCreator.PropertyDock.McqPropertyBox", function(McqPropertyBox, App, Backbone, Marionette, $, _) {
     McqPropertyBox.Controller = (function(superClass) {
       extend(Controller, superClass);
