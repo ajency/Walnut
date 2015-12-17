@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-single-module/module-description/templates/module-description.html'], function(App, RegionController, collectionDetailsTpl) {
   return App.module("CollecionDetailsApp.Controller", function(Controller, App) {
     var CollectionDetailsView;
-    Controller.ViewCollecionDetailsController = (function(_super) {
-      __extends(ViewCollecionDetailsController, _super);
+    Controller.ViewCollecionDetailsController = (function(superClass) {
+      extend(ViewCollecionDetailsController, superClass);
 
       function ViewCollecionDetailsController() {
         return ViewCollecionDetailsController.__super__.constructor.apply(this, arguments);
@@ -14,6 +14,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
+        console.log('am i reaching here?');
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         console.log('test');
         this.view = view = this._getCollectionDetailsView();
@@ -123,11 +124,11 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
       return ViewCollecionDetailsController;
 
     })(RegionController);
-    CollectionDetailsView = (function(_super) {
-      __extends(CollectionDetailsView, _super);
+    CollectionDetailsView = (function(superClass) {
+      extend(CollectionDetailsView, superClass);
 
       function CollectionDetailsView() {
-        this.startModule = __bind(this.startModule, this);
+        this.startModule = bind(this.startModule, this);
         return CollectionDetailsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -150,6 +151,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
       };
 
       CollectionDetailsView.prototype.initialize = function() {
+        console.log('initialized description app');
         return this.mode = Marionette.getOption(this, 'mode');
       };
 

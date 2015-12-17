@@ -1,7 +1,7 @@
 define ['app'
         'controllers/region-controller'
         'apps/content-creator/property-dock/mcq-property-box/views'
-        'apps/content-creator/property-dock/mcq-property-box/marksview']
+        'apps/content-creator/property-dock/mcq-property-box/marksView']
 , (App, RegionController)->
     App.module "ContentCreator.PropertyDock.McqPropertyBox",
     (McqPropertyBox, App, Backbone, Marionette, $, _)->

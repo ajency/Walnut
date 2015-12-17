@@ -108,7 +108,7 @@ define ['app'
 						groupData = @model.toJSON()
 						@clonedData = _.omit groupData,
 						  ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']
-						@clonedData.name = "#{@clonedData.name} clone"
+						@clonedData.name = "#{@clonedData.name}"
 						@clonedData.post_status = "underreview"
 
 						App.execute "when:fetched", @cloneModel, =>

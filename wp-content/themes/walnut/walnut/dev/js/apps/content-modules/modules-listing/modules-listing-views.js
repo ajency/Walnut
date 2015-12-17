@@ -1,17 +1,17 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/content-modules/modules-listing/templates/content-modules-list-tmpl.html', 'bootbox'], function(App, contentListTpl, bootbox) {
   return App.module("ContentModulesApp.ModulesListing.Views", function(Views, App, Backbone, Marionette, $, _) {
     var EmptyView, ListItemView;
-    ListItemView = (function(_super) {
-      __extends(ListItemView, _super);
+    ListItemView = (function(superClass) {
+      extend(ListItemView, superClass);
 
       function ListItemView() {
-        this.removeSpinner = __bind(this.removeSpinner, this);
-        this.successUpdateFn = __bind(this.successUpdateFn, this);
-        this.successSaveFn = __bind(this.successSaveFn, this);
+        this.removeSpinner = bind(this.removeSpinner, this);
+        this.successUpdateFn = bind(this.successUpdateFn, this);
+        this.successSaveFn = bind(this.successSaveFn, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -125,7 +125,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
               }).call(_this);
               groupData = _this.model.toJSON();
               _this.clonedData = _.omit(groupData, ['id', 'last_modified_on', 'last_modified_by', 'created_on', 'created_by']);
-              _this.clonedData.name = "" + _this.clonedData.name + " clone";
+              _this.clonedData.name = "" + _this.clonedData.name;
               _this.clonedData.post_status = "underreview";
               return App.execute("when:fetched", _this.cloneModel, function() {
                 return _this.cloneModel.save(_this.clonedData, {
@@ -163,7 +163,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
               return "edit-student-training-module";
           }
         }).call(this);
-        return App.navigate("" + url + "/" + model.id, true);
+        return App.navigate(url + "/" + model.id, true);
       };
 
       ListItemView.prototype.errorFn = function() {
@@ -215,8 +215,8 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       return ListItemView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -233,11 +233,11 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       return EmptyView;
 
     })(Marionette.ItemView);
-    return Views.ModulesListingView = (function(_super) {
-      __extends(ModulesListingView, _super);
+    return Views.ModulesListingView = (function(superClass) {
+      extend(ModulesListingView, superClass);
 
       function ModulesListingView() {
-        this.changeStatus = __bind(this.changeStatus, this);
+        this.changeStatus = bind(this.changeStatus, this);
         return ModulesListingView.__super__.constructor.apply(this, arguments);
       }
 

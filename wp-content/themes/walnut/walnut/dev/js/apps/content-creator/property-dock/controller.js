@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/property-dock/views', 'apps/content-creator/property-dock/question-element-box-loader'], function(App, RegionController) {
   return App.module("ContentCreator.PropertyDock", function(PropertyDock, App, Backbone, Marionette, $, _) {
     var PropertyDockController;
-    PropertyDockController = (function(_super) {
-      __extends(PropertyDockController, _super);
+    PropertyDockController = (function(superClass) {
+      extend(PropertyDockController, superClass);
 
       function PropertyDockController() {
         return PropertyDockController.__super__.constructor.apply(this, arguments);

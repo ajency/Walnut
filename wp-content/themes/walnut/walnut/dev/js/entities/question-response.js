@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(["app", 'backbone'], function(App, Backbone) {
   return App.module("Entities.QuestionResponse", function(QuestionResponse, App, Backbone, Marionette, $, _) {
     var API, QuestionResponseCollection, QuestionResponseModel;
-    QuestionResponseModel = (function(_super) {
-      __extends(QuestionResponseModel, _super);
+    QuestionResponseModel = (function(superClass) {
+      extend(QuestionResponseModel, superClass);
 
       function QuestionResponseModel() {
         return QuestionResponseModel.__super__.constructor.apply(this, arguments);
@@ -29,8 +29,8 @@ define(["app", 'backbone'], function(App, Backbone) {
       return QuestionResponseModel;
 
     })(Backbone.Model);
-    QuestionResponseCollection = (function(_super) {
-      __extends(QuestionResponseCollection, _super);
+    QuestionResponseCollection = (function(superClass) {
+      extend(QuestionResponseCollection, superClass);
 
       function QuestionResponseCollection() {
         return QuestionResponseCollection.__super__.constructor.apply(this, arguments);

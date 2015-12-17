@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.TeacherQuestion.Views', function(Views, App, Backbone, Marionette, $, _) {
     var RowView;
-    RowView = (function(_super) {
-      __extends(RowView, _super);
+    RowView = (function(superClass) {
+      extend(RowView, superClass);
 
       function RowView() {
         return RowView.__super__.constructor.apply(this, arguments);
@@ -61,11 +61,11 @@ define(['app'], function(App) {
       return RowView;
 
     })(Marionette.ItemView);
-    return Views.MainView = (function(_super) {
-      __extends(MainView, _super);
+    return Views.MainView = (function(superClass) {
+      extend(MainView, superClass);
 
       function MainView() {
-        this._addTextForChild = __bind(this._addTextForChild, this);
+        this._addTextForChild = bind(this._addTextForChild, this);
         return MainView.__super__.constructor.apply(this, arguments);
       }
 
@@ -76,34 +76,34 @@ define(['app'], function(App) {
       MainView.prototype.itemView = RowView;
 
       MainView.prototype.initialize = function(opt) {
-        var i, ro, row, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        var i, j, k, len, len1, ref, ref1, results, results1, ro, row;
         if (opt == null) {
           opt = {};
         }
         this.model = opt.model;
         this.collection = new Backbone.Collection;
         if (opt.model.get('elements').length === 0) {
-          _ref = [1, 2];
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            i = _ref[_i];
-            _results.push(this.collection.add({
+          ref = [1, 2];
+          results = [];
+          for (j = 0, len = ref.length; j < len; j++) {
+            i = ref[j];
+            results.push(this.collection.add({
               position: i,
               element: 'TeacherQuestRow',
               elements: []
             }));
           }
-          return _results;
+          return results;
         } else {
-          _ref1 = opt.model.get('elements');
-          _results1 = [];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            row = _ref1[_j];
+          ref1 = opt.model.get('elements');
+          results1 = [];
+          for (k = 0, len1 = ref1.length; k < len1; k++) {
+            row = ref1[k];
             ro = _.clone(row);
             delete ro.elements;
-            _results1.push(this.collection.add(ro));
+            results1.push(this.collection.add(ro));
           }
-          return _results1;
+          return results1;
         }
       };
 

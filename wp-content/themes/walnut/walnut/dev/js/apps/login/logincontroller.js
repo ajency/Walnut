@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/login/templates/login.html', 'bootbox', 'apps/login/resetpasswordapp'], function(App, RegionController, loginTpl, bootbox) {
   return App.module("LoginApp.Controller", function(Controller, App) {
     var LoginView;
-    Controller.LoginController = (function(_super) {
-      __extends(LoginController, _super);
+    Controller.LoginController = (function(superClass) {
+      extend(LoginController, superClass);
 
       function LoginController() {
-        this.authenticateUser = __bind(this.authenticateUser, this);
+        this.authenticateUser = bind(this.authenticateUser, this);
         return LoginController.__super__.constructor.apply(this, arguments);
       }
 
@@ -51,7 +51,11 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
                 return window.location = response.blog_details.site_url;
               } else {
                 _this.view.close();
-                return App.vent.trigger('show:dashboard');
+                App.vent.trigger('show:dashboard');
+                if (user.attributes.caps.student) {
+                  $("body").hide();
+                  return window.location.href = SITEURL + '/dashboard-student';
+                }
               }
             }
           };
@@ -64,8 +68,8 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       return LoginController;
 
     })(RegionController);
-    return LoginView = (function(_super) {
-      __extends(LoginView, _super);
+    return LoginView = (function(superClass) {
+      extend(LoginView, superClass);
 
       function LoginView() {
         return LoginView.__super__.constructor.apply(this, arguments);
@@ -83,6 +87,20 @@ define(['app', 'controllers/region-controller', 'text!apps/login/templates/login
       };
 
       LoginView.prototype.onShow = function() {
+        $('.mat-input').focus(function() {
+          $(this).parent().addClass('is-active is-completed');
+        });
+        $('.mat-input').focusout(function() {
+          if ($(this).val() === '') {
+            $(this).parent().removeClass('is-completed');
+          }
+          $(this).parent().removeClass('is-active');
+        });
+        $('.mat-input').each(function(index) {
+          if ($(this).val() !== '') {
+            $(this).parent().addClass('is-active is-completed');
+          }
+        });
         $('body').addClass('error-body no-top');
         return $('.page-content').addClass('condensed');
       };

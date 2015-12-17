@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], function(App, RegionController) {
   return App.module("TextbookFiltersApp", function(TextbookFilters, App, Backbone, Marionette, $, _) {
-    TextbookFilters.Controller = (function(_super) {
-      __extends(Controller, _super);
+    TextbookFilters.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getTextbookFiltersView = __bind(this._getTextbookFiltersView, this);
-        this.fetchSectionOrSubsection = __bind(this.fetchSectionOrSubsection, this);
+        this._getTextbookFiltersView = bind(this._getTextbookFiltersView, this);
+        this.fetchSectionOrSubsection = bind(this.fetchSectionOrSubsection, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -40,21 +40,21 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         this.textbooksCollection = App.request("get:textbooks", data);
         this.selectedFilterParamsObject.setHandler("get:selected:parameters", (function(_this) {
           return function() {
-            var ele, term_id, textbook_filters, _i, _len, _results;
+            var ele, i, len, results, term_id, textbook_filters;
             textbook_filters = $(_this.view.el).find('select.textbook-filter');
-            _results = [];
-            for (_i = 0, _len = textbook_filters.length; _i < _len; _i++) {
-              ele = textbook_filters[_i];
+            results = [];
+            for (i = 0, len = textbook_filters.length; i < len; i++) {
+              ele = textbook_filters[i];
               if ($(ele).val() != null) {
-                _results.push(term_id = {
+                results.push(term_id = {
                   id: $(ele).val(),
                   text: $(ele).find(':selected').text()
                 });
               } else {
-                _results.push(void 0);
+                results.push(void 0);
               }
             }
-            return _results;
+            return results;
           };
         })(this));
         this.selectedFilterParamsObject.setHandler("get:parameters:for:search", (function(_this) {

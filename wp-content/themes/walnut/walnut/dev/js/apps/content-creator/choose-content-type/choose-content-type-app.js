@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("ContentCreator.Controller", function(Controller, App) {
     var ChooseContentTypeView;
-    Controller.ChooseContentType = (function(_super) {
-      __extends(ChooseContentType, _super);
+    Controller.ChooseContentType = (function(superClass) {
+      extend(ChooseContentType, superClass);
 
       function ChooseContentType() {
-        this._getChooseContentTypeView = __bind(this._getChooseContentTypeView, this);
+        this._getChooseContentTypeView = bind(this._getChooseContentTypeView, this);
         return ChooseContentType.__super__.constructor.apply(this, arguments);
       }
 
@@ -44,8 +44,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return ChooseContentType;
 
     })(RegionController);
-    return ChooseContentTypeView = (function(_super) {
-      __extends(ChooseContentTypeView, _super);
+    return ChooseContentTypeView = (function(superClass) {
+      extend(ChooseContentTypeView, superClass);
 
       function ChooseContentTypeView() {
         return ChooseContentTypeView.__super__.constructor.apply(this, arguments);

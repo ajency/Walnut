@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/quiz-report-layout', 'apps/quiz-reports/quiz-report/quiz-details/quiz-details-app', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/quiz-report/students-list/student-list-app'], function(App, RegionController) {
   return App.module("QuizReportApp", function(QuizReportApp, App) {
-    QuizReportApp.Controller = (function(_super) {
-      __extends(Controller, _super);
+    QuizReportApp.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showViews = __bind(this._showViews, this);
+        this._showViews = bind(this._showViews, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -41,9 +41,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
         return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
           return function() {
             var takenBy;
-            _this.quizResponseSummaries.remove(_this.quizResponseSummaries.where({
-              'status': 'started'
-            }));
             takenBy = _.size(_.uniq(_this.quizResponseSummaries.pluck('student_id')));
             _this.layout = _this._getQuizReportLayout(students, takenBy);
             _this.show(_this.layout, {

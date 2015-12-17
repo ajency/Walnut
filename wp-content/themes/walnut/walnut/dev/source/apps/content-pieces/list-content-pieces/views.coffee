@@ -30,6 +30,10 @@ define ['app'
 								<span class="nonDevice archiveModuleSpan">|</span>
 								<a target="_blank" class="nonDevice archiveModule">Archive</a>
 							{{/is_published}}
+							{{^is_used}}
+								<span class="nonDevice deleteModuleSpan">|</span>
+								<a target="_blank" class="nonDevice deleteModule">Delete</a>
+							{{/is_used}}							
 							<span class="nonDevice">|</span>
 							<a target="_blank"  class="nonDevice cloneModule">Clone</a>
 							<i class="fa spinner"></i>
@@ -83,6 +87,7 @@ define ['app'
 				_.each data.present_in_modules, (ele,index)->
 					modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
 
+				data.is_used = true if modules.length > 0
 				data.present_in_str=
 					if _.size(modules)>0
 					then _.toSentence(modules)
@@ -91,6 +96,7 @@ define ['app'
 				data
 
 			events:
+				'click a.deleteModule'	:-> @deleteModule 'delete'
 				'click a.cloneModule'	:-> @model.duplicate()
 				'click a.archiveModule' :-> @changeModuleStatus 'archive'
 				'click a.publishModule' :-> @changeModuleStatus 'publish'
@@ -106,7 +112,20 @@ define ['app'
 			removeSpinner:=>
 				@$el.find '.spinner'
 				.removeClass 'fa-spin fa-spinner'
-			
+
+			deleteModule:(status) ->
+				bootbox.confirm "Are you sure you want to delete '#{@model.get('post_excerpt')}' ?", (result)=>
+					if result
+	        			@addSpinner()
+	        			model_id = @model.id
+	        			data = {}
+	        			data.action = 'delete-content-module'
+	        			data.id = model_id
+        				return $.post(AJAXURL, data).success((resp) ->
+          					_this.model.destroy()
+        				)
+
+
 			changeModuleStatus:(status)->
 				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('post_excerpt')}' ?", (result)=>
 					if result

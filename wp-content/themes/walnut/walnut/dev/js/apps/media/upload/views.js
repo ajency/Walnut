@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'plupload', 'text!apps/media/upload/templates/upload.html'], function(App, plupload, uploadTpl) {
   return App.module('Media.Upload.Views', function(Views, App) {
-    return Views.UploadView = (function(_super) {
-      __extends(UploadView, _super);
+    return Views.UploadView = (function(superClass) {
+      extend(UploadView, superClass);
 
       function UploadView() {
         return UploadView.__super__.constructor.apply(this, arguments);

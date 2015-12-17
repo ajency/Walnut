@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'apps/content-creator/content-builder/element/controller', 'text!apps/content-creator/content-builder/elements/table/templates/table.html', 'apps/content-creator/content-builder/elements/table/views'], function(App, Element, tableTemplate) {
   return App.module('ContentCreator.ContentBuilder.Element.Table', function(Table, App, Backbone, Marionette, $, _) {
-    return Table.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return Table.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this.renderElement = __bind(this.renderElement, this);
+        this.renderElement = bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 

@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/users/edit/templates/add-user.html'], function(App, addUserTpl) {
   return App.module("UsersApp.Edit.Views", function(Views) {
-    return Views.EditUser = (function(_super) {
-      __extends(EditUser, _super);
+    return Views.EditUser = (function(superClass) {
+      extend(EditUser, superClass);
 
       function EditUser() {
-        this.errorFn = __bind(this.errorFn, this);
-        this.successFn = __bind(this.successFn, this);
+        this.errorFn = bind(this.errorFn, this);
+        this.successFn = bind(this.successFn, this);
         return EditUser.__super__.constructor.apply(this, arguments);
       }
 

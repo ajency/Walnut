@@ -72,3 +72,14 @@ function ajax_update_content_piece_status(){
     
 }
 add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_status');
+
+function ajax_delete_content_module(){
+   
+    $id = $_POST['id'];
+    
+    wp_delete_post($id);
+    
+    return wp_send_json(array('code' => 'OK'));
+    
+}
+add_action('wp_ajax_delete-content-module', 'ajax_delete_content_module');

@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module('ContentSelectionApp.AddQuiz', function(AddQuiz, App) {
     var EmptyView, QuizIView, QuizView;
-    AddQuiz.Controller = (function(_super) {
-      __extends(Controller, _super);
+    AddQuiz.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showView = __bind(this._showView, this);
+        this._showView = bind(this._showView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -66,8 +66,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return Controller;
 
     })(RegionController);
-    QuizIView = (function(_super) {
-      __extends(QuizIView, _super);
+    QuizIView = (function(superClass) {
+      extend(QuizIView, superClass);
 
       function QuizIView() {
         return QuizIView.__super__.constructor.apply(this, arguments);
@@ -94,8 +94,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return QuizIView;
 
     })(Marionette.ItemView);
-    EmptyView = (function(_super) {
-      __extends(EmptyView, _super);
+    EmptyView = (function(superClass) {
+      extend(EmptyView, superClass);
 
       function EmptyView() {
         return EmptyView.__super__.constructor.apply(this, arguments);
@@ -112,12 +112,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return EmptyView;
 
     })(Marionette.ItemView);
-    QuizView = (function(_super) {
-      __extends(QuizView, _super);
+    QuizView = (function(superClass) {
+      extend(QuizView, superClass);
 
       function QuizView() {
-        this.onQuizRemoved = __bind(this.onQuizRemoved, this);
-        this.addQuiz = __bind(this.addQuiz, this);
+        this.onQuizRemoved = bind(this.onQuizRemoved, this);
+        this.addQuiz = bind(this.addQuiz, this);
         return QuizView.__super__.constructor.apply(this, arguments);
       }
 

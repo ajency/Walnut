@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-pieces/list-content-pieces/views'], function(App, RegionController) {
   return App.module("ContentPiecesApp.ContentList", function(ContentList, App) {
-    ContentList.ListContentPiecesController = (function(_super) {
-      __extends(ListContentPiecesController, _super);
+    ContentList.ListContentPiecesController = (function(superClass) {
+      extend(ListContentPiecesController, superClass);
 
       function ListContentPiecesController() {
         return ListContentPiecesController.__super__.constructor.apply(this, arguments);

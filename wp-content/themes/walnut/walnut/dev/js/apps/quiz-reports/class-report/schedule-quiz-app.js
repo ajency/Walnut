@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module('ScheduleQuizPopup', function(ScheduleQuizPopup, App) {
     var ScheduleQuizView;
-    ScheduleQuizPopup.Controller = (function(_super) {
-      __extends(Controller, _super);
+    ScheduleQuizPopup.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getScheduleQuizView = __bind(this._getScheduleQuizView, this);
+        this._getScheduleQuizView = bind(this._getScheduleQuizView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -54,11 +54,11 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return Controller;
 
     })(RegionController);
-    ScheduleQuizView = (function(_super) {
-      __extends(ScheduleQuizView, _super);
+    ScheduleQuizView = (function(superClass) {
+      extend(ScheduleQuizView, superClass);
 
       function ScheduleQuizView() {
-        this.saveScheduled = __bind(this.saveScheduled, this);
+        this.saveScheduled = bind(this.saveScheduled, this);
         return ScheduleQuizView.__super__.constructor.apply(this, arguments);
       }
 

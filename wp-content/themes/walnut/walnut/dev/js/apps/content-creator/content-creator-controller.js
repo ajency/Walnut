@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/element-box/elementboxapp', 'apps/content-creator/content-builder/app', 'apps/content-creator/property-dock/controller', 'apps/content-creator/options-bar/options-bar-app', 'apps/content-creator/content-pieces-listing/app', 'apps/content-creator/grading-parameter/grading-parameter-controller'], function(App, RegionController) {
   return App.module("ContentCreator.Controller", function(Controller, App) {
     var CannotEditView, ContentCreatorLayout;
-    Controller.ContentCreatorController = (function(_super) {
-      __extends(ContentCreatorController, _super);
+    Controller.ContentCreatorController = (function(superClass) {
+      extend(ContentCreatorController, superClass);
 
       function ContentCreatorController() {
         return ContentCreatorController.__super__.constructor.apply(this, arguments);
@@ -131,8 +131,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       return ContentCreatorController;
 
     })(RegionController);
-    ContentCreatorLayout = (function(_super) {
-      __extends(ContentCreatorLayout, _super);
+    ContentCreatorLayout = (function(superClass) {
+      extend(ContentCreatorLayout, superClass);
 
       function ContentCreatorLayout() {
         return ContentCreatorLayout.__super__.constructor.apply(this, arguments);
@@ -154,8 +154,8 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
       return ContentCreatorLayout;
 
     })(Marionette.Layout);
-    return CannotEditView = (function(_super) {
-      __extends(CannotEditView, _super);
+    return CannotEditView = (function(superClass) {
+      extend(CannotEditView, superClass);
 
       function CannotEditView() {
         return CannotEditView.__super__.constructor.apply(this, arguments);
@@ -177,7 +177,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
             }
           })();
           m = module;
-          m.url = "" + SITEURL + "/#" + moduleBaseurl + "/" + module.id;
+          m.url = SITEURL + "/#" + moduleBaseurl + "/" + module.id;
           return m;
         });
         data.urlBase = SITEURL + '/#dummy-';

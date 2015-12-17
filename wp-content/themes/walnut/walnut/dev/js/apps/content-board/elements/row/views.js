@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('ContentPreview.ContentBoard.Element.Row.Views', function(Views, App, Backbone, Marionette, $, _) {
     var ColumnView;
-    ColumnView = (function(_super) {
-      __extends(ColumnView, _super);
+    ColumnView = (function(superClass) {
+      extend(ColumnView, superClass);
 
       function ColumnView() {
         return ColumnView.__super__.constructor.apply(this, arguments);
@@ -31,8 +31,8 @@ define(['app'], function(App) {
       return ColumnView;
 
     })(Marionette.ItemView);
-    return Views.RowView = (function(_super) {
-      __extends(RowView, _super);
+    return Views.RowView = (function(superClass) {
+      extend(RowView, superClass);
 
       function RowView() {
         return RowView.__super__.constructor.apply(this, arguments);
@@ -45,20 +45,20 @@ define(['app'], function(App) {
       RowView.prototype.itemView = ColumnView;
 
       RowView.prototype.initialize = function(opt) {
-        var col, column, _i, _len, _ref, _results;
+        var col, column, i, len, ref, results;
         if (opt == null) {
           opt = {};
         }
         this.collection = new Backbone.Collection;
-        _ref = opt.model.get('elements');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          column = _ref[_i];
+        ref = opt.model.get('elements');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          column = ref[i];
           col = _.clone(column);
           delete col.elements;
-          _results.push(this.collection.add(col));
+          results.push(this.collection.add(col));
         }
-        return _results;
+        return results;
       };
 
       RowView.prototype.onShow = function() {

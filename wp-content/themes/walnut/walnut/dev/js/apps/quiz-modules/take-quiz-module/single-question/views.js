@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modules/take-quiz-module/single-question/templates/question-area-tpl.html'], function(App, RegionController, bootbox, questionAreaTemplate) {
   return App.module("TakeQuizApp.SingleQuestion", function(SingleQuestion, App) {
-    return SingleQuestion.SingleQuestionLayout = (function(_super) {
-      __extends(SingleQuestionLayout, _super);
+    return SingleQuestion.SingleQuestionLayout = (function(superClass) {
+      extend(SingleQuestionLayout, superClass);
 
       function SingleQuestionLayout() {
-        this.mixinTemplateHelpers = __bind(this.mixinTemplateHelpers, this);
+        this.mixinTemplateHelpers = bind(this.mixinTemplateHelpers, this);
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
@@ -38,7 +38,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
-        var display_mode, responseModel, _ref;
+        var display_mode, ref, responseModel;
         responseModel = Marionette.getOption(this, 'questionResponseModel');
         display_mode = Marionette.getOption(this, 'display_mode');
         if (display_mode === 'replay') {
@@ -66,7 +66,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
             if (responseModel.get('status') === 'paused') {
               data.allow_submit_answer = true;
             }
-            if ((_ref = responseModel.get('status')) !== 'skipped' && _ref !== 'paused') {
+            if ((ref = responseModel.get('status')) !== 'skipped' && ref !== 'paused') {
               data.show_skip = false;
             }
           }

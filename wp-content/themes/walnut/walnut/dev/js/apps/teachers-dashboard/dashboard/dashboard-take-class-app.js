@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller'], function(App, RegionController) {
   return App.module("DashboardTakeClassApp.Controller", function(Controller, App) {
     var TeachersTakeClassView;
-    Controller.DashboardTakeClassController = (function(_super) {
-      __extends(DashboardTakeClassController, _super);
+    Controller.DashboardTakeClassController = (function(superClass) {
+      extend(DashboardTakeClassController, superClass);
 
       function DashboardTakeClassController() {
         return DashboardTakeClassController.__super__.constructor.apply(this, arguments);
@@ -28,8 +28,8 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       return DashboardTakeClassController;
 
     })(RegionController);
-    TeachersTakeClassView = (function(_super) {
-      __extends(TeachersTakeClassView, _super);
+    TeachersTakeClassView = (function(superClass) {
+      extend(TeachersTakeClassView, superClass);
 
       function TeachersTakeClassView() {
         return TeachersTakeClassView.__super__.constructor.apply(this, arguments);

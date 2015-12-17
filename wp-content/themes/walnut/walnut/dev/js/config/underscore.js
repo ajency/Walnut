@@ -1,4 +1,4 @@
-var __slice = [].slice;
+var slice = [].slice;
 
 define(['underscore', 'underscorestring'], function(_) {
   _.templateSettings = {
@@ -9,14 +9,14 @@ define(['underscore', 'underscorestring'], function(_) {
   return _.mixin({
     logAppMsg: function() {
       var msg;
-      msg = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      msg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       return _.each(arguments, function(l, index) {
         return console.log(l);
       });
     },
     logAppErr: function() {
       var msg;
-      msg = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      msg = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       return _.each(arguments, function(l, index) {
         return console.log(l);
       });

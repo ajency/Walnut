@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'bootbox'], function(App, bootbox) {
   return App.module('ContentPreview.ContentBoard.Element.Table.Views', function(Views, App, Backbone, Marionette, $, _) {
-    return Views.TableView = (function(_super) {
-      __extends(TableView, _super);
+    return Views.TableView = (function(superClass) {
+      extend(TableView, superClass);
 
       function TableView() {
         return TableView.__super__.constructor.apply(this, arguments);
