@@ -27,9 +27,12 @@
  // ---------------------------
 
 
-// .sidebarContainer{
-// 	padding-top: 30px;
-// }
+.sidebarContainer{
+	@media (max-width: 1200px){
+        position: static;
+        float:none;
+    }
+}
 
 
 
@@ -41,9 +44,39 @@
     margin: 0 auto;
     max-width: 50%;
     .pieceWrapper{
-        & > div:first-child{
-            padding: 15px !important;
+        .quiz-info{
+            padding: 20px !important;
             margin: 0;
+            background-color: #F2F2F2;
+            .display(flex);
+            .align-content(center);
+            .justify-content(flex-start);
+            & > h3{
+               margin: 0;
+               font-size: 1.5em;
+               padding-right: 10px;
+               color: @quiz-link-color3;
+            }
+            & > a{
+                margin: 0;
+                display: inline-block !important;
+                color: #000;
+                font-size: 1.5em;
+                text-decoration: none;
+                color: @quiz-link-color1 !important;
+                &:after{
+                    content: "\f107";
+                    display: inline-block;
+                    font: normal normal normal 14px/1 FontAwesome;
+                    font-size: inherit;
+                    padding-left: 5px;
+                    text-rendering: auto;
+                    -webkit-font-smoothing: antialiased;
+                }   
+            }
+        }
+        #collapseView{
+            border-top: 2px solid #ccc;
         }
     }
 }
@@ -64,33 +97,41 @@
         right: 0;
         margin: 0 auto;
         max-width: 50%;
-       
+        #content-board{
+            .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+            @media (max-width: 1200px){
+                margin-top: 0;
+            }
+            &.quizContent{
+                #myCanvas{
+                    border: 0;
+                    min-height: 460px !important;
+                    max-width: 100%;
+                    @media @i-tab-landscape{
+                        margin-top: 50px;
+                    }
+                    #question-area{
+                        .element-wrapper{
+                            font-family: open-sans;
+                            .text{
+                                font-size: 1.5em;
+                                font-weight: bold;
+                                color: @quiz-link-color3;
+                                & > p{
+                                    & > span{
+                                        font-size: inherit !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } 
     }
 }
 
 
-
-
-#content-board{
-	&.quizContent{
-		#myCanvas{
-			border: 3px solid #eee;
-			min-height: 460px !important;
-            max-width: 100%;
-            @media @i-tab-landscape{
-                margin-top: 50px;
-            }
-            #question-area{
-                .element-wrapper{
-                    font-family: open-sans;
-                    .text{
-                        font-size: 1.3em;
-                    }
-                }
-            }
-		}
-	}
-} 
 
 
  // ---------------------------
@@ -125,7 +166,7 @@
         width:260px;
         .transition-duration(0.3s);
         &:hover{
-            left: 0;
+            left: 15px;
             .progressStrip{
                 left: 260px;
             }
@@ -138,12 +179,20 @@
             left: 0px;
             height: 60px;
             width: 50px;
-            font-size: 28px;
             text-align: center;
-            padding-top: 8px;
+            padding-top: 5px;
             color: #ffffff;
-            background: #0090d9;
+            background: #868686;
             .transition-duration(0.3s);
+                span{
+                    &:before{
+                        content: 'Q';
+                        font-size: 3em;
+                        @media (max-width: 1200px){
+                            font-size: 1.5em;
+                        }
+                    }
+                }
          }
 
          .modProgress {
@@ -338,10 +387,11 @@
  .timerBox {
  	background: #f3f3f3;
     visibility: hidden;
-    // z-index: 9999;
     .box-shadow(#dadada 0 0 0 3px);
-    // right: -302px;
-    // left: auto;
+    @media (max-width: 1200px){
+        float: right;
+        position: static;
+    }
     .container-grey{
     	background: none;
     	box-shadow: none;
@@ -405,68 +455,6 @@
              }
          }
      }
-	// Practice quiz statistics
-	.quiz-stats {
-	    .flex-family();
-	    .flex-direction(column);
-	    background: rgba(247, 247, 247, 0.74);
-	    .time-left {
-	        .flex-family();
-	        padding: 25px;
-	        width: 100%;
-	        border-bottom: 1px solid #ccc;
-	        .flex-direction(column);
-	        button {
-	            margin-top: 20px;
-	            padding: 12px 25px;
-	            color: #fff;
-	            text-transform: uppercase;
-	            background: @button-1-danger;
-	            font-size: 1.2em;
-	        }
-	    }
-	    .quiz-data {
-	        .flex-family();
-	        flex-direction: column;
-	        padding: 10px 0;
-	        >div {
-	            .flex-family();
-	            width: 100%;
-	            margin: 5px 0;
-	            .icon-data {
-	                .flex(1 40%);
-	                text-align: center;
-	                >div {
-	                    .flex-family();
-	                    background: url('../images/marks-time.png') no-repeat;
-	                    height: 81px;
-	                    width: 79px;
-	                    margin: 0 auto;
-	                    h3 {
-	                        margin: 0;
-	                        font-size: 1.5em;
-	                        width: 70%;
-	                        color: @quiz-link-color3;
-	                        span{
-	                            font-size: 0.6em;
-	                            display: block;
-	                        }
-	                    }
-	                }
-	            }
-	            h4 {
-	                .flex(1 60%);
-	                text-align: left;
-	                font-size: 1.1em;
-	                text-transform: uppercase;
-	                color: @quiz-link-color3;
-	                line-height: 20px;
-	                margin: 0;
-	            }
-	        }
-	    }
-	}     
-
      .container-grey:last-child {
          padding: 20px;
      }
@@ -474,6 +462,67 @@
      //    right: 0;
      // }
  }
+
+    // Practice quiz statistics
+    .quiz-stats {
+        .flex-family();
+        padding: 20px;
+        background: #F2F2F2;
+        .time-left {
+            .flex-family();
+            padding: 25px;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            .flex-direction(column);
+            button {
+                margin-top: 20px;
+                padding: 12px 25px;
+                color: #fff;
+                text-transform: uppercase;
+                background: @button-1-danger;
+                font-size: 1.2em;
+            }
+        }
+        .quiz-data {
+            .flex-family();
+            padding: 10px 0;
+            >div {
+                .flex-family();
+                width: 100%;
+                margin: 5px 0;
+                .icon-data {
+                    .flex(1 40%);
+                    text-align: center;
+                    >div {
+                        .flex-family();
+                        background: url('../images/marks-time.png') no-repeat;
+                        height: 81px;
+                        width: 79px;
+                        margin: 0 auto;
+                        h3 {
+                            margin: 0;
+                            font-size: 1.5em;
+                            width: 70%;
+                            color: @quiz-link-color3;
+                            span{
+                                font-size: 0.6em;
+                                display: block;
+                            }
+                        }
+                    }
+                }
+                h4 {
+                    .flex(1 60%);
+                    text-align: left;
+                    font-size: 0.9em;
+                    text-transform: uppercase;
+                    color: @quiz-link-color3;
+                    line-height: 20px;
+                    margin: 0;
+                }
+            }
+        }
+    } 
  
 
  // ---------------------------
@@ -515,7 +564,7 @@
 	    font-weight: bold;
 	    font-size: 1.1em;
     	line-height: 1.5;
-        border-radius: 10px;
+        border-radius: 8px;
         @media @i-tab-landscape{
             width: 32%;
             font-size: 1em;
