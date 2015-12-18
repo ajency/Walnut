@@ -190,6 +190,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       function ListView() {
         this.changeStatus = bind(this.changeStatus, this);
+        this.moveContent = bind(this.moveContent, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
@@ -219,7 +220,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           return $.toggleCheckAll(this.$el.find('table'));
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
-        'click .change-status button': 'changeStatus'
+        'click .change-status button': 'changeStatus',
+        'click .move-content button': 'moveContent'
       };
 
       ListView.prototype.initialize = function() {
@@ -280,11 +282,41 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.showSubmitButton = function() {
-        if (this.$el.find('.tab_checkbox').is(':checked')) {
-          return this.$el.find('.change-status').show();
+        if (this.$el.find(".tab_checkbox").is(":checked")) {
+          this.$el.find(".change-status").show();
+          return this.$el.find(".move-content").show();
         } else {
-          return this.$el.find('.change-status').hide();
+          this.$el.find(".change-status").hide();
+          return this.$el.find(".move-content").hide();
         }
+      };
+
+      ListView.prototype.moveContent = function(e) {
+        var data, msg;
+        data = {};
+        data.IDs = $.getCheckedItems(this.$el.find('table'));
+        console.log(data);
+        msg = "Are you sure you want to move selected content pieces?";
+        if (0 === _.size(data.IDs)) {
+          bootbox.alert('None of the selected items can be published');
+          return;
+        }
+        return bootbox.confirm(msg, (function(_this) {
+          return function(result) {
+            if (result) {
+              $(e.target).find('.fa').addClass('fa-spin fa-spinner');
+            }
+            data.action = 'bulk-move-content-pieces';
+            return $.post(AJAXURL, data).success(function(resp) {
+              return console.log(resp);
+            }).fail(function(resp) {
+              console.log('some error occurred');
+              return console.log(resp);
+            }).done(function() {
+              return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
+            });
+          };
+        })(this));
       };
 
       ListView.prototype.changeStatus = function(e) {
