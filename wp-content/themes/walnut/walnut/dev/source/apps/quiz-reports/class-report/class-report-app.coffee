@@ -13,15 +13,20 @@ define ['app'
             students = null
             textbooksCollection = null
             divisionsCollection = null
+            schoolsCollection   = null
             quizzes = null
 
             initialize: ->
 
                 @division = 0
 
-                divisionsCollection = App.request "get:divisions"
+                schoolsCollection   = App.request "get:all:schools"
+                App.execute "when:fetched", schoolsCollection, @_fetchDivisions                        
 
-                App.execute "when:fetched", divisionsCollection, @_fetchTextbooks                          
+            _fetchDivisions:=>
+                
+                divisionsCollection = App.request "get:divisions"
+                App.execute "when:fetched", divisionsCollection, @_fetchTextbooks  
 
             _fetchTextbooks:=>
                 
@@ -31,7 +36,7 @@ define ['app'
                 textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
 
                 App.execute "when:fetched", textbooksCollection, => 
-                    App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
+                App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
 
             _fetchQuizzes:=>
 
