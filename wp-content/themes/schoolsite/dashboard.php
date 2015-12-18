@@ -128,6 +128,11 @@ global $chorus_options;
 
 </script>
 <script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+ <?php             define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/"); ?>
+
+                <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
+                <!-- Bootstrap Core JavaScript -->
+                <script src="<?php echo STUDENT_ASSET_PATH ;?>js/bootstrap.min.js"></script>
 <script>
     Pace.on('hide', function () {
         document.getElementById("site_main_container").setAttribute('class', 'showAll');
@@ -147,10 +152,7 @@ if (ENV == 'dev') {
     <script type="text/javascript"
             src="./wp-content/themes/walnut/walnut/production/school-main.js?ver=<?php echo VERSION ?>"></script>
 <?php } ?>
-<?php             define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/"); ?>
-                <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
-                <!-- Bootstrap Core JavaScript -->
-                <script src="<?php echo STUDENT_ASSET_PATH ;?>js/bootstrap.min.js"></script>
+
                 <script src="<?php echo STUDENT_ASSET_PATH ;?>js/script.js"></script>
 </body>
 </html>
