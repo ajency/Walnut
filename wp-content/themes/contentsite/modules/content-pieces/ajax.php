@@ -4,7 +4,7 @@ require_once 'functions.php';
 require_once 'content_pieces_import.php';
 
 function ajax_save_content_element() {
-    
+
     unset($_POST['action']);
     $element_details = $_POST;
     $meta_id = save_content_element($element_details);
@@ -43,43 +43,59 @@ add_action('wp_ajax_save-content-piece-json', 'ajax_save_content_piece');
 add_action('wp_ajax_create-content-piece', 'ajax_save_content_piece');
 
 function ajax_update_content_piece(){
-    
+
     #currently this is used only to update the status.
     #for the actual create/update functions refer to function ajax_save_content_piece()
-    
+
     $data= array('ID'=>$_POST['ID'],'post_status'=>$_POST['post_status']);
     $content_id = wp_update_post($data);
-    
+
     wp_send_json(array('ID'=>$content_id));
-    
+
 }
 add_action('wp_ajax_update-content-piece', 'ajax_update_content_piece');
 
 function ajax_update_content_piece_status(){
-   
+
     $ids = $_POST['IDs'];
-    
+
     if(!isset($_POST['IDs']) || empty($_POST['IDs']) || !isset($_POST['status']))
         return new WP_Error('invalid_request_data', __('Invalid ID or status') );
-    
+
     foreach ($ids as $id){
         if(!$id) continue;
         $data= array('ID'=>$id,'post_status'=>$_POST['status']);
         $content_id = wp_update_post($data);
     }
-    
+
     return wp_send_json(array('code' => 'OK'));
-    
+
 }
 add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_status');
 
-function ajax_delete_content_module(){
-   
-    $id = $_POST['id'];
-    
-    wp_delete_post($id);
-    
+
+
+
+function ajax_bulk_move_content_pieces(){
+
+    $ids = $_POST['IDs'];
+
     return wp_send_json(array('code' => 'OK'));
-    
+
+}
+add_action('wp_ajax_bulk-move-content-pieces', 'ajax_bulk_move_content_pieces');
+
+
+
+
+
+function ajax_delete_content_module(){
+
+    $id = $_POST['id'];
+
+    wp_delete_post($id);
+
+    return wp_send_json(array('code' => 'OK'));
+
 }
 add_action('wp_ajax_delete-content-module', 'ajax_delete_content_module');

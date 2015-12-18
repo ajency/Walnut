@@ -33,7 +33,7 @@ define ['app'
 							{{^is_used}}
 								<span class="nonDevice deleteModuleSpan">|</span>
 								<a target="_blank" class="nonDevice deleteModule">Delete</a>
-							{{/is_used}}							
+							{{/is_used}}
 							<span class="nonDevice">|</span>
 							<a target="_blank"  class="nonDevice cloneModule">Clone</a>
 							<i class="fa spinner"></i>
@@ -41,7 +41,7 @@ define ['app'
 
 			serializeData:->
 				data= super()
-				
+
 				#this is for display purpose only
 				data.modified_date= moment(data.post_modified).format("Do MMM YYYY <br/> h:mm a")
 
@@ -104,11 +104,11 @@ define ['app'
 			initialize : (options)->
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
-			
+
 			addSpinner:->
 				@$el.find '.spinner'
 				.addClass 'fa-spin fa-spinner'
-			
+
 			removeSpinner:=>
 				@$el.find '.spinner'
 				.removeClass 'fa-spin fa-spinner'
@@ -131,10 +131,10 @@ define ['app'
 					if result
 						@addSpinner()
 						@model.save post_status: status,
-							success:=> @changeStatusLabel status								
+							success:=> @changeStatusLabel status
 							error:(resp)-> console.log resp
 							complete:@removeSpinner
-			
+
 			changeStatusLabel:(status)->
 				switch (status)
 					when 'archive'
@@ -144,20 +144,20 @@ define ['app'
 						.html 'Archived'
 						@$el.find '.archiveModule, .archiveModuleSpan'
 						.remove()
-						
+
 					when 'publish'
 						@$el.find '.post-status'
 						.removeClass 'label-important'
 						.addClass 'label-info'
 						.html 'Published'
-						
+
 						@$el.find '.view-content-piece'
 						.after '<span class="nonDevice archiveModuleSpan">|</span>
 								<a target="_blank" class="nonDevice archiveModule">Archive</a>'
-								
+
 						@$el.find '.publishModule, .publishModuleSpan, .editLink, .editLinkSpan'
 						.remove()
-						
+
 		class EmptyView extends Marionette.ItemView
 
 			template: 'No Content Available'
@@ -192,6 +192,7 @@ define ['app'
 				'change #check_all_div'     			:-> $.toggleCheckAll @$el.find 'table'
 				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
 				'click .change-status button'			: 'changeStatus'
+				'click .move-content button'			: 'moveContent'
 
 
 			initialize : ->
@@ -246,23 +247,53 @@ define ['app'
 				@$el.find "#content-pieces-table"
 				.tablesorterPager pagerOptions
 
-			showSubmitButton:->
-	            if @$el.find '.tab_checkbox'
-	            .is ':checked'
-	                @$el.find '.change-status'
-	                .show()
 
-	            else
-	                @$el.find '.change-status'
-	                .hide()
-				
+			showSubmitButton:->
+  				if @$el.find(".tab_checkbox").is(":checked")
+    				@$el.find(".change-status").show()
+    				@$el.find(".move-content").show()
+  				else
+    				@$el.find(".change-status").hide()
+    				@$el.find(".move-content").hide()
+
+
+
+			moveContent:(e)=>
+					data = {}
+					data.IDs= $.getCheckedItems @$el.find 'table'
+					console.log data
+					msg = "Are you sure you want to move selected content pieces?"
+					if 0 is _.size data.IDs
+						bootbox.alert 'None of the selected items can be published'
+						return
+
+					bootbox.confirm msg, (result)=>
+						if result
+							$(e.target).find '.fa'
+							.addClass 'fa-spin fa-spinner'
+
+						data.action = 'bulk-move-content-pieces'
+						$.post AJAXURL, data
+						.success (resp)=>
+							console.log resp
+						.fail (resp)->
+							console.log 'some error occurred'
+							console.log resp
+						.done ->
+							$(e.target).find '.fa'
+							.removeClass 'fa-spin fa-spinner'
+							.addClass 'fa-check'
+
+
+
+
 			changeStatus:(e)=>
 				data = {}
 				data.IDs= $.getCheckedItems @$el.find 'table'
 				data.status= $(e.target).closest('.change-status').find('select').val()
 
 				msg = "Are you sure you want to #{data.status} the selected content pieces ?"
-				
+
 				if data.status is 'publish'
 					data.IDs = _.filter data.IDs, (id)=>return id if @collection.get(id).get('post_status') is 'pending'
 					msg += "<div class='small m-t-10'>
@@ -285,7 +316,7 @@ define ['app'
 						.fail (resp)->
 							console.log 'some error occurred'
 							console.log resp
-						.done ->							
+						.done ->
 							$(e.target).find '.fa'
 							.removeClass 'fa-spin fa-spinner'
 							.addClass 'fa-check'
