@@ -129,15 +129,17 @@
  // ---------------------------
 
 .video-details{
-	position: absolute;
     max-width: 760px;
-    text-align: left;
-    right: 0;
     margin: 0 auto;
-    top: -55px;
-    left: 0;
     padding: 18px 19px;
     background: #eee;
+    h4{
+    	font-size: 1.3em;
+    	margin: 0;	
+    	span{
+    		color:@quiz-link-color1;
+    	}
+    }
 }
 
 
@@ -146,35 +148,41 @@
  // ---------------------------
  // VIDEO PLAYER -----------
  // --------------------------- 
-
-	// #content-board{
-	// 	#myCanvas{
-	// 		#question-area{
-	// 			.element-wrapper:first-child{
-	// 				padding:0;
-	// 				margin:2px 0 2px;
-	// 			}
-	// 			.element-wrapper:last-child{
-	// 				padding: 15px 7px;
-	// 				.box-shadow(0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
-	// 				font-family: open-sans;
-	// 				.text{
-	// 					font-size: 1.3em;
- //    					font-weight: bold;
-	// 					p{
-	// 						color: @quiz-link-color3;
-	// 						line-height: 30px;
-	// 						a{
-	// 							color: @quiz-link-color1;
-	// 							display: block;
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-
+	.lesson{
+		position: absolute;
+    	width: 100%;
+    	top: -54px;
+    	z-index: 1030;
+		#content-board{
+			margin: 0;
+			#myCanvas{
+				padding: 0;
+				#question-area{
+					.element-wrapper:first-child{
+						padding:0;
+						margin:2px 0 2px;
+					}
+					.element-wrapper:last-child{
+						padding: 15px 7px;
+						.box-shadow(0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
+						font-family: open-sans;
+						.text{
+							font-size: 1.3em;
+	    					font-weight: bold;
+							p{
+								color: @quiz-link-color3;
+								line-height: 30px;
+								a{
+									color: @quiz-link-color1;
+									display: block;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 
 
@@ -185,9 +193,20 @@
 
 .video-sidebar{
 	position: absolute;
-	left: -265px;
+	left: 0px;
 	z-index: 1;
+	top: 150px;
+	.transition-duration(0.3s);
 	.display(flex);
+	@media (max-width) {
+		left: -265px;
+	}
+	&.video-is-open{
+		left: -265px;
+		@media (max-width: 1230px) {
+			left: 0px;
+		}
+	}
 	.video-lecture-parts{
 		background: #eee;
 		text-align: center;
@@ -212,7 +231,7 @@
 .contentTime, .contentInfo{
 	background: #fff;
 	box-shadow: none;
-	top: 261px;
+	top: 175px;
 	padding: 0;
 }
 
