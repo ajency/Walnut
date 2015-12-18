@@ -57,9 +57,11 @@ define ['app'
 
 					onShow : ->
 						$('#collapseView').on 'hidden.bs.collapse', ->
+							$('#accordionToggle').removeClass 'updown'
 							$('#accordionToggle').text 'Expand'
 
 						$('#collapseView').on 'shown.bs.collapse', ->
+							$('#accordionToggle').addClass 'updown'
 							$('#accordionToggle').text 'Collapse'
 
 					onQuestionChange:(model)->

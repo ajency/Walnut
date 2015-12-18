@@ -151,7 +151,7 @@ define ['app'
 		class ContentGroupViewLayout extends Marionette.Layout
 
 			template: '<div class="teacher-app">
-						  <div id="collection-details-region"></div>
+						  <div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div>
 						</div>
 						<div id="content-display-region"></div>'
 

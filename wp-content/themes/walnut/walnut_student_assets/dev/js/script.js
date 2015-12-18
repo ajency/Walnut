@@ -140,7 +140,7 @@ $(function() {
 
     //Grid load effect onload
 
-     window.scrollReveal = new scrollReveal();
+//     window.scrollReveal = new scrollReveal();
 
 
     //Notification popover
@@ -178,6 +178,4 @@ $(function() {
     }).data('bs.popover').tip().addClass('dashboard-popover animated shake');
 
     }
-
-
 });
