@@ -1597,6 +1597,7 @@ lesshat-selector {
 }
 .teacher-app #collection-details-region {
   margin-top: 50px;
+  padding-top: 5px;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .teacher-app #collection-details-region {
@@ -1817,6 +1818,9 @@ lesshat-selector {
   max-width: 95%;
   margin: 5px auto;
 }
+.qstnInfo {
+  display: none;
+}
 .video-holder {
   width: 95%;
   margin: 0 auto;
@@ -1905,47 +1909,116 @@ lesshat-selector {
   font-size: 1em;
   line-height: 20px;
 }
-.video-holder .qstnInfo {
+.video-details {
+  position: absolute;
+  max-width: 760px;
+  text-align: left;
+  right: 0;
+  margin: 0 auto;
+  top: -55px;
+  left: 0;
+  padding: 18px 19px;
+  background: #eee;
+}
+.video-sidebar {
+  position: absolute;
+  left: -265px;
+  z-index: 1;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.video-sidebar .video-lecture-parts {
+  background: #eee;
+  text-align: center;
+}
+.video-sidebar .open-sidebar {
+  width: 60px;
+  text-align: center;
+  padding-top: 10px;
+  color: #FFF;
+  background: #868686 none repeat scroll 0% 0%;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  height: 60px;
+}
+.video-sidebar .open-sidebar i {
+  font-size: 2.5em;
+}
+.contentTime,
+.contentInfo {
+  background: #fff;
+  box-shadow: none;
+  top: 261px;
+  padding: 0;
+}
+.contentTime {
+  left: 90px;
+}
+.contentInfo {
+  right: 90px;
+}
+.video-lecture-parts {
+  background: #fff;
+  padding: 25px;
+}
+.video-lecture-parts .modTime {
   display: none;
 }
-.video-holder #content-board {
+.video-lecture-parts > div {
+  margin: 15px 0;
+}
+.video-lecture-parts .controls {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  margin-top: 30px;
+  text-align: center;
+}
+.video-lecture-parts .controls > a {
+  color: #fe9f99;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.video-lecture-parts .controls > a img {
+  width: 80%;
+}
+.video-lecture-parts .lecture-details {
+  margin: 50px 0;
+}
+.video-lecture-parts .lecture-details > div {
+  margin: 15px 0;
+}
+.video-lecture-parts .lecture-details > div h4 {
   margin: 0;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-flex: 1 50%;
-  -ms-flex: 1 50%;
-  flex: 1 50%;
+  padding: 5px 0;
+  text-transform: uppercase;
+  font-weight: lighter;
 }
-.video-holder #content-board #myCanvas {
-  max-width: initial;
-  margin: 0 10px;
-  padding: 0;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:first-child {
-  padding: 0;
-  margin: 2px 0 2px;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:first-child .element-markup .video .videoWrapper {
-  padding-bottom: 41.2%;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child {
-  padding: 15px 7px;
-  -webkit-box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
-  -moz-box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
-  font-family: open-sans;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child .text {
-  font-size: 1.3em;
-  font-weight: bold;
-}
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child .text p {
+.video-lecture-parts .lecture-details > div h4:first-child {
   color: #602f1a;
-  line-height: 30px;
+  font-size: 1.1em;
 }
-.video-holder #content-board #myCanvas #question-area .element-wrapper:last-child .text p a {
+.video-lecture-parts .lecture-details > div h4:last-child {
   color: #69b8b5;
-  display: block;
+  font-size: 1em;
+  line-height: 20px;
 }
 .quiz-subj {
   -webkit-box-shadow: 10px 0 15px -6px #cccccc, -12px 0 8px -4px #cccccc;
@@ -1967,11 +2040,15 @@ lesshat-selector {
 }
 .teacher-app #attempts-region .grid.vertical.blue {
   border-left: 0;
-  padding: 0 12px !important;
+  margin: 0;
+  -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title {
   border-left: 4px solid #69b8b5;
-  padding: 8px;
+  padding: 20px 15px;
+  background: #eee;
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title .tools > a.expand {
   background-position: -95px -40px;
@@ -1992,13 +2069,11 @@ lesshat-selector {
 .teacher-app #attempts-region .grid .grid-body h4 {
   font-size: 1.2em;
   margin: 0;
+  color: #602f1a;
 }
 .teacher-app #attempts-region #attempts_list .row .p-b-5 button {
   background: #69b8b5;
   border: 0;
-}
-.teacher-app #quiz-details-region {
-  margin-top: 20px;
 }
 .teacher-app #quiz-details-region > div {
   padding-bottom: 5px;
@@ -2105,6 +2180,9 @@ lesshat-selector {
   margin: 0 auto;
   top: 40px;
 }
+.all-d-best {
+  margin: 30px 0;
+}
 .quizComment {
   display: none;
 }
@@ -2117,6 +2195,14 @@ lesshat-selector {
 #quiz-description-region {
   margin: 0 auto;
   max-width: 50%;
+}
+@media (max-width: 1230px) {
+  #quiz-description-region {
+    max-width: 80%;
+  }
+}
+#quiz-description-region .pieceWrapper {
+  display: block;
 }
 #quiz-description-region .pieceWrapper .quiz-info {
   padding: 20px !important;
@@ -2172,6 +2258,11 @@ lesshat-selector {
   margin: 0 auto;
   max-width: 50%;
 }
+@media (max-width: 1230px) {
+  #question-display-region > div {
+    max-width: 80%;
+  }
+}
 #question-display-region > div #content-board {
   -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
@@ -2187,9 +2278,9 @@ lesshat-selector {
   min-height: 460px !important;
   max-width: 100%;
 }
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+@media (max-width: 1230px) {
   #question-display-region > div #content-board.quizContent #myCanvas {
-    margin-top: 50px;
+    min-height: 360px !important;
   }
 }
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
@@ -2392,9 +2483,42 @@ lesshat-selector {
     position: static;
   }
 }
+@media (max-width: 1230px) {
+  .timerBox {
+    visibility: visible;
+    background: none;
+    box-shadow: none;
+  }
+}
 .timerBox .container-grey {
   background: none;
   box-shadow: none;
+}
+@media (max-width: 1230px) {
+  .timerBox .container-grey {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    margin: 0 auto;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-box-shadow: 0 0px 25px 8px rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 0px 25px 8px rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0px 25px 8px rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+    padding: 15px 0;
+  }
+}
+@media (max-width: 1230px) {
+  .timerBox .container-grey .timerStrip {
+    display: none;
+  }
+}
+.timerBox .container-grey .bold {
+  display: none;
 }
 .timerBox .container-grey #completed-quiz {
   margin: 0;
@@ -2413,6 +2537,14 @@ lesshat-selector {
   top: -25px;
   right: 152px;
 }
+@media (max-width: 1230px) {
+  .timerBox .container-grey #downUpTimer {
+    top: inherit;
+    position: static;
+    right: inherit;
+    padding: 8px;
+  }
+}
 .timerBox .container-grey #downUpTimer > span > span {
   background: #469290;
   border-radius: 5px;
@@ -2421,11 +2553,21 @@ lesshat-selector {
   color: #fff;
   font-size: 1em;
 }
+@media (max-width: 1230px) {
+  .timerBox .container-grey #downUpTimer > span > span {
+    font-size: 0.9em;
+  }
+}
 .timerBox .container-grey #downUpTimer > span > span:first-child {
   margin-right: 2px;
 }
 .timerBox .container-grey #downUpTimer > span > span > span {
   color: #fff;
+}
+@media (max-width: 1230px) {
+  .timerBox .container-grey:last-child {
+    display: none;
+  }
 }
 .timerBox .small-text {
   padding: 10px 0;
@@ -2438,6 +2580,13 @@ lesshat-selector {
   top: -20px;
   right: 16px;
   border: 0;
+}
+@media (max-width: 1230px) {
+  .timerBox .endQuiz {
+    position: static;
+    top: inherit;
+    right: inherit;
+  }
 }
 .timerBox .endQuiz button {
   background: #459290;
@@ -2618,12 +2767,6 @@ lesshat-selector {
   font-size: 1.1em;
   line-height: 1.5;
   border-radius: 8px;
-}
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
-  .quizActions button {
-    width: 32%;
-    font-size: 1em;
-  }
 }
 .quizActions button i:before {
   padding-left: 5px;

@@ -46,10 +46,12 @@
              &.vertical {
                  &.blue {
                      border-left: 0;
-                     padding: 0 12px !important;
+                     margin: 0;
+                     .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
                      .grid-title{
                         border-left: 4px solid @dashboard-color;
-                        padding: 8px;
+                        padding: 20px 15px;
+                        background: #eee;
                         .tools{
                             & > a{
                                 &.expand{
@@ -77,6 +79,7 @@
                  h4 {
                      font-size: 1.2em;
                      margin: 0;
+                     color: @quiz-link-color3;
                  }
              }
          }
@@ -97,10 +100,7 @@
      // ---------------------------
 
      #quiz-details-region {
-         margin-top: 20px;
-        // @media @desktop-def{
-        //     padding-bottom: 80px;
-        // }
+         // margin-top: 20px;
          & > div {
              padding-bottom: 5px;
              background: #F0F0F0;
@@ -222,3 +222,8 @@
      }
  }
 
+
+
+ .all-d-best{
+        margin:30px 0;
+ }
