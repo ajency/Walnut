@@ -193,6 +193,8 @@ define ['app'
 				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
 				'click .change-status button'			: 'changeStatus'
 				'click .move-content button'			: 'moveContent'
+				'change #status_dropdown'				: 'show_destination_textbooks'
+				'change #textbooks-filter'				: 'show_destination_chapters'
 
 
 			initialize : ->
@@ -285,7 +287,19 @@ define ['app'
 							.addClass 'fa-check'
 
 
+			show_destination_textbooks:(e)=>
+					textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
+					@$el.find '#destination_textbook'
+					.html textbookFiltersHTML	
+					@$el.find '#sections-filter'
+						.hide()
+					@$el.find '#subsections-filter'
+						.hide()
 
+			show_destination_chapters:(e)=>
+					term_id = $("#destination_textbook option:selected").val()
+					chaptersCollection = App.request "get:chapters", ('parent': term_id)
+                		          
 
 			changeStatus:(e)=>
 				data = {}

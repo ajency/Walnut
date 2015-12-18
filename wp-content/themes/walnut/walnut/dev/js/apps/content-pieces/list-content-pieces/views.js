@@ -190,6 +190,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       function ListView() {
         this.changeStatus = bind(this.changeStatus, this);
+        this.show_destination_chapters = bind(this.show_destination_chapters, this);
+        this.show_destination_textbooks = bind(this.show_destination_textbooks, this);
         this.moveContent = bind(this.moveContent, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
@@ -221,7 +223,9 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
         'click .change-status button': 'changeStatus',
-        'click .move-content button': 'moveContent'
+        'click .move-content button': 'moveContent',
+        'change #status_dropdown': 'show_destination_textbooks',
+        'change #textbooks-filter': 'show_destination_chapters'
       };
 
       ListView.prototype.initialize = function() {
@@ -317,6 +321,25 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
             });
           };
         })(this));
+      };
+
+      ListView.prototype.show_destination_textbooks = function(e) {
+        var textbookFiltersHTML;
+        textbookFiltersHTML = $.showTextbookFilters({
+          textbooks: this.textbooksCollection
+        });
+        this.$el.find('#destination_textbook').html(textbookFiltersHTML);
+        this.$el.find('#sections-filter').hide();
+        return this.$el.find('#subsections-filter').hide();
+      };
+
+      ListView.prototype.show_destination_chapters = function(e) {
+        var chaptersCollection, term_id;
+        term_id = $("#destination_textbook option:selected").val();
+        chaptersCollection = App.request("get:chapters", {
+          'parent': term_id
+        });
+        console.log(chaptersCollection); 
       };
 
       ListView.prototype.changeStatus = function(e) {

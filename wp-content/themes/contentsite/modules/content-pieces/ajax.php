@@ -64,8 +64,15 @@ function ajax_update_content_piece_status(){
 
     foreach ($ids as $id){
         if(!$id) continue;
-        $data= array('ID'=>$id,'post_status'=>$_POST['status']);
-        $content_id = wp_update_post($data);
+        if($_POST['status']=='archive' || $_POST['status']=='publish'){
+            $data= array('ID'=>$id,'post_status'=>$_POST['status']);
+            $content_id = wp_update_post($data);
+        }else if($_POST['status']=='delete'){
+            wp_delete_post($id);
+        }
+        else if($_POST['status']=='move'){
+
+        }
     }
 
     return wp_send_json(array('code' => 'OK'));
@@ -79,7 +86,10 @@ add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_sta
 function ajax_bulk_move_content_pieces(){
 
     $ids = $_POST['IDs'];
-
+    foreach ($ids as $id){
+        if(!$id) continue;
+        
+    }    
     return wp_send_json(array('code' => 'OK'));
 
 }
