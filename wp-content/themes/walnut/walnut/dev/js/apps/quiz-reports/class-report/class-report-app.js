@@ -5,7 +5,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/modules-listing/controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app', 'apps/quiz-reports/class-report/schedule-quiz-app', 'apps/quiz-reports/class-report/recipients-popup/controller'], function(App, RegionController) {
   return App.module("ClassReportApp", function(ClassReportApp, App) {
     ClassReportApp.Controller = (function(superClass) {
-      var divisionsCollection, quizzes, students, textbooksCollection;
+      var divisionsCollection, quizzes, schoolsCollection, students, textbooksCollection;
 
       extend(Controller, superClass);
 
@@ -13,6 +13,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
         this._showViews = bind(this._showViews, this);
         this._fetchQuizzes = bind(this._fetchQuizzes, this);
         this._fetchTextbooks = bind(this._fetchTextbooks, this);
+        this._fetchDivisions = bind(this._fetchDivisions, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -22,10 +23,17 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
 
       divisionsCollection = null;
 
+      schoolsCollection = null;
+
       quizzes = null;
 
       Controller.prototype.initialize = function() {
         this.division = 0;
+        schoolsCollection = App.request("get:all:schools");
+        return App.execute("when:fetched", schoolsCollection, this._fetchDivisions);
+      };
+
+      Controller.prototype._fetchDivisions = function() {
         divisionsCollection = App.request("get:divisions");
         return App.execute("when:fetched", divisionsCollection, this._fetchTextbooks);
       };
@@ -37,11 +45,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
         textbooksCollection = App.request("get:textbooks", {
           'class_id': class_id
         });
-        return App.execute("when:fetched", textbooksCollection, (function(_this) {
-          return function() {
-            return App.execute("when:fetched", textbooksCollection, _this._fetchQuizzes);
-          };
+        App.execute("when:fetched", textbooksCollection, (function(_this) {
+          return function() {};
         })(this));
+        return App.execute("when:fetched", textbooksCollection, this._fetchQuizzes);
       };
 
       Controller.prototype._fetchQuizzes = function() {

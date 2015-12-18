@@ -603,3 +603,26 @@ function create_new_element(&$ele)
 
     return $wpdb->insert_id;
 }
+
+//Added By Kapil start to add column ID in http://synapselearning.net/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
+add_filter('manage_edit-textbook_columns', 'change_columns_header', 10, 3);
+function change_columns_header($columns) {
+    $columns['id'] = 'ID';
+    return $columns;
+}
+
+function id_column_register_sortable( $columns ) {
+$columns['id'] = "ID";
+return $columns;
+}
+add_filter( 'manage_edit-textbook_sortable_columns', 'id_column_register_sortable' );
+
+function manage_textbook_custom_fields($deprecated,$column_name,$term_id)
+{
+ if ($column_name == 'id') {
+   echo $term_id;
+ }
+}
+add_filter ('manage_textbook_custom_column', 'manage_textbook_custom_fields', 10,3);
+
+//Added By Kapil ends to add column ID in http://synapselearning.net/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
