@@ -81,8 +81,8 @@ if( isset($current_user->roles[0]) && $current_user->roles[0]=='student'){
                 <div class="content">
                      <?php if(!is_multisite()) :?>
                         <?php if(!school_is_syncd()) : ?>
-                    <p align="center">You may not see any data if you have not synced.</p> 
-                    <p align="center">Sync data from the drop down on the top right corner after logging in<p> 
+                    <!-- <p align="center">You may not see any data if you have not synced.</p>  -->
+                    <!-- <p align="center">Sync data from the drop down on the top right corner after logging in<p>  -->
                     <iframe style="position:absolute;top:-5000px" src="<?php  site_url() ?>/wp-admin/options-permalink.php"></iframe>    
                         <?php endif; ?>
                     <?php endif;?>
