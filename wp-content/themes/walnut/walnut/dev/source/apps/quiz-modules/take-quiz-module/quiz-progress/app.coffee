@@ -70,6 +70,10 @@ define ['app'
                         @quizModel = Marionette.getOption @,'quizModel'
 
                     onShow:->
+                        $('.progressStrip').click ->
+                          $('.quizProgress').toggleClass 'progress-expand'
+                          return
+    
                         @$el.find "div.holder"
                         .jPages
                             containerID: "quiz-items"

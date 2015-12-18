@@ -102,6 +102,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       QuizProgressView.prototype.onShow = function() {
         var currentQuestion;
+        $('.progressStrip').click(function() {
+          $('.quizProgress').toggleClass('progress-expand');
+        });
         this.$el.find("div.holder").jPages({
           containerID: "quiz-items",
           perPage: 9,

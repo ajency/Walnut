@@ -195,7 +195,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         return ContentGroupViewLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupViewLayout.prototype.template = '<div class="teacher-app"> <div id="collection-details-region"></div> </div> <div id="content-display-region"></div>';
+      ContentGroupViewLayout.prototype.template = '<div class="teacher-app"> <div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div> </div> <div id="content-display-region"></div>';
 
       ContentGroupViewLayout.prototype.className = '';
 
