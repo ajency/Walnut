@@ -2068,9 +2068,6 @@ lesshat-selector {
   text-transform: uppercase;
   text-decoration: none;
 }
-.video-lecture-parts .controls > a img {
-  width: 80%;
-}
 .video-lecture-parts .lecture-details {
   margin: 50px 0;
 }
