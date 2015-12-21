@@ -66,9 +66,11 @@ define(['marionette'], function(Marionette) {
         });
       }
       if (user.current_user_can('student')) {
-        App.navigate('students/dashboard', {
+        $("body").hide();
+        window.location.href = SITEURL+'/dashboard-student';
+        /*App.navigate('students/dashboard', {
           trigger: true
-        });
+        });*/
       }
       App.execute("show:breadcrumbapp", {
         region: App.breadcrumbRegion
