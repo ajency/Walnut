@@ -686,6 +686,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   z-index: 99999;
   top: 150px;
 }
+@media only screen and (min-width: 530px) and (max-width: 767px) {
+  .signin-card .signin-wrapper {
+    top: 95px;
+  }
+}
 .signin-card .signin-wrapper .wrapped {
   -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
@@ -875,7 +880,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   background: #8cc8c6;
 }
 .intro {
-  padding: 35px;
+  padding: 20px;
 }
 .intro .welcome-text {
   font-size: 1.9em;
@@ -1969,7 +1974,7 @@ lesshat-selector {
 }
 .video-sidebar {
   position: absolute;
-  left: 0px;
+  left: -265px;
   z-index: 1;
   top: 150px;
   -webkit-transition-duration: 0.3s;
@@ -1982,18 +1987,8 @@ lesshat-selector {
   display: -ms-flexbox;
   display: flex;
 }
-@media (max-width) {
-  .video-sidebar {
-    left: -265px;
-  }
-}
 .video-sidebar.video-is-open {
-  left: -265px;
-}
-@media (max-width: 1230px) {
-  .video-sidebar.video-is-open {
-    left: 0px;
-  }
+  left: 0px;
 }
 .video-sidebar .video-lecture-parts {
   background: #eee;
@@ -2010,6 +2005,7 @@ lesshat-selector {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
   height: 60px;
+  cursor: pointer;
 }
 .video-sidebar .open-sidebar i {
   font-size: 2.5em;
@@ -2030,7 +2026,7 @@ lesshat-selector {
 .contentTime {
   left: 90px;
 }
-@media (max-width: 1295px) {
+@media (max-width: 1330px) {
   .contentTime {
     left: 0;
   }
@@ -2038,7 +2034,7 @@ lesshat-selector {
 .contentInfo {
   right: 90px;
 }
-@media (max-width: 1295px) {
+@media (max-width: 1330px) {
   .contentInfo {
     right: 0;
   }
@@ -2076,9 +2072,6 @@ lesshat-selector {
   color: #fe9f99;
   text-transform: uppercase;
   text-decoration: none;
-}
-.video-lecture-parts .controls > a img {
-  width: 80%;
 }
 .video-lecture-parts .lecture-details {
   margin: 50px 0;
@@ -2936,6 +2929,9 @@ lesshat-selector {
 .quizActions .submit2 #submit-question {
   width: 100%;
 }
+.quizActions .submit2.submit-pushed {
+  top: -209px;
+}
 .teacher-app #quiz-details-region > div:last-child #try-again {
   margin: 18px 0px 18px 30px;
   background: #69b8b5;
@@ -3028,4 +3024,3 @@ lesshat-selector {
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-success i:before {
   content: "\f058";
 }
-/*version 1.0.0.0 */
