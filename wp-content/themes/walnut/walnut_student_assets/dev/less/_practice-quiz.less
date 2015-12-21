@@ -58,7 +58,7 @@
             & > h3{
                margin: 0;
                font-size: 1.5em;
-               padding-right: 10px;
+               padding-right: 15px;
                color: @quiz-link-color3;
             }
             & > a{
@@ -73,9 +73,15 @@
                     display: inline-block;
                     font: normal normal normal 14px/1 FontAwesome;
                     font-size: inherit;
-                    padding-left: 5px;
+                    padding: 0 5px;
                     text-rendering: auto;
+                    .transition(all ease-in-out 0.5s);
                     -webkit-font-smoothing: antialiased;
+                }
+                &.updown{
+                    &:after{
+                        .transform(rotate(180deg));
+                    }
                 }   
             }
         }
@@ -164,39 +170,56 @@
  #quiz-progress-region {
      .quizProgress {
         padding: 0;
-
         margin: 0;
         float: none;
         position: fixed;
         top: 150px;
-        left: -298px;
+        left: 0px;
         width:260px;
         .transition-duration(0.3s);
-        &:hover{
-            left: 15px;
+        @media (max-width: 1230px) {
+            left: -260px;
+        }
+        &.progress-expand{
+            left: -260px;
+            @media (max-width: 1230px) {
+                left: 0;
+            }
             .progressStrip{
-                left: 260px;
+                left:0;
+                @media (max-width: 1230px) {
+                    left: 260px;
+                }
             }
         }
-
          .progressStrip{
             display: block;
             position: fixed;
             top: 150px;
-            left: 0px;
+            left: 260px;
             height: 60px;
             width: 50px;
             text-align: center;
-            padding-top: 5px;
+            padding-top: 8px;
             color: #ffffff;
             background: #868686;
+            cursor: pointer;
             .transition-duration(0.3s);
+            @media (max-width: 1230px) {
+                left: 0;
+                padding-top: 6px;
+            }            
                 span{
+                    height: 45px;
+                    width: 45px;
+                    border: 3px solid #fff;
+                    border-radius: 50%;
                     &:before{
                         content: 'Q';
-                        font-size: 3em;
+                        font-size: 2em;
+                        line-height: 35px;
                         @media (max-width: 1200px){
-                            font-size: 1.5em;
+                            font-size: 0.9em;
                         }
                     }
                 }
@@ -432,9 +455,26 @@
         #completed-quiz{
             margin:0;
             padding: 0;
+            margin: 0;
+            padding: 0;
+            visibility: visible;
+            position: absolute;
+            top: -2px;
+            right: 173px;
+            @media (max-width: 1230px) {
+                position: static;
+                top: inherit;
+                right: inherit;
+                padding-right: 20px;
+            }
             .qstnStatus{
-                font-size: 1.3em;
+                font-size: 1em;
                 padding: 8px 0;
+                color: #FCEC34;
+                text-transform: uppercase;
+                @media (max-width: 1230px) {
+                    color: #259b24;
+                }
                 i{
                     vertical-align: middle;
                 }
@@ -445,7 +485,7 @@
             position: absolute;
             top: -25px;
             right: 152px;
-            @media (max-width:1230px) {
+            @media (max-width: 1230px) {
                 top:inherit;
                 position: static;
                 right: inherit;
@@ -583,13 +623,6 @@
  .timerBox, .quizProgress {
      width: 300px;
      height: 510px;
-    // margin: 0;
-    // float: none;
-    // position: fixed;
-    // top: 150px;
-    // left: -296px;
-    // z-index: 9999;
-    // .transition-duration(0.3s);
  }
  
 
@@ -605,7 +638,7 @@
     text-align: right;
     max-width: 100%;
     #previous-question,#next-question{
-    	display: none !important;
+    	// display: none !important;
     }
     button{
 	    border: 0;

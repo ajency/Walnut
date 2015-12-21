@@ -9,7 +9,7 @@ function fetch_all_divisions(){
 function my_profile() {
 	// reset a users password
 	if(isset($_POST['student_action']) && $_POST['student_action'] == 'update-my-profile') {
-		$_POST['primary_blog'] =13;
+		$_POST['primary_blog'] =14;
 		$_POST['source_domain']='walnut.synapselearning.net';
 
 		$current_user = wp_get_current_user();
