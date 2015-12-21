@@ -2924,6 +2924,9 @@ lesshat-selector {
 .quizActions .submit2 #submit-question {
   width: 100%;
 }
+.quizActions .submit2.submit-pushed {
+  top: -209px;
+}
 .teacher-app #quiz-details-region > div:last-child #try-again {
   margin: 18px 0px 18px 30px;
   background: #69b8b5;
