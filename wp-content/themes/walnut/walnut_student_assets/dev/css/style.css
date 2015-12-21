@@ -18,6 +18,12 @@ h4,
 h5 {
   font-weight: bold !important;
 }
+a img {
+  border: 0;
+}
+a img:active {
+  border: 0;
+}
 .body-push {
   margin-bottom: 100px;
 }
