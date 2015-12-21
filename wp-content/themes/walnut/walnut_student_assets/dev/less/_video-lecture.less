@@ -200,19 +200,19 @@
 
 .video-sidebar{
 	position: absolute;
-	left: 0px;
+	left: -265px;
 	z-index: 1;
 	top: 150px;
 	.transition-duration(0.3s);
 	.display(flex);
-	@media (max-width) {
-		left: -265px;
-	}
+	// @media (max-width: 1230px) {
+	// 	left: -265px;
+	// }
 	&.video-is-open{
-		left: -265px;
-		@media (max-width: 1230px) {
-			left: 0px;
-		}
+		left: 0px;
+		// @media (max-width: 1230px) {
+		// 	left: 0px;
+		// }
 	}
 	.video-lecture-parts{
 		background: #eee;
@@ -226,6 +226,7 @@
 	    background: #868686 none repeat scroll 0% 0%;
 	    .transition-duration(0.3s);
 	    height: 60px;
+	    cursor: pointer;
 	    i{
 	    	font-size: 2.5em;
 	    }
@@ -247,14 +248,14 @@
 
 .contentTime{
 	left: 90px;
-	@media (max-width: 1295px) {
+	@media (max-width: 1330px) {
 		left: 0;
 	}	
 }
 
 .contentInfo{
 	right: 90px;
-	@media (max-width: 1295px) {
+	@media (max-width: 1330px) {
 		right: 0;
 	}	
 }
