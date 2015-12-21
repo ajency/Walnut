@@ -1922,6 +1922,11 @@ lesshat-selector {
 .video-details h4 span {
   color: #69b8b5;
 }
+@media (max-width: 1295px) {
+  .video-details {
+    max-width: 600px;
+  }
+}
 .lesson {
   position: absolute;
   width: 100%;
@@ -1933,6 +1938,12 @@ lesshat-selector {
 }
 .lesson #content-board #myCanvas {
   padding: 0;
+}
+@media (max-width: 1295px) {
+  .lesson #content-board #myCanvas {
+    margin: 0 auto;
+    max-width: 600px;
+  }
 }
 .lesson #content-board #myCanvas #question-area .element-wrapper:first-child {
   padding: 0;
@@ -2011,11 +2022,27 @@ lesshat-selector {
   top: 175px;
   padding: 0;
 }
+@media (max-width: 1295px) {
+  .contentTime,
+  .contentInfo {
+    position: absolute;
+  }
+}
 .contentTime {
   left: 90px;
 }
+@media (max-width: 1295px) {
+  .contentTime {
+    left: 0;
+  }
+}
 .contentInfo {
   right: 90px;
+}
+@media (max-width: 1295px) {
+  .contentInfo {
+    right: 0;
+  }
 }
 .video-lecture-parts {
   background: #fff;

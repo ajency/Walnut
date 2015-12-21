@@ -140,6 +140,9 @@
     		color:@quiz-link-color1;
     	}
     }
+	@media (max-width: 1295px) {
+		max-width: 600px;
+	}    
 }
 
 
@@ -157,6 +160,10 @@
 			margin: 0;
 			#myCanvas{
 				padding: 0;
+				@media (max-width: 1295px) {
+					margin:0 auto;
+					max-width: 600px;
+				}
 				#question-area{
 					.element-wrapper:first-child{
 						padding:0;
@@ -233,14 +240,23 @@
 	box-shadow: none;
 	top: 175px;
 	padding: 0;
+	@media (max-width: 1295px) {
+		position: absolute;
+	}
 }
 
 .contentTime{
 	left: 90px;
+	@media (max-width: 1295px) {
+		left: 0;
+	}	
 }
 
 .contentInfo{
 	right: 90px;
+	@media (max-width: 1295px) {
+		right: 0;
+	}	
 }
 
 
