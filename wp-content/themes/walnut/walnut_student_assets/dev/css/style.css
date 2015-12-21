@@ -2433,7 +2433,7 @@ lesshat-selector {
 #quiz-progress-region .quizProgress .progressStrip span {
   height: 45px;
   width: 45px;
-  border: 3px solid #fff;
+  border: 4px solid #fff;
   border-radius: 50%;
 }
 #quiz-progress-region .quizProgress .progressStrip span:before {
