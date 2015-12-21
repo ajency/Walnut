@@ -37,10 +37,11 @@ define ['detect', 'jquery'], (detect, $)->
         if _.isUndefined navigator.connection
             true
 
-        else
-            if navigator.connection.type is Connection.NONE
-                false
-            else true
+        else true
+
+            #if navigator.connection.type is Connection.NONE
+            #    false
+            #else true
 
     #Mobile events
     document.addEventListener("online", onOnline, false);

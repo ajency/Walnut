@@ -30,11 +30,7 @@ define(['detect', 'jquery'], function(detect, $) {
     if (_.isUndefined(navigator.connection)) {
       return true;
     } else {
-      if (navigator.connection.type === Connection.NONE) {
-        return false;
-      } else {
-        return true;
-      }
+      return true;
     }
   };
   document.addEventListener("online", onOnline, false);
