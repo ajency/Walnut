@@ -33,6 +33,7 @@ define ['app'
                         @teachersDashboard()
 
                     if App.request 'current:user:can', 'student'
+                        alert()
                         App.navigate 'students/dashboard'
                         @studentsDashboard()
 
