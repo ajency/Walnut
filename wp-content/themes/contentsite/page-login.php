@@ -82,7 +82,7 @@
                                             </div>
                                         </div>                                    
                                         <div class="row text-center">
-                                            <div class="col-sm-6 col-lg-6 border-rl">
+                                            <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
                                                         <img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block">
@@ -90,7 +90,7 @@
                                                     <h5><a href="http://walnut.synapsedu.info">Login at Shivane</a></h5>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-lg-6">
+                                            <div class="col-xs-6 col-sm-6 col-lg-6">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
                                                           <img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block">
@@ -107,7 +107,7 @@
                                             </div>
                                         </div>                                          
                                         <div class="row text-center">
-                                            <div class="col-sm-6 col-lg-6 border-rl">
+                                            <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                               <div class="social-signup">
                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
@@ -118,7 +118,7 @@
                                                  </div>
                                               </div>
                                             </div>
-                                            <div class="col-sm-6 col-lg-6">
+                                            <div class="col-xs-6 col-sm-6 col-lg-6">
                                               <div class="social-signup">
                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
@@ -130,13 +130,6 @@
                                               </div>
                                             </div>
                                         </div>
-                                        <!-- <hr>
-                                        <div class="row text-center">
-                                            <div class="col-md-12 sys-login">
-                                                 <h5><a href="">Content Creator Login</a></h5>
-                                                 <h5><a href="">School Login</a></h5>
-                                            </div>
-                                        </div> -->
                                     </div>
                                 </div>
                             </form>

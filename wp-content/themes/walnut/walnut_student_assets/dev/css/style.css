@@ -686,6 +686,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   z-index: 99999;
   top: 150px;
 }
+@media only screen and (min-width: 530px) and (max-width: 767px) {
+  .signin-card .signin-wrapper {
+    top: 95px;
+  }
+}
 .signin-card .signin-wrapper .wrapped {
   -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
@@ -875,7 +880,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   background: #8cc8c6;
 }
 .intro {
-  padding: 35px;
+  padding: 20px;
 }
 .intro .welcome-text {
   font-size: 1.9em;
