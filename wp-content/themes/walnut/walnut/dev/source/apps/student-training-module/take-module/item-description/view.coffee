@@ -24,7 +24,9 @@ define ['app'
                 @mode = Marionette.getOption(@, 'display_mode')
 
             onShow:->
-
+                $('.open-sidebar').click ->
+                  $('.video-sidebar').toggleClass 'video-is-open'
+                  return
                 @$el.find('#correct-answer-col').hide() if @model.get('question_type') is 'multiple_eval'
 
                 @$el.find('#question-type-col, #correct-answer-col').hide() if @model.get('content_type') in ['content_piece','student_question']

@@ -45,6 +45,9 @@ define(['app', 'text!apps/student-training-module/take-module/item-description/t
 
       TopPanelView.prototype.onShow = function() {
         var ref, timeLeftOrElapsed;
+        $('.open-sidebar').click(function() {
+          $('.video-sidebar').toggleClass('video-is-open');
+        });
         if (this.model.get('question_type') === 'multiple_eval') {
           this.$el.find('#correct-answer-col').hide();
         }

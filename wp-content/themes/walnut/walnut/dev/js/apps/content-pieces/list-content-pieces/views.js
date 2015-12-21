@@ -336,10 +336,9 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.show_destination_chapters = function(e) {
         var chaptersCollection, term_id;
         term_id = $("#destination_textbook option:selected").val();
-        chaptersCollection = App.request("get:chapters", {
+        return chaptersCollection = App.request("get:chapters", {
           'parent': term_id
         });
-        console.log(chaptersCollection); 
       };
 
       ListView.prototype.changeStatus = function(e) {

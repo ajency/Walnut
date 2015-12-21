@@ -151,9 +151,13 @@ define ['app'
 		class ContentGroupViewLayout extends Marionette.Layout
 
 			template: '<div class="teacher-app">
-						  <div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div>
+						<div class="direction text-center">
+						<div class="icon goto-prev-page"><a href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div>
+						<p class="welcome-text">You\'re here to view the My Body Organ Lecture</p>
 						</div>
-						<div id="content-display-region"></div>'
+						<div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div>
+						</div>
+					   <div id="content-display-region"></div>'
 
 			className: ''
 

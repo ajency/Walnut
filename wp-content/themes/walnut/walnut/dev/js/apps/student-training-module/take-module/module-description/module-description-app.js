@@ -203,7 +203,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.onTopPanelCheckLastQuestion = function() {
         if (this.isLastContentPiece) {
-          return $("#top-panel-question-done").html('<i class="fa fa-forward"></i> Finish Module');
+          return $("#top-panel-question-done").html("<img src='wp-content/themes/walnut/walnut_student_assets/dev/images/stop.png' class='img-reponsive center-block'/><h4>Finish Module</h4>");
         }
       };
 
