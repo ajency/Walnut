@@ -33,9 +33,8 @@ define ['app'
                         @teachersDashboard()
 
                     if App.request 'current:user:can', 'student'
-                        alert()
-                        App.navigate 'students/dashboard'
-                        @studentsDashboard()
+                      $("body").hide()
+                      return window.location.href = SITEURL + '/dashboard-student'
 
             teachersDashboard: ->
                 if $.allowRoute 'dashboard'
