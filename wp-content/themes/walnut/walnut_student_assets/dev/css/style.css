@@ -2120,7 +2120,6 @@ lesshat-selector {
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title {
-  border-left: 4px solid #69b8b5;
   padding: 20px 15px;
   background: #eee;
 }
@@ -2150,12 +2149,10 @@ lesshat-selector {
   border: 0;
 }
 .teacher-app #quiz-details-region > div {
-  padding-bottom: 5px;
   background: #F0F0F0;
   -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
-  border-left: 4px solid #69b8b5;
 }
 .teacher-app #quiz-details-region > div .grid {
   margin-bottom: 0;
@@ -2182,9 +2179,8 @@ lesshat-selector {
 }
 .teacher-app #quiz-details-region > div .grid .grid-title h3 span,
 .teacher-app #quiz-details-region > div .grid .grid-body h3 span {
-  font-size: 0.9em;
   line-height: 22px;
-  color: #69b8b5 !important;
+  color: #f2593a !important;
 }
 .teacher-app #quiz-details-region > div .grid .grid-title .small-text .col-md-6,
 .teacher-app #quiz-details-region > div .grid .grid-body .small-text .col-md-6 {
@@ -2209,9 +2205,11 @@ lesshat-selector {
   font-size: 1.1em;
 }
 .teacher-app #quiz-details-region > div .grid .grid-body h3 > span {
-  font-size: 0.9em;
+  font-size: 1em;
   line-height: 22px;
-  color: #69b8b5 !important;
+  color: #602f1a !important;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 .teacher-app #quiz-details-region > div .grid .grid-body:last-child {
   color: #69b8b5;
@@ -2223,27 +2221,17 @@ lesshat-selector {
   -moz-box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   border: 0;
-  line-height: 45px;
+  width: 15%;
   font-size: 1.1em;
-}
-.teacher-app #quiz-details-region > div:last-child #take-quiz:before,
-.teacher-app #quiz-details-region > div:last-child #take-quiz:after {
-  display: inline-block;
-  font: normal normal normal 2.5em FontAwesome;
-  color: #ea340f;
+  color: #fff;
 }
 .teacher-app #quiz-details-region > div:last-child #take-quiz:before {
-  content: "";
-  margin-right: 15px;
-  float: left;
-  background: url('../../images/dashboard_03.png') no-repeat;
-  width: 46px;
-  height: 46px;
-}
-.teacher-app #quiz-details-region > div:last-child #take-quiz:after {
-  content: "\f105";
-  float: right;
-  padding-left: 15px;
+  content: "\f01d";
+  padding-right: 15px;
+  vertical-align: sub;
+  display: inline-block;
+  font: normal normal normal 1.5em FontAwesome;
+  color: #ea340f;
 }
 .teacher-app #quiz-details-region .all-d-best {
   position: absolute;
@@ -2939,17 +2927,17 @@ lesshat-selector {
   -moz-box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   border: 0;
-  line-height: 45px;
+  width: 15%;
+  color: #fff;
   font-size: 1.1em;
 }
-.teacher-app #quiz-details-region > div:last-child #try-again:before {
-  content: "\f0ec";
+.teacher-app #quiz-details-region > div:last-child #try-again:after {
+  content: "\f105";
   font: normal normal normal 1.5em FontAwesome;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  padding-right: 10px;
-  color: #8cc8c6;
-  vertical-align: inherit;
+  padding-left: 10px;
+  vertical-align: sub;
 }
 .teacher-app #quiz-details-region > div .grid .grid-body .summary-section {
   text-transform: uppercase;
