@@ -13,8 +13,15 @@ function student_fetch_name(){
 	$current_user = wp_get_current_user();	
 	$result       = $wpdb->get_results("select meta_value from wp_usermeta
 	   	       						   WHERE user_id = '". $current_user->ID ."' 
-	   	       						   and meta_key in ('first_name','last_name')");
-	return $result[0]->meta_value.' '.$result[1]->meta_value;
+	   	       						   and meta_key = 'first_name'");
+	$fn = $result[0]->meta_value;
+
+	$result       = $wpdb->get_results("select meta_value from wp_usermeta
+	   	       						   WHERE user_id = '". $current_user->ID ."' 
+	   	       						   and meta_key = 'last_name'");
+	$ln = $result[0]->meta_value;	
+
+	return $fn.' '.$ln;
 }
 
 
