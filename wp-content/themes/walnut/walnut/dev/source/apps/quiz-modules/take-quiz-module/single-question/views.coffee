@@ -35,9 +35,10 @@ define ['app'
 
                         if display_mode is 'replay'
                             data.showComment = true
+                            data.replay = true
 
                         else
-                            
+                            data.replay = false
                             data.show_skip = true
 
                             data.allow_submit_answer = true
@@ -80,7 +81,8 @@ define ['app'
                             if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                                 @$el.find '#last_question'
                                 .html 'This is the last question'
-
+                                @$el.find '#next-question'
+                                .hide()
                                 
 
                             else
