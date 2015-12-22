@@ -11,10 +11,6 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         return QuizModuleRouter.__super__.constructor.apply(this, arguments);
       }
 
-      $("#header-region").hide();
-
-      $("#left-nav-region").hide();
-
       QuizModuleRouter.prototype.appRoutes = {
         'create-quiz': 'createQuiz',
         'edit-quiz/:id': 'editQuiz',
@@ -48,6 +44,8 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         }
       },
       startQuizClassMode: function(tID, qID) {
+        $("#header-region").hide();
+        $("#left-nav-region").hide();
         if ($.allowRoute('view-quiz')) {
           return new QuizModuleApp.ViewQuiz.Controller({
             region: App.mainContentRegion,
