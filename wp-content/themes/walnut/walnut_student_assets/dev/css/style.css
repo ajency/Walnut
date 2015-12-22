@@ -2340,6 +2340,11 @@ lesshat-selector {
   padding-right: 15px;
   color: #602f1a;
 }
+@media (max-width: 1370px) {
+  #quiz-description-region .pieceWrapper .quiz-info > h3 {
+    font-size: 1.2em;
+  }
+}
 #quiz-description-region .pieceWrapper .quiz-info > a {
   margin: 0;
   display: inline-block !important;
@@ -2347,6 +2352,11 @@ lesshat-selector {
   font-size: 1.5em;
   text-decoration: none;
   color: #69b8b5 !important;
+}
+@media (max-width: 1370px) {
+  #quiz-description-region .pieceWrapper .quiz-info > a {
+    font-size: 1.2em;
+  }
 }
 #quiz-description-region .pieceWrapper .quiz-info > a:after {
   content: "\f107";
@@ -2401,9 +2411,9 @@ lesshat-selector {
   min-height: 460px !important;
   max-width: 100%;
 }
-@media (max-width: 1230px) {
+@media (max-width: 1370px) {
   #question-display-region > div #content-board.quizContent #myCanvas {
-    min-height: 360px !important;
+    min-height: 370px !important;
   }
 }
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
@@ -2413,6 +2423,11 @@ lesshat-selector {
   font-size: 1.5em;
   font-weight: bold;
   color: #602f1a;
+}
+@media (max-width: 1370px) {
+  #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {
+    font-size: 1.2em;
+  }
 }
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text > p > span {
   font-size: inherit !important;
@@ -2594,7 +2609,7 @@ lesshat-selector {
 }
 .customButtons {
   padding: 8px 15px;
-  margin: 12px 0;
+  margin: 8px 0;
 }
 .customButtons > span {
   background: #F2593A;
@@ -2918,7 +2933,7 @@ lesshat-selector {
 .timerBox,
 .quizProgress {
   width: 300px;
-  height: 510px;
+  height: 460px;
 }
 .quizActions {
   background: none;

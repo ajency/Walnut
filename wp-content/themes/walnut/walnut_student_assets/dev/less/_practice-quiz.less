@@ -60,6 +60,9 @@
                font-size: 1.5em;
                padding-right: 15px;
                color: @quiz-link-color3;
+                @media (max-width: 1370px) {
+                    font-size: 1.2em;
+                }                
             }
             & > a{
                 margin: 0;
@@ -68,6 +71,9 @@
                 font-size: 1.5em;
                 text-decoration: none;
                 color: @quiz-link-color1 !important;
+                @media (max-width: 1370px) {
+                    font-size: 1.2em;
+                }                  
                 &:after{
                     content: "\f107";
                     display: inline-block;
@@ -120,9 +126,12 @@
                     border: 0;
                     min-height: 460px !important;
                     max-width: 100%;
-                    @media (max-width:1230px) {
-                            min-height: 360px !important;
-                    }
+                    // @media (max-width:1230px) {
+                    //         min-height: 360px !important;
+                    // }
+                    @media (max-width: 1370px) {
+                        min-height: 370px !important;
+                    }                      
                     #question-area{
                         .element-wrapper{
                             font-family: open-sans;
@@ -130,6 +139,9 @@
                                 font-size: 1.5em;
                                 font-weight: bold;
                                 color: @quiz-link-color3;
+                                @media (max-width: 1370px) {
+                                    font-size: 1.2em;
+                                }                                 
                                 & > p{
                                     & > span{
                                         font-size: inherit !important;
@@ -379,7 +391,7 @@
 
  .customButtons {
      padding: 8px 15px;
-     margin: 12px 0;
+     margin: 8px 0;
      & > span {
          background: #F2593A;
          border-radius: 50%;
@@ -622,7 +634,7 @@
 
  .timerBox, .quizProgress {
      width: 300px;
-     height: 510px;
+     height: 460px;
  }
  
 
