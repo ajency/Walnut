@@ -67,7 +67,7 @@ define ['marionette'], (Marionette)->
         if App.request 'current:user:can','student'
             $("body").hide()
             window.location.href = SITEURL+'/dashboard-student'          
-
+            return false
         App.execute "show:breadcrumbapp", region: App.breadcrumbRegion
         App.execute "show:headerapp", region: App.headerRegion
         App.execute "show:leftnavapp", region: App.leftNavRegion

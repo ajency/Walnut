@@ -66,6 +66,7 @@ define(['marionette'], function(Marionette) {
       if (App.request('current:user:can', 'student')) {
         $("body").hide();
         window.location.href = SITEURL + '/dashboard-student';
+        return false;
       }
       App.execute("show:breadcrumbapp", {
         region: App.breadcrumbRegion
