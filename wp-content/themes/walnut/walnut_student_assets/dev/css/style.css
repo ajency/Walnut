@@ -2037,9 +2037,9 @@ lesshat-selector {
   display: -ms-flexbox;
   display: flex;
 }
-@media (max-width: 1200px) {
+@media only screen and (max-width: 1024px) {
   .video-sidebar {
-    top: 110px;
+    top: 90px;
   }
 }
 .video-sidebar.video-is-open {
@@ -2071,6 +2071,12 @@ lesshat-selector {
   box-shadow: none;
   top: 175px;
   padding: 0;
+}
+@media only screen and (max-width: 1024px) {
+  .contentTime,
+  .contentInfo {
+    top: 130px;
+  }
 }
 @media (max-width: 1295px) {
   .contentTime,
