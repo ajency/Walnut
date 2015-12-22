@@ -4,7 +4,8 @@ define ['app'
     App.module 'QuizModuleApp',(QuizModuleApp,App)->
 
         class QuizModuleRouter extends Marionette.AppRouter
-
+            $("#header-region").hide()
+            $("#left-nav-region").hide()
             appRoutes :
                 'create-quiz'                               : 'createQuiz'
                 'edit-quiz/:id'                             : 'editQuiz'

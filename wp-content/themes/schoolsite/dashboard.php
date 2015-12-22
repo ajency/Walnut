@@ -132,7 +132,7 @@ global $chorus_options;
 
                 <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
                 <!-- Bootstrap Core JavaScript -->
-                <script src="<?php echo STUDENT_ASSET_PATH ;?>js/bootstrap.min.js"></script>
+                <!--script src="<?php echo //STUDENT_ASSET_PATH ;?>js/bootstrap.min.js"></script-->
 <script>
     Pace.on('hide', function () {
         document.getElementById("site_main_container").setAttribute('class', 'showAll');
