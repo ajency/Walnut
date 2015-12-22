@@ -46,6 +46,9 @@
         width: 100%;
         z-index: 99999;
         top: 180px;
+        @media (max-width: 1370px) {
+            top: 150px;
+        }
         @media @tablet {
             top: 95px;
         }
@@ -57,6 +60,9 @@
                 font-family: open-sans;
                 margin: 12px 0;
                 color: @quiz-link-color3;
+                @media (max-width: 1370px) {
+                    margin: 10px 0;
+                }                
                 & > h4 {
                     margin: 0;
                 }
@@ -84,6 +90,9 @@
             }
             .social-signup {
                 margin: 10px 0;
+                @media (max-width: 1370px) {
+                    margin: 8px 0;
+                }                 
                 i {
                     padding: 10px 12px;
                     color: #fff;
@@ -122,10 +131,18 @@
             .border-rl {
                 border-right: 1px solid #eee;
             }
+            hr{
+                @media (max-width: 1370px) {
+                    margin: 15px 0;
+                }                
+            }
         }
         .support-email {
             margin: 35px 0;
             font-family: open-sans;
+            @media (max-width: 1370px) {
+                margin: 15px 0;
+            }            
             h5 {
                 font-size: 1.1em;
                 a {

@@ -44,6 +44,7 @@ a img:active {
   top: 20px;
   width: 10%;
   left: 20px;
+  z-index: 1031;
 }
 .is-back a {
   border: 2px solid #fff;
@@ -710,6 +711,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   z-index: 99999;
   top: 180px;
 }
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper {
+    top: 150px;
+  }
+}
 @media only screen and (min-width: 530px) and (max-width: 767px) {
   .signin-card .signin-wrapper {
     top: 95px;
@@ -726,6 +732,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   font-family: open-sans;
   margin: 12px 0;
   color: #602f1a;
+}
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .wrapped .reg-login {
+    margin: 10px 0;
+  }
 }
 .signin-card .signin-wrapper .wrapped .reg-login > h4 {
   margin: 0;
@@ -753,6 +764,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 }
 .signin-card .signin-wrapper .wrapped .social-signup {
   margin: 10px 0;
+}
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .wrapped .social-signup {
+    margin: 8px 0;
+  }
 }
 .signin-card .signin-wrapper .wrapped .social-signup i {
   padding: 10px 12px;
@@ -789,9 +805,19 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 .signin-card .signin-wrapper .wrapped .border-rl {
   border-right: 1px solid #eee;
 }
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .wrapped hr {
+    margin: 15px 0;
+  }
+}
 .signin-card .signin-wrapper .support-email {
   margin: 35px 0;
   font-family: open-sans;
+}
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .support-email {
+    margin: 15px 0;
+  }
 }
 .signin-card .signin-wrapper .support-email h5 {
   font-size: 1.1em;
@@ -1958,7 +1984,7 @@ lesshat-selector {
 .lesson {
   position: absolute;
   width: 100%;
-  top: -54px;
+  top: -68px;
   z-index: 1030;
 }
 .lesson #content-board {
@@ -2314,6 +2340,11 @@ lesshat-selector {
   padding-right: 15px;
   color: #602f1a;
 }
+@media (max-width: 1370px) {
+  #quiz-description-region .pieceWrapper .quiz-info > h3 {
+    font-size: 1.2em;
+  }
+}
 #quiz-description-region .pieceWrapper .quiz-info > a {
   margin: 0;
   display: inline-block !important;
@@ -2321,6 +2352,11 @@ lesshat-selector {
   font-size: 1.5em;
   text-decoration: none;
   color: #69b8b5 !important;
+}
+@media (max-width: 1370px) {
+  #quiz-description-region .pieceWrapper .quiz-info > a {
+    font-size: 1.2em;
+  }
 }
 #quiz-description-region .pieceWrapper .quiz-info > a:after {
   content: "\f107";
@@ -2375,9 +2411,9 @@ lesshat-selector {
   min-height: 460px !important;
   max-width: 100%;
 }
-@media (max-width: 1230px) {
+@media (max-width: 1370px) {
   #question-display-region > div #content-board.quizContent #myCanvas {
-    min-height: 360px !important;
+    min-height: 370px !important;
   }
 }
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
@@ -2387,6 +2423,11 @@ lesshat-selector {
   font-size: 1.5em;
   font-weight: bold;
   color: #602f1a;
+}
+@media (max-width: 1370px) {
+  #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {
+    font-size: 1.2em;
+  }
 }
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text > p > span {
   font-size: inherit !important;
@@ -2568,7 +2609,7 @@ lesshat-selector {
 }
 .customButtons {
   padding: 8px 15px;
-  margin: 12px 0;
+  margin: 8px 0;
 }
 .customButtons > span {
   background: #F2593A;
@@ -2892,7 +2933,7 @@ lesshat-selector {
 .timerBox,
 .quizProgress {
   width: 300px;
-  height: 510px;
+  height: 460px;
 }
 .quizActions {
   background: none;
