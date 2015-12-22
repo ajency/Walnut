@@ -44,6 +44,7 @@ a img:active {
   top: 20px;
   width: 10%;
   left: 20px;
+  z-index: 1031;
 }
 .is-back a {
   border: 2px solid #fff;
@@ -710,6 +711,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   z-index: 99999;
   top: 180px;
 }
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper {
+    top: 150px;
+  }
+}
 @media only screen and (min-width: 530px) and (max-width: 767px) {
   .signin-card .signin-wrapper {
     top: 95px;
@@ -726,6 +732,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   font-family: open-sans;
   margin: 12px 0;
   color: #602f1a;
+}
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .wrapped .reg-login {
+    margin: 10px 0;
+  }
 }
 .signin-card .signin-wrapper .wrapped .reg-login > h4 {
   margin: 0;
@@ -753,6 +764,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 }
 .signin-card .signin-wrapper .wrapped .social-signup {
   margin: 10px 0;
+}
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .wrapped .social-signup {
+    margin: 8px 0;
+  }
 }
 .signin-card .signin-wrapper .wrapped .social-signup i {
   padding: 10px 12px;
@@ -789,9 +805,19 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 .signin-card .signin-wrapper .wrapped .border-rl {
   border-right: 1px solid #eee;
 }
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .wrapped hr {
+    margin: 15px 0;
+  }
+}
 .signin-card .signin-wrapper .support-email {
   margin: 35px 0;
   font-family: open-sans;
+}
+@media (max-width: 1370px) {
+  .signin-card .signin-wrapper .support-email {
+    margin: 15px 0;
+  }
 }
 .signin-card .signin-wrapper .support-email h5 {
   font-size: 1.1em;
