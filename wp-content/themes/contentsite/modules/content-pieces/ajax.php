@@ -86,6 +86,7 @@ add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_sta
 function ajax_bulk_move_content_pieces(){
 
     $ids = $_POST['IDs'];
+    $parent = $_POST['parent'];
     foreach ($ids as $id){
         if(!$id) continue;
         

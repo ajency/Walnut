@@ -11,7 +11,7 @@ define ['app'
 			groupContentCollection=null
 
 			initialize: (opts) ->
-
+				$('.navbar .container-fluid').css("visibility","visible")
 				#get the header and left nav back incase it was hidden for quiz view
 				$.showHeaderAndLeftNav()
 

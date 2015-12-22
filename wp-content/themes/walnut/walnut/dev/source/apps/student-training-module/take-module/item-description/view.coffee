@@ -24,6 +24,8 @@ define ['app'
                 @mode = Marionette.getOption(@, 'display_mode')
 
             onShow:->
+                $('.navbar').append('<div class="icon is-back go-back"><a onclick="location.reload();" href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i>Back</a></div>');
+                $('.navbar .container-fluid').css("visibility","hidden")
                 $('.open-sidebar').click ->
                   $('.video-sidebar').toggleClass 'video-is-open'
                   return

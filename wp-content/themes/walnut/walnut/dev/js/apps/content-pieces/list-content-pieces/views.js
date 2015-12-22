@@ -190,6 +190,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       function ListView() {
         this.changeStatus = bind(this.changeStatus, this);
+        this.show_destination_subsections = bind(this.show_destination_subsections, this);
+        this.show_destination_sections = bind(this.show_destination_sections, this);
         this.show_destination_chapters = bind(this.show_destination_chapters, this);
         this.show_destination_textbooks = bind(this.show_destination_textbooks, this);
         this.moveContent = bind(this.moveContent, this);
@@ -223,9 +225,10 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
         'click .change-status button': 'changeStatus',
-        'click .move-content button': 'moveContent',
         'change #status_dropdown': 'show_destination_textbooks',
-        'change #textbooks-filter': 'show_destination_chapters'
+        'change #destination_textbook #textbooks-filter': 'show_destination_chapters',
+        'change #destination_textbook #chapters-filter': 'show_destination_sections',
+        'change #destination_textbook #sections-filter': 'show_destination_subsections'
       };
 
       ListView.prototype.initialize = function() {
@@ -296,20 +299,29 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.moveContent = function(e) {
-        var data, msg;
+        var data, final_id, msg;
+        final_id = $("#destination_textbook #subsections-filter option:selected").val();
+        if (isNaN(parseInt(final_id)) || !isFinite(final_id)) {
+          final_id = $("#destination_textbook #sections-filter option:selected").val();
+        }
+        if (isNaN(parseInt(final_id)) || !isFinite(final_id)) {
+          final_id = $("#destination_textbook #chapters-filter option:selected").val();
+        }
+        if (isNaN(parseInt(final_id)) || !isFinite(final_id)) {
+          bootbox.alert('Please select a Chapter');
+          return;
+        }
         data = {};
         data.IDs = $.getCheckedItems(this.$el.find('table'));
+        data.parent = final_id;
         console.log(data);
         msg = "Are you sure you want to move selected content pieces?";
         if (0 === _.size(data.IDs)) {
-          bootbox.alert('None of the selected items can be published');
+          bootbox.alert('None of the selected items can be moved');
           return;
         }
         return bootbox.confirm(msg, (function(_this) {
           return function(result) {
-            if (result) {
-              $(e.target).find('.fa').addClass('fa-spin fa-spinner');
-            }
             data.action = 'bulk-move-content-pieces';
             return $.post(AJAXURL, data).success(function(resp) {
               return console.log(resp);
@@ -324,25 +336,90 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.show_destination_textbooks = function(e) {
-        var textbookFiltersHTML;
+        var action, textbookFiltersHTML;
+        action = $("#status_dropdown").val();
+        if (action !== 'move') {
+          this.$el.find('#destination_textbook').hide();
+          return false;
+        }
         textbookFiltersHTML = $.showTextbookFilters({
           textbooks: this.textbooksCollection
         });
         this.$el.find('#destination_textbook').html(textbookFiltersHTML);
-        this.$el.find('#sections-filter').hide();
-        return this.$el.find('#subsections-filter').hide();
+        this.$el.find('#destination_textbook').show();
+        this.$el.find('#destination_textbook #textbooks-filter').hide();
+        return this.show_destination_chapters();
       };
 
       ListView.prototype.show_destination_chapters = function(e) {
         var chaptersCollection, term_id;
-        term_id = $("#destination_textbook option:selected").val();
-        return chaptersCollection = App.request("get:chapters", {
+        term_id = $("#textbooks-filter option:selected").val();
+        chaptersCollection = App.request("get:chapters", {
           'parent': term_id
         });
+        return App.execute("when:fetched", chaptersCollection, (function(_this) {
+          return function() {
+            var html;
+            html = "<option>Select</option>";
+            chaptersCollection.each(function(t, ind) {
+              var chapter_id, chapter_name;
+              chapter_id = t.get('term_id');
+              chapter_name = t.get('name');
+              return html += "<option value='" + chapter_id + "'>" + chapter_name + "</option>";
+            });
+            return _this.$el.find('#destination_textbook #chapters-filter').html(html);
+          };
+        })(this));
+      };
+
+      ListView.prototype.show_destination_sections = function(e) {
+        var sectionsCollection, term_id;
+        term_id = $("#destination_textbook #chapters-filter option:selected").val();
+        sectionsCollection = App.request("get:chapters", {
+          'parent': term_id
+        });
+        return App.execute("when:fetched", sectionsCollection, (function(_this) {
+          return function() {
+            var html;
+            html = "<option>Select</option>";
+            sectionsCollection.each(function(sectionModel, ind) {
+              var section_id, section_name;
+              section_id = sectionModel.get('term_id');
+              section_name = sectionModel.get('name');
+              return html += "<option value='" + section_id + "'>" + section_name + "</option>";
+            });
+            return _this.$el.find('#destination_textbook  #sections-filter').html(html);
+          };
+        })(this));
+      };
+
+      ListView.prototype.show_destination_subsections = function(e) {
+        var subsectionsCollection, term_id;
+        term_id = $("#destination_textbook #sections-filter option:selected").val();
+        subsectionsCollection = App.request("get:chapters", {
+          'parent': term_id
+        });
+        return App.execute("when:fetched", subsectionsCollection, (function(_this) {
+          return function() {
+            var html;
+            html = "<option>Select</option>";
+            subsectionsCollection.each(function(subsectionModel, ind) {
+              var section_id, section_name;
+              section_id = subsectionModel.get('term_id');
+              section_name = subsectionModel.get('name');
+              return html += "<option value='" + section_id + "'>" + section_name + "</option>";
+            });
+            return _this.$el.find('#destination_textbook  #subsections-filter').html(html);
+          };
+        })(this));
       };
 
       ListView.prototype.changeStatus = function(e) {
         var data, msg;
+        if ($(e.target).closest('.change-status').find('select').val() === 'move') {
+          this.moveContent();
+          return false;
+        }
         data = {};
         data.IDs = $.getCheckedItems(this.$el.find('table'));
         data.status = $(e.target).closest('.change-status').find('select').val();

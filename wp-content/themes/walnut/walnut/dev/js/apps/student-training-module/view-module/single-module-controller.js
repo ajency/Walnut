@@ -23,6 +23,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
       groupContentCollection = null;
 
       GroupController.prototype.initialize = function(opts) {
+        $('.navbar .container-fluid').css("visibility", "visible");
         $.showHeaderAndLeftNav();
         model = opts.model, this.classID = opts.classID, this.mode = opts.mode, this.division = opts.division, this.questionResponseCollection = opts.questionResponseCollection;
         groupContentCollection = null;

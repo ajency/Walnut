@@ -192,10 +192,10 @@ define ['app'
 				'change #check_all_div'     			:-> $.toggleCheckAll @$el.find 'table'
 				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
 				'click .change-status button'			: 'changeStatus'
-				'click .move-content button'			: 'moveContent'
 				'change #status_dropdown'				: 'show_destination_textbooks'
-				'change #textbooks-filter'				: 'show_destination_chapters'
-
+				'change #destination_textbook #textbooks-filter'				: 'show_destination_chapters'
+				'change #destination_textbook #chapters-filter'				: 'show_destination_sections'
+				'change #destination_textbook #sections-filter'				: 'show_destination_subsections'
 
 			initialize : ->
 				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -261,18 +261,30 @@ define ['app'
 
 
 			moveContent:(e)=>
+					final_id = $("#destination_textbook #subsections-filter option:selected").val()
+
+					if isNaN(parseInt(final_id)) or !isFinite(final_id)
+					  final_id = $("#destination_textbook #sections-filter option:selected").val()
+
+					if isNaN(parseInt(final_id)) or !isFinite(final_id)
+					  final_id = $("#destination_textbook #chapters-filter option:selected").val()					  
+					
+					if isNaN(parseInt(final_id)) or !isFinite(final_id)
+						bootbox.alert 'Please select a Chapter'
+						return
 					data = {}
 					data.IDs= $.getCheckedItems @$el.find 'table'
+					data.parent = final_id
 					console.log data
 					msg = "Are you sure you want to move selected content pieces?"
 					if 0 is _.size data.IDs
-						bootbox.alert 'None of the selected items can be published'
+						bootbox.alert 'None of the selected items can be moved'
 						return
 
 					bootbox.confirm msg, (result)=>
-						if result
-							$(e.target).find '.fa'
-							.addClass 'fa-spin fa-spinner'
+						#if result
+							#$(e.target).find '.fa'
+							#.addClass 'fa-spin fa-spinner'
 
 						data.action = 'bulk-move-content-pieces'
 						$.post AJAXURL, data
@@ -288,20 +300,62 @@ define ['app'
 
 
 			show_destination_textbooks:(e)=>
+					action = $("#status_dropdown").val()
+					if action != 'move'
+						@$el.find '#destination_textbook'
+						.hide()	
+						return false
 					textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
 					@$el.find '#destination_textbook'
-					.html textbookFiltersHTML	
-					@$el.find '#sections-filter'
-						.hide()
-					@$el.find '#subsections-filter'
-						.hide()
+					.html textbookFiltersHTML
+					@$el.find '#destination_textbook'
+					.show()	
+					@$el.find '#destination_textbook #textbooks-filter'
+						.hide()					
+					@show_destination_chapters()
+
 
 			show_destination_chapters:(e)=>
-					term_id = $("#destination_textbook option:selected").val()
+					term_id = $("#textbooks-filter option:selected").val()
 					chaptersCollection = App.request "get:chapters", ('parent': term_id)
-                		          
+					App.execute "when:fetched", chaptersCollection, =>
+						html = "<option>Select</option>"
+						chaptersCollection.each (t, ind)=>
+							chapter_id = t.get('term_id')
+							chapter_name = t.get('name')
+							html += "<option value='"+chapter_id+"'>"+chapter_name+"</option>"
+						@$el.find '#destination_textbook #chapters-filter'
+						.html html	
+					
+
+			show_destination_sections:(e)=>
+					term_id = $("#destination_textbook #chapters-filter option:selected").val()
+					sectionsCollection = App.request "get:chapters", ('parent': term_id)
+					App.execute "when:fetched", sectionsCollection, =>
+						html = "<option>Select</option>"
+						sectionsCollection.each (sectionModel, ind)=>
+							section_id = sectionModel.get('term_id')
+							section_name = sectionModel.get('name')
+							html += "<option value='"+section_id+"'>"+section_name+"</option>"
+						@$el.find '#destination_textbook  #sections-filter'
+						.html html	
+
+			show_destination_subsections:(e)=>
+					term_id = $("#destination_textbook #sections-filter option:selected").val()
+					subsectionsCollection = App.request "get:chapters", ('parent': term_id)
+					App.execute "when:fetched", subsectionsCollection, =>
+						html = "<option>Select</option>"
+						subsectionsCollection.each (subsectionModel, ind)=>
+							section_id = subsectionModel.get('term_id')
+							section_name = subsectionModel.get('name')
+							html += "<option value='"+section_id+"'>"+section_name+"</option>"
+						@$el.find '#destination_textbook  #subsections-filter'
+						.html html					                		          
 
 			changeStatus:(e)=>
+				if $(e.target).closest('.change-status').find('select').val() is 'move'
+					@moveContent()
+					return false
 				data = {}
 				data.IDs= $.getCheckedItems @$el.find 'table'
 				data.status= $(e.target).closest('.change-status').find('select').val()
