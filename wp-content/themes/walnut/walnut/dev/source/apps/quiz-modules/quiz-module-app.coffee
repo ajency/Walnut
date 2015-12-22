@@ -4,7 +4,8 @@ define ['app'
     App.module 'QuizModuleApp',(QuizModuleApp,App)->
 
         class QuizModuleRouter extends Marionette.AppRouter
-
+            $("#header-region").hide()
+            $("#left-nav-region").hide()
             appRoutes :
                 'create-quiz'                               : 'createQuiz'
                 'edit-quiz/:id'                             : 'editQuiz'
@@ -32,8 +33,6 @@ define ['app'
                         d_mode: 'quiz_report'
 
             startQuizClassMode:(tID,qID)->
-                $("#header-region").hide()
-                $("#left-nav-region").hide()
                 if $.allowRoute 'view-quiz'                
                     new QuizModuleApp.ViewQuiz.Controller
                         region: App.mainContentRegion
