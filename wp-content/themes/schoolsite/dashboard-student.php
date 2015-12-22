@@ -44,8 +44,9 @@
                                                     <?php $notifications =  $textbook_id_to_name_map[$textbook->term_id] ?>
                                                     <?php $textbook_id_vs_name[$textbook->term_id]= $textbook->name; ?>
                                                    <?php if($notifications>0): ?>
-                                                    <div class="notification"  data-scrollreveal="enter top and move 100px, wait 1.8s" data-toggle="popover" data-placement="left" title="New Update" data-content="Look here for latest quizzes avaliable!!!">
+                                                    <div class="notification"  data-scrollreveal="enter top and move 100px, wait 1.8s">
                                                         <?php echo $notifications ?>
+                                                        <span>Look for the latest quizzes under list of upcoming quizzes on right</span>
                                                     </div>
                                                     <?php endif; ?>
                                                     <?php 

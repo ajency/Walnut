@@ -145,7 +145,7 @@ $(function() {
 
     //Notification popover
 
-    $('.notification').popover();
+    // $('.notification').popover();
     
     // $('.notification').on('shown.bs.popover', function() {
     //     setTimeout(function() {
@@ -155,27 +155,27 @@ $(function() {
 
     //if clicked outside hide popover
 
-    $('body').on('click', function (e) {
-        $('[data-toggle=popover]').each(function () {
-            // hide any open popovers when the anywhere else in the body is clicked
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
-    });
+    // $('body').on('click', function (e) {
+    //     $('[data-toggle=popover]').each(function () {
+    //         // hide any open popovers when the anywhere else in the body is clicked
+    //         if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+    //             $(this).popover('hide');
+    //         }
+    //     });
+    // });
 
 
 
     //Adding popover a custom class
 
-    var notify= $('.notification');
+    // var notify= $('.notification');
 
-    if (notify.length)
-    {
-    $('.notification').popover({
-        placement: 'left',
-        trigger: 'click'
-    }).data('bs.popover').tip().addClass('dashboard-popover animated shake');
+    // if (notify.length)
+    // {
+    // $('.notification').popover({
+    //     placement: 'left',
+    //     trigger: 'click'
+    // }).data('bs.popover').tip().addClass('dashboard-popover animated shake');
 
-    }
+    // }
 });
