@@ -12,6 +12,7 @@ define ['app'
 
 			initialize: (opts) ->
 				$('.navbar .container-fluid').css("visibility","visible")
+				$('.navbar .go-back').remove() 
 				#get the header and left nav back incase it was hidden for quiz view
 				$.showHeaderAndLeftNav()
 
