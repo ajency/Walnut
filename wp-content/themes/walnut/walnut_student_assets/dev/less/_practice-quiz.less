@@ -130,7 +130,10 @@
                     // }
                     @media (max-width: 1370px) {
                         min-height: 370px !important;
-                    }                      
+                    }
+                    @media (max-width:1024px) {
+                        min-height: 218px !important;                    
+                    }                
                     #question-area{
                         .element-wrapper{
                             font-family: open-sans;
@@ -188,8 +191,8 @@
         left: 0px;
         width:260px;
         .transition-duration(0.3s);
-        @media (max-width:1200px) {
-            top: 126px;
+        @media (max-width:1024px) {
+            top: 15px;
         }
         @media (max-width: 1230px) {
             left: -260px;
@@ -219,8 +222,8 @@
             background: #868686;
             cursor: pointer;
             .transition-duration(0.3s);
-            @media (max-width:1200px) {
-                top: 126px;
+            @media (max-width:1024px) {
+                top: 15px;
             }            
             @media (max-width: 1230px) {
                 left: 0;
@@ -257,6 +260,9 @@
          .quizSteps {
              padding:5px 5px;
              height: 270px;
+            @media (max-width:1024px) {
+                height: initial;
+            }              
              ul {
                  padding: 0 6px;
                  li {
@@ -373,6 +379,10 @@
  .customButtons {
      padding: 8px 15px;
      margin: 8px 0;
+    @media (max-width: 1024px) {
+        padding: 5px 15px;
+        margin: 5px 0;
+    }      
      & > span {
          background: #F2593A;
          border-radius: 50%;
@@ -616,6 +626,9 @@
  .timerBox, .quizProgress {
      width: 300px;
      height: 460px;
+     @media (max-width:1024px) {
+        height: 435px;
+     } 
  }
  
 
@@ -641,6 +654,9 @@
 	    font-size: 1.1em;
     	line-height: 1.5;
         border-radius: 8px;
+        @media (max-width:1024px) {
+           width: 18%;                    
+        }         
 	    i{
 	    	&:before{
 	    		padding-left: 5px;
@@ -649,6 +665,9 @@
     }
     #submit-question{
     	background: #FF8685;
+        @media (max-width:1024px) {
+            border:2px solid #ff8685;
+        }         
     	&:hover{
     		background: lighten(#FF8685, 10%);
     	}
@@ -676,6 +695,9 @@
         width: 25%;
         top: -56px;
         right: 10px;
+        @media (max-width:1024px) {
+            top: -52px;                    
+        }         
         #submit-question{
             width: 100%;
         }

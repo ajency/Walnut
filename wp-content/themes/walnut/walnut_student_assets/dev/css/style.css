@@ -2421,6 +2421,11 @@ lesshat-selector {
     min-height: 370px !important;
   }
 }
+@media (max-width: 1024px) {
+  #question-display-region > div #content-board.quizContent #myCanvas {
+    min-height: 218px !important;
+  }
+}
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
   font-family: open-sans;
 }
@@ -2456,9 +2461,9 @@ lesshat-selector {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   #quiz-progress-region .quizProgress {
-    top: 126px;
+    top: 15px;
   }
 }
 @media (max-width: 1230px) {
@@ -2499,9 +2504,9 @@ lesshat-selector {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   #quiz-progress-region .quizProgress .progressStrip {
-    top: 126px;
+    top: 15px;
   }
 }
 @media (max-width: 1230px) {
@@ -2539,6 +2544,11 @@ lesshat-selector {
 #quiz-progress-region .quizProgress .quizSteps {
   padding: 5px 5px;
   height: 270px;
+}
+@media (max-width: 1024px) {
+  #quiz-progress-region .quizProgress .quizSteps {
+    height: initial;
+  }
 }
 #quiz-progress-region .quizProgress .quizSteps ul {
   padding: 0 6px;
@@ -2625,6 +2635,12 @@ lesshat-selector {
 .customButtons {
   padding: 8px 15px;
   margin: 8px 0;
+}
+@media (max-width: 1024px) {
+  .customButtons {
+    padding: 5px 15px;
+    margin: 5px 0;
+  }
 }
 .customButtons > span {
   background: #F2593A;
@@ -2950,6 +2966,12 @@ lesshat-selector {
   width: 300px;
   height: 460px;
 }
+@media (max-width: 1024px) {
+  .timerBox,
+  .quizProgress {
+    height: 435px;
+  }
+}
 .quizActions {
   background: none;
   box-shadow: none;
@@ -2965,11 +2987,21 @@ lesshat-selector {
   line-height: 1.5;
   border-radius: 8px;
 }
+@media (max-width: 1024px) {
+  .quizActions button {
+    width: 18%;
+  }
+}
 .quizActions button i:before {
   padding-left: 5px;
 }
 .quizActions #submit-question {
   background: #FF8685;
+}
+@media (max-width: 1024px) {
+  .quizActions #submit-question {
+    border: 2px solid #ff8685;
+  }
 }
 .quizActions #submit-question:hover {
   background: #ffb9b8;
@@ -2993,6 +3025,11 @@ lesshat-selector {
   width: 25%;
   top: -56px;
   right: 10px;
+}
+@media (max-width: 1024px) {
+  .quizActions .submit2 {
+    top: -52px;
+  }
 }
 .quizActions .submit2 #submit-question {
   width: 100%;
