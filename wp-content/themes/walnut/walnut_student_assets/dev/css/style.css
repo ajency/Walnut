@@ -2421,7 +2421,7 @@ lesshat-selector {
     min-height: 370px !important;
   }
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   #question-display-region > div #content-board.quizContent #myCanvas {
     min-height: 218px !important;
   }
@@ -2461,7 +2461,7 @@ lesshat-selector {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress {
     top: 15px;
   }
@@ -2504,7 +2504,7 @@ lesshat-selector {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress .progressStrip {
     top: 15px;
   }
@@ -2545,9 +2545,9 @@ lesshat-selector {
   padding: 5px 5px;
   height: 270px;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress .quizSteps {
-    height: initial;
+    height: 255px;
   }
 }
 #quiz-progress-region .quizProgress .quizSteps ul {
@@ -2636,7 +2636,7 @@ lesshat-selector {
   padding: 8px 15px;
   margin: 8px 0;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   .customButtons {
     padding: 5px 15px;
     margin: 5px 0;
@@ -2966,7 +2966,7 @@ lesshat-selector {
   width: 300px;
   height: 460px;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   .timerBox,
   .quizProgress {
     height: 435px;
@@ -2987,9 +2987,10 @@ lesshat-selector {
   line-height: 1.5;
   border-radius: 8px;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   .quizActions button {
     width: 18%;
+    padding: 10px 0;
   }
 }
 .quizActions button i:before {
@@ -2998,7 +2999,7 @@ lesshat-selector {
 .quizActions #submit-question {
   background: #FF8685;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   .quizActions #submit-question {
     border: 2px solid #ff8685;
   }
@@ -3026,13 +3027,18 @@ lesshat-selector {
   top: -56px;
   right: 10px;
 }
-@media (max-width: 1024px) {
+@media only screen and (max-width: 1024px) {
   .quizActions .submit2 {
     top: -52px;
   }
 }
 .quizActions .submit2 #submit-question {
   width: 100%;
+}
+@media only screen and (max-width: 1024px) {
+  .quizActions .submit2 #submit-question {
+    width: 72%;
+  }
 }
 .quizActions .submit2.submit-pushed {
   top: -209px;

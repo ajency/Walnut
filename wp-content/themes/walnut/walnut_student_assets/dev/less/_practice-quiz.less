@@ -131,7 +131,7 @@
                     @media (max-width: 1370px) {
                         min-height: 370px !important;
                     }
-                    @media (max-width:1024px) {
+                    @media @desktop-def {
                         min-height: 218px !important;                    
                     }                
                     #question-area{
@@ -191,7 +191,7 @@
         left: 0px;
         width:260px;
         .transition-duration(0.3s);
-        @media (max-width:1024px) {
+        @media @desktop-def {
             top: 15px;
         }
         @media (max-width: 1230px) {
@@ -222,7 +222,7 @@
             background: #868686;
             cursor: pointer;
             .transition-duration(0.3s);
-            @media (max-width:1024px) {
+            @media @desktop-def {
                 top: 15px;
             }            
             @media (max-width: 1230px) {
@@ -260,8 +260,8 @@
          .quizSteps {
              padding:5px 5px;
              height: 270px;
-            @media (max-width:1024px) {
-                height: initial;
+            @media @desktop-def {
+                height: 255px;
             }              
              ul {
                  padding: 0 6px;
@@ -379,7 +379,7 @@
  .customButtons {
      padding: 8px 15px;
      margin: 8px 0;
-    @media (max-width: 1024px) {
+    @media @desktop-def {
         padding: 5px 15px;
         margin: 5px 0;
     }      
@@ -626,7 +626,7 @@
  .timerBox, .quizProgress {
      width: 300px;
      height: 460px;
-     @media (max-width:1024px) {
+     @media @desktop-def {
         height: 435px;
      } 
  }
@@ -654,8 +654,9 @@
 	    font-size: 1.1em;
     	line-height: 1.5;
         border-radius: 8px;
-        @media (max-width:1024px) {
-           width: 18%;                    
+        @media @desktop-def {
+           width: 18%;  
+           padding: 10px 0;                  
         }         
 	    i{
 	    	&:before{
@@ -665,7 +666,7 @@
     }
     #submit-question{
     	background: #FF8685;
-        @media (max-width:1024px) {
+        @media @desktop-def {
             border:2px solid #ff8685;
         }         
     	&:hover{
@@ -695,11 +696,14 @@
         width: 25%;
         top: -56px;
         right: 10px;
-        @media (max-width:1024px) {
+        @media @desktop-def {
             top: -52px;                    
         }         
         #submit-question{
             width: 100%;
+            @media @desktop-def {
+                width: 72%;                 
+            } 
         }
         &.submit-pushed{
             top: -209px;
