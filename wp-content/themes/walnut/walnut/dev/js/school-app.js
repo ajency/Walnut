@@ -1,8 +1,8 @@
 define(['marionette'], function(Marionette) {
   window.App = new Marionette.Application;
   App.addRegions({
-    leftNavRegion: '#left-nav-region',
-    headerRegion: '#header-region',
+    leftNavRegion: '#left-nav-regions',
+    headerRegion: '#header-regions',
     mainContentRegion: '#main-content-region',
     popupRegion: '#dialog-region',
     dialogRegion: Marionette.Region.Dialog.extend({
