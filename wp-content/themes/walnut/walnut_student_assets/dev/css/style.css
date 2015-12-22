@@ -704,7 +704,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   -moz-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
   background: #fff;
-  padding: 20px;
+  padding: 10px;
 }
 .signin-card .signin-wrapper .wrapped .reg-login {
   font-family: open-sans;
@@ -715,7 +715,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   margin: 0;
 }
 .signin-card .signin-wrapper .wrapped .school-details {
-  padding: 15px 0;
+  padding: 10px 0;
 }
 .signin-card .signin-wrapper .wrapped .school-details .profile-pic {
   height: 112px;
@@ -774,7 +774,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   border-right: 1px solid #eee;
 }
 .signin-card .signin-wrapper .support-email {
-  margin: 50px 0;
+  margin: 35px 0;
   font-family: open-sans;
 }
 .signin-card .signin-wrapper .support-email h5 {
