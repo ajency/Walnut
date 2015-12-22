@@ -39,6 +39,22 @@ a img:active {
   position: relative;
   top: 1px;
 }
+.is-back {
+  position: absolute;
+  top: 20px;
+  width: 10%;
+  left: 20px;
+}
+.is-back a {
+  border: 2px solid #fff;
+  color: #fff;
+  font-family: open-sans;
+  font-size: 1.4em !important;
+}
+.is-back a i {
+  padding-right: 26px;
+  font-size: 1.5em;
+}
 nav.wallnut-nav {
   background-color: #69b8b5;
   border: 0;
