@@ -20,9 +20,11 @@ h5 {
 }
 a img {
   border: 0;
+  outline: 0;
 }
 a img:active {
   border: 0;
+  outline: 0;
 }
 .body-push {
   margin-bottom: 100px;
@@ -1636,12 +1638,12 @@ lesshat-selector {
 }
 .teacher-app #collection-details-region .grid .grid-title,
 .teacher-app #collection-details-region .grid .grid-body {
-  padding: 15px 10px;
+  padding: 10px;
   border-color: #eee;
 }
 .teacher-app #collection-details-region .grid .grid-title .row > div,
 .teacher-app #collection-details-region .grid .grid-body .row > div {
-  padding: 30px 15px;
+  padding: 15px;
 }
 .teacher-app #collection-details-region .grid .grid-title .row > div .row > div,
 .teacher-app #collection-details-region .grid .grid-body .row > div .row > div {
