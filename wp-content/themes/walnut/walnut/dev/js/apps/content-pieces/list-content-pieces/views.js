@@ -299,22 +299,21 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListView.prototype.moveContent = function(e) {
-        var data, final_id, msg;
-        final_id = $("#destination_textbook #subsections-filter option:selected").val();
-        if (isNaN(parseInt(final_id)) || !isFinite(final_id)) {
-          final_id = $("#destination_textbook #sections-filter option:selected").val();
-        }
-        if (isNaN(parseInt(final_id)) || !isFinite(final_id)) {
-          final_id = $("#destination_textbook #chapters-filter option:selected").val();
-        }
-        if (isNaN(parseInt(final_id)) || !isFinite(final_id)) {
-          bootbox.alert('Please select a Chapter');
+        var chapter, data, msg, sections;
+        chapter = $("#destination_textbook #chapters-filter option:selected").val();
+        if (isNaN(parseInt(chapter)) || !isFinite(chapter)) {
+          chapter = 0;
+          bootbox.alert('Please select a chapter');
           return;
+        }
+        sections = $("#destination_textbook #sections-filter option:selected").val();
+        if (isNaN(parseInt(sections)) || !isFinite(sections)) {
+          sections = 0;
         }
         data = {};
         data.IDs = $.getCheckedItems(this.$el.find('table'));
-        data.parent = final_id;
-        console.log(data);
+        data.chapter = chapter;
+        data.sections = sections;
         msg = "Are you sure you want to move selected content pieces?";
         if (0 === _.size(data.IDs)) {
           bootbox.alert('None of the selected items can be moved');
@@ -324,7 +323,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           return function(result) {
             data.action = 'bulk-move-content-pieces';
             return $.post(AJAXURL, data).success(function(resp) {
-              return console.log(resp);
+              return bootbox.alert('Moved Successfully.');
             }).fail(function(resp) {
               console.log('some error occurred');
               return console.log(resp);

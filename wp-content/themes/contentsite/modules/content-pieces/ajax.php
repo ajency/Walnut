@@ -86,10 +86,12 @@ add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_sta
 function ajax_bulk_move_content_pieces(){
 
     $ids = $_POST['IDs'];
-    $parent = $_POST['parent'];
+    $chapter = $_POST['chapter'];
+    $sections = array($_POST['sections']);
     foreach ($ids as $id){
         if(!$id) continue;
-        
+        m4c_duplicate_post($id, $chapter, $sections);
+        wp_delete_post($id);
     }    
     return wp_send_json(array('code' => 'OK'));
 
