@@ -61,8 +61,11 @@ function ajax_update_content_piece_status(){
 
     if(!isset($_POST['IDs']) || empty($_POST['IDs']) || !isset($_POST['status']))
         return new WP_Error('invalid_request_data', __('Invalid ID or status') );
+    $in = implode(",", $ids);
 
-    foreach ($ids as $id){
+    global $wpdb;
+    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['status']."' WHERE ID in(".$n.")");
+    /*foreach ($ids as $id){
         if(!$id) continue;
         if($_POST['status']=='archive' || $_POST['status']=='publish'){
             $data= array('ID'=>$id,'post_status'=>$_POST['status']);
@@ -70,10 +73,7 @@ function ajax_update_content_piece_status(){
         }else if($_POST['status']=='delete'){
             wp_delete_post($id);
         }
-        else if($_POST['status']=='move'){
-
-        }
-    }
+    }*/
 
     return wp_send_json(array('code' => 'OK'));
 
