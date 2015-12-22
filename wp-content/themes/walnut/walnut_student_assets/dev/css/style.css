@@ -708,10 +708,10 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 }
 .signin-card .signin-wrapper .wrapped .reg-login {
   font-family: open-sans;
-  margin: 15px 0;
+  margin: 12px 0;
   color: #602f1a;
 }
-.signin-card .signin-wrapper .wrapped .reg-login > h3 {
+.signin-card .signin-wrapper .wrapped .reg-login > h4 {
   margin: 0;
 }
 .signin-card .signin-wrapper .wrapped .school-details {
