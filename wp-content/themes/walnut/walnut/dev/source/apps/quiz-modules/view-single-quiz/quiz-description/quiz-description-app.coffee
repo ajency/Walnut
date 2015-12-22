@@ -6,8 +6,6 @@ define ['app'
 
             initialize : (opts)->
                 $('.navbar .container-fluid').css("visibility","visible")
-                $("#header-region").hide()
-                $("#left-nav-region").hide()
                 
                 {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
 
