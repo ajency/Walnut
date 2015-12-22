@@ -96,6 +96,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       };
 
       QuizProgressView.prototype.initialize = function() {
+        $('.navbar .container-fluid').css("visibility", "hidden");
         this.questionResponseCollection = Marionette.getOption(this, 'questionResponseCollection');
         return this.quizModel = Marionette.getOption(this, 'quizModel');
       };

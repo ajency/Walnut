@@ -5,6 +5,7 @@ define ['app'
         class Controller.ViewCollecionDetailsController extends RegionController
 
             initialize : (opts)->
+                $('.navbar .container-fluid').css("visibility","visible")
                 $("#header-region").hide()
                 $("#left-nav-region").hide()
                 
