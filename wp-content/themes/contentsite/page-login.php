@@ -95,7 +95,7 @@
                                                     <div class="profile-pic">
                                                           <img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block">
                                                     </div>   
-                                                    <h5><a href="">Login at Fursungi</a></h5>
+                                                    <h5><a href="http://walnut.synapsedu.info">Login at Fursungi</a></h5>
                                                 </div>
                                             </div>
                                         </div>
