@@ -2037,6 +2037,11 @@ lesshat-selector {
   display: -ms-flexbox;
   display: flex;
 }
+@media (max-width: 1200px) {
+  .video-sidebar {
+    top: 110px;
+  }
+}
 .video-sidebar.video-is-open {
   left: 0px;
 }
@@ -2451,6 +2456,11 @@ lesshat-selector {
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
+@media (max-width: 1200px) {
+  #quiz-progress-region .quizProgress {
+    top: 126px;
+  }
+}
 @media (max-width: 1230px) {
   #quiz-progress-region .quizProgress {
     left: -260px;
@@ -2488,6 +2498,11 @@ lesshat-selector {
   -moz-transition-duration: 0.3s;
   -o-transition-duration: 0.3s;
   transition-duration: 0.3s;
+}
+@media (max-width: 1200px) {
+  #quiz-progress-region .quizProgress .progressStrip {
+    top: 126px;
+  }
 }
 @media (max-width: 1230px) {
   #quiz-progress-region .quizProgress .progressStrip {
