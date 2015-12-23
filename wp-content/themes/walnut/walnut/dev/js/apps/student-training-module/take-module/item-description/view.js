@@ -40,7 +40,7 @@ define(['app', 'text!apps/student-training-module/take-module/item-description/t
       };
 
       TopPanelView.prototype.initialize = function() {
-        $('.navbar').append('<div class="icon is-back go-back"><a onclick="location.reload();" href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i>Back</a></div>');
+        $('header').prepend('<div class="icon is-back go-back"><a onclick="location.reload();" href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i>Back</a></div>');
         $('.navbar .container-fluid').css("visibility", "hidden");
         return this.mode = Marionette.getOption(this, 'display_mode');
       };
