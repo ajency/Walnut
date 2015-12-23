@@ -85,7 +85,7 @@
                                             <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                        <img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block">
+                                                        <a href="http://walnut.synapsedu.info"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
                                                     </div>                                              
                                                     <h5><a href="http://walnut.synapsedu.info">Login at Shivane</a></h5>
                                                 </div>
@@ -93,7 +93,7 @@
                                             <div class="col-xs-6 col-sm-6 col-lg-6">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                          <img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block">
+                                                          <a href="http://walnut.synapsedu.info"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block"></a>
                                                     </div>   
                                                     <h5><a href="http://walnut.synapsedu.info">Login at Fursungi</a></h5>
                                                 </div>
