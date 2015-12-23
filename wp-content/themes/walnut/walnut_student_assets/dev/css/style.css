@@ -696,6 +696,11 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 .signin-header .signin-logo > img {
   width: 7%;
 }
+@media (max-width: 1024px) {
+  .signin-header .signin-logo > img {
+    width: 12%;
+  }
+}
 .signin-header .slogan {
   margin: 10px 0;
 }
