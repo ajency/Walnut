@@ -261,21 +261,22 @@ define ['app'
 
 
 			moveContent:(e)=>
-					final_id = $("#destination_textbook #subsections-filter option:selected").val()
-
-					if isNaN(parseInt(final_id)) or !isFinite(final_id)
-					  final_id = $("#destination_textbook #sections-filter option:selected").val()
-
-					if isNaN(parseInt(final_id)) or !isFinite(final_id)
-					  final_id = $("#destination_textbook #chapters-filter option:selected").val()					  
-					
-					if isNaN(parseInt(final_id)) or !isFinite(final_id)
-						bootbox.alert 'Please select a Chapter'
+					chapter = $("#destination_textbook #chapters-filter option:selected").val()
+					if isNaN(parseInt(chapter)) or !isFinite(chapter)
+						chapter=0
+						bootbox.alert 'Please select a chapter'
 						return
+
+					sections = $("#destination_textbook #sections-filter option:selected").val()
+					if isNaN(parseInt(sections)) or !isFinite(sections)
+						sections=0
+
+
 					data = {}
 					data.IDs= $.getCheckedItems @$el.find 'table'
-					data.parent = final_id
-					console.log data
+					data.chapter = chapter
+					data.sections = sections
+
 					msg = "Are you sure you want to move selected content pieces?"
 					if 0 is _.size data.IDs
 						bootbox.alert 'None of the selected items can be moved'
@@ -289,7 +290,7 @@ define ['app'
 						data.action = 'bulk-move-content-pieces'
 						$.post AJAXURL, data
 						.success (resp)=>
-							console.log resp
+							bootbox.alert 'Moved Successfully.'
 						.fail (resp)->
 							console.log 'some error occurred'
 							console.log resp
