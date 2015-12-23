@@ -56,7 +56,7 @@
    </head>
    <body>
                 <header>
-                    <nav class="navbar navbar-default wallnut-nav navbar-fixed-top">
+                    <nav class="navbar navbar-default wallnut-nav">
                         <div class="container-fluid signin-header">
                             <div class="logo">
                                 <img src="<?php echo STUDENT_ASSET_PATH ;?>images/walnut-logo.png" class="img-responsive center-block" alt="">

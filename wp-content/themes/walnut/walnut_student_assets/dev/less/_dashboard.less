@@ -36,6 +36,9 @@
     position: relative;
     overflow: inherit;
     height: 220px;
+    /*Fixed z-index issue for notification tooltip*/
+    -webkit-animation-fill-mode: none !important;
+    animation-fill-mode: none !important;
     @media @i-tab-landscape {
         height: 200px;
     }

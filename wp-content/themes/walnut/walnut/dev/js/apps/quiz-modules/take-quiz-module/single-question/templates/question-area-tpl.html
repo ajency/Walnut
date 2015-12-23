@@ -7,11 +7,7 @@
 
 <div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
     <!-- <span class="pull-left small" id="first_question"></span> -->
-    {{#replay}}
-    <button type="button" id="previous-question" class="btn btn-info pull-left"> 
-        <i class="fa fa-backward"></i> Previous 
-    </button>
-    {{/replay}}
+  
         {{#show_skip}}
             <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
                 Skip <i class="fa fa-step-forward"></i>
@@ -48,10 +44,28 @@
         {{/show_skip_helper_text}}
 
         {{#replay}}
-        <button type="button" id="next-question" class="none btn btn-info pull-right">
-            Next <i class="fa fa-forward"></i> 
+        <div class="replay-actions">
+        {{#replay}}
+        <div>
+        <button type="button" id="previous-question" class="btn btn-info"> 
+             <h4>Previous</h4>
         </button>
+        
+
+        </div>
         {{/replay}}
+
+        {{#replay}}
+        <div>
+        <button type="button" id="next-question" class="none btn btn-info">
+            <h4>Next</h4>
+        </button>
+ 
+        </div>
+        {{/replay}}
+        </div>
+        {{/replay}}
+
     <!-- </div> -->
     <div class="clearfix"></div>
 </div>
