@@ -133,7 +133,12 @@
                     }
                     @media @desktop-def {
                         min-height: 218px !important;                    
-                    }                
+                    }
+                    #loading-content-board{
+                        @media (max-width: 1230px) {
+                            font-size: 2em;
+                        }
+                    }
                     #question-area{
                         .element-wrapper{
                             font-family: open-sans;
@@ -190,9 +195,10 @@
         top: 150px;
         left: 0px;
         width:260px;
+        z-index: 1;
         .transition-duration(0.3s);
         @media @desktop-def {
-            top: 15px;
+            top: 35px;
         }
         @media (max-width: 1230px) {
             left: -260px;
@@ -223,7 +229,7 @@
             cursor: pointer;
             .transition-duration(0.3s);
             @media @desktop-def {
-                top: 15px;
+                top: 35px;
             }            
             @media (max-width: 1230px) {
                 left: 0;
@@ -438,6 +444,8 @@
             width: 100%;
             left: 0;
             bottom: 0;
+            z-index: 1;
+            background: #fff;
             text-align: center;
             margin: 0 auto;
             right: 0;
@@ -618,6 +626,28 @@
     } 
  
 
+
+
+ // ---------------------------
+ // FEEDBACK AREA OF QUIZZES -----------
+ // ---------------------------
+
+    .answrMsg{
+        @media @desktop-def {
+        margin: 0;
+        padding: 5px;
+        & > h3,& > h4{
+            font-size: 1.1em;
+        }
+        }
+    }
+
+
+
+
+
+
+
  // ---------------------------
  // COMMON HEIGHT FOR QUESTION GRID AND STATISTICS -----------
  // ---------------------------
@@ -710,4 +740,54 @@
         }
     }
 
+ }
+
+
+
+ // ---------------------------
+ // REPLAY QUIZ BUTTON FIXES -----------
+ // ---------------------------
+
+
+ .replay-actions{
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 235px;
+    @media (max-width: 1230px) {
+        top: 155px;
+    }     
+    & > div{
+        float: left;
+        margin: 0 auto;
+        width: 25%;
+        text-align: center;
+        @media (max-width: 1230px) {
+            width: 10%;
+        }        
+        button{
+            width: 104px;
+            background: transparent url('../images/previous.png') no-repeat !important;
+            height: 108px;
+            box-shadow: none;
+            &:active{
+                box-shadow: none;
+            }
+        }
+        h4{
+            color: @quiz-link-color2;
+            text-transform: uppercase;
+            margin-top: 100px;
+            font-family: open-sans;
+        }
+    }
+    & > div:last-child{
+        float: right;
+        @media (max-width: 1230px) {
+           right: 0;
+        }        
+        button{
+            background: transparent url('../images/forward.png') no-repeat !important;
+        }
+    }
  }
