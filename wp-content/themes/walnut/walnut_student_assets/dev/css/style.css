@@ -3113,6 +3113,7 @@ lesshat-selector {
   width: 25%;
   top: -56px;
   right: 10px;
+  display: block;
 }
 @media only screen and (max-width: 1024px) {
   .quizActions .submit2 {
@@ -3128,6 +3129,7 @@ lesshat-selector {
   }
 }
 .quizActions .submit2.submit-pushed {
+  display: none;
   top: -209px;
 }
 .replay-actions {
