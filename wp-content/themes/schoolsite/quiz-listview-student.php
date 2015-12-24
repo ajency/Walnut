@@ -35,6 +35,7 @@ foreach ($chapters['data'] as $key => $value) {
                 </div>
             </div>
             <!-- All Lectures -->
+            <h4 class="text-danger" id="danger" style="display:<?php echo count($quizzes)>0?'none':'block'; ?>">There is no quiz for this filter, select other filter for quiz listings.</h4>
             <div class="row">
                 <?php foreach($quizzes as $key => $quiz): ?>
                 <div class="col-sm-6 col-md-6 col-lg-6 quiz_tiles <?php echo "S".$quiz['status'] ?> <?php echo "T".$quiz['quiz_type'] ?> <?php echo "C".$quiz['chapter_id'] ?>">
@@ -244,7 +245,19 @@ function filter_it(){
         }else{
             $(this).hide();
         }
-    });    
+    });   
+
+        var no_items = true;
+        $( ".quiz_tiles" ).each(function( index ) {
+            if( $(this).css("display")!='none' ){
+                no_items = false;
+            }
+        });
+        $("#danger").hide();
+        if(no_items==true){
+            $("#danger").show();
+        }
+
     $("html, body").animate({ scrollTop: 0 }, "slow");
 } 
 </script>
