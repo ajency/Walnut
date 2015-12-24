@@ -29,6 +29,7 @@ foreach ($chapters['data'] as $key => $value) {
                 </div>
             </div>
             <!-- All Lectures -->
+            <h4 class="text-danger" id="danger" style="display:<?php echo count($lectures)>0?'none':'block'; ?>">There is no lesson for this filter, select other filter for lesson listings.</h4>
             <div class="row">
                 <?php foreach($lectures as $key => $lecture): ?>
                 <div class="col-sm-6 col-md-6 col-lg-6 chapter_tiles <?php echo "chapter_".$lecture['chapter_id'] ?>">
@@ -102,6 +103,16 @@ $(document).ready(function(){
             $("."+show_class).show();            
         }else{
             $(".chapter_tiles").show();
+        }
+        var no_items = true;
+        $( ".chapter_tiles" ).each(function( index ) {
+            if( $(this).css("display")!='none' ){
+                no_items = false;
+            }
+        });
+        $("#danger").hide();
+        if(no_items==true){
+            $("#danger").show();
         }
         $("html, body").animate({ scrollTop: 0 }, "slow");
    });

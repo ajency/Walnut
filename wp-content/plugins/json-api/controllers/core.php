@@ -6,6 +6,9 @@ Controller description: Basic introspection methods
 
 class JSON_API_Core_Controller {
   
+  public function add_student(){
+    return print_r($_POST);
+  }
   public function info() {
     global $json_api;
     $php = '';
