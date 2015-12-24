@@ -70,6 +70,11 @@ a img:active {
   padding-right: 26px;
   font-size: 1.5em;
 }
+.is-back a:hover,
+.is-back a:active,
+.is-back a:focus {
+  color: #fff;
+}
 nav.wallnut-nav {
   background-color: #69b8b5;
   border: 0;
@@ -1866,12 +1871,15 @@ lesshat-selector {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
   border: 1px solid #ccc;
   padding: 25px;
-  width: 80%;
+  width: 100%;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
     width: 85%;
   }
+}
+.cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child h4 {
+  font-size: 1.2em;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child h4 {
