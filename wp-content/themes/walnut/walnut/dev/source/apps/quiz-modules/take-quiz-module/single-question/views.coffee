@@ -38,7 +38,7 @@ define ['app'
                             data.replay = true
 
                         else
-                            data.replay = false
+                            data.replay = false 
                             data.show_skip = true
 
                             data.allow_submit_answer = true
