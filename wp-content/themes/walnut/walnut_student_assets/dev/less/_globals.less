@@ -25,7 +25,6 @@
 }
 
 
-
 // ---------------------------
 // BASIC RESET FOR BODY AND BLOCK/INLINE ELEMENTS -----------
 // ---------------------------
@@ -39,16 +38,39 @@ body {
 }
 
 
+
+// ---------------------------
+// FIREFOX IMAGE BORDER FIX -----------
+// ---------------------------
+
 a{
     outline: 0;
 }
 
-// Setting Headings to bold
+a:hover, a:active, a:focus {
+  outline: 0;
+}
+
+
+
+// ---------------------------
+// ALL HEADINGS TO BOLD -----------
+// ---------------------------
+
 h1, h2, h3, h4, h5 {
     font-weight: bold !important; //important for breaking Bootstrap default style
 }
 
 
+// ---------------------------
+// FIREFOX FONT RENDERING ISSUE WORKAROUND -----------
+// ---------------------------
+
+@-moz-document url-prefix() { 
+    h1, h2, h3, h4, h5 {
+        font-weight: lighter !important; 
+    }
+}
 
 
 // ---------------------------
