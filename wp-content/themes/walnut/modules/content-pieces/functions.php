@@ -289,8 +289,8 @@ function get_single_content_piece($id){
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
     else
-        $excerpt.='...';
-    
+        $excerpt.='';
+        //original commented by kapil $excerpt.='...';    
     $content_piece->post_excerpt =$excerpt;
     
     switch_to_blog($current_blog_id);
@@ -480,7 +480,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         if(strlen($ex)>0 && $excerpt_length <500 ){
             $excerpt.=$ex;
             $excerpt_length += strlen($ex);
-            $excerpt.=' | ';
+            //commented by kapil $excerpt.=' | ';
         }
     }
 
@@ -489,7 +489,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         $excerpt= substr($excerpt,0,500);
 
     //REMOVAL OF LAST 3 CHARACTERS WHICH MAY CONTAIN THE DIVIDER
-    $excerpt = substr($excerpt,0,-3);
+    //$excerpt = substr($excerpt,0,-3); commented by kapil
 
     return $excerpt;
 
