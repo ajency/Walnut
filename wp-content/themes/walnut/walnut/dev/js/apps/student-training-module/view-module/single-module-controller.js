@@ -197,7 +197,7 @@ define(['app', 'controllers/region-controller', 'apps/student-training-module/vi
         return ContentGroupViewLayout.__super__.constructor.apply(this, arguments);
       }
 
-      ContentGroupViewLayout.prototype.template = '<div class="teacher-app"> <div class="direction text-center"> <div class="icon goto-prev-page"><a href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div> <p class="welcome-text">You\'re here to view the My Body Organ Lecture</p> </div> <div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div> </div> <div id="content-display-region"></div>';
+      ContentGroupViewLayout.prototype.template = '<div class="teacher-app"> <div class="direction text-center"> <div class="icon goto-prev-page"><a href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div> <p class="welcome-text">You\'re here to view <span id="lect_name"></span> Lecture</p> </div> <div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div> </div> <div id="content-display-region"></div>';
 
       ContentGroupViewLayout.prototype.className = '';
 
