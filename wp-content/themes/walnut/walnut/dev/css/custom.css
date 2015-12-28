@@ -232,14 +232,14 @@
   src: local('KG Corner of the Sky'), local('KGCorneroftheSky-Normal'), url(../fonts/KGCorneroftheSky.woff) format('woff');
 }
 
-/*@font-face {
+@font-face {
   font-family: 'Qarmic Sans Free';
   font-style: normal;
   font-weight: 400;
   src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.eot) format('embedded-opentype');
   src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.ttf) format('True Type');
   src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.woff) format('woff');
-}*/
+}
 
 .creator {
   position: relative;
