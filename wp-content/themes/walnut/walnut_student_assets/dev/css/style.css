@@ -3254,6 +3254,11 @@ lesshat-selector {
 .teacher-app #quiz-details-region > div .grid .grid-body .summary-section span.text-danger {
   color: #D82A07 !important;
 }
+@media only screen and (max-width: 1024px) {
+  #myCanvas-miki {
+    float: none;
+  }
+}
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel {
     margin: 0 0 55px 28%;
