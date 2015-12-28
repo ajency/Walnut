@@ -938,6 +938,17 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 .create-ac-card .create-ac-wrapper .wrapped .parents-info .info .mat-holder:before {
   width: 80%;
 }
+.create-ac-card .create-ac-wrapper .wrapped .student-info .info .mat-holder .mat-label .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .parents-info .info .mat-holder .mat-label .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .student-info .info .mat-holder .mat-input .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .parents-info .info .mat-holder .mat-input .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .student-info .info .mat-holder:after .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .parents-info .info .mat-holder:after .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .student-info .info .mat-holder:before .mandatory,
+.create-ac-card .create-ac-wrapper .wrapped .parents-info .info .mat-holder:before .mandatory {
+  color: #FF0D00;
+  font-weight: bold;
+}
 .create-ac-card .create-ac-wrapper .wrapped .create-ac {
   background: #f3f3f3;
   padding: 20px;
