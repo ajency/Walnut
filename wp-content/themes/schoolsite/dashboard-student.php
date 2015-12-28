@@ -6,7 +6,6 @@
 <?php
 	get_header('student');
 ?>
-<h1><?php echo bloginfo('url'); ?></h1>
 <?php       
             $textbooks_res = student_fetch_textbooks();
             $textbooks     = $textbooks_res['data'];
