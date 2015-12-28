@@ -1054,6 +1054,10 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   -o-transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
+.quiz-cards .notification.destroy-popover span {
+  opacity: 0;
+  pointer-events: none;
+}
 .quiz-cards .quiz-img {
   -webkit-flex-basis: 30%;
   flex-basis: 30%;

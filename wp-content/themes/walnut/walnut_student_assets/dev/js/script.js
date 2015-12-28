@@ -185,7 +185,9 @@ $(function() {
         
     $('.notification').click(function(){
           
-        $(this).toggleClass('generate-popover');
+
+    $(this).toggleClass('generate-popover').removeClass('destroy-popover').parent().parent().siblings().children().find('.notification').toggleClass('destroy-popover').removeClass('generate-popover');
+
 
      });
 
@@ -199,7 +201,7 @@ $(function() {
             && element.has(e.target).length === 0) // ... nor a descendant of the container
         {
            
-            $(element).removeClass('generate-popover');
+            $(element).removeClass('generate-popover destroy-popover');
         }
     });
 
