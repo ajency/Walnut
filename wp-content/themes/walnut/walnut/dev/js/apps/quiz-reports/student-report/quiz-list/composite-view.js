@@ -86,6 +86,10 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-reports/st
             };
           })(this));
         } else {
+          msg = 'All the previous attempts for practice quiz only will also be resetted. Are you sure you want to continue?';
+          bootbox.confirm(msg, (function(_this) {
+            return function(result) {};
+          })(this));
           return this.deleteSelectedResponses(quizIDs);
         }
       };
