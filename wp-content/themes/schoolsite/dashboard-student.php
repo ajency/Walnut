@@ -6,7 +6,7 @@
 <?php
 	get_header('student');
 ?>
-
+<h1><?php echo bloginfo('url'); ?></h1>
 <?php       
             $textbooks_res = student_fetch_textbooks();
             $textbooks     = $textbooks_res['data'];
@@ -71,8 +71,8 @@
                                                         <?php endif; ?>                                                        
                                                         </p>
                                                         <div class="questions">
-                                                            <a href="<?php echo get_home_url() ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
-                                                            <a href="<?php echo get_home_url() ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo bloginfo('url'); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo bloginfo('url'); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
                                                         </div>
                                                     </div>
                                                 </div>
