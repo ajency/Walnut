@@ -1026,6 +1026,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   position: absolute;
   text-align: center;
   text-transform: none;
+  pointer-events: none;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
@@ -1042,8 +1043,9 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   position: absolute;
   width: 0;
 }
-.quiz-cards .notification:hover span {
+.quiz-cards .notification.generate-popover span {
   opacity: 1;
+  pointer-events: auto;
   filter: alpha(opacity=100);
   top: -5.5em;
   z-index: 1032;
@@ -2907,14 +2909,14 @@ lesshat-selector {
   }
 }
 .timerBox .endQuiz button {
-  background: #459290;
+  background: #602f1a;
   border: 2px solid #fff;
   border-radius: 10px;
   color: #ffffff;
   padding: 12px 28px;
 }
 .timerBox .endQuiz button:hover {
-  background: #9ed1d0;
+  background: #884325;
 }
 .timerBox .container-grey:last-child {
   padding: 20px;
