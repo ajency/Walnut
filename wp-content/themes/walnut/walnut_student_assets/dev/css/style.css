@@ -553,9 +553,6 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
-.direction .icon {
-  padding-right: 15px;
-}
 .direction .icon a {
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
@@ -572,6 +569,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 .direction .welcome-text {
   font-weight: bold;
   font-size: 1.3em;
+  padding-left: 15px;
   margin: 0;
 }
 .direction .welcome-text a {
