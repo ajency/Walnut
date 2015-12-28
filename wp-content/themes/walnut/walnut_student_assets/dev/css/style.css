@@ -140,6 +140,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   -o-transform: scale(1.2);
   -ms-transform: scale(1.2);
   transform: scale(1.2);
+  background: #ef5a47;
 }
 .profile-pic {
   height: 70px;
@@ -184,12 +185,10 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   color: #69b8b5;
 }
 .btn.fab-header:hover,
-.btn.fab-header:active,
 .btn.fab-header:focus {
-  background-color: #ef5a47 !important;
+  background-color: #ef5a47;
 }
 .btn.fab-header:hover i,
-.btn.fab-header:active i,
 .btn.fab-header:focus i {
   color: #ffffff;
 }
@@ -783,6 +782,7 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 }
 .signin-card .signin-wrapper .wrapped .school-details h5 a {
   color: #69b8b5;
+  text-decoration: underline;
 }
 .signin-card .signin-wrapper .wrapped .social-signup {
   margin: 10px 0;
@@ -1318,29 +1318,37 @@ nav.wallnut-nav .walnut-account > li > a:focus {
 }
 .fixed-container .btn-nav.setting-bg {
   background: #ef5a47 !important;
-}
-.fixed-container .btn-nav.setting-bg i {
-  color: #fff;
-}
-.fixed-container .btn-nav.setting-bg:focus,
-.fixed-container .btn-nav.setting-bg:active,
-.fixed-container .btn-nav.setting-bg:hover {
-  background: #ef5a47;
-}
-.fixed-container .btn-nav:hover,
-.fixed-container .btn-nav:active,
-.fixed-container .btn-nav:focus {
-  background: #ef5a47 !important;
   -webkit-transform: scale(1.2);
   -moz-transform: scale(1.2);
   -o-transform: scale(1.2);
   -ms-transform: scale(1.2);
   transform: scale(1.2);
 }
-.fixed-container .btn-nav:hover i,
-.fixed-container .btn-nav:active i,
-.fixed-container .btn-nav:focus i {
+.fixed-container .btn-nav.setting-bg i {
   color: #ffffff;
+}
+.fixed-container .btn-nav.setting-bg:hover {
+  background: #ef5a47;
+}
+.fixed-container .btn-nav.setting-bg:focus {
+  background: #ef5a47 !important;
+}
+.fixed-container .btn-nav.setting-bg:focus i {
+  color: #ffffff;
+}
+.fixed-container .btn-nav:hover {
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
+  background: #ef5a47;
+}
+.fixed-container .btn-nav:focus {
+  background: #F7F7F7 !important;
+}
+.fixed-container .btn-nav:focus i {
+  color: #69b8b5;
 }
 .fixed-container .waves-effect {
   position: relative;

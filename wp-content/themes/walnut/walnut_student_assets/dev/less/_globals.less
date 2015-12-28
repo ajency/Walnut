@@ -209,7 +209,7 @@ nav {
                     &:hover, &:active, &:focus {
                         outline: none;
                         .transform(scale(1.2));
-                        //background: lighten(#F7F7F7, 10%);
+                        background: @profile-color;
                     }
                 }
             }
@@ -265,8 +265,8 @@ nav {
     .fa {
         color: @dashboard-color;
     }
-    &:hover,&:active,&:focus {
-        background-color: @profile-color !important;
+    &:hover,&:focus {
+        background-color: @profile-color;
         & i{
             color: @color-white;
         }
