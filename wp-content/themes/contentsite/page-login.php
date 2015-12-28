@@ -12,7 +12,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="description" content="">
       <meta name="author" content="">
-      <title>Synapse Learning Institute</title>
+      <title>Walnut Learning System</title>
       <?php
          global $post;
          $page_slug=$post->post_name;
@@ -77,7 +77,7 @@
                                     <div class="col-sm-6 col-sm-offset-3 col-lg-6 col-lg-offset-3 wrapped">
                                         <div class="row text-center">
                                             <div class="col-md-12 reg-login">
-                                                <h4>Welcome to Synapse Learning Institute</h4>
+                                                <h4>Welcome to Walnut Learning System</h4>
                                                 <h5>Signin/Signup into your account</h5>
                                             </div>
                                         </div>                                    
@@ -85,9 +85,9 @@
                                             <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                        <a href="http://walnut.synapsedu.info"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
+                                                        <a href="<?php echo get_blog_option( $blog_id, 'siteurl' ) ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
                                                     </div>                                              
-                                                    <h5><a href="http://walnut.synapsedu.info">Login at Shivane</a></h5>
+                                                    <h5><a href="<?php echo get_blog_option( $blog_id, 'siteurl' ) ?>">Login at Shivane</a></h5>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6 col-sm-6 col-lg-6">
