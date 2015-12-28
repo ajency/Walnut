@@ -101,7 +101,6 @@ define ['app'
                     .hide()
 
             clearQuizResponse:->
-
                 quizIDs = $.getCheckedItems @$el.find '#quiz-table'
 
                 quizIDs = _.map quizIDs, (m)-> parseInt m
@@ -116,6 +115,8 @@ define ['app'
                         @deleteSelectedResponses(quizIDs) if result
 
                 else
+                    msg = 'All the previous attempts for practice quiz only will also be resetted. Are you sure you want to continue?'
+                    bootbox.confirm msg,(result)=>                    
                     @deleteSelectedResponses quizIDs
 
             deleteSelectedResponses:(quizIDs)->
