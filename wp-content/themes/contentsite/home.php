@@ -3,6 +3,8 @@
 <head>
     <title>Walnut Learning System</title>
 
+
+    <?php wp_head();?>
 </head>
 <body class="">
 <div id="site_main_container">
