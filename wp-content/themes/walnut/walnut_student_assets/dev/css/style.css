@@ -2383,13 +2383,13 @@ lesshat-selector {
   -moz-box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   border: 0;
-  width: 15%;
+  width: 18%;
   font-size: 1.1em;
   color: #fff;
 }
 .teacher-app #quiz-details-region > div:last-child #take-quiz:before {
   content: "\f01d";
-  padding-right: 15px;
+  padding-right: 10px;
   vertical-align: sub;
   display: inline-block;
   font: normal normal normal 1.5em FontAwesome;
@@ -3225,7 +3225,7 @@ lesshat-selector {
   -moz-box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   box-shadow: 0 3px 0 0 rgba(192, 204, 203, 0.9);
   border: 0;
-  width: 15%;
+  width: 18%;
   color: #fff;
   font-size: 1.1em;
 }
