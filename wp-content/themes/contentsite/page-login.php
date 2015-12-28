@@ -78,7 +78,7 @@
                                         <div class="row text-center">
                                             <div class="col-md-12 reg-login">
                                                 <h4>Welcome to Walnut Learning System</h4>
-                                                <h5>Signin/Signup into your account</h5>
+                                                <h5>Choose your school</h5>
                                             </div>
                                         </div>                                    
                                         <div class="row text-center">
