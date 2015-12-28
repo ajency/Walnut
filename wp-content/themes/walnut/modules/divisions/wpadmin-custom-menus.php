@@ -18,6 +18,14 @@ function school_divisions_addedit_menu() {
 }
 add_action( 'admin_menu', 'school_divisions_addedit_menu' );
 
+function admin_content_pieces_import_page(){
+    
+    if ( !current_user_can( 'manage_options' ) )  {
+        wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+    }
+    
+    echo get_content_pieces_import_page_html();
+}
 /*
  * function to display the school divisions
  */

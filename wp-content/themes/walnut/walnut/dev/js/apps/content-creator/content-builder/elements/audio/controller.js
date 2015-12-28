@@ -88,6 +88,11 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
               this.layout.elementRegion.show(this.view);
               return this.layout.model.save();
             });
+            _this.listenTo(_this.view, "show show:audio:properties", function() {
+              return App.execute("show:question:properties", {
+                model: _this.layout.model
+              });
+            });
             return _this.layout.elementRegion.show(_this.view);
           };
         })(this));

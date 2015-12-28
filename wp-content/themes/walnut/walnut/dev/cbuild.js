@@ -19,6 +19,7 @@
         marionette: 'plugins/backbone.marionette',
         text: 'plugins/text',
         mustache: 'plugins/mustache',
+        moment: 'plugins/moment.min',
 
         holder: 'plugins/holder',
         app: 'content-creator-app',

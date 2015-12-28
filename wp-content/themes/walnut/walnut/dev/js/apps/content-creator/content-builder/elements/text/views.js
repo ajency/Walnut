@@ -28,7 +28,7 @@ define(['app'], function(App) {
       };
 
       TextView.prototype.onShow = function() {
-        console.log(this.model.get('content'));
+        CKEDITOR.dtd.$removeEmpty['span'] = false;
         this.$el.attr('contenteditable', 'true').attr('id', _.uniqueId('text-'));
         CKEDITOR.on('instanceCreated', this.configureEditor);
         this.editor = CKEDITOR.inline(document.getElementById(this.$el.attr('id')));

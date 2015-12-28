@@ -40,6 +40,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       UserCollection.prototype.model = Users.UserModel;
 
+      UserCollection.prototype.comparator = 'display_name';
+
       UserCollection.prototype.url = function() {
         return AJAXURL + '?action=get-users';
       };
@@ -58,6 +60,9 @@ define(["app", 'backbone'], function(App, Backbone) {
           data: params
         });
         return userCollection;
+      },
+      newUser: function() {
+        return new Users.UserModel();
       },
       getUserByID: function(id) {
         var user;
@@ -145,8 +150,11 @@ define(["app", 'backbone'], function(App, Backbone) {
     App.reqres.setHandler("get:user:by:id", function(id) {
       return API.getUserByID(id);
     });
-    return App.reqres.setHandler("current:user:can", function(capability) {
+    App.reqres.setHandler("current:user:can", function(capability) {
       return API.current_user_can(capability);
+    });
+    return App.reqres.setHandler("new:user", function() {
+      return API.newUser();
     });
   });
 });

@@ -19,7 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
       answerModel = null;
 
       Controller.prototype.initialize = function(options) {
-        this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel;
+        this.model = options.model, answerWreqrObject = options.answerWreqrObject, answerModel = options.answerModel, this.quizModel = options.quizModel, this.direction = options.direction;
         this.view = this._getContentBoardView();
         this.listenTo(this.view, "add:new:element", function(container, type) {
           return App.request("add:new:element", container, type);
@@ -37,6 +37,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
           return function() {
             var fillElements;
             fillElements = _this.startFillingElements();
+            _this.view.$el.find('.cke_widget_drag_handler_container').remove();
             return fillElements.done(function() {
               return setTimeout(function() {
                 $('#loading-content-board').remove();
@@ -128,7 +129,6 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
 
       API = {
         addNewElement: function(container, type, modelData) {
-          console.log(type);
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,

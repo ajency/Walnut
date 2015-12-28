@@ -1,191 +1,281 @@
 define ['app'
-        'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'
-        'bootbox'], (App, contentListTpl,bootbox)->
-    App.module "ContentPiecesApp.ContentList.Views", (Views, App)->
-        class ListItemView extends Marionette.ItemView
+	    'text!apps/content-pieces/list-content-pieces/templates/content-pieces-list-tpl.html'
+	    'bootbox'], (App, contentListTpl,bootbox)->
+	App.module "ContentPiecesApp.ContentList.Views", (Views, App)->
+		class ListItemView extends Marionette.ItemView
 
-            tagName : 'tr'
-            className: 'gradeX odd'
+			tagName : 'tr'
+			className: 'gradeX odd'
 
-            template:   '<td class="cpHeight">{{&post_excerpt}}</td>
-                                    <td class="cpHeight">{{&present_in_str}}</td>
-                                    <td>{{textbookName}}</td>
-                                    <td>{{chapterName}}</td>
-                                    <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td>
-                                    <td>{{&statusMessage}}</td>
-                                    <td data-id="{{ID}}" class="text-center">
-                                        <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a>
-                                        {{&edit_link}}
-                                        {{#archivedModule}}
-                                            <span class="nonDevice">|</span>
-                                            <a target="_blank"  class="nonDevice cloneModule">Clone</a>
-                                        {{/archivedModule}}
-                                    </td>'
+			template:   '<td class="v-align-middle"><div class="checkbox check-default">
+	                        <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}">
+	                        <label for="checkbox{{ID}}"></label>
+	                      </div>
+	                    </td>
+	                    <td class="cpHeight">{{&post_excerpt}}</td>
+						<td class="cpHeight">{{&present_in_str}}</td>
+						<td>{{textbookName}}</td>
+						<td>{{chapterName}}</td>
+						<td>{{contentType}}</td>
+						<td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td>
+						<td>{{&statusMessage}}</td>
+						<td data-id="{{ID}}" class="text-center">
+							<a target="_blank" href="{{view_url}}" class="view-content-piece">View</a>
+							{{&edit_link}}
+							{{#is_under_review}}
+								<span class="nonDevice publishModuleSpan">|</span>
+								<a target="_blank" class="nonDevice publishModule">Publish</a>
+							{{/is_under_review}}
+							{{#is_published}}
+								<span class="nonDevice archiveModuleSpan">|</span>
+								<a target="_blank" class="nonDevice archiveModule">Archive</a>
+							{{/is_published}}
+							<span class="nonDevice">|</span>
+							<a target="_blank"  class="nonDevice cloneModule">Clone</a>
+							<i class="fa spinner"></i>
+						</td>'
 
-            serializeData:->
-                data= super()
+			serializeData:->
+				data= super()
+				
+				#this is for display purpose only
+				data.modified_date= moment(data.post_modified).format("Do MMM YYYY <br/> h:mm a")
 
-                #this is for display purpose only
-                data.modified_date= moment(data.post_modified).format("Do MMM YYYY")
+				#for sorting the column date-wise
+				data.sort_date= moment(data.post_modified).format "YYYYMMDD"
 
-                #for sorting the column date-wise
-                data.sort_date= moment(data.post_modified).format "YYYYMMDD"
+				if data.content_type is 'student_question'
+					data.view_url = SITEURL + '/#dummy-quiz/'+data.ID
 
-                if data.content_type is 'student_question'
-                    data.view_url = SITEURL + '/#dummy-quiz/'+data.ID
+				else
+					data.view_url = SITEURL + '/#dummy-module/'+data.ID
 
-                else
-                    data.view_url = SITEURL + '/#dummy-module/'+data.ID
+				edit_url = SITEURL + '/content-creator/#edit-content/'+data.ID
+				data.edit_link= ''
 
-                edit_url = SITEURL + '/content-creator/#edit-content/'+data.ID
-                data.edit_link= ''
+				if data.post_status is 'pending'
+					data.edit_link= ' <span class="nonDevice editLinkSpan">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice editLink">Edit</a>'
 
-                if data.post_status is 'pending'
-                    data.edit_link= ' <span class="nonDevice">|</span> <a target="_blank" href="'+edit_url+'" class="nonDevice">Edit</a>'
+				data.textbookName = =>
+					if data.term_ids.textbook
+						textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+						textbook.name if textbook
 
-                data.textbookName = =>
-                    if data.term_ids.textbook
-                        textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-                        textbook.name if textbook
+				data.chapterName = =>
+					if data.term_ids.chapter
+						chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
+						.pluck 'name'
+							.compact()
+							.value()
+						chapter
 
-                data.chapterName = =>
-                    if data.term_ids.chapter
-                        chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
-                        .pluck 'name'
-                            .compact()
-                            .value()
-                        chapter
+				data.statusMessage = ->
+					if data.post_status is 'pending'
+						return '<span class="label post-status label-important">Under Review</span>'
+					else if data.post_status is 'publish'
+						return '<span class="label post-status label-info">Published</span>'
+					else if data.post_status is 'archive'
+						return '<span class="label post-status label-success">Archived</span>'
 
-                data.statusMessage = ->
-                    if data.post_status is 'pending'
-                        return '<span class="label label-important">Under Review</span>'
-                    else if data.post_status is 'publish'
-                        return '<span class="label label-info">Published</span>'
-                    else if data.post_status is 'archive'
-                        return '<span class="label label-success">Archived</span>'
+				data.is_published = true if data.post_status is 'publish'
+				data.is_under_review  = true if data.post_status is 'pending'
+				modules=[]
+				_.each data.present_in_modules, (ele,index)->
+					modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
 
-                data.archivedModule = true if data.post_status in ['publish', 'archive']
+				data.present_in_str=
+					if _.size(modules)>0
+					then _.toSentence(modules)
+					else 'Not added to a module yet'
+				data.contentType = _.str.titleize _.str.humanize data.content_type
+				data
 
-                modules=[]
-                _.each data.present_in_modules, (ele,index)->
-                    modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
+			events:
+				'click a.cloneModule'	:-> @model.duplicate()
+				'click a.archiveModule' :-> @changeModuleStatus 'archive'
+				'click a.publishModule' :-> @changeModuleStatus 'publish'
 
-                data.present_in_str=
-                    if _.size(modules)>0
-                    then _.toSentence(modules)
-                    else 'Not added to a module yet'
+			initialize : (options)->
+				@textbooks = options.textbooksCollection
+				@chapters = options.chaptersCollection
+			
+			addSpinner:->
+				@$el.find '.spinner'
+				.addClass 'fa-spin fa-spinner'
+			
+			removeSpinner:=>
+				@$el.find '.spinner'
+				.removeClass 'fa-spin fa-spinner'
+			
+			changeModuleStatus:(status)->
+				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('post_excerpt')}' ?", (result)=>
+					if result
+						@addSpinner()
+						@model.save post_status: status,
+							success:=> @changeStatusLabel status								
+							error:(resp)-> console.log resp
+							complete:@removeSpinner
+			
+			changeStatusLabel:(status)->
+				switch (status)
+					when 'archive'
+						@$el.find '.post-status'
+						.removeClass 'label-info'
+						.addClass 'label-success'
+						.html 'Archived'
+						@$el.find '.archiveModule, .archiveModuleSpan'
+						.remove()
+						
+					when 'publish'
+						@$el.find '.post-status'
+						.removeClass 'label-important'
+						.addClass 'label-info'
+						.html 'Published'
+						
+						@$el.find '.view-content-piece'
+						.after '<span class="nonDevice archiveModuleSpan">|</span>
+								<a target="_blank" class="nonDevice archiveModule">Archive</a>'
+								
+						@$el.find '.publishModule, .publishModuleSpan, .editLink, .editLinkSpan'
+						.remove()
+						
+		class EmptyView extends Marionette.ItemView
 
-                data
+			template: 'No Content Available'
 
-            events:
-                'click a.cloneModule' : 'cloneModule'
+			tagName: 'td'
 
-            initialize : (options)->
-                @textbooks = options.textbooksCollection
-                @chapters = options.chaptersCollection
+			onShow:->
+				@$el.attr 'colspan',7
 
-            cloneModule :->
-                if @model.get('post_status') in ['publish','archive']
-                    bootbox.confirm "Are you sure you want to clone '#{@model.get('post_excerpt')}' ?", (result)=>
-                        if(result)
-                            @cloneModel = App.request "new:content:piece"
-                            contentPieceData = @model.toJSON()
+		class Views.ListView extends Marionette.CompositeView
 
-                            @clonedData = _.omit contentPieceData,
-                                          ['ID', 'guid', 'last_modified_by', 'post_author',
-                                           'post_author_name', 'post_date', 'post_date_gmt', 'published_by']
+			template: contentListTpl
 
-                            @clonedData.post_status = "pending"
-                            @clonedData.clone_id =@model.id
+			className: 'row'
 
-                            App.execute "when:fetched", @cloneModel, =>
-                                @cloneModel.save @clonedData,
-                                    wait : true
-                                    success : @successSaveFn
-                                    error : @errorFn
+			itemView: ListItemView
 
-            successSaveFn : (model)=>
-                document.location = SITEURL+ "/content-creator/#edit-content/#{model.id}"
+			emptyView: EmptyView
 
-        class EmptyView extends Marionette.ItemView
+			itemViewContainer: '#list-content-pieces'
 
-            template: 'No Content Available'
+			itemViewOptions : ->
+				textbooksCollection : @textbooks
+				chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
 
-            tagName: 'td'
+			events:
+				'change #content-post-status-filter, #difficulty-level-filter'  : 'setFilteredContent'
 
-            onShow:->
-                @$el.attr 'colspan',7
+				'change .textbook-filter' :(e)->
+					@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
-        class Views.ListView extends Marionette.CompositeView
-
-            template: contentListTpl
-
-            className: 'row'
-
-            itemView: ListItemView
-
-            emptyView: EmptyView
-
-            itemViewContainer: '#list-content-pieces'
-
-            itemViewOptions : ->
-                textbooksCollection : @textbooks
-                chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
-
-            events:
-                'change #content-post-status-filter, #difficulty-level-filter'  : 'setFilteredContent'
-
-                'change .textbook-filter' :(e)->
-                    @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
-
-
-            initialize : ->
-                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
-                @textbooks = new Array()
-                @textbooksCollection.each (textbookModel, ind)=>
-                    @textbooks.push
-                        'name' : textbookModel.get('name')
-                        'id' : textbookModel.get('term_id')
-            onShow:->
-                @textbooksCollection = Marionette.getOption @, 'textbooksCollection'
-                @fullCollection = Marionette.getOption @, 'fullCollection'
-                textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
-                @$el.find '#textbook-filters'
-                .html textbookFiltersHTML
-
-                @$el.find "#content-pieces-table"
-                .tablesorter()
-
-                @$el.find ".select2-filters"
-                .select2()
-
-                @onUpdatePager()
-
-            onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
-
-                switch filterType
-                    when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
-                    when 'chapters-filter' then $.populateSections filteredCollection, @$el
-                    when 'sections-filter' then $.populateSubSections filteredCollection, @$el
-
-                @setFilteredContent()
-
-
-            setFilteredContent:->
-                filtered_data= $.filterTableByTextbooks(@)
-
-                @collection.set filtered_data
-
-                @onUpdatePager()
+				'change #check_all_div'     			:-> $.toggleCheckAll @$el.find 'table'
+				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
+				'click .change-status button'			: 'changeStatus'
 
 
-            onUpdatePager:->
+			initialize : ->
+				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+				@textbooks = new Array()
+				@textbooksCollection.each (textbookModel, ind)=>
+					@textbooks.push
+						'name' : textbookModel.get('name')
+						'id' : textbookModel.get('term_id')
 
-                @$el.find "#content-pieces-table"
-                .trigger "updateCache"
-                pagerOptions =
-                    container : @$el.find ".pager"
-                    output : '{startRow} to {endRow} of {totalRows}'
+			onShow:->
+				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
+				@fullCollection = Marionette.getOption @, 'fullCollection'
+				textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
+				@$el.find '#textbook-filters'
+				.html textbookFiltersHTML
 
-                @$el.find "#content-pieces-table"
-                .tablesorterPager pagerOptions
+				@$el.find "#content-pieces-table"
+				.tablesorter()
+
+				@$el.find ".select2-filters"
+				.select2()
+
+				@onUpdatePager()
+
+			onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
+
+				switch filterType
+					when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
+					when 'chapters-filter' then $.populateSections filteredCollection, @$el
+					when 'sections-filter' then $.populateSubSections filteredCollection, @$el
+
+				@setFilteredContent()
+
+
+			setFilteredContent:->
+				filtered_data= $.filterTableByTextbooks(@)
+
+				@collection.set filtered_data
+
+				@onUpdatePager()
+
+
+			onUpdatePager:->
+
+				@$el.find "#content-pieces-table"
+				.trigger "updateCache"
+				pagerOptions =
+					container : @$el.find ".pager"
+					output : '{startRow} to {endRow} of {totalRows}'
+
+				@$el.find "#content-pieces-table"
+				.tablesorterPager pagerOptions
+
+			showSubmitButton:->
+	            if @$el.find '.tab_checkbox'
+	            .is ':checked'
+	                @$el.find '.change-status'
+	                .show()
+
+	            else
+	                @$el.find '.change-status'
+	                .hide()
+				
+			changeStatus:(e)=>
+				data = {}
+				data.IDs= $.getCheckedItems @$el.find 'table'
+				data.status= $(e.target).closest('.change-status').find('select').val()
+
+				msg = "Are you sure you want to #{data.status} the selected content pieces ?"
+				
+				if data.status is 'publish'
+					data.IDs = _.filter data.IDs, (id)=>return id if @collection.get(id).get('post_status') is 'pending'
+					msg += "<div class='small m-t-10'>
+								Note: Only content pieces with status 'Under Review' will be changed to publish
+							</div>"
+
+					if 0 is _.size data.IDs
+						bootbox.alert 'None of the selected items can be published'
+						return
+
+				bootbox.confirm msg, (result)=>
+					if result
+						$(e.target).find '.fa'
+						.addClass 'fa-spin fa-spinner'
+
+						data.action = 'update-content-piece-status'
+						$.post AJAXURL, data
+						.success (resp)=>
+							@updateStatusValues data.IDs, data.status
+						.fail (resp)->
+							console.log 'some error occurred'
+							console.log resp
+						.done ->							
+							$(e.target).find '.fa'
+							.removeClass 'fa-spin fa-spinner'
+							.addClass 'fa-check'
+
+
+			updateStatusValues:(IDs, status)->
+				_.each IDs, (id)=>
+					model= @collection.get parseInt id
+					model.set 'post_status': status
+
+				@collection.reset @collection.models
+				@onUpdatePager()

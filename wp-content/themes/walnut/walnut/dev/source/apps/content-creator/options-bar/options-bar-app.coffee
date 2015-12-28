@@ -1,8 +1,9 @@
 define ['app'
         'controllers/region-controller'
+        'bootbox'
         'apps/content-creator/options-bar/options-bar-views'
 
-], (App, RegionController)->
+], (App, RegionController,bootbox)->
     App.module "ContentCreator.OptionsBar", (OptionsBar, App, Backbone, Marionette, $, _)->
         class OptionsBarController extends RegionController
 
@@ -15,6 +16,9 @@ define ['app'
 
                 App.execute "when:fetched", [@textbooksCollection, @contentPieceModel], @showView
 
+                @listenTo @region, "change:content:piece",@_beforeChangeContentPiece
+
+
                 @listenTo @view, "save:data:to:model", (data)=>
                     @contentPieceModel.set data
                     App.execute "save:question"
@@ -25,7 +29,16 @@ define ['app'
                 @listenTo @view, 'close:grading:parameter',()=>
                     @region.trigger 'close:grading:parameter'
 
-
+            _beforeChangeContentPiece:(nextID)=>
+                if @contentPieceModel.isNew()
+                    message = 'You are in the middle of creating a new content piece.
+                            If you reload the page your changes will be lost.'
+                else
+                    @view.triggerMethod 'save:question:settings'
+                    if (not @view.$el.find('form').valid()) or $('form input[name="complete"]').val() is 'false'
+                        bootbox.alert 'Error occured saving your content'
+                    else
+                        App.navigate "edit-content/#{nextID}", true
 
 
             showView: =>

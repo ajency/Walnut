@@ -21,11 +21,6 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
           return e.preventDefault();
         },
         'click': '_whenImageClicked',
-        'click .delete-media-img': function() {
-          if (confirm("Delete image?")) {
-            return this.trigger("delete:media:image", this.model);
-          }
-        },
         'click .edit-image': function() {
           return this.trigger('show:image:editor', this.model);
         }
@@ -40,10 +35,15 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
         data.imagePreview = false;
         data.videoPreview = false;
         data.audioPreview = false;
-        if (data.type === 'image') {
-          if (data.sizes && data.sizes.thumbnail && data.sizes.thumbnail.url) {
-            data.imagePreview = true;
+        if (data.type === 'image' && data.sizes) {
+          if (data.sizes.thumbnail && data.sizes.thumbnail.url) {
+            data.imageUrl = data.sizes.thumbnail.url;
+          } else if (data.sizes.full && data.sizes.full.url) {
+            data.imageUrl = data.sizes.full.url;
           }
+        }
+        if (data.imageUrl) {
+          data.imagePreview = true;
         }
         if (data.type === 'video') {
           data.videoPreview = true;
@@ -52,6 +52,9 @@ define(['app', 'text!apps/media/grid/templates/media.html', 'text!apps/media/gri
         if (data.type === 'audio') {
           data.audioPreview = true;
           data.title_show = _.prune(data.title, 50);
+        }
+        if (data.type === 'image') {
+          data.title_show = _.prune(data.title, 22);
         }
         return data;
       };

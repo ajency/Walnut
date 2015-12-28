@@ -29,7 +29,7 @@ define ['app'], (App)->
             # hold the editor instance as the element property so that
             # we can destroy it on close of element
             onShow : ->
-                console.log @model.get 'content'
+                CKEDITOR.dtd.$removeEmpty['span'] = false;
                 @$el.attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
                 CKEDITOR.on 'instanceCreated', @configureEditor
                 @editor = CKEDITOR.inline document.getElementById @$el.attr 'id'

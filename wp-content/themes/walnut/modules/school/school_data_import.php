@@ -1,5 +1,7 @@
 <?php
-require_once 'CSV.php';
+
+if(!class_exists('Coseva\CSV'))
+    require_once 'CSV.php';
 
 function parseCSV($filepath) {
 
@@ -76,7 +78,7 @@ function getStudentCsvContent($csvJson){
     $i=1;
     while ($i <= count($csvData)-1 ) {
 	    $user_table = $wpdb->prefix ."users";
-        $user_pass = "ajency";
+        $user_pass = "12345";
         $user_login = $csvData[$i][0];
         $meta_value_rollno = $csvData[$i][1];
         $blogId = $csvData[$i][2];
@@ -86,46 +88,27 @@ function getStudentCsvContent($csvJson){
         $meta_value_division =(int) $csvData[$i][5];
         $role = "student";
 
-        //Check if $user_email is present in users table
-		$userEmailExists = $wpdb->get_row( "select * from $user_table where user_email like '%" . $user_email . "%'" );
-		
-		if( $userEmailExists != null ){ 
-		
-			$user_id = $userEmailExists->ID; 
-			$userdata = array(
-				'ID'			=> $user_id,
-				'user_pass'     => $user_pass,
-				'user_login'    => $user_login,
-				'user_email'    => $user_email
-
-			);
-			echo "<br/>Student updated : ". $user_id;			
-
-		}
-		else{
 				
-			$userdata = array(
-				'user_pass'     => $user_pass,
-				'user_login'    => $user_login,
-				'user_email'    => $user_email
+        $userdata = array(
+                'user_pass'     => $user_pass,
+                'user_login'    => $user_login,
+                'user_email'    => $user_email
 
-			);
+        );
 
-			$user_id = wp_insert_user( $userdata ) ;
-			if( !is_wp_error($user_id) ) {
-				echo "<br/>Student created : ". $user_id;
-			}
-		}
+        $user_id = wp_insert_user( $userdata ) ;
+        if( !is_wp_error($user_id) ) {
+                echo "<br/>Student created : ". $user_id;
+        }
 		
-		//Insert/Update user meta table
+        //Insert user meta table
 		
-		update_user_meta( $user_id, $meta_key_division, $meta_value_division );
-		update_user_meta( $user_id, $meta_key_rollno, $meta_value_rollno);
-		
-		//add student to blog
-		if(add_user_to_blog( $blogId, $user_id, $role )){
-			echo "<br/>Added Student - ". $user_id." to blog ".$blogId." as a ".$role;
-		}
+        update_user_meta( $user_id, $meta_key_division, $meta_value_division );
+        update_user_meta( $user_id, $meta_key_rollno, $meta_value_rollno);
+
+        //add student to blog
+        if(add_user_to_blog( $blogId, $user_id, $role ))
+            echo "<br/>Added Student - ". $user_id." to blog ".$blogId." as a ".$role;
 
         $i++;
 
@@ -142,7 +125,7 @@ function getTeacherCsvContent($csvJson){
     $i=1;
     while ($i <= count($csvData)-1 ) {
 		$user_table = $wpdb->prefix ."users";
-        $user_pass = "ajency";
+        $user_pass = "12345";
         $user_login = $csvData[$i][0];
         $user_email = $csvData[$i][1];
         $blogId = $csvData[$i][2];

@@ -143,21 +143,27 @@ define(['app', 'apps/content-modules/view-single-module/single-module-controller
           this.contentPiece = App.request("get:content:piece:by:id", content_piece_id);
           return App.execute("when:fetched", this.contentPiece, (function(_this) {
             return function() {
-              var dummyGroupModel, questionsCollection;
+              var questionsCollection, textbookID;
               questionsCollection = App.request("empty:content:pieces:collection");
               questionsCollection.add(_this.contentPiece);
               if (_this.contentPiece.get('content_type') !== 'student_question') {
-                dummyGroupModel = App.request("create:dummy:content:module", content_piece_id);
-                return App.execute("start:teacher:teaching:app", {
-                  region: App.mainContentRegion,
-                  division: 3,
-                  contentPiece: _this.contentPiece,
-                  questionResponseCollection: App.request("get:empty:question:response:collection"),
-                  contentGroupModel: dummyGroupModel,
-                  questionsCollection: questionsCollection,
-                  classID: 2,
-                  studentCollection: App.request("get:dummy:students"),
-                  display_mode: 'class_mode'
+                textbookID = _this.contentPiece.get('term_ids')['textbook'];
+                _this.textbook = App.request("get:textbook:by:id", textbookID);
+                return App.execute("when:fetched", _this.textbook, function() {
+                  var dummyGroupModel;
+                  dummyGroupModel = App.request("create:dummy:content:module", content_piece_id);
+                  console.log(_this.textbook);
+                  return App.execute("start:teacher:teaching:app", {
+                    region: App.mainContentRegion,
+                    division: 3,
+                    contentPiece: _this.contentPiece,
+                    questionResponseCollection: App.request("get:empty:question:response:collection"),
+                    contentGroupModel: dummyGroupModel,
+                    questionsCollection: questionsCollection,
+                    classID: _.first(_this.textbook.get('classes')),
+                    studentCollection: App.request("get:dummy:students"),
+                    display_mode: 'class_mode'
+                  });
                 });
               }
             };

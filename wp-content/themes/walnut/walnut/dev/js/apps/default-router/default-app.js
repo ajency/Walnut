@@ -12,17 +12,16 @@ define(['app'], function(App) {
       }
 
       DefaultAppRouter.prototype.appRoutes = {
-        '*path': 'default'
+        'route-not-found': 'routeNotFound'
       };
 
       return DefaultAppRouter;
 
     })(Marionette.AppRouter);
     Controller = {
-      "default": function() {
-        console.log('defaulted');
-        return App.navigate('', {
-          trigger: true
+      routeNotFound: function() {
+        return App.execute("show:404:app", {
+          region: App.mainContentRegion
         });
       }
     };

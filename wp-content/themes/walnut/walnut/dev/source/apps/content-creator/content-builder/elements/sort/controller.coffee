@@ -35,10 +35,11 @@ define ['app'
 
                 @_parseOptions optionsObj
 
-                optionCollection = App.request "create:new:option:collection", optionsObj
-                optionCollection.comparator = 'index'
-                optionCollection.sort()
-                @layout.model.set 'elements', optionCollection
+                if not (optionsObj instanceof Backbone.Collection)
+                    optionCollection = App.request "create:new:option:collection", optionsObj
+                    optionCollection.comparator = 'index'
+                    optionCollection.sort()
+                    @layout.model.set 'elements', optionCollection
 
                 # get the view
                 @view = @_getSortView()# optionCollection

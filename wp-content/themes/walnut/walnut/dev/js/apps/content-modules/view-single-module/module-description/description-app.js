@@ -15,7 +15,6 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
-        console.log('test');
         this.view = view = this._getCollectionDetailsView();
         this.listenTo(view, 'start:teaching:module', (function(_this) {
           return function() {
@@ -133,11 +132,13 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       CollectionDetailsView.prototype.template = collectionDetailsTpl;
 
-      CollectionDetailsView.prototype.events = {
-        'click #start-module': 'startModule',
-        'click #go-back-button': function() {
-          return this.trigger("goto:previous:route");
-        }
+      CollectionDetailsView.prototype.events = function() {
+        return {
+          'click #start-module': 'startModule',
+          'click #go-back-button': function() {
+            return this.trigger("goto:previous:route");
+          }
+        };
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {

@@ -3,7 +3,7 @@ var __hasProp = {}.hasOwnProperty,
 
 define(["app", 'backbone'], function(App, Backbone) {
   App.module("Entities.Menus", function(Menus, App, Backbone, Marionette, $, _) {
-    var API;
+    var API, menuCollection;
     Menus.MenuItemModel = (function(_super) {
       __extends(MenuItemModel, _super);
 
@@ -40,19 +40,22 @@ define(["app", 'backbone'], function(App, Backbone) {
       return MenuItemCollection;
 
     })(Backbone.Collection);
+    menuCollection = new Menus.MenuItemCollection;
     API = {
       getMenus: function(param) {
-        var menuCollection;
         if (param == null) {
           param = {};
         }
-        menuCollection = new Menus.MenuItemCollection;
-        menuCollection.url = AJAXURL + '?action=get-menus';
-        menuCollection.fetch({
-          reset: true,
-          data: param
-        });
-        return menuCollection;
+        if (menuCollection.isEmpty()) {
+          menuCollection.url = AJAXURL + '?action=get-menus';
+          menuCollection.fetch({
+            reset: true,
+            data: param
+          });
+          return menuCollection;
+        } else {
+          return menuCollection;
+        }
       }
     };
     return App.reqres.setHandler("get:site:menus", function() {

@@ -1,13 +1,21 @@
 <div class="col-lg-12">
     <!-- <h4><span class="semi-bold">All</span> Modules</h4> -->
 
+    <div class="change-status none small">
+        Change status to: 
+        <select class="form-control inline small">
+            <option value="publish">Publish</option>
+            <option value="archive">Archive</option>
+        </select>
+        <button class="btn btn-info btn-small"><i class="fa"></i> Change Status</button>
+    </div>
     <table class="table table-bordered m-t-10" id="content-pieces-table" >
         <thead>
         <tr>
-            <!--<th style="width:4%"><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
+            <th style="width:4%"><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
                 <input id="check_all" type="checkbox">
                 <label for="check_all"></label>
-            </div>-->
+            </div>
             <th style="width:30%">Name</th>
             {{#isQuiz}}<th>Type</th>{{/isQuiz}}
             <th>Textbook</th>
@@ -24,6 +32,14 @@
 
         </tbody>
     </table>
+    <div class="change-status none small">
+        Change status to: 
+        <select class="form-control inline small">
+            <option value="publish">Publish</option>
+            <option value="archive">Archive</option>
+        </select>
+        <button class="btn btn-info btn-small"><i class="fa"></i> Change Status</button>
+    </div>
     <div id="pager" class="pager">
         <i class="cursor fa fa-chevron-left prev"></i>
         <span style="padding:0 15px"  class="pagedisplay"></span>

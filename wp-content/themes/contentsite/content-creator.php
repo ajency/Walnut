@@ -120,14 +120,13 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
          document.getElementById("site_main_container").setAttribute('class','showAll');
      })
 </script>
- <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js"></script> 
+ <script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/ckeditor/ckeditor.js?ver=4.4.1"></script>
 <?php if(ENV=='dev') { ?>
 <script type="text/javascript" data-main="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/content-creator-main.js?ver=<?php echo DEV_VERSION?>" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+
 <?php } else { ?>
 
  <script type="text/javascript"  src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js?ver=<?php echo VERSION?>"></script>
 <?php } ?>
-
-
 </body>
 </html>

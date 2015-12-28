@@ -134,6 +134,113 @@
   src: local('CinzelDecorative'), local('CinzelDecorative-Regular'), url(../fonts/CinzelDecorative-Regular.ttf) format('True Type');
   src: local('CinzelDecorative'), local('CinzelDecorative-Regular'), url(../fonts/CinzelDecorative-Regular.woff) format('woff');
 }
+
+@font-face {
+  font-family: 'Aksharyogini';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.eot) format('embedded-opentype');
+  src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.ttf) format('True Type');
+  src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Garamond';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.eot) format('embedded-opentype');
+  src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.ttf) format('True Type');
+  src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Calibri';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Calibri'), local('Calibri-Normal'), url(../fonts/Calibri.eot) format('embedded-opentype');
+  src: local('Calibri'), local('Calibri-Normal'), url(../fonts/Calibri.ttf) format('True Type');
+  src: local('Calibri'), local('Calibri-Normal'), url(../fonts/Calibri.woff) format('woff');
+}
+@font-face {
+  font-family: 'Days Later';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.eot) format('embedded-opentype');
+  src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.ttf) format('True Type');
+  src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Days Ago';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.eot) format('embedded-opentype');
+  src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.ttf) format('True Type');
+  src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Bedizen';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.eot) format('embedded-opentype');
+  src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.ttf) format('True Type');
+  src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Braveheart DNA';
+  font-style: normal;
+  font-weight: 400;
+  src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.eot) format('embedded-opentype');
+  src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.ttf) format('True Type');
+  src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Cardo';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.eot) format('embedded-opentype');
+  src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.ttf) format('True Type');
+  src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Corporate Rounded';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Corporate Rounded'), local('CorporateRounded-Normal'), url(../fonts/CorporateRounded.eot) format('embedded-opentype');
+  src: local('Corporate Rounded'), local('CorporateRounded-Normal'), url(../fonts/CorporateRounded.ttf) format('True Type');
+  src: local('Corporate Rounded'), local('CorporateRounded-Normal'), url(../fonts/CorporateRounded.woff) format('woff');
+}
+@font-face {
+  font-family: 'Lane Humouresque';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.eot) format('embedded-opentype');
+  src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.ttf) format('True Type');
+  src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'KG Corner of the Sky';
+  font-style: normal;
+  font-weight: 400;
+  src: local('KG Corner of the Sky'), local('KGCorneroftheSky-Normal'), url(../fonts/KGCorneroftheSky.eot) format('embedded-opentype');
+  src: local('KG Corner of the Sky'), local('KGCorneroftheSky-Normal'), url(../fonts/KGCorneroftheSky.ttf) format('True Type');
+  src: local('KG Corner of the Sky'), local('KGCorneroftheSky-Normal'), url(../fonts/KGCorneroftheSky.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Qarmic Sans Free';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.eot) format('embedded-opentype');
+  src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.ttf) format('True Type');
+  src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.woff) format('woff');
+}
+
 .creator {
   position: relative;
 }
@@ -182,6 +289,21 @@
   padding: 20px 0;
   background: #d0d0d0;
   border: none;
+}
+#content-board #myCanvas .column,
+#content-board.quizContent #myCanvas .column,
+#content-builder #myCanvas .column {
+  padding: 0 5px;
+}
+#content-board #myCanvas .column:first-child,
+#content-board.quizContent #myCanvas .column:first-child,
+#content-builder #myCanvas .column:first-child {
+  padding-left: 15px;
+}
+#content-board #myCanvas .column:last-child,
+#content-board.quizContent #myCanvas .column:last-child,
+#content-builder #myCanvas .column:last-child {
+  padding-right: 15px;
 }
 .createParameters {
   background: #ffffff;
@@ -377,6 +499,7 @@
   /* Opera 10.50–12.00 */
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
+  font-family: "Qarmic Sans Free";
 }
 .element-wrapper .element-controls {
   position: relative;
@@ -758,7 +881,10 @@
   display: block;
 }
 .image img {
-  height: inherit;
+  /*height: 100%;*/
+  max-height: 100%;
+  width: auto;
+  margin: auto;
 }
 .image .ui-resizable-handle.ui-resizable-s {
   height: 15px;
@@ -892,6 +1018,9 @@
 #all-media-region .thumbnail {
   cursor: pointer;
   background-color: #f3f3f3;
+  height: 145px;
+  overflow: hidden;
+  margin-bottom: 0;
 }
 #all-media-region .thumbnail::after {
   clear: both;
@@ -923,6 +1052,12 @@
 #all-media-region .col-sm-2 .imaTitle {
   display: none;
 }
+#all-media-region .col-sm-2 .edit-image,
+#all-media-region .col-sm-2 .delete-image {
+  font-size: 14px;
+  display: inline-block;
+  margin-bottom: 15px;
+}
 #all-media-region .single-img {
   position: relative;
 }
@@ -937,7 +1072,7 @@
   display: none;
 }
 #all-media-region .ui-selected a {
-  border: 2px solid #0090d9;
+  border: 1px solid #0090d9;
 }
 #all-media-region .ui-selected .ticker {
   display: block;
@@ -1385,13 +1520,12 @@ p.mcq-option-text {
   margin-top: 15px;
   margin-left: 220px;
   margin-right: 220px;
-  margin-bottom: 50px;
   overflow-x: auto;
 }
 #content-board .element-wrapper {
   border: none;
   padding: 0 7px;
-  margin: 2px 0 15px;
+  margin: 2px 0 5px;
 }
 #content-board .imagewithtext .image-placeholder {
   cursor: default;
@@ -2636,7 +2770,7 @@ textarea.error,
 .smallLogo {
   background: url(../../../images/synapse-logo-main.png);
   width: 97px;
-  height: 35px;
+  height: 100px;
   margin: 0 auto;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -2959,3 +3093,23 @@ select:before {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
   margin-left: 0;
 }
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+a.browse-content-pieces-item{height:160px;}
+
+#textbooks.list.myClass .txtbook.noCursor {
+  cursor: auto;
+}
+/*# sourceMappingURL=custom.css.map */

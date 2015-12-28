@@ -67,20 +67,25 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       DataContentItemView.prototype.tagName = 'tr';
 
       DataContentItemView.prototype.serializeData = function() {
-        var data, modules, type;
+        var data, modules, type, _ref;
         data = DataContentItemView.__super__.serializeData.call(this);
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if (this.groupType === 'teaching-module') {
+        if ((_ref = this.groupType) === 'teaching-module' || _ref === 'student-training') {
           data.isModule = true;
+        }
+        if (this.groupType === 'student-training') {
+          data.isStudentTraining = true;
         }
         data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
         data.content_type_str = _(data.content_type).chain().humanize().titleize().value();
         modules = [];
         _.each(data.present_in_modules, function(ele, index) {
-          return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
+          var link;
+          link = data.content_type === 'student_question' ? 'view-quiz' : 'view-group';
+          return modules.push(("<a target='_blank' href='#" + link + "/" + ele.id + "'>") + ele.name + "</a>");
         });
         type = data.content_type === 'student_question' ? 'quiz' : 'teaching-module';
         if (data.content_type === 'student_question') {
@@ -144,11 +149,12 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.mixinTemplateHelpers = function(data) {
+        var _ref;
         data = DataContentTableView.__super__.mixinTemplateHelpers.call(this, data);
         if (this.groupType === 'quiz') {
           data.isQuiz = true;
         }
-        if (this.groupType === 'teaching-module') {
+        if ((_ref = this.groupType) === 'teaching-module' || _ref === 'student-training') {
           data.isModule = true;
         }
         return data;

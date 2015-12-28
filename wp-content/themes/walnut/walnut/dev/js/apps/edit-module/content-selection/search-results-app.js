@@ -36,7 +36,16 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       Controller.prototype._searchContent = function(searchStr, useFilters) {
         var content_type, filters;
-        content_type = this.groupType === 'teaching-module' ? ['teacher_question', 'content_piece'] : ['student_question'];
+        content_type = (function() {
+          switch (this.groupType) {
+            case 'teaching-module':
+              return ['teacher_question', 'content_piece'];
+            case 'student-training':
+              return ['content_piece'];
+            case 'quiz':
+              return ['student_question'];
+          }
+        }).call(this);
         filters = {};
         if (useFilters) {
           filters = this.selectedFilterParamsObject.request("get:parameters:for:search");

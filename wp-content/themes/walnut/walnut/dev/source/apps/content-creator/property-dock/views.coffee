@@ -24,6 +24,6 @@ define ['app'], (App)->
                     evt.stopPropagation()
 
                 $('.content-creator-layout').on 'click', =>
-                    @questPropertyRegion.close()
-                    @questElementPropRegion.close()
-                    @questElementRegion.close()
+                    @questPropertyRegion.close() if @questPropertyRegion?
+                    @questElementPropRegion.close() if @questElementPropRegion?
+                    @questElementRegion.close() if @questElementRegion?

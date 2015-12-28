@@ -60,7 +60,9 @@ define ['app'], (App)->
                                     {{#content_type_filter}}
                                     <select class="content-type-filter select2-filters selectFilter" id="content-type-filter">
                                         <option value="">All Types</option>
-                                        <option value="teacher_question">Teacher Question</option>
+                                        {{#teacher_question}}
+											<option value="teacher_question">Teacher Question</option>
+                                        {{/teacher_question}}
                                         {{#student_question}}
                                            <option value="student_question">Student Question</option>
                                         {{/student_question}}
@@ -92,7 +94,8 @@ define ['app'], (App)->
 
                 'change .filters' :(e)->
                     if e.target.id isnt 'divisions-filter'
-                        console.log e.target.id
+                        @$el.find '.filters .table-tools-actions'
+                        .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
                         @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change .content-type-filter' : (e)->
@@ -134,6 +137,7 @@ define ['app'], (App)->
                 data.content_type_filter = true if _.contains filters, 'content_type'
 
                 data.student_question = true if _.contains filters, 'student_question'
+                data.teacher_question = true if _.contains filters, 'teacher_question'
 
                 data.status_filter = true if _.contains filters, 'status'
 
@@ -157,7 +161,7 @@ define ['app'], (App)->
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
 
-                switch filterType                    
+                switch filterType
                     when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
                     when 'chapters-filter' then $.populateSections filteredCollection, @$el, currItem
@@ -173,9 +177,10 @@ define ['app'], (App)->
 
                 @collection.reset filtered_data
                 @trigger "update:pager"
+                @$el.find '.loading-collection'
+                .remove()
 
             onNewContentFetched:->
                 @setFilteredContent()
 
             onDivisionChanged:(textbooksCollection)->
-

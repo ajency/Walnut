@@ -29,10 +29,7 @@ define ['app'
 
 				'focus .table-holder' : 'destroyEditor'
 
-				'column:resize:stop.rc table' : 'saveTableMarkup'
-
-				
-				
+				'column:resize:stop.rc table' : 'saveTableMarkup'				
 
 			modelEvents :
 				'change:row' : 'rowChanged'
@@ -40,18 +37,21 @@ define ['app'
 				'change:bordered' : 'changeBordered'
 				'change:striped' : 'changeStriped'
 				'change:style' : 'changeStyle'
+				'destroy'		:->$('#myCanvas').unbind "click"
 
 
 
 			onShow :->
+				
+				$('#myCanvas').bind "click", (evt)=>
+					@destroyEditor evt if not $.contains $('#myCanvas')[0], evt.target
+					
 				@$el.find('.table-holder').html _.stripslashes @model.get 'content'
 
 				@$el.find('.table-holder tr div').attr 'tabindex', 0
 		
 				@$el.find('table').resizableColumns()
 				# @$el.find('select').selectpicker()
-				
-
 
 			rowChanged:(model,rows)->
 				currentRows = @$el.find('tbody tr').length 
@@ -127,8 +127,7 @@ define ['app'
 					@$el.find('td div, th div').removeAttr('contenteditable').removeAttr('style').removeAttr 'id'
 
 					@saveTableMarkup()	
-				
-				console.log 'showEditor'
+					
 				id = _.uniqueId 'text-'
 				$(evt.target).closest('td,th').find('div').attr('contenteditable', 'true').attr 'id', id
 				CKEDITOR.on 'instanceCreated', @configureEditor
@@ -145,9 +144,10 @@ define ['app'
 						editor.config.placeholder = 'Enter Data'
 
 			destroyEditor :(evt)=>
+				console.log 'destroy editor'
 				evt.stopPropagation()
 				@trigger 'show:table:property'
-				if @editor
+				if @editor and not ($(evt.target).hasClass('cke_editable'))
 					@editor.destroy()
 					@editor = null
 					console.log 'editor destroyed'
@@ -155,10 +155,10 @@ define ['app'
 					# $(evt.target).closest('div').attr('contenteditable', 'false').removeAttr 'id'
 					@$el.find('table').resizableColumns('destroy')
 					@$el.find('table').resizableColumns()
+						
 					@saveTableMarkup()				
 
 			saveTableMarkup:->
-				console.log 'save table'
 				@trigger 'save:table',@$el.find('.table-holder')
 
 

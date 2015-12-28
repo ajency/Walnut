@@ -116,7 +116,7 @@ function import_student_csv($file_path){
         }
         
 	$user_table = $wpdb->base_prefix ."users";
-        $user_pass = "ajency";
+        $user_pass = "12345";
         $user_login = $csvData[$i][0];
         $first_name = $csvData[$i][1];
         $last_name = $csvData[$i][2];
@@ -133,62 +133,43 @@ function import_student_csv($file_path){
         $role = "student";
 
         //Check if $user_email is present in users table
-        $userExists = $wpdb->get_row( "select * from $user_table where user_email ='" . $user_email . "' OR user_login ='" . $user_login . "' "  );
-	
-		if( $userExists != null ){ 
+
+        $userdata = array(
+                'user_pass'     => $user_pass,
+                'user_login'    => $user_login,
+                'user_email'    => $user_email
+
+        );
+
+        $user_id = wp_insert_user( $userdata ) ;
+
+        if( is_wp_error( $user_id ) ){
+            $csvData[$i][] = get_failed_status($csvData[$i]);
+            $failed_records[] = $csvData[$i];
+            $failed_count++;
+            $i++;
+            continue;
+        }
+
+        $new_records[] = $csvData[$i];
+        $insert_count++;
 		
-			$user_id = $userExists->ID; 
-			$userdata = array(
-				'ID'            => $user_id,
-				'user_pass'     => wp_hash_password($user_pass),
-				'user_login'    => $user_login,
-				'user_email'    => $user_email
+        if(! is_wp_error( $user_id ) ){
+            //Insert/Update user meta table
+            update_user_meta( $user_id, 'first_name', $first_name );
+            update_user_meta( $user_id, 'last_name', $last_name );
+            update_user_meta( $user_id, 'student_division', $meta_value_division );
+            update_user_meta( $user_id, 'roll_no', $meta_value_rollno);
+            update_user_meta( $user_id, 'parent_phone1', $parent_phone1 );
+            update_user_meta( $user_id, 'parent_phone2', $parent_phone2);
 
-			);
-	
-                        wp_insert_user( $userdata ) ;
-                        $updated_records[] = $csvData[$i];
-                        $update_count++;
-		}
-		else{
-			$userdata = array(
-				'user_pass'     => $user_pass,
-				'user_login'    => $user_login,
-				'user_email'    => $user_email
+            //add student to blog
+            add_user_to_blog( $blogId, $user_id, $role );
 
-			);
+            $parent_emails = array('parent_email1' =>$parent_email1,'parent_email2' =>$parent_email2);
+            add_update_student_parents($user_id,$parent_emails);
+        }
 
-			$user_id = wp_insert_user( $userdata ) ;
-                        
-                        if( is_wp_error( $user_id ) ){
-                            $csvData[$i][] = get_failed_status($csvData[$i]);
-                            $failed_records[] = $csvData[$i];
-                            $failed_count++;
-                            $i++;
-                            continue;
-                        }
-                        
-                        $new_records[] = $csvData[$i];
-                        $insert_count++;
-
-		}
-		
-                if(! is_wp_error( $user_id ) ){
-                    //Insert/Update user meta table
-                    update_user_meta( $user_id, 'first_name', $first_name );
-                    update_user_meta( $user_id, 'last_name', $last_name );
-                    update_user_meta( $user_id, 'student_division', $meta_value_division );
-                    update_user_meta( $user_id, 'roll_no', $meta_value_rollno);
-                    update_user_meta( $user_id, 'parent_phone1', $parent_phone1 );
-                    update_user_meta( $user_id, 'parent_phone2', $parent_phone2);
-
-                    //add student to blog
-                    add_user_to_blog( $blogId, $user_id, $role );
-
-                    $parent_emails = array('parent_email1' =>$parent_email1,'parent_email2' =>$parent_email2);
-                    add_update_student_parents($user_id,$parent_emails);
-                }
-                
                 
         $i++;
 

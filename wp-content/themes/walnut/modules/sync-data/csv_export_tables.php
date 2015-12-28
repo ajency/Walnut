@@ -598,12 +598,10 @@ class ExportTables {
             $table_name= $table;
         }
 
-        if(trim($csv_data) != ''){
-            $file['data']= $csv_data;
-            $file['name']= $table_name;
-            $csv_file=$file;
-        }
 
+        $file['data']= $csv_data;
+        $file['name']= $table_name;
+        $csv_file=$file;
         return $csv_file;
     }
 
@@ -617,24 +615,25 @@ class ExportTables {
         //debug- see the list of tables being exported
         //echo $table; echo '<br><br>';
 
+        global $wpdb;
         if($sql_query== '')
             $sql_query = "select * from $table";
 
         // Gets the data from the database
-        $result = mysql_query($sql_query);
-
+        $result = $wpdb->get_results($sql_query);
+        
         if(!$result)
             return false;
-
-        $fields_cnt = mysql_num_fields($result);
+        
+        $fields_cnt = sizeof(get_object_vars($result[0]));
 
 
         $schema_insert = '';
-
-        for ($i = 0; $i < $fields_cnt; $i++)
+        
+        foreach($result[0] as $key=>$value)
         {
             $l = $csv_enclosed . str_replace($csv_enclosed, $csv_escaped . $csv_enclosed,
-                    stripslashes(mysql_field_name($result, $i))) . $csv_enclosed;
+                    stripslashes($key)) . $csv_enclosed;
             $schema_insert .= $l;
             $schema_insert .= $csv_separator;
         } // end for
@@ -642,22 +641,23 @@ class ExportTables {
         $output = trim(substr($schema_insert, 0, -1));
         $output .= $csv_terminated;
 
-        // Format the data
-        while ($row = mysql_fetch_array($result))
+        foreach($result as $row)
         {
+
             $schema_insert = '';
-            for ($j = 0; $j < $fields_cnt; $j++)
+            foreach($row as $key=>$value)
             {
-                if ($row[$j] == '0' || $row[$j] != '')
+
+                if ($value != '')
                 {
 
                     if ($csv_enclosed == '')
                     {
-                        $schema_insert .= $row[$j];
+                        $schema_insert .= $value;
                     } else
                     {
                         $schema_insert .= $csv_enclosed .
-                            str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, stripslashes($row[$j])) . $csv_enclosed;
+                            str_replace($csv_enclosed, $csv_escaped . $csv_enclosed, stripslashes($value)) . $csv_enclosed;
                     }
                 } else
                 {
@@ -669,11 +669,10 @@ class ExportTables {
                     $schema_insert .= $csv_separator;
                 }
             } // end for
-
             $output .= $schema_insert;
+            $output = trim(substr($output, 0, -1));
             $output .= $csv_terminated;
         } // end while
-
         return $output;
 
     }
@@ -724,7 +723,7 @@ function create_zip($files = array(),$destination = '',$overwrite = false) {
     //add the files
 
     foreach($files as $file) {
-        if(isset($file['name']) &&  ($file['name'] != '') && isset($file['data']) && ($file['data'] !=''))
+        if(isset($file['name']) &&  ($file['name'] != '') && isset($file['data']))
             $zip->addFromString ($file['name'].'.csv',$file['data']);
 
     }

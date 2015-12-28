@@ -15,8 +15,19 @@ define ['marionette','mustache'], (Marionette, Mustache)->
 		
 		startHistory: ->
 			if Backbone.history
-				Backbone.history.start()
-		
+				Backbone.history.start();
+#				AppHandlers = Backbone.history.handlers
+#				History = Backbone.History.extend
+#					loadUrl:->
+#						match = Backbone.History.prototype.loadUrl.apply @, arguments
+#						@loadUrl 'route-not-found' if not match
+#						match;
+#
+#				AppHistory = new History
+#				AppHistory.handlers = AppHandlers
+#				AppHistory.start();
+			
+
 		# register a controller instance
 		register: (instance, id) ->
 			@_registry ?= {}

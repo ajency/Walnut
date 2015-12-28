@@ -1,0 +1,33 @@
+<form name="add-user">
+    <div class="grid-title"><h3 class="m-t-0">{{#ID}} Edit {{/ID}} {{^ID}} Add {{/ID}} <span class="semi-bold">Parent</span></h3></div>
+            <div class="grid-body" style="overflow: hidden; display: block;">
+                    <div id="saved-success"></div>
+                    <div class="row m-b-10">
+                            <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input class="input-lg" name="first_name" value="{{first_name}}" placeholder="First Name" type="text" required="required" />
+                            </div>
+                    </div>
+                    <div class="row m-b-10">
+                            <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="input-lg" name="last_name" value="{{last_name}}" placeholder="Last Name" type="text" required="required" />
+                            </div>
+                    </div>
+                    <div class="row m-b-10">
+                            <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input class="input-lg" {{#ID}} disabled="disabled" {{/ID}} name="user_email" value="{{user_email}}" placeholder="Email" type="email" required="required" />
+                            </div>
+                    </div>
+
+                    <div class="row m-t-20">
+                            <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-success btn-cons2" id="save-user"> 
+                                    <i class="fa"></i> 
+                                    Save</button>
+                                    <a href="#parents" class="btn btn-default btn-cons2">Cancel</a>
+                            </div>
+                    </div>
+            </div>
+    </form>

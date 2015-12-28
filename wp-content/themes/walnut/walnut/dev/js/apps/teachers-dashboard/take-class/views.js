@@ -18,6 +18,9 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
       TextbooksItemView.prototype.template = listitemTpl;
 
       TextbooksItemView.prototype.onShow = function() {
+        if (Marionette.getOption(this, 'mode') === 'take-quiz') {
+          this.$el.addClass('noCursor');
+        }
         this.$el.attr('data-name', this.model.get('name'));
         this.$el.attr('data-modules', this.model.get('modules_count'));
         return this.$el.attr('data-subjects', this.model.get('subjects'));
@@ -27,13 +30,17 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
         var data, mode, route;
         data = TextbooksItemView.__super__.serializeData.call(this);
         route = App.getCurrentRoute();
-        data.url = '#' + route + '/textbook/' + this.model.get('term_id');
         mode = Marionette.getOption(this, 'mode');
         if (mode === 'take-quiz') {
           data.take_quiz = true;
         }
         if (mode === 'training') {
           data.training_mode = true;
+        }
+        data.url = '#' + route + '/textbook/' + this.model.get('term_id');
+        if (data.take_quiz) {
+          data.quizzes_url = data.url;
+          data.training_modules_url = "#students/training-modules/textbook/" + this.model.get('term_id');
         }
         return data;
       };
@@ -104,10 +111,12 @@ define(['app', 'text!apps/teachers-dashboard/take-class/templates/textbooks-list
         this.dimensions = {
           status: 'all'
         };
-        return $("li.txtbook").click(function() {
-          window.location = $(this).find("a").attr("href");
-          return false;
-        });
+        if (Marionette.getOption(this, 'mode') !== 'take-quiz') {
+          return $("li.txtbook").click(function() {
+            window.location = $(this).find("a").attr("href");
+            return false;
+          });
+        }
       };
 
       return TextbooksListView;

@@ -9,7 +9,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListItemView, _super);
 
       function ListItemView() {
-        this.successSaveFn = __bind(this.successSaveFn, this);
+        this.removeSpinner = __bind(this.removeSpinner, this);
         return ListItemView.__super__.constructor.apply(this, arguments);
       }
 
@@ -17,12 +17,12 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td><span style="display:none">{{sort_date}} </span> {{modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#archivedModule}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> {{/archivedModule}} </td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
-        var data, edit_url, modules, _ref;
+        var data, edit_url, modules;
         data = ListItemView.__super__.serializeData.call(this);
-        data.modified_date = moment(data.post_modified).format("Do MMM YYYY");
+        data.modified_date = moment(data.post_modified).format("Do MMM YYYY <br/> h:mm a");
         data.sort_date = moment(data.post_modified).format("YYYYMMDD");
         if (data.content_type === 'student_question') {
           data.view_url = SITEURL + '/#dummy-quiz/' + data.ID;
@@ -32,7 +32,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         edit_url = SITEURL + '/content-creator/#edit-content/' + data.ID;
         data.edit_link = '';
         if (data.post_status === 'pending') {
-          data.edit_link = ' <span class="nonDevice">|</span> <a target="_blank" href="' + edit_url + '" class="nonDevice">Edit</a>';
+          data.edit_link = ' <span class="nonDevice editLinkSpan">|</span> <a target="_blank" href="' + edit_url + '" class="nonDevice editLink">Edit</a>';
         }
         data.textbookName = (function(_this) {
           return function() {
@@ -60,26 +60,38 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         })(this);
         data.statusMessage = function() {
           if (data.post_status === 'pending') {
-            return '<span class="label label-important">Under Review</span>';
+            return '<span class="label post-status label-important">Under Review</span>';
           } else if (data.post_status === 'publish') {
-            return '<span class="label label-info">Published</span>';
+            return '<span class="label post-status label-info">Published</span>';
           } else if (data.post_status === 'archive') {
-            return '<span class="label label-success">Archived</span>';
+            return '<span class="label post-status label-success">Archived</span>';
           }
         };
-        if ((_ref = data.post_status) === 'publish' || _ref === 'archive') {
-          data.archivedModule = true;
+        if (data.post_status === 'publish') {
+          data.is_published = true;
+        }
+        if (data.post_status === 'pending') {
+          data.is_under_review = true;
         }
         modules = [];
         _.each(data.present_in_modules, function(ele, index) {
           return modules.push("<a target='_blank' href='#view-group/" + ele.id + "'>" + ele.name + "</a>");
         });
         data.present_in_str = _.size(modules) > 0 ? _.toSentence(modules) : 'Not added to a module yet';
+        data.contentType = _.str.titleize(_.str.humanize(data.content_type));
         return data;
       };
 
       ListItemView.prototype.events = {
-        'click a.cloneModule': 'cloneModule'
+        'click a.cloneModule': function() {
+          return this.model.duplicate();
+        },
+        'click a.archiveModule': function() {
+          return this.changeModuleStatus('archive');
+        },
+        'click a.publishModule': function() {
+          return this.changeModuleStatus('publish');
+        }
       };
 
       ListItemView.prototype.initialize = function(options) {
@@ -87,33 +99,45 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return this.chapters = options.chaptersCollection;
       };
 
-      ListItemView.prototype.cloneModule = function() {
-        var _ref;
-        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
-          return bootbox.confirm("Are you sure you want to clone '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
-            return function(result) {
-              var contentPieceData;
-              if (result) {
-                _this.cloneModel = App.request("new:content:piece");
-                contentPieceData = _this.model.toJSON();
-                _this.clonedData = _.omit(contentPieceData, ['ID', 'guid', 'last_modified_by', 'post_author', 'post_author_name', 'post_date', 'post_date_gmt', 'published_by']);
-                _this.clonedData.post_status = "pending";
-                _this.clonedData.clone_id = _this.model.id;
-                return App.execute("when:fetched", _this.cloneModel, function() {
-                  return _this.cloneModel.save(_this.clonedData, {
-                    wait: true,
-                    success: _this.successSaveFn,
-                    error: _this.errorFn
-                  });
-                });
-              }
-            };
-          })(this));
-        }
+      ListItemView.prototype.addSpinner = function() {
+        return this.$el.find('.spinner').addClass('fa-spin fa-spinner');
       };
 
-      ListItemView.prototype.successSaveFn = function(model) {
-        return document.location = SITEURL + ("/content-creator/#edit-content/" + model.id);
+      ListItemView.prototype.removeSpinner = function() {
+        return this.$el.find('.spinner').removeClass('fa-spin fa-spinner');
+      };
+
+      ListItemView.prototype.changeModuleStatus = function(status) {
+        return bootbox.confirm("Are you sure you want to " + status + " '" + (this.model.get('post_excerpt')) + "' ?", (function(_this) {
+          return function(result) {
+            if (result) {
+              _this.addSpinner();
+              return _this.model.save({
+                post_status: status
+              }, {
+                success: function() {
+                  return _this.changeStatusLabel(status);
+                },
+                error: function(resp) {
+                  return console.log(resp);
+                },
+                complete: _this.removeSpinner
+              });
+            }
+          };
+        })(this));
+      };
+
+      ListItemView.prototype.changeStatusLabel = function(status) {
+        switch (status) {
+          case 'archive':
+            this.$el.find('.post-status').removeClass('label-info').addClass('label-success').html('Archived');
+            return this.$el.find('.archiveModule, .archiveModuleSpan').remove();
+          case 'publish':
+            this.$el.find('.post-status').removeClass('label-important').addClass('label-info').html('Published');
+            this.$el.find('.view-content-piece').after('<span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a>');
+            return this.$el.find('.publishModule, .publishModuleSpan, .editLink, .editLinkSpan').remove();
+        }
       };
 
       return ListItemView;
@@ -141,6 +165,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       __extends(ListView, _super);
 
       function ListView() {
+        this.changeStatus = __bind(this.changeStatus, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
@@ -165,7 +190,12 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         'change #content-post-status-filter, #difficulty-level-filter': 'setFilteredContent',
         'change .textbook-filter': function(e) {
           return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
-        }
+        },
+        'change #check_all_div': function() {
+          return $.toggleCheckAll(this.$el.find('table'));
+        },
+        'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
+        'click .change-status button': 'changeStatus'
       };
 
       ListView.prototype.initialize = function() {
@@ -223,6 +253,66 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           output: '{startRow} to {endRow} of {totalRows}'
         };
         return this.$el.find("#content-pieces-table").tablesorterPager(pagerOptions);
+      };
+
+      ListView.prototype.showSubmitButton = function() {
+        if (this.$el.find('.tab_checkbox').is(':checked')) {
+          return this.$el.find('.change-status').show();
+        } else {
+          return this.$el.find('.change-status').hide();
+        }
+      };
+
+      ListView.prototype.changeStatus = function(e) {
+        var data, msg;
+        data = {};
+        data.IDs = $.getCheckedItems(this.$el.find('table'));
+        data.status = $(e.target).closest('.change-status').find('select').val();
+        msg = "Are you sure you want to " + data.status + " the selected content pieces ?";
+        if (data.status === 'publish') {
+          data.IDs = _.filter(data.IDs, (function(_this) {
+            return function(id) {
+              if (_this.collection.get(id).get('post_status') === 'pending') {
+                return id;
+              }
+            };
+          })(this));
+          msg += "<div class='small m-t-10'> Note: Only content pieces with status 'Under Review' will be changed to publish </div>";
+          if (0 === _.size(data.IDs)) {
+            bootbox.alert('None of the selected items can be published');
+            return;
+          }
+        }
+        return bootbox.confirm(msg, (function(_this) {
+          return function(result) {
+            if (result) {
+              $(e.target).find('.fa').addClass('fa-spin fa-spinner');
+              data.action = 'update-content-piece-status';
+              return $.post(AJAXURL, data).success(function(resp) {
+                return _this.updateStatusValues(data.IDs, data.status);
+              }).fail(function(resp) {
+                console.log('some error occurred');
+                return console.log(resp);
+              }).done(function() {
+                return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
+              });
+            }
+          };
+        })(this));
+      };
+
+      ListView.prototype.updateStatusValues = function(IDs, status) {
+        _.each(IDs, (function(_this) {
+          return function(id) {
+            var model;
+            model = _this.collection.get(parseInt(id));
+            return model.set({
+              'post_status': status
+            });
+          };
+        })(this));
+        this.collection.reset(this.collection.models);
+        return this.onUpdatePager();
       };
 
       return ListView;

@@ -26,6 +26,8 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
             };
             if (_this.groupType === 'teaching-module') {
               _this.contentModulesCollection = App.request("get:content:groups", data);
+            } else if (_this.groupType === 'student-training') {
+              _this.contentModulesCollection = App.request("get:student:training:modules", data);
             } else {
               _this.contentModulesCollection = App.request("get:quizes", data);
             }
@@ -37,11 +39,16 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
               });
               _this.listenTo(_this.layout, "show", function() {
                 var dataType;
-                if (_this.groupType === 'teaching-module') {
-                  dataType = 'teaching-modules';
-                } else {
-                  dataType = 'quiz';
-                }
+                dataType = (function() {
+                  switch (this.groupType) {
+                    case 'teaching-module':
+                      return 'teaching-modules';
+                    case 'student-training':
+                      return 'student-training';
+                    default:
+                      return 'quiz';
+                  }
+                }).call(_this);
                 App.execute("show:textbook:filters:app", {
                   region: _this.layout.filtersRegion,
                   collection: _this.contentModulesCollection,

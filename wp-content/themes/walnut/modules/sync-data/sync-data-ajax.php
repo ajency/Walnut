@@ -128,6 +128,9 @@ add_action( 'wp_ajax_get-site-audio-resources-data', 'get_site_audio_resources_d
 
 function ajax_sync_database(){
 
+    ini_set('memory_limit', '-1');
+    set_time_limit(0);
+
     $blog_id= $_REQUEST['blog_id'];
     
     $device_type = $_REQUEST['device_type'];

@@ -41,12 +41,14 @@ define(['app', 'apps/content-creator/content-builder/element/controller', 'apps/
         textCollectionArray = this.layout.model.get('textCollection');
         imageCollectionArray = this.layout.model.get('imageCollection');
         this._parseArray(optionCollectionArray, textCollectionArray, imageCollectionArray);
-        this.optionCollection = App.request("create:new:hotspot:element:collection", optionCollectionArray);
-        this.textCollection = App.request("create:new:hotspot:element:collection", textCollectionArray);
-        this.imageCollection = App.request("create:new:hotspot:element:collection", imageCollectionArray);
-        this.layout.model.set('optionCollection', this.optionCollection);
-        this.layout.model.set('textCollection', this.textCollection);
-        this.layout.model.set('imageCollection', this.imageCollection);
+        if (!(optionCollectionArray instanceof Backbone.Collection)) {
+          this.optionCollection = App.request("create:new:hotspot:element:collection", optionCollectionArray);
+          this.textCollection = App.request("create:new:hotspot:element:collection", textCollectionArray);
+          this.imageCollection = App.request("create:new:hotspot:element:collection", imageCollectionArray);
+          this.layout.model.set('optionCollection', this.optionCollection);
+          this.layout.model.set('textCollection', this.textCollection);
+          this.layout.model.set('imageCollection', this.imageCollection);
+        }
         this.view = this._getHotspotView();
         this.listenTo(this.view, "show show:hotspot:elements", (function(_this) {
           return function() {

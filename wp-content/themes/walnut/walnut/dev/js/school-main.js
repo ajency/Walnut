@@ -41,7 +41,10 @@ require.config({
     countdowntimer: 'plugins/jquery.countdown.min',
     spinedit: 'plugins/bootstrap-spinedit',
     bootbox: 'plugins/bootbox.min',
-    jPages: 'plugins/jPages.min'
+    jPages: 'plugins/jPages.min',
+    modenizr: 'plugins/bookBlock/modernizr.custom',
+    jquerypp: 'plugins/bookBlock/jquerypp.custom',
+    bookblock: 'plugins/bookBlock/jquery.bookblock'
   },
   shim: {
     underscore: {
@@ -87,6 +90,8 @@ require.config({
     spinedit: ['jquery', 'bootstrap'],
     jPages: ['jquery'],
     bootbox: ['jquery', 'bootstrap'],
+    jquerypp: ['jquery'],
+    bookblock: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

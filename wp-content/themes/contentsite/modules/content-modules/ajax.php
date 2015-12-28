@@ -52,3 +52,28 @@ function ajax_update_content_module() {
 }
 
 add_action('wp_ajax_update-content-group', 'ajax_update_content_module');
+
+function ajax_update_content_module_status(){
+   
+    $ids = $_POST['IDs'];
+    
+    if(!isset($_POST['IDs']) || empty($_POST['IDs']) || !isset($_POST['status']))
+        return new WP_Error('invalid_request_data', __('Invalid ID or status') );
+    
+    global $wpdb;
+    global $user_ID;
+    
+    $data = array(
+        'post_status'       => $_POST['status'],
+        'last_modified_on'  => date('y-m-d H:i:s'),
+        'last_modified_by'  => $user_ID
+    );
+    
+    foreach ($ids as $id){
+        if(!$id) continue;
+        $updated= $wpdb->update($wpdb->base_prefix . 'content_collection', $data, array('id' => $id)); 
+    }
+    
+    return wp_send_json(array('code' => 'OK'));
+}
+add_action('wp_ajax_update-content-module-status', 'ajax_update_content_module_status');

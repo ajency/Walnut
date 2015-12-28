@@ -26,9 +26,15 @@ define(['app'], function(App) {
         });
         return $('.content-creator-layout').on('click', (function(_this) {
           return function() {
-            _this.questPropertyRegion.close();
-            _this.questElementPropRegion.close();
-            return _this.questElementRegion.close();
+            if (_this.questPropertyRegion != null) {
+              _this.questPropertyRegion.close();
+            }
+            if (_this.questElementPropRegion != null) {
+              _this.questElementPropRegion.close();
+            }
+            if (_this.questElementRegion != null) {
+              return _this.questElementRegion.close();
+            }
           };
         })(this));
       };

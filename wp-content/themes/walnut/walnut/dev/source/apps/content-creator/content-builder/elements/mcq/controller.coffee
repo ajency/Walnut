@@ -10,12 +10,12 @@ define ['app'
                 _.defaults options.modelData,
                     element : 'Mcq'
                     optioncount : 4
-                    columncount : 3
+                    columncount : 2
                     options : [
-                        { optionNo : 1 , class : 4 }
-                        { optionNo : 2 , class : 4 }
-                        { optionNo : 3 , class : 4 }
-                        { optionNo : 4 , class : 4 }
+                        { optionNo : 1 , class : 6 }
+                        { optionNo : 2 , class : 6 }
+                        { optionNo : 3 , class : 6 }
+                        { optionNo : 4 , class : 6 }
                     ]
                     elements : []
                     marks : 1
@@ -37,10 +37,9 @@ define ['app'
 
                 @_parseOptions optionsObj
 
-                optionCollection = App.request "create:new:option:collection", optionsObj
-                @layout.model.set 'options', optionCollection
-
-                console.log @layout.model
+                if not (optionsObj instanceof Backbone.Collection)
+                    optionCollection = App.request "create:new:option:collection", optionsObj
+                    @layout.model.set 'options', optionCollection
 
 
                 # get the view
@@ -64,6 +63,10 @@ define ['app'
 
             # convert the option attributes to integers
             _parseOptions : (optionsObj)->
+
+                if optionsObj instanceof Backbone.Collection
+                    optionsObj = optionsObj.toJSON()
+
                 _.each optionsObj,(option)->
                     option.marks = parseFloat option.marks if option.marks?
                     option.optionNo = parseInt option.optionNo if option.optionNo?
