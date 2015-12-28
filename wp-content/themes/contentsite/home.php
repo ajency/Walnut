@@ -80,46 +80,7 @@
     <div id="dialog-region">
     </div>
 </div>
-<?php global $class_ids;
-global $chorus_options; ?>
-<script>
-    AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
-    SITEURL = '<?php echo site_url() ?>';
-    THEMEURL = '<?php echo get_template_directory_uri()?>';
 
-    <?php print_r(getLoggedInUserModel())?>
-
-    CLASS_LABEL = {};
-    <?php foreach($class_ids as $class): ?>
-    CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
-    <?php endforeach; ?>
-
-    CHORUS_OPTIONS = {};
-    <?php foreach($chorus_options as $key=>$value){ ?>
-    CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
-    <?php } ?>
-
-</script>
-<script type="text/javascript" src="/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-<script>
-    Pace.on('hide', function () {
-        document.getElementById("site_main_container").setAttribute('class', 'showAll');
-    })
-</script>
-<?php
-
-if (ENV == 'dev') {
-    ?>
-    <script type="text/javascript"
-            data-main="/wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
-            src="/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
-<?php
-} else {
-
-?>
-    <script type="text/javascript"
-            src="/wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
-<?php } ?>
 
 </body>
 </html>
