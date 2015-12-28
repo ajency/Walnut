@@ -140,7 +140,7 @@ $(function() {
 
     //Grid load effect onload
 
-//     window.scrollReveal = new scrollReveal();
+    //window.scrollReveal = new scrollReveal();
 
 
     //Notification popover
@@ -178,4 +178,31 @@ $(function() {
     // }).data('bs.popover').tip().addClass('dashboard-popover animated shake');
 
     // }
+
+
+
+    //Popover onclick for notification
+        
+    $('.notification').click(function(){
+          
+        $(this).toggleClass('aj');
+
+     });
+
+    //Removing popover when click outside
+
+    $(document).mouseup(function (e)
+    {
+        var element = $(".notification");
+
+        if (!element.is(e.target) // if the target of the click isn't the container...
+            && element.has(e.target).length === 0) // ... nor a descendant of the container
+        {
+           
+            $(element).removeClass('aj');
+        }
+    });
+
+
+
 });
