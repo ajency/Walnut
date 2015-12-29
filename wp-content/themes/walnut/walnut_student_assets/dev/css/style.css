@@ -950,6 +950,20 @@ nav.wallnut-nav .walnut-account > li > a:focus {
     height: 200px;
   }
 }
+.quiz-cards.no-img .quiz-img {
+  -webkit-flex-basis: inherit;
+  -ms-flex-preferred-size: inherit;
+      flex-basis: inherit;
+  width: inherit;
+}
+.quiz-cards.no-img .quiz-img > img {
+  display: none;
+}
+.quiz-cards.no-img .subj-detail {
+  -webkit-flex-basis: 100%;
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+}
 .quiz-cards .notification {
   position: absolute;
   right: -4px;

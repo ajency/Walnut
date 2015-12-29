@@ -42,6 +42,18 @@
     @media @i-tab-landscape {
         height: 200px;
     }
+    &.no-img{
+        .quiz-img{
+            .flex-basis(inherit);
+            width: inherit;   
+            & > img{
+                display: none;
+            }
+        }
+        .subj-detail{
+            .flex-basis(100%);
+        }
+    }
     .notification {
         position: absolute;
         right: -4px;
