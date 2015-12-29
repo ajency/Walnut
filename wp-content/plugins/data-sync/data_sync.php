@@ -13,7 +13,7 @@
 
 //define('NETWORK_SERVER_URL','http://localhost/walnut');
 
-define('NETWORK_SERVER_URL','http://synapselearning.net');
+define('NETWORK_SERVER_URL','http://walnutedu.org');
 
 //define('NETWORK_SERVER_URL','http://synapsedu.info');
 
