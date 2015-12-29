@@ -23,7 +23,7 @@ define(['detect', 'jquery'], function(detect, $) {
     if (networkStatus === 1) {
       return true;
     } else {
-      return false;
+      return true;
     }
   };
   checkConnection = function() {
