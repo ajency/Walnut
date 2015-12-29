@@ -51,7 +51,7 @@
     <!-- END Additional CSS For Admin Fix -->
 
 
-    <?php wp_head();?>
+
 </head>
 <body class="">
 <div id="site_main_container">
@@ -65,7 +65,7 @@
                 <div class="content">
                     <?php if(!is_multisite()) :?>
                         <?php if(!school_is_syncd()) : ?>
-                        <!-- <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">School Data Sync</a> <p>  -->
+                        <p>You may not see any data if you have not synced. If you are a school admin then go to your link <a href="<?php echo admin_url().'options-general.php?page=school_data_sync' ?>">School Data Sync</a> <p>
                         <?php endif; ?>
                     <?php endif;?>
                             
@@ -90,9 +90,9 @@ global $chorus_options; ?>
     <?php print_r(getLoggedInUserModel())?>
 
     CLASS_LABEL = {};
-    <?php foreach($class_ids as $class){ ?>
+    <?php foreach($class_ids as $class): ?>
     CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
-    <?php } ?>
+    <?php endforeach; ?>
 
     CHORUS_OPTIONS = {};
     <?php foreach($chorus_options as $key=>$value){ ?>

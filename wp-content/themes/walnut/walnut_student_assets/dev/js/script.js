@@ -39,13 +39,13 @@ $(function() {
 
 
     //Carousel options for practice quiz
-
+    /*commented  by kapil
     $('#carousel-example-generic1').carousel({
         pause: true,
         interval: false, //stop cycling
         wrap: false //stop from looping
     });
-
+    */
 
 
     //Progress Loader Trigger
