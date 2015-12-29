@@ -182,7 +182,7 @@ define ['app'
                         time +=parseInt m.get 'duration'
 
                     numQuestions = parseInt @$el.find("#lvl#{lev} input").val() 
-
+                    
                     avgMarks += numQuestions*marks/models.length if numQuestions
                     avgTime += numQuestions*time/models.length if numQuestions
 

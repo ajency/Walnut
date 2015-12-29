@@ -65,8 +65,14 @@
 </head>
 <?php 
 $current_user = wp_get_current_user();
-if( isset($current_user->roles[0]) && $current_user->roles[0]=='student'){
-    require_once('header-student.php');    
+if( isset($current_user->roles)){
+    foreach ($current_user->roles as $key => $value) {
+        if($value=='student'){
+            require_once('header-student.php');               
+            break;
+        }
+    }
+ 
 }
 ?>
 <body class="">
