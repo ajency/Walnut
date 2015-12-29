@@ -1,6 +1,8 @@
 @font-face {
   font-family: 'open-sans';
-  src: url('../fonts/OpenSans-Regular.ttf');
+  src: url('../fonts/OpenSans-Regular.woff') format('woff'), /* Pretty Modern Browsers */ url('../fonts/OpenSans-Regular.ttf') format('truetype')
+  
+  /* Safari, Android, iOS */
 }
 body {
   font-family: 'open-sans', 'arial';
