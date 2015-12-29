@@ -140,7 +140,7 @@
                                 <div class="col-sm-12 col-lg-12">
                                     <div class="support-email">
                                         <h5>Support Emails</h5>
-                                        <h5><a href="mailto:walnut@info.com">walnut@info.com</a>/<a href="mailto:helpdesk@walnut.com">helpdesk@walnut.com</a></h5>
+                                        <h5><a href="mailto:ask@walnutedu.in">ask@walnutedu.in</a>/</h5>
                                     </div>
                                 </div>
                             </div>
