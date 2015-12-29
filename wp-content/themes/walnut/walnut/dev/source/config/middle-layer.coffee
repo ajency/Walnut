@@ -28,7 +28,7 @@ define ['detect', 'jquery'], (detect, $)->
     window.isOnline = ->
         if networkStatus is 1
             true
-        else false
+        else true
 
     #Implementation for mobile
     #Check network status using Cordova API
