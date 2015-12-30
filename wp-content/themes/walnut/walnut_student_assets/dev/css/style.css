@@ -2178,7 +2178,7 @@ lesshat-selector {
 }
 .teacher-app .direction {
   margin: 0;
-  padding-top: 30px;
+  padding-top: 10px;
 }
 .teacher-app #attempts-region {
   margin-top: 25px;
@@ -2189,7 +2189,7 @@ lesshat-selector {
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title {
-  padding: 20px 15px;
+  padding: 0 15px;
   background: #eee;
 }
 .teacher-app #attempts-region .grid.vertical.blue .grid-title .tools > a.expand {
@@ -2211,7 +2211,13 @@ lesshat-selector {
 .teacher-app #attempts-region .grid .grid-body h4 {
   font-size: 1.2em;
   margin: 0;
+  padding: 20px 0;
+  width: 98%;
   color: #602f1a;
+}
+.teacher-app #attempts-region .grid .grid-title .tools,
+.teacher-app #attempts-region .grid .grid-body .tools {
+  padding: 20px 0;
 }
 .teacher-app #attempts-region #attempts_list .row .p-b-5 button {
   background: #69b8b5;

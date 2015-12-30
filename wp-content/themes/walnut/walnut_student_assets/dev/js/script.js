@@ -133,10 +133,12 @@ $(function() {
 
      $( ".mat-input" ).each(function( index ) {
         if($(this).val()!==""){
-
             $( this ).parent().addClass("is-active is-completed");
         }
     });
+
+
+
 
     //Grid load effect onload
 
@@ -180,19 +182,11 @@ $(function() {
     // }
 
 
-
-
-
-
-
-
     //Popover onclick for notification
         
     $('.notification').click(function(){
-          
 
     $(this).toggleClass('generate-popover').removeClass('destroy-popover').parent().parent().siblings().children().find('.notification').toggleClass('destroy-popover').removeClass('generate-popover');
-
 
      });
 
