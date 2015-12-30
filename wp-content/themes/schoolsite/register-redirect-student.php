@@ -46,7 +46,7 @@
                             <input value="<?php echo isset($meta['last_name'])? $meta['last_name'][0]:"" ?>" name="last_name" type="text" class="mat-input" required>
                         </div>
                         <div class="mat-holder">
-                            <label for="text" class="mat-label">Last School Attended <span class="mandatory">*</span></label>
+                            <label for="text" class="mat-label">School Name <span class="mandatory">*</span></label>
                             <input value="<?php echo isset($meta['last_school_attended'])? $meta['last_school_attended'][0]:"" ?>" name="last_school_attended" type="text" class="mat-input" required>
                         </div>                                                       
                                 </div>
