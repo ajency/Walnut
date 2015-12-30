@@ -89,7 +89,10 @@
                             </div>
                             <div class="col-sm-6 col-lg-6">
                                 <div class="info text-center">
-
+                        <div class="mat-holder">
+                            <label for="Parent email" class="mat-label">Parent Email ID <span class="mandatory">*</span></label>
+                            <input type="text" class="mat-input" required>
+                        </div>
                         <div class="mat-holder">
                             <label for="Mobile" class="mat-label">Mobile Number <span class="mandatory">*</span></label>
                             <input value="<?php echo isset($meta['parent_phone1'])? $meta['parent_phone1'][0]:"" ?>" name="parent_phone1" type="text" class="mat-input" required>
