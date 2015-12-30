@@ -2387,12 +2387,8 @@ lesshat-selector {
     font-size: 2em;
   }
 }
-#question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper {
-  font-family: open-sans;
-}
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {
   font-size: 1.5em;
-  font-weight: bold;
   color: #602f1a;
 }
 @media (max-width: 1370px) {
