@@ -15,13 +15,12 @@
 // ---------------------------
 
 .intro {
-    padding: 20px;
+    padding: 20px;     
     .welcome-text {
         font-size: 1.9em;
-        margin: 0;
-    }
+        margin: 0;       
+    }    
 }
-
 
 
 // ---------------------------
@@ -170,6 +169,22 @@
 }
 
 
+// ---------------------------
+// LIGHTER FONT WEIGHT FOR NOTIFICATION IN FIREFOX -----------
+// ---------------------------
+
+@-moz-document url-prefix() { 
+    .quiz-cards {
+        .notification {   
+            & > span{
+            font-weight: lighter;
+            }
+        }
+    }
+}
+
+
+
 
 // ---------------------------
 // DASHBOARD RIGHT SECTION TRAPEZIOD DIV CREATED IN CSS AND NOT AN IMAGE -----------
@@ -208,6 +223,21 @@
         }
     }
 }
+
+
+
+// ---------------------------
+// FONT WEIGHT LIGHTER FOR FIREFOX -----------
+// ---------------------------
+
+.trapezoid {
+    &__holder {
+        span:nth-child(2n) {
+            font-weight: lighter;
+        }
+    }
+}
+
 
 
 
@@ -264,6 +294,23 @@
         }
     }
 }
+
+
+
+// ---------------------------
+// FONT WEIGHT LIGHTER FOR FIREFOX -----------
+// ---------------------------
+
+.quiz-schedule {
+    .subj-time {
+        >a {
+            p:first-child {
+                font-weight: lighter;
+            }
+        }
+    }
+}
+
 
 
 

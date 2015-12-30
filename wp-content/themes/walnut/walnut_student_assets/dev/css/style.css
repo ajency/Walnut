@@ -30,7 +30,11 @@ h5 {
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  label,
+  body,
+  .semi-bold,
+  .bold {
     font-weight: lighter !important;
   }
 }
@@ -506,7 +510,7 @@ lesshat-selector {
   -ms-flex-pack: start;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
-  margin: 25px 0;
+  margin: 10px 0 25px 0;
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
 }
@@ -566,6 +570,11 @@ lesshat-selector {
 .direction .duration h4 span {
   font-size: 0.8em;
   color: #602f1a;
+}
+@-moz-document url-prefix() {
+  .direction .welcome-text {
+    font-weight: lighter;
+  }
 }
 .signin-header {
   padding: 15px 0 35px 0;
@@ -797,6 +806,11 @@ lesshat-selector {
 .signin-card .signin-wrapper .support-email h5 a {
   color: #69b8b5;
   padding: 0 5px;
+}
+@-moz-document url-prefix() {
+  .signin-card .signin-wrapper {
+    top: -35px;
+  }
 }
 .change-password {
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12);
@@ -1099,6 +1113,11 @@ lesshat-selector {
     width: 62%;
   }
 }
+@-moz-document url-prefix() {
+  .quiz-cards .notification > span {
+    font-weight: lighter;
+  }
+}
 .trapezoid {
   border-bottom: 88px solid #2f0e09;
   border-left: 20px solid transparent;
@@ -1153,6 +1172,9 @@ lesshat-selector {
   .trapezoid__holder span:nth-child(2n) {
     font-size: 0.9em;
   }
+}
+.trapezoid__holder span:nth-child(2n) {
+  font-weight: lighter;
 }
 .quiz-schedule {
   background: #fcea98;
@@ -1222,6 +1244,9 @@ lesshat-selector {
 .quiz-schedule .subj-time > a p:nth-child(2n) {
   color: #F7867E;
   text-transform: uppercase;
+}
+.quiz-schedule .subj-time > a p:first-child {
+  font-weight: lighter;
 }
 .no-quiz {
   color: #69b8b5;
@@ -1565,6 +1590,11 @@ lesshat-selector {
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
+@-moz-document url-prefix() {
+  .l-q-cards__title {
+    font-weight: lighter;
+  }
+}
 .spacing {
   padding: 30px 15px;
 }
@@ -1751,6 +1781,22 @@ lesshat-selector {
   content: "\f105";
   float: right;
   padding-right: 15px;
+}
+@-moz-document url-prefix() {
+  .teacher-app #collection-details-region .grid .tiles .modTimes .pull-right:last-child {
+    float: none !important;
+    margin: 10px auto 0 auto;
+  }
+  .teacher-app #collection-details-region .grid .tiles .modTimes .pull-right:last-child button#start-module {
+    line-height: inherit;
+  }
+  .teacher-app #collection-details-region .grid .tiles .modTimes .pull-right:last-child button#start-module:before,
+  .teacher-app #collection-details-region .grid .tiles .modTimes .pull-right:last-child button#start-module:after {
+    vertical-align: middle;
+  }
+  .teacher-app #collection-details-region .grid .tiles .modTimes .pull-right:last-child button#start-module:after {
+    float: none;
+  }
 }
 .cbp_tmtimeline > li .contentPiece .cbp_tmicon {
   box-shadow: 0 0 0 8px #ffa39c;
@@ -2263,6 +2309,11 @@ lesshat-selector {
 }
 .all-d-best {
   margin: 30px 0;
+}
+@-moz-document url-prefix() {
+  .teacher-app #quiz-details-region > div .grid .grid-body h3 > span {
+    font-weight: lighter;
+  }
 }
 .quizComment {
   display: none;

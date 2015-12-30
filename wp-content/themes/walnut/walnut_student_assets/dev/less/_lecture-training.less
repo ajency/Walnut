@@ -122,6 +122,42 @@
 }
  
  
+
+
+ // ---------------------------
+ // FIREFOX LECTURE START BUTTON ISSUE FIX -----------
+ // ---------------------------
+
+@-moz-document url-prefix() { 
+     .teacher-app {
+        #collection-details-region {
+            .grid {
+                .tiles {
+                    .modTimes {
+                        .pull-right:last-child {
+                            float: none !important;
+                            margin: 10px auto 0 auto;
+                            button#start-module {
+                                line-height: inherit;
+                                &:before, &:after {
+                                    vertical-align: middle;
+                                }
+                                &:after {
+                                    float: none;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
  
  // ---------------------------
  // TIMELINE STYLES -----------
