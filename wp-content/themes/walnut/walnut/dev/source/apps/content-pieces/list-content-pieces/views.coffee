@@ -290,11 +290,16 @@ define ['app'
 						data.action = 'bulk-move-content-pieces'
 						$.post AJAXURL, data
 						.success (resp)=>
+							i = 0
+							while i < data.IDs.length
+							  $('#checkbox' + data.IDs[i]).closest('tr').remove()
+							  i++
 							bootbox.alert 'Moved Successfully.'
 						.fail (resp)->
 							console.log 'some error occurred'
 							console.log resp
 						.done ->
+							$("#destination_textbook").hide()
 							$(e.target).find '.fa'
 							.removeClass 'fa-spin fa-spinner'
 							.addClass 'fa-check'
