@@ -123,12 +123,7 @@ function get_content_pieces($args = array()) {
                 }
             }
         }
-
-        //Start Kapils code to hide archived content pieces
-        if($cpiece->post_status == 'archive'){
-            continue;
-        }
-        //End Kapils code to hide archived content pieces        
+        
         $content_pieces[]= $cpiece;
     }
 
@@ -334,6 +329,10 @@ function get_modules_containing_content_piece($content_id){
 
         if($valid){
             $module_dets= get_single_content_module($module_meta->collection_id);
+            if($module_dets->post_status == 'archive'){
+                continue;
+                //added by kapil to know the post status and skip if its archive
+            }
             $m['id']=$module_dets->id;
             $m['name']=$module_dets->name;
             $m['type']=$module_dets->type;
