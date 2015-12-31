@@ -258,6 +258,10 @@ nav.wallnut-nav .walnut-account > li > a:focus {
   background: #69b8b5;
   color: #fff;
 }
+.bootbox-alert .modal-body .bootbox-close-button,
+.bootbox-confirm .modal-body .bootbox-close-button {
+  display: none;
+}
 .bootbox-alert .modal-footer,
 .bootbox-confirm .modal-footer {
   text-align: center;
