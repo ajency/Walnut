@@ -64,7 +64,7 @@ function ajax_update_content_piece_status(){
     $in = implode(",", $ids);
 
     global $wpdb;
-    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['status']."' WHERE ID in(".$n.")");
+    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['status']."' WHERE ID in(".$in.")");
     /*foreach ($ids as $id){
         if(!$id) continue;
         if($_POST['status']=='archive' || $_POST['status']=='publish'){

@@ -40,6 +40,15 @@ function ajax_update_student_training_module() {
     }
 
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
+        if(!isset($_POST['content_layout'][0]['type'])){//kapil start
+            $tmp = array();
+            $i=0;
+            foreach($_POST['content_layout'] as $cp){
+                $tmp[$i]['type']="content-piece";
+                $tmp[$i++]['id']=$cp;
+            }
+            $_POST['content_layout'] = $tmp;
+        }//kapil ends
         $data = array(
             'id' => $_POST['id'],
             'content_layout' => $_POST['content_layout']
