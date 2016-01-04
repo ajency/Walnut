@@ -208,29 +208,32 @@ $(function() {
 
     //Orientation check if portrait or landscape
 
-    $(window).bind("orientationchange", function(){
-       
-    if(window.innerHeight > window.innerWidth){
-         $('body').css({
-            "display": "block"
-        });
-    }
-    else
-    {
-         $('body').css({
-            "display": "none"
-        });
-         alert('Please Load in Landscape mode to view this site!');
-    }
-
+    $(window).bind("orientationchange", function() {
+        if (window.innerHeight > window.innerWidth) {
+            $('body').css({
+                "display": "block"
+            });
+        } else {
+            $('body').css({
+                "display": "none"
+            });
+            alert('Please Load in Landscape mode to view this site!');
+        }
     });
-
-    if(window.innerHeight > window.innerWidth){
+    if (window.innerHeight > window.innerWidth) {
         $('body').css({
             "display": "none"
         });
         alert("Please Load in Landscape mode to view this site!");
     }
+
+
+    //Modal for selcting children account if many
+
+    $('#walnut-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
 
 
 
