@@ -10,7 +10,6 @@
 
 
 
-
 // ---------------------------
 // CREATE ACCOUNT STYLES -----------
 // ---------------------------
@@ -74,6 +73,57 @@
                         background: lighten(@button-2-theme, 10%);
                     }
                 }
+            }
+        }
+    }
+}
+
+
+
+// ---------------------------
+// FOR SELECTING CHILDREN IF MANY -----------
+// ---------------------------
+
+
+.modal{
+    &.in{
+        display: flex !important;
+        align-items:center;
+        justify-content:center;
+        background: rgba(255,255,255,0.3);
+    }
+    .modal-body{
+        text-align: center;
+        padding: 20px;
+        h4{
+            margin: 0;
+            color: @quiz-link-color3;
+            text-transform: capitalize;
+        }
+        .child{
+            color: #fff;
+            padding: 10px 0;
+            text-transform: uppercase;
+            width: 30%;
+            border-radius: 5px;
+            &.old{
+                background: @button-2-theme;
+                &:hover{
+                    background: lighten(@button-2-theme, 10%);
+                }
+            }
+            &.new{
+                background: @button-1-danger;
+                &:hover{
+                    background: lighten(@button-1-danger, 10%);
+                }
+            }            
+        }
+        form{
+            hr{
+                width: 35%;
+                margin:8px auto;
+                border-color: #B8C1C1;
             }
         }
     }
