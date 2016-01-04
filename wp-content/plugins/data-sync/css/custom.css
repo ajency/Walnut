@@ -1,8 +1,10 @@
-#syncstatus{
-margin-top:20px;
+#upsyncstatus,
+#downsyncstatus{
+margin-top:10px;
 }
 
-#syncstatus .syncstat{
+#upsyncstatus .syncstat,
+#downsyncstatus .syncstat{
 display: table;
 padding-right:60px;
 padding-bottom:5px;
@@ -11,7 +13,8 @@ background-repeat: no-repeat;
 background-position: right 2px top 8px;
 }
 
-#syncstatus .done{
+#upsyncstatus .done,
+#downsyncstatus .done{
 background-image:none;
 color:#858585;
 }

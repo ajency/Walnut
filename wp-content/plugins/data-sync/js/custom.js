@@ -5,9 +5,15 @@ jQuery(document).ready(function() {
 
   jQuery("#vsync-data").on('click',function(){
 
-    jQuery("#syncstatus").empty();
+    jQuery("#upsyncstatus").empty();
+    jQuery("#downsyncstatus").empty();
 
-    initiate_sync()
+    jQuery("#upsyncstatus").append('<h3>Up-Sync</h3>');
+    jQuery("#downsyncstatus").append('<h3>Down-Sync</h3>');
+
+    //initiate_up_sync();
+
+    initiate_down_sync()
     .then(generate_terms)
     .then(generate_term_relationships)
     .then(generate_term_taxonomy)
@@ -44,8 +50,6 @@ jQuery(document).ready(function() {
     .then(download_usermeta)
     .then(download_options)
 
-
-    //.then(generate_backup_file)
     .then(extract_data)
     .then(import_downloaded_data)
     .then(complete_sync_process);
@@ -65,9 +69,36 @@ jQuery.ajaxSetup({
 });
 
 
-function initiate_sync() {
+
+
+
+// Starting Upsync
+
+function initiate_up_sync() {
   jQuery("#vsync-data").hide();
-  writeProgressMessage("Initiating update process ","initiate");
+  writeProgressMessageUpsync("Initiating upsync process ","initiate");
+  return jQuery.ajax({
+        url: ajaxurl+'?action=sync_initiate',
+    });
+}
+
+
+function writeProgressMessageUpsync(msg,msgact) {
+    jQuery("#upsyncstatus").append("<div class='syncstat "+msgact+"'>"+msg + "</div>");
+    console.log(msg);
+}
+
+
+
+
+
+
+
+
+// Starting Downsync
+function initiate_down_sync() {
+  jQuery("#vsync-data").hide();
+  writeProgressMessage("Initiating downsync process ","initiate");
   return jQuery.ajax({
         url: ajaxurl+'?action=sync_initiate',
     });
@@ -227,7 +258,7 @@ function generate_options(promiseResult) {
   jQuery(".generatestatus").text('(17/17)');
     jQuery(".curreentgtable").text(table);
     return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,        
+        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&blog_id='+BLOG_ID,
     });
 }
 
@@ -439,7 +470,7 @@ function complete_sync_process(promiseResult) {
 
 
 function writeProgressMessage(msg,msgact) {
-    jQuery("#syncstatus").append("<div class='syncstat "+msgact+"'>"+msg + "</div>");
+    jQuery("#downsyncstatus").append("<div class='syncstat "+msgact+"'>"+msg + "</div>");
     console.log(msg);
 }
 

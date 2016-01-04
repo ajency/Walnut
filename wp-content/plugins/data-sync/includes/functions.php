@@ -31,9 +31,12 @@ function school_data_sync_screen_new(){
     }
 
 
-    $html .= '<button type="button" id="vsync-data" style="margin-top:10px;">Update</button>';
+    $html .= '<button type="button" id="vsync-data" style="margin:10px 0px;">Update</button>';
 
-    $html .= '<div id="syncstatus"></div>';
+    $html .= '<div style="clear:both"></div>';
+    $html .= '<div id="upsyncstatus" style="float:left;width:50%"></div>';
+    $html .= '<div id="downsyncstatus" style="float:left;width:50%"></div>';
+    $html .= '<div style="clear:both"></div>';
 
     $html .= '</div>';
 

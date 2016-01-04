@@ -1,9 +1,11 @@
 .htaccess
 wp-config.php
+wp-config2.php
 wp-content/themes/walnut/walnut/dev/node_modules
 wp-content/uploads
 adminer.php
 adminer.css
+tmp
 
 .idea
 .ssh
