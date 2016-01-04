@@ -877,6 +877,12 @@ lesshat-selector {
   padding-left: 30px;
   color: #602f1a;
 }
+.create-ac-card .create-ac-wrapper .wrapped .student-info .info .sel-mandatory:before,
+.create-ac-card .create-ac-wrapper .wrapped .parents-info .info .sel-mandatory:before {
+  content: '*';
+  font-weight: bold;
+  color: #FF0D00;
+}
 .create-ac-card .create-ac-wrapper .wrapped .student-info .info select,
 .create-ac-card .create-ac-wrapper .wrapped .parents-info .info select {
   margin: 12px 0 0 0;
