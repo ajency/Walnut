@@ -162,7 +162,7 @@ function student_fetch_division(){
 
 function student_my_upcoming_quizes($texbook_ids){
 	global $wpdb;
-
+	echo $wpdb->prefix;
 	$current_user = wp_get_current_user();
 	$term_ids = [];
 	foreach ($texbook_ids as $key => $value) {
