@@ -1384,7 +1384,6 @@ lesshat-selector {
 .fixed-container .circle-container {
   visibility: visible;
   position: absolute;
-  height: 400px;
   left: 0px;
   width: 80px;
   top: -18px;
