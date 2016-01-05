@@ -145,7 +145,7 @@ function student_fetch_chapters($term_id){
 
 add_action('wp_logout','student_go_login');
 function student_go_login(){
-	wp_redirect(site_url."/login" );
+	wp_redirect(MAIN_SITE."/login" );
 	exit();
 }
 
