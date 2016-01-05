@@ -32,7 +32,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
             } else {
               usermodel = App.request("get:user:model");
               usermodel.clear();
-              return App.vent.trigger("show:login");
+              return location.href = MAIN_SITE + "/login";
             }
           };
         })(this));
