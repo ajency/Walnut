@@ -170,7 +170,7 @@ function student_my_upcoming_quizes($texbook_ids){
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
 	$today = date("Y-m-d 00:00:00");
-	   $query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value,summary.taken_on FROM wp_content_collection collection  
+	   $query = "SELECT collection.name as quiz_name,quiz_id, term_ids, schedule_from, meta.meta_value,summary.taken_on FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
 		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
 		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
@@ -178,7 +178,6 @@ function student_my_upcoming_quizes($texbook_ids){
 		and (schedule_from >= '".$today."' OR schedule_to >= '".$today."')
 		GROUP BY collection.id ORDER BY schedules.schedule_from DESC";	
 		$result = $wpdb->get_results($query);
-
 		$data = [];
 		foreach ($result as $key => $value) {
 			if(isset($value->taken_on)){
@@ -189,7 +188,7 @@ function student_my_upcoming_quizes($texbook_ids){
 			 $day      = date("d", strtotime($value->schedule_from));
 			 $month    = date("M", strtotime($value->schedule_from));
 			 $year     = date("Y", strtotime($value->schedule_from));
-			 $data[]   = array('quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
+			 $data[]   = array('quiz_name'=>$value->quiz_name,'quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
 		}
 		return $data;
 }
