@@ -89,6 +89,7 @@ define ['app'
 
 			mixinTemplateHelpers :(data)->
 				data = super data
+				data.name = data.name.replace("Lecture -","")
 				data.isTraining = if @display_mode is 'training' then true else false
 				data
 
