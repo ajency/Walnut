@@ -162,7 +162,7 @@ if ( typeof(jQuery) != 'undefined' ) {
 			$('#wp-admin-bar-logout a').click( function() {
 				try {
 					for ( var key in sessionStorage ) {
-						if ( key.indexOf('wp-autosave-') != -1 )
+					//commented by kapil if ( key.indexOf('wp-autosave-') != -1 )
 							sessionStorage.removeItem(key);
 					}
 				} catch(e) {}
