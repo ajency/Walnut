@@ -8,6 +8,7 @@
 ?>
 <?php       
             global $blog_id;
+            echo $blog_id;
             $textbooks_res = student_fetch_textbooks();
             $textbooks     = $textbooks_res['data'];
 //            pr($textbooks);
