@@ -108,7 +108,7 @@
                                             </div>
                                         </div>
                                         <div class="subj-time">
-                                            <a href="<?php echo get_site_url(get_current_blog_id());?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
+                                            <a href="<?php echo get_site_url();?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
                                             <p> <?php echo $upcoming_quiz['quiz_name'] ?><br/> <span style="font-size:12px"><?php echo $textbook_id_vs_name[$upcoming_quiz['textbook_id']]; ?></span></p>
                                         
                                             </a>
