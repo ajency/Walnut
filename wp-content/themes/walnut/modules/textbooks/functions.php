@@ -326,7 +326,7 @@ function get_book( $book, $division=0,$user_id=0) {
     
     }
 
-
+    print_r($GLOBALS['_wp_switched_stack']);
    echo restore_current_blog();
     return $book_dets;
 }
