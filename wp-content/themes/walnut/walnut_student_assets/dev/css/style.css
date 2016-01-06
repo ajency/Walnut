@@ -932,7 +932,7 @@ lesshat-selector {
 .create-ac-card .create-ac-wrapper .wrapped .create-ac button:hover {
   background: #8cc8c6;
 }
-.modal.in {
+#walnut-modal.modal.in {
   display: -webkit-box !important;
   display: -webkit-flex !important;
   display: -ms-flexbox !important;
@@ -947,35 +947,35 @@ lesshat-selector {
           justify-content: center;
   background: rgba(255, 255, 255, 0.3);
 }
-.modal .modal-body {
+#walnut-modal.modal .modal-body {
   text-align: center;
   padding: 20px;
 }
-.modal .modal-body h4 {
+#walnut-modal.modal .modal-body h4 {
   margin: 0;
   color: #602f1a;
   text-transform: capitalize;
 }
-.modal .modal-body .child {
+#walnut-modal.modal .modal-body .child {
   color: #fff;
   padding: 10px 0;
   text-transform: uppercase;
   width: 30%;
   border-radius: 5px;
 }
-.modal .modal-body .child.old {
+#walnut-modal.modal .modal-body .child.old {
   background: #69b8b5;
 }
-.modal .modal-body .child.old:hover {
+#walnut-modal.modal .modal-body .child.old:hover {
   background: #8cc8c6;
 }
-.modal .modal-body .child.new {
+#walnut-modal.modal .modal-body .child.new {
   background: #f2593a;
 }
-.modal .modal-body .child.new:hover {
+#walnut-modal.modal .modal-body .child.new:hover {
   background: #f5816a;
 }
-.modal .modal-body form hr {
+#walnut-modal.modal .modal-body form hr {
   width: 35%;
   margin: 8px auto;
   border-color: #B8C1C1;
