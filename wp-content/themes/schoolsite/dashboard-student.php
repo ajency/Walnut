@@ -7,9 +7,9 @@
 	get_header('student');
 ?>
 <?php       
-            echo get_current_blog_id();
+
             $textbooks_res = student_fetch_textbooks();
-            echo get_current_blog_id();
+ 
             $textbooks     = $textbooks_res['data'];
 //            pr($textbooks);
             $textbook_ids  = array();
@@ -75,8 +75,8 @@
                                                         </p>
                                                         <div class="questions">
 
-                                                            <a href="<?php echo get_site_url(get_current_blog_id()); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
-                                                            <a href="<?php echo get_site_url(get_current_blog_id()); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo get_site_url(); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo get_site_url(); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
                                                         </div>
                                                     </div>
                                                 </div>
