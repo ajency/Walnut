@@ -167,7 +167,7 @@ function get_textbooks( $args = array() ) {
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
-    
+    print_r($GLOBALS['_wp_switched_stack']);
     return $textbooks_data;
 }
 
