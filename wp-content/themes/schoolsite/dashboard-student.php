@@ -9,6 +9,7 @@
 <?php       
             echo get_current_blog_id();
             $textbooks_res = student_fetch_textbooks();
+            restore_current_blog();
             echo get_current_blog_id();
             $textbooks     = $textbooks_res['data'];
 //            pr($textbooks);
