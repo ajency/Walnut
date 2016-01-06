@@ -8,16 +8,15 @@
 ?>
 <?php       
             global $blog_id;
-            echo $blog_id;
+            
             $textbooks_res = student_fetch_textbooks();
-            echo $blog_id;
             $textbooks     = $textbooks_res['data'];
 //            pr($textbooks);
             $textbook_ids  = array();
             foreach ($textbooks as $textbook) {
                 $textbook_ids[]= $textbook->term_id;
             }
-
+            
             $upcoming_quizes = student_my_upcoming_quizes($textbook_ids);
             $textbook_id_to_name_map = array();
 
