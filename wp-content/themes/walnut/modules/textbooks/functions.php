@@ -127,6 +127,7 @@ function get_textbooks( $args = array() ) {
 
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all) {
+        echo "x ";
         switch_to_blog( 1 );
         $textbooks = get_terms( 'textbook', $args );
         $count_args = $args;
@@ -306,7 +307,7 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
 
-    restore_current_blog();
+    
 
     if ($division && $book_dets->parent === 0){
         $textbook_status = get_status_for_textbook($book_id, $division);
@@ -329,7 +330,7 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
 
-
+    restore_current_blog();
     return $book_dets;
 }
 
