@@ -326,7 +326,7 @@ function get_book( $book, $division=0,$user_id=0) {
     
     }
 
-    echo "reaches ";
+    echo " reaches ".get_current_blog_id();
     restore_current_blog();
     return $book_dets;
 }
