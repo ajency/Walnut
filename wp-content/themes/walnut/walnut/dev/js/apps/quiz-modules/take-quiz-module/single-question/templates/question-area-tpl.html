@@ -5,7 +5,47 @@
 
 <div id="content-board" class="quizContent"></div>
 
-<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
+
+<!--Admin side code reverted-->
+
+<div class="admin-side container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
+    <span class="pull-left small" id="first_question"></span>
+    <button type="button" id="previous-question" class="btn btn-info pull-left"> 
+        <i class="fa fa-backward"></i> Previous 
+    </button>
+    {{#allow_submit_answer}}
+   <button type="button" id="submit-question" class="btn btn-success pull-right">
+        Submit <i class="fa fa-forward"></i> 
+    </button>
+    {{/allow_submit_answer}}
+
+    <span class="pull-right small" id="last_question"></span>
+    <button type="button" id="next-question" class="none btn btn-info pull-right">
+        Next <i class="fa fa-forward"></i> 
+    </button>
+
+    <div class="text-center">
+        {{#show_hint}}
+        <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
+            <i class="fa fa-lightbulb-o"></i> Hint
+        </button>
+        {{/show_hint}}
+        {{#show_skip}}
+            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
+                Skip <i class="fa fa-step-forward"></i>
+            </button>
+        {{/show_skip}}
+        {{#show_skip_helper_text}}
+            <div><i class="small">(questions once skipped cannot be answered later)</i></div>
+        {{/show_skip_helper_text}}
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<!--New design code-->
+
+
+<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions new-design"> 
     <!-- <span class="pull-left small" id="first_question"></span> -->
   
         {{#show_skip}}
@@ -63,6 +103,12 @@
     <!-- </div> -->
     <div class="clearfix"></div>
 </div>
+
+
+
+
+
+
 
 {{#showComment}}
     <div class="container-grey m-b-5 quizComment">

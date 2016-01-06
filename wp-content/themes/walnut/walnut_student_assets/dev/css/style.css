@@ -2381,7 +2381,8 @@ lesshat-selector {
     font-weight: lighter;
   }
 }
-.quizComment {
+.quizComment,
+.admin-side {
   display: none;
 }
 @media (max-width: 1200px) {
