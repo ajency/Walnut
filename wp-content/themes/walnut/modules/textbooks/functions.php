@@ -127,7 +127,6 @@ function get_textbooks( $args = array() ) {
 
     //if fetch_all is true (eg. for content creator / admin), get full list of textbooks
     if ($fetch_all) {
-        echo "x ";
         switch_to_blog( 1 );
         $textbooks = get_terms( 'textbook', $args );
         $count_args = $args;
@@ -159,9 +158,11 @@ function get_textbooks( $args = array() ) {
 
         foreach ($textbooks as $book){
             $book= get_book( $book,$division,$user_id );
-            if($book)
-                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name 
-                $data[]= $book;
+            if($book){
+                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
+                $data[]= $book;               
+            }
+                
         }
 
 
@@ -211,14 +212,17 @@ function get_book( $book, $division=0,$user_id=0) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
 
-        if(!$book_dets)
+        if(!$book_dets){
+            restore_current_blog();
             return false;
+        }
 
     } else if (is_numeric( $book->term_id )) {
         $book_id = $book->term_id;
         $book_dets = $book;
 
     } else {
+        restore_current_blog();
         return false;
     }
 
