@@ -18,6 +18,7 @@
             }
             $upcoming_quizes = student_my_upcoming_quizes($textbook_ids);
             $textbook_id_to_name_map = array();
+            echo $blog_id;
             foreach ($textbooks as $key => $value) {
                 $textbook_id_to_name_map[$value->term_id] = 0;
             }
@@ -25,7 +26,7 @@
                 $textbook_id_to_name_map[$quiz['textbook_id']]++;
             }
            $textbook_id_vs_name = array();
- ?>         <?php echo $blog_id;?>    
+ ?>            
 <div class="container-fluid walnut-content">
                             <!-- Welcome text -->
                             <div class="row text-center">
