@@ -117,7 +117,7 @@ function get_textbooks( $args = array() ) {
     $args = wp_parse_args( $args, $defaults );
     $textbooks_for_blog = get_textbooksids_for_current_blog();
 
-    if($args['parent'] ==0 && current_user_can('view_all_textbooks')==false)
+    if($args['parent'] ==0 && current_user_can('administrator')==false)
         $args['include']=$textbooks_for_blog;
 
     extract( $args );
@@ -133,10 +133,11 @@ function get_textbooks( $args = array() ) {
         $count_args['fields'] = 'count';
         $count_args['number'] = '';
         $count_total = get_terms( 'textbook', $count_args );
-        switch_to_blog( $current_blog );
+        restore_current_blog();// added by kapil to fix blog id problem
     } //if filtering for a particular class, get textbooks based on which class they belong to
-    else if (is_numeric( $class_id ) || $class_id == '0')
+    else if (is_numeric( $class_id ) || $class_id == '0'){
         $textbooks = get_textbooks_for_class( $class_id );
+    }
 
     //get textbooks for logged in user depending on the class the user belongs to
     //generally used for logged in students
@@ -157,16 +158,17 @@ function get_textbooks( $args = array() ) {
 
         foreach ($textbooks as $book){
             $book= get_book( $book,$division,$user_id );
-            if($book)
-                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name 
-                $data[]= $book;
+            if($book){
+                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
+                $data[]= $book;               
+            }
+                
         }
 
 
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
-    restore_current_blog();// added by kapil to fix blog id problem
     return $textbooks_data;
 }
 
@@ -209,14 +211,17 @@ function get_book( $book, $division=0,$user_id=0) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
 
-        if(!$book_dets)
+        if(!$book_dets){
+            restore_current_blog();
             return false;
+        }
 
     } else if (is_numeric( $book->term_id )) {
         $book_id = $book->term_id;
         $book_dets = $book;
 
     } else {
+        restore_current_blog();
         return false;
     }
 
@@ -232,6 +237,7 @@ function get_book( $book, $division=0,$user_id=0) {
                 where textbook_id=" . $book_id, ARRAY_A );
 
     $book_dets->classes = maybe_unserialize( $classes['class_id'] );
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
 
     //added by kapil to fetch textbook names with class name starts
     $class_names_applicable="";
@@ -261,26 +267,23 @@ function get_book( $book, $division=0,$user_id=0) {
                 WHEN m.meta_value = 'practice' THEN 1 ELSE 0 END
             ) as practice,
         SUM( CASE
-                WHEN m.meta_value = 'test'
+                WHEN m.meta_value = 'test' 
                 THEN 1 ELSE 0  END
             ) as test,
         SUM( CASE
-                WHEN m.meta_value = 'class_test'
+                WHEN m.meta_value = 'class_test' 
                 THEN 1 ELSE 0  END
             ) as class_test
 
         FROM `{$wpdb->base_prefix}content_collection` c, {$wpdb->base_prefix}collection_meta m
-        WHERE c.term_ids LIKE %s
-            AND c.post_status LIKE %s
+        WHERE c.term_ids LIKE %s 
+            AND c.post_status LIKE %s 
             AND c.type LIKE %s
             AND c.id = m.collection_id
             AND m.meta_key LIKE %s",
-
+            
         array('%"'. $book_id . '";%', 'publish', 'quiz', 'quiz_type')
     );
-
-    ## UNCOMMENT BELOW LINES TO GET FULL DETAILS OF NUMBER OF QUIZZES FOR EACH QUIZ TYPE
-    ## COMMENTED OUT TO REDUCE QUERY TIME AS NOT NEEDED CURRENTLY
     $quizzes_count = $wpdb->get_row( $quiz_count_query );
 
     $book_dets->class_test_count = (int) $quizzes_count->class_test;
@@ -303,20 +306,11 @@ function get_book( $book, $division=0,$user_id=0) {
         $book_dets->chapters_completed = sizeof($textbook_status['completed']);
         $book_dets->chapters_in_progress = sizeof($textbook_status['in_progress']);
         $book_dets->chapters_not_started = sizeof($textbook_status['not_started']);
+
     }
 
-    $modules_count_qry= $wpdb->prepare("SELECT COUNT(id) FROM"
-                . " {$wpdb->base_prefix}content_collection WHERE "
-                . "type=%s  AND "
-                . "post_status  =%s  AND "
-                . "term_ids like %s",
-                array( 'student-training', 'publish','%"' . $book_id . '";%')
-            );
 
-    $counts_student_training_modules = $wpdb->get_var($modules_count_qry);
-    $book_dets->total_student_training_modules = $counts_student_training_modules;
-    $book_dets->total_quizzes =   $book_dets->class_test_count + $book_dets->practice_count + $book_dets->take_at_home_count;
-    restore_current_blog();
+    
 
     if ($division && $book_dets->parent === 0){
         $textbook_status = get_status_for_textbook($book_id, $division);
@@ -326,22 +320,20 @@ function get_book( $book, $division=0,$user_id=0) {
 
     }
 
-    ## UNCOMMENT BELOW LINES TO GET FULL DETAILS OF NUMBER OF QUIZZES FOR EACH QUIZ TYPE FOR STUDENTS DASHBOARD
-    ## COMMENTED OUT TO REDUCE QUERY TIME AS NOT NEEDED CURRENTLY
     if($user_id){
-//        $quizzes_status = quiz_status_for_textbook($book_id,$user_id);
-//        $book_dets->home_test_completed    = $quizzes_status['home_test_completed'];
-//        $book_dets->home_test_in_progress  = $quizzes_status['home_test_in_progress'];
-//        $book_dets->home_test_not_started = $quizzes_count->test - ($quizzes_status['home_test_completed']+$quizzes_status['home_test_in_progress']);
-//
-//        $book_dets->practice_completed    = $quizzes_status['practice_completed'];
-//        $book_dets->practice_in_progress  = $quizzes_status['practice_in_progress'];
-//        $book_dets->practice_not_started = $quizzes_count->practice - ($quizzes_status['practice_completed']+$quizzes_status['practice_in_progress']);
+        $quizzes_status = quiz_status_for_textbook($book_id,$user_id);
+        $book_dets->home_test_completed    = $quizzes_status['home_test_completed'];
+        $book_dets->home_test_in_progress  = $quizzes_status['home_test_in_progress'];
+        $book_dets->home_test_not_started = $quizzes_count->test - ($quizzes_status['home_test_completed']+$quizzes_status['home_test_in_progress']);
 
+        $book_dets->practice_completed    = $quizzes_status['practice_completed'];
+        $book_dets->practice_in_progress  = $quizzes_status['practice_in_progress'];
+        $book_dets->practice_not_started = $quizzes_count->practice - ($quizzes_status['practice_completed']+$quizzes_status['practice_in_progress']);
+    
     }
 
 
-
+    restore_current_blog();
     return $book_dets;
 }
 
@@ -353,9 +345,9 @@ function get_status_for_textbook($textbook_id, $division){
 
     switch_to_blog( 1 );
     $chapters = get_terms( 'textbook', $args );
-
+    
     restore_current_blog();
-
+    
     $completed = $in_progress = $not_started = array();
 
     foreach($chapters as $chapter){
@@ -388,9 +380,9 @@ function get_status_for_textbook($textbook_id, $division){
 function get_status_for_chapter($chapter_id, $division){
 
     global $wpdb;
-
+    
     restore_current_blog();
-
+    
     if(!(int)$chapter_id || ! (int) $division)
         return false;
 
@@ -402,7 +394,7 @@ function get_status_for_chapter($chapter_id, $division){
     );
 
     $module_ids = $wpdb->get_results($module_ids_query);
-
+    
     if($module_ids){
         foreach($module_ids as $module){
             $module_status = get_content_module_status($module->id, $division);
@@ -463,48 +455,48 @@ function get_textbooks_for_class( $classid ) {
 }
 
 function get_assigned_textbooks( $user_id = '' ) {
-
+    
     global $wpdb;
-
+    
     if ($user_id == '')
         $user_id = get_current_user_id();
-
-    if(user_can($user_id, 'view_all_textbooks')){
+    
+    if(user_can($user_id, 'administrator') || user_can($user_id, 'school-admin') || user_can($user_id, 'content-creator')){
 
         switch_to_blog(1);
         $txtbook_ids = get_terms(
-                'textbook',
+                'textbook', 
                 array(
-                    'hide_empty'=>false,
+                    'hide_empty'=>false, 
                     'fields'=>'ids')
                 );
         restore_current_blog();
     }
-
+    
     elseif(user_can($user_id, 'student')){
-
+        
         $division_id = get_user_meta(get_current_user_id(), 'student_division',true);
         $division = fetch_single_division($division_id);
-
+        
         $class_id= $division['class_id'];
-
+        
         $query= $wpdb->prepare(
-                "SELECT textbook_id from {$wpdb->base_prefix}textbook_relationships
+                "SELECT textbook_id from {$wpdb->base_prefix}textbook_relationships 
                     WHERE class_id like %s",
                 '%"'.$class_id.'";%'
                 );
-
+                
         $txtbook_ids= $wpdb->get_col($query);
-
+        
     }
-
+    
     else{
 
         $txtbooks_assigned = get_user_meta( $user_id, 'textbooks', true );
 
         $txtbook_ids = maybe_unserialize( $txtbooks_assigned );
     }
-
+    
     return $txtbook_ids;
 }
 
@@ -602,91 +594,7 @@ function user_has_access_to_textbook($textbook,$user_id=0){
 
         if(in_array($textbook, $assigned))
             $has_access = true;
-
+    
     return $has_access;
 
 }
-
-function textbooks_admin_search_filter($args){
-    global $pagenow;
-    if(! ($pagenow == 'edit-tags.php' && $_GET['taxonomy']=='textbook'))
-        return $args;
-
-    #search str can have values like p:maths, n:alg
-    #or p:15, n:alg
-    #where p=parentName (like) or p=parentID
-    #n = name of book to search for
-
-    if(strpos($args['search'], 'p=') !== FALSE) {
-        $options = explode(',',$args['search']);
-
-        $searchArray = array();
-        foreach($options as $opt){
-            $arr = explode('=',$opt);
-            if(sizeof($arr)>=2 && trim($arr[0]) && trim($arr[1]))
-                $searchArray[trim($arr[0])] = trim($arr[1]);
-        }
-
-        if(ctype_digit($searchArray['p'])) {
-            $possible_parents= array((int) $searchArray['p']);
-        }
-        else{
-            $possible_parents= get_terms('textbook', array(
-                                'search'=>$searchArray['p'],
-                                'fields'=>'ids',
-                                'hide_empty'=>false
-                            ));
-        }
-
-        $args['include']= array();
-
-        foreach($possible_parents as $parent){
-            $ids = get_terms('textbook', array(
-                            'parent'=>$parent,
-                            'fields'=>'ids',
-                            'hide_empty'=>false
-                        ));
-            $args['include']= array_merge($args['include'],$ids);
-        }
-        $args['search']= (isset($searchArray['n']))? $searchArray['n']: '';
-
-        if(sizeof($args['include'])==0){
-            $args['include']=array(-1);
-            return $args;
-        }
-    }
-    return $args;
-}
-add_filter('get_terms_args','textbooks_admin_search_filter');
-
-function filter_get_textbook_terms($terms, $taxonomies, $args){
-    global $pagenow;
-    if(! ($pagenow == 'edit-tags.php' && $_REQUEST['taxonomy']=='textbook'))
-        return $terms;
-
-    foreach($terms as $term){
-        $term->name = "<a href='test.php'>{$term->name}</a>";
-    }
-
-    return $terms;
-}
-add_filter('get_terms', 'filter_get_textbook_terms');
-
-function populate_textbook_custom_column($data, $column_name, $term_id){
-    return $term_id;
-}
-add_action( "manage_textbook_custom_column",  'populate_textbook_custom_column', 10, 3  );
-
-function column_header_function($a1,$a2,$a3){
-    $columns = array(
-        'cb'          => '<input type="checkbox" />',
-        'name'        => _x( 'Name', 'term name' ),
-        'description' => __( 'Description' ),
-        'slug'        => __( 'Slug' ),
-        'ID'          => __( 'ID' )
-    );
-    return $columns;
-
-}
-
-add_filter( "manage_edit-textbook_columns", "column_header_function" );

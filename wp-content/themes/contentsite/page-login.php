@@ -17,10 +17,6 @@
          global $post;
          $page_slug=$post->post_name;
          $current_user = wp_get_current_user();
-         $login_header_pages = array('register-redirect-student', 'login','dashboard');
-         if ( is_user_logged_in() ) {
-             array_pop($login_header_pages);
-         }
          define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/");
          define("ANIMATED_LIBRARY", get_template_directory_uri()."/walnut/dev/");
          ?>        
@@ -33,26 +29,10 @@
          }
          
       </script>
-      <!-- Sites Styles -->
-      <!-- Bootstrap Core CSS -->
       <link rel="stylesheet" href="<?php echo STUDENT_ASSET_PATH ;?>css/bootstrap.min.css" type="text/css">
-      <!-- Custom Css -->
       <link rel="stylesheet" href="<?php echo STUDENT_ASSET_PATH ;?>css/style.css">
-      <!-- Animation library -->
-      <link href="<?php echo ANIMATED_LIBRARY ;?>css/animate.min.css" rel="stylesheet" type="text/css">
-      <!-- Custom Fonts -->
       <link rel="stylesheet" href="<?php echo STUDENT_ASSET_PATH ;?>css/font-awesome.min.css" type="text/css">
-      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-      <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-      <?php
-         wp_head();
-         //240935906580-i8f78p42fftas8p4llu8d6va4ldbnp0g.apps.googleusercontent.com
-         //mQWjHa1kosS0LofU3NrgG-F-
-         ?>
+      <?php wp_head(); ?>
    </head>
    <body>
                 <header>
@@ -85,9 +65,9 @@
                                             <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                        <a href="http://walnut.synapsedu.info"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
+                                                        <a href="<?php echo get_site_url(13); ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
                                                     </div>                                              
-                                                    <h5><a href="http://walnut.synapsedu.info">Login at Shivane</a></h5>
+                                                    <h5><a href="<?php echo get_site_url(13); ?>">Login at Shivane</a></h5>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6 col-sm-6 col-lg-6">
@@ -150,49 +130,6 @@
         <?php 
          wp_footer();         
          ?>
-
-      <?php
-         global $chorus_options; 
-         ?>
-      <script>
-         AJAXURL = '<?php echo admin_url("admin-ajax.php") ?>';
-         SITEURL = '<?php echo site_url() ?>';
-         THEMEURL = '<?php echo get_template_directory_uri()?>';
-         
-         
-         <?php print_r(getLoggedInUserModel())?>
-         
-         CLASS_LABEL = {};
-         <?php foreach($class_ids as $class){ ?>
-         CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
-         <?php } ?>
-         
-         CHORUS_OPTIONS = {};
-         <?php foreach($chorus_options as $key=>$value){ ?>
-         CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
-         <?php } ?>
-         
-      </script>
-      <script type="text/javascript" src="/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-      <script>
-          Pace.on('hide', function () {
-              document.getElementById("site_main_container").setAttribute('class', 'showAll');
-          })
-      </script>
-      <?php
-
-      if (ENV == 'dev') {
-          ?>
-          <script type="text/javascript"
-                  data-main="/wp-content/themes/walnut/walnut/dev/js/walnut-main.js?ver=<?php echo DEV_VERSION ?>"
-                  src="/wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
-      <?php
-      } else {
-
-      ?>
-          <script type="text/javascript"
-                  src="/wp-content/themes/walnut/walnut/production/walnut-main.js?ver=<?php echo VERSION ?>"></script>
-      <?php } ?>
 
       <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
       <!-- Bootstrap Core JavaScript -->
