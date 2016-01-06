@@ -25,7 +25,7 @@ define ['app'
                     else
                         usermodel = App.request "get:user:model"
                         usermodel.clear()
-                        App.vent.trigger "show:login"
+                        location.href=MAIN_SITE+"/login"
 
             _showLeftRightViews: =>
                 App.execute "show:leftheaderapp", region: @layout.leftRegion
