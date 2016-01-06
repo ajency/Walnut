@@ -70,8 +70,8 @@
                                                         <?php endif; ?>                                                        
                                                         </p>
                                                         <div class="questions">
-                                                            <a href="/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
-                                                            <a href="/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo get_site_url(); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo get_site_url(); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -103,7 +103,7 @@
                                             </div>
                                         </div>
                                         <div class="subj-time">
-                                            <a href="<?php echo site_url() ?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
+                                            <a href="<?phpecho get_site_url(13);?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
                                             <p> <?php echo $upcoming_quiz['quiz_name'] ?><br/> <span style="font-size:12px"><?php echo $textbook_id_vs_name[$upcoming_quiz['textbook_id']]; ?></span></p>
                                         
                                             </a>
