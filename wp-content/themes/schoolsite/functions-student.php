@@ -170,7 +170,7 @@ function student_my_upcoming_quizes($texbook_ids){
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
 	$today = date("Y-m-d 00:00:00");
-	   $query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM wp_content_collection collection  
+	   $query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value,summary.taken_on FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
 		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
 		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
@@ -181,6 +181,9 @@ function student_my_upcoming_quizes($texbook_ids){
 
 		$data = [];
 		foreach ($result as $key => $value) {
+			if(isset($value->taken_on)){
+				continue;
+			}
 			 $quiz_id  = $value->quiz_id;
 			 $terms    = maybe_unserialize($value->term_ids);
 			 $day      = date("d", strtotime($value->schedule_from));
