@@ -125,6 +125,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.mixinTemplateHelpers = function(data) {
         data = ModuleDescriptionView.__super__.mixinTemplateHelpers.call(this, data);
+        data.name = data.name.replace("Lecture -", "");
         data.isTraining = this.display_mode === 'training' ? true : false;
         return data;
       };
