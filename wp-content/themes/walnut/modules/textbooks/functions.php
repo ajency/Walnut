@@ -304,7 +304,7 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
 
-    restore_current_blog();
+    
 
     if ($division && $book_dets->parent === 0){
         $textbook_status = get_status_for_textbook($book_id, $division);
@@ -326,8 +326,8 @@ function get_book( $book, $division=0,$user_id=0) {
     
     }
 
-
-
+    echo "reaches ";
+    restore_current_blog();
     return $book_dets;
 }
 
