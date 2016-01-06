@@ -16,9 +16,10 @@
             foreach ($textbooks as $textbook) {
                 $textbook_ids[]= $textbook->term_id;
             }
+            echo $blog_id;
             $upcoming_quizes = student_my_upcoming_quizes($textbook_ids);
             $textbook_id_to_name_map = array();
-            echo $blog_id;
+
             foreach ($textbooks as $key => $value) {
                 $textbook_id_to_name_map[$value->term_id] = 0;
             }
