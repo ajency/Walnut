@@ -7,10 +7,9 @@
 	get_header('student');
 ?>
 <?php       
-            global $blog_id;
-            echo $blog_id;
+            echo get_current_blog_id();
             $textbooks_res = student_fetch_textbooks();
-            echo $blog_id;
+            echo get_current_blog_id();
             $textbooks     = $textbooks_res['data'];
 //            pr($textbooks);
             $textbook_ids  = array();
@@ -76,8 +75,8 @@
                                                         </p>
                                                         <div class="questions">
 
-                                                            <a href="<?php echo get_site_url($blog_id); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
-                                                            <a href="<?php echo get_site_url($blog_id); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo get_site_url(get_current_blog_id()); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo get_site_url(get_current_blog_id()); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,7 +108,7 @@
                                             </div>
                                         </div>
                                         <div class="subj-time">
-                                            <a href="<?php echo get_site_url($blog_id);?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
+                                            <a href="<?php echo get_site_url(get_current_blog_id());?>/#students/dashboard/textbook/<?php echo $upcoming_quiz['textbook_id']?>/quiz/<?php echo $upcoming_quiz['quiz_id']?>">
                                             <p> <?php echo $upcoming_quiz['quiz_name'] ?><br/> <span style="font-size:12px"><?php echo $textbook_id_vs_name[$upcoming_quiz['textbook_id']]; ?></span></p>
                                         
                                             </a>
