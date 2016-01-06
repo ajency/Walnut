@@ -36,11 +36,19 @@ function run_standalone_school_setup(){
     //setup the template and stylesheet for child sites
     update_option( 'template', 'walnut' );
     update_option( 'stylesheet', 'schoolsite' );
+    update_option( 'permalink_structure', '/%postname%/' );
 
     add_pages_to_main_site();
 
     activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
-
+    
+    activate_plugins(array(
+        'custom-taxonomy-order-ne/customtaxorder.php',
+        'wp-crontrol/wp-crontrol.php'));
+    
+    #schedule the communication cron
+    wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'ajcm_process_communication_queue');
+    
     //wp_redirect(site_url().'/wp-admin/options-general.php?page=school_data_sync');
 }
 
@@ -149,6 +157,7 @@ function create_custom_tables(){
         `student_id` bigint(20) NOT NULL,
         `taken_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         `quiz_meta` text NOT NULL,
+        `sync` int(1),
         PRIMARY KEY (`summary_id`)
       )";
 
@@ -163,6 +172,7 @@ function create_custom_tables(){
         `time_taken` int(11) NOT NULL,
         `marks_scored` decimal(10,1) NOT NULL DEFAULT '0.0',
         `status` varchar(30) NOT NULL,
+        `sync` int(1),
         PRIMARY KEY (`qr_id`)
       )";
 
@@ -172,7 +182,8 @@ function create_custom_tables(){
       `quiz_id` int(11) NOT NULL,
       `division_id` int(11) NOT NULL,
       `schedule_from` date NOT NULL,
-      `schedule_to` date NOT NULL
+      `schedule_to` date NOT NULL,              
+      `sync` int(1)
     )";
 
   $wpdb->query( $quiz_schedules_table );
@@ -228,6 +239,18 @@ function add_pages_to_main_site()
         update_option( 'page_on_front', $postid );
         update_option( 'show_on_front', 'page' );
     }
+    
+    if (!get_page_by_title('Sync Site Content')) {
+        $post = array();
+        $post['post_type'] = 'page'; //could be 'page' for example
+        $post['post_author'] = get_current_user_id();
+        $post['post_status'] = 'publish'; //draft
+        $post['post_title'] = 'Sync Site Content';
+        $postid = wp_insert_post($post);
+
+        update_post_meta($postid, '_wp_page_template', 'site-sync.php');
+
+    }    
 
 }
 

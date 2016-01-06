@@ -116,6 +116,7 @@ define ['app'
 					@_showQuestionDisplayView prevItem,direction:'rtl'
 					@layout.triggerMethod "change:content:piece", currentItem
 				else
+					$(".is-back").remove()
 					@_gotoViewModule()
 
 			_getPrevItem : ->
@@ -254,28 +255,30 @@ define ['app'
 
 		class SingleQuestionLayout extends Marionette.Layout
 
-			template : '<div id="module-details-region"></div>
-						<div class="" id="top-panel"></div>
-						<div class="container-grey m-b-5  qstnInfo ">
-							<label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label>
-							<span class="small-text" id="instructions"></span>
-						</div>
-						<div id="content-board">
-						</div>
-						
-						<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions none"> 
-							<button type="button" id="submit-question" class="btn btn-success pull-right">
-								Submit <i class="fa fa-forward"></i> 
-							</button>
-							
-							<div class="text-center">
-								{{#show_hint}}
-								<button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
-									<i class="fa fa-lightbulb-o"></i> Hint
-								</button>
-								{{/show_hint}}
+			template : '<div class="lesson">
+							<div id="module-details-region"></div>
+							<div class="" id="top-panel"></div>
+							<div class="container-grey m-b-5  qstnInfo ">
+								<label class="form-label bold small-text muted no-margin inline" id="instructions-label"> </label>
+								<span class="small-text" id="instructions"></span>
 							</div>
-							<div class="clearfix"></div>
+							<div id="content-board">
+							</div>
+							
+							<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions none"> 
+								<button type="button" id="submit-question" class="btn btn-success pull-right">
+									Submit <i class="fa fa-forward"></i> 
+								</button>
+								
+								<div class="text-center">
+									{{#show_hint}}
+									<button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
+										<i class="fa fa-lightbulb-o"></i> Hint
+									</button>
+									{{/show_hint}}
+								</div>
+								<div class="clearfix"></div>
+							</div>
 						</div>'
 
 			regions :

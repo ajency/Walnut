@@ -89,6 +89,7 @@ define ['app'
 
 			mixinTemplateHelpers :(data)->
 				data = super data
+				data.name = data.name.replace("Lecture -","")
 				data.isTraining = if @display_mode is 'training' then true else false
 				data
 
@@ -104,7 +105,6 @@ define ['app'
 				'click #question-done': 'questionCompleted'
 
 			onShow:->
-
 				if not Marionette.getOption(@, 'nextItemID')
 					@isLastContentPiece = true
 					@$el.find "#question-done"
@@ -159,8 +159,7 @@ define ['app'
 			onTopPanelCheckLastQuestion : ->
 				if @isLastContentPiece
 					$ "#top-panel-question-done"
-					.html '<i class="fa fa-forward"></i> Finish Module'
-
+					.html("<img src='wp-content/themes/walnut/walnut_student_assets/dev/images/stop.png' class='img-reponsive center-block'/><h4>Finish Module</h4>")
 		# set handlers
 		App.commands.setHandler "show:student:training:module:description", (opt = {})->
 			new ModuleDescriptionController opt

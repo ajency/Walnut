@@ -1,19 +1,44 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
-define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html'], function(App, RegionController, quizDetailsTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html', 'bootbox'], function(App, RegionController, quizDetailsTpl, bootbox) {
   return App.module("QuizModuleApp.Controller", function(Controller, App) {
     var QuizDetailsView;
-    Controller.ViewCollecionDetailsController = (function(_super) {
-      __extends(ViewCollecionDetailsController, _super);
+    Controller.ViewCollecionDetailsController = (function(superClass) {
+      extend(ViewCollecionDetailsController, superClass);
 
       function ViewCollecionDetailsController() {
         return ViewCollecionDetailsController.__super__.constructor.apply(this, arguments);
       }
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
-        var view;
+        var c, i, r, total, view;
+        $('.navbar .container-fluid').css("visibility", "visible");
         this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, this.quizResponseSummary = opts.quizResponseSummary;
+        r = this.model._fetch.responseJSON.data.content_layout;
+        c = this.model._fetch.responseJSON.data.content_pieces.length;
+        total = 0;
+        i = 0;
+        while (i < r.length) {
+          if (r[i].data === void 0) {
+            total++;
+            i++;
+            continue;
+          }
+          total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3);
+          i++;
+        }
+        if (total > c) {
+          bootbox.confirm('Quiz could not be generated as there are less number of questions due to deletion.', (function(_this) {
+            return function(result) {
+              if (result) {
+                return $("#take-quiz").hide();
+              } else {
+                return $("#take-quiz").hide();
+              }
+            };
+          })(this));
+        }
         this.view = view = this._getQuizDescriptionView();
         this.listenTo(view, 'start:quiz:module', (function(_this) {
           return function() {
@@ -59,8 +84,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       return ViewCollecionDetailsController;
 
     })(RegionController);
-    QuizDetailsView = (function(_super) {
-      __extends(QuizDetailsView, _super);
+    QuizDetailsView = (function(superClass) {
+      extend(QuizDetailsView, superClass);
 
       function QuizDetailsView() {
         return QuizDetailsView.__super__.constructor.apply(this, arguments);
@@ -132,12 +157,12 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        var responseSummary, _ref;
+        var ref, responseSummary;
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
           this.$el.find("#take-quiz").html('Continue');
         }
-        if ((_ref = Marionette.getOption(this, 'display_mode')) === 'replay' || _ref === 'quiz_report') {
+        if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
           if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {

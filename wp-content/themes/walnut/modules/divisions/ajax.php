@@ -25,3 +25,19 @@ function ajax_fetch_single_division() {
 }
 
 add_action('wp_ajax_read-division', 'ajax_fetch_single_division');
+
+
+function fetch_schools() {
+
+	global $wpdb;
+	$current_user = wp_get_current_user();	
+	$query       = $wpdb->prepare(
+			     "SELECT * FROM wp_blogs ");
+ 
+	$data      = $wpdb->get_results($query);	
+ 
+    
+    wp_send_json(array('status'=>'OK', 'data'=>$data));
+}
+
+add_action('wp_ajax_get-schools', 'fetch_schools');

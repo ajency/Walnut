@@ -11,7 +11,8 @@ define ['app'
 			groupContentCollection=null
 
 			initialize: (opts) ->
-
+				$('.navbar .container-fluid').css("visibility","visible")
+				$('.navbar .go-back').remove() 
 				#get the header and left nav back incase it was hidden for quiz view
 				$.showHeaderAndLeftNav()
 
@@ -151,9 +152,13 @@ define ['app'
 		class ContentGroupViewLayout extends Marionette.Layout
 
 			template: '<div class="teacher-app">
-						  <div id="collection-details-region"></div>
+						<div class="direction text-center">
+						<div class="icon goto-prev-page"><a href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div>
+						<p class="welcome-text">You\'re here to view <span id="lect_name"></span> Lecture</p>
 						</div>
-						<div id="content-display-region"></div>'
+						<div id="collection-details-region" class="col-lg-10 col-lg-offset-1"></div>
+						</div>
+					   <div id="content-display-region"></div>'
 
 			className: ''
 

@@ -5,6 +5,7 @@ define ['app'
 
 	App.module 'ContentCreator.ContentBuilder.Element.Video', (Video, App, Backbone, Marionette, $, _)->
 
+
 		# menu controller
 		class Video.Controller extends Element.Controller
 
@@ -98,3 +99,4 @@ define ['app'
 						model : @layout.model
 
 					@layout.elementRegion.show @view
+

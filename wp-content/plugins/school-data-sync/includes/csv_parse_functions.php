@@ -195,7 +195,7 @@ function sds_sanitize_question_response( $question_response ) {
 
 function sds_sync_question_response( $question_response_data ) {
 
-    if (question_response_exists( $question_response_data['ref_id'] )) {
+    if (sds_question_response_exists( $question_response_data['ref_id'] )) {
         sds_sync_update_question_response( $question_response_data );
     } else {
         sds_sync_insert_question_response( $question_response_data );
@@ -777,8 +777,8 @@ function sds_posts_exists( $posts_data ) {
     $id= $posts_data['ID'];
 
     $query = $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}posts
-        WHERE ID like %s",
-        array($id)
+        WHERE ID like %s AND post_type NOT like %s",
+        array($id,'page')
     );
     $record = $wpdb->get_var( $query );
 
@@ -875,6 +875,9 @@ function sds_postmeta_exists( $postmeta_data ) {
 
     global $wpdb;
 
+    if($postmeta_data['post_id'] == 0){
+        return false;
+    }
     $id= $postmeta_data['meta_id'];
     $post_id= $postmeta_data['post_id'];
     $meta_key= $postmeta_data['meta_key'];
@@ -1122,7 +1125,7 @@ function sds_validate_terms_csv_row( $terms_data ) {
         return new WP_Error("", "Not a valid record");
 
     // Total columns for each row MUST be 11. else its a improper CSV row
-    if (count( $terms_data ) !== 4)
+    if (count( $terms_data ) !== 5)
         return new WP_Error("", "Column count for csv row not proper");
 
     // TODO: add more validation checks here/ May be for each column to be valid
@@ -1140,7 +1143,8 @@ function sds_convert_csv_row_to_terms_format( $terms_data ) {
         'term_id' => $terms_data[0],
         'name' => $terms_data[1],
         'slug' => $terms_data[2],
-        'term_group' => $terms_data[3]
+        'term_group' => $terms_data[3],
+        'term_order' => $terms_data[4]
     );
 }
 

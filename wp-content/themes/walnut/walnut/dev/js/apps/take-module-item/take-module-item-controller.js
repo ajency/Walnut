@@ -1,6 +1,6 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/take-module-item/student-list/student-list-app', 'apps/take-module-item/teacher-training-footer/training-footer-controller', 'apps/take-module-item/module-description/module-description-app', 'apps/take-module-item/chorus-options/chorus-options-app', 'apps/take-module-item/item-description/controller', 'apps/take-module-item/multiple-evaluation/multiple-evaluation-controller'], function(App, RegionController) {
   return App.module("TeacherTeachingApp", function(View, App) {
@@ -11,19 +11,19 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
     questionResponseCollection = null;
     contentPiece = null;
     questionResponseModel = null;
-    View.TeacherTeachingController = (function(_super) {
-      __extends(TeacherTeachingController, _super);
+    View.TeacherTeachingController = (function(superClass) {
+      extend(TeacherTeachingController, superClass);
 
       function TeacherTeachingController() {
-        this._showTeacherTrainingFooter = __bind(this._showTeacherTrainingFooter, this);
-        this._showStudentsListView = __bind(this._showStudentsListView, this);
-        this._showQuestionDisplayView = __bind(this._showQuestionDisplayView, this);
-        this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
-        this._getOrCreateModel = __bind(this._getOrCreateModel, this);
-        this._startViewModuleApp = __bind(this._startViewModuleApp, this);
-        this._saveQuestionResponse = __bind(this._saveQuestionResponse, this);
-        this._gotoViewModule = __bind(this._gotoViewModule, this);
-        this._changeQuestion = __bind(this._changeQuestion, this);
+        this._showTeacherTrainingFooter = bind(this._showTeacherTrainingFooter, this);
+        this._showStudentsListView = bind(this._showStudentsListView, this);
+        this._showQuestionDisplayView = bind(this._showQuestionDisplayView, this);
+        this._showModuleDescriptionView = bind(this._showModuleDescriptionView, this);
+        this._getOrCreateModel = bind(this._getOrCreateModel, this);
+        this._startViewModuleApp = bind(this._startViewModuleApp, this);
+        this._saveQuestionResponse = bind(this._saveQuestionResponse, this);
+        this._gotoViewModule = bind(this._gotoViewModule, this);
+        this._changeQuestion = bind(this._changeQuestion, this);
         return TeacherTeachingController.__super__.constructor.apply(this, arguments);
       }
 
@@ -270,8 +270,8 @@ define(['app', 'controllers/region-controller', 'apps/take-module-item/student-l
       return TeacherTeachingController;
 
     })(RegionController);
-    return SingleQuestionLayout = (function(_super) {
-      __extends(SingleQuestionLayout, _super);
+    return SingleQuestionLayout = (function(superClass) {
+      extend(SingleQuestionLayout, superClass);
 
       function SingleQuestionLayout() {
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);

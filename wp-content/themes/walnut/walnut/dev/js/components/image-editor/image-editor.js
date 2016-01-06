@@ -1,6 +1,6 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'marionette'], function(App, Marionette) {
   var ImageEditorView, InvalidMediaView, imageCropView;
@@ -38,8 +38,8 @@ define(['app', 'marionette'], function(App, Marionette) {
       }
     });
   };
-  InvalidMediaView = (function(_super) {
-    __extends(InvalidMediaView, _super);
+  InvalidMediaView = (function(superClass) {
+    extend(InvalidMediaView, superClass);
 
     function InvalidMediaView() {
       return InvalidMediaView.__super__.constructor.apply(this, arguments);
@@ -50,12 +50,12 @@ define(['app', 'marionette'], function(App, Marionette) {
     return InvalidMediaView;
 
   })(Marionette.ItemView);
-  ImageEditorView = (function(_super) {
-    __extends(ImageEditorView, _super);
+  ImageEditorView = (function(superClass) {
+    extend(ImageEditorView, superClass);
 
     function ImageEditorView() {
-      this._iasInit = __bind(this._iasInit, this);
-      this.showImageEditor = __bind(this.showImageEditor, this);
+      this._iasInit = bind(this._iasInit, this);
+      this.showImageEditor = bind(this.showImageEditor, this);
       return ImageEditorView.__super__.constructor.apply(this, arguments);
     }
 

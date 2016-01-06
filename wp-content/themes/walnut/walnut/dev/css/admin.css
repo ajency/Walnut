@@ -1,0 +1,60 @@
+
+
+/* ---------------------------
+   ADMIN TABLE FIX FOR CONTENT PIECE -----------
+ ---------------------------
+*/
+
+
+#content-pieces-table{
+	table-layout: fixed;
+}
+
+#content-pieces-table  tr  th{
+	vertical-align: middle;
+	text-align: center;
+}
+
+#content-pieces-table .tablesorter-header-inner{
+	font-size: inherit;
+}
+
+
+#content-pieces-table  td{
+	font-size: 0.6em;
+	word-wrap: break-word;
+	text-align: center;
+}
+
+
+#content-pieces-table  td > span.label{
+	font-size: 0.9em;
+    padding: 7px;
+    min-width: inherit;
+}
+
+
+
+
+/* ---------------------------
+   ADMIN CONTENT PIECE AND QUIZ/LECTURE FIXES -----------
+ ---------------------------
+*/
+
+
+.all-d-best,.direction,.submit2,.quiz-stats,.new-design{
+	display: none;
+}
+
+.admin-side{
+	display: block;
+}
+
+#question-display-region > div .container-grey,.quiz-info{
+	text-align: center;
+}
+
+
+#question-display-region > div #skip-question{
+	padding: 10px 18px;
+}

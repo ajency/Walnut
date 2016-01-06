@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/student-training-module/view-module/content-display/templates/content-display-item.html'], function(App, RegionController, contentDisplayItemTpl) {
   return App.module("StudentTrainingApp.Controller", function(Controller, App) {
     var ContentDisplayView, ContentItemView;
-    Controller.CollectionContentDisplayController = (function(_super) {
-      __extends(CollectionContentDisplayController, _super);
+    Controller.CollectionContentDisplayController = (function(superClass) {
+      extend(CollectionContentDisplayController, superClass);
 
       function CollectionContentDisplayController() {
-        this._getCollectionContentDisplayView = __bind(this._getCollectionContentDisplayView, this);
+        this._getCollectionContentDisplayView = bind(this._getCollectionContentDisplayView, this);
         return CollectionContentDisplayController.__super__.constructor.apply(this, arguments);
       }
 
@@ -42,8 +42,8 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       return CollectionContentDisplayController;
 
     })(RegionController);
-    ContentItemView = (function(_super) {
-      __extends(ContentItemView, _super);
+    ContentItemView = (function(superClass) {
+      extend(ContentItemView, superClass);
 
       function ContentItemView() {
         return ContentItemView.__super__.constructor.apply(this, arguments);
@@ -88,12 +88,12 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       return ContentItemView;
 
     })(Marionette.ItemView);
-    ContentDisplayView = (function(_super) {
-      __extends(ContentDisplayView, _super);
+    ContentDisplayView = (function(superClass) {
+      extend(ContentDisplayView, superClass);
 
       function ContentDisplayView() {
-        this.viewItem = __bind(this.viewItem, this);
-        this.getResults = __bind(this.getResults, this);
+        this.viewItem = bind(this.viewItem, this);
+        this.getResults = bind(this.getResults, this);
         return ContentDisplayView.__super__.constructor.apply(this, arguments);
       }
 
@@ -104,13 +104,13 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       ContentDisplayView.prototype.itemViewContainer = 'ul.cbp_tmtimeline';
 
       ContentDisplayView.prototype.itemViewOptions = function(model, index) {
-        var additionalData, data, responseCollection, responseModel, responseModelArray, _i, _len;
+        var additionalData, data, i, len, responseCollection, responseModel, responseModelArray;
         responseCollection = Marionette.getOption(this, 'responseCollection');
         responseModelArray = responseCollection.where({
           "content_piece_id": model.get('ID')
         });
-        for (_i = 0, _len = responseModelArray.length; _i < _len; _i++) {
-          responseModel = responseModelArray[_i];
+        for (i = 0, len = responseModelArray.length; i < len; i++) {
+          responseModel = responseModelArray[i];
           responseModel = responseModel;
         }
         additionalData = {};
@@ -131,7 +131,7 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       };
 
       ContentDisplayView.prototype.getResults = function(model, question_response) {
-        var ans, answeredCorrectly, correct_answer, name, names, studID, studentCollection, student_names, _i, _j, _len, _len1;
+        var ans, answeredCorrectly, correct_answer, i, j, len, len1, name, names, studID, studentCollection, student_names;
         correct_answer = 'No One';
         names = [];
         studentCollection = Marionette.getOption(this, 'studentCollection');
@@ -140,13 +140,13 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
             correct_answer = CHORUS_OPTIONS[question_response];
           }
         } else if (model.get('question_type') === 'individual') {
-          for (_i = 0, _len = question_response.length; _i < _len; _i++) {
-            studID = question_response[_i];
+          for (i = 0, len = question_response.length; i < len; i++) {
+            studID = question_response[i];
             answeredCorrectly = studentCollection.where({
               "ID": studID
             });
-            for (_j = 0, _len1 = answeredCorrectly.length; _j < _len1; _j++) {
-              ans = answeredCorrectly[_j];
+            for (j = 0, len1 = answeredCorrectly.length; j < len1; j++) {
+              ans = answeredCorrectly[j];
               name = ans.get('display_name');
             }
             names.push(name);
@@ -166,7 +166,7 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
       };
 
       ContentDisplayView.prototype.onShow = function() {
-        var completedResponses, question, responseCollection, responseQuestionIDs, _i, _j, _len, _len1, _ref, _ref1, _results, _results1;
+        var completedResponses, i, j, len, len1, question, ref, ref1, responseCollection, responseQuestionIDs, results, results1;
         responseCollection = Marionette.getOption(this, 'responseCollection');
         completedResponses = responseCollection.where({
           'status': 'completed'
@@ -175,25 +175,25 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
           return m.toJSON();
         }).pluck('content_piece_id').value();
         if (Marionette.getOption(this, 'mode') === 'training') {
-          _ref = this.$el.find('.contentPiece');
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            question = _ref[_i];
-            _results.push($(question).find('.cbp_tmlabel').addClass('completed').css('cursor', 'pointer'));
+          ref = this.$el.find('.contentPiece');
+          results = [];
+          for (i = 0, len = ref.length; i < len; i++) {
+            question = ref[i];
+            results.push($(question).find('.cbp_tmlabel').addClass('completed').css('cursor', 'pointer'));
           }
-          return _results;
+          return results;
         } else {
-          _ref1 = this.$el.find('.contentPiece');
-          _results1 = [];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            question = _ref1[_j];
+          ref1 = this.$el.find('.contentPiece');
+          results1 = [];
+          for (j = 0, len1 = ref1.length; j < len1; j++) {
+            question = ref1[j];
             if (_.contains(responseQuestionIDs, parseInt($(question).attr('data-id')))) {
-              _results1.push($(question).find('.cbp_tmlabel').addClass('done completed').css('cursor', 'pointer'));
+              results1.push($(question).find('.cbp_tmlabel').addClass('done completed').css('cursor', 'pointer'));
             } else {
-              _results1.push(void 0);
+              results1.push(void 0);
             }
           }
-          return _results1;
+          return results1;
         }
       };
 

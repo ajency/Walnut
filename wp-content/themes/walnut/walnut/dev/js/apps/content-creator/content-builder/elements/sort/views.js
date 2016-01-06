@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ContentBuilder.Element.Sort.Views", function(Views, App, Backbone, Marionette, $, _) {
     var OptionView;
-    OptionView = (function(_super) {
-      __extends(OptionView, _super);
+    OptionView = (function(superClass) {
+      extend(OptionView, superClass);
 
       function OptionView() {
-        this.configureEditor = __bind(this.configureEditor, this);
+        this.configureEditor = bind(this.configureEditor, this);
         return OptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -59,13 +59,13 @@ define(['app'], function(App) {
       return OptionView;
 
     })(Marionette.ItemView);
-    return Views.SortView = (function(_super) {
-      __extends(SortView, _super);
+    return Views.SortView = (function(superClass) {
+      extend(SortView, superClass);
 
       function SortView() {
-        this._onOptionPositionChanged = __bind(this._onOptionPositionChanged, this);
-        this._changeHeight = __bind(this._changeHeight, this);
-        this._changeBGColor = __bind(this._changeBGColor, this);
+        this._onOptionPositionChanged = bind(this._onOptionPositionChanged, this);
+        this._changeHeight = bind(this._changeHeight, this);
+        this._changeBGColor = bind(this._changeBGColor, this);
         return SortView.__super__.constructor.apply(this, arguments);
       }
 

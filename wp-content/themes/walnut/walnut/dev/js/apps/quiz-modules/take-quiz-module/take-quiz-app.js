@@ -1,6 +1,6 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-module/quiz-description/app', 'apps/quiz-modules/take-quiz-module/quiz-progress/app', 'apps/quiz-modules/take-quiz-module/quiz-timer/app', 'apps/quiz-modules/take-quiz-module/single-question/app'], function(App, RegionController) {
   return App.module("TakeQuizApp", function(View, App) {
@@ -14,14 +14,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
     timeBeforeCurrentQuestion = null;
     pausedQuestionTime = 0;
     studentTrainingModule = null;
-    View.TakeQuizController = (function(_super) {
-      __extends(TakeQuizController, _super);
+    View.TakeQuizController = (function(superClass) {
+      extend(TakeQuizController, superClass);
 
       function TakeQuizController() {
-        this._saveQuizResponseModel = __bind(this._saveQuizResponseModel, this);
-        this._changeQuestion = __bind(this._changeQuestion, this);
-        this._autosaveQuestionTime = __bind(this._autosaveQuestionTime, this);
-        this._startTakeQuiz = __bind(this._startTakeQuiz, this);
+        this._saveQuizResponseModel = bind(this._saveQuizResponseModel, this);
+        this._changeQuestion = bind(this._changeQuestion, this);
+        this._autosaveQuestionTime = bind(this._autosaveQuestionTime, this);
+        this._startTakeQuiz = bind(this._startTakeQuiz, this);
         return TakeQuizController.__super__.constructor.apply(this, arguments);
       }
 
@@ -101,13 +101,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._autosaveQuestionTime = function() {
-        var data, timeTaken, totalTime, _ref;
+        var data, ref, timeTaken, totalTime;
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
-        if ((!questionResponseModel) || ((_ref = questionResponseModel.get('status')) === 'not_started' || _ref === 'paused')) {
+        if ((!questionResponseModel) || ((ref = questionResponseModel.get('status')) === 'not_started' || ref === 'paused')) {
           if (questionResponseModel) {
             console.log(questionResponseModel.get('status'));
           }
@@ -187,12 +187,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._endQuiz = function() {
-        var unanswered, _ref, _ref1;
+        var ref, ref1, unanswered;
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
-        if ((_ref = this.display_mode) !== 'replay' && _ref !== 'quiz_report') {
-          if ((!questionResponseModel) || ((_ref1 = questionResponseModel.get('status')) === 'paused' || _ref1 === 'not_attempted')) {
+        if ((ref = this.display_mode) !== 'replay' && ref !== 'quiz_report') {
+          if ((!questionResponseModel) || ((ref1 = questionResponseModel.get('status')) === 'paused' || ref1 === 'not_attempted')) {
             this.layout.questionDisplayRegion.trigger("silent:save:question");
           }
           unanswered = this._getUnansweredIDs();
@@ -348,8 +348,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       return TakeQuizController;
 
     })(RegionController);
-    TakeQuizLayout = (function(_super) {
-      __extends(TakeQuizLayout, _super);
+    TakeQuizLayout = (function(superClass) {
+      extend(TakeQuizLayout, superClass);
 
       function TakeQuizLayout() {
         return TakeQuizLayout.__super__.constructor.apply(this, arguments);

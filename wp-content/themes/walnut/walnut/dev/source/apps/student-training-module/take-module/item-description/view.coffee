@@ -21,10 +21,14 @@ define ['app'
                 data
 
             initialize:->
+                $('header').prepend('<div class="icon is-back go-back"><a onclick="location.reload();" href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i>Back</a></div>');
+                $('.navbar .container-fluid').css("visibility","hidden")                
                 @mode = Marionette.getOption(@, 'display_mode')
 
             onShow:->
-
+                $('.open-sidebar').click ->
+                  $('.video-sidebar').toggleClass 'video-is-open'
+                  return
                 @$el.find('#correct-answer-col').hide() if @model.get('question_type') is 'multiple_eval'
 
                 @$el.find('#question-type-col, #correct-answer-col').hide() if @model.get('content_type') in ['content_piece','student_question']

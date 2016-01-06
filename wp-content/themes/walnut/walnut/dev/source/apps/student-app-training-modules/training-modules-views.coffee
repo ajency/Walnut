@@ -8,9 +8,10 @@ define ['app',
 			# kept hidden coz the display doesnt need it. only tablesorter does
 
 			template : '<td class="v-align-middle">{{name}}</td>
+						<td class="v-align-middle">{{textbookName}}</td>
 						<td class="v-align-middle">{{chapterName}}</td>
 						<td class="v-align-middle"><span style="display: none;">{{total_minutes}}</span> <span class="muted">{{duration}} {{minshours}}</span></td>
-						<td>
+					   	<td>
 							<button data-id="{{id}}" type="button" class="btn btn-success btn-small pull-right action start-training">
 							View {{moduleType}}
 							</button>
@@ -55,9 +56,14 @@ define ['app',
 			serializeData : ->
 				data = super()
 				@textbooks = Marionette.getOption @, 'textbookNames'
-				data.chapterName = =>
-					chapter = @textbooks.findWhere "id" : data.term_ids.chapter
-					chapter.get 'name' if chapter?
+				
+				data.textbookName = =>
+                    textbook = @textbooks.findWhere "id" : data.term_ids.textbook
+                    textbook.get 'name' if textbook?
+
+                data.chapterName = =>
+                    chapter = @textbooks.findWhere "id" : data.term_ids.chapter
+                    chapter.get 'name' if chapter?
 
 				data
 
@@ -132,7 +138,7 @@ define ['app',
 					@$el.find '.status_label, .training-date, #status_header, .dateInfo'
 					.remove();
 
-				textbookFiltersHTML= $.showTextbookFilters chapters: Marionette.getOption @, 'chaptersCollection'
+				textbookFiltersHTML= $.showTextbookFilters textbooks: Marionette.getOption @, 'chaptersCollection'
 				@fullCollection = Marionette.getOption @, 'fullCollection'
 				console.log @fullCollection
 				@$el.find '#textbook-filters'
@@ -152,6 +158,7 @@ define ['app',
 			onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
 				switch filterType
+					when 'textbooks-filter' then $.populateChapters filteredCollection, @$el
 					when 'chapters-filter' then $.populateSections filteredCollection, @$el
 					when 'sections-filter' then $.populateSubSections filteredCollection, @$el
 
@@ -160,7 +167,7 @@ define ['app',
 
 			setFilteredContent:->
 				dataType = 'student-training'
-
+					
 				filtered_data= $.filterTableByTextbooks(@, dataType)
 
 				@collection.set filtered_data

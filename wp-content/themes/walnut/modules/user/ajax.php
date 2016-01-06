@@ -14,7 +14,7 @@ add_action( 'wp_ajax_get-user-data', 'get_user_data' );
 
 function logout_current_user() {
     wp_logout();
-    wp_send_json( array( "success" => "User logged out." ) );
+    wp_send_json( array( "success" => "User logged out." ,"redirect_url" => site_url().'/#login') );
 }
 
 add_action( 'wp_ajax_logout_user', 'logout_current_user' );
@@ -203,7 +203,6 @@ function reset_user_password(){
 
 }
 add_action('wp_ajax_nopriv_reset-user-password', 'reset_user_password');
-
 
 function ajax_create_user() {
     

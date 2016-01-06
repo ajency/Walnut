@@ -1,17 +1,17 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ContentPieces.Views", function(Views, App) {
     var ContentPiecesIV;
-    ContentPiecesIV = (function(_super) {
-      __extends(ContentPiecesIV, _super);
+    ContentPiecesIV = (function(superClass) {
+      extend(ContentPiecesIV, superClass);
 
       function ContentPiecesIV() {
         return ContentPiecesIV.__super__.constructor.apply(this, arguments);
       }
 
-      ContentPiecesIV.prototype.template = '{{&excerpt}}<br> <label class="form-label list-group-item-text"> {{contentType}} </label>';
+      ContentPiecesIV.prototype.template = '{{&excerpt}}<br> <label class="form-label list-group-item-text"> {{textbookName}} | {{chapterName}} | {{contentType}} </label> <label>Last Modified: {{date_modified}}</label>';
 
       ContentPiecesIV.prototype.className = 'col-md-2 list-group-item browse-content-pieces-item';
 
@@ -50,8 +50,8 @@ define(['app'], function(App) {
       return ContentPiecesIV;
 
     })(Marionette.ItemView);
-    return Views.ContentPieces = (function(_super) {
-      __extends(ContentPieces, _super);
+    return Views.ContentPieces = (function(superClass) {
+      extend(ContentPieces, superClass);
 
       function ContentPieces() {
         return ContentPieces.__super__.constructor.apply(this, arguments);

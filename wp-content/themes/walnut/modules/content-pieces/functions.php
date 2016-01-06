@@ -52,9 +52,9 @@ function create_content_piece_post_type() {
 add_action('init', 'create_content_piece_post_type');
 
 function get_content_pieces($args = array()) {
-
+    
     global $wpdb;
-
+    
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
@@ -67,13 +67,13 @@ function get_content_pieces($args = array()) {
         $ids = implode(',',$args['ids']);
         $args['post__in'] = $args['ids'];
     }
-
+    
     if(isset($args['textbook'])){
-
+        
         $post_ids= $wpdb->prepare(
                 "SELECT post_id from {$wpdb->base_prefix}postmeta WHERE meta_key LIKE %s
                     AND meta_value like %s",
-                array('term_ids', '%"'.$args['textbook'].'";%')
+                array('term_ids', '%"'.$args['textbook'].'";%')                
         );
         $textbook_posts=$wpdb->get_col($post_ids);
         if($textbook_posts)
@@ -84,11 +84,11 @@ function get_content_pieces($args = array()) {
 
         unset($args['textbook']);
     }
-
+    
     if(isset($args['content_type'])){
 
         $content_type_meta_array = array('relation' => 'OR');
-
+        
         foreach($args['content_type'] as $content_type){
             $content_type_meta_array[]= array(
                 'key'     => 'content_type',
@@ -104,9 +104,9 @@ function get_content_pieces($args = array()) {
 
     if(!isset($args['post_status']))
         $args['post_status'] = 'any';
-
+     
     $content_items = get_posts($args);
-
+    
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
 
@@ -123,6 +123,7 @@ function get_content_pieces($args = array()) {
                 }
             }
         }
+        
         $content_pieces[]= $cpiece;
     }
 
@@ -157,11 +158,11 @@ function get_content_pieces_by_search_string($search_string, $content_pieces){
         $content_meta= get_post_meta($id,'content_piece_meta',true);
 
         $content_meta= maybe_unserialize($content_meta);
-
-        if(isset($content_meta['post_tags']))
+        
+        if(isset($content_meta['post_tags'])) 
             $excerpts[] = $content_meta['post_tags'];
-
-        if(isset($content_meta['instructions']))
+        
+        if(isset($content_meta['instructions'])) 
             $excerpts[] = $content_meta['instructions'];
 
         $excerpts = __u::flatten($excerpts);
@@ -184,13 +185,13 @@ function get_single_content_piece($id){
     $current_blog_id= get_current_blog_id();
 
     switch_to_blog(1);
-
+    
     global $wpdb;
 
     $content_piece= get_post($id);
 
     $authordata = get_userdata($content_piece->post_author);
-    $post_modified= $content_piece->post_modified;
+    $post_modified= $content_piece->post_modified; 
     $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($post_modified)));
     $content_piece->post_author_name = $authordata->display_name;
 
@@ -233,9 +234,6 @@ function get_single_content_piece($id){
 
     $content_piece->last_modified_by='';
 
-    $content_piece->autoplay_audio	= (isset($autoplay_audio))? $autoplay_audio === "true" :false;
-    $content_piece->autoplay_video	= (isset($autoplay_video))? $autoplay_video === "true" :false;
-
     if(isset($last_modified_by)){
         $last_modified_by_user=get_userdata($last_modified_by);
         $content_piece->last_modified_by = $last_modified_by_user->display_name;
@@ -264,8 +262,8 @@ function get_single_content_piece($id){
 
     if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
-        $content_piece->marks = 0;
-
+        $content_piece->marks = 0; 
+        
         if($content_elements['marks'] > 0)
            $content_piece->marks = $content_elements['marks'];
 
@@ -286,10 +284,10 @@ function get_single_content_piece($id){
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
     else
-        $excerpt.='...';
-
+        $excerpt.='';
+        //original commented by kapil $excerpt.='...';    
     $content_piece->post_excerpt =$excerpt;
-
+    
     switch_to_blog($current_blog_id);
 
     return $content_piece;
@@ -331,6 +329,10 @@ function get_modules_containing_content_piece($content_id){
 
         if($valid){
             $module_dets= get_single_content_module($module_meta->collection_id);
+            if($module_dets->post_status == 'archive'){
+                continue;
+                //added by kapil to know the post status and skip if its archive
+            }
             $m['id']=$module_dets->id;
             $m['name']=$module_dets->name;
             $m['type']=$module_dets->type;
@@ -477,7 +479,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         if(strlen($ex)>0 && $excerpt_length <500 ){
             $excerpt.=$ex;
             $excerpt_length += strlen($ex);
-            $excerpt.=' | ';
+            //commented by kapil $excerpt.=' | ';
         }
     }
 
@@ -486,7 +488,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         $excerpt= substr($excerpt,0,500);
 
     //REMOVAL OF LAST 3 CHARACTERS WHICH MAY CONTAIN THE DIVIDER
-    $excerpt = substr($excerpt,0,-3);
+    //$excerpt = substr($excerpt,0,-3); commented by kapil
 
     return $excerpt;
 
@@ -601,53 +603,25 @@ function create_new_element(&$ele)
     return $wpdb->insert_id;
 }
 
-function get_adjacent_chapter($chapterID,$direction='next'){
-
-    $chapter= get_term($chapterID,'textbook');
-
-    if(!is_wp_error( $chapter )){
-        $adjChapterID = get_adjacent_textbook_term_id($chapter,$direction);
-
-        if(!$adjChapterID){
-            $textbook = get_term($chapter->parent,'textbook');
-            $adjTextbookID = get_adjacent_textbook_term_id($textbook,$direction);
-
-            if($adjTextbookID){
-                $args = array(
-                    'parent'     =>$adjTextbookID,
-                    'fields'     =>'ids',
-                    'order_by'   =>'name',
-                    'order'      =>($direction=='next')?'asc':'desc',
-                    'hide_empty' =>false,
-                    'number'     =>1
-                );
-                $chapters = get_terms('textbook',$args);
-                if(sizeof($chapters)>0)
-                    $adjChapterID= $chapters[0];
-                else $adjChapterID= 0;
-            }
-            else $adjChapterID = 0;
-        }
-    }
-    return $adjChapterID;
-
+//Added By Kapil start to add column ID in http://synapselearning.net/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
+add_filter('manage_edit-textbook_columns', 'change_columns_header', 10, 3);
+function change_columns_header($columns) {
+    $columns['id'] = 'ID';
+    return $columns;
 }
 
-function get_adjacent_textbook_term_id($term, $direction='next'){
-
-    $args = array(
-        'parent'     => $term->parent,
-        'order_by'   => 'name',
-        'fields'     => 'ids',
-        'hide_empty' => false
-    );
-    $siblings = get_terms('textbook',$args);
-
-    $currentIndex = array_search($term->term_id, $siblings);
-
-    $step = ($direction=='next')?$currentIndex+1:$currentIndex-1;
-
-    $adjTermID= $siblings[$step];
-
-    return $adjTermID;
+function id_column_register_sortable( $columns ) {
+$columns['id'] = "ID";
+return $columns;
 }
+add_filter( 'manage_edit-textbook_sortable_columns', 'id_column_register_sortable' );
+
+function manage_textbook_custom_fields($deprecated,$column_name,$term_id)
+{
+ if ($column_name == 'id') {
+   echo $term_id;
+ }
+}
+add_filter ('manage_textbook_custom_column', 'manage_textbook_custom_fields', 10,3);
+
+//Added By Kapil ends to add column ID in http://synapselearning.net/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page

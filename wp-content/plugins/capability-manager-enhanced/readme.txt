@@ -1,10 +1,10 @@
 === Capability Manager Enhanced===
 Contributors: txanny, kevinB
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=JWZVFUDLLYQBA
-Tags: roles, capabilities, manager, editor, rights, role, capability, types, taxonomies
+Tags: roles, capabilities, manager, editor, rights, role, capability, types, taxonomies, network, multisite, default
 Requires at least: 3.1
-Tested up to: 3.7
-Stable tag: 1.5.1
+Tested up to: 4.3.1
+Stable tag: 1.5.7
 
 A simple way to manage WordPress roles and capabilities.
 
@@ -88,14 +88,18 @@ The custom post type must be defined to impose type-specific capability requirem
 
 Probably because your custom post type definition not having map_meta_cap set true. If you are calling register_post_type manually, just add this property to the options array. Unfortunately, none of the free CPT plugins deal with this important detail. 
 
+= Even after I added capabilities, WordPress is not working the way I want =
+
+Keep in mind that this plugin's purpose is to conveniently view and modify the capabilities array stored for each WordPress role.  It is not responsible for the implementation of those capabilities by the WordPress core or other plugins.
+
 = Where can I find more information about this plugin, usage and support ? =
 
-* If you need help, <a href="http://wordpress.org/tags/capsman-enhanced">ask in the Support forum</a>.
+* If you need help, <a href="http://wordpress.org/tags/capsman-enhanced">ask in the Support forum</a>.  If your issue pertains to the enforcement of assigned capabilities, I am not the primary support avenue.  In many cases, I will offer a suggestion, but please don't give me negative feedback for not providing free consulting.
 
 == License ==
 
 Copyright 2009, 2010 Jordi Canals
-Copyright 2013, Kevin Behrens
+Copyright 2013-2015, Kevin Behrens
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
 
@@ -104,6 +108,35 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 == Changelog ==
+
+= 1.5.7 =
+  * Change : Revert menu captions to previous behavior ("Permissions > Role Capabilities" if Press Permit Core is active, otherwise "Users > Capabilities")
+
+= 1.5.6 =
+  * Fixed : Correct some irregularities in CME admin menu item display
+
+= 1.5.5 =
+  * Fixed : User editing was improperly blocked in some cases
+
+= 1.5.4 =
+  * Fixed : Non-administrators' user editing capabilities were blocked if Press Permit Core was also active
+  * Fixed : Non-administrators could not edit other users with their role (define constant CME_LEGACY_USER_EDIT_FILTER to retain previous behavior)
+  * Fixed : Non-administrators could not assign their role to other users (define constant CME_LEGACY_USER_EDIT_FILTER to retain previous behavior)
+  * Lang : Changed text domain for language pack conformance
+
+= 1.5.3 =
+  * Fixed : On single-site installations, non-Administrators with delete_users capability could give new users an Administrator role (since 1.5.2) 
+  * Fixed : Deletion of a third party plugin role could cause users to be demoted to Subscriber inappropriately
+  * Compat : Press Permit Core - Permission Group refresh was not triggered if Press Permit Core is inactive when CME deletes a role definition
+  * Compat : Support third party display of available capabilities via capsman_get_capabilities or members_get_capabilities filter
+  * Change : If user_level of Administrator role was cleared, non-Administrators with user editing capabilities could create/edit/delete Administrators.  Administrator role is now implicitly treated as level 10.
+  * Fixed : CSS caused formatting issues around wp-admin Update button on some installations
+  * Perf : Don't output wp-admin CSS on non-CME screens
+  * Lang : Fixed erroneous text_domain argument for numerous strings
+  * Lang : Updated .pot and .po files
+  
+= 1.5.2 =
+  * Fixed : Network Super Administrators without an Administrator role on a particular site could not assign an Administrator role to other users of that site
 
 = 1.5.1 =
   * Fixed : Non-administrators with user editing capabilities could give new users a role with a higher level than their own (including Administrator)

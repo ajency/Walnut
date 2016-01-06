@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('ContentPreview.ContentBoard.Element.Video.Views', function(Views, App, Backbone, Marionette, $, _) {
-    return Views.VideoView = (function(_super) {
-      __extends(VideoView, _super);
+    return Views.VideoView = (function(superClass) {
+      extend(VideoView, superClass);
 
       function VideoView() {
         return VideoView.__super__.constructor.apply(this, arguments);
@@ -121,9 +121,7 @@ define(['app'], function(App) {
           }
           this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
           this.$el.find('video')[0].load();
-          if (autoplay) {
-            return this.$el.find('video')[0].play();
-          }
+          return this.$el.find('video')[0].play();
         }
       };
 

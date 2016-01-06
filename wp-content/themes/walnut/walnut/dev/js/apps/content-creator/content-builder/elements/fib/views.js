@@ -1,18 +1,18 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module("ContentCreator.ContentBuilder.Element.Fib.Views", function(Views, App, Backbone, Marionette, $, _) {
-    return Views.FibView = (function(_super) {
-      __extends(FibView, _super);
+    return Views.FibView = (function(superClass) {
+      extend(FibView, superClass);
 
       function FibView() {
-        this._updateInputProperties = __bind(this._updateInputProperties, this);
-        this._onClickOfBlank = __bind(this._onClickOfBlank, this);
-        this._initializeEachBlank = __bind(this._initializeEachBlank, this);
-        this._afterCKEditorInitialization = __bind(this._afterCKEditorInitialization, this);
-        this.configureEditor = __bind(this.configureEditor, this);
+        this._updateInputProperties = bind(this._updateInputProperties, this);
+        this._onClickOfBlank = bind(this._onClickOfBlank, this);
+        this._initializeEachBlank = bind(this._initializeEachBlank, this);
+        this._afterCKEditorInitialization = bind(this._afterCKEditorInitialization, this);
+        this.configureEditor = bind(this.configureEditor, this);
         return FibView.__super__.constructor.apply(this, arguments);
       }
 
@@ -130,18 +130,18 @@ define(['app'], function(App) {
       };
 
       FibView.prototype._removeBlanks = function(noOfBlanksToRemove) {
-        var _results;
-        _results = [];
+        var results;
+        results = [];
         while (noOfBlanksToRemove !== 0) {
           this.$el.find('input').last().parent().remove();
-          _results.push(noOfBlanksToRemove--);
+          results.push(noOfBlanksToRemove--);
         }
-        return _results;
+        return results;
       };
 
       FibView.prototype._addBlanks = function(noOfBlanksToAdd) {
-        var blanksModel, inputId, inputNumber, _results;
-        _results = [];
+        var blanksModel, inputId, inputNumber, results;
+        results = [];
         while (noOfBlanksToAdd !== 0) {
           inputId = _.uniqueId('input-');
           inputNumber = this.model.get('blanksArray').size() + 1;
@@ -154,9 +154,9 @@ define(['app'], function(App) {
           blanksModel = this.model.get('blanksArray').get(inputId);
           this._initializeEachBlank(blanksModel);
           this.$el.find("input").parent().on('click', this._onClickOfBlank);
-          _results.push(noOfBlanksToAdd--);
+          results.push(noOfBlanksToAdd--);
         }
-        return _results;
+        return results;
       };
 
       FibView.prototype._onClickOfBlank = function(e) {
@@ -184,7 +184,7 @@ define(['app'], function(App) {
       };
 
       FibView.prototype._changeFontSize = function(fontSize) {
-        return this.$el.find('input').css('font-size', "" + fontSize + "px");
+        return this.$el.find('input').css('font-size', fontSize + "px");
       };
 
       FibView.prototype._changeColor = function(color) {

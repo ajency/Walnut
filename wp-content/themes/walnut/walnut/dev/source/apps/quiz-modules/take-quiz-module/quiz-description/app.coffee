@@ -57,10 +57,14 @@ define ['app'
 
 					onShow : ->
 						$('#collapseView').on 'hidden.bs.collapse', ->
+							$('#accordionToggle').removeClass 'updown'
 							$('#accordionToggle').text 'Expand'
+							$('.submit2').removeClass 'submit-pushed'
 
 						$('#collapseView').on 'shown.bs.collapse', ->
+							$('#accordionToggle').addClass 'updown'
 							$('#accordionToggle').text 'Collapse'
+							$('.submit2').addClass 'submit-pushed'
 
 					onQuestionChange:(model)->
 						@$el.find "#time-on-question"

@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/edit-module/module-description/templates/collection-details.html'], function(App, collectionDetailsTpl) {
   return App.module('EditCollecionDetailsApp.Views', function(Views, App) {
-    return Views.CollectionDetailsView = (function(_super) {
-      __extends(CollectionDetailsView, _super);
+    return Views.CollectionDetailsView = (function(superClass) {
+      extend(CollectionDetailsView, superClass);
 
       function CollectionDetailsView() {
-        this.permissionSelected = __bind(this.permissionSelected, this);
+        this.permissionSelected = bind(this.permissionSelected, this);
         return CollectionDetailsView.__super__.constructor.apply(this, arguments);
       }
 
@@ -107,8 +107,8 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.statusChanged = function() {
-        var _ref;
-        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
+        var ref;
+        if ((ref = this.model.get('post_status')) === 'publish' || ref === 'archive') {
           this.$el.find('input, textarea, select').prop('disabled', true);
           this.$el.find('select#status').prop('disabled', false);
           return this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
@@ -264,14 +264,20 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           }
         });
         this.$el.find('#total-marks').val(marks);
+        if ($("#total-time-marks-set").val() === 0) {
+          $("#total-time-marks-set").val(1);
+        } else {
+          this.$el.find('#total-marks-final').val(marks);
+          this.$el.find('#total-time-final').val(time);
+        }
         return this.$el.find('#total-time').val(time);
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {
-        var attrs, msg, _ref;
+        var attrs, msg, ref;
         this.$el.find('#saved-success').remove();
         this.$el.find('select#status option').prop('disabled', false);
-        if ((_ref = this.model.get('post_status')) === 'publish' || _ref === 'archive') {
+        if ((ref = this.model.get('post_status')) === 'publish' || ref === 'archive') {
           this.$el.find('select#status option[value="underreview"]').prop('disabled', true);
         }
         this.$el.find('#save-content-collection i').removeClass('fa-spin fa-spinner').addClass('fa-check');

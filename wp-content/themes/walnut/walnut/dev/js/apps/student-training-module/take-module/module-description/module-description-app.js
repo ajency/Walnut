@@ -1,17 +1,17 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/take-module-item/module-description/templates/module-description-template.html', 'bootbox'], function(App, RegionController, moduleDescriptionTemplate, bootbox) {
   return App.module("StudentTrainingApp.ModuleDescription", function(ModuleDescription, App) {
     var ModuleDescriptionController, ModuleDescriptionView;
-    ModuleDescriptionController = (function(_super) {
-      __extends(ModuleDescriptionController, _super);
+    ModuleDescriptionController = (function(superClass) {
+      extend(ModuleDescriptionController, superClass);
 
       function ModuleDescriptionController() {
-        this._showModuleDescriptionView = __bind(this._showModuleDescriptionView, this);
-        this._getNextItemID = __bind(this._getNextItemID, this);
-        this._changeQuestion = __bind(this._changeQuestion, this);
+        this._showModuleDescriptionView = bind(this._showModuleDescriptionView, this);
+        this._getNextItemID = bind(this._getNextItemID, this);
+        this._changeQuestion = bind(this._changeQuestion, this);
         return ModuleDescriptionController.__super__.constructor.apply(this, arguments);
       }
 
@@ -109,13 +109,13 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
       return ModuleDescriptionController;
 
     })(RegionController);
-    ModuleDescriptionView = (function(_super) {
-      __extends(ModuleDescriptionView, _super);
+    ModuleDescriptionView = (function(superClass) {
+      extend(ModuleDescriptionView, superClass);
 
       function ModuleDescriptionView() {
-        this.decidePageFlip = __bind(this.decidePageFlip, this);
-        this.questionCompleted = __bind(this.questionCompleted, this);
-        this.onTopPanelQuestionDone = __bind(this.onTopPanelQuestionDone, this);
+        this.decidePageFlip = bind(this.decidePageFlip, this);
+        this.questionCompleted = bind(this.questionCompleted, this);
+        this.onTopPanelQuestionDone = bind(this.onTopPanelQuestionDone, this);
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
       }
 
@@ -125,6 +125,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.mixinTemplateHelpers = function(data) {
         data = ModuleDescriptionView.__super__.mixinTemplateHelpers.call(this, data);
+        data.name = data.name.replace("Lecture -", "");
         data.isTraining = this.display_mode === 'training' ? true : false;
         return data;
       };
@@ -203,7 +204,7 @@ define(['app', 'controllers/region-controller', 'text!apps/take-module-item/modu
 
       ModuleDescriptionView.prototype.onTopPanelCheckLastQuestion = function() {
         if (this.isLastContentPiece) {
-          return $("#top-panel-question-done").html('<i class="fa fa-forward"></i> Finish Module');
+          return $("#top-panel-question-done").html("<img src='wp-content/themes/walnut/walnut_student_assets/dev/images/stop.png' class='img-reponsive center-block'/><h4>Finish Module</h4>");
         }
       };
 

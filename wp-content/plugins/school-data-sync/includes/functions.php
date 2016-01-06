@@ -11,10 +11,12 @@ function school_data_sync_screen(){
 
 	<?php
 
-        $blog_id = get_option('blog_id');
 
-        if($blog_id){
-            $sync_form_html = get_sync_form_html($blog_id); 
+        $sync_user_cookie_name = get_option('sync_user_cookie_name');
+        $sync_user_cookie_value = get_option('sync_user_cookie_value');
+        $blog_id = get_option('blog_id');
+        if($sync_user_cookie_name){
+            $sync_form_html = get_sync_form_html($blog_id,$sync_user_cookie_name,$sync_user_cookie_value); 
             echo $sync_form_html;
         }
 
@@ -25,7 +27,7 @@ function school_data_sync_screen(){
 
 }
 
-function get_sync_form_html($blog_id){
+function get_sync_form_html($blog_id,$cookiename,$cookievalue){
 
     global $wpdb;
     $last_sync_status = get_last_sync_status();
@@ -44,44 +46,51 @@ function get_sync_form_html($blog_id){
     }
 
 
-    $sync_form_html= '<form>
-         <fieldset>
+    $sync_form_html= '<fieldset>
          <h3>School Data Sync</h3>';
+    $sync_form_html .= '<p id="reset-passwrd-block">Reset Sync Password: <input type="password" name="reset-sync-password" id="reset-sync-password"> 
+                        <input type="button" name="reset-passwrd-button" value="Reset" id="reset-passwrd-button"/>
+                                 <span class="status-msg"></span></p>';
     if($last_sync_imported->last_sync)
-        $sync_form_html .= '<p>[Last Data Sync]:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
+        $sync_form_html .= '<p>Last Data Sync:'.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'</p>';
         
         $upsyncount = get_upsync_data_count();
         
         $sync_form_html .= '<p>Records To Be Upsyncd:'.$upsyncount.'</p>';
         
-        $sync_form_html .= '<label>Data Sync </label> ->
+        $sync_form_html .= '<input type="hidden" name="login_cookie_name" id ="login_cookie_name" value='.$cookiename.' />
+                            <input type="hidden" name="login_cookie_value" id ="login_cookie_value" value='.$cookievalue.' />
+                        <label>Data Sync </label> ->
                         <input type="button" name="sync-data" value="'.$sync_defaults['label'].'" '
             . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
             . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
             . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
-            . 'data-blog-id='.$blog_id.' '
+            . 'data-blog-id="'.$blog_id.'" '
             . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'"  />
                             <span class="status-msg"></span>
                          <br/><br/>
                          <label>Media Sync</label> -> <input type="button" name="sync-media" value="Start" id="sync-media"/>
                                  <span class="status-msg"></span>
-                         </fieldset>
-                        </form>';
+                         </fieldset>';
+        if(!school_is_syncd()){
+            $sync_form_html .='<iframe style="position:absolute;top:-5000px" src="'.site_url().'/wp-admin/options-permalink.php"></iframe>'; 
+        }
 
     return $sync_form_html;
 
 }
 
 function get_sync_user_validation_form(){
+    $blog_id = get_option('blog_id');
+    
+    $html ='<h3>Validate Sync User</h3>';
 
-    $html ='<h3>Validate Blog User</h3>';
-
-    $html .= '<form id="validate_school_user"  autocomplete="off">
+    $html .= '<div id="validate_sync_school_user">
                 <div class="error_msg" style="color:red; padding:10px 0"></div>
-                Username: <input id="validate_uname" value=" " type="text"><br>
-                Password: <input id="validate_pwd" value=""  type="password"><br>
-                <input type="button" id="validate-blog-user" value="Validate User">
-            </form>';
+                <input id="validate_blog_id" value="'.$blog_id.'" type="hidden">
+                Sync Password: <input id="validate_pwd" value=""  type="password"><br>
+                <input type="button" id="validate-blog-sync-user" value="Validate">
+            </div>';
 
     return $html;
 
@@ -122,8 +131,12 @@ function sds_download_file_local($sync_id){
     $status = $sync_record->status;
     
     $uploads_dir=wp_upload_dir();
+
     $upload_directory = str_replace('/images', '', $uploads_dir['basedir']);
     
+    if(!file_exists($upload_directory))
+        mkdir($upload_directory,0755);
+
     if(!file_exists($upload_directory.'/tmplocal/'))
         mkdir($upload_directory.'/tmplocal',0755);
 
@@ -193,17 +206,36 @@ function sds_get_tables_to_export($last_sync=''){
 
     $question_response_table = "{$wpdb->prefix}question_response";
     $response_meta_table = "{$wpdb->prefix}question_response_meta";
+    
+    $quiz_question_response_table = "{$wpdb->prefix}quiz_question_response";
+    $quiz_response_summary_table = "{$wpdb->prefix}quiz_response_summary";
+    
+    $quiz_schedules_table = "{$wpdb->prefix}quiz_schedules";
 
     $tables_list[]= array(
-        'query'=> "SELECT * FROM $question_response_table WHERE sync = 0",
+        'query'=> "SELECT ref_id,teacher_id,content_piece_id,collection_id,division,question_response,time_taken,start_date,end_date,status FROM $question_response_table WHERE sync = 0",
         'table_name'=> $question_response_table
         );
 
     $tables_list[]= array(
-        'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm 
-        WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
+        'query'=> "SELECT qrm.* FROM $question_response_table qr, $response_meta_table qrm WHERE qr.sync = 0 AND qr.ref_id = qrm.qr_ref_id",
         'table_name'=> $response_meta_table);
+    
+    $tables_list[]= array(
+        'query'=> "SELECT qr_id,summary_id,content_piece_id,question_response,time_taken,marks_scored,status FROM $quiz_question_response_table WHERE sync = 0",
+        'table_name'=> $quiz_question_response_table
+        );
+    
+    $tables_list[]= array(
+        'query'=> "SELECT summary_id,collection_id,student_id,taken_on,quiz_meta FROM $quiz_response_summary_table WHERE sync = 0",
+        'table_name'=> $quiz_response_summary_table
+        );
 
+    $tables_list[]= array(
+        'query'=> "SELECT quiz_id,division_id,schedule_from,schedule_to FROM $quiz_schedules_table WHERE sync = 0",
+        'table_name'=> $quiz_schedules_table
+        );    
+    
     return $tables_list;
 }
 
@@ -337,7 +369,7 @@ function sds_create_zip($files = array(),$destination = '',$overwrite = false) {
 
     }
     //debug
-    //echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
+    //echo 'The zip archive contains '.$zip->numFiles.' files with a status of '.$zip->status.'=destination'.$destination;exit;
 
     //close the zip -- done!
     $zip->close();
@@ -481,8 +513,10 @@ function sds_get_files_difference_server($files,$mediatype = 'images'){
 
 function get_upsync_data_count(){
     global $wpdb;
-    $upsynccount = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
-    return $upsynccount[0];
+    $upsynccount_question_r = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}question_response where sync = 0" );
+    $upsynccount_quiz_qr = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}quiz_question_response where sync = 0" );
+    $upsynccount_quiz_sr = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}quiz_response_summary where sync = 0" );
+    return $upsynccount_question_r[0]+$upsynccount_quiz_qr[0]+$upsynccount_quiz_sr[0];
 }
 
 function sds_update_data_imported(){
@@ -573,4 +607,72 @@ function copyfile_chunked($infile, $outfile) {
     fclose($i_handle);
     fclose($o_handle);
     return $cnt;
+}
+
+
+function get_web_data_sync_html($blog_id){
+
+    global $wpdb;
+    $last_sync_status = get_last_sync_status();
+    $last_sync_imported = get_last_sync_imported();
+    $sync_user_cookie_name = get_option('sync_user_cookie_name');
+    $sync_user_cookie_value = get_option('sync_user_cookie_value');
+    
+    $sync_defaults = array('label' =>'Start','lastsync'=>'','syncstatus' =>'','filepath' =>'','sync_id' => '','server_sync_id'=>'');
+    if(!empty($last_sync_status)){
+        $sync_defaults['sync_id'] = $last_sync_status->id;
+        $sync_defaults['syncstatus'] = $last_sync_status->status;
+        $sync_defaults['lastsync'] = $last_sync_status->last_sync;
+        if($last_sync_status->status != 'imported'){
+             $sync_defaults['label'] = 'Continue';
+             $sync_defaults['syncstatus'] = $last_sync_status->status;
+             $sync_defaults['filepath'] = $last_sync_status->file_path;
+             $sync_defaults['server_sync_id'] = $last_sync_status->server_sync_id;
+        }
+    }
+
+    $sync_form_html= '';
+
+         
+        $upsyncount = get_upsync_data_count();
+        
+        $sync_form_html .= '<div id="totalRecords" class="row">
+                                                  <div class="col-sm-12  m-b-10">
+                                                    <div class="">
+                                                      <h5 id="totalRecordsToBeSynced" class="m-t-10 bold text-center text-error">Records to be synced: '.$upsyncount.'</h5>
+                                                    </div>
+                                                  </div>
+                                                </div>';
+        
+       if($last_sync_imported->last_sync) 
+        $sync_form_html .= '<div id="lastDownload" class="row">
+                                <div class="col-sm-12  m-b-10">
+                                  <div class="">
+                                    <h5 id="lastDownloadTimeStamp" class="m-t-10 bold text-center text-error">Last downloaded: 
+                                    '.date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s').'
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>';       
+        
+        $sync_form_html .= '<div class="row">
+                                <div class="col-sm-12  m-b-10 m-t-10">
+                                  <div class="">
+                                  <input type="hidden" name="login_cookie_name" id ="login_cookie_name" value='.$sync_user_cookie_name.' />
+                                  <input type="hidden" name="login_cookie_value" id ="login_cookie_value" value='.$sync_user_cookie_value.' />
+                                    <button name="sync-data" '
+            . 'id="sync-data" data-lastsync="'.$sync_defaults['lastsync'].'" '
+            . 'data-syncstatus="'.$sync_defaults['syncstatus'].'" '
+            . 'data-lastsync-id="'.$sync_defaults['sync_id'].'" '
+            . 'data-blog-id='.$blog_id.' '
+            . 'data-file-path="'.$sync_defaults['filepath'].'" data-server-sync-id="'.$sync_defaults['server_sync_id'].'" 
+              type="button" class="btn btn-success h-align-middle block"><span id="syncButtonText" class="bold">'.$sync_defaults['label'].'</span></button>
+              <h5 id="syncSuccess" class="m-t-5 semi-bold text-center text-success status-msg"></h5>
+              <h5 id="datasyncProgress" class="m-t-5 semi-bold text-center text-success status-msg"></h5>
+                                  </div>
+                                </div>
+                              </div>';
+
+    return $sync_form_html;
+
 }

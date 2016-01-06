@@ -1,7 +1,9 @@
 <?php
 
 require_once 'functions.php';
+
 require_once 'ImportContentPiece/ImportContentPiece.php';
+
 require_once 'content_pieces_import.php';
 
 function ajax_save_content_element() {
@@ -63,13 +65,61 @@ function ajax_update_content_piece_status(){
     if(!isset($_POST['IDs']) || empty($_POST['IDs']) || !isset($_POST['status']))
         return new WP_Error('invalid_request_data', __('Invalid ID or status') );
 
+
     foreach ($ids as $id){
         if(!$id) continue;
         $data= array('ID'=>$id,'post_status'=>$_POST['status']);
         $content_id = wp_update_post($data);
     }
 
+    $in = implode(",", $ids);
+
+    global $wpdb;
+    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['status']."' WHERE ID in(".$in.")");
+    /*foreach ($ids as $id){
+        if(!$id) continue;
+        if($_POST['status']=='archive' || $_POST['status']=='publish'){
+            $data= array('ID'=>$id,'post_status'=>$_POST['status']);
+            $content_id = wp_update_post($data);
+        }else if($_POST['status']=='delete'){
+            wp_delete_post($id);
+        }
+    }*/
+
+
     return wp_send_json(array('code' => 'OK'));
 
 }
 add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_status');
+
+
+function ajax_bulk_move_content_pieces(){
+
+    $ids = $_POST['IDs'];
+    $chapter = $_POST['chapter'];
+    $sections = array($_POST['sections']);
+    foreach ($ids as $id){
+        if(!$id) continue;
+        m4c_duplicate_post($id, $chapter, $sections);
+        wp_delete_post($id);
+    }    
+    return wp_send_json(array('code' => 'OK'));
+
+}
+add_action('wp_ajax_bulk-move-content-pieces', 'ajax_bulk_move_content_pieces');
+
+
+
+
+
+function ajax_delete_content_module(){
+
+    $id = $_POST['id'];
+
+    wp_delete_post($id);
+
+    return wp_send_json(array('code' => 'OK'));
+
+}
+add_action('wp_ajax_delete-content-module', 'ajax_delete_content_module');
+

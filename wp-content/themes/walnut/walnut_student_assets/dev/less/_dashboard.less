@@ -1,0 +1,463 @@
+//  _____            _     _                         _       _         _           
+// |  __ \          | |   | |                       | |     | |       | |          
+// | |  | | __ _ ___| |__ | |__   ___   __ _ _ __ __| |  ___| |_ _   _| | ___  ___ 
+// | |  | |/ _` / __| '_ \| '_ \ / _ \ / _` | '__/ _` | / __| __| | | | |/ _ \/ __|
+// | |__| | (_| \__ \ | | | |_) | (_) | (_| | | | (_| | \__ \ |_| |_| | |  __/\__ \
+// |_____/ \__,_|___/_| |_|_.__/ \___/ \__,_|_|  \__,_| |___/\__|\__, |_|\___||___/
+//                                                                __/ |            
+//                                                               |___/             
+
+
+
+
+// ---------------------------
+// INTRO(WELCOME)  -----------
+// ---------------------------
+
+.intro {
+    padding: 20px;     
+    .welcome-text {
+        font-size: 1.9em;
+        margin: 0;       
+    }    
+}
+
+
+// ---------------------------
+// QUIZ CARD STYLES -----------
+// ---------------------------
+
+.quiz-cards {
+    .display(flex);
+    .align-content(center);
+    .box-shadow(0 1px 6px 0 rgba(0, 0, 0, .12), 0 1px 6px 0 rgba(0, 0, 0, .12));
+    margin-bottom: 30px;
+    position: relative;
+    overflow: inherit;
+    height: 220px;
+    /*Fixed z-index issue for notification tooltip*/
+    -webkit-animation-fill-mode: none !important;
+    animation-fill-mode: none !important;
+    @media @i-tab-landscape {
+        height: 200px;
+    }
+    &.no-img{
+        .quiz-img{
+            .flex-basis(inherit);
+            width: inherit;   
+            & > img{
+                display: none;
+            }
+        }
+        .subj-detail{
+            .flex-basis(100%);
+        }
+    }
+    .notification {
+        position: absolute;
+        right: -4px;
+        top: -10px;
+        background: #FF0D00;
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        color: #fff;
+        font: 16px open-sans, arial;
+        cursor: pointer;      
+        & > span{
+            background: none repeat scroll 0 0 #fcea98; 
+            color: #000;
+            text-align: left;
+            font-family: open-sans;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            line-height: 1.5em;
+            padding: 10px;
+            width: 240px;
+            top: -4.5em;  
+            left: -31px;
+            margin-left: 0; 
+            z-index: 1032;
+            opacity: 0;
+            // display: none;
+            filter: alpha(opacity=0);   
+            position: absolute;
+            text-align: center; 
+            text-transform: none;
+            pointer-events: none;
+            .transition(all 0.3s ease-in-out);
+            &:after{
+                border-color: #fcea98 rgba(0, 0, 0, 0);
+                border-style: solid;
+                border-width: 15px 15px 0;
+                bottom: -15px;
+                content: "";
+                display: block;
+                left: 31px;
+                position: absolute;
+                width: 0;
+            }
+        }    
+        &.generate-popover{
+            & span{
+                opacity: 1;
+                pointer-events: auto;
+                filter: alpha(opacity=100);
+                top: -5.5em;
+                z-index: 1032;
+                .transition(all 0.2s ease);
+            }
+        }
+        &.destroy-popover{
+            & span{
+                opacity: 0;
+                pointer-events:none;
+            }
+        }        
+    }
+    .quiz-img {
+        .flex-basis(30%);
+        .display(flex);
+        .align-items(center);
+        width: 30%;
+        height: 220px;
+        @media @i-tab-landscape {
+            height: 200px;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .subj-detail {
+        .flex-basis(70%);
+        .display(flex);
+        .flex-direction(column);
+        .align-items(center);
+        .justify-content(space-between);
+        padding: 20px 0;
+        &__heading {
+            font-size: 1.7em;
+            margin: 0 0 8px 0;
+            color: #2f0e09;
+            @media @i-tab-landscape {
+                font-size: 1.4em;
+            }
+        }
+        .quiz-time {
+            span {
+                display: block;
+            }
+            color: #67B9B3;
+        }
+        .questions {
+            .display(flex);
+            .justify-content(center);
+            img {
+                width: 65%;
+                .transition(all .2s ease-in-out);
+                &:hover {
+                    .transform(scale(1.2));
+                }
+                @media @i-tab-landscape {
+                    width: 62%;
+                }
+            }
+        }
+    }
+}
+
+
+// ---------------------------
+// LIGHTER FONT WEIGHT FOR NOTIFICATION IN FIREFOX -----------
+// ---------------------------
+
+@-moz-document url-prefix() { 
+    .quiz-cards {
+        .notification {   
+            & > span{
+            font-weight: lighter;
+            }
+        }
+    }
+}
+
+
+
+
+// ---------------------------
+// DASHBOARD RIGHT SECTION TRAPEZIOD DIV CREATED IN CSS AND NOT AN IMAGE -----------
+// ---------------------------
+
+.trapezoid {
+    border-bottom: 88px solid #2f0e09;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    height: 0;
+    margin: 15px auto;
+    color: #fff;
+    .border-radius(8px);
+    &__holder {
+        .display(flex);
+        .justify-content(space-around);
+        .align-items(center);
+        height: 88px;
+        span:first-child {
+            .flex-basis(30%);
+        }
+        span:nth-child(2n) {
+            text-align: left;
+            .flex-basis(70%);
+            text-decoration: none;
+            color: #FFA099;
+            text-transform: uppercase;
+            font-size: 1.3em;
+            font-weight: bold;
+            @media @desktop {
+                font-size: 1.4em;
+            }
+            @media @i-tab-landscape {
+                font-size: 0.9em;
+            }
+        }
+    }
+}
+
+
+
+// ---------------------------
+// FONT WEIGHT LIGHTER FOR FIREFOX -----------
+// ---------------------------
+
+.trapezoid {
+    &__holder {
+        span:nth-child(2n) {
+            font-weight: lighter;
+        }
+    }
+}
+
+
+
+
+// ---------------------------
+// QUIZ SCHEDULER/UPCOMING QUIZZES STYLES -----------
+// ---------------------------
+
+.quiz-schedule {
+    background: @quiz-schedule-color;
+    margin: 15px auto;
+    .display(flex);
+    .justify-content(space-around);
+    .align-items(center);
+    padding: 0 15px;
+    height: 90px;
+    .calendar {
+        .flex-basis(20%);
+        .box-shadow(0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
+        @media @desktop {
+            font-size: 13px;
+        }
+        .month {
+            background: @dashboard-color;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        .date, .year {
+            background: #fff;
+            b {
+                font-size: 1.4em;
+                @media @desktop {
+                    font-size: 1.1em;
+                }
+            }
+        }
+    }
+    .subj-time {
+        .flex-basis(80%);
+        text-align: left;
+        padding-left: 20px;
+        >a {
+            text-decoration: none;
+            p:first-child {
+                font-size: 1.2em;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #572605;
+                text-transform: uppercase;
+            }
+            p:nth-child(2n) {
+                color: #F7867E;
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+
+
+// ---------------------------
+// FONT WEIGHT LIGHTER FOR FIREFOX -----------
+// ---------------------------
+
+.quiz-schedule {
+    .subj-time {
+        >a {
+            p:first-child {
+                font-weight: lighter;
+            }
+        }
+    }
+}
+
+
+
+
+// ---------------------------
+// IF NO QUIZ AVALIABLE -----------
+// ---------------------------
+
+.no-quiz {
+    color: @quiz-link-color1;
+    text-transform: capitalize;
+}
+
+
+
+// ---------------------------
+// BOOTSTRAP INHERIT OF FONT-FAMILY -----------
+// ---------------------------
+
+.walnut-content {
+    font-family: 'open-sans', 'arial';
+}
+
+
+
+// ---------------------------
+// DASHBAORD SETTINGS BUTTON EFFECT -----------
+// ---------------------------
+
+.fixed-container {
+    position: relative;
+    z-index: 99999;
+    display: block;
+    .btn-nav {
+        position: absolute;
+        display: flex !important;
+        .transition(.2s ease-out);
+        cursor: pointer;
+        z-index: 9999;
+        .border-radius(50%);
+        .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12));
+        &.setting-bg {
+            background: @profile-color !important;
+            .transform(scale(1.2));
+            i {
+                color: @color-white;;
+            }
+             &:hover {
+                background: @profile-color;
+            }
+            &:focus {
+            background: @profile-color !important;
+                i{
+                    color: @color-white; 
+                }
+            }
+        }
+        &:hover{
+          .transform(scale(1.2));
+          background: @profile-color;
+        }
+        &:focus {
+            background: #F7F7F7 !important;
+            i{
+                color: @dashboard-color;
+            }
+        }
+    }
+    .waves-effect {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        vertical-align: middle;
+        will-change: opacity, transform;
+        .transition(all .3s ease-out);
+    }
+    .circle-container {
+        visibility: visible;
+        position: absolute;
+        left: 0px;
+        width: 80px;
+        top: -18px;
+        .round-circle {
+            .border-radius(50%);
+            background-color: #69b8b5;
+            width: 56px;
+            height: 56px;
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            line-height: 60px;
+            visibility: hidden;
+            .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12));
+            >a {
+                display: block;
+                background: #F7F7F7;
+                .transition(background 0.5s ease-in-out);
+                &:hover {
+                    background: @profile-color;
+                    >i {
+                        color: #fff;
+                    }
+                }
+                i {
+                    color: @quiz-link-color1;
+                    font-size: 26px;
+                    .transition(color 0.5s ease-in-out);
+                }
+            }
+            .first-circle {
+                z-index: 4;
+            }
+            .second-circle {
+                z-index: 3;
+            }
+            .third-circle {
+                z-index: 2;
+            }
+            .forth-circle {
+                z-index: 1;
+            }
+        }
+    }
+}
+
+
+
+
+// ---------------------------
+// DASHBAORD SETTINGS BUTTON ANIMATION KEYFRAMES(ROTATE EFFECT) -----------
+// ---------------------------
+
+
+//Rotate icon
+ .keyframes(~'rotateIcon, from{ transform:rotateZ(0); } to{ transform:rotateZ(360deg);} ');
+
+//UnRotate icon
+.keyframes(~'unRotateIcon, from{ transform:rotateZ(360deg); } to{ transform:rotateZ(0);} ');
+
+
+//Animation calls
+.rotateIcon {
+    .animation(rotateIcon 1s);
+}
+
+.unRotateIcon {
+    .animation(unRotateIcon 1s);
+}

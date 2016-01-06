@@ -30,11 +30,11 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
       return delete this._registry[id];
     },
     resetRegistry: function() {
-      var controller, key, msg, oldCount, _ref;
+      var controller, key, msg, oldCount, ref;
       oldCount = this.getRegistrySize();
-      _ref = this._registry;
-      for (key in _ref) {
-        controller = _ref[key];
+      ref = this._registry;
+      for (key in ref) {
+        controller = ref[key];
         controller.region.close();
       }
       msg = "There were " + oldCount + " controllers in the registry, there are now " + (this.getRegistrySize());
@@ -57,11 +57,11 @@ define(['marionette', 'mustache'], function(Marionette, Mustache) {
       return delete this._elementRegistry[id];
     },
     resetElementRegistry: function() {
-      var controller, key, msg, oldCount, _ref;
+      var controller, key, msg, oldCount, ref;
       oldCount = this.getElementRegistrySize();
-      _ref = this._elementRegistry;
-      for (key in _ref) {
-        controller = _ref[key];
+      ref = this._elementRegistry;
+      for (key in ref) {
+        controller = ref[key];
         controller.layout.close();
       }
       msg = "There were " + oldCount + " controllers in the registry, there are now " + (this.getElementRegistrySize());

@@ -1,4 +1,4 @@
-var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define(['jquery', 'underscore'], function($, _) {
   var adjustPageDim;
@@ -125,22 +125,22 @@ define(['jquery', 'underscore'], function($, _) {
   });
   $(window).resize(adjustPageDim);
   $.toggleCheckAll = function(element, exclude) {
-    var checkbox, checkboxes, _i, _len, _ref, _results;
+    var checkbox, checkboxes, i, len, ref, results;
     if (exclude == null) {
       exclude = [];
     }
     if (element.find('#check_all').is(':checked')) {
       checkboxes = element.find('.tab_checkbox');
-      _results = [];
-      for (_i = 0, _len = checkboxes.length; _i < _len; _i++) {
-        checkbox = checkboxes[_i];
-        if (_ref = parseInt(checkbox.value), __indexOf.call(exclude, _ref) < 0) {
-          _results.push($(checkbox).trigger('click').prop('checked', true));
+      results = [];
+      for (i = 0, len = checkboxes.length; i < len; i++) {
+        checkbox = checkboxes[i];
+        if (ref = parseInt(checkbox.value), indexOf.call(exclude, ref) < 0) {
+          results.push($(checkbox).trigger('click').prop('checked', true));
         } else {
-          _results.push(void 0);
+          results.push(void 0);
         }
       }
-      return _results;
+      return results;
     } else {
       return element.find('.tab_checkbox').removeAttr('checked');
     }

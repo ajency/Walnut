@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
   return App.module('ContentCreator.ContentBuilder.Element.Image.Views', function(Views, App, Backbone, Marionette, $, _) {
-    return Views.ImageView = (function(_super) {
-      __extends(ImageView, _super);
+    return Views.ImageView = (function(superClass) {
+      extend(ImageView, superClass);
 
       function ImageView() {
         return ImageView.__super__.constructor.apply(this, arguments);
@@ -58,7 +58,7 @@ define(['app'], function(App) {
           this.$el.height(parseFloat(this.imageHeightRatio) * this.$el.width());
         }
         if (this.positionTopRatio) {
-          this.$el.find('img').css('top', "" + (this.positionTopRatio * this.$el.width()) + "px");
+          this.$el.find('img').css('top', (this.positionTopRatio * this.$el.width()) + "px");
         }
         this.$el.resizable({
           handles: "s",
@@ -136,7 +136,7 @@ define(['app'], function(App) {
         console.log(this.$el);
         width = this.$el.width();
         height = this.$el.height();
-        return "" + (parseInt(width)) + ":" + (parseInt(height));
+        return (parseInt(width)) + ":" + (parseInt(height));
       };
 
       ImageView.prototype.adjustImagePosition = function() {

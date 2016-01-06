@@ -56,11 +56,22 @@ function ajax_sds_data_sync_import() {
     $zip->extractTo( $extract_path );
 
     // save current logged in user's data to set the user's session after re-importing the users and usermeta table
+    define('SYNC_IN_PROGRESS',true);
     $logged_in_user_data = get_userdata(get_current_user_id());
 
 
     for ($i = 0; $i < $zip->numFiles; $i++) {
         $stat = $zip->statIndex( $i );
+
+        if(strpos($stat['name'],'quiz_question_response.csv') !== false)
+            sds_read_quiz_question_response_csv_file( $extract_path . '/' . $stat['name'] ); 
+        
+        if(strpos($stat['name'],'quiz_response_summary.csv') !== false)
+            sds_read_quiz_response_summary_csv_file( $extract_path . '/' . $stat['name'] ); 
+ 
+        if(strpos($stat['name'],'quiz_schedules.csv') !== false)
+            sds_read_quiz_schedules_csv_file( $extract_path . '/' . $stat['name'] );         
+        
         if(strpos($stat['name'],'class_divisions.csv') !== false)
             sds_read_class_divisions_csv_file( $extract_path . '/' . $stat['name'] );
 
@@ -96,6 +107,7 @@ function ajax_sds_data_sync_import() {
 
         if(strpos($stat['name'],'textbook_relationships.csv') !== false)
             sds_read_textbook_relationships_csv_file( $extract_path . '/' . $stat['name'] );     
+
         
         if(strpos($stat['name'],'users.csv') !== false){
             $wpdb->query("TRUNCATE TABLE `{$wpdb->prefix}users`");
@@ -129,10 +141,15 @@ function ajax_sds_data_sync_import() {
     $zip->close();
     
     $status =  get_local_syncrecord_status($sync_id);
-    if($status == 'imported')
-    wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id, 'status' => $status) ) );
-    else
+    if($status == 'imported'){
+        $upsyncount = get_upsync_data_count();
+        $last_sync_imported = get_last_sync_imported();
+        $last_sync_date = date_format(date_create($last_sync_imported->last_sync), 'd/m/Y H:i:s');
+        wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id, 'status' => $status,'sync_date' => $last_sync_date,'to_be_synccount'=>$upsyncount) ) );
+    }
+    else{
     wp_die( json_encode( array( 'code' => 'ERROR', 'sync_request_id' => $sync_id, 'status' => $status) ) );
+    }
 }
 add_action( 'wp_ajax_sds_data_sync_import', 'ajax_sds_data_sync_import' );
 
@@ -151,6 +168,9 @@ function ajax_sds_data_sync_local_export(){
     $upload_url = str_replace('/images', '', $uploads_dir['baseurl']);
 
     $random= rand(9999,99999);
+
+    if(!file_exists($upload_directory))
+        mkdir($upload_directory,0755);
 
     if(!file_exists($upload_directory.'/tmplocal/'))
         mkdir($upload_directory.'/tmplocal',0755);
@@ -180,11 +200,27 @@ function ajax_sds_data_sync_local_export(){
         $meta_data = array();
         $meta_data['exported_local_csv_url'] =  $export_details['exported_csv_url'];
         
+        $emptyflag = 0;
+        $exp_status = 'export-local';
+        foreach($exported_tables as $value){
+            if($value == ''){
+                $emptyflag++;
+            }
+            
+            if($emptyflag == 2){
+                $exp_status = 'export-not-required';
+            }
+        }
+        
         $wpdb->insert( $table_name, array( 'file_path' => '', 'last_sync' => $export_details['last_sync'] ,
-                        'status' =>'export-local','meta'=>  maybe_serialize($meta_data)  ));
+                        'status' =>$exp_status,'meta'=>  maybe_serialize($meta_data)  ));
         $sync_id = $wpdb->insert_id;
         
-        wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id,'status'=>'export-local') ) );
+        if($emptyflag == 2){
+            wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id,'status'=>$exp_status ) ) );
+        }
+
+        wp_die( json_encode( array( 'code' => 'OK', 'sync_request_id' => $sync_id,'status'=>$exp_status ) ) );
     }
 
 }
@@ -195,6 +231,9 @@ function ajax_sds_local_upload_to_server(){
     
     $sync_request_id = $_POST['sync_request_id'];
     $blog_id         = $_POST['blog_id'];
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
 
     $filetoupload = get_local_uploaded_file($sync_request_id);
     
@@ -213,6 +252,7 @@ function ajax_sds_local_upload_to_server(){
         'blog_id' =>$blog_id,
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     $resp_decode = json_decode($response,true);
@@ -224,7 +264,7 @@ function ajax_sds_local_upload_to_server(){
         array('status' => 'transfered-server','server_sync_id' => $resp_decode['sync_request_id']),
         array( 'id' => $sync_request_id ) );
         
-        wp_die( json_encode( array( 'code' => $resp_decode['code'], 'sync_request_id' => $resp_decode['sync_request_id']) ) );
+        wp_die( json_encode( array( 'code' => $resp_decode['code'], 'sync_request_id' => $resp_decode['sync_request_id'],'status' =>'transfered-server') ) );
     }
     
     wp_die( json_encode( array( 'code' => $resp_decode['code'], 'message' => $resp_decode['message']) ) );
@@ -251,6 +291,9 @@ function ajax_sds_media_sync(){
                                 'audios'=>'get-site-audio-resources-data',
                                 'videos'=>'get-site-video-resources-data');
     $media_type = $_POST['type'];
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
     
     if(!array_key_exists($media_type, $mediafetchactions))
             wp_die( json_encode( array( 'code' => 'ERROR', 'message' => 'Invalid action') ) );
@@ -270,6 +313,7 @@ function ajax_sds_media_sync(){
         'action' => $mediafetchactions[$media_type]
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     $resp_decode = json_decode($response,true);
@@ -292,8 +336,6 @@ function ajax_sds_media_sync(){
 }
 add_action( 'wp_ajax_sds_media_sync', 'ajax_sds_media_sync' );
 
-add_action( 'wp_ajax_nopriv_sds_media_sync', 'ajax_sds_media_sync' );
-
 
 function ajax_save_standalone_school_blogid(){
 
@@ -303,12 +345,14 @@ function ajax_save_standalone_school_blogid(){
     wp_send_json (array('blog_id'=>$blog_id));
 
 }
-
 add_action ('wp_ajax_save_standalone_school_blogid', 'ajax_save_standalone_school_blogid');
 
 function ajax_sync_local_database(){
 
     $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -322,10 +366,12 @@ function ajax_sync_local_database(){
         'device_type' => $_POST['device_type']
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     //$resp_decode = json_decode($response,true);
     echo $response;
+    
     exit;
 
 }
@@ -334,6 +380,9 @@ add_action ('wp_ajax_sync-local-database', 'ajax_sync_local_database');
 function ajax_check_server_app_data_sync_completion(){
 
     $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
+    $login_cookie_name = $_POST['login_cookie_name'];
+    $login_cookie_value = $_POST['login_cookie_value'];
+    $strCookie = "Cookie:".$login_cookie_name."=".$login_cookie_value;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -346,6 +395,7 @@ function ajax_check_server_app_data_sync_completion(){
         'sync_request_id' => $_REQUEST['sync_request_id']
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("$strCookie;"));
     $response = curl_exec($ch);
     curl_close($ch);
     //$resp_decode = json_decode($response,true);
@@ -363,23 +413,49 @@ function ajax_sds_delete_blog_content(){
 }
 add_action ('wp_ajax_sds_delete_blog_content', 'ajax_sds_delete_blog_content');
 
-function ajax_test_server_request(){
-    $remote_url = 'http://school15.synapsedu.info';
+function ajax_sds_auth_sync_user(){
+    $remote_url = REMOTE_SERVER_URL.'/wp-admin/admin-ajax.php';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_URL, $remote_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    $post = array(
+        'action' => 'auth-sync-user',       
+        'blog_id' => $_REQUEST['data']['txt_blog_id'],
+        'passwd' => $_REQUEST['data']['txtpassword']
+    );
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
     $response = curl_exec($ch);
-    $info = curl_getinfo($ch);
-    $error = curl_error($ch);
     curl_close($ch);
     //$resp_decode = json_decode($response,true);
-    //echo $response;
-    
-    //echo $info;
-    $respcode = array('resp' =>$response,'info'=>$error );
-    wp_send_json($respcode);
-    exit;
+    echo $response;
+    exit;  
 }
-add_action ('wp_ajax_test-server-request', 'ajax_test_server_request');
+add_action ('wp_ajax_sds-auth-sync-user', 'ajax_sds_auth_sync_user');
+
+function ajax_save_standalone_school_sync_cookies(){
+
+    $cookie_name = $_REQUEST['cookie_name'];
+    $cookie_value = $_REQUEST['cookie_value'];
+    update_option('sync_user_cookie_name', $cookie_name);
+    update_option('sync_user_cookie_value', $cookie_value);
+
+    wp_send_json (array('success'=>true));
+
+}
+add_action ('wp_ajax_save_standalone_school_sync_cookies', 'ajax_save_standalone_school_sync_cookies');
+
+#deregister heartbeat api so that wordpress doesnt log you out automatically before sync is complete
+add_action( 'init', 'stop_heartbeat', 1 );
+function stop_heartbeat() {
+    
+    global $pagenow;
+    if($pagenow=='options-general.php' && isset($_GET['page']) && $_GET['page']=='school_data_sync')
+         wp_deregister_script('heartbeat');
+     
+    if(defined('SYNC_IN_PROGRESS') || (isset($_REQUEST['action']) && $_REQUEST['action']=='sds_data_sync_import'))
+        wp_deregister_script('heartbeat');
+    
+}

@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html', 'bootbox'], function(App, optionsBarTpl, bootbox) {
   return App.module("ContentCreator.OptionsBar.Views", function(Views, App) {
-    return Views.OptionsBarView = (function(_super) {
-      __extends(OptionsBarView, _super);
+    return Views.OptionsBarView = (function(superClass) {
+      extend(OptionsBarView, superClass);
 
       function OptionsBarView() {
-        this._commentEnable = __bind(this._commentEnable, this);
-        this._hintEnable = __bind(this._hintEnable, this);
+        this._commentEnable = bind(this._commentEnable, this);
+        this._hintEnable = bind(this._hintEnable, this);
         return OptionsBarView.__super__.constructor.apply(this, arguments);
       }
 

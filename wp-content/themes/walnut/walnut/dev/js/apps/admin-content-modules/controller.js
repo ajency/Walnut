@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/admin-content-modules/views', 'apps/admin-content-modules/recipients-popup/controller'], function(App, RegionController, classDescriptionTpl) {
   return App.module("AdminContentModulesApp.View", function(View, App) {
-    View.AdminModulesController = (function(_super) {
-      __extends(AdminModulesController, _super);
+    View.AdminModulesController = (function(superClass) {
+      extend(AdminModulesController, superClass);
 
       function AdminModulesController() {
-        this._getContentGroupsListingView = __bind(this._getContentGroupsListingView, this);
+        this._getContentGroupsListingView = bind(this._getContentGroupsListingView, this);
         return AdminModulesController.__super__.constructor.apply(this, arguments);
       }
 

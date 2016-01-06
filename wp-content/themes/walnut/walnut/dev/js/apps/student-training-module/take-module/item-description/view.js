@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'text!apps/student-training-module/take-module/item-description/templates/top-panel.html'], function(App, TopPanelTemplate) {
   return App.module("StudentTrainingApp.TopPanel.Views", function(Views, App, Backbone, Marionette, $, _) {
-    return Views.TopPanelView = (function(_super) {
-      __extends(TopPanelView, _super);
+    return Views.TopPanelView = (function(superClass) {
+      extend(TopPanelView, superClass);
 
       function TopPanelView() {
-        this.countUp = __bind(this.countUp, this);
-        this.countDown = __bind(this.countDown, this);
+        this.countUp = bind(this.countUp, this);
+        this.countDown = bind(this.countDown, this);
         return TopPanelView.__super__.constructor.apply(this, arguments);
       }
 
@@ -40,15 +40,20 @@ define(['app', 'text!apps/student-training-module/take-module/item-description/t
       };
 
       TopPanelView.prototype.initialize = function() {
+        $('header').prepend('<div class="icon is-back go-back"><a onclick="location.reload();" href="javascript:" class="btn fab-content"><i class="fa fa-hand-o-left"></i>Back</a></div>');
+        $('.navbar .container-fluid').css("visibility", "hidden");
         return this.mode = Marionette.getOption(this, 'display_mode');
       };
 
       TopPanelView.prototype.onShow = function() {
-        var timeLeftOrElapsed, _ref;
+        var ref, timeLeftOrElapsed;
+        $('.open-sidebar').click(function() {
+          $('.video-sidebar').toggleClass('video-is-open');
+        });
         if (this.model.get('question_type') === 'multiple_eval') {
           this.$el.find('#correct-answer-col').hide();
         }
-        if ((_ref = this.model.get('content_type')) === 'content_piece' || _ref === 'student_question') {
+        if ((ref = this.model.get('content_type')) === 'content_piece' || ref === 'student_question') {
           this.$el.find('#question-type-col, #correct-answer-col').hide();
         }
         if (this.model.get('content_type') !== 'student_question') {

@@ -119,6 +119,7 @@ function get_taught_in_class_template_data($comm_data, $module_id, $division){
 
     switch_to_blog($comm_data['blog_id']);
 
+
     $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
 
     $module_details= get_single_content_module($module_id,$division,$school_admin);
@@ -140,7 +141,9 @@ function get_taught_in_class_template_data($comm_data, $module_id, $division){
    		$chapter_name = ' -- ';
    	restore_current_blog();
 
+    $subject = get_textbook_subject($textbook_id);
 
+    
     $division_data = fetch_single_division($division,$comm_data['blog_id']);
     $division  = $division_data['division'];
 
@@ -150,6 +153,7 @@ function get_taught_in_class_template_data($comm_data, $module_id, $division){
 
 	$data[] = array('name' => 'MODULE',			'content' => $module_details->name);
 	$data[] = array('name' => 'DIVISION',		'content' => $division);
+	$data[] = array('name' => 'SUBJECT',		'content' => $subject);
 	$data[] = array('name' => 'TEXTBOOK',		'content' => $textbook_name);
 	$data[] = array('name' => 'CHAPTER',		'content' => $chapter_name);
 	$data[] = array('name' => 'DATE_COMPLETED',	'content' => $module_end_date);
@@ -220,12 +224,12 @@ function get_training_modules_report_data($blog_id){
 
     $today = date('Y-m-d');
 
-    $query = $wpdb->prepare("SELECT collection_id, division FROM {$wpdb->prefix}question_response
+    $query = $wpdb->prepare("SELECT collection_id, division FROM {$wpdb->prefix}question_response 
                 WHERE DATE(start_date) LIKE %s OR DATE(end_date) LIKE %s",
                 $today,$today
             );
 
-    $modules = $wpdb->get_results($query, ARRAY_A);
+    $modules = $wpdb->get_results($query, ARRAY_A);  
 
     if($modules){
         $modules_for_div = __u::groupBy($modules, 'division');

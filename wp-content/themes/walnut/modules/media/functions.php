@@ -176,6 +176,12 @@ function aes_file_decrypt($src_url,$mediatype){
         mkdir($temp_user_path, 0777, true);
     }
     $inputKey = "kal/dvjBWAaD8+fl0a1b1JljOJtdv6G6"; //unique key to be used for AES encryption and decryption
+    
+    #setting memory limit to infinite for large file read.
+    $mem_limit = ini_get('memory_limit');
+    $max_mem_limit = ini_get('max_memory_limit');
+    ini_set('memory_limit', '-1');
+    ini_set('max_memory_limit', '-1');
 
     $file_data = file_get_contents($src_file_path);
 
@@ -186,7 +192,11 @@ function aes_file_decrypt($src_url,$mediatype){
     $nfile = fopen($temp_user_path.DIRECTORY_SEPARATOR.$src_file_info['basename'], "w") ;
     fwrite($nfile, $dec);
     fclose($nfile);
-
+    
+    // reset the memory limit back
+    ini_set('memory_limit', $mem_limit);
+    ini_set('max_memory_limit', $max_mem_limit);
+    
     $wp_upload_dir = wp_upload_dir();
     $temp_url = str_replace("images", "", $wp_upload_dir['baseurl']);
 

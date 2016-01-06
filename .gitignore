@@ -1,5 +1,6 @@
 .htaccess
 wp-config.php
+wp-config2.php
 wp-content/themes/walnut/walnut/dev/node_modules
 wp-content/uploads
 .idea
@@ -10,9 +11,9 @@ wp-content/uploads
 .gitconfig
 .composer
 composer.phar
-wp-content/themes/walnut/vendor
 wp-content/themes/walnut/csvupload
-
+wp-content/debug.log
+tmp
 
 
 /nbproject

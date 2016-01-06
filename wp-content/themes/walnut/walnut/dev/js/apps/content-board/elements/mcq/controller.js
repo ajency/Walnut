@@ -1,19 +1,19 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 define(['app', 'apps/content-board/element/controller', 'apps/content-board/elements/mcq/views'], function(App, Element) {
   return App.module("ContentPreview.ContentBoard.Element.Mcq", function(Mcq, App, Backbone, Marionette, $, _) {
-    return Mcq.Controller = (function(_super) {
-      __extends(Controller, _super);
+    return Mcq.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._optionUnchecked = __bind(this._optionUnchecked, this);
-        this._optionChecked = __bind(this._optionChecked, this);
-        this.createRowStructure = __bind(this.createRowStructure, this);
-        this._submitAnswer = __bind(this._submitAnswer, this);
-        this.renderElement = __bind(this.renderElement, this);
+        this._optionUnchecked = bind(this._optionUnchecked, this);
+        this._optionChecked = bind(this._optionChecked, this);
+        this.createRowStructure = bind(this.createRowStructure, this);
+        this._submitAnswer = bind(this._submitAnswer, this);
+        this.renderElement = bind(this.renderElement, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -164,11 +164,11 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       };
 
       Controller.prototype.createRowStructure = function(options) {
-        var columnCount, columnElement, columnElements, controller, num, optionsInCurrentRow, rowElements, rowNumber, totalOptionsinMcq, _i, _results;
+        var columnCount, columnElement, columnElements, controller, i, num, optionsInCurrentRow, ref, results, rowElements, rowNumber, totalOptionsinMcq;
         columnCount = parseInt(this.layout.model.get('columncount')) + 1;
         columnElements = (function() {
-          var _results;
-          _results = [];
+          var results;
+          results = [];
           while (columnCount -= 1) {
             columnElement = {
               position: this.layout.model.get('columncount') - columnCount + 1,
@@ -176,9 +176,9 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
               className: 12 / this.layout.model.get('columncount'),
               elements: []
             };
-            _results.push(columnElement);
+            results.push(columnElement);
           }
-          return _results;
+          return results;
         }).call(this);
         rowElements = {
           element: 'Row',
@@ -187,29 +187,29 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
         };
         totalOptionsinMcq = this.layout.model.get('optioncount');
         rowNumber = 1;
-        _results = [];
+        results = [];
         while (totalOptionsinMcq > 0) {
           optionsInCurrentRow = totalOptionsinMcq > this.layout.model.get('columncount') ? this.layout.model.get('columncount') : totalOptionsinMcq;
           this._setColumnClassForRow(rowElements, rowNumber, optionsInCurrentRow);
           controller = App.request("add:new:element", options.container, 'Row', rowElements);
-          for (num = _i = 1; 1 <= optionsInCurrentRow ? _i <= optionsInCurrentRow : _i >= optionsInCurrentRow; num = 1 <= optionsInCurrentRow ? ++_i : --_i) {
+          for (num = i = 1, ref = optionsInCurrentRow; 1 <= ref ? i <= ref : i >= ref; num = 1 <= ref ? ++i : --i) {
             this._iterateThruOptions(controller, rowNumber, num);
           }
           totalOptionsinMcq -= this.layout.model.get('columncount');
-          _results.push(rowNumber += 1);
+          results.push(rowNumber += 1);
         }
-        return _results;
+        return results;
       };
 
       Controller.prototype._setColumnClassForRow = function(rowElements, rowNumber, optionsInCurrentRow) {
         var classRemaining, num, optionNumbers;
         optionNumbers = (function() {
-          var _i, _ref, _results;
-          _results = [];
-          for (num = _i = 1, _ref = this.layout.model.get('columncount'); 1 <= _ref ? _i <= _ref : _i >= _ref; num = 1 <= _ref ? ++_i : --_i) {
-            _results.push((rowNumber - 1) * this.layout.model.get('columncount') + num);
+          var i, ref, results;
+          results = [];
+          for (num = i = 1, ref = this.layout.model.get('columncount'); 1 <= ref ? i <= ref : i >= ref; num = 1 <= ref ? ++i : --i) {
+            results.push((rowNumber - 1) * this.layout.model.get('columncount') + num);
           }
-          return _results;
+          return results;
         }).call(this);
         classRemaining = 12;
         return _.each(optionNumbers, (function(_this) {
@@ -275,9 +275,9 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
       };
 
       Controller.prototype._optionChecked = function(model) {
-        var answerArray, _ref;
+        var answerArray, ref;
         answerArray = this.answerModel.get('answer');
-        if (_ref = model.get('optionNo'), __indexOf.call(answerArray, _ref) < 0) {
+        if (ref = model.get('optionNo'), indexOf.call(answerArray, ref) < 0) {
           answerArray.push(model.get('optionNo'));
         }
         this.view.$el.find("input#option-" + (model.get('optionNo'))).prop('checked', true);

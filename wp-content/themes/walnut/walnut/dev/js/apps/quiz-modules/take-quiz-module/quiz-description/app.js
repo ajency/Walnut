@@ -1,15 +1,15 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-quiz-module/quiz-description/templates/quiz-description-tpl.html'], function(App, RegionController, quizDescriptionTemplate) {
   return App.module("TakeQuizApp.QuizDescription", function(QuizDescription, App) {
     var ModuleDescriptionView;
-    QuizDescription.Controller = (function(_super) {
-      __extends(Controller, _super);
+    QuizDescription.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._showQuizDescriptionView = __bind(this._showQuizDescriptionView, this);
+        this._showQuizDescriptionView = bind(this._showQuizDescriptionView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
@@ -72,8 +72,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       return Controller;
 
     })(RegionController);
-    return ModuleDescriptionView = (function(_super) {
-      __extends(ModuleDescriptionView, _super);
+    return ModuleDescriptionView = (function(superClass) {
+      extend(ModuleDescriptionView, superClass);
 
       function ModuleDescriptionView() {
         return ModuleDescriptionView.__super__.constructor.apply(this, arguments);
@@ -96,10 +96,14 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       ModuleDescriptionView.prototype.onShow = function() {
         $('#collapseView').on('hidden.bs.collapse', function() {
-          return $('#accordionToggle').text('Expand');
+          $('#accordionToggle').removeClass('updown');
+          $('#accordionToggle').text('Expand');
+          return $('.submit2').removeClass('submit-pushed');
         });
         return $('#collapseView').on('shown.bs.collapse', function() {
-          return $('#accordionToggle').text('Collapse');
+          $('#accordionToggle').addClass('updown');
+          $('#accordionToggle').text('Collapse');
+          return $('.submit2').addClass('submit-pushed');
         });
       };
 

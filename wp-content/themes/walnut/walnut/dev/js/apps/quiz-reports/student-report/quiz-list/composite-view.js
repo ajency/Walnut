@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-reports/student-report/quiz-list/item-views'], function(App, RegionController, bootbox) {
   return App.module("StudentReportApp.QuizList.Views", function(Views, App) {
-    return Views.QuizListView = (function(_super) {
-      __extends(QuizListView, _super);
+    return Views.QuizListView = (function(superClass) {
+      extend(QuizListView, superClass);
 
       function QuizListView() {
         return QuizListView.__super__.constructor.apply(this, arguments);
@@ -86,15 +86,19 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-reports/st
             };
           })(this));
         } else {
+          msg = 'All the previous attempts for practice quiz only will also be resetted. Are you sure you want to continue?';
+          bootbox.confirm(msg, (function(_this) {
+            return function(result) {};
+          })(this));
           return this.deleteSelectedResponses(quizIDs);
         }
       };
 
       QuizListView.prototype.deleteSelectedResponses = function(quizIDs) {
-        var quizID, _i, _len;
+        var i, len, quizID;
         if (!_.isEmpty(quizIDs)) {
-          for (_i = 0, _len = quizIDs.length; _i < _len; _i++) {
-            quizID = quizIDs[_i];
+          for (i = 0, len = quizIDs.length; i < len; i++) {
+            quizID = quizIDs[i];
             this.deleteResponse(quizID);
           }
         }
@@ -103,13 +107,13 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-reports/st
       };
 
       QuizListView.prototype.deleteResponse = function(quizID) {
-        var quizResponseSummaries, s, summary, _i, _len;
+        var i, len, quizResponseSummaries, s, summary;
         quizResponseSummaries = Marionette.getOption(this, 'quizResponseSummaries');
         summary = quizResponseSummaries.where({
           'collection_id': parseInt(quizID)
         });
-        for (_i = 0, _len = summary.length; _i < _len; _i++) {
-          s = summary[_i];
+        for (i = 0, len = summary.length; i < len; i++) {
+          s = summary[i];
           s.destroy();
         }
         this.collection.remove(quizID);

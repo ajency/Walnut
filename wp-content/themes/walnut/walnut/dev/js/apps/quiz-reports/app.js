@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'apps/quiz-reports/class-report/class-report-app', 'apps/quiz-reports/quiz-report/quiz-report-app', 'apps/quiz-reports/student-report/student-report-app'], function(App) {
   return App.module("QuizReportsApp", function(QuizReportsApp, App) {
     var Controller, QuizReportsRouter;
-    QuizReportsRouter = (function(_super) {
-      __extends(QuizReportsRouter, _super);
+    QuizReportsRouter = (function(superClass) {
+      extend(QuizReportsRouter, superClass);
 
       function QuizReportsRouter() {
         return QuizReportsRouter.__super__.constructor.apply(this, arguments);

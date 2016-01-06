@@ -150,6 +150,6 @@ define ['app'], (App)->
 												data-setup="{}" controls src="'+videoUrl+'">
 
 								</video>'
-
+								
 					@$el.find('video')[0].load()
-					@$el.find('video')[0].play() if autoplay
+					@$el.find('video')[0].play()

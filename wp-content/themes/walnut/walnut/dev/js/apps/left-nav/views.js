@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTpl) {
   return App.module("LeftNavApp.Controller.Views", function(Views, App) {
     var MenuItemView;
-    MenuItemView = (function(_super) {
-      __extends(MenuItemView, _super);
+    MenuItemView = (function(superClass) {
+      extend(MenuItemView, superClass);
 
       function MenuItemView() {
         return MenuItemView.__super__.constructor.apply(this, arguments);
@@ -36,11 +36,11 @@ define(['app', 'text!apps/left-nav/templates/leftnav.html'], function(App, navTp
       return MenuItemView;
 
     })(Marionette.ItemView);
-    return Views.LeftNavView = (function(_super) {
-      __extends(LeftNavView, _super);
+    return Views.LeftNavView = (function(superClass) {
+      extend(LeftNavView, superClass);
 
       function LeftNavView() {
-        this.clickMenu = __bind(this.clickMenu, this);
+        this.clickMenu = bind(this.clickMenu, this);
         return LeftNavView.__super__.constructor.apply(this, arguments);
       }
 

@@ -168,6 +168,7 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
 
     $quiz_details= get_single_quiz_module($quiz_id,$school_admin);
 
+
     $terms= $quiz_details->term_ids;
 
     $textbook_id = $terms['textbook'];

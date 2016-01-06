@@ -1,16 +1,16 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'apps/header/right/rightapp', 'text!apps/header/templates/header.html'], function(App, RegionController, LeftApp, RightApp, headerTpl) {
   return App.module("HeaderApp.Controller", function(Controller, App) {
     var HeaderView;
-    Controller.HeaderController = (function(_super) {
-      __extends(HeaderController, _super);
+    Controller.HeaderController = (function(superClass) {
+      extend(HeaderController, superClass);
 
       function HeaderController() {
-        this._getHeaderView = __bind(this._getHeaderView, this);
-        this._showLeftRightViews = __bind(this._showLeftRightViews, this);
+        this._getHeaderView = bind(this._getHeaderView, this);
+        this._showLeftRightViews = bind(this._showLeftRightViews, this);
         return HeaderController.__super__.constructor.apply(this, arguments);
       }
 
@@ -32,7 +32,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
             } else {
               usermodel = App.request("get:user:model");
               usermodel.clear();
-              return App.vent.trigger("show:login");
+              return location.href = MAIN_SITE + "/login";
             }
           };
         })(this));
@@ -62,8 +62,8 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       return HeaderController;
 
     })(RegionController);
-    HeaderView = (function(_super) {
-      __extends(HeaderView, _super);
+    HeaderView = (function(superClass) {
+      extend(HeaderView, superClass);
 
       function HeaderView() {
         return HeaderView.__super__.constructor.apply(this, arguments);

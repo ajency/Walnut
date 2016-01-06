@@ -1,14 +1,14 @@
-var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-modules/modules-listing/modules-listing-views'], function(App, RegionController) {
   return App.module("ContentModulesApp.ModulesListing", function(ModulesListing, App, Backbone, Marionette, $, _) {
-    ModulesListing.Controller = (function(_super) {
-      __extends(Controller, _super);
+    ModulesListing.Controller = (function(superClass) {
+      extend(Controller, superClass);
 
       function Controller() {
-        this._getContentModulessListingView = __bind(this._getContentModulessListingView, this);
+        this._getContentModulessListingView = bind(this._getContentModulessListingView, this);
         return Controller.__super__.constructor.apply(this, arguments);
       }
 

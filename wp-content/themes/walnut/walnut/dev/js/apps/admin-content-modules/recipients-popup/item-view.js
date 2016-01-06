@@ -1,10 +1,10 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'bootbox', 'apps/admin-content-modules/recipients-popup/item-view'], function(App, bootbox) {
   return App.module("ModulesEmailRecipientsPopup.Views", function(Views) {
-    return Views.RecipientsItemView = (function(_super) {
-      __extends(RecipientsItemView, _super);
+    return Views.RecipientsItemView = (function(superClass) {
+      extend(RecipientsItemView, superClass);
 
       function RecipientsItemView() {
         return RecipientsItemView.__super__.constructor.apply(this, arguments);

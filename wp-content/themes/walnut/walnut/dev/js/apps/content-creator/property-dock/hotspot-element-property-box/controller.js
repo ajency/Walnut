@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-creator/property-dock/hotspot-element-property-box/hotspot-element-property-view-loader'], function(App, RegionController) {
   return App.module("ContentCreator.PropertyDock.HotspotElementPropertyBox", function(HotspotElementPropertyBox, App, Backbone, MArionette, $, _) {
     var HotspotElementPropertyBoxController;
-    HotspotElementPropertyBoxController = (function(_super) {
-      __extends(HotspotElementPropertyBoxController, _super);
+    HotspotElementPropertyBoxController = (function(superClass) {
+      extend(HotspotElementPropertyBoxController, superClass);
 
       function HotspotElementPropertyBoxController() {
         return HotspotElementPropertyBoxController.__super__.constructor.apply(this, arguments);
@@ -19,7 +19,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/property-d
       HotspotElementPropertyBoxController.prototype._getView = function(options) {
         var elementType, viewName;
         elementType = options.model.get('type');
-        viewName = "" + elementType + "View";
+        viewName = elementType + "View";
         return new HotspotElementPropertyBox.Views[viewName]({
           model: options.model,
           hotspotModel: options.hotspotModel

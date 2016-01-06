@@ -2,32 +2,15 @@
 
 jQuery(document).ready(function() {
     
-    jQuery("#req-test").on('click',function(){
-       jQuery.ajax({  
-                type: 'POST',  
-                url: ajaxurl,  
-                data: {  
-                    action: 'test-server-request',
-                },  
-                success: function(data, textStatus, XMLHttpRequest){  
-                    //alert('Success: ' + data);
-                    console.log(data); 
-                },  
-                error: function(XMLHttpRequest, textStatus, errorThrown){  
-                    console.log(errorThrown);  
 
-                }  
-	    }); 
-    });
-
-    jQuery("#validate-blog-user").on('click',function(){
+    jQuery("#validate-blog-sync-user").on('click',function(){
 
         data ={}
-        data['txtusername'] = jQuery.trim(jQuery('#validate_school_user #validate_uname').val())
-        data['txtpassword'] = jQuery('#validate_school_user #validate_pwd').val()
+        data['txt_blog_id'] = jQuery.trim(jQuery('#validate_sync_school_user #validate_blog_id').val())
+        data['txtpassword'] = jQuery('#validate_sync_school_user #validate_pwd').val()
 
-        if(data['txtusername']=='' || data['txtpassword']==''){
-          jQuery('#validate_school_user .error_msg').html('Invalid username or password');
+        if(data['txtpassword']==''){
+          jQuery('#validate_sync_school_user .error_msg').html('Invalid password');
           return false
         }
 
@@ -37,15 +20,15 @@ jQuery(document).ready(function() {
 
         jQuery.ajax({
             type: 'POST',
-            url: SERVER_AJAXURL+'?action=get-user-profile',
+            url: ajaxurl+'?action=sds-auth-sync-user',
             data: formData,
             success: function(data, textStatus, XMLHttpRequest){
-              if(data.error){
-                jQuery('#validate_school_user .error_msg').html('Invalid username or password');
+                data = jQuery.parseJSON(data);
+              if(! data.status){
+                jQuery('#validate_sync_school_user .error_msg').html('Invalid password');
               }
               else{
-                blog_id = data.blog_details.blog_id
-                insert_blogid_in_options_table(blog_id);
+                insert_sync_cookies_in_options_table(data);
               }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -55,7 +38,44 @@ jQuery(document).ready(function() {
 
     });
 
+    jQuery("#reset-passwrd-button").on('click',function(){
+    
+        data ={}
+        data['txt_blog_id'] = jQuery.trim(jQuery('#sync-data').attr('data-blog-id'))
+        data['txtpassword'] = jQuery('#reset-sync-password').val()
+
+        if(data['txtpassword']==''){
+          jQuery('#reset-passwrd-block .status-msg').html('Invalid password');
+          return false
+        }
+
+
+        formData= {}
+        formData['data'] = data
+
+        jQuery.ajax({
+            type: 'POST',
+            url: ajaxurl+'?action=sds-auth-sync-user',
+            data: formData,
+            success: function(data, textStatus, XMLHttpRequest){
+                data = jQuery.parseJSON(data);
+              if(! data.status){
+                jQuery('#reset-passwrd-block .status-msg').html('Invalid password');
+              }
+              else{
+                jQuery('#reset-passwrd-block .status-msg').html('Password Validated');
+                insert_sync_cookies_in_options_table(data);
+              }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+
+            }
+        });
+
+    });
+    
     jQuery("#sync-data").on('click',function(){
+        jQuery(this).attr('disabled', true)
         var lastsync = jQuery(this).attr('data-lastsync');
         var lastsync_id = jQuery(this).attr('data-lastsync-id');
         var syncstatus = jQuery(this).attr('data-syncstatus');
@@ -73,6 +93,24 @@ jQuery(document).ready(function() {
     });
     
 
+    function insert_sync_cookies_in_options_table(response_data){
+
+      jQuery.post( ajaxurl,
+        {
+            action          : 'save_standalone_school_sync_cookies',
+            cookie_name     : response_data.logged_in_cookie_key,
+            cookie_value    : response_data.logged_in_cookie_value,
+        },
+        function(data) {           
+            if(data.success)
+                location.reload();
+            else 
+              console.log('error saving cookie data in database');
+                        
+        },'json');
+
+    }
+
     function insert_blogid_in_options_table(blog_id){
 
       jQuery.post( ajaxurl,
@@ -89,9 +127,11 @@ jQuery(document).ready(function() {
         },'json');
 
     }
-
+    
     function init_school_data_sync(referer,lastsync_id,syncstatus,blog_id,last_sync){
       console.log(referer);
+      var login_cookie_name = jQuery('#login_cookie_name').val();
+      var login_cookie_value = jQuery('#login_cookie_value').val();
        jQuery('#sync-media').prop('disabled', true);
        jQuery.ajax({  
                 type: 'POST',  
@@ -100,7 +140,9 @@ jQuery(document).ready(function() {
                     action: 'sync-local-database',
                     blog_id: blog_id,
                     last_sync: last_sync,
-                    device_type: 'standalone'
+                    device_type: 'standalone',
+                    login_cookie_name: login_cookie_name,
+                    login_cookie_value: login_cookie_value
                 },  
                 success: function(data, textStatus, XMLHttpRequest){  
                     //alert('Success: ' + data);
@@ -195,7 +237,7 @@ jQuery(document).ready(function() {
         },
         function(data) {           
                    if(data.code === 'OK'){ 
-                               jQuery(referer).next().text('Data Imported successfully!!');
+                               jQuery(referer).next().text('Sync completed! You now have all the recent updates');
                                jQuery(referer).prop('disabled', false);
                                jQuery('#sync-media').prop('disabled', false);
                                jQuery(referer).val('Start');
@@ -245,7 +287,14 @@ jQuery(document).ready(function() {
                                jQuery(referer).next().text('Local Data exported...');
                                jQuery(referer).attr('data-lastsync-id',data.sync_request_id);
                                jQuery(referer).attr('data-syncstatus',data.status);
-                               school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                               if(data.status == 'export-not-required'){
+                                    //school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                                    init_school_data_sync(referer,data.sync_request_id,data.status,blog_id,lastsync);
+
+                               }
+                               else{
+                                   school_data_local_upload(referer,data.sync_request_id,blog_id,lastsync);
+                               }
                                
                   
                    } else if(data.code === 'ERROR') {
@@ -258,11 +307,16 @@ jQuery(document).ready(function() {
     }
     
     function school_data_local_upload(referer,sync_request_id,blog_id,last_sync){
+        
+      var login_cookie_name = jQuery('#login_cookie_name').val();
+      var login_cookie_value = jQuery('#login_cookie_value').val();
         jQuery.post( ajaxurl,
         {
             action    : 'sds_data_sync_local_upload',
             sync_request_id : sync_request_id,
-            blog_id         : blog_id
+            blog_id         : blog_id,
+            login_cookie_name : login_cookie_name,
+            login_cookie_value : login_cookie_value
         },
         function(data) {           
                    if(data.code === 'OK'){ 
@@ -282,16 +336,21 @@ jQuery(document).ready(function() {
     }
     
     function check_server_data_sync(referer,sync_request_id,blog_id,last_sync){
-        referer.next().text('Checking server...');
+        referer.next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
         var syncstatus = referer.attr('data-syncstatus');
         var server_sync_id = referer.attr('data-server-sync-id');
+        var login_cookie_name = jQuery('#login_cookie_name').val();
+        var login_cookie_value = jQuery('#login_cookie_value').val();      
+        
         check_server_sync = setInterval(function()
                                 {
-                                  jQuery.get( ajaxurl,
+                                  jQuery.post( ajaxurl,
                                   {
                                     action    : 'check-server-app-data-sync-completion',
                                     blog_id :blog_id,
-                                    sync_request_id:server_sync_id
+                                    sync_request_id:server_sync_id,
+                                    login_cookie_name : login_cookie_name,
+                                    login_cookie_value : login_cookie_value
                                   },
                                     function(data) { 
                                         var data = jQuery.parseJSON( data );
@@ -315,10 +374,14 @@ jQuery(document).ready(function() {
                 jQuery('#sync-data').prop('disabled', true);
                 jQuery(this).next().text('Downloading images...');     
                 var referer = jQuery(this);
+                var login_cookie_name = jQuery('#login_cookie_name').val();
+                var login_cookie_value = jQuery('#login_cookie_value').val();
                 jQuery.post( ajaxurl,
                 {
                     action    : 'sds_media_sync',
-                    type : 'images'
+                    type : 'images',
+                    login_cookie_name : login_cookie_name,
+                    login_cookie_value : login_cookie_value
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 
@@ -345,7 +408,9 @@ jQuery(document).ready(function() {
                 jQuery.post( ajaxurl,
                 {
                     action    : 'sds_media_sync',
-                    type : 'audios'
+                    type : 'audios',
+                    login_cookie_name : login_cookie_name,
+                    login_cookie_value : login_cookie_value
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 
@@ -371,7 +436,9 @@ jQuery(document).ready(function() {
                 jQuery.post( ajaxurl,
                 {
                     action : 'sds_media_sync',
-                    type : 'videos'
+                    type : 'videos',
+                    login_cookie_name : login_cookie_name,
+                    login_cookie_value : login_cookie_value
                 },
                 function(data) {           
                            if(data.code === 'OK'){ 

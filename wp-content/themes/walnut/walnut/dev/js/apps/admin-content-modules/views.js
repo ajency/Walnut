@@ -1,12 +1,12 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'], function(App, adminContentModulesTpl) {
   return App.module("AdminContentModulesApp.View.AdminModulesView", function(AdminModulesView, App) {
     var ModulesEmptyView, ModulesItemView;
-    ModulesItemView = (function(_super) {
-      __extends(ModulesItemView, _super);
+    ModulesItemView = (function(superClass) {
+      extend(ModulesItemView, superClass);
 
       function ModulesItemView() {
         return ModulesItemView.__super__.constructor.apply(this, arguments);
@@ -81,8 +81,8 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
       return ModulesItemView;
 
     })(Marionette.ItemView);
-    ModulesEmptyView = (function(_super) {
-      __extends(ModulesEmptyView, _super);
+    ModulesEmptyView = (function(superClass) {
+      extend(ModulesEmptyView, superClass);
 
       function ModulesEmptyView() {
         return ModulesEmptyView.__super__.constructor.apply(this, arguments);
@@ -99,13 +99,13 @@ define(['app', 'text!apps/admin-content-modules/templates/outer-template.html'],
       return ModulesEmptyView;
 
     })(Marionette.ItemView);
-    return AdminModulesView.ModulesView = (function(_super) {
-      __extends(ModulesView, _super);
+    return AdminModulesView.ModulesView = (function(superClass) {
+      extend(ModulesView, superClass);
 
       function ModulesView() {
-        this.onNewCollectionFetched = __bind(this.onNewCollectionFetched, this);
-        this.onShow = __bind(this.onShow, this);
-        this.startTraining = __bind(this.startTraining, this);
+        this.onNewCollectionFetched = bind(this.onNewCollectionFetched, this);
+        this.onShow = bind(this.onShow, this);
+        this.startTraining = bind(this.startTraining, this);
         return ModulesView.__super__.constructor.apply(this, arguments);
       }
 

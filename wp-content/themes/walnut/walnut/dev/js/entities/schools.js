@@ -1,11 +1,11 @@
-var __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
 
 define(["app", 'backbone'], function(App, Backbone) {
   App.module("Entities.Schools", function(Schools, App, Backbone, Marionette, $, _) {
     var API, school, schoolCollection;
-    Schools.SchoolModel = (function(_super) {
-      __extends(SchoolModel, _super);
+    Schools.SchoolModel = (function(superClass) {
+      extend(SchoolModel, superClass);
 
       function SchoolModel() {
         return SchoolModel.__super__.constructor.apply(this, arguments);
@@ -24,8 +24,8 @@ define(["app", 'backbone'], function(App, Backbone) {
 
     })(Backbone.Model);
     school = new Schools.SchoolModel;
-    Schools.SchoolCollection = (function(_super) {
-      __extends(SchoolCollection, _super);
+    Schools.SchoolCollection = (function(superClass) {
+      extend(SchoolCollection, superClass);
 
       function SchoolCollection() {
         return SchoolCollection.__super__.constructor.apply(this, arguments);
