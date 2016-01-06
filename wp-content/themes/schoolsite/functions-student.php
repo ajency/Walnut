@@ -35,7 +35,6 @@ function student_fetch_textbooks() {
       $defaults['fetch_all']= true;
     $args = wp_parse_args($args, $defaults);
     $textbooks=get_textbooks($args);
-    restore_current_blog();
     return $textbooks;
 }
 

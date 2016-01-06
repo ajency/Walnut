@@ -166,7 +166,6 @@ function get_textbooks( $args = array() ) {
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
-    restore_current_blog();// added by kapil to fix blog id problem
     return $textbooks_data;
 }
 
