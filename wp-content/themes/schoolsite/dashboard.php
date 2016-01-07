@@ -61,7 +61,7 @@
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/admin.css" rel="stylesheet" type="text/css">
+
 </head>
 <?php 
 $current_user = wp_get_current_user();
