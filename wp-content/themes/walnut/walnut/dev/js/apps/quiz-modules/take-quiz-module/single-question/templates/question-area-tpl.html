@@ -53,8 +53,19 @@
                 Skip <i class="fa fa-step-forward"></i>
             </button>
         {{/show_skip}}
+
+        {{^replay}}
+        {{^allow_submit_answer}} 
+        <button type="button" id="next-question" class="btn btn-default btn-sm btn-small">
+                Next <i class="fa fa-step-forward"></i>
+            </button>
+        {{/allow_submit_answer}} 
+        {{/replay}}
+
+
         {{#show_skip_helper_text}} 
     
+
     {{#allow_submit_answer}}   
    <button type="button" id="submit-question" class="btn btn-success">
         Submit <i class="fa fa-forward"></i> 
