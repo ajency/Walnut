@@ -230,7 +230,7 @@ $(function() {
 
     //Modal for selcting children account if many
 
-    $('#walnut-modal').modal({
+    $('#walnut-modal,#logout-modal').modal({
         backdrop: 'static',
         keyboard: false
     });

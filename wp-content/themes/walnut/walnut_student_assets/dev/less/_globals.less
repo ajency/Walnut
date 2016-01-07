@@ -791,3 +791,41 @@ nav {
         }
     }
 }
+
+
+// ---------------------------
+// LOGOUT CUSTOM MODAL -----------
+// ---------------------------
+
+#logout-modal{
+    &.modal{
+        .modal-body{
+            background: @dashboard-color;
+            color: @color-white;
+            padding: 15px;
+            h4{
+                margin: 0;
+                font-size: 1em;
+            }
+        }
+        .modal-footer{
+            text-align: center;
+            padding: 15px;
+            button{
+                color: @color-white;
+                border: 0;
+                color: #fff;
+                padding: 8px;
+                width: 20%;
+                text-transform: uppercase;
+                .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.2));
+                &.cancel{
+                    background: @button-1-danger;
+                }
+                &.confirm{
+                    background: @dashboard-color;
+                }
+            }
+        }
+    }
+}
