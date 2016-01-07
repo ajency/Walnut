@@ -77,17 +77,14 @@
                 {{/negMarksEnable}}
             </div-->
         </div>
-
+        {{#description.instruction}}
         <div class="row b-grey b-t">
             <div class="col-sm-12">
                 <h3 class="semi-bold"><label class="form-label text-grey">Quiz Instructions</label></h3>
                     {{&description.instruction}}
-                    {{^description.instruction}}
-                        This quiz has no instructions.
-                    {{/description.instruction}}
             </div>
         </div>
-
+        {{/description.instruction}}
     </div>
     
 </div>
