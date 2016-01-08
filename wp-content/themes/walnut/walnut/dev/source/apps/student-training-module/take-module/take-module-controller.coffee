@@ -92,6 +92,7 @@ define ['app'
 					@layout.triggerMethod "change:content:piece", currentItem
 
 				else
+					$(".is-back").remove()
 					@_gotoViewModule()
 
 			_getNextItem : ->

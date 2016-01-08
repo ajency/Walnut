@@ -61,7 +61,18 @@
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-
+    <script type="text/javascript">
+    function logout(){
+        event.preventDefault();
+        $("#logout-modal").modal('hide');
+        location.href="<?php echo wp_logout_url(); ?>";
+    }
+    function close_modal(){
+        event.preventDefault();
+        $("#logout-modal").modal('hide');
+        return false;
+    }
+    </script>
 </head>
 <?php 
 $current_user = wp_get_current_user();
@@ -143,6 +154,13 @@ global $chorus_options;
     Pace.on('hide', function () {
         document.getElementById("site_main_container").setAttribute('class', 'showAll');
     })
+
+    $('#logout').click(function(){
+        $('#logout-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+        });
+    })    
 </script>
 <?php
 
