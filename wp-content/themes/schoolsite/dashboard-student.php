@@ -42,8 +42,15 @@
                                     </div>
                                         <div class="row">
                                         <?php foreach($textbooks as $textbook): ?>
+                                            <?php 
+                                            $str = $textbook->thumbnail;
+                                            $doc = new DOMDocument();
+                                            $doc->loadHTML($str);
+                                            $xpath = new DOMXPath($doc);
+                                            $src = $xpath->evaluate("string(//img/@src)");
+                                            ?>                                            
                                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                                <div class="quiz-cards animated bounceIn">
+                                                <div class="quiz-cards animated bounceIn <?php echo $src=="" ?"no-img":"" ?>">
                                                     <?php $notifications =  $textbook_id_to_name_map[$textbook->term_id] ?>
                                                     <?php $textbook_id_vs_name[$textbook->term_id]= $textbook->name; ?>
                                                    <?php if($notifications>0): ?>
@@ -52,13 +59,6 @@
                                                         <span>Look for the latest quizzes under list of upcoming quizzes on right</span>
                                                     </div>
                                                     <?php endif; ?>
-                                                    <?php 
-                                                    $str = $textbook->thumbnail;
-                                                    $doc = new DOMDocument();
-                                                    $doc->loadHTML($str);
-                                                    $xpath = new DOMXPath($doc);
-                                                    $src = $xpath->evaluate("string(//img/@src)");
-                                                    ?>
                                                     <div class="quiz-img bg-1"><img src="<?php echo $src?>" class="img-responsive center-block"></div>
                                                     <div class="subj-detail">
                                                         <h2 class="subj-detail__heading"><?php echo $textbook->name ?></h2>
