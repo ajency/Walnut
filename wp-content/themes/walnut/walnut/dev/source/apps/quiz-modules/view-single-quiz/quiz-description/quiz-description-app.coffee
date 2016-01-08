@@ -26,7 +26,7 @@ define ['app'
                           i++
 
                         if(total > c)
-                            bootbox.confirm 'Quiz could not be generated as there are less number of questions due to deletion.',(result)=>
+                            bootbox.confirm 'Quiz could not be generated as there are less number of questions!',(result)=>
                                 if result
                                     $("#take-quiz").hide()
                                 else 

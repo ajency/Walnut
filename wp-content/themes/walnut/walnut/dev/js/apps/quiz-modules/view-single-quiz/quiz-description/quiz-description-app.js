@@ -32,7 +32,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
               i++;
             }
             if (total > c) {
-              bootbox.confirm('Quiz could not be generated as there are less number of questions due to deletion.', (function(_this) {
+              bootbox.confirm('Quiz could not be generated as there are less number of questions!', (function(_this) {
                 return function(result) {
                   if (result) {
                     return $("#take-quiz").hide();
