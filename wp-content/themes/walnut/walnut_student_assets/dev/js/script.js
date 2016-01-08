@@ -235,6 +235,9 @@ $(function() {
         keyboard: false
     });
 
+
+
+
     $('#logout').click(function(){
         $('#logout-modal').modal({
         backdrop: 'static',
