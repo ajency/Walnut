@@ -81,6 +81,9 @@ if( isset($current_user->roles)){
         if($value=='student'){
             require_once('header-student.php');               
             break;
+        }else if ($value=='school-admin') {
+           echo '<link href="'.get_template_directory_uri().'/walnut/dev/css/admin.css" rel="stylesheet" type="text/css"/>';
+           break;
         }
     }
  

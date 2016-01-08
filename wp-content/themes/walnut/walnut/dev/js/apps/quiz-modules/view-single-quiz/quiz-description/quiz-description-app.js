@@ -12,34 +12,36 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       }
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
-        var c, i, r, total, view;
+        var c, i, r, ref, total, view;
         $('.navbar .container-fluid').css("visibility", "visible");
         this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, this.quizResponseSummary = opts.quizResponseSummary;
-        if (this.model._fetch.responseJSON.data.content_pieces !== void 0) {
-          r = this.model._fetch.responseJSON.data.content_layout;
-          console.log(this.model._fetch.responseJSON.data);
-          c = this.model._fetch.responseJSON.data.content_pieces.length;
-          total = 0;
-          i = 0;
-          while (i < r.length) {
-            if (r[i].data === void 0) {
-              total++;
+        if ((ref = Marionette.getOption(this, 'display_mode')) !== 'replay' && ref !== 'quiz_report') {
+          if (this.model._fetch.responseJSON.data.content_pieces !== void 0) {
+            r = this.model._fetch.responseJSON.data.content_layout;
+            console.log(this.model._fetch.responseJSON.data);
+            c = this.model._fetch.responseJSON.data.content_pieces.length;
+            total = 0;
+            i = 0;
+            while (i < r.length) {
+              if (r[i].data === void 0) {
+                total++;
+                i++;
+                continue;
+              }
+              total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3);
               i++;
-              continue;
             }
-            total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3);
-            i++;
-          }
-          if (total > c) {
-            bootbox.confirm('Quiz could not be generated as there are less number of questions due to deletion.', (function(_this) {
-              return function(result) {
-                if (result) {
-                  return $("#take-quiz").hide();
-                } else {
-                  return $("#take-quiz").hide();
-                }
-              };
-            })(this));
+            if (total > c) {
+              bootbox.confirm('Quiz could not be generated as there are less number of questions due to deletion.', (function(_this) {
+                return function(result) {
+                  if (result) {
+                    return $("#take-quiz").hide();
+                  } else {
+                    return $("#take-quiz").hide();
+                  }
+                };
+              })(this));
+            }
           }
         }
         this.view = view = this._getQuizDescriptionView();
