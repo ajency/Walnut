@@ -11,6 +11,7 @@ define ['app'
                 
                 #code added by kapil to block the quiz generations if there are insufficient questions due to deletion of set added questions STARTS
                 r = @model._fetch.responseJSON.data.content_layout
+                console.log(@model._fetch.responseJSON.data)
                 c = @model._fetch.responseJSON.data.content_pieces.length
                 total = 0
                 i = 0

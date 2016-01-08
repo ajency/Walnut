@@ -16,6 +16,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         $('.navbar .container-fluid').css("visibility", "visible");
         this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, this.quizResponseSummary = opts.quizResponseSummary;
         r = this.model._fetch.responseJSON.data.content_layout;
+        console.log(this.model._fetch.responseJSON.data);
         c = this.model._fetch.responseJSON.data.content_pieces.length;
         total = 0;
         i = 0;
