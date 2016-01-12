@@ -25,6 +25,9 @@ define(['app'], function(App) {
         if (!this.model.get('video_ids').length) {
           return;
         }
+        this.model.set({
+          'autoplay': _.toBool(this.model.get('autoplay'))
+        });
         this.videos = this.model.get('videoUrls');
         this.index = 0;
         this.$el.find('video').on('ended', (function(_this) {
@@ -36,12 +39,10 @@ define(['app'], function(App) {
           this._setVideoList();
         }
         this.$el.find(".playlist-video[data-index='0']").addClass('currentVid');
-        return this._addVideoElement(this.videos[0]);
+        return this._addVideoElement(this.videos[0], this.model.get('autoplay'));
       };
 
       VideoView.prototype._setVideoList = function() {
-        console.log('@model');
-        console.log(this.model);
         this.$el.append('<div id="playlist-hover" class="playlistHover"> <div class="row m-l-0 m-r-0 p-b-5 m-b-5"> <div class="col-sm-8 nowPlaying"> <span class="small text-muted">Now Playing:</span> <span id="now-playing-tag">' + this.model.get('title')[0] + '</span> </div> <div class="col-sm-4"> <button class="btn btn-white btn-small pull-right show-playlist"> <i class="fa fa-list-ul"></i> Playlist </button> </div> </div> <div class="row m-l-0 m-r-0 playlist-hidden vidList animated fadeInRight" style="display: none;"> <div class="video-list col-sm-8" id="video-list"></div> <div class="col-sm-4 p-t-5 m-b-5"> <button class="btn btn-info btn-small pull-right" id="next"> <i class="fa fa-step-forward"></i> </button> <button class="btn btn-info btn-small pull-right m-r-10" id="prev"> <i class="fa fa-step-backward"></i> </button> </div> </div> </div>');
         this.$el.find('#video-list').empty();
         return _.each(this.model.get('title'), (function(_this) {
@@ -93,15 +94,31 @@ define(['app'], function(App) {
       };
 
       VideoView.prototype._addVideoElement = function(videoUrl, autoplay) {
-        var vidID;
+        var params, startTime, vidID;
         if (autoplay == null) {
           autoplay = false;
         }
         this.$el.find('.videoContainer').empty();
         if (_.str.contains(videoUrl, 'youtube.com')) {
+          autoplay = autoplay ? 1 : 0;
+          params = "&autoplay=" + autoplay;
+          startTime = this.model.get('startTime') ? this.model.get('startTime') : 0;
+          params += "&start=" + startTime;
+          if (this.model.get('endTime') && this.model.get('endTime') !== '0') {
+            params += "&end=" + this.model.get('endTime');
+          }
           vidID = _.str.strRightBack(videoUrl, '?v=');
-          return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0&autoplay=1" frameborder="0"> </iframe></div>');
+          return this.$el.find('.videoContainer').html('<div class="videoWrapper"> <iframe width="100%" height="349" src="https://www.youtube.com/embed/' + vidID + '?rel=0&amp;showinfo=0' + params + '" frameborder="0"> </iframe></div>');
         } else {
+          videoUrl += "#t=";
+          if (this.model.get('startTime')) {
+            videoUrl += this.model.get('startTime');
+          } else {
+            videoUrl += 0;
+          }
+          if (this.model.get('endTime') && this.model.get('endTime') !== '0') {
+            videoUrl += "," + this.model.get('endTime');
+          }
           this.$el.find('.videoContainer').html('<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%" poster="' + SITEURL + '/wp-content/themes/walnut/images/video-poster.jpg" data-setup="{}" controls src="' + videoUrl + '"> </video>');
           this.$el.find('video')[0].load();
           return this.$el.find('video')[0].play();

@@ -20,7 +20,7 @@ function ajax_get_content_pieces() {
 add_action('wp_ajax_get-content-pieces', 'ajax_get_content_pieces');
 
 function ajax_get_single_content_piece() {
-    
+
     $id=$_GET['ID'];
     $content_pieces = get_single_content_piece($id);
 
@@ -89,4 +89,3 @@ function ajax_get_adjacent_content_pieces(){
     wp_send_json(array('status'=>$status,'items'=>$content_pieces));
 }
 add_action('wp_ajax_get-adjacent-content-pieces', 'ajax_get_adjacent_content_pieces');
-

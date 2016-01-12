@@ -1,6 +1,9 @@
 <?php
 
 require_once 'functions.php';
+
+require_once 'ImportContentPiece/ImportContentPiece.php';
+
 require_once 'content_pieces_import.php';
 
 function ajax_save_content_element() {
@@ -61,6 +64,14 @@ function ajax_update_content_piece_status(){
 
     if(!isset($_POST['IDs']) || empty($_POST['IDs']) || !isset($_POST['status']))
         return new WP_Error('invalid_request_data', __('Invalid ID or status') );
+
+
+    foreach ($ids as $id){
+        if(!$id) continue;
+        $data= array('ID'=>$id,'post_status'=>$_POST['status']);
+        $content_id = wp_update_post($data);
+    }
+
     $in = implode(",", $ids);
 
     global $wpdb;
@@ -75,12 +86,11 @@ function ajax_update_content_piece_status(){
         }
     }*/
 
+
     return wp_send_json(array('code' => 'OK'));
 
 }
 add_action('wp_ajax_update-content-piece-status', 'ajax_update_content_piece_status');
-
-
 
 
 function ajax_bulk_move_content_pieces(){
@@ -112,3 +122,4 @@ function ajax_delete_content_module(){
 
 }
 add_action('wp_ajax_delete-content-module', 'ajax_delete_content_module');
+

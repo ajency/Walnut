@@ -27,7 +27,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, studentTrainingModule = opts.studentTrainingModule;
-        return this._startTakeQuiz();
+        this._startTakeQuiz();
+        return App.vent.bind("closed:quiz", this._autosaveQuestionTime);
       };
 
       TakeQuizController.prototype._startTakeQuiz = function() {
@@ -82,7 +83,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         this.listenTo(this.layout.quizTimerRegion, "end:quiz", this._endQuiz);
         this.listenTo(this.layout.quizTimerRegion, "show:single:quiz:app", this._showSingleQuizApp);
         this.listenTo(this.layout.quizProgressRegion, "change:question", this._changeQuestion);
-        return setInterval((function(_this) {
+        setInterval((function(_this) {
           return function() {
             var time;
             time = _this.timerObject.request("get:elapsed:time");
@@ -91,6 +92,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             }
           };
         })(this), 30000);
+        return $(window).on('beforeunload', (function(_this) {
+          return function() {
+            _this._autosaveQuestionTime();
+            return 'Quiz in progress';
+          };
+        })(this));
       };
 
       TakeQuizController.prototype._autosaveQuestionTime = function() {
@@ -100,7 +107,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
-        pausedQuestionTime = 0;
         if ((!questionResponseModel) || ((ref = questionResponseModel.get('status')) === 'not_started' || ref === 'paused')) {
           if (questionResponseModel) {
             console.log(questionResponseModel.get('status'));

@@ -65,7 +65,10 @@ define ['app'],(App)->
 				else
 					@$el.find '#autoplayFalse'
 					.attr 'checked', true
-
+				
+				if @model.attributes.videoUrl==""
+					@$el.find '#autoplayTrue'
+					.attr 'checked', true
 
 			# function for changing model on change of marks dropbox
 			_changeMarks:(evt)->

@@ -1,11 +1,11 @@
 define ['app'
-        'controllers/region-controller'
-        'apps/content-creator/element-box/elementboxapp'
-        'apps/content-creator/content-builder/app'
-        'apps/content-creator/property-dock/controller'
-        'apps/content-creator/options-bar/options-bar-app'
-        'apps/content-creator/content-pieces-listing/app'
-        'apps/content-creator/grading-parameter/grading-parameter-controller'
+		'controllers/region-controller'
+		'apps/content-creator/element-box/elementboxapp'
+		'apps/content-creator/content-builder/app'
+		'apps/content-creator/property-dock/controller'
+		'apps/content-creator/options-bar/options-bar-app'
+		'apps/content-creator/content-pieces-listing/app'
+		'apps/content-creator/grading-parameter/grading-parameter-controller'
 ], (App, RegionController)->
 	App.module "ContentCreator.Controller", (Controller, App)->
 		class Controller.ContentCreatorController extends RegionController
@@ -34,8 +34,6 @@ define ['app'
 				# get the main layout for the content creator
 				@layout = @_getContentCreatorLayout()
 
-
-
 				@eventObj = App.createEventObject()
 
 				# listen to "show" event of the layout and start the
@@ -53,17 +51,15 @@ define ['app'
 
 				@listenTo @layout.optionsBarRegion, 'close:grading:parameter', @_closeGradingParameter
 
-				@listenTo @layout.contentPiecesListRegion, 'change:content:piece', (model)=>
-					App.navigate "edit-content/#{model.id}"
-					@contentPieceModel = model
-					@_showViews()
+				@listenTo @layout.contentPiecesListRegion, 'change:content:piece',(nextID) =>
+					@layout.optionsBarRegion.trigger "change:content:piece", nextID
 
 				# show the layout
 				App.execute "when:fetched", @contentPieceModel, =>
-					present_in = @contentPieceModel.get 'present_in_modules'					
+					present_in = @contentPieceModel.get 'present_in_modules'
 					if not _.isEmpty present_in
 						view = new CannotEditView model: @contentPieceModel
-						@show view							
+						@show view
 					else
 						@show @layout, loading : true
 
@@ -115,8 +111,12 @@ define ['app'
 
 			template : '<div id="content-pieces-list-region"></div>
 						<div id="options-bar-region"></div>
+						<input type="hidden"
+							name = "cp_not_saved"
+							value= false
+							data-description="content piece modified but not saved" />
 						<div class="page-title">
-						    <h3>Add <span class="semi-bold">Question</span></h3>
+							<h3>Add <span class="semi-bold">Question</span></h3>
 						</div>
 						<div class="creator">
 							<div class="tiles" id="toolbox"></div>
@@ -132,10 +132,10 @@ define ['app'
 				optionsBarRegion : '#options-bar-region'
 				gradingParameterRegion : '#grading-parameter'
 				contentPiecesListRegion: '#content-pieces-list-region'
-				
+
 
 		class CannotEditView extends Marionette.ItemView
-			
+
 			template : '<div class="tiles white grid simple vertical green animated slideInRight">
 							<div class="grid-title no-border">
 								Cannot Edit This Content Piece
@@ -148,7 +148,7 @@ define ['app'
 											 {{#moduleItems}}
 												<li class="list-group-item"><a href="{{url}}">{{name}}</a></li>
 											{{/moduleItems}}
-										</ul> 
+										</ul>
 										<h4>You can clone it to create another content piece.</h4>
 										<a class="btn btn-info" href="{{urlBase}}/{{ID}}">View Content Piece</a>
 										<a class="btn btn-info clone_item">Clone Content Piece</a>
@@ -171,7 +171,7 @@ define ['app'
 				data.urlBase += if data.content_type is 'student_question' then 'quiz' else 'module'
 				console.log data
 				data
-				
+
 			events:->
 				'click .clone_item' : 'cloneItem'
 

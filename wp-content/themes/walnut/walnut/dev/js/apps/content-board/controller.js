@@ -37,6 +37,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
           return function() {
             var fillElements;
             fillElements = _this.startFillingElements();
+            _this.view.$el.find('.cke_widget_drag_handler_container').remove();
             return fillElements.done(function() {
               return setTimeout(function() {
                 $('#loading-content-board').remove();

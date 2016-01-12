@@ -3108,9 +3108,17 @@ select:before {
   height: 100%;
 }
 
+a.browse-content-pieces-item{height:160px;}
+
+#textbooks.list.myClass .txtbook.noCursor {
+  cursor: auto;
+}
+
+
 .media_times > input[type="text"] {
   width: 100%;
 }
 
 a.browse-content-pieces-item{height:160px;}
+
 /*# sourceMappingURL=custom.css.map */

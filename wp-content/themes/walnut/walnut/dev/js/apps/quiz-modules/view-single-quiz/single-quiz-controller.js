@@ -34,6 +34,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype.initialize = function(opts) {
         var d_mode, fetchQuestionResponseCollection, quiz_id;
+        $(window).off('beforeunload');
         quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, studentTrainingModule = opts.studentTrainingModule;
         quizResponseSummary = opts.quizResponseSummary, this.quizResponseSummaryCollection = opts.quizResponseSummaryCollection, display_mode = opts.display_mode, this.student = opts.student, d_mode = opts.d_mode;
         if (!quizModel) {

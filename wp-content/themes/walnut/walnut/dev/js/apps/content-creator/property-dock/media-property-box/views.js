@@ -59,9 +59,12 @@ define(['app'], function(App) {
           this.$el.find('.media_times').removeClass('hidden');
         }
         if (_.toBool(this.model.get('autoplay'))) {
-          return this.$el.find('#autoplayTrue').attr('checked', true);
+          this.$el.find('#autoplayTrue').attr('checked', true);
         } else {
-          return this.$el.find('#autoplayFalse').attr('checked', true);
+          this.$el.find('#autoplayFalse').attr('checked', true);
+        }
+        if (this.model.attributes.videoUrl === "") {
+          return this.$el.find('#autoplayTrue').attr('checked', true);
         }
       };
 

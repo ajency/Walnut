@@ -20,12 +20,15 @@
         ?>        
         <script type="text/javascript">
         function logout(){
-          y = confirm("Do you really wish to logout?");    
-          if(y){
+            event.preventDefault();
+            $("#logout-modal").modal('hide');
             location.href="<?php echo wp_logout_url(); ?>";
-          }
         }
-        
+        function close_modal(){
+            event.preventDefault();
+            $("#logout-modal").modal('hide');
+            return false;
+        }
         </script>
         <!-- Sites Styles -->
         <!-- Bootstrap Core CSS -->
@@ -46,6 +49,25 @@
 
             </head>
             <body>
+                <div class="modal fade" id="logout-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <h4>Do you really wish to logout?</h4>
+                      </div>
+                      <div class="modal-footer">
+                        <form action="">
+                            <button class="btn btn-default cancel" onclick="close_modal()">
+                                Cancel
+                            </button>
+                            <button class="btn btn-default confirm" onclick="logout()">
+                                Ok
+                            </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>            
                 <!-- Dashboard-Header -->
                 <?php if(!in_array($page_slug,$login_header_pages)): ?>  
                 <header class="body-push">
@@ -89,7 +111,7 @@
                                     <?php endif;?>
 
                                     <?php if(in_array($page_slug, array('dashboard','change-password-student','dashboard-student','lecture-listview-student', 'quiz-listview-student', 'lecture-start-student', 'quiz-start-student'))): ?>
-                                    <li class="log-session"><a onclick="logout()" href="javascript:"  class="btn fab-header"><i class="fa fa-power-off"></i></a></li>
+                                    <li class="log-session"><a id="logout" href="javascript:"  class="btn fab-header"><i class="fa fa-power-off"></i></a></li>
                                     <?php endif;?>
 
                        

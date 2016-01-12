@@ -16,17 +16,17 @@ define ['app',
 				'change #secs' : (e)->
 					@trigger "fetch:subsections", $(e.target).val()
 
-				'change #qType' : '_changeOfQuestionType'
+				'change #qType'           : '_changeOfQuestionType'
 
-				'click  #save-question': 'saveQuestionSettings'
+				'click #save-question'    : 'onSaveQuestionSettings'
 
 				'click #preview-question' : 'previewQuestion'
-				
-				'click #close-content-creator' :-> 
+
+				'click #close-content-creator' :->
 					bootbox.confirm 'Are you sure you want to close the content creator? Caution: Unsaved content will be lost.', (result)->
 						App.navigate '',true if result
-				
-				'click #clone-question':-> 
+
+				'click #clone-question':->
 					cpModel = App.request "new:content:piece"
 					cpModel.set @model.toJSON()
 					cpModel.duplicate()
@@ -152,14 +152,20 @@ define ['app',
 				else
 					@trigger 'close:grading:parameter'
 
-			saveQuestionSettings:->
+			onSaveQuestionSettings:->
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
 					@trigger "save:data:to:model", data
+				else
+					firstErr = _.first @$el.find '.form-control.error'
+					$(firstErr).focus()
+					if _.str.contains firstErr.id, 's2id'
+						eleID = _.str.strRight firstErr.id,'_'
+						@$el.find "##{eleID}"
+						.data('select2').open()
 
 			previewQuestion:->
 				if @model.get('content_type') is 'student_question'
 					window.open SITEURL + "/#dummy-quiz/"+@model.id, 'target':'blank'
 				else
 					window.open SITEURL + "/#dummy-module/"+@model.id, 'target':'blank'
-

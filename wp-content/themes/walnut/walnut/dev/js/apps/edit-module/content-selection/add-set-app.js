@@ -16,6 +16,13 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       Controller.prototype.initialize = function(options) {
         this.contentPiecesCollection = options.contentPiecesCollection, this.contentGroupCollection = options.contentGroupCollection, this.selectedFilterParamsObject = options.selectedFilterParamsObject;
         this.view = this._getView();
+        this.listenTo(this.region, "update:collection", (function(_this) {
+          return function() {
+            var filters;
+            filters = _this.selectedFilterParamsObject.request('get:selected:parameters');
+            return _this.view.triggerMethod('set:level:count');
+          };
+        })(this));
         this.listenTo(this.view, 'get:textbook:filter', function() {
           var filters;
           filters = this.selectedFilterParamsObject.request('get:selected:parameters');
@@ -83,13 +90,13 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       SetView.prototype.onShow = function() {
         this.listenTo(this.collection, 'add remove', (function(_this) {
           return function() {
-            return _this._setLevelCount();
+            return _this.onSetLevelCount();
           };
         })(this));
-        return this._setLevelCount();
+        return this.onSetLevelCount();
       };
 
-      SetView.prototype._setLevelCount = function() {
+      SetView.prototype.onSetLevelCount = function() {
         var count, i, j, levelCount, ref, results;
         levelCount = this.collection.countBy('difficulty_level');
         this.$el.find('#selectAll').prop('checked', false);

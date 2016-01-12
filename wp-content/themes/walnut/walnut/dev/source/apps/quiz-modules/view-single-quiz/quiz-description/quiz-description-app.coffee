@@ -10,24 +10,27 @@ define ['app'
                 {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
                 
                 #code added by kapil to block the quiz generations if there are insufficient questions due to deletion of set added questions STARTS
-                r = @model._fetch.responseJSON.data.content_layout
-                c = @model._fetch.responseJSON.data.content_pieces.length
-                total = 0
-                i = 0
-                while i < r.length
-                  if r[i].data  == undefined
-                    total++
-                    i++
-                    continue
-                  total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3)
-                  i++
+                if Marionette.getOption(@, 'display_mode') not in ['replay','quiz_report']
+                    if @model._fetch.responseJSON.data.content_pieces != undefined
+                        r = @model._fetch.responseJSON.data.content_layout
+                        console.log(@model._fetch.responseJSON.data)
+                        c = @model._fetch.responseJSON.data.content_pieces.length
+                        total = 0
+                        i = 0
+                        while i < r.length
+                          if r[i].data  == undefined
+                            total++
+                            i++
+                            continue
+                          total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3)
+                          i++
 
-                if(total > c)
-                    bootbox.confirm 'Quiz could not be generated as there are less number of questions due to deletion.',(result)=>
-                        if result
-                            $("#take-quiz").hide()
-                        else 
-                            $("#take-quiz").hide()
+                        if(total > c)
+                            bootbox.confirm 'Quiz could not be generated as there are less number of questions!',(result)=>
+                                if result
+                                    $("#take-quiz").hide()
+                                else 
+                                    $("#take-quiz").hide()
                 #code added by kapil to block the quiz generations if there are insufficient questions due to deletion of set added questions ENDS
 
 

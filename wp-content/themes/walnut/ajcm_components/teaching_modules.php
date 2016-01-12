@@ -3,8 +3,8 @@
 function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 
 	global $aj_comm;
-	
-	$template_data['name'] 		= 'taught-in-class-parent-mail'; 
+
+	$template_data['name'] 		= 'taught-in-class-parent-mail';
 
 	$blog_data= get_blog_details($comm_data['blog_id']);
 
@@ -12,7 +12,7 @@ function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 
 	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
-    
+
     $module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
 	$division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
 
@@ -44,15 +44,15 @@ function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 }
 
 function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
-    
+
     global $aj_comm;
-    
+
 	$template_data['name'] 		= 'taught-in-class-parent-mail';
 
 	$blog_data= get_blog_details($comm_data['blog_id']);
 
 	$template_data['subject'] 	= $blog_data->blogname.': Training module completed';
-    
+
 	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse Learning';
 
@@ -66,23 +66,23 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 	foreach($recipients_email as $user_value){
 
 	        $overwrite_vars = array();
-	        
+
 	        $user = get_userdata($user_value->user_id );
 
 	        $child = get_user_meta($user_value->user_id, 'parent_of', true);
 
-                $child = get_parent_of_formated($child); 
-                
+                $child = get_parent_of_formated($child);
+
                 $student_name = '';
 	        if(!empty($child)){
                     foreach($child as $child_val){
 	        	$studentdata 	= get_userdata($child_val);
                         $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
                         $student_division = get_user_meta($studentdata->ID,'student_division', true);
-                        
+
                         if($division != $student_division)
                             continue;
-                        
+
                         if($student_name != ''){
                             $student_name .= ',';
                         }
@@ -119,10 +119,11 @@ function get_taught_in_class_template_data($comm_data, $module_id, $division){
 
     switch_to_blog($comm_data['blog_id']);
 
+
     $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
 
     $module_details= get_single_content_module($module_id,$division,$school_admin);
-    
+
     $module_end_date = get_module_end_date($module_id, $comm_data['blog_id']);
 
     $terms= $module_details->term_ids;
@@ -169,13 +170,13 @@ function getvars_teaching_modules_report($recipients_email,$comm_data){
 
 	global $aj_comm;
 
-	$template_data['name'] 		= 'training-modules-report'; 
+	$template_data['name'] 		= 'training-modules-report';
 
 	$template_data['subject'] 	= 'Synapse Notification: Training module report for today';
 
 	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
-    
+
     $blog_data= get_blog_details($comm_data['blog_id'], true);
 
 	$template_data['global_merge_vars'] = array();
@@ -216,7 +217,7 @@ function get_training_modules_report_data($blog_id){
     global $wpdb;
 
     switch_to_blog($blog_id);
-    
+
     $tbody = '';
 
     $style= " style='border:1px solid #000; color:#000; padding: 5px; font-size:14px'";
@@ -240,7 +241,7 @@ function get_training_modules_report_data($blog_id){
 
             $completed = $pending = 0;
             $ids = array();
-            $ids = __u::pluck($mod,'collection_id');  
+            $ids = __u::pluck($mod,'collection_id');
             $ids = __u::uniq($ids,'collection_id');
 
             foreach($ids as $id){
@@ -260,10 +261,10 @@ function get_training_modules_report_data($blog_id){
                         <td $style>$taken</td>
                         <td $style>$completed</td>
                     </tr>";
-            
+
         }
     }
-    
+
     if (!$tbody)
         $tbody = "<tr>
                 <td colspan=3 $style>No Modules were taught today</td>

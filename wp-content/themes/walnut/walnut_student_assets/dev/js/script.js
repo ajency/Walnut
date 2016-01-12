@@ -237,4 +237,13 @@ $(function() {
 
 
 
+
+    $('#logout').click(function(){
+        $('#logout-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+        });
+    })
+
+
 });
