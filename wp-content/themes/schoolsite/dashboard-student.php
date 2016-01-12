@@ -22,6 +22,7 @@
 
             foreach ($textbooks as $key => $value) {
                 $textbook_id_to_name_map[$value->term_id] = 0;
+                $value->name= substr($value->name, 0, strpos($value->name, "("));
             }
             foreach ($upcoming_quizes as $key => $quiz) {
                 $textbook_id_to_name_map[$quiz['textbook_id']]++;
