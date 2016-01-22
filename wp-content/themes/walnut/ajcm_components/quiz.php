@@ -8,7 +8,7 @@ function getvars_quizzes_taken_report($recipients_email,$comm_data){
 
     $template_data['subject']   = 'Synapse Notification: Quiz report for today';
 
-    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_email'] = 'no-reply@synapselearning.net';
     $template_data['from_name'] = 'Synapse';
 
     $blog_data= get_blog_details($comm_data['blog_id'], true);
@@ -50,7 +50,7 @@ function getvars_quiz_completed_student_mail($recipients_email,$comm_data){
 
     $template_data['subject']   = $blog_data->blogname.': You have successfully completed a Quiz!';
 
-    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_email'] = 'no-reply@synapselearning.net';
     $template_data['from_name'] = 'Synapse';
 
     $quiz_id        = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
@@ -83,7 +83,7 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
 
     $template_data['subject']   = $blog_data->blogname.':  Quiz report for student ';
 
-    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_email'] = 'no-reply@synapselearning.net';
     $template_data['from_name'] = 'Synapse';
 
     $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');

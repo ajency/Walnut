@@ -263,7 +263,7 @@
                                                       <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden"> 
                                                       <label class="text-center">Enter Sync Password: </label> 
                                                       <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>  
-                                                      <h4>If you have been provided a new sync password by Network Admin, please enter the same in the reset sync box else you can ignore this. For assistance and support contact us at <a href="mailto:support@walnutedu.org">support@walnutedu.org</a></h4>
+                                                      <h4>If you have been provided a new sync password by Network Admin, please enter the same in the reset sync box else you can ignore this. For assistance and support contact us at <a href="mailto:support@synapselearning.net">support@synapselearning.net</a></h4>
                                                       <br/>
                                                       <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block">
                                                       <span id="syncResetPasswordButtonText" class="bold">Reset</span></button>
@@ -287,7 +287,7 @@
                                                       <input id="validate_blog_id" value="<?php echo $blog_id ?>" type="hidden">
                                                       <label class="text-center">Enter Sync Password: </label>  
                                                       <input type="password" id="validate_pwd" value="" class="h-align-middle block"/>   
-                                                      <h4>This is not the password you use to log in, it is the sync password provided by the Network Admin. If you are unable to use it please contact us at <a href="mailto:support@walnutedu.org">support@walnutedu.org</a> to send you a new sync password</h4>
+                                                      <h4>This is not the password you use to log in, it is the sync password provided by the Network Admin. If you are unable to use it please contact us at <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> to send you a new sync password</h4>
                                                       <br/>
                                                       <button name="validate-blog-sync-user" id="validate-blog-sync-user" type="button" class="btn btn-success h-align-middle block"><span id="syncValidateButtonText" class="bold">Validate</span></button>
                                                       <h5 class="m-t-5 semi-bold text-center text-error status-msg error_msg"></h5>
@@ -427,7 +427,7 @@ jQuery(document).ready(function() {
       var login_cookie_name = jQuery('#login_cookie_name').val();
       var login_cookie_value = jQuery('#login_cookie_value').val();      
        jQuery('#sync-media').prop('disabled', true);
-       jQuery(referer).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@walnutedu.org">support@walnutedu.org</a> if the problem persists');
+       jQuery(referer).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
        jQuery.ajax({  
                 type: 'POST',  
                 url: AJAXURL,  
@@ -565,7 +565,7 @@ jQuery(document).ready(function() {
     function resync_school_data_sync(syncreference,lastsync,syncstatus,filepath,lastsync_id,blog_id){
         jQuery(syncreference).prop('disabled', true);
         jQuery('#sync-media').prop('disabled', true);
-        jQuery(syncreference).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@walnutedu.org">support@walnutedu.org</a> if the problem persists');
+        jQuery(syncreference).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
         jQuery(syncreference).next().next().show();
         if(syncstatus == 'downloaded'){
             school_data_sync_import(syncreference,lastsync_id);
@@ -688,7 +688,7 @@ jQuery(document).ready(function() {
                 jQuery(this).prop('disabled', true); 
                 jQuery('#sync-data').prop('disabled', true);
                 jQuery(this).next().text('Downloading images...');   
-                jQuery(this).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@walnutedu.org">support@walnutedu.org</a> if the problem persists');
+                jQuery(this).next().next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
                 jQuery(this).next().next().show();               
                 var referer = jQuery(this);
                 var login_cookie_name = jQuery('#login_cookie_name').val();

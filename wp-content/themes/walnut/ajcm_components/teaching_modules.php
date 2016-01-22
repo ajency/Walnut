@@ -10,7 +10,7 @@ function getvars_taught_in_class_student_mail($recipients_email,$comm_data){
 
 	$template_data['subject'] 	= $blog_data->blogname.': Training module completed';
 
-	$template_data['from_email'] = 'no-reply@walnutedu.org';
+	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
 
     $module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
@@ -53,7 +53,7 @@ function getvars_taught_in_class_parent_mail($recipients_email,$comm_data){
 
 	$template_data['subject'] 	= $blog_data->blogname.': Training module completed';
 
-	$template_data['from_email'] = 'no-reply@walnutedu.org';
+	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse Learning';
 
 	$module_id   = $aj_comm->get_communication_meta($comm_data['id'],'module_id');
@@ -170,7 +170,7 @@ function getvars_teaching_modules_report($recipients_email,$comm_data){
 
 	$template_data['subject'] 	= 'Synapse Notification: Training module report for today';
 
-	$template_data['from_email'] = 'no-reply@walnutedu.org';
+	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
 
     $blog_data= get_blog_details($comm_data['blog_id'], true);

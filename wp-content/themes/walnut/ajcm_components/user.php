@@ -12,7 +12,7 @@ function getvars_reset_password($recipients_email,$comm_data){
 
 	$template_data['subject'] 	= $blog_data->blogname.': Reset your password';
 
-	$template_data['from_email'] = 'no-reply@walnutedu.org';
+	$template_data['from_email'] = 'no-reply@synapselearning.net';
 	$template_data['from_name'] = 'Synapse';
     
 	$template_data['global_merge_vars'][]=array(
