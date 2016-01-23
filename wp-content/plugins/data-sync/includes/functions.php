@@ -242,7 +242,9 @@ $wpdb->query("TRUNCATE TABLE ".$table."");
 /*if($file == 'options.csv'){
 update_options_csv($target.'/'.$file);
 }else{*/
+if($file !== 'options.csv'){
 $tables[] = load_csv_to_table($target.'/'.$file,$table);
+}
 //}
 
 
