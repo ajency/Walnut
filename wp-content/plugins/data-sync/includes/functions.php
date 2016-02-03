@@ -237,16 +237,9 @@ $table = $wpdb->prefix . pathinfo($file)['filename'];
 
 if($file !== 'options.csv'){
 $wpdb->query("TRUNCATE TABLE ".$table."");
-}
 
-/*if($file == 'options.csv'){
-update_options_csv($target.'/'.$file);
-}else{*/
-if($file !== 'options.csv'){
 $tables[] = load_csv_to_table($target.'/'.$file,$table);
 }
-//}
-
 
 }
 
@@ -311,7 +304,7 @@ gzclose($file);
 function load_csv_to_table($file,$table){
 global $wpdb;
 $sql = "LOAD DATA INFILE '".$file."' INTO TABLE ".$table." CHARACTER SET UTF8
-        FIELDS TERMINATED BY ',' ENCLOSED BY '\"'";
+        FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
 return $wpdb->query($sql);
 }
 
