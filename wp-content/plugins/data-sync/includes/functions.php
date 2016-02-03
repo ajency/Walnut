@@ -304,7 +304,7 @@ gzclose($file);
 function load_csv_to_table($file,$table){
 global $wpdb;
 $sql = "LOAD DATA INFILE '".$file."' INTO TABLE ".$table." CHARACTER SET UTF8
-        FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
+        FIELDS TERMINATED BY ',' ENCLOSED BY '\"'";
 return $wpdb->query($sql);
 }
 
