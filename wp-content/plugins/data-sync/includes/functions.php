@@ -147,6 +147,8 @@ function download_each_tables(){
     $table = $_REQUEST['table'];
     $url = $r_url.'/'.$table.'.csv.gz';
 
+    set_time_limit(0);
+
 
     if($table == 'terms'){
         $id = uniqid();
@@ -168,7 +170,7 @@ function download_each_tables(){
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_AUTOREFERER, true);
     curl_setopt($ch, CURLOPT_BINARYTRANSFER,true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_FILE, $zipResource);
