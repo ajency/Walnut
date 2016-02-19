@@ -560,7 +560,7 @@ function write_quiz_question_response($args){
             'question_response' => maybe_serialize($args['question_response']),
             'time_taken' => $args['time_taken'],
             'marks_scored' => $args['marks_scored'],
-            'status' => $args['status']    );
+            'status' => $args['status']);
 
     //handling sync status for standalone sites.
     if (!is_multisite())

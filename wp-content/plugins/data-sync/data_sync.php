@@ -30,6 +30,7 @@ function set_ds_plugin_options() {
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_data` (
 			   `id` int(11) NOT NULL primary key AUTO_INCREMENT,
                `last_sync` timestamp NOT NULL,
+               `type` VARCHAR(30) NOT NULL,
                `status` VARCHAR(30) NOT NULL
             )";
 

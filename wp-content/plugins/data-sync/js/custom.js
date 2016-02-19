@@ -5,10 +5,10 @@ jQuery(document).ready(function() {
 
   jQuery("#vsync-data").on('click',function(){
 
-    jQuery("#upsyncstatus").empty();
+    //jQuery("#upsyncstatus").empty();
     jQuery("#downsyncstatus").empty();
 
-    jQuery("#upsyncstatus").append('<h3>Up-Sync</h3>');
+    //jQuery("#upsyncstatus").append('<h3>Up-Sync</h3>');
     jQuery("#downsyncstatus").append('<h3>Down-Sync</h3>');
 
     //initiate_up_sync();
@@ -20,10 +20,10 @@ jQuery(document).ready(function() {
     .then(generate_textbook_relationships)
     .then(generate_class_divisions)
     .then(generate_quiz_schedules)
-    //.then(generate_question_response)
-    //.then(generate_question_response_meta)
-    //.then(generate_quiz_question_response)
-    //.then(generate_quiz_response_summary)
+    .then(generate_question_response)
+    .then(generate_question_response_meta)
+    .then(generate_quiz_question_response)
+    .then(generate_quiz_response_summary)
     .then(generate_content_collection)
     .then(generate_collection_meta)
     .then(generate_posts)
@@ -38,10 +38,10 @@ jQuery(document).ready(function() {
     .then(download_textbook_relationships)
     .then(download_class_divisions)
     .then(download_quiz_schedules)
-    //.then(download_question_response)
-    //.then(download_question_response_meta)
-    //.then(download_quiz_question_response)
-    //.then(download_quiz_response_summary)
+    .then(download_question_response)
+    .then(download_question_response_meta)
+    .then(download_quiz_question_response)
+    .then(download_quiz_response_summary)
     .then(download_content_collection)
     .then(download_collection_meta)
     .then(download_posts)
@@ -54,6 +54,31 @@ jQuery(document).ready(function() {
     .then(import_downloaded_data)
     .then(complete_sync_process);
   });
+
+
+
+
+
+jQuery("#usync-data").on('click',function(){
+    jQuery("#upsyncstatus").empty();
+    jQuery("#upsyncstatus").append('<h3>Up-Sync</h3>');
+
+    initiate_up_sync()
+    .then(generate_upsync_question_response)
+    .then(generate_upsync_question_response_meta)
+    .then(generate_upsync_quiz_question_response)
+    .then(generate_upsync_quiz_response_summary)
+    .then(generate_upsync_quiz_schedules)
+    .then(upload_upsync_question_response)
+    .then(upload_upsync_question_response_meta)
+    .then(upload_upsync_quiz_question_response)
+    .then(upload_upsync_quiz_response_summary)
+    .then(upload_upsync_quiz_schedules)
+    .then(extract_upsync_data)
+    .then(import_upsync_data)
+    .then(complete_upsync_process);
+
+});
 
 
 
@@ -73,13 +98,142 @@ jQuery.ajaxSetup({
 
 
 // Starting Upsync
-
 function initiate_up_sync() {
-  jQuery("#vsync-data").hide();
+  jQuery("#usync-data").attr('disabled', 'disabled');
   writeProgressMessageUpsync("Initiating upsync process ","initiate");
   return jQuery.ajax({
-        url: ajaxurl+'?action=sync_initiate',
+        url: ajaxurl+'?action=upsync_initiate',
     });
+}
+
+function generate_upsync_question_response(promiseResult) {
+  var table = 'question_response';
+  writeProgressMessageUpsync("Generating <span class='curreentugtable'></span> <span class='generateustatus'></span> ","generating");
+  jQuery(".generating").prev().addClass('done');
+  jQuery(".generateustatus").text('(1/5)');
+    jQuery(".curreentugtable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_generate&table='+table,
+    });
+}
+
+function generate_upsync_question_response_meta(promiseResult) {
+  var table = 'question_response_meta';
+  jQuery(".generateustatus").text('(2/5)');
+    jQuery(".curreentugtable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_generate&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+function generate_upsync_quiz_question_response(promiseResult) {
+  var table = 'quiz_question_response';
+  jQuery(".generateustatus").text('(3/5)');
+    jQuery(".curreentugtable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_generate&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+function generate_upsync_quiz_response_summary(promiseResult) {
+  var table = 'quiz_response_summary';
+  jQuery(".generateustatus").text('(4/5)');
+    jQuery(".curreentugtable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_generate&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+function generate_upsync_quiz_schedules(promiseResult) {
+  var table = 'quiz_schedules';
+  jQuery(".generateustatus").text('(5/5)');
+    jQuery(".curreentugtable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_generate&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+
+function upload_upsync_question_response(promiseResult) {
+  jQuery(".generateustatus").empty();
+  jQuery(".curreentugtable").text('data');
+  var table = 'question_response';
+  writeProgressMessageUpsync("Uploading <span class='curreentutable'></span> <span class='uploadstatus'></span> ","uploading");
+  jQuery(".uploading").prev().addClass('done');
+  jQuery(".uploadstatus").text('(1/5)');
+    jQuery(".curreentutable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_upload&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+
+function upload_upsync_question_response_meta(promiseResult) {
+  var table = 'question_response_meta';
+  jQuery(".uploadstatus").text('(2/5)');
+    jQuery(".curreentutable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_upload&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+function upload_upsync_quiz_question_response(promiseResult) {
+  var table = 'quiz_question_response';
+  jQuery(".uploadstatus").text('(3/5)');
+    jQuery(".curreentutable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_upload&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+
+function upload_upsync_quiz_response_summary(promiseResult) {
+  var table = 'quiz_response_summary';
+  jQuery(".uploadstatus").text('(4/5)');
+    jQuery(".curreentutable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_upload&table='+table+'&path='+promiseResult.path,
+    });
+}
+
+function upload_upsync_quiz_schedules(promiseResult) {
+  var table = 'quiz_schedules';
+  jQuery(".uploadstatus").text('(5/5)');
+    jQuery(".curreentutable").text(table);
+    return jQuery.ajax({
+        url: ajaxurl+'?action=upsync_upload&table='+table+'&path='+promiseResult.path+'&last_table=yes',
+    });
+}
+
+
+function extract_upsync_data(promiseResult) {
+  jQuery(".uploadstatus").empty();
+  jQuery(".curreentutable").text('data');
+  var current = 'extract';
+    writeProgressMessageUpsync("Extracting data ",current);
+    jQuery("." + current).prev().addClass('done');
+    return jQuery.ajax({
+        url: SERVER_AJAXURL+'?action=upsync_extract_data&folder_id='+promiseResult.folder_id,
+    });
+}
+
+function import_upsync_data(promiseResult) {
+  var current = 'import_data';
+    writeProgressMessageUpsync("Importing upsync data ",current);
+    jQuery("." + current).prev().addClass('done');
+    return jQuery.ajax({
+        url: SERVER_AJAXURL+'?action=import_uploaded_data&path='+promiseResult.path+'&blog_id='+BLOG_ID,
+    });
+}
+
+
+function complete_upsync_process(promiseResult) {
+  var current = 'sync_complete';
+    writeProgressMessageUpsync("Upsync process completed ",current);
+    jQuery("." + current).prev().addClass('done');
+    jQuery("." + current).css('background','none');
+    jQuery("#usync-data").attr('disabled', false);
+    jQuery("#upsyncstatus").append('<div><a class="button" href="'+promiseResult.log_url+'" target="_blank">Download Log</a></div>');
 }
 
 
@@ -95,9 +249,14 @@ function writeProgressMessageUpsync(msg,msgact) {
 
 
 
+
+
+
+
+
 // Starting Downsync
 function initiate_down_sync() {
-  jQuery("#vsync-data").hide();
+  jQuery("#vsync-data").attr('disabled', 'disabled');
   writeProgressMessage("Initiating downsync process ","initiate");
   return jQuery.ajax({
         url: ajaxurl+'?action=sync_initiate',
@@ -464,7 +623,7 @@ function complete_sync_process(promiseResult) {
     writeProgressMessage("Update process completed ",current);
     jQuery("." + current).prev().addClass('done');
     jQuery("." + current).css('background','none');
-    jQuery("#vsync-data").show();
+    jQuery("#vsync-data").attr('disabled', false);
 }
 
 
@@ -476,6 +635,18 @@ function writeProgressMessage(msg,msgact) {
 
 
 
+
+
+
+
+
+
+jQuery("#testsync-data").on('click',function(){
+var syncresponse = jQuery.ajax({
+        url: ajaxurl+'?action=test_upsync_import',
+    });
+console.log(syncresponse);
+})
 
 
 

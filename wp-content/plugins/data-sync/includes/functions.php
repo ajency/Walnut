@@ -31,7 +31,8 @@ function school_data_sync_screen_new(){
     }
 
 
-    $html .= '<button type="button" id="vsync-data" style="margin:10px 0px;">Update</button>';
+    $html .= '<button type="button" class="button" id="usync-data" style="margin:10px 10px;">UpSync</button>';
+    $html .= '<button type="button" class="button" id="vsync-data" style="margin:10px 10px;">DownSync</button>';
 
     $html .= '<div style="clear:both"></div>';
     $html .= '<div id="upsyncstatus" style="float:left;width:50%"></div>';
@@ -106,7 +107,190 @@ function copyRemoteFile($url, $localPathname){
 
 
 
-//Initiating sync
+
+
+
+
+
+
+//Initiating Upsync
+add_action( 'wp_ajax_upsync_initiate', 'upsync_initiate_process' );
+add_action( 'wp_ajax_upsync_initiate', 'upsync_initiate_process' );
+
+function upsync_initiate_process(){
+global $wpdb;
+
+$wpdb->insert(
+    $wpdb->prefix.'sync_data',
+    array(
+        'type' => 'upsync',
+        'status' => 'pending'
+    ));
+
+$response = json_encode(array('status'=>'success'));
+header("content-type: text/javascript; charset=utf-8");
+header("access-control-allow-origin: *");
+echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
+exit;
+}
+
+
+add_action( 'wp_ajax_upsync_generate', 'generate_upsync_data' );
+add_action( 'wp_ajax_nopriv_upsync_generate', 'generate_upsync_data' );
+
+function generate_upsync_data(){
+global $wpdb;
+$table = $_REQUEST['table'];
+$table_name = $wpdb->prefix.$table;
+
+/*$blog_id = get_option('blog_id');
+$params = "action=upsync_records_count&query_table=".$table.'&blog_id='.$blog_id;
+
+$ch = curl_init(NETWORK_SERVER_URL.'/wp-admin/admin-ajax.php');                                                                      
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+curl_setopt($ch, CURLOPT_POSTFIELDS, $params);                                                                  
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$remote = json_decode(curl_exec($ch));
+curl_close($ch);
+
+$records = $wpdb->get_results("SELECT * FROM ".$table_name."");
+$local_count = count($records);
+$remote_count = $remote->{'row_count'};*/
+
+if($table == 'question_response'){
+        $id = uniqid();
+        $target = get_home_path().'tmp/'.$id;
+        $oldumask = umask(0);
+        mkdir($target, 0777);
+        umask($oldumask);
+    }else{
+        $target = $_REQUEST['path'];
+    }
+
+$filename = $target.'/'.$table.'.csv';
+
+/*if($local_count > $remote_count){
+
+$limit = $local_count-$remote_count;
+$data = $wpdb->get_results("SELECT * FROM ".$table_name." LIMIT ".$limit." OFFSET ".$remote_count."", ARRAY_A);*/
+
+$data = $wpdb->get_results("SELECT * FROM ".$table_name." WHERE sync=0", ARRAY_A);
+
+if(count($data)>0){
+
+$f = fopen($filename, 'w');
+
+foreach($data as $row){
+    fputcsv($f, $row,',','"');
+}
+fclose($f);
+
+//Compressing file to gzip
+  gzCompressFile($filename);
+
+//Removing csv file
+  unlink($filename);
+
+$response = json_encode(array('status'=>'success','path'=>$target,'local_count'=>$local_count,'remote_count'=>$remote_count));
+}else{
+$response = json_encode(array('status'=>'skipped','path'=>$target,'local_count'=>$local_count,'remote_count'=>$remote_count)); 
+}
+
+header("content-type: text/javascript; charset=utf-8");
+header("access-control-allow-origin: *");
+echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
+exit;
+}
+
+
+
+
+add_action( 'wp_ajax_upsync_upload', 'upload_upsync_data' );
+add_action( 'wp_ajax_nopriv_upsync_upload', 'upload_upsync_data' );
+
+function upload_upsync_data(){
+
+$file = $_REQUEST['path'].'/'.$_REQUEST['table'].'.csv.gz';
+
+if(file_exists($file)){
+
+$post = array('action' => 'save_upsync_upload','file'=>'@'.$file,'folder_id'=>basename($_REQUEST['path']));
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_VERBOSE, 0);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/6.0Mozilla/4.0 (compatible;)");
+curl_setopt($ch, CURLOPT_URL,NETWORK_SERVER_URL.'/wp-admin/admin-ajax.php');
+curl_setopt($ch, CURLOPT_POST,true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+$upload_status=curl_exec ($ch);
+curl_close ($ch);
+$resp_decode = json_decode($upload_status,true);
+
+    $response = json_encode(array('status'=>'success','path'=>$_REQUEST['path'],'upload_status'=>$resp_decode,'folder_id'=>basename($_REQUEST['path'])));
+}else{
+    $response = json_encode(array('status'=>'skipped','path'=>$_REQUEST['path'],'folder_id'=>basename($_REQUEST['path'])));
+}
+
+if(isset($_REQUEST['last_table'])){
+    deleteDir($_REQUEST['path']);
+}
+
+header("content-type: text/javascript; charset=utf-8");
+header("access-control-allow-origin: *");
+echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
+exit;
+}
+
+
+
+
+
+
+function gzCompressFile($source, $level = 9){ 
+    $dest = $source . '.gz'; 
+    $mode = 'wb' . $level; 
+    $error = false; 
+    if ($fp_out = gzopen($dest, $mode)) { 
+        if ($fp_in = fopen($source,'rb')) { 
+            while (!feof($fp_in)) 
+                gzwrite($fp_out, fread($fp_in, 1024 * 512)); 
+            fclose($fp_in); 
+        } else {
+            $error = true; 
+        }
+        gzclose($fp_out); 
+    } else {
+        $error = true; 
+    }
+    if ($error)
+        return false; 
+    else
+        return $dest; 
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Initiating Down sync
 add_action( 'wp_ajax_sync_initiate', 'sync_initiate_process' );
 add_action( 'wp_ajax_sync_initiate', 'sync_initiate_process' );
 
@@ -116,6 +300,7 @@ global $wpdb;
 $wpdb->insert(
     $wpdb->prefix.'sync_data',
     array(
+        'type' => 'downsync',
         'status' => 'pending'
     ));
 
@@ -340,3 +525,8 @@ if (($handle = fopen($file, "r")) !== FALSE) {
 }
 
 }
+
+
+
+
+
