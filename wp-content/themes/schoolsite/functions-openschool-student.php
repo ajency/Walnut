@@ -10,7 +10,7 @@ function my_profile() {
 	// reset a users password
 	if(isset($_POST['student_action']) && $_POST['student_action'] == 'update-my-profile') {
 		$_POST['primary_blog'] =13;
-		$_POST['source_domain']='walnut.synapselearning.net';
+		$_POST['source_domain']='walnut.walnutedu.org';
 
 		$current_user = wp_get_current_user();
 		$meta = get_user_meta($current_user->ID);

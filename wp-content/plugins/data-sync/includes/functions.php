@@ -33,6 +33,7 @@ function school_data_sync_screen_new(){
 
     $html .= '<button type="button" class="button" id="usync-data" style="margin:10px 10px;">UpSync</button>';
     $html .= '<button type="button" class="button" id="vsync-data" style="margin:10px 10px;">DownSync</button>';
+    
 
     $html .= '<div style="clear:both"></div>';
     $html .= '<div id="upsyncstatus" style="float:left;width:50%"></div>';
@@ -472,15 +473,15 @@ $response = json_encode(array('status'=>'success','last_id'=>$last_sync_id));
 
 
 function uncompress_gzip($file_name){
-$buffer_size = 4096;
-$out_file_name = str_replace('.gz', '', $file_name);
-$file = gzopen($file_name, 'rb');
-$out_file = fopen($out_file_name, 'wb');
-while(!gzeof($file)) {
-  fwrite($out_file, gzread($file, $buffer_size));
-}
-fclose($out_file);
-gzclose($file);
+    $buffer_size = 4096;
+    $out_file_name = str_replace('.gz', '', $file_name);
+    $file = gzopen($file_name, 'rb');
+    $out_file = fopen($out_file_name, 'wb');
+    while(!gzeof($file)) {
+      fwrite($out_file, gzread($file, $buffer_size));
+  }
+  fclose($out_file);
+  gzclose($file);
 }
 
 
@@ -525,8 +526,5 @@ if (($handle = fopen($file, "r")) !== FALSE) {
 }
 
 }
-
-
-
 
 
