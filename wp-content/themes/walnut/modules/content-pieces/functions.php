@@ -292,13 +292,9 @@ function get_single_content_piece($id){
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
     else
-<<<<<<< HEAD
-        $excerpt.='...';
 
-=======
         $excerpt.='';
         //original commented by kapil $excerpt.='...';    
->>>>>>> develop_copy
     $content_piece->post_excerpt =$excerpt;
 
     switch_to_blog($current_blog_id);
@@ -612,7 +608,7 @@ function create_new_element(&$ele)
     return $wpdb->insert_id;
 }
 
-<<<<<<< HEAD
+
 function get_adjacent_chapter($chapterID,$direction='next'){
 
     $chapter= get_term($chapterID,'textbook');
@@ -663,8 +659,8 @@ function get_adjacent_textbook_term_id($term, $direction='next'){
 
     return $adjTermID;
 }
-=======
-//Added By Kapil start to add column ID in http://synapselearning.net/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
+
+//Added By Kapil start to add column ID in http://walnutedu.org/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
 add_filter('manage_edit-textbook_columns', 'change_columns_header', 10, 3);
 function change_columns_header($columns) {
     $columns['id'] = 'ID';
@@ -685,5 +681,4 @@ function manage_textbook_custom_fields($deprecated,$column_name,$term_id)
 }
 add_filter ('manage_textbook_custom_column', 'manage_textbook_custom_fields', 10,3);
 
-//Added By Kapil ends to add column ID in http://synapselearning.net/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
->>>>>>> develop_copy
+//Added By Kapil ends to add column ID in http://walnutedu.org/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
