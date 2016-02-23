@@ -19,9 +19,14 @@ function student_fetch_name(){
 	$result       = $wpdb->get_results("select meta_value from wp_usermeta
 	   	       						   WHERE user_id = '". $current_user->ID ."' 
 	   	       						   and meta_key = 'last_name'");
-	$ln = $result[0]->meta_value;	
+	$ln = $result[0]->meta_value;
 
-	return $fn.' '.$ln;
+	if(strlen($fn)<=0){
+		$name = $current_user->display_name;
+	}else{
+		$name = $fn.' '.$ln;
+	}
+	return $name;
 }
 
 
