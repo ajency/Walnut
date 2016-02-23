@@ -24,9 +24,6 @@ define(['app', 'text!apps/teaching-modules/templates/content-modules-list.html']
             if (this.model.get('schedule')['is_expired'] || !this.model.get('schedule')['is_active']) {
               this.$el.find('.start-training').hide();
             }
-            if (!IS_STANDALONE_SITE) {
-              this.$el.find('.start-training').hide();
-            }
             if (this.model.get('schedule')['is_expired']) {
               this.$el.find('.schedule_dates').removeClass('alert-info').addClass('alert-error');
             }

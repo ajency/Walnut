@@ -2780,3 +2780,7 @@ select:before {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
   margin-left: 0;
 }
+
+.media_times > input[type="text"] {
+  width: 100%;
+}

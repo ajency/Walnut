@@ -1,0 +1,220 @@
+ //   ____        _       _____                 
+ //  / __ \      (_)     |  __ \                
+ // | |  | |_   _ _ ____ | |__) |_ _  __ _  ___ 
+ // | |  | | | | | |_  / |  ___/ _` |/ _` |/ _ \
+ // | |__| | |_| | |/ /  | |  | (_| | (_| |  __/
+ //  \___\_\\__,_|_/___| |_|   \__,_|\__, |\___|
+ //                                   __/ |     
+ //                                  |___/      
+
+
+
+
+ // ---------------------------
+ // QUIZ SECTION DIVIDER -----------
+ // ---------------------------
+
+
+.quiz-subj {
+    .box-shadow(10px 0 15px -6px #CCC, -12px 0 8px -4px #ccc);
+    padding: 0 30px;
+    border-right: 1px solid #ccc;
+    // @media @desktop-def {
+    //     height: inherit;
+    // }    
+}
+
+
+
+ // ---------------------------
+ // QUIZ PAGE STYLES -----------
+ // ---------------------------
+
+
+ .teacher-app {
+     & > .well {
+         display: none; 
+     }
+     .direction {
+         margin: 0;
+         padding-top: 30px;
+     }
+     // ---------------------------
+     // IF QUIZES ARE ATTEMPTED THEN DETAIL DROPDOWN -----------
+     // ---------------------------
+     #attempts-region {
+         margin-top: 25px;
+         .grid {
+             &.vertical {
+                 &.blue {
+                     border-left: 0;
+                     margin: 0;
+                     .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+                     .grid-title{
+                        padding: 20px 15px;
+                        background: #eee;
+                        .tools{
+                            & > a{
+                                &.expand{
+                                    background-position: -95px -40px;
+                                }
+                                &.collapse{
+                                    background-position: -123px -40px;
+                                }
+                            }
+                        }
+                     }
+    				 @media @i-tab-landscape{
+    				 	//width: ~"calc(100% - 30px)";
+    				 }
+                 }
+             }
+             .grid-title, .grid-body {
+                 border: 2px solid #eee;
+                 padding: 10px 15px;
+                 .row {
+                     label {
+                         margin-bottom: 10px;
+                     }
+                 }
+                 h4 {
+                     font-size: 1.2em;
+                     margin: 0;
+                     color: @quiz-link-color3;
+                 }
+             }
+         }
+         #attempts_list {
+             .row {
+                 .p-b-5 {
+                     button {
+                         background: @dashboard-color;
+                         border: 0;
+                     }
+                 }
+             }
+         }
+     }
+
+     // ---------------------------
+     // QUIZ CARD STYLES -----------
+     // ---------------------------
+
+     #quiz-details-region {
+         // margin-top: 20px;
+         & > div {
+             background: #F0F0F0;
+             .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+             .grid {
+                 margin-bottom: 0;
+                 .grid-title, .grid-body {
+                     border: 0;
+                     padding: 15px;
+                     border-bottom: 1px solid #eee;
+                     .row{
+                     	.b-grey{
+                     		border-color: #eee;
+                     	}
+                     	& > div:last-child{
+                     		.row{
+                     			& > div:first-child{
+                     				border-right: 1px solid #eee;
+                     			}
+                     		}
+                     	}
+                     }
+                     h3 {
+                         font-size: 1em;
+                         color: @quiz-link-color1;
+                         line-height: 20px;
+                         span {
+                             line-height: 22px;
+                             color: #f2593a !important;
+                         }
+                     }
+                     .small-text {
+                         .col-md-6 {
+                             color: @quiz-link-color1;
+                         }
+                     }
+                     .form-label {
+                         color: @quiz-link-color3 !important;
+                         display: block;
+                         text-transform: uppercase;
+                         font-size: 1em;
+                     }
+                 }
+                 .grid-body {
+                     .row {
+                         & > div:nth-child(-n+3) {
+                             border-right: 1px solid #eee;
+                         }
+                         &.b-grey {
+                             border-color: #eee;
+                         }
+                     }
+                     .form-label {
+                         & > h4 {
+                             color: @quiz-link-color1;
+                             //display: block !important;
+                             margin: 12px 0 12px 10px !important;
+                             font-size: 1.1em;
+                         }
+                     }
+                     h3 {
+                         & > span {
+                             font-size: 1em;
+                             line-height: 22px;
+                             color: @quiz-link-color3 !important;
+                             font-weight: bold;
+                             text-transform: uppercase;
+                         }
+                     }
+                     &:last-child {
+                         color: @quiz-link-color1;
+                     }
+                 }
+             }
+             &:last-child {
+                 #take-quiz {
+                     margin: 18px 0px;
+                     background: @button-1-danger;
+                     .box-shadow(0 3px 0 0 rgba(192, 204, 203, 0.9));
+                     border: 0;
+                     width: 18%;
+                    font-size: 1.1em;
+                    color: #fff;
+                     &:before {
+                         content: "\f01d";
+                         padding-right: 10px;
+                         vertical-align: sub;
+                         display: inline-block;
+                         font: normal normal normal 1.5em FontAwesome;
+                         color: darken(@button-1-danger, 10%);                         
+                     }
+                 }
+             }
+         }
+
+
+     // ---------------------------
+     // ALL THE BEST SECTION HACK -----------
+     // ---------------------------
+
+         .all-d-best{
+         	    position: absolute;
+			    width: 50%;
+			    left: 0;
+			    right: 0;
+			    text-align: center;
+			    margin: 0 auto;
+			    top: 40px;
+         }
+     }
+ }
+
+
+
+ .all-d-best{
+        margin:30px 0;
+ }

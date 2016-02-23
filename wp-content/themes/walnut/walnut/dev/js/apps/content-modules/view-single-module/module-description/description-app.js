@@ -14,6 +14,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
         var view;
+        console.log('am i reaching here?');
         this.model = opts.model, this.mode = opts.mode, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames;
         this.view = view = this._getCollectionDetailsView();
         this.listenTo(view, 'start:teaching:module', (function(_this) {
@@ -149,6 +150,7 @@ define(['app', 'controllers/region-controller', 'text!apps/content-modules/view-
       };
 
       CollectionDetailsView.prototype.initialize = function() {
+        console.log('initialized description app');
         return this.mode = Marionette.getOption(this, 'mode');
       };
 

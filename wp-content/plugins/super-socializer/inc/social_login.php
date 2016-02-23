@@ -191,8 +191,12 @@ function the_champ_create_user($profileData, $verification = false){
 		'first_name' => $firstName,
 		'last_name' => $lastName,
 		'description' => isset($profileData['bio']) && $profileData['bio'] != '' ? $profileData['bio'] : '',
+<<<<<<< HEAD
 		'user_url' => isset($profileData['link']) && $profileData['link'] != '' ? $profileData['link'] : '',
 		'role' => 'student'
+=======
+		'user_url' => isset($profileData['link']) && $profileData['link'] != '' ? $profileData['link'] : ''
+>>>>>>> develop_copy
 	);
 	$userId = wp_insert_user($userdata);
 	if(!is_wp_error($userId)){
@@ -646,4 +650,39 @@ function heateor_ss_disable_social_registration($profileData){
 		the_champ_ajax_response(array('status' => false, 'message' => 'registration disabled'));
 	}
 }
+<<<<<<< HEAD
 add_action('the_champ_before_registration', 'heateor_ss_disable_social_registration', 10, 1);
+=======
+add_action('the_champ_before_registration', 'heateor_ss_disable_social_registration', 10, 1);
+
+
+function social_role_updation($userId, $userdata, $profileData){
+	$meta = get_user_meta($userId);
+	if(isset($meta['primary_blog'])){
+		update_user_meta( $userId, 'primary_blog', 14);
+	}else{
+		add_user_meta( $userId, 'primary_blog', 14);
+	}
+
+	if(isset($meta['source_domain'])){
+		update_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
+	}else{
+		add_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
+	}
+
+	if(isset($meta['wp_14_capabilities'])){
+		update_user_meta( $userId, 'wp_14_capabilities', array('student'=>true));
+	}else{
+		add_user_meta( $userId, 'wp_14_capabilities', array('student'=>true));
+	}
+
+	if(isset($meta['wp_14_user_level'])){
+		update_user_meta( $userId, 'wp_14_user_level', '0');
+	}else{
+		add_user_meta( $userId, 'wp_14_user_level', '0');
+	}
+wp_redirect(site_url().'/register-redirect-student');
+}
+
+add_action('the_champ_user_successfully_created','social_role_updation');
+>>>>>>> develop_copy

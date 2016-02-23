@@ -8,6 +8,7 @@ define(['app'], function(App) {
       extend(VideoView, superClass);
 
       function VideoView() {
+
         this._showProperties = bind(this._showProperties, this);
         this._playVideo = bind(this._playVideo, this);
         return VideoView.__super__.constructor.apply(this, arguments);

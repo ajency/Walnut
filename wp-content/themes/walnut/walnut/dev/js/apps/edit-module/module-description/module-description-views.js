@@ -264,6 +264,12 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
           }
         });
         this.$el.find('#total-marks').val(marks);
+        if ($("#total-time-marks-set").val() === 0) {
+          $("#total-time-marks-set").val(1);
+        } else {
+          this.$el.find('#total-marks-final').val(marks);
+          this.$el.find('#total-time-final').val(time);
+        }
         return this.$el.find('#total-time').val(time);
       };
 

@@ -30,6 +30,10 @@ define ['app'
 								<span class="nonDevice archiveModuleSpan">|</span>
 								<a target="_blank" class="nonDevice archiveModule">Archive</a>
 							{{/is_published}}
+							{{^is_used}}
+								<span class="nonDevice deleteModuleSpan">|</span>
+								<a target="_blank" class="nonDevice deleteModule">Delete</a>
+							{{/is_used}}
 							<span class="nonDevice">|</span>
 							<a target="_blank"  class="nonDevice cloneModule">Clone</a>
 							<i class="fa spinner"></i>
@@ -37,7 +41,7 @@ define ['app'
 
 			serializeData:->
 				data= super()
-				
+
 				#this is for display purpose only
 				data.modified_date= moment(data.post_modified).format("Do MMM YYYY <br/> h:mm a")
 
@@ -83,6 +87,7 @@ define ['app'
 				_.each data.present_in_modules, (ele,index)->
 					modules.push "<a target='_blank' href='#view-group/"+ ele.id+"'>"+ ele.name+"</a>"
 
+				data.is_used = true if modules.length > 0
 				data.present_in_str=
 					if _.size(modules)>0
 					then _.toSentence(modules)
@@ -91,6 +96,7 @@ define ['app'
 				data
 
 			events:
+				'click a.deleteModule'	:-> @deleteModule 'delete'
 				'click a.cloneModule'	:-> @model.duplicate()
 				'click a.archiveModule' :-> @changeModuleStatus 'archive'
 				'click a.publishModule' :-> @changeModuleStatus 'publish'
@@ -98,24 +104,37 @@ define ['app'
 			initialize : (options)->
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
-			
+
 			addSpinner:->
 				@$el.find '.spinner'
 				.addClass 'fa-spin fa-spinner'
-			
+
 			removeSpinner:=>
 				@$el.find '.spinner'
 				.removeClass 'fa-spin fa-spinner'
-			
+
+			deleteModule:(status) ->
+				bootbox.confirm "Are you sure you want to delete '#{@model.get('post_excerpt')}' ?", (result)=>
+					if result
+	        			@addSpinner()
+	        			model_id = @model.id
+	        			data = {}
+	        			data.action = 'delete-content-module'
+	        			data.id = model_id
+        				return $.post(AJAXURL, data).success((resp) ->
+          					_this.model.destroy()
+        				)
+
+
 			changeModuleStatus:(status)->
 				bootbox.confirm "Are you sure you want to #{status} '#{@model.get('post_excerpt')}' ?", (result)=>
 					if result
 						@addSpinner()
 						@model.save post_status: status,
-							success:=> @changeStatusLabel status								
+							success:=> @changeStatusLabel status
 							error:(resp)-> console.log resp
 							complete:@removeSpinner
-			
+
 			changeStatusLabel:(status)->
 				switch (status)
 					when 'archive'
@@ -125,20 +144,20 @@ define ['app'
 						.html 'Archived'
 						@$el.find '.archiveModule, .archiveModuleSpan'
 						.remove()
-						
+
 					when 'publish'
 						@$el.find '.post-status'
 						.removeClass 'label-important'
 						.addClass 'label-info'
 						.html 'Published'
-						
+
 						@$el.find '.view-content-piece'
 						.after '<span class="nonDevice archiveModuleSpan">|</span>
 								<a target="_blank" class="nonDevice archiveModule">Archive</a>'
-								
+
 						@$el.find '.publishModule, .publishModuleSpan, .editLink, .editLinkSpan'
 						.remove()
-						
+
 		class EmptyView extends Marionette.ItemView
 
 			template: 'No Content Available'
@@ -173,7 +192,10 @@ define ['app'
 				'change #check_all_div'     			:-> $.toggleCheckAll @$el.find 'table'
 				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
 				'click .change-status button'			: 'changeStatus'
-
+				'change #status_dropdown'				: 'show_destination_textbooks'
+				'change #destination_textbook #textbooks-filter'				: 'show_destination_chapters'
+				'change #destination_textbook #chapters-filter'				: 'show_destination_sections'
+				'change #destination_textbook #sections-filter'				: 'show_destination_subsections'
 
 			initialize : ->
 				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -227,23 +249,120 @@ define ['app'
 				@$el.find "#content-pieces-table"
 				.tablesorterPager pagerOptions
 
-			showSubmitButton:->
-	            if @$el.find '.tab_checkbox'
-	            .is ':checked'
-	                @$el.find '.change-status'
-	                .show()
 
-	            else
-	                @$el.find '.change-status'
-	                .hide()
-				
+			showSubmitButton:->
+  				if @$el.find(".tab_checkbox").is(":checked")
+    				@$el.find(".change-status").show()
+    				@$el.find(".move-content").show()
+  				else
+    				@$el.find(".change-status").hide()
+    				@$el.find(".move-content").hide()
+
+
+
+			moveContent:(e)=>
+					chapter = $("#destination_textbook #chapters-filter option:selected").val()
+					if isNaN(parseInt(chapter)) or !isFinite(chapter)
+						chapter=0
+						bootbox.alert 'Please select a chapter'
+						return
+
+					sections = $("#destination_textbook #sections-filter option:selected").val()
+					if isNaN(parseInt(sections)) or !isFinite(sections)
+						sections=0
+
+
+					data = {}
+					data.IDs= $.getCheckedItems @$el.find 'table'
+					data.chapter = chapter
+					data.sections = sections
+
+					msg = "Are you sure you want to move selected content pieces?"
+					if 0 is _.size data.IDs
+						bootbox.alert 'None of the selected items can be moved'
+						return
+
+					bootbox.confirm msg, (result)=>
+						#if result
+							#$(e.target).find '.fa'
+							#.addClass 'fa-spin fa-spinner'
+
+						data.action = 'bulk-move-content-pieces'
+						$.post AJAXURL, data
+						.success (resp)=>
+							bootbox.alert 'Moved Successfully.'
+						.fail (resp)->
+							console.log 'some error occurred'
+							console.log resp
+						.done ->
+							$(e.target).find '.fa'
+							.removeClass 'fa-spin fa-spinner'
+							.addClass 'fa-check'
+
+
+			show_destination_textbooks:(e)=>
+					action = $("#status_dropdown").val()
+					if action != 'move'
+						@$el.find '#destination_textbook'
+						.hide()	
+						return false
+					textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
+					@$el.find '#destination_textbook'
+					.html textbookFiltersHTML
+					@$el.find '#destination_textbook'
+					.show()	
+					@$el.find '#destination_textbook #textbooks-filter'
+						.hide()					
+					@show_destination_chapters()
+
+
+			show_destination_chapters:(e)=>
+					term_id = $("#textbooks-filter option:selected").val()
+					chaptersCollection = App.request "get:chapters", ('parent': term_id)
+					App.execute "when:fetched", chaptersCollection, =>
+						html = "<option>Select</option>"
+						chaptersCollection.each (t, ind)=>
+							chapter_id = t.get('term_id')
+							chapter_name = t.get('name')
+							html += "<option value='"+chapter_id+"'>"+chapter_name+"</option>"
+						@$el.find '#destination_textbook #chapters-filter'
+						.html html	
+					
+
+			show_destination_sections:(e)=>
+					term_id = $("#destination_textbook #chapters-filter option:selected").val()
+					sectionsCollection = App.request "get:chapters", ('parent': term_id)
+					App.execute "when:fetched", sectionsCollection, =>
+						html = "<option>Select</option>"
+						sectionsCollection.each (sectionModel, ind)=>
+							section_id = sectionModel.get('term_id')
+							section_name = sectionModel.get('name')
+							html += "<option value='"+section_id+"'>"+section_name+"</option>"
+						@$el.find '#destination_textbook  #sections-filter'
+						.html html	
+
+			show_destination_subsections:(e)=>
+					term_id = $("#destination_textbook #sections-filter option:selected").val()
+					subsectionsCollection = App.request "get:chapters", ('parent': term_id)
+					App.execute "when:fetched", subsectionsCollection, =>
+						html = "<option>Select</option>"
+						subsectionsCollection.each (subsectionModel, ind)=>
+							section_id = subsectionModel.get('term_id')
+							section_name = subsectionModel.get('name')
+							html += "<option value='"+section_id+"'>"+section_name+"</option>"
+						@$el.find '#destination_textbook  #subsections-filter'
+						.html html					                		          
+
 			changeStatus:(e)=>
+				if $(e.target).closest('.change-status').find('select').val() is 'move'
+					@moveContent()
+					return false
 				data = {}
 				data.IDs= $.getCheckedItems @$el.find 'table'
 				data.status= $(e.target).closest('.change-status').find('select').val()
 
 				msg = "Are you sure you want to #{data.status} the selected content pieces ?"
-				
+
 				if data.status is 'publish'
 					data.IDs = _.filter data.IDs, (id)=>return id if @collection.get(id).get('post_status') is 'pending'
 					msg += "<div class='small m-t-10'>
@@ -266,7 +385,7 @@ define ['app'
 						.fail (resp)->
 							console.log 'some error occurred'
 							console.log resp
-						.done ->							
+						.done ->
 							$(e.target).find '.fa'
 							.removeClass 'fa-spin fa-spinner'
 							.addClass 'fa-check'

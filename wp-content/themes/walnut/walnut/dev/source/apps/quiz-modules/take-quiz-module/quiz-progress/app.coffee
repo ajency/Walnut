@@ -66,10 +66,15 @@ define ['app'
                         data
 
                     initialize:->
+                        $('.navbar .container-fluid').css("visibility","hidden")                        
                         @questionResponseCollection= Marionette.getOption @, 'questionResponseCollection'
                         @quizModel = Marionette.getOption @,'quizModel'
 
                     onShow:->
+                        $('.progressStrip').click ->
+                          $('.quizProgress').toggleClass 'progress-expand'
+                          return
+    
                         @$el.find "div.holder"
                         .jPages
                             containerID: "quiz-items"

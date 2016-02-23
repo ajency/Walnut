@@ -23,18 +23,14 @@ define(['detect', 'jquery'], function(detect, $) {
     if (networkStatus === 1) {
       return true;
     } else {
-      return false;
+      return true;
     }
   };
   checkConnection = function() {
     if (_.isUndefined(navigator.connection)) {
       return true;
     } else {
-      if (navigator.connection.type === Connection.NONE) {
-        return false;
-      } else {
-        return true;
-      }
+      return true;
     }
   };
   document.addEventListener("online", onOnline, false);

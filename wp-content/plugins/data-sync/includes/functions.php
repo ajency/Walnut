@@ -110,10 +110,6 @@ function copyRemoteFile($url, $localPathname){
 
 
 
-
-
-
-
 //Initiating Upsync
 add_action( 'wp_ajax_upsync_initiate', 'upsync_initiate_process' );
 add_action( 'wp_ajax_upsync_initiate', 'upsync_initiate_process' );
@@ -451,6 +447,7 @@ update_option( 'wp_user_roles', unserialize($default_roles) );
 
 $front_page_id = get_option( 'page_on_front' );
 update_post_meta($front_page_id,'_wp_page_template','dashboard.php');
+update_custom_template_pages();
 
 
 deleteDir($target);
@@ -526,6 +523,56 @@ if (($handle = fopen($file, "r")) !== FALSE) {
         $i++;
     }
     fclose($handle);
+}
+
+}
+
+
+
+
+
+
+//Custom page tempalate
+function update_custom_template_pages(){
+$data = array(
+    array(
+        'post_data'  => array(
+            "post_title" => 'Student Quize List',
+            "post_name"  => 'quiz-listview-student'
+            ),
+        'meta'  => array('_wp_page_template' => 'quiz-listview-student.php')
+    ),
+    array(
+        'post_data'  => array(
+            "post_title" => 'Student Lectures List',
+            "post_name"  => 'lecture-listview-student'
+            ),
+        'meta'  => array('_wp_page_template' => 'lecture-listview-student.php')
+    ),
+    array(
+        'post_data'  => array(
+            "post_title" => 'Student Dashboard',
+            "post_name"  => 'dashboard-student'
+            ),
+        'meta'  => array('_wp_page_template' => 'dashboard-student.php')
+    ),
+    array(
+        'post_data'  => array(
+            "post_title" => 'Change Password',
+            "post_name"  => 'change-password-student'
+            ),
+        'meta'  => array('_wp_page_template' => 'change_password_student.php')
+    )
+
+    );
+
+foreach($data as $key=>$value){
+    $value['post_data']['post_type'] = 'page';
+    $value['post_data']['post_status'] = 'publish';
+    $post_id = wp_insert_post($value['post_data']);
+    foreach($value['meta'] as $metakey=>$metavalue){
+        update_post_meta($post_id,$metakey,$metavalue);
+    }
 }
 
 }

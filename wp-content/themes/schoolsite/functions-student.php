@@ -11,10 +11,17 @@ function fetch_single_student_trainig_module($lecture_id) {
 function student_fetch_name(){
 	global $wpdb;
 	$current_user = wp_get_current_user();	
-	$result       = $wpdb->get_results("select meta_value from {$wpdb->prefix}usermeta
+	$result       = $wpdb->get_results("select meta_value from wp_usermeta
 	   	       						   WHERE user_id = '". $current_user->ID ."' 
-	   	       						   and meta_key in ('first_name','last_name')");
-	return $result[0]->meta_value.' '.$result[1]->meta_value;
+	   	       						   and meta_key = 'first_name'");
+	$fn = $result[0]->meta_value;
+
+	$result       = $wpdb->get_results("select meta_value from wp_usermeta
+	   	       						   WHERE user_id = '". $current_user->ID ."' 
+	   	       						   and meta_key = 'last_name'");
+	$ln = $result[0]->meta_value;	
+
+	return $fn.' '.$ln;
 }
 
 
@@ -36,8 +43,8 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 	$current_user = wp_get_current_user();	
 	$query       = $wpdb->prepare(
 			     "SELECT collection.id, collection.name as quiz_name, collection.term_ids, collection.duration, meta.meta_value as quiz_type 
-			      FROM {$wpdb->prefix}content_collection collection
-			      INNER JOIN {$wpdb->prefix}collection_meta meta on collection.id = meta.collection_id and meta.meta_key=%s
+			      FROM wp_content_collection collection
+			      INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta.meta_key=%s
 			      WHERE term_ids like %s and type=%s and post_status=%s",
 			      array('quiz_type','%"'.$texbook_id.'";%', 'quiz', 'publish'));
  
@@ -94,7 +101,7 @@ function student_fetch_lectures_by_textbook_id($texbook_id) {
 	global $wpdb;
 	$query       = $wpdb->prepare(
 			     "SELECT id, name as lecture_name, term_ids, duration 
-			      FROM {$wpdb->prefix}content_collection
+			      FROM wp_content_collection
 			      WHERE term_ids like %s and type=%s and post_status=%s",
 			      array('%"'.$texbook_id.'";%', 'student-training', 'publish'));
 	$result      = $wpdb->get_results($query);	
@@ -146,7 +153,7 @@ function student_fetch_division(){
 	global $wpdb;
 	$current_user = wp_get_current_user();	
 	$query        = "SELECT division FROM {$wpdb->prefix}class_divisions divisions 
-			         INNER JOIN {$wpdb->prefix}usermeta usermeta on divisions.id = usermeta.meta_value 
+			         INNER JOIN wp_usermeta usermeta on divisions.id = usermeta.meta_value 
 			         AND meta_key='student_division' and usermeta.user_id='". $current_user->ID ."'";	
 	$result       = $wpdb->get_results($query);	
 	$division     = $result[0]->division;
@@ -162,26 +169,24 @@ function student_my_upcoming_quizes($texbook_ids){
 		$term_ids[] = "collection.term_ids like '%\"$value\";%'";
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
-	$today = date("Y-m-d H:i:s");
-	$query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM {$wpdb->prefix}content_collection collection  
+	$today = date("Y-m-d 00:00:00");
+	   $query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
-		INNER JOIN {$wpdb->prefix}collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
+		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
 		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
-		WHERE collection.type='quiz' and post_status='publish' ".$term_ids."  and  summary.summary_id is null
-		and schedule_from > '".$today."'
+		WHERE collection.type='quiz' and post_status='publish' ".$term_ids."
+		and (schedule_from >= '".$today."' OR schedule_to >= '".$today."')
 		GROUP BY collection.id ORDER BY schedules.schedule_from DESC";	
 		$result = $wpdb->get_results($query);
 
 		$data = [];
 		foreach ($result as $key => $value) {
 			 $quiz_id  = $value->quiz_id;
-			 $terms    = maybe_unserialize($value->meta_value);
-			 $terms    = $terms[0]['data'];
-			 $textbook = $terms['textbook'];
+			 $terms    = maybe_unserialize($value->term_ids);
 			 $day      = date("d", strtotime($value->schedule_from));
 			 $month    = date("M", strtotime($value->schedule_from));
 			 $year     = date("Y", strtotime($value->schedule_from));
-			 $data[]   = array('quiz_id'=>$quiz_id, 'textbook_id'=>$terms['terms_id']['textbook'], 'textbook'=>$textbook, 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
+			 $data[]   = array('quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
 		}
 		return $data;
 }
@@ -191,7 +196,7 @@ function student_last_quiz_taken_on($book_id){
 	$current_user = wp_get_current_user($book_id);
 
 	$query = $wpdb->prepare(
-		"SELECT taken_on FROM {$wpdb->prefix}quiz_response_summary  summary INNER JOIN {$wpdb->prefix}content_collection collection on summary.collection_id = collection.id
+		"SELECT taken_on FROM {$wpdb->prefix}quiz_response_summary  summary INNER JOIN wp_content_collection collection on summary.collection_id = collection.id
 		 WHERE student_id = %d  and term_ids like %s ORDER BY taken_on desc limit 1", 
 		
 		array($current_user->ID, '%"'.$book_id.'";%')

@@ -76,9 +76,9 @@ define ['app',
 							@$el.find '.start-training'
 							.hide()
 
-						if not IS_STANDALONE_SITE
-							@$el.find '.start-training'
-							.hide()
+						#if not IS_STANDALONE_SITE
+						#	@$el.find '.start-training'
+						#	.hide()
 
 						if @model.get('schedule')['is_expired']
 							@$el.find '.schedule_dates'

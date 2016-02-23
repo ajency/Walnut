@@ -45,6 +45,9 @@ define ['app'
                             else
                                 @view.close()
                                 App.vent.trigger 'show:dashboard'
+                                if user.attributes.caps.student
+                                    $("body").hide()
+                                    window.location.href = SITEURL+'/dashboard-student'
                 );
 
                 if(connection_resp is "connection_error")
@@ -62,6 +65,19 @@ define ['app'
                 'click .reset-password'     :-> @trigger "reset:password"
 
             onShow: ->
+                $('.mat-input').focus ->
+                  $(this).parent().addClass 'is-active is-completed'
+                  return
+                $('.mat-input').focusout ->
+                  if $(this).val() == ''
+                    $(this).parent().removeClass 'is-completed'
+                  $(this).parent().removeClass 'is-active'
+                  return
+                $('.mat-input').each (index) ->
+                  if $(this).val() != ''
+                    $(this).parent().addClass 'is-active is-completed'
+                  return     
+
                 $('body').addClass 'error-body no-top'
                 $('.page-content').addClass 'condensed'
 

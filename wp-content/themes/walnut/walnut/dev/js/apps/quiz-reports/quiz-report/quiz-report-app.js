@@ -41,9 +41,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
         return App.execute("when:fetched", this.quizResponseSummaries, (function(_this) {
           return function() {
             var takenBy;
-            _this.quizResponseSummaries.remove(_this.quizResponseSummaries.where({
-              'status': 'started'
-            }));
             takenBy = _.size(_.uniq(_this.quizResponseSummaries.pluck('student_id')));
             _this.layout = _this._getQuizReportLayout(students, takenBy);
             _this.show(_this.layout, {

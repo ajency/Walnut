@@ -123,6 +123,12 @@ function get_content_pieces($args = array()) {
                 }
             }
         }
+
+        //Start Kapils code to hide archived content pieces
+        if($cpiece->post_status == 'archive'){
+            continue;
+        }
+        //End Kapils code to hide archived content pieces        
         $content_pieces[]= $cpiece;
     }
 
@@ -286,8 +292,9 @@ function get_single_content_piece($id){
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
     else
-        $excerpt.='...';
 
+        $excerpt.='';
+        //original commented by kapil $excerpt.='...';    
     $content_piece->post_excerpt =$excerpt;
 
     switch_to_blog($current_blog_id);
@@ -477,7 +484,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         if(strlen($ex)>0 && $excerpt_length <500 ){
             $excerpt.=$ex;
             $excerpt_length += strlen($ex);
-            $excerpt.=' | ';
+            //commented by kapil $excerpt.=' | ';
         }
     }
 
@@ -486,7 +493,7 @@ function prettify_content_piece_excerpt($excerpt_array){
         $excerpt= substr($excerpt,0,500);
 
     //REMOVAL OF LAST 3 CHARACTERS WHICH MAY CONTAIN THE DIVIDER
-    $excerpt = substr($excerpt,0,-3);
+    //$excerpt = substr($excerpt,0,-3); commented by kapil
 
     return $excerpt;
 
@@ -601,6 +608,7 @@ function create_new_element(&$ele)
     return $wpdb->insert_id;
 }
 
+
 function get_adjacent_chapter($chapterID,$direction='next'){
 
     $chapter= get_term($chapterID,'textbook');
@@ -651,3 +659,26 @@ function get_adjacent_textbook_term_id($term, $direction='next'){
 
     return $adjTermID;
 }
+
+//Added By Kapil start to add column ID in http://walnutedu.org/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
+add_filter('manage_edit-textbook_columns', 'change_columns_header', 10, 3);
+function change_columns_header($columns) {
+    $columns['id'] = 'ID';
+    return $columns;
+}
+
+function id_column_register_sortable( $columns ) {
+$columns['id'] = "ID";
+return $columns;
+}
+add_filter( 'manage_edit-textbook_sortable_columns', 'id_column_register_sortable' );
+
+function manage_textbook_custom_fields($deprecated,$column_name,$term_id)
+{
+ if ($column_name == 'id') {
+   echo $term_id;
+ }
+}
+add_filter ('manage_textbook_custom_column', 'manage_textbook_custom_fields', 10,3);
+
+//Added By Kapil ends to add column ID in http://walnutedu.org/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page

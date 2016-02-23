@@ -1,0 +1,782 @@
+ //   _____ _       _           _    _____ _         _           
+ //  / ____| |     | |         | |  / ____| |       | |          
+ // | |  __| | ___ | |__   __ _| | | (___ | |_ _   _| | ___  ___ 
+ // | | |_ | |/ _ \| '_ \ / _` | |  \___ \| __| | | | |/ _ \/ __|
+ // | |__| | | (_) | |_) | (_| | |  ____) | |_| |_| | |  __/\__ \
+ //  \_____|_|\___/|_.__/ \__,_|_| |_____/ \__|\__, |_|\___||___/
+ //                                             __/ |            
+ //                                            |___/             
+
+
+
+ // ---------------------------
+// SITE GLOBAL STYLES -----------
+// ---------------------------
+
+
+
+// ---------------------------
+// CUSTOM FONTS REQUIRED FOR SITE(OPEN-SANS) -----------
+// ---------------------------
+
+
+@font-face {
+  font-family: 'open-sans';
+  src: url('../fonts/OpenSans-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+       url('../fonts/OpenSans-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+}
+
+
+
+// ---------------------------
+// BASIC RESET FOR BODY AND BLOCK/INLINE ELEMENTS -----------
+// ---------------------------
+
+
+body {
+    font-family: 'open-sans', 'arial';
+    overflow: auto;
+    height: initial;
+    -webkit-text-stroke: initial;
+}
+
+
+
+// ---------------------------
+// FIREFOX IMAGE BORDER FIX -----------
+// ---------------------------
+
+a{
+    outline: 0;
+}
+
+a:hover, a:active, a:focus {
+  outline: 0;
+}
+
+
+
+// ---------------------------
+// ALL HEADINGS TO BOLD -----------
+// ---------------------------
+
+h1, h2, h3, h4, h5 {
+    font-weight: bold !important; //important for breaking Bootstrap default style
+}
+
+
+// ---------------------------
+// FIREFOX FONT RENDERING ISSUE WORKAROUND -----------
+// ---------------------------
+
+@-moz-document url-prefix() { 
+    h1, h2, h3, h4, h5 {
+        font-weight: lighter !important; 
+    }
+}
+
+
+// ---------------------------
+// MOZILLA WIERD BORDER FIX FOR IMAGES -----------
+// ---------------------------
+
+a{
+img{
+    border:0;
+    outline: 0;
+    &:active{
+        border:0;
+        outline: 0;
+    }
+}
+}
+
+
+// ---------------------------
+// SHIFTING HEADER 100PX DOWN AS NAVIGATION IS FIXED -----------
+// ---------------------------
+
+.body-push{
+    margin-bottom: 100px;
+}
+
+
+// ---------------------------
+// BORDER RIGHT FOR ODD EVEN DIVS -----------
+// ---------------------------
+
+.border-rl {
+    border-right: 1px solid #eee;
+}
+
+
+
+// ---------------------------
+// BTN OULINE REMOVE -----------
+// ---------------------------
+
+.btn {
+    &:focus {
+        outline: 0 !important;
+    }
+    &:active {
+        position: relative;
+        top: 1px;
+    }
+}
+
+
+
+// ---------------------------
+// CUSTOM BACK BUTTON FOR SPECIFIC PAGES -----------
+// ---------------------------
+
+.is-back{
+    position: absolute;
+    top: 20px;
+    width: 10%;
+    left: 20px;
+    z-index: 1031;
+    a{
+        border: 2px solid #fff;
+        color: #fff;
+        font-family: open-sans;
+        font-size: 1.4em !important;
+        i{
+            padding-right: 26px;
+            font-size: 1.5em;
+        }
+        &:hover,&:active,&:focus{
+            color: #fff;
+        }
+    }
+}
+
+
+
+
+// ---------------------------
+// CUSTOM NAVBAR STYLES -----------
+// ---------------------------
+
+nav {
+    &.wallnut-nav {
+        background-color: @dashboard-color;
+        border: 0;
+        color: #fff;
+        border-radius: 0;
+        font-family: 'open-sans', 'arial';
+        .box-shadow(0 1px 6px 0 rgba(0, 0, 0, .12));
+        margin: 0;
+        .navbar-nav {
+            >li {
+                >a {
+                    color: #fff;
+                    outline: none;
+                    font-weight: lighter;
+                    &:hover, &:active, &:focus {
+                        color: #E9E9E9;
+                    }
+                }
+            }
+        }
+        .navbar-brand {
+            border-right: 1px inset #90A0A0;
+            height: inherit;
+            padding: 5px 15px;
+            & > img{
+            	width: 90px;
+            }
+        }
+        .profile {
+            padding: 15px;
+            pointer-events: none;
+        }
+        .profile-name {
+            margin: 0;
+            padding: 10px 0;
+            font-size: 1.3em;
+            line-height: 25px;
+            span {
+                font-size: 15px;
+                text-transform: uppercase;
+            }
+        }
+        .walnut-account {
+            padding: 7px;
+            >li {
+                padding: 15px 10px;
+                >a {
+                    outline: none;
+                    .transition(all .2s ease-in-out);
+                    &:hover, &:active, &:focus {
+                        outline: none;
+                        .transform(scale(1.2));
+                        background: @profile-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+// ---------------------------
+// PROFILE PIC STYLES INSPIRED FROM GOOGLE -----------
+// ---------------------------
+
+
+.profile-pic{
+    height: 70px;
+    width: 70px;
+    margin: 0 auto;
+    background: @profile-color;
+    .border-radius(50%);
+    color: #fff;
+    font-size: 2.6em;
+    padding-top: 2px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 65px;
+    text-transform: uppercase;
+    .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+    text-shadow:1px 1px 1px #000;
+}
+
+
+
+// ---------------------------
+// MATERIAL DESIGN INSPIRED FAB(FLOATING ACTION BUTTON) STYLES -----------
+// ---------------------------
+
+
+.btn.fab-header {
+    background: #F7F7F7;
+    border-radius: 50%;
+    margin: 0;
+    padding: 15px;
+    font-size: 26px;
+    width: 56px;
+    height: 56px;
+    // .box-shadow(0 1px 6px 0 rgba(0, 0, 0, .12), 0 1px 6px 0 rgba(0, 0, 0, .12));
+    .box-shadow(0 3px 0 0 rgba(81, 144, 142, 0.9));
+    .transition(box-shadow .28s cubic-bezier(.4, 0, .2, 1));
+    .fa {
+        color: @dashboard-color;
+    }
+    &:hover,&:focus {
+        background-color: @profile-color;
+        & i{
+            color: @color-white;
+        }
+    }
+}
+
+.btn.fab-content {
+    background: @dashboard-color;
+    border-radius: 50%;
+    margin: 0;
+    padding: 10px;
+    font-size: 26px;
+    width: 56px;
+    height: 56px;
+    .box-shadow(0 3px 0 0 rgba(81, 144, 142, 0.9));
+    .transition(box-shadow .28s cubic-bezier(.4, 0, .2, 1));
+    .fa {
+        color: #fff;
+    }
+    &:hover, &:active, &:focus {
+        background-color: lighten(@dashboard-color, 5%);
+        outline: none;
+    }
+}
+
+
+
+
+
+
+
+
+ // ---------------------------
+// OVERWRITING PAGE CONENT STYLES TO BRING CONTENT IN CENTER -----------
+// ---------------------------
+
+
+
+ .page-content{
+ 	margin: 0;
+ 	background: none;
+ 	padding-bottom: 100px;
+    min-height: inherit;
+    overflow-x: inherit;
+    overflow: inherit;
+    @media @desktop-def{
+        padding-bottom: 0px;
+    }
+ 	.content{
+ 		padding: 0;
+        @media @desktop-def{
+            padding-bottom: 0px;
+        }
+ 	}
+ 	&.condensed{
+ 		margin: 0;
+ 	}
+ }
+
+
+
+
+ // ---------------------------
+// PARENT OF QUIZ AND LECTURE CARD LAYOUT HOLDER -----------
+// ---------------------------
+
+
+.teacher-app{
+	max-width: 95%;
+}
+
+
+
+ // ---------------------------
+// MODAL STYLES -----------
+// ---------------------------
+
+
+#dialog-region{
+	.modal-content{
+		   font-family: open-sans;
+		.modal-header{
+			background: @dashboard-color;
+		}
+		.modal-body{
+			#reset-password-form{
+				form{
+					text-align: center;
+					label{
+						display: block;
+						text-align: left;
+					}
+					button#reset-password{
+						    float: none !important;
+						    background: @dashboard-color;
+						    border: 0;
+						    padding: 10px 18px;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+// ---------------------------
+// MODAL STYLES FOR PRACTICE QUIZ ALERTS -----------
+// ---------------------------
+
+
+.bootbox-alert,.bootbox-confirm{
+	.modal-body{
+		background: @dashboard-color;
+		color: #fff;
+	}
+	.modal-footer{
+		text-align: center;
+		button{
+			border:0;
+			color: #fff;
+			padding: 8px;
+    		width: 20%;
+			&:active,&:focus{
+				color: #fff;
+			}
+		}
+		.btn-default{
+			background: @button-1-danger;
+		}
+		.btn-primary{
+			background: @dashboard-color;
+		}
+	}
+}
+
+
+
+// ---------------------------
+// ALERT STYLING -----------
+// ---------------------------
+
+.alert{
+	margin-top: 50px;
+}
+
+
+
+// ---------------------------
+// NOTIFICATION CLICK POPOVER -----------
+// ---------------------------
+
+.dashboard-popover{
+		&.popover{
+	    position: fixed;
+	    left: initial !important;
+	    right: -20px;
+	    top: 100% !important;
+	    border-color: #69b8b5;
+	    background: #69b8b5;
+	    color: #fff;
+	    font-family: open-sans;
+	    text-shadow: 1px 1px 1px #000;
+	    &.left{
+	    	& > .arrow{
+	    		border-left-color: #69b8b5;
+	    		&:after{
+	    			border-left-color: #69b8b5;
+	    		}
+	    	}
+	    }
+	    .popover-title {
+		    padding: 10px 14px;
+		    font-size: 0.9em;
+		    background-color: #69b8b5;
+		    border-bottom: 1px solid #ebebeb;
+		    text-transform: uppercase;
+		}
+		.popover-content {
+		    padding: 10px 14px;
+		}
+	}
+}
+
+
+// ---------------------------
+// NO MARGIN BOTTOM -----------
+// ---------------------------
+
+
+.m-b-0{
+	margin-bottom: 0 !important;
+}
+
+
+
+// ---------------------------
+// SHIFT BODY CONTENT DOWN COZ OF FIXED HEADER -----------
+// ---------------------------
+
+.m-b-100{
+    margin-bottom: 100px;
+}
+
+
+
+// ---------------------------
+// CUSTOM MARGIN BOTTOM -----------
+// ---------------------------
+
+.m-b-3 {
+    margin-bottom: 30px;
+}
+
+
+// ---------------------------
+// CUSTOM MARGIN TOP -----------
+// ---------------------------
+
+.m-t-3 {
+    margin-top: 30px;
+}
+
+
+
+
+// ---------------------------
+// ALL THE BEST STYLES -----------
+// ---------------------------
+
+
+.all-d-best {
+    margin-bottom: 20px;
+    i {
+        vertical-align: middle;
+    }
+    span {
+        text-transform: uppercase;
+        color: @quiz-link-color1;
+        padding-left: 5px;
+        font-size: 1.4em;
+        vertical-align: middle;
+    }
+}
+
+
+
+
+// ---------------------------
+// MATERIAL DESIGN INSPIRED INPUT FOCUS STYLES -----------
+// ---------------------------
+
+
+
+.mat-holder{
+    position: relative;
+    margin: 10px 0;
+    .mat-label{
+      display: block;
+      font-size: 1.1em;
+      .transform(translateY(25px));
+      color: #928E8E;
+      font-weight: lighter;
+      margin: 0 auto;
+      width: 50%;
+      .transition(all 0.5s);
+      text-align: left;
+    }
+    .mat-input{
+      position: relative;
+      background: transparent;
+      width: 50%;
+      border: none;
+      outline: none;
+      padding: 8px 0;
+      font:lighter 1.1em open-sans,arial;
+      &:focus{
+        background: transparent;
+      }
+    }
+    &:after,&:before{
+      content: "";
+      position: absolute;
+      display: block;
+      width: 50%;
+      height: 1px;
+      background-color: #ccc; 
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      .transition(all 0.5s);
+    }
+    &:after{
+        background-color: @quiz-link-color3;
+        .transform(scaleX(0));
+    }
+    &.is-active {
+        
+        &:after{
+            transform: scaleX(1);
+            }
+
+        .mat-label {
+          color: @quiz-link-color3;
+        }
+    }
+    &.is-completed{
+        .mat-label {
+          font-size: 0.9em;
+          .transform(translateY(0));
+          font-weight: bold;
+        }
+    }
+}
+
+
+// ---------------------------
+// WORKAROUND TO REMOVE DEAFULT HTML5 DATE HYPENS,DASHES AND PLACEHOLDERS -----------
+// ---------------------------
+
+
+::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+::-webkit-datetime-edit-day-field:not([aria-valuenow]),
+::-webkit-datetime-edit-text {
+    color: transparent;
+    display: none;
+}
+
+
+
+// ---------------------------
+// PROGRESS BAR STYLES -----------
+// ---------------------------
+
+
+.progress {
+    width: 85%;
+    margin: 0 auto 20px auto;
+    border-radius: 0 !important;
+    background: #D2D1D1 !important;
+    height: 25px !important;
+    @media @i-tab-landscape {
+        width: 100%;
+   }
+   .progress-bar {
+        background: @dashboard-color;
+        padding: 4px 0;
+           h5 {
+               margin: 0;
+               @media @i-tab-landscape {
+                   font-size: 1em;
+                   line-height: 15px;
+              }
+         }
+    }
+}
+
+
+
+// ---------------------------
+// LOADER STYLES -----------
+// ---------------------------
+
+
+/* Make clicks pass-through */
+
+#nprogress {
+    pointer-events: none;
+    .bar {
+        background: @loader-color;
+        position: fixed;
+        z-index: 1034;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+    }
+    // Fancy blur effect 
+    .peg {
+        display: block;
+        position: absolute;
+        right: 0px;
+        width: 100px;
+        height: 100%;
+        .box-shadow(0 0 10px #F2593A, 0 0 5px #F2593A);
+        opacity: 1.0;
+        .transform(rotate(3deg) translate(0px, -4px));
+    }
+    // Remove these to get rid of the spinner 
+    .spinner {
+        display: block;
+        position: fixed;
+        z-index: 1034;
+        top: 15px;
+        right: 15px;
+    }
+    .spinner-icon {
+        width: 28px;
+        height: 28px;
+        box-sizing: border-box;
+        border: solid 4px transparent;
+        border-top-color: #F2593A;
+        border-left-color: #F2593A;
+        .border-radius(50%);
+        .animation(nprogress-spinner 400ms linear infinite);
+    }
+}
+
+.nprogress-custom-parent {
+    overflow: hidden;
+    position: relative;
+    #nprogress {
+        .spinner, .bar {
+            position: absolute;
+        }
+    }
+}
+
+
+
+// ---------------------------
+// LOADER ANIMATION -----------
+// ---------------------------
+
+.keyframes(~'nprogress-spinner, 0%{ transform:rotate(0); } 100%{ transform:rotate(360deg);} ');
+
+
+
+
+// @-webkit-keyframes nprogress-spinner {
+//     0% {
+//         -webkit-transform: rotate(0deg);
+//     }
+//     100% {
+//         -webkit-transform: rotate(360deg);
+//     }
+// }
+
+// @keyframes nprogress-spinner {
+//     0% {
+//         transform: rotate(0deg);
+//     }
+//     100% {
+//         transform: rotate(360deg);
+//     }
+// }
+
+
+
+// ---------------------------
+// BACK BUTTON - DIRECTIONS -----------
+// ---------------------------
+
+
+.direction {
+    .display(flex);
+    .align-items(center);
+    .justify-content(flex-start);
+    margin: 25px 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    .icon {
+        a{
+            .transition(all .2s ease-in-out);
+            &:hover{
+                .transform(scale(1.1));
+            }
+        }
+    }
+    .welcome-text {
+        font-weight: bold;
+        font-size: 1.3em;
+        padding-left: 15px;
+        margin: 0;
+        a {
+            text-decoration: none;
+            color: @quiz-link-color1;
+            cursor: default;
+            pointer-events: none;
+            &:hover {
+                color: lighten(@quiz-link-color1, 10%);
+            }
+        }
+    }
+    .duration {
+        .flex(1);
+        .display(flex);
+        .align-content(center);
+        .justify-content(flex-end);
+        i {
+            font-size: 3em;
+            color: @quiz-link-color2;
+        }
+        h4 {
+            margin: 0;
+            padding: 0 0 0 20px;
+            text-transform: uppercase;
+            text-align: left;
+            color: @quiz-link-color1;
+            font-weight: lighter;
+            span {
+                font-size: 0.8em;
+                color: @quiz-link-color3;
+            }
+        }
+    }
+}
