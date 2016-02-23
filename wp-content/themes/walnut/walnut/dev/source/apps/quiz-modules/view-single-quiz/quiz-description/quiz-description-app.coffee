@@ -5,7 +5,8 @@ define ['app'
         class Controller.ViewCollecionDetailsController extends RegionController
 
             initialize : (opts)->
-
+                $('.navbar .container-fluid').css("visibility","visible")
+                
                 {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
 
                 @view = view = @_getQuizDescriptionView()

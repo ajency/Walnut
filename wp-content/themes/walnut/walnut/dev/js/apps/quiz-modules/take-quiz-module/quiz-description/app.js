@@ -96,10 +96,14 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
 
       ModuleDescriptionView.prototype.onShow = function() {
         $('#collapseView').on('hidden.bs.collapse', function() {
-          return $('#accordionToggle').text('Expand');
+          $('#accordionToggle').removeClass('updown');
+          $('#accordionToggle').text('Expand');
+          return $('.submit2').removeClass('submit-pushed');
         });
         return $('#collapseView').on('shown.bs.collapse', function() {
-          return $('#accordionToggle').text('Collapse');
+          $('#accordionToggle').addClass('updown');
+          $('#accordionToggle').text('Collapse');
+          return $('.submit2').addClass('submit-pushed');
         });
       };
 

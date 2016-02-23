@@ -3107,6 +3107,11 @@ select:before {
   width: 100%;
   height: 100%;
 }
+
+.media_times > input[type="text"] {
+  width: 100%;
+}
+
 a.browse-content-pieces-item{height:160px;}
 
 #textbooks.list.myClass .txtbook.noCursor {

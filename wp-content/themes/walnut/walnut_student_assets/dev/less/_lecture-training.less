@@ -1,0 +1,239 @@
+ //  _               _                    _______        _       _             
+ // | |             | |                  |__   __|      (_)     (_)            
+ // | |     ___  ___| |_ _   _ _ __ ___     | |_ __ __ _ _ _ __  _ _ __   __ _ 
+ // | |    / _ \/ __| __| | | | '__/ _ \    | | '__/ _` | | '_ \| | '_ \ / _` |
+ // | |___|  __/ (__| |_| |_| | | |  __/    | | | | (_| | | | | | | | | | (_| |
+ // |______\___|\___|\__|\__,_|_|  \___|    |_|_|  \__,_|_|_| |_|_|_| |_|\__, |
+ //                                                                       __/ |
+ //                                                                      |___/ 
+
+
+
+ // ---------------------------
+ // LECTURE TRAINING STYLES -----------
+ // ---------------------------
+
+ .teacher-app {
+    #collection-details-region {
+        // margin-top: 50px;
+        padding-top: 5px;
+        @media @i-tab-landscape {
+            margin-top: 0;
+        }
+        & > div {
+            position: relative;
+            .direction {
+                position: absolute;
+                top: -100px;
+                width: 100%;
+                left: -120px;
+                @media @i-tab-landscape {
+                    position: static;
+                }
+            }
+        }
+        .grid {
+            .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+            margin-top: 50px;
+            .grid-title, .grid-body {
+                padding: 10px;
+                border-color: #eee;
+                .row {
+                    & > div {
+                        padding: 15px;
+                        .row {
+                            & > div {
+                                padding: 0 15px;
+                            }
+                        }
+                    }
+                    & > div:nth-child(-n+2) {
+                        border-right: 1px solid #eee;
+                    }
+                }
+                h3 {
+                    font-size: 1.1em;
+                    span {
+                        color: #602f1a !important;
+                        display: block;
+                        margin: 2px 0 15px 0;
+                        text-transform: uppercase;
+                    }
+                }
+                .small-text, div {
+                    color: @quiz-link-color1;
+                    line-height: 25px;
+                    label {
+                        color: #602f1a !important;
+                        display: block;
+                        text-transform: uppercase;
+                        margin: 2px 0 12px 0;
+                    }
+                }
+            }
+            .grid-body {
+                display: none !important;
+            }
+            .tiles {
+                .modTimes {
+                    .b-grey:first-child {
+                        display: none;
+                    }
+                    .pull-right:last-child {
+                        float: none !important;
+                        margin: 10px auto 0 auto;
+                        button#start-module {
+                            padding: 10px 0px;
+                            background: @button-1-danger;
+                            .box-shadow(0 3px 0 0 rgba(192, 204, 203, 0.9));
+                            border: 0;
+                            font-size: 1.2em;
+                            width: 75%;
+                            margin: 0 auto;
+                            line-height: 42px;
+                            @media @i-tab-landscape {
+                                width: 85%;
+                            }
+                            &:before, &:after {
+                                display: inline-block;
+                                font: normal normal normal 2.5em FontAwesome;
+                                color: darken(@button-1-danger, 10%);
+                                padding: 0 10px;
+                            }
+                            &:before {
+                                content: "";
+                                margin-left: 15px;
+                                float: left;
+                                background: url('../../images/dashboard_03.png') no-repeat;
+                                width: 46px;
+                                height: 46px;
+                            }
+                            &:after {
+                                content: "\f105";
+                                float: right;
+                                padding-right: 15px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+ 
+ 
+ 
+ // ---------------------------
+ // TIMELINE STYLES -----------
+ // ---------------------------
+ .cbp_tmtimeline {
+     & > li {
+         .contentPiece {
+             .cbp_tmicon {
+                 .box-shadow(0 0 0 8px #FFA39C);
+                 width: 75px;
+                 height: 75px;
+                 left: 17%;
+                 text-align: center;
+                 .cbp_tmtime {
+                     position: static;
+                     padding: 0;
+                     display: initial;
+                     text-align: center;
+                     .time {
+                         margin: 17px 0;
+                         font-size: 1.6em;
+                         line-height: 18px;
+                         color: #F15839 !important;
+                         font-family: open-sans;
+                         font-weight: bold;
+                         span {
+                             display: block;
+                             font-size: 0.6em;
+                             text-transform: uppercase;
+                             margin-top: 5px;
+                             color: #F15839;
+                         }
+                     }
+                 }
+             }
+             .cbp_tmlabel {
+                 margin: 0 0 55px 25%;
+                 & > div:first-child {
+                     .box-shadow(0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
+                     border: 1px solid #ccc;
+                     padding: 25px;
+                     width: 80%;
+                     @media @i-tab-landscape {
+                         width: 85%;
+                     }
+                     h4 {
+                         @media @i-tab-landscape {
+                             font-size: 1.1em;
+                         }
+                         a {
+                             margin: 10px 0;
+                             color: #6F361B !important;
+                             line-height: 30px;
+                             text-decoration: none;
+                         }
+                     }
+                     &:after, &:before {
+                         content: "";
+                         position: absolute;
+                         top: 35px;
+                         left: -17px;
+                         border-style: solid dotted none;
+                         border-width: 12px 12px 0;
+                         border-color: #FFFFFF transparent;
+                         display: block;
+                         width: 0;
+                         z-index: 1;
+                         -webkit-transform: rotate(90deg);
+                         -moz-transform: rotate(90deg);
+                         -o-transform: rotate(90deg);
+                         -ms-transform: rotate(90deg);
+                         transform: rotate(90deg);
+                     }
+                     &:before {
+                         border-color: #000 transparent;
+                     }
+                 }
+                 & > div:last-child {
+                     display: none;
+                 }
+             }
+         }
+     }
+     &:before {
+         left: 18.5%;
+         @media @desktop {
+             left: 19.5%;
+         }
+         @media @desktop-xl {
+             left: 18.2%;
+         }
+         @media @i-tab-landscape {
+             left: 19.2%;
+         }
+     }
+ }
+
+
+
+
+ // ---------------------------
+ // TIMELINE STYLES AFFECTING ONLY VIDEO START PAGE -----------
+ // ---------------------------
+
+
+#timeline_lecture{
+    .cbp_tmlabel{
+        & > div:first-child{
+            width: 100%;
+            & > h4{
+                font-size: 1.2em;
+            }
+        }
+    }
+}

@@ -88,8 +88,9 @@ define(['app', 'controllers/region-controller', 'text!apps/student-training-modu
               var chapter, chapterName;
               chapter = _this.textbookNames.get(options.terms.chapter);
               if (chapter != null) {
-                return chapterName = chapter.get('name');
+                chapterName = chapter.get('name');
               }
+              return $("#lect_name").html(chapterName);
             };
           })(this)
         };

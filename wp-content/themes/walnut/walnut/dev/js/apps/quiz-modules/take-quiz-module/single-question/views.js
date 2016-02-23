@@ -43,7 +43,9 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         display_mode = Marionette.getOption(this, 'display_mode');
         if (display_mode === 'replay') {
           data.showComment = true;
+          data.replay = true;
         } else {
+          data.replay = false;
           data.show_skip = true;
           data.allow_submit_answer = true;
           if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
@@ -85,6 +87,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         if (this.$el.find('#submit-question').length === 0) {
           if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
             this.$el.find('#last_question').html('This is the last question');
+            this.$el.find('#next-question').hide();
           } else {
             this.$el.find('#next-question').show();
           }

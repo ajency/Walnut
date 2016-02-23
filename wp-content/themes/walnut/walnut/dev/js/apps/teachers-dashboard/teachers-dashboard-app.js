@@ -38,8 +38,8 @@ define(['app', 'apps/teachers-dashboard/dashboard/dashboard-controller', 'apps/t
             this.teachersDashboard();
           }
           if (App.request('current:user:can', 'student')) {
-            App.navigate('students/dashboard');
-            return this.studentsDashboard();
+            $("body").hide();
+            return window.location.href = SITEURL + '/dashboard-student';
           }
         }
       },

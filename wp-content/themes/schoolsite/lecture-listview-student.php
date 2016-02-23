@@ -8,7 +8,6 @@
 ?>
 <?php
 $textbook_id = $_GET['textbook_id'];
-$lectures    = student_get_lectures();
 $textbook    = get_book($textbook_id);
 $chapters    = student_fetch_chapters($textbook_id);
 $lectures    = student_fetch_lectures_by_textbook_id($textbook_id);
@@ -30,10 +29,11 @@ foreach ($chapters['data'] as $key => $value) {
                 </div>
             </div>
             <!-- All Lectures -->
+            <h4 class="text-danger" id="danger" style="display:<?php echo count($lectures)>0?'none':'block'; ?>">There is no lesson for this filter, select other filter for lesson listings.</h4>
             <div class="row">
                 <?php foreach($lectures as $key => $lecture): ?>
                 <div class="col-sm-6 col-md-6 col-lg-6 chapter_tiles <?php echo "chapter_".$lecture['chapter_id'] ?>">
-                    <div class="l-q-cards">
+                    <div class="l-q-cards animated bounceIn">
                         <div class="l-q-cards__title lecture--card">
                             <div class="lecture">
                                 <span>Lecture :</span>
@@ -44,7 +44,7 @@ foreach ($chapters['data'] as $key => $value) {
                                 <span><?php echo $chapter_id_to_name_map[$lecture['chapter_id']] ?></span>
                             </div>
                             <div class="view">
-                                <a href="<?php echo site_url() ?>/lecture-start-student?lecture_id=<?php echo $lecture['lecture_id'] ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/view.png" class="img-responsive center-block">
+                                <a href="<?php echo site_url() ?>/#students/training-module/<?php echo $lecture['lecture_id'] ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/view.png" class="img-responsive center-block">
                                 </a>
                             </div>
                         </div>
@@ -103,6 +103,16 @@ $(document).ready(function(){
             $("."+show_class).show();            
         }else{
             $(".chapter_tiles").show();
+        }
+        var no_items = true;
+        $( ".chapter_tiles" ).each(function( index ) {
+            if( $(this).css("display")!='none' ){
+                no_items = false;
+            }
+        });
+        $("#danger").hide();
+        if(no_items==true){
+            $("#danger").show();
         }
         $("html, body").animate({ scrollTop: 0 }, "slow");
    });

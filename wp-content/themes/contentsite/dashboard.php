@@ -16,8 +16,8 @@
 /*
   Template Name: Dashboard
  */
-
 ?>
+<<<<<<< HEAD
 
 <!DOCTYPE html>
 <!DOCTYPE html>
@@ -145,3 +145,6 @@ if (ENV == 'dev') {
 
 </body>
 </html>
+=======
+<?php require_once('home.php'); ?>
+>>>>>>> develop_copy

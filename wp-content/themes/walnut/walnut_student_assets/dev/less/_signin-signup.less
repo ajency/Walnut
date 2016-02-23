@@ -1,0 +1,153 @@
+
+ //   _____ _             _           ___    _       
+ //  / ____(_)           (_)         / / |  | |      
+ // | (___  _  __ _ _ __  _ _ __    / /| |  | |_ __  
+ //  \___ \| |/ _` | '_ \| | '_ \  / / | |  | | '_ \ 
+ //  ____) | | (_| | | | | | | | |/ /  | |__| | |_) |
+ // |_____/|_|\__, |_| |_|_|_| |_/_/    \____/| .__/ 
+ //            __/ |                          | |    
+ //           |___/                           |_|    
+
+
+
+// ---------------------------
+// UNIVERSAL SINGIN-SIGNUP STYLES -----------
+// ---------------------------
+
+
+
+
+// ---------------------------
+// SIGNIN HEADER STYLES -----------
+// ---------------------------
+
+ .signin-header {
+     padding: 15px 0 35px 0;
+     text-align: center;
+     .signin-logo {
+         margin: 0;
+         & > img {
+             width: 7%;
+             @media (max-width: 1024px) {
+                 width: 12%;
+             }
+         }
+     }
+     .slogan {
+         margin: 10px 0;
+         & > img {
+             width: 20%;
+         }
+     }
+ }
+
+
+.signin-card {
+    position: relative;
+    .signin-wrapper {
+        position: absolute;
+        width: 100%;
+        z-index: 99999;
+        top: -25px;
+        .wrapped {
+            .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+            background: #fff;
+            padding: 10px;
+            .reg-login {
+                font-family: open-sans;
+                margin: 12px 0;
+                color: @quiz-link-color3;
+                @media (max-width: 1370px) {
+                    margin: 10px 0;
+                }                
+                & > h4 {
+                    margin: 0;
+                }
+            }
+            .school-details {
+                padding: 10px 0;
+                .profile-pic {
+                    height: 112px;
+                    width: 112px;
+                    padding-top: 18px;
+                    img {
+                        width: 74%;
+                    }
+                }
+                h5 {
+                    width: 70%;
+                    margin: 10px auto 0 auto;
+                    text-decoration: underline;
+                    font: 1em open-sans, arial;
+                    line-height: 22px;
+                    a {
+                        color: @quiz-link-color1;
+                        text-decoration: underline;
+                    }
+                }
+            }
+            .social-signup {
+                margin: 10px 0;
+                @media (max-width: 1370px) {
+                    margin: 8px 0;
+                }                 
+                i {
+                    padding: 10px 12px;
+                    color: #fff;
+                    font: 0.9em open-sans, arial;
+                    text-transform: uppercase;
+                    &:before {
+                        font-family: fontawesome;
+                        padding-right: 5px;
+                    }
+                }
+                .g-plus {
+                    background: #f2593a;
+                    &:hover {
+                        background: lighten(#f2593a, 10%);
+                    }
+                }
+                .fb {
+                    background: #4260a0;
+                    &:hover {
+                        background: lighten(#4260a0, 10%);
+                    }
+                }
+            }
+            .sys-login {
+                h5 {
+                    width: 70%;
+                    margin: 10px auto 0 auto;
+                    text-decoration: underline;
+                    font: 1em open-sans, arial;
+                    line-height: 22px;
+                    a {
+                        color: @quiz-link-color1;
+                    }
+                }
+            }
+            .border-rl {
+                border-right: 1px solid #eee;
+            }
+            hr{
+                @media (max-width: 1370px) {
+                    margin: 15px 0;
+                }                
+            }
+        }
+        .support-email {
+            margin: 35px 0;
+            font-family: open-sans;
+            @media (max-width: 1370px) {
+                margin: 15px 0;
+            }            
+            h5 {
+                font-size: 1.1em;
+                a {
+                    color: @quiz-link-color1;
+                    padding: 0 5px;
+                }
+            }
+        }
+    }
+}

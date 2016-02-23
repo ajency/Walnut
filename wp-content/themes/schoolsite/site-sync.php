@@ -17,8 +17,6 @@
   Template Name: Site Content Sync
  */
 ?>
-
-<!DOCTYPE html>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,37 +27,37 @@
     <meta content="" name="description"/>
     <meta content="" name="author"/>
 
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
 
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
           media="screen"/>
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
           media="screen"/>
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.mmenu.all.css" rel="stylesheet" type="text/css"
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.mmenu.all.css" rel="stylesheet" type="text/css"
           media="screen"/>
     <!-- BEGIN CORE CSS FRAMEWORK -->
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/tablesorter.default.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/tablesorter.default.css" rel="stylesheet" type="text/css"/>
 
     <!-- END CORE CSS FRAMEWORK -->
 
     <!-- BEGIN CSS TEMPLATE -->
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
-    <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
 
     
 </head>
@@ -323,7 +321,7 @@ global $chorus_options; ?>
     SITEURL = '<?php echo site_url() ?>';
     THEMEURL = '<?php echo get_template_directory_uri()?>';
 
-    <?=getLoggedInUserModel()?>
+    <?php getLoggedInUserModel()?>
 
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
@@ -336,9 +334,9 @@ global $chorus_options; ?>
     <?php } ?>
 
 </script>
-<script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
-<script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.js"></script>
-<script type="text/javascript" src="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+<script type="text/javascript" src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.js"></script>
+<script type="text/javascript" src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.tablesorter.js"></script>
 <script>
     Pace.on('hide', function () {
         document.getElementById("site_main_container").setAttribute('class', 'showAll');

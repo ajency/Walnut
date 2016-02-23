@@ -44,6 +44,8 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
         }
       },
       startQuizClassMode: function(tID, qID) {
+        $("#header-region").hide();
+        $("#left-nav-region").hide();
         if ($.allowRoute('view-quiz')) {
           return new QuizModuleApp.ViewQuiz.Controller({
             region: App.mainContentRegion,
