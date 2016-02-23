@@ -70,8 +70,8 @@
                                                         <?php endif; ?>                                                        
                                                         </p>
                                                         <div class="questions">
-                                                            <a href="/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
-                                                            <a href="/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo site_url(); ?>/quiz-listview-student?textbook_id=<?php echo $textbook->term_id ?>" class=""><img src="<?php echo STUDENT_ASSET_PATH ;?>images/q.png" class="img-responsive center-block"></a>
+                                                            <a href="<?php echo site_url(); ?>/lecture-listview-student?textbook_id=<?php echo $textbook->term_id ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/l.png" class="img-responsive center-block"></a>
                                                         </div>
                                                     </div>
                                                 </div>
