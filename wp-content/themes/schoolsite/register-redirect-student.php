@@ -30,11 +30,11 @@
                             <div class="col-sm-6 col-lg-6">
                                 <div class="info text-center">
                         <div class="mat-holder">
-                            <label for="First Name" class="mat-label">First Name <span class="mandatory">*</span></label>
+                            <label for="First Name" class="mat-label"> <span class="mandatory">*</span> First Name</label>
                             <input value="<?php echo isset($meta['first_name'])? $meta['first_name'][0]:"" ?>" name="first_name" type="text" class="mat-input" required>
                         </div>
                         <div class="mat-holder">
-                            <label for="date" class="mat-label">Date of Birth <span class="mandatory">*</span></label>
+                            <label for="date" class="mat-label"> <span class="mandatory">*</span> Date of Birth</label>
                             <input value="<?php echo isset($meta['dob'])? $meta['dob'][0]:"" ?>" name="dob" type="date" class="mat-input" required>
                         </div>                                                                                            
                                 </div>      
@@ -42,11 +42,11 @@
                             <div class="col-sm-6 col-lg-6">
                                 <div class="info text-center">
                         <div class="mat-holder">
-                            <label for="Last Name" class="mat-label">Last Name <span class="mandatory">*</span></label>
+                            <label for="Last Name" class="mat-label"> <span class="mandatory">*</span> Last Name</label>
                             <input value="<?php echo isset($meta['last_name'])? $meta['last_name'][0]:"" ?>" name="last_name" type="text" class="mat-input" required>
                         </div>
                         <div class="mat-holder">
-                            <label for="text" class="mat-label">Last School Attended <span class="mandatory">*</span></label>
+                            <label for="text" class="mat-label"> <span class="mandatory">*</span> School Name</label>
                             <input value="<?php echo isset($meta['last_school_attended'])? $meta['last_school_attended'][0]:"" ?>" name="last_school_attended" type="text" class="mat-input" required>
                         </div>                                                       
                                 </div>
@@ -58,16 +58,16 @@
                             <div class="col-sm-6 col-lg-6">
                                 <div class="info text-center">
                         <div class="mat-holder">
-                            <label for="Parent Name" class="mat-label">Parent Name <span class="mandatory">*</span></label>
+                            <label for="Parent Name" class="mat-label"> <span class="mandatory">*</span> Parent Name</label>
                             <input  value="<?php echo isset($meta['parent_name'])? $meta['parent_name'][0]:"" ?>" name="parent_name" type="text" class="mat-input" required>
                         </div>
-                            
-                        <select name="relation_with_student" id="" required>
-                                        <option value="">Relationship with student</option>
-                                        <option <?php echo isset($meta['relation_with_student']) && $meta['relation_with_student'][0]== "father" ? "selected":"" ?> value="father">Father</option>
-                                        <option <?php echo isset($meta['relation_with_student']) && $meta['relation_with_student'][0]== "mother" ? "selected":"" ?> value="mother">Mother</option>
-                                    </select>
-
+                        <div class="sel-mandatory">   
+                            <select name="relation_with_student" id="" required>
+                                            <option value="">Relationship with student</option>
+                                            <option <?php echo isset($meta['relation_with_student']) && $meta['relation_with_student'][0]== "father" ? "selected":"" ?> value="father">Father</option>
+                                            <option <?php echo isset($meta['relation_with_student']) && $meta['relation_with_student'][0]== "mother" ? "selected":"" ?> value="mother">Mother</option>
+                            </select>
+                        </div>
                         <div class="mat-holder">
                             <label for="landline" class="mat-label">Landline Number</label>
                             <input value="<?php echo isset($meta['landline_no'])? $meta['landline_no'][0]:"" ?>" name="landline_no" type="text" class="mat-input">
@@ -75,7 +75,7 @@
 
 
                         <div class="mat-holder">
-                            <label for="zipcode" class="mat-label">Zipcode <span class="mandatory">*</span></label>
+                            <label for="zipcode" class="mat-label"> <span class="mandatory">*</span> Zipcode</label>
                             <input value="<?php echo isset($meta['zipcode'])? $meta['zipcode'][0]:"" ?>" name="zipcode" type="text" class="mat-input" required>
                         </div>                                        
 
@@ -89,14 +89,17 @@
                             </div>
                             <div class="col-sm-6 col-lg-6">
                                 <div class="info text-center">
-
                         <div class="mat-holder">
-                            <label for="Mobile" class="mat-label">Mobile Number <span class="mandatory">*</span></label>
+                            <label for="Parent email" class="mat-label"> <span class="mandatory">*</span> Parent Email ID</label>
+                            <input type="text" class="mat-input" required>
+                        </div>
+                        <div class="mat-holder">
+                            <label for="Mobile" class="mat-label"> <span class="mandatory">*</span> Mobile Number</label>
                             <input value="<?php echo isset($meta['parent_phone1'])? $meta['parent_phone1'][0]:"" ?>" name="parent_phone1" type="text" class="mat-input" required>
                         </div>
 
                         <div class="mat-holder">
-                            <label for="Address" class="mat-label">Address <span class="mandatory">*</span></label>
+                            <label for="Address" class="mat-label"> <span class="mandatory">*</span> Address</label>
                             <input value="<?php echo isset($meta['address'])? $meta['address'][0]:"" ?>" name="address" type="text" class="mat-input" required>
                         </div>
 
@@ -109,7 +112,7 @@
                                      </select> 
                             
                         <div class="mat-holder">
-                            <label for="city" class="mat-label">City <span class="mandatory">*</span></label>
+                            <label for="city" class="mat-label"> <span class="mandatory">*</span> City</label>
                             <input value="<?php echo isset($meta['city'])? $meta['city'][0]:"" ?>" name="city" type="text" class="mat-input" required>
                         </div>
 

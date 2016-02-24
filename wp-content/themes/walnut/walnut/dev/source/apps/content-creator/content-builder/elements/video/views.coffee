@@ -36,6 +36,7 @@ define ['app'], (App)->
 				'click #prev' : '_playPrevVideo'
 				'click #next' : '_playNextVideo'
 				'click .playlist-video' : '_playClickedVideo'
+				'click':-> @trigger "show:video:properties"
 
 			# check if a valid image_id is set for the element
 			# if present ignore else run the Holder.js to show a placeholder
@@ -52,8 +53,11 @@ define ['app'], (App)->
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
-				
+
 				@_addVideoElement @videos[0]
+
+				@$el.closest('.element-wrapper').off 'click', @_showProperties
+				@$el.closest('.element-wrapper').on 'click', @_showProperties
 
 			_setVideoList : ->
 				@$el.append('<div id="playlist-hover" class="playlistHover">
@@ -118,24 +122,28 @@ define ['app'], (App)->
 			_showMediaManager : (e)->
 				e.stopPropagation()
 				@trigger "show:media:manager"
-			
+
 			_addVideoElement:(videoUrl, autoplay=false)->
-			
+
 				@$el.find('.videoContainer').empty()
 				if _.str.contains videoUrl, 'youtube.com'
 					vidID= _.str.strRightBack videoUrl,'?v='
 					@$el.find('.videoContainer').html '<div class="videoWrapper">
-					<iframe width="100%" height="349" 
-						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0&autoplay=1" 
+					<iframe width="100%" height="349"
+						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0&autoplay=1"
 						frameborder="0">
 					</iframe></div>'
-					
+
 				else
 					@$el.find('.videoContainer').html '<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%"
 									poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
 												data-setup="{}" controls src="'+videoUrl+'">
 
 								</video>'
-								
+
 					@$el.find('video')[0].load()
 					@$el.find('video')[0].play()
+
+			_showProperties : (evt)=>
+                @trigger "show:video:properties"
+                evt.stopPropagation()

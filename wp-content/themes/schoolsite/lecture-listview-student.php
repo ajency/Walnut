@@ -23,7 +23,7 @@ foreach ($chapters['data'] as $key => $value) {
             <div class="row">
                 <div class="col-md-12 col-lg-12">
                     <div class="direction text-center">
-                        <div class="icon"><a href="<?php echo site_url() ?>/dashboard-student" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div>
+                        <div class="icon"><a href="<?php echo get_site_url();?>/dashboard-student" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div>
                         <p class="welcome-text">You're on <a href="javascript:"><?php echo $textbook->name ?></a> Lectures</p>
                     </div>
                 </div>
@@ -44,7 +44,7 @@ foreach ($chapters['data'] as $key => $value) {
                                 <span><?php echo $chapter_id_to_name_map[$lecture['chapter_id']] ?></span>
                             </div>
                             <div class="view">
-                                <a href="<?php echo site_url() ?>/#students/training-module/<?php echo $lecture['lecture_id'] ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/view.png" class="img-responsive center-block">
+                                <a href="<?php echo get_site_url();?>/#students/training-module/<?php echo $lecture['lecture_id'] ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/view.png" class="img-responsive center-block">
                                 </a>
                             </div>
                         </div>

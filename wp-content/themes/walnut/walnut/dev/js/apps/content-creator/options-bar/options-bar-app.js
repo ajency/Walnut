@@ -2,7 +2,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['app', 'controllers/region-controller', 'apps/content-creator/options-bar/options-bar-views'], function(App, RegionController) {
+define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator/options-bar/options-bar-views'], function(App, RegionController, bootbox) {
   return App.module("ContentCreator.OptionsBar", function(OptionsBar, App, Backbone, Marionette, $, _) {
     var OptionsBarController;
     OptionsBarController = (function(superClass) {
@@ -14,6 +14,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
         this._fetchSections = bind(this._fetchSections, this);
         this._fetchChapters = bind(this._fetchChapters, this);
         this.showView = bind(this.showView, this);
+        this._beforeChangeContentPiece = bind(this._beforeChangeContentPiece, this);
         return OptionsBarController.__super__.constructor.apply(this, arguments);
       }
 
@@ -24,6 +25,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
           "fetch_all": true
         });
         App.execute("when:fetched", [this.textbooksCollection, this.contentPieceModel], this.showView);
+        this.listenTo(this.region, "change:content:piece", this._beforeChangeContentPiece);
         this.listenTo(this.view, "save:data:to:model", (function(_this) {
           return function(data) {
             _this.contentPieceModel.set(data);
@@ -40,6 +42,20 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/options-ba
             return _this.region.trigger('close:grading:parameter');
           };
         })(this));
+      };
+
+      OptionsBarController.prototype._beforeChangeContentPiece = function(nextID) {
+        var message;
+        if (this.contentPieceModel.isNew()) {
+          return message = 'You are in the middle of creating a new content piece. If you reload the page your changes will be lost.';
+        } else {
+          this.view.triggerMethod('save:question:settings');
+          if ((!this.view.$el.find('form').valid()) || $('form input[name="complete"]').val() === 'false') {
+            return bootbox.alert('Error occured saving your content');
+          } else {
+            return App.navigate("edit-content/" + nextID, true);
+          }
+        }
       };
 
       OptionsBarController.prototype.showView = function() {

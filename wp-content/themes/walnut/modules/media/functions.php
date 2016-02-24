@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function get_site_media($query, $search_string=''){
 
@@ -37,7 +37,7 @@ function get_site_media($query, $search_string=''){
 
 	if ( current_user_can( get_post_type_object( 'attachment' )->cap->read_private_posts ) )
 		$query['post_status'] .= ',private';
-	
+
 	$query = apply_filters( 'ajax_query_attachments_args', $query );
 
 	$query = new WP_Query( $query );
@@ -94,15 +94,15 @@ function media_encrypt_files() {
         if(isset($_POST['new_url_attaches']) && !empty($_POST['new_url_attaches'])){
             encrypt_media_files($_POST['new_url_attaches']);
         }
-        
+
     }
- 
+
 }
 
 add_filter( 'admin_init', 'media_encrypt_files', 100);
 
 function encrypt_media_files($media_files){
-    
+
     #setting memory limit to infinite for videos conversion.
     ini_set('memory_limit', '-1');
     ini_set('max_memory_limit', '-1');
@@ -117,16 +117,16 @@ function encrypt_media_files($media_files){
            $enc_media_type = $mediatype[0];
         }
         elseif($pathinfo[$count_pathinfo-2] == 'videos-web'){
-           $enc_media_type = $mediatype[1];   
+           $enc_media_type = $mediatype[1];
         }
-        
+
         if(in_array($enc_media_type, $mediatype)){
         $filename = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'media-web'
                 .DIRECTORY_SEPARATOR.$pathinfo[$count_pathinfo-2].DIRECTORY_SEPARATOR.$pathinfo[$count_pathinfo-1];
-        
+
         $filename_enc = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$enc_media_type
                 .DIRECTORY_SEPARATOR.$pathinfo[$count_pathinfo-1];
-        
+
         aes_file_encrypt($filename,$filename_enc,$enc_media_type);
         }
     }
@@ -134,16 +134,16 @@ function encrypt_media_files($media_files){
 
 function aes_file_encrypt($orig_file,$encfile,$mediatype){
     $inputKey = "kal/dvjBWAaD8+fl0a1b1JljOJtdv6G6"; //unique key to be used for AES encryption and decryption
-    
+
     $file_data = file_get_contents($orig_file);
 
     $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_128,
           $inputKey, $file_data, MCRYPT_MODE_ECB);
-   
+
     if (!file_exists(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$mediatype)) {
         mkdir(WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$mediatype, 0777, true);
     }
-    
+
     $nfile = fopen($encfile, "w") ;
     fwrite($nfile, $enc);
     fclose($nfile);
@@ -152,27 +152,27 @@ function aes_file_encrypt($orig_file,$encfile,$mediatype){
 
 
 /*
- * function to decrypt a file 
- * 
- * @param string $src_url  source url as stored in posts table 
+ * function to decrypt a file
+ *
+ * @param string $src_url  source url as stored in posts table
  * @param string $mediatype media type  audios|videos
- * 
+ *
  * @return url $temp_url ur of the decrypted file
  */
 function aes_file_decrypt($src_url,$mediatype){
-    
+
     $src_file_info = pathinfo($src_url);
-    
+
     $src_file_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$mediatype.DIRECTORY_SEPARATOR.$src_file_info['basename'];
-            
+
     $temp_path = WP_CONTENT_DIR.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$mediatype;
-    
-    if (!file_exists($temp_path)) {   
+
+    if (!file_exists($temp_path)) {
         mkdir($temp_path, 0777, true);
     }
 
     $temp_user_path = $temp_path.DIRECTORY_SEPARATOR.get_current_user_id();
-    if (!file_exists($temp_user_path)) {   
+    if (!file_exists($temp_user_path)) {
         mkdir($temp_user_path, 0777, true);
     }
     $inputKey = "kal/dvjBWAaD8+fl0a1b1JljOJtdv6G6"; //unique key to be used for AES encryption and decryption
@@ -187,8 +187,8 @@ function aes_file_decrypt($src_url,$mediatype){
 
     $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,
           $inputKey, $file_data, MCRYPT_MODE_ECB);
-   
-    
+
+
     $nfile = fopen($temp_user_path.DIRECTORY_SEPARATOR.$src_file_info['basename'], "w") ;
     fwrite($nfile, $dec);
     fclose($nfile);
@@ -199,17 +199,35 @@ function aes_file_decrypt($src_url,$mediatype){
     
     $wp_upload_dir = wp_upload_dir();
     $temp_url = str_replace("images", "", $wp_upload_dir['baseurl']);
-    
+
     $temp_url = $temp_url.'/tmp/'.$mediatype.'/'.get_current_user_id().'/'.$src_file_info['basename'];
     return $temp_url;
-       
+
 }
 
+function get_media_file_type($filename){
+    $type='';
+    $ft= wp_check_filetype($filename);
+    if($ft['type']){
+        $ftype = explode('/',$ft['type']);
+        $type = $ftype[0];
+    }
+    return $type;
+}
 
 function modify_media_url($mediaresponse,$media_type){
     $temp_media_folder = array('audio'=>'audios','video'=>'videos');
-    
+
     $mediaresponse['url'] =  aes_file_decrypt($mediaresponse['url'],$temp_media_folder[$media_type]);
-    
+
     return $mediaresponse;
 }
+
+function add_custom_upload_mimes($existing_mimes=array()){
+
+    $existing_mimes['mp4'] = 'video/mp4';
+    return $existing_mimes;
+
+}
+
+add_filter( 'upload_mimes', 'add_custom_upload_mimes', 100, 2 );

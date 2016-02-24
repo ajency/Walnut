@@ -93,7 +93,8 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/content-select
               }
             });
             return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
-              return _this.layout.allContentRegion.trigger("update:pager");
+              _this.layout.allContentRegion.trigger("update:pager");
+              return _this.layout.addSetRegion.trigger("update:collection");
             });
           };
         })(this));

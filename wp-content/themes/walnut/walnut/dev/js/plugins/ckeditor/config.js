@@ -52,7 +52,7 @@ CKEDITOR.editorConfig = function( config ) {
                         '/'
                     ,
                         {name: 'styles',
-                        items: [ 'Styles',  'Font', 'FontSize' ] }
+                        items: [ 'Styles',  'Font','FontAwesome', 'FontSize' ] }
                     ,
                         {name: 'colors',
                         items: [ 'TextColor', 'BGColor' ] }
@@ -80,6 +80,22 @@ CKEDITOR.editorConfig = function( config ) {
                             Sacramento;'
 
     fontsArray = (config.font_names).split(';')
+<<<<<<< HEAD
+
+    font_names= [];
+
+    for (i in fontsArray) font_names.push(fontsArray[i].trim());
+
+    config.font_names= font_names.sort().join(';');
+
+    config.fontSize_defaultLabel = '22';
+    config.font_defaultLabel = 'Qarmic Sans Free';
+
+	config.extraPlugins = 'fontawesome';
+	config.contentsCss = 'fontawesome/css/font-awesome.min.css';
+	config.allowedContent = true;
+};
+=======
 
     font_names= [];
 
@@ -93,4 +109,6 @@ CKEDITOR.editorConfig = function( config ) {
 };
 
 CKEDITOR.addCss( '.cke_editable { font-family: "Qarmic Sans Free" }' );
+>>>>>>> develop
 
+CKEDITOR.addCss( '.cke_editable { font-family: "Qarmic Sans Free" }' );

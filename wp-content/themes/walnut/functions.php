@@ -105,7 +105,19 @@ if(!function_exists('_log')){
 
 
 
-// Remote sync module to generate table data which van be downloaded from local school site
+
+
+
+
+
+
+
+
+
+
+
+//Added for testing
+
 //Generating table data
 add_action( 'wp_ajax_sync_generate', 'generate_sync_data' );
 add_action( 'wp_ajax_nopriv_sync_generate', 'generate_sync_data' );
@@ -116,7 +128,7 @@ function generate_sync_data(){
 
     $network_url = preg_replace('#^https?://#', '', rtrim(get_site_url(),'/'));
 
-
+    
     if(isset($_REQUEST['blog_id'])){
         $prefix = $wpdb->prefix.$_REQUEST['blog_id'].'_';
     }else{
@@ -139,7 +151,7 @@ function generate_sync_data(){
 
     if($table=='usermeta'){
       $users = $wpdb->get_results( "SELECT ID FROM {$wpdb->prefix}users WHERE 1=1 AND {$wpdb->prefix}users.ID IN (
-       SELECT {$wpdb->prefix}usermeta.user_id FROM {$wpdb->prefix}usermeta
+       SELECT {$wpdb->prefix}usermeta.user_id FROM {$wpdb->prefix}usermeta 
        WHERE {$wpdb->prefix}usermeta.meta_key = 'primary_blog'
        AND {$wpdb->prefix}usermeta.meta_value = {$_REQUEST['blog_id']})",ARRAY_A );
       $f = fopen($filename, 'w');
@@ -157,7 +169,7 @@ function generate_sync_data(){
     }else{
       if($table=='users'){
         $data = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}users WHERE 1=1 AND {$wpdb->prefix}users.ID IN (
-         SELECT {$wpdb->prefix}usermeta.user_id FROM {$wpdb->prefix}usermeta
+         SELECT {$wpdb->prefix}usermeta.user_id FROM {$wpdb->prefix}usermeta 
          WHERE {$wpdb->prefix}usermeta.meta_key = 'primary_blog'
          AND {$wpdb->prefix}usermeta.meta_value = {$_REQUEST['blog_id']})",ARRAY_A );
 
@@ -203,9 +215,9 @@ function generate_sync_data(){
           }else if($line['meta_key'] == '_menu_item_url' && strpos($line['meta_value'],$network_url) !== false){
             $line['meta_value'] = str_replace($network_url, $_REQUEST['school'], $line['meta_value']);
           }
-
+          
             fputcsv($f, $line,',','"');
-
+                   
         }
         fclose($f);
 
@@ -236,7 +248,7 @@ function generate_sync_data(){
 
    }
 
-
+    
 
 
 
@@ -286,34 +298,37 @@ function str_replace_deep($search, $replace, $subject)
 
 
 
-function gzCompressFile($source, $level = 9){
-    $dest = $source . '.gz';
-    $mode = 'wb' . $level;
-    $error = false;
-    if ($fp_out = gzopen($dest, $mode)) {
-        if ($fp_in = fopen($source,'rb')) {
-            while (!feof($fp_in))
-                gzwrite($fp_out, fread($fp_in, 1024 * 512));
-            fclose($fp_in);
+function gzCompressFile($source, $level = 9){ 
+    $dest = $source . '.gz'; 
+    $mode = 'wb' . $level; 
+    $error = false; 
+    if ($fp_out = gzopen($dest, $mode)) { 
+        if ($fp_in = fopen($source,'rb')) { 
+            while (!feof($fp_in)) 
+                gzwrite($fp_out, fread($fp_in, 1024 * 512)); 
+            fclose($fp_in); 
         } else {
-            $error = true;
+            $error = true; 
         }
-        gzclose($fp_out);
+        gzclose($fp_out); 
     } else {
-        $error = true;
+        $error = true; 
     }
     if ($error)
-        return false;
+        return false; 
     else
-        return $dest;
-}
+        return $dest; 
+} 
 
 
 function deleteDir($path) {
-    if (empty($path)) {
+    if (empty($path)) { 
         return false;
     }
     return is_file($path) ?
             @unlink($path) :
             array_map(__FUNCTION__, glob($path.'/*')) == @rmdir($path);
 }
+
+
+

@@ -323,11 +323,18 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           return function(result) {
             data.action = 'bulk-move-content-pieces';
             return $.post(AJAXURL, data).success(function(resp) {
+              var i;
+              i = 0;
+              while (i < data.IDs.length) {
+                $('#checkbox' + data.IDs[i]).closest('tr').remove();
+                i++;
+              }
               return bootbox.alert('Moved Successfully.');
             }).fail(function(resp) {
               console.log('some error occurred');
               return console.log(resp);
             }).done(function() {
+              $("#destination_textbook").hide();
               return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
             });
           };

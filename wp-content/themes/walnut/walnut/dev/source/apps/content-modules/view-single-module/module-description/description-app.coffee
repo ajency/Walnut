@@ -5,11 +5,9 @@ define ['app'
 		class Controller.ViewCollecionDetailsController extends RegionController
 
 			initialize : (opts)->
-				console.log 'am i reaching here?'
 				# for take-class module the template changes a bit
 				# so based on this value (@mode) we set the template additional stuff
 				{@model,@mode,@questionResponseCollection,@textbookNames}= opts
-				console.log 'test'
 				@view = view = @_getCollectionDetailsView()
 
 				@listenTo view, 'start:teaching:module', =>
@@ -112,7 +110,6 @@ define ['app'
 				data
 
 			initialize : ->
-				console.log 'initialized description app'
 				@mode = Marionette.getOption @, 'mode'
 
 			startModule : =>

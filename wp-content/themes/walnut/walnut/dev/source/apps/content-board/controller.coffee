@@ -6,7 +6,7 @@ define ['app'
 ], (App, RegionController)->
 
 	#used for preview of content pieces and taking of quiz/teaching-module
-	
+
 	App.module "ContentPreview.ContentBoard", (ContentBoard, App, Backbone, Marionette, $, _)->
 		class ContentBoard.Controller extends RegionController
 
@@ -20,13 +20,13 @@ define ['app'
 
 				@listenTo @view, "add:new:element", (container, type)->
 					App.request "add:new:element", container, type
-					
-				@listenTo @view, "close", => 
+
+				@listenTo @view, "close", =>
 					audioEls = @view.$el.find '.audio'
 					_.each audioEls,(el, ind)->
 						$(el).find '.pause'
 						.trigger 'click'
-						
+
 				@listenTo @view, 'dependencies:fetched', =>
 					# Bookblock is currently initialized only for student training.
 					# And without initialization, content (question area, feedback area) can't be seen.
@@ -35,11 +35,14 @@ define ['app'
 					# 	shadowSides : 0.8
 					# 	shadowFlip : 0.7
 					# 	direction: @direction
-						
+
 					fillElements = @startFillingElements()
+					@view.$el.find '.cke_widget_drag_handler_container'
+					.remove()
+
 					fillElements.done =>
 						setTimeout ->
-						
+
 							$('#loading-content-board').remove()
 							$('#question-area').removeClass 'vHidden'
 							# $('.bb-bookblock').bookblock 'jump',2

@@ -1,7 +1,7 @@
 var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html'], function(App, RegionController, quizDetailsTpl) {
+define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html', 'bootbox'], function(App, RegionController, quizDetailsTpl, bootbox) {
   return App.module("QuizModuleApp.Controller", function(Controller, App) {
     var QuizDetailsView;
     Controller.ViewCollecionDetailsController = (function(superClass) {
@@ -12,9 +12,38 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       }
 
       ViewCollecionDetailsController.prototype.initialize = function(opts) {
-        var view;
+        var c, i, r, ref, total, view;
         $('.navbar .container-fluid').css("visibility", "visible");
         this.model = opts.model, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, this.quizResponseSummary = opts.quizResponseSummary;
+        if ((ref = Marionette.getOption(this, 'display_mode')) !== 'replay' && ref !== 'quiz_report') {
+          if (this.model._fetch.responseJSON.data.content_pieces !== void 0) {
+            r = this.model._fetch.responseJSON.data.content_layout;
+            console.log(this.model._fetch.responseJSON.data);
+            c = this.model._fetch.responseJSON.data.content_pieces.length;
+            total = 0;
+            i = 0;
+            while (i < r.length) {
+              if (r[i].data === void 0) {
+                total++;
+                i++;
+                continue;
+              }
+              total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3);
+              i++;
+            }
+            if (total > c) {
+              bootbox.confirm('Quiz could not be generated as there are less number of questions!', (function(_this) {
+                return function(result) {
+                  if (result) {
+                    return $("#take-quiz").hide();
+                  } else {
+                    return $("#take-quiz").hide();
+                  }
+                };
+              })(this));
+            }
+          }
+        }
         this.view = view = this._getQuizDescriptionView();
         this.listenTo(view, 'start:quiz:module', (function(_this) {
           return function() {

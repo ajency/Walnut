@@ -13,6 +13,8 @@ define ['app'
 			template : listitemTpl
 
 			onShow:->
+				@$el.addClass 'noCursor' if Marionette.getOption(@, 'mode') is 'take-quiz'
+				
 				@$el.attr 'data-name', @model.get 'name'
 
 				@$el.attr 'data-modules', @model.get 'modules_count'
@@ -26,14 +28,18 @@ define ['app'
 
 				route= App.getCurrentRoute()
 
-				data.url= '#'+route+'/textbook/'+ @model.get 'term_id'
-
 				mode = Marionette.getOption @, 'mode'
 
 				data.take_quiz = true if mode is 'take-quiz' 
 
 				data.training_mode = true if mode is 'training'
-
+				
+				data.url= '#'+route+'/textbook/'+ @model.get 'term_id'
+				
+				if data.take_quiz
+					data.quizzes_url = data.url
+					data.training_modules_url  = "#students/training-modules/textbook/"+ @model.get 'term_id'
+				
 				data
 
 		class EmptyView extends Marionette.ItemView
@@ -85,8 +91,8 @@ define ['app'
 
 				@dimensions = 
 					status: 'all'
-
-				$("li.txtbook").click ->
-				  window.location = $(this).find("a").attr("href")
-				  false
-
+					
+				if  Marionette.getOption(@,'mode') isnt 'take-quiz' 
+					$("li.txtbook").click ->
+						window.location = $(this).find("a").attr("href")
+						false

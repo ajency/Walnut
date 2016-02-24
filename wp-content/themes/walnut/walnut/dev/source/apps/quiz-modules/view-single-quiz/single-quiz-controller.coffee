@@ -20,7 +20,9 @@ define ['app'
 			display_mode = null
 
 			initialize: (opts) ->
-
+				
+				$(window).off 'beforeunload'
+				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
 
 				{quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts

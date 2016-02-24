@@ -1,9 +1,10 @@
 define ['app'
-        'apps/content-creator/content-builder/element/controller'
-        'apps/content-creator/content-builder/elements/video/views'],
+		'apps/content-creator/content-builder/element/controller'
+		'apps/content-creator/content-builder/elements/video/views'],
 (App, Element)->
-	App.module 'ContentCreator.ContentBuilder.Element.Video',
-	(Video, App, Backbone, Marionette, $, _)->
+
+	App.module 'ContentCreator.ContentBuilder.Element.Video', (Video, App, Backbone, Marionette, $, _)->
+
 
 		# menu controller
 		class Video.Controller extends Element.Controller
@@ -55,7 +56,7 @@ define ['app'
 					video_ids.push parseInt id
 
 				@layout.model.set 'video_ids',video_ids
-				
+
 			# setup templates for the element
 			renderElement: ()=>
 				@removeSpinner()
@@ -64,7 +65,7 @@ define ['app'
 	#                videoModel = App.request "get:media:by:id", @layout.model.get 'video_id'
 				videoCollection = @_getVideoCollection()
 				App.execute "when:fetched", videoCollection, =>
-					
+
 					videoCollection.each (model,index)=>
 						titles= @layout.model.get 'title'
 						if _.str.contains(titles[index], 'youtube.com') and not model.get 'url'
@@ -92,5 +93,10 @@ define ['app'
 							'videoUrl' : _.first @videoCollection.pluck 'url'
 						@layout.elementRegion.show @view
 						@layout.model.save()
-						
+
+					@listenTo @view, "show show:video:properties", =>
+						App.execute "show:question:properties",
+						model : @layout.model
+
 					@layout.elementRegion.show @view
+

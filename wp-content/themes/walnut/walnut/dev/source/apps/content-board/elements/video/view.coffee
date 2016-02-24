@@ -39,6 +39,7 @@ define ['app'], (App)->
 
 				return if not @model.get('video_ids').length
 
+				@model.set 'autoplay': _.toBool @model.get 'autoplay'
 				@videos = @model.get('videoUrls')
 				@index = 0
 
@@ -47,12 +48,10 @@ define ['app'], (App)->
 
 				@_setVideoList() if _.size(@videos) > 1
 				@$el.find(".playlist-video[data-index='0']").addClass 'currentVid'
-				
-				@_addVideoElement @videos[0]
+
+				@_addVideoElement @videos[0], @model.get 'autoplay'
 
 			_setVideoList : ->
-				console.log '@model'
-				console.log @model
 				@$el.append('<div id="playlist-hover" class="playlistHover">
 								<div class="row m-l-0 m-r-0 p-b-5 m-b-5">
 									<div class="col-sm-8 nowPlaying">
@@ -113,20 +112,39 @@ define ['app'], (App)->
 
 				if not @videos[@index]
 					@$el.find('video').attr 'poster', SITEURL+'/wp-content/themes/walnut/images/video-unavailable.png'
-				
+
 				@_addVideoElement @videos[@index], true
 
 			_addVideoElement:(videoUrl, autoplay=false)->
-			
+
 				@$el.find('.videoContainer').empty()
 				if _.str.contains videoUrl, 'youtube.com'
+					autoplay = if autoplay then 1 else 0
+					params = "&autoplay=#{autoplay}"
+
+					startTime = if @model.get('startTime') then @model.get('startTime') else 0
+					params += "&start="+startTime
+
+					if @model.get('endTime') and @model.get('endTime') isnt '0'
+						params += "&end="+@model.get 'endTime'
+
 					vidID= _.str.strRightBack videoUrl,'?v='
+
 					@$el.find('.videoContainer').html '<div class="videoWrapper">
-					<iframe width="100%" height="349" 
-						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0&autoplay=1" 
+					<iframe width="100%" height="349"
+						src="https://www.youtube.com/embed/'+vidID+'?rel=0&amp;showinfo=0'+params+'"
 						frameborder="0">
 					</iframe></div>'
 				else
+					videoUrl += "#t="
+					if @model.get 'startTime'
+						videoUrl += @model.get 'startTime'
+					else
+						videoUrl += 0
+
+					if @model.get('endTime') and @model.get('endTime') isnt '0'
+						videoUrl += ","+@model.get 'endTime'
+
 					@$el.find('.videoContainer').html '<video class="video-js vjs-default-skin show-video" controls preload="none" height="auto" width="100%"
 									poster="'+SITEURL+'/wp-content/themes/walnut/images/video-poster.jpg"
 												data-setup="{}" controls src="'+videoUrl+'">

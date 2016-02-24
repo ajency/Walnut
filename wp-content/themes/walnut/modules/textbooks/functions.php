@@ -133,10 +133,11 @@ function get_textbooks( $args = array() ) {
         $count_args['fields'] = 'count';
         $count_args['number'] = '';
         $count_total = get_terms( 'textbook', $count_args );
-        switch_to_blog( $current_blog );
+        restore_current_blog();// added by kapil to fix blog id problem
     } //if filtering for a particular class, get textbooks based on which class they belong to
-    else if (is_numeric( $class_id ) || $class_id == '0')
+    else if (is_numeric( $class_id ) || $class_id == '0'){
         $textbooks = get_textbooks_for_class( $class_id );
+    }
 
     //get textbooks for logged in user depending on the class the user belongs to
     //generally used for logged in students
@@ -157,16 +158,17 @@ function get_textbooks( $args = array() ) {
 
         foreach ($textbooks as $book){
             $book= get_book( $book,$division,$user_id );
-            if($book)
-                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name 
-                $data[]= $book;
+            if($book){
+                $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
+                $data[]= $book;               
+            }
+                
         }
 
 
     }
     $textbooks_data['data'] = $data;
     $textbooks_data['count'] = $count_total;
-
     return $textbooks_data;
 }
 
@@ -209,14 +211,17 @@ function get_book( $book, $division=0,$user_id=0) {
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
 
-        if(!$book_dets)
+        if(!$book_dets){
+            restore_current_blog();
             return false;
+        }
 
     } else if (is_numeric( $book->term_id )) {
         $book_id = $book->term_id;
         $book_dets = $book;
 
     } else {
+        restore_current_blog();
         return false;
     }
 
@@ -305,7 +310,7 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
 
-    restore_current_blog();
+    
 
     if ($division && $book_dets->parent === 0){
         $textbook_status = get_status_for_textbook($book_id, $division);
@@ -328,7 +333,7 @@ function get_book( $book, $division=0,$user_id=0) {
     }
 
 
-
+    restore_current_blog();
     return $book_dets;
 }
 

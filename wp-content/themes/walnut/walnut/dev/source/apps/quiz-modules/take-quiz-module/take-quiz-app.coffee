@@ -26,6 +26,8 @@ define ['app'
 
 					@_startTakeQuiz()
 
+					App.vent.bind "closed:quiz", @_autosaveQuestionTime
+
 				_startTakeQuiz:=>
 
 					if not @questionResponseCollection
@@ -89,14 +91,17 @@ define ['app'
 						time = @timerObject.request "get:elapsed:time"
 						@_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
 					,30000
-
+					
+					$(window).on 'beforeunload', =>
+						@_autosaveQuestionTime()
+						return 'Quiz in progress'
+						
 				_autosaveQuestionTime:=>
 
 					questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
 
 					totalTime =@timerObject.request "get:elapsed:time"
 					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
-					pausedQuestionTime =0 #reset to 0 once used
 
 					if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
 
@@ -214,6 +219,7 @@ define ['app'
 
 
 				_showSingleQuizApp:->
+					
 					App.execute "show:single:quiz:app",
 						region                      : App.mainContentRegion
 						quizModel                   : quizModel

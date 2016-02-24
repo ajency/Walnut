@@ -1,6 +1,6 @@
 define ['app'
         'controllers/region-controller'
-        'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html'], (App, RegionController, quizDetailsTpl)->
+        'text!apps/quiz-modules/view-single-quiz/quiz-description/templates/quiz-description.html', 'bootbox'], (App, RegionController, quizDetailsTpl, bootbox)->
     App.module "QuizModuleApp.Controller", (Controller, App)->
         class Controller.ViewCollecionDetailsController extends RegionController
 
@@ -8,6 +8,31 @@ define ['app'
                 $('.navbar .container-fluid').css("visibility","visible")
                 
                 {@model,@textbookNames, @display_mode,@quizResponseSummary}= opts
+                
+                #code added by kapil to block the quiz generations if there are insufficient questions due to deletion of set added questions STARTS
+                if Marionette.getOption(@, 'display_mode') not in ['replay','quiz_report']
+                    if @model._fetch.responseJSON.data.content_pieces != undefined
+                        r = @model._fetch.responseJSON.data.content_layout
+                        console.log(@model._fetch.responseJSON.data)
+                        c = @model._fetch.responseJSON.data.content_pieces.length
+                        total = 0
+                        i = 0
+                        while i < r.length
+                          if r[i].data  == undefined
+                            total++
+                            i++
+                            continue
+                          total += parseInt(r[i].data.lvl1) + parseInt(r[i].data.lvl2) + parseInt(r[i].data.lvl3)
+                          i++
+
+                        if(total > c)
+                            bootbox.confirm 'Quiz could not be generated as there are less number of questions!',(result)=>
+                                if result
+                                    $("#take-quiz").hide()
+                                else 
+                                    $("#take-quiz").hide()
+                #code added by kapil to block the quiz generations if there are insufficient questions due to deletion of set added questions ENDS
+
 
                 @view = view = @_getQuizDescriptionView()
 

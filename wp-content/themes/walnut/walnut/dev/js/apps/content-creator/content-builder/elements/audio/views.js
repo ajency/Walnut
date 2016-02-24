@@ -1,4 +1,5 @@
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 define(['app'], function(App) {
@@ -7,6 +8,7 @@ define(['app'], function(App) {
       extend(AudioView, superClass);
 
       function AudioView() {
+        this._showProperties = bind(this._showProperties, this);
         return AudioView.__super__.constructor.apply(this, arguments);
       }
 
@@ -33,7 +35,8 @@ define(['app'], function(App) {
       AudioView.prototype.events = {
         'click': function(e) {
           e.stopPropagation();
-          return this.trigger("show:media:manager");
+          this.trigger("show:media:manager");
+          return this.trigger("show:audio:properties");
         },
         'click .panzerlist .controls': '_stopPropagating',
         'click .panzerlist .list': '_stopPropagating'
@@ -44,13 +47,20 @@ define(['app'], function(App) {
       };
 
       AudioView.prototype.onShow = function() {
-        return this.$el.find('audio.audio1').panzerlist({
+        this.$el.find('audio.audio1').panzerlist({
           theme: 'light',
           layout: 'big',
           expanded: true,
           showduration: true,
           show_prev_next: true
         });
+        this.$el.closest('.element-wrapper').off('click', this._showProperties);
+        return this.$el.closest('.element-wrapper').on('click', this._showProperties);
+      };
+
+      AudioView.prototype._showProperties = function(evt) {
+        this.trigger("show:audio:properties");
+        return evt.stopPropagation();
       };
 
       return AudioView;

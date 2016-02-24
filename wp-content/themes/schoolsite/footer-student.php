@@ -14,7 +14,7 @@ global $chorus_options;
     <?php }?>
 
     <?php print_r(getLoggedInUserModel());?>
-
+    MAIN_SITE='<?php echo MAIN_SITE?>';
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
     CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';

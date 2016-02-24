@@ -27,41 +27,52 @@
     <meta content="" name="description"/>
     <meta content="" name="author"/>
 
-    <link href="./wp-content/themes/walnut/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
-    <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/listnav.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/select2.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/TimeCircles.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/video-js.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
 
-    <link href="./wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
           media="screen"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
           media="screen"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/jquery.mmenu.all.css" rel="stylesheet" type="text/css"
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/jquery.mmenu.all.css" rel="stylesheet" type="text/css"
           media="screen"/>
     <!-- BEGIN CORE CSS FRAMEWORK -->
-    <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev//css/jquery.resizableColumns.css" rel="stylesheet" media="screen"/>
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/animate.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bootstrap-spinedit.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev//css/jquery.resizableColumns.css" rel="stylesheet" media="screen"/>
 
     <!-- BEGIN BOOK BLOCK -->
-    <link href="./wp-content/themes/walnut/walnut/dev/css/bookBlock/custom.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/bookBlock/bookblock.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bookBlock/custom.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bookBlock/bookblock.css" rel="stylesheet" type="text/css">
     <!-- END CORE CSS FRAMEWORK -->
 
     <!-- BEGIN CSS TEMPLATE -->
-    <link href="./wp-content/themes/walnut/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
-    <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/style.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/responsive.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
-    <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript">
+    function logout(){
+        event.preventDefault();
+        $("#logout-modal").modal('hide');
+        location.href="<?php echo wp_logout_url(); ?>";
+    }
+    function close_modal(){
+        event.preventDefault();
+        $("#logout-modal").modal('hide');
+        return false;
+    }
+    </script>
 </head>
 <?php 
 $current_user = wp_get_current_user();
@@ -70,6 +81,9 @@ if( isset($current_user->roles)){
         if($value=='student'){
             require_once('header-student.php');               
             break;
+        }else if ($value=='school-admin') {
+           echo '<link href="'.get_template_directory_uri().'/walnut/dev/css/admin.css" rel="stylesheet" type="text/css"/>';
+           break;
         }
     }
  
@@ -121,7 +135,7 @@ global $chorus_options;
     <?php }?>
 
     <?php print_r(getLoggedInUserModel());?>
-
+    MAIN_SITE='<?php echo MAIN_SITE?>';
     CLASS_LABEL = {};
     <?php foreach($class_ids as $class){ ?>
     CLASS_LABEL[<?php echo $class['id']?>] = '<?php echo $class['label']?>';
@@ -133,7 +147,7 @@ global $chorus_options;
     <?php } ?>
 
 </script>
-<script type="text/javascript" src="./wp-content/themes/walnut/walnut/dev/js/plugins/pace.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri()?>/walnut/dev/js/plugins/pace.js"></script>
  <?php             define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/"); ?>
 
                 <script src="<?php echo STUDENT_ASSET_PATH ;?>js/jquery-1.11.3.min.js"></script>
@@ -143,20 +157,27 @@ global $chorus_options;
     Pace.on('hide', function () {
         document.getElementById("site_main_container").setAttribute('class', 'showAll');
     })
+
+    $('#logout').click(function(){
+        $('#logout-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+        });
+    })    
 </script>
 <?php
 
 if (ENV == 'dev') {
     ?>
     <script type="text/javascript"
-            data-main="./wp-content/themes/walnut/walnut/dev/js/school-main.js?ver=<?php echo DEV_VERSION ?>"
-            src="./wp-content/themes/walnut/walnut/dev/js/plugins/require.js"></script>
+            data-main="<?php echo get_template_directory_uri()?>/walnut/dev/js/school-main.js?ver=<?php echo DEV_VERSION ?>"
+            src="<?php echo get_template_directory_uri()?>/walnut/dev/js/plugins/require.js"></script>
 <?php
 } else {
 
 ?>
     <script type="text/javascript"
-            src="./wp-content/themes/walnut/walnut/production/school-main.js?ver=<?php echo VERSION ?>"></script>
+            src="<?php echo get_template_directory_uri()?>/walnut/production/school-main.js?ver=<?php echo VERSION ?>"></script>
 <?php } ?>
 
                 <script src="<?php echo STUDENT_ASSET_PATH ;?>js/script.js"></script>

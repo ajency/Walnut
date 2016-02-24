@@ -64,8 +64,9 @@ define ['app'
 
                 getChapterName : =>
                     chapter = @textbookNames.get options.terms.chapter
+                    $("#lect_name").html(chapter.get 'name' if chapter?);
                     chapterName = chapter.get 'name' if chapter?
-                    $("#lect_name").html(chapterName);
+                    
 
         class CollectionDetailsView extends Marionette.ItemView
 
