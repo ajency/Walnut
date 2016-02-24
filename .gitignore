@@ -12,6 +12,8 @@ wp-content/uploads
 composer.phar
 wp-content/themes/walnut/csvupload
 wp-content/debug.log
+wp-config2.php
+wp-config3.php
 
 
 /nbproject
