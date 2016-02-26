@@ -439,8 +439,8 @@ function the_champ_account_linking(){
 		if(the_champ_social_login_enabled()){
 			$loadingImagePath = plugins_url('images/ajax_loader.gif', __FILE__);
 			$theChampAjaxUrl = get_admin_url().'admin-ajax.php';
-			$redirectionUrl = the_champ_get_login_redirection_url();
-			$regRedirectionUrl = the_champ_get_login_redirection_url('', true);
+			/*$redirectionUrl = the_champ_get_login_redirection_url();
+			$regRedirectionUrl = the_champ_get_login_redirection_url('', true);*/
 			?>
 			<script> var theChampLoadingImgPath = '<?php echo $loadingImagePath ?>'; var theChampAjaxUrl = '<?php echo $theChampAjaxUrl ?>'; var theChampRedirectionUrl = '<?php echo $redirectionUrl ?>'; var theChampRegRedirectionUrl = '<?php echo $regRedirectionUrl ?>'; </script>
 			<?php

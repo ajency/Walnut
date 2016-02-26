@@ -332,3 +332,140 @@ function deleteDir($path) {
 
 
 
+
+
+function check_social_login_redirect($userId, $provider, $hybridauth_user_profile){
+  $school_site_name = 'universal';
+  $universal_id = get_id_from_blogname( $school_site_name );
+  $universal_url = get_site_url($universal_id);
+
+  $meta = get_user_meta($userId);
+  if(isset($meta['primary_blog'])){
+    update_user_meta( $userId, 'primary_blog', $universal_id);
+  }else{
+    add_user_meta( $userId, 'primary_blog', $universal_id);
+  }
+
+  if(isset($meta['source_domain'])){
+    update_user_meta( $userId, 'source_domain', $school_site_name.'.'.$_SERVER['SERVER_NAME']);
+  }else{
+    add_user_meta( $userId, 'source_domain', $school_site_name.'.'.$_SERVER['SERVER_NAME']);
+  }
+
+  if(isset($meta['wp_'.$universal_id.'_capabilities'])){
+    update_user_meta( $userId, 'wp_'.$universal_id.'_capabilities', array('parent'=>true));
+  }else{
+    add_user_meta( $userId, 'wp_'.$universal_id.'_capabilities', array('parent'=>true));
+  }
+
+  if(isset($meta['wp_'.$universal_id.'_user_level'])){
+    update_user_meta( $userId, 'wp_'.$universal_id.'_user_level', '0');
+  }else{
+    add_user_meta( $userId, 'wp_'.$universal_id.'_user_level', '0');
+  }
+
+
+  if(isset($meta['wp_user_level'])){
+    delete_user_meta( $userId, 'wp_user_level');
+  }
+   if(isset($meta['wp_capabilities'])){
+    delete_user_meta( $userId, 'wp_capabilities');
+  }
+}
+add_action( 'wsl_hook_process_login_after_wp_insert_user', 'check_social_login_redirect',10,3 );
+
+
+
+
+
+
+function login_site_redirect ( $redirect_to ) {
+  global $user;
+  $primary_blog_id = get_usermeta($user->ID, 'primary_blog');
+  $blog_details = get_blog_details($primary_blog_id);
+  $redirect_url = $blog_details->siteurl;
+  return $redirect_url;
+
+}
+
+//add_filter ( 'login_redirect', 'login_site_redirect', 10, 3 ) ;
+
+
+
+
+
+add_filter('login_redirect', function($redirect_to, $request_redirect_to, $user)
+{
+    if (!is_wp_error($user) && $user->ID != 0)
+    {
+        $user_info = get_userdata($user->ID);
+        if ($user_info->primary_blog)
+        {
+            $primary_url = get_blogaddress_by_id($user_info->primary_blog) . 'wp-admin/';
+            if ($primary_url) {
+                wp_redirect($primary_url);
+                die();
+            }
+        }
+    }
+    return $redirect_to;
+}, 100, 3);
+
+
+
+
+function login_social_redirect($login_user, $user){
+  global $wpdb;
+
+//$user_info = get_userdata($user->ID);
+
+//$user = new WP_User( $user->ID );
+
+$user_info = get_userdata($user->ID);
+
+if ($user_info->primary_blog){
+
+$capabilities = maybe_unserialize(get_user_meta($user->ID,$wpdb->base_prefix.$user_info->primary_blog.'_capabilities',true));
+$school_url = get_site_url($user_info->primary_blog);
+
+if(array_key_exists('parent',$capabilities)){
+
+$students = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key = 'parent_email1' AND meta_value = '".$user_info->user_email."'");
+if(count($students)>0){
+    $redirect_url = $school_url.'/dashboard-student';
+}else{
+  $redirect_url = $school_url.'/register-redirect-student';
+}
+
+wp_redirect($redirect_url);
+die();
+}
+
+
+}
+}
+add_action('wp_login','login_social_redirect',10,2);
+
+
+
+function check_user_capabilities(){
+  global $wpdb;
+  $user_id = 2450;
+  $user_info = get_userdata($user_id);
+
+if ($user_info->primary_blog){
+
+$capabilities = maybe_unserialize(get_user_meta($user_id,$wpdb->base_prefix.$user_info->primary_blog.'_capabilities',true));
+if(array_key_exists('parent',$capabilities)){
+ 
+  $students = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key = 'parent_email1' AND meta_value = '".$user_info->user_email."'");
+  if(count($students)>0){
+    $total_students = count($students);
+  }
+}
+
+}
+}
+//add_action('init','check_user_capabilities');
+
+

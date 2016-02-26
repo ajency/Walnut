@@ -65,17 +65,17 @@
                                             <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                        <a href="<?php echo get_site_url(13); ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
+                                                        <a href="http://walnut.<?php echo $_SERVER['SERVER_NAME']; ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/shivane.png" alt="" class="img-responsive center-block"></a>
                                                     </div>                                              
-                                                    <h5><a href="<?php echo get_site_url(13); ?>">Login at Shivane</a></h5>
+                                                    <h5><a href="http://walnut.<?php echo $_SERVER['SERVER_NAME']; ?>">Login at Shivane</a></h5>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6 col-sm-6 col-lg-6">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                          <a href="http://walnut.synapsedu.info"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block"></a>
+                                                          <a href="http://empireschool.<?php echo $_SERVER['SERVER_NAME']; ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block"></a>
                                                     </div>   
-                                                    <h5><a href="http://walnut.synapsedu.info">Login at Fursungi</a></h5>
+                                                    <h5><a href="http://empireschool.<?php echo $_SERVER['SERVER_NAME']; ?>">Login at Fursungi</a></h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -87,13 +87,15 @@
                                             </div>
                                         </div>                                          
                                         <div class="row text-center">
+
                                             <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                               <div class="social-signup">
                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
-                                                       <i id="theChampGoogleButton" class="fa fa-google-plus btn g-plus " alt="Login with Google" title="Login with Google" onclick="theChampInitiateLogin(this)" >
+                                                       <!-- <i id="theChampGoogleButton" class="fa fa-google-plus btn g-plus " alt="Login with Google" title="Login with Google" onclick="theChampInitiateLogin(this)" >
                                                        Sign in with google
-                                                       </i>
+                                                       </i> -->
+                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Google" class="fa fa-google-plus btn g-plus wp-social-login-provider" data-provider="Google"> Sign in with google</a>
                                                     </ul>
                                                  </div>
                                               </div>
@@ -102,13 +104,22 @@
                                               <div class="social-signup">
                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
-                                                       <i id="theChampFacebookButton" class="fa fa-facebook btn fb " alt="Login with Facebook" title="Login with Facebook" onclick="theChampInitiateLogin(this)" >
+                                                       <!-- <i id="theChampFacebookButton" class="fa fa-facebook btn fb " alt="Login with Facebook" title="Login with Facebook" onclick="theChampInitiateLogin(this)" >
                                                        Sign in with facebook
-                                                       </i>
+                                                       </i> -->
+                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Facebook" class="fa fa-facebook btn fb wp-social-login-provider" data-provider="Facebook"> Sign in with facebook</a>
                                                     </ul>
                                                  </div>
                                               </div>
                                             </div>
+
+
+                                            <?php //do_action( 'wordpress_social_login' ); ?>
+
+                                            <input type="hidden" id="wsl_popup_base_url" value="http://synapselearning.dev/wp-login.php?action=wordpress_social_authenticate&#038;mode=login&#038;" />
+                                            <input type="hidden" id="wsl_login_form_uri" value="http://synapselearning.dev/wp-login.php" />
+
+
                                         </div>
                                     </div>
                                 </div>

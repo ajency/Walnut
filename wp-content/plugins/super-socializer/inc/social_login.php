@@ -649,31 +649,59 @@ add_action('the_champ_before_registration', 'heateor_ss_disable_social_registrat
 
 
 function social_role_updation($userId, $userdata, $profileData){
+
+
+	$universal_id = get_id_from_blogname( 'universal' );
+	$universal_url = get_site_url($universal_id);
+
 	$meta = get_user_meta($userId);
 	if(isset($meta['primary_blog'])){
-		update_user_meta( $userId, 'primary_blog', 14);
+		update_user_meta( $userId, 'primary_blog', $universal_id);
 	}else{
-		add_user_meta( $userId, 'primary_blog', 14);
+		add_user_meta( $userId, 'primary_blog', $universal_id);
 	}
 
 	if(isset($meta['source_domain'])){
-		update_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
+		update_user_meta( $userId, 'source_domain', 'universal.'.$_SERVER['SERVER_NAME']);
 	}else{
-		add_user_meta( $userId, 'source_domain', 'universal.synapsedu.info');
+		add_user_meta( $userId, 'source_domain', 'universal.'.$_SERVER['SERVER_NAME']);
 	}
 
-	if(isset($meta['wp_14_capabilities'])){
-		update_user_meta( $userId, 'wp_14_capabilities', array('student'=>true));
+	if(isset($meta['wp_'.$universal_id.'_capabilities'])){
+		update_user_meta( $userId, 'wp_'.$universal_id.'_capabilities', array('parent'=>true));
 	}else{
-		add_user_meta( $userId, 'wp_14_capabilities', array('student'=>true));
+		add_user_meta( $userId, 'wp_'.$universal_id.'_capabilities', array('parent'=>true));
 	}
 
-	if(isset($meta['wp_14_user_level'])){
-		update_user_meta( $userId, 'wp_14_user_level', '0');
+	if(isset($meta['wp_'.$universal_id.'_user_level'])){
+		update_user_meta( $userId, 'wp_'.$universal_id.'_user_level', '0');
 	}else{
-		add_user_meta( $userId, 'wp_14_user_level', '0');
+		add_user_meta( $userId, 'wp_'.$universal_id.'_user_level', '0');
 	}
-wp_redirect(site_url().'/register-redirect-student');
+//wp_redirect($universal_url.'/register-redirect-student');
 }
 
 add_action('the_champ_user_successfully_created','social_role_updation');
+
+
+
+
+
+
+
+
+function primary_login_redirect( $redirect_to, $request_redirect_to, $user )
+{
+    if ($user->ID != 0) {
+        $user_info = get_userdata($user->ID);
+        if ($user_info->primary_blog) {
+            $primary_url = get_blogaddress_by_id($user_info->primary_blog) . 'wp-admin/themes';
+            if ($primary_url) {
+                wp_redirect($primary_url);
+                die();
+            }
+        }
+    }
+    return $redirect_to;
+}
+add_filter('login_redirect','primary_login_redirect', 10, 3);
