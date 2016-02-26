@@ -886,7 +886,7 @@ lesshat-selector {
   position: absolute;
   width: 100%;
   z-index: 999;
-  top: 56px;
+  top: -30px;
   margin-bottom: 30px;
   font-family: open-sans;
 }
