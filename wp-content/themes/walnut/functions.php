@@ -469,3 +469,25 @@ if(array_key_exists('parent',$capabilities)){
 //add_action('init','check_user_capabilities');
 
 
+
+
+
+
+function change_all_postmeta(){
+  global $wpdb;
+  $results = $wpdb->get_results( "SELECT * FROM wp_postmeta_test WHERE meta_key = 'content_element'",ARRAY_A);
+
+  foreach($results as $key=>$value){
+    $rawdata = $value['meta_value'];
+    $data = unserialize(str_replace("walnutedu.org","synapselearning.net",$rawdata));
+    $finaldata = json_decode(str_replace('synapselearning.net', 'walnutedu.org', json_encode($data)), true);
+    $finaldata = serialize($finaldata);
+
+    $wpdb->update( 'wp_postmeta_test', array('meta_value' => $finaldata), array( 'meta_id' => $value['meta_id'] ));
+
+  }
+}
+
+//add_action('template_redirect','change_all_postmeta');
+
+
