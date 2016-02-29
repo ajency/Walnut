@@ -1153,6 +1153,9 @@ lesshat-selector {
 .add-student .modal-footer button.cancel:hover {
   background: #f5816a;
 }
+.panel-disabled {
+  pointer-events: none;
+}
 .intro {
   padding: 20px;
 }
