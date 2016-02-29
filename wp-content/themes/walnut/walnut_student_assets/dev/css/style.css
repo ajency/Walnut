@@ -932,7 +932,7 @@ lesshat-selector {
 .create-ac-card .create-ac-wrapper .wrapped .panel-body .student-alert {
   text-align: center;
   margin: 0;
-  padding-top: 20px;
+  padding: 20px;
   font-size: 1.1em;
 }
 .create-ac-card .create-ac-wrapper .wrapped .student-info,
@@ -987,7 +987,7 @@ lesshat-selector {
   font-weight: bold;
 }
 .create-ac-card .create-ac-wrapper .wrapped .create-ac {
-  padding: 25px 15px 0 15px;
+  padding: 0px 15px;
 }
 .create-ac-card .create-ac-wrapper .wrapped .create-ac > div {
   background: #f3f3f3;
@@ -1094,12 +1094,14 @@ lesshat-selector {
   text-transform: capitalize;
 }
 .add-student .modal-body .student-info {
-  margin-bottom: 15px;
   padding: 10px;
 }
 .add-student .modal-body .student-info h5 {
   padding-left: 30px;
   color: #602f1a;
+}
+.add-student .modal-body .student-info .info {
+  text-align: center;
 }
 .add-student .modal-body .student-info .info .sel-mandatory:before {
   content: '*';

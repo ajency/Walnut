@@ -142,7 +142,7 @@
                 .student-alert{
                     text-align: center;
                     margin: 0;
-                    padding-top: 20px;
+                    padding: 20px;
                     font-size: 1.1em;
                 }
             }
@@ -183,7 +183,7 @@
                 }
             }
             .create-ac {
-                padding: 25px 15px 0 15px;
+                padding: 0px 15px;
                 & > div{
                         background: #f3f3f3;
                         padding: 20px;
@@ -205,11 +205,10 @@
                 padding: 20px;
                 button{
                     color: #fff;
-                padding: 10px;
-                margin: 5px;
-                text-transform: uppercase;
-                
-                border-radius: 5px;
+                    padding: 10px;
+                    margin: 5px;
+                    text-transform: uppercase;
+                    border-radius: 5px;
                     &.odd{
                         background: @button-2-theme;
                         &:hover{
@@ -296,13 +295,14 @@
     }
     .modal-body{
         .student-info{
-            margin-bottom: 15px;
+            // margin-bottom: 15px;
             padding: 10px;
             h5 {
                 padding-left: 30px;
                 color: #602f1a;
             }
             .info {
+                text-align: center;
                 .sel-mandatory{
                     &:before{
                         content: '*';
