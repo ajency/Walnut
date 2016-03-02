@@ -935,6 +935,9 @@ lesshat-selector {
   padding: 20px;
   font-size: 1.1em;
 }
+.create-ac-card .create-ac-wrapper .wrapped .parents-info {
+  padding: 15px 0;
+}
 .create-ac-card .create-ac-wrapper .wrapped .student-info,
 .create-ac-card .create-ac-wrapper .wrapped .parents-info {
   margin-bottom: 15px;
@@ -1092,6 +1095,9 @@ lesshat-selector {
   color: #602f1a;
   text-align: center;
   text-transform: capitalize;
+}
+.add-student .modal-body {
+  padding-top: 0;
 }
 .add-student .modal-body .student-info {
   padding: 10px;
