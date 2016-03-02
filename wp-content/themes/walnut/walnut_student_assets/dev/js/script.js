@@ -239,6 +239,7 @@ $(function() {
 
 
     $('#logout').click(function(){
+        $('#logout-modal').removeClass('hidden');
         $('#logout-modal').modal({
         backdrop: 'static',
         keyboard: false

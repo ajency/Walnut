@@ -352,6 +352,12 @@ function check_social_login_redirect($userId, $provider, $hybridauth_user_profil
     add_user_meta( $userId, 'source_domain', $school_site_name.'.'.$_SERVER['SERVER_NAME']);
   }
 
+  if(!isset($meta['parent_name'])){
+    $first_name = get_user_meta($userId,'first_name',true);
+    $last_name = get_user_meta($userId,'last_name',true);
+    add_user_meta( $userId, 'parent_name', $first_name.' '.$last_name);
+  }
+
   if(isset($meta['wp_'.$universal_id.'_capabilities'])){
     update_user_meta( $userId, 'wp_'.$universal_id.'_capabilities', array('parent'=>true));
   }else{
@@ -432,7 +438,7 @@ if(array_key_exists('parent',$capabilities)){
 
 $students = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key = 'parent_email1' AND meta_value = '".$user_info->user_email."'");
 if(count($students)>0){
-    $redirect_url = $school_url.'/dashboard-student';
+   $redirect_url = $school_url.'/register-redirect-student';
 }else{
   $redirect_url = $school_url.'/register-redirect-student';
 }
@@ -445,6 +451,208 @@ die();
 }
 }
 add_action('wp_login','login_social_redirect',10,2);
+
+
+
+
+
+
+
+//Updating parent info
+add_action( 'wp_ajax_update_parent_info', 'update_parent_info' );
+add_action( 'wp_ajax_nopriv_update_parent_info', 'update_parent_info' );
+
+function update_parent_info(){
+  $query = $_POST['data'];
+  $validate = array(
+    'parent_name'=>'Parent Name',
+    'parent_email'=>'Parent Email',
+    'relation_with_student'=>'Relation with student',
+    'zipcode'=>'Zipcode',
+    'address'=>'Address',
+    'parent_mobile'=>'Mobile No.',
+    'parent_city'=>'City'
+    );
+  $exclude = array('parent_email','parent_id');
+
+  $data = array();
+  $errors = array();
+  foreach (explode('&', $query) as $chunk) {
+    $param = explode("=", $chunk);
+    if ($param) {
+        $data[urldecode($param[0])] = urldecode($param[1]);
+        if(array_key_exists(urldecode($param[0]), $validate) && (urldecode($param[1]) == "")){
+          $errors[] = $validate[urldecode($param[0])].' is required.';
+        }
+    }
+  }
+
+  if($data['landline_no'] !== "" && !is_numeric($data['landline_no'])){
+    $errors[] = 'Landline number is invalid.';
+  }
+
+  if(($data['parent_mobile'] !== "") && (!is_numeric($data['parent_mobile']))){
+    $errors[] = 'Mobile number is invalid.';
+  }
+
+  if(($data['zipcode'] !== "") && (!is_numeric($data['zipcode']))){
+    $errors[] = 'Zipcode is invalid.';
+  }
+
+if(count($errors)>0){
+  $response = array('status'=>'failed','errors'=>$errors,'data'=>$data);
+}else{
+  foreach($data as $key=>$value){
+    if(!array_key_exists($key, $exclude)){
+      update_user_meta( $data['parent_id'], $key, $value);
+    }
+  }
+
+  $response = array('status'=>'success','message'=>'Parent information updated successfully.','data'=>$data);
+}
+
+echo json_encode($response);
+die();
+}
+
+
+
+
+
+function check_if_parent_info_completed($parent_id){
+  $required = array(
+    'parent_name',
+    'relation_with_student',
+    'zipcode',
+    'address',
+    'parent_mobile',
+    'parent_city'
+    );
+  $errors = array();  
+  $meta = get_user_meta($userId);
+
+  foreach($required as $key=>$value){
+    if(isset($meta[$value])){
+      $errors[] = $value;
+    }
+  }
+  if(count($errors)>0){
+    return 'pending';
+  }else{
+    return 'completed';
+  }
+}
+
+
+
+
+
+function get_parents_students($email){
+  global $wpdb;
+  $students = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key = 'parent_email1' AND meta_value = '".$email."'");
+if(count($students)>0){
+    return $students;
+}else{
+  return false;
+}
+}
+
+
+
+
+//Adding student
+add_action( 'wp_ajax_add_parent_student', 'add_parent_student' );
+add_action( 'wp_ajax_nopriv_add_parent_student', 'add_parent_student' );
+
+function add_parent_student(){
+  $query = $_POST['data'];
+  $validate = array(
+    'first_name'=>'First Name',
+    'last_name'=>'Last Name',
+    'dob'=>'Date of Birth',
+    'last_school_attended'=>'School Name',
+    'student_division'=>'Class Name'
+    );
+
+  $data = array();
+  $errors = array();
+  foreach (explode('&', $query) as $chunk) {
+    $param = explode("=", $chunk);
+    if ($param) {
+        $data[urldecode($param[0])] = urldecode($param[1]);
+        if(array_key_exists(urldecode($param[0]), $validate) && (urldecode($param[1]) == "")){
+          $errors[] = $validate[urldecode($param[0])].' is required.';
+        }
+    }
+  }
+
+  $school_site_name = 'universal';
+  $universal_id = get_id_from_blogname( $school_site_name );
+  $universal_url = get_site_url($universal_id);
+
+  $data['primary_blog'] = $universal_id;
+  $data['source_domain'] = $_SERVER['SERVER_NAME'];
+  $data['wp_'.$universal_id.'_capabilities'] = array('student'=>true);
+  $data['wp_'.$universal_id.'_user_level'] = 0;
+
+  if(count($errors)>0){
+    $response = array('status'=>'failed','errors'=>$errors,'data'=>$data);
+  }else{
+    $password = wp_generate_password( 12, false );
+    $user_name = strtolower($data['first_name']).'_'.$data['parent_id'];
+    $user_id = wp_create_user( $user_name, $password, $data['parent_email1'] );
+    wp_update_user(
+    array(
+      'ID'          =>    $user_id,
+      'user_nicename'    =>   $data['first_name'],
+      'nickname'    =>    $data['first_name'],
+      'display_name'    =>    $data['first_name'].' '.$data['last_name']
+    )
+  );
+    foreach($data as $key=>$value){
+      update_user_meta( $user_id, $key, $value);
+    }
+
+    $student = array('name'=>$data['first_name'].' '.$data['last_name'],'id'=>$user_id);
+    //$student = array('name'=>'Rohan','id'=>'2453');
+    $response = array('status'=>'success','message'=>'Student added successfully.','student'=>$student,'data'=>$data);
+  }
+
+echo json_encode($response);
+die();
+}
+
+
+
+
+function get_all_class_divisions(){
+  global $wpdb;
+  $class_table = $wpdb->prefix.'class_divisions';
+  $divisions = $wpdb->get_results( "SELECT * FROM $class_table",ARRAY_A);
+  return $divisions;
+}
+
+
+
+
+//Logging in universal student
+add_action( 'wp_ajax_login_universal_student', 'login_universal_student' );
+add_action( 'wp_ajax_nopriv_login_universal_student', 'login_universal_student' );
+
+function login_universal_student(){
+  $userId = $_POST['student_id']; 
+
+  $user = get_user_by( 'id', $userId );
+  wp_set_current_user($userId, $user -> user_login);
+  wp_set_auth_cookie($userId);
+  do_action('wp_login', $user -> user_login);
+  $response = array('status'=>'success','login_redirect'=>get_site_url().'/dashboard-student'); 
+  echo json_encode($response);
+  die();
+}
+
+
+
 
 
 
