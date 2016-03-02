@@ -19,6 +19,8 @@
             define("ANIMATED_LIBRARY", get_template_directory_uri()."/walnut/dev/");
         ?>        
         <script type="text/javascript">
+
+
         function logout(){
             event.preventDefault();
             $("#logout-modal").modal('hide');
@@ -49,7 +51,7 @@
 
             </head>
             <body>
-                <div class="modal fade" id="logout-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal fade hidden" id="logout-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabell" >
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-body">

@@ -222,4 +222,15 @@ function student_last_quiz_taken_on($book_id){
 function student_get_lectures(){
 
 }
+
+
+
+
+
+
+
+
+
+
+
 ?>

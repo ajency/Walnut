@@ -21,10 +21,10 @@ require_once( plugin_dir_path( __FILE__ ) . 'includes/csv_import_quiz_schedules.
 
 function set_sds_plugin_options() {
 	global $wpdb;
-	
+
 	//add_option("sds_syncsite","");
 	//add_option("sds_syncblog_id","");
-	
+
 	//create tables logic on plugin activation
 	$sync_status_table = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_local_data` (
@@ -37,7 +37,7 @@ function set_sds_plugin_options() {
             )";
 
     $wpdb->query( $sync_status_table );
-	
+
 }
 
 function unset_sds_plugin_options () {
@@ -50,7 +50,7 @@ register_activation_hook(__FILE__,"set_sds_plugin_options");
 register_deactivation_hook(__FILE__,"unset_sds_plugin_options");
 
 function school_data_sync_menu() {
-    add_options_page( 'School Sync', 'School Sync', 'manage_options', 'school_data_sync', 
+    add_options_page( 'School Sync', 'School Sync', 'manage_options', 'school_data_sync',
             'school_data_sync_screen' );
 }
 add_action( 'admin_menu', 'school_data_sync_menu' );
@@ -58,14 +58,15 @@ add_action( 'admin_menu', 'school_data_sync_menu' );
 function check_data_sync($redirect_to, $request, $user) {
     global $wpdb;
     $sync_count = $wpdb->get_col( "SELECT count(*) FROM {$wpdb->prefix}sync_local_data where status='imported'" );
-    
+
     if($sync_count[0] == 0){
         $redirect_to = site_url().'/wp-admin/options-general.php?page=school_data_sync';
-		
+
     }
-	
+
 	return $redirect_to;
 
 }
+
 add_action( 'login_redirect', 'check_data_sync', 10,3 );
 ?>
