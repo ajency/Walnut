@@ -51,12 +51,21 @@ class ImportContentPiece {
     #get the attachment id of media file
     private function get_attachment_id_by_path($path){
 
+        _log('actual media path: '.$path);
+
         $attachment_id=0;
         $path = trim($path);
+
+        $path = str_replace('\\', '/', $path);
+
+
+        _log('modified media path: '.$path);
 
         if($path){
 
             $base_url = $this->get_media_base_url($path);
+
+            _log('modified media full path: '.$base_url.$path);
 
             global $wpdb;
 
@@ -102,6 +111,7 @@ class ImportContentPiece {
     public function create_media_element($media_path){
 
         $attachment_id = $this->get_attachment_id_by_path($media_path);
+        _log('media attachment path: '.$media_path);
         if(!$attachment_id)
             return false;
 
@@ -128,7 +138,7 @@ class ImportContentPiece {
             'top'           => 0
         );
         $media_element_id = save_content_element($data);
-        _log($type);
+        
         return array('id'=>$media_element_id,'type'=>ucfirst($type));
     }
 }
