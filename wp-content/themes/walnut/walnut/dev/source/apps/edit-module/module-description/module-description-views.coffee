@@ -248,6 +248,7 @@ define ['app'
                 @trigger 'show:custom:msg:popup',
                     slug : $(e.target).closest('.customMsgLink').attr 'data-slug'
 
+            # added to auto calculate the time marks and total questions
             _getAdditionaLayout:->
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
