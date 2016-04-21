@@ -44,13 +44,22 @@ define ['app'
         class ScheduleQuizView extends Marionette.ItemView
 
             template: '<form>
+            <!--div id="datetimepicker3" class="input-append">
+    <input data-format="hh:mm:ss" type="text"></input>
+    <span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+  </div-->
                         <div class="row">
+                            
                             <div class="input-daterange">
-                                <div class="col-md-6">
+                                  <div class="col-md-6">
                                     From: <br>
                                     <div class="input-append success date">
-                                      <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
-                                      <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+                                          <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
+                                            <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+                                            </span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -82,15 +91,23 @@ define ['app'
 
                 today = new Date();
 
+                @$el.find '#datetimepicker3'
+                .datetimepicker
+                    language:'pt-BR'
+
                 @$el.find '.input-daterange'
-                .datepicker
+                .datetimepicker
+                    language: 'pt-BR'
+                    pickDate: true
+                    pickTime: true
                     todayHighlight  : true
                     startDate       : today
-                    format          : 'yyyy-mm-dd'
+                    format          : 'yyyy-MM-dd hh:mm:ss'
 
                 .on 'hide', (e)=>
                     if e.target.id is 'scheduleFrom'
-                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date
+                        #console.log "datte"
+                        @$el.find('#scheduleTo').datetimepicker 'setStartDate', e.date
 
 
             saveScheduled: (e)=>

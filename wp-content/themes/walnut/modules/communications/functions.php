@@ -218,6 +218,7 @@ function ajax_get_communication_preview(){
         $response=array('error'=>"function $functionName doesnt exist");
 
     wp_send_json($response);
-
+    //wp_send_json($template_data);
+    //return $template_data;
 }
 add_action('wp_ajax_get-communication-preview','ajax_get_communication_preview');

@@ -47,6 +47,19 @@ define ['app'
 						@listenTo @region, "update:pager",=>
 							@view.triggerMethod "update:pager"
 
+						@listenTo @view, "save:communications", (data)=>
+                        	console.log "save:communication"
+                        	data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_published_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    #division        : null
+                            #console.log @allChaptersCollection
+                            communicationModel = App.request "create:communication",data
+                            @_showSelectRecipientsApp communicationModel
+
 			_getContentModulessListingView : =>
 				new ModulesListing.Views.ModulesListingView
 					collection          : @contentModulesCollection
@@ -54,6 +67,12 @@ define ['app'
 					textbooksCollection : @textbooksCollection
 					chaptersCollection  : @allChaptersCollection
 					groupType : @groupType
+
+			_showSelectRecipientsApp:(communicationModel)->
+				console.log communicationModel
+				App.execute "show:quiz:select:recipients:popup",
+                    region               : App.dialogRegion
+                    communicationModel   : communicationModel
 
 
 

@@ -9,6 +9,11 @@
         </select>
         <button class="btn btn-info btn-small"><i class="fa"></i> Change Status</button>
     </div>
+    {{#isQuiz}}
+    <div class="send-email-to-stud none small">
+    <button class="send-email btn btn-success btn-small"><i class="fa"></i> Send Email</button>
+    </div>
+    {{/isQuiz}}
     <table class="table table-bordered m-t-10" id="content-pieces-table" >
         <thead>
         <tr>
@@ -40,6 +45,11 @@
         </select>
         <button class="btn btn-info btn-small"><i class="fa"></i> Change Status</button>
     </div>
+    {{#isQuiz}}
+    <div class="send-email-to-stud none small">
+    <button class="send-email btn btn-success btn-small"><i class="fa"></i> Send Email</button>
+    </div>
+    {{/isQuiz}}
     <div id="pager" class="pager">
         <i class="cursor fa fa-chevron-left prev"></i>
         <span style="padding:0 15px"  class="pagedisplay"></span>

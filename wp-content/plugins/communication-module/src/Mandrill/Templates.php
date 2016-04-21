@@ -5,6 +5,7 @@ class Mandrill_Templates {
         $this->master = $master;
     }
 
+
     /**
      * Add a new template
      * @param string $name the name for the new template - must be unique

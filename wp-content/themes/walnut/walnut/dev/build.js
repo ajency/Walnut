@@ -34,6 +34,7 @@
         moment: 'plugins/moment.min',
         select2             : 'plugins/select2',
         datepicker          : 'plugins/bootstrap-datepicker',
+        datetimepicker      : 'plugins/bootstrap-datetimepicker.min',
         timepicker          : 'plugins/bootstrap-timepicker.min',
         timecircles         : 'plugins/TimeCircles',
         jquery_listnav      : 'plugins/jquery-listnav',

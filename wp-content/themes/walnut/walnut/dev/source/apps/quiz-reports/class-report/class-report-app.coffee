@@ -70,7 +70,7 @@ define ['app'
                         selectedFilterParamsObject: @selectedFilterParamsObject
                         divisionsCollection : divisionsCollection
                         dataType : 'quiz'
-                        filters : ['divisions','textbooks', 'chapters']
+                        filters : ['divisions','textbooks', 'chapters','post_status']
 
                         
 
@@ -102,7 +102,6 @@ define ['app'
                     @listenTo @layout.searchResultsRegion, "show:quiz:report", @_showQuiz
 
                     @listenTo @layout.allContentRegion, "save:communications", (data)=>
-                        
                             data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_completed_parent_mail'
@@ -110,7 +109,7 @@ define ['app'
                                 additional_data:
                                     quiz_ids        : data.quizIDs
                                     division        : @division
-
+                            #console.log @division
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
                             

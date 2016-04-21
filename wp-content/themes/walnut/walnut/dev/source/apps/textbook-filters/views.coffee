@@ -42,7 +42,7 @@ define ['app'], (App)->
                                     {{#post_status_filter}}
                                     <select class="select2-filters selectFilter" id="content-post-status-filter">
                                         <option value="any">All Status</option>
-                                        <option value="pending">Under Review</option>
+                                        <!--option value="pending">Under Review</option-->
                                         <option value="publish">Published</option>
                                         <option value="archive">Archived</option>
                                     </select>

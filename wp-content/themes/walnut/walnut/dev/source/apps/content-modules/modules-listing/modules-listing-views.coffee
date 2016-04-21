@@ -132,7 +132,8 @@ define ['app'
 						when 'student-training' then "edit-student-training-module"
 				
 				App.navigate "#{url}/#{model.id}", true
-				
+
+			
 			errorFn : ->
 				console.log 'error'
 			
@@ -212,11 +213,13 @@ define ['app'
 			events :
 				'change .textbook-filter' :(e)->
 					@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+					console.log e.target.id
 
 				'change #check_all_div'     :-> $.toggleCheckAll @$el.find 'table'
 				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
 				'change #content-post-status-filter'  	: 'setFilteredContent'
 				'click .change-status button'			: 'changeStatus'
+				'click .send-email-to-stud button'		: 'sendEmailStud'
 
 			initialize : ->
 				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
@@ -235,13 +238,44 @@ define ['app'
 				@$el.find '#textbook-filters'
 				.html textbookFiltersHTML
 
-				@$el.find ".select2-filters"
-				.select2()
-
 				@$el.find '#content-pieces-table'
 				.tablesorter();
 
 				@onUpdatePager()
+
+			sendEmailStud :(e)->
+				console.log "email sent module executed"
+				#abc = @$el.find "#textbooks-filter"
+				#.val()
+				#console.log (abc)
+				data = []
+				@$el.find '.communication_sent'
+                .remove()
+
+                allQuizIDs= _.map $.getCheckedItems(@$el.find('#content-pieces-table')), (m)-> parseInt m
+                #console.log (allQuizIDs)
+                excludeIDs = _.chain @collection.where 'taken_by':0
+                        .pluck 'id'
+                        .value()
+
+				#data.quizIDs = _.difference allQuizIDs,excludeIDs
+				data.quizIDs = allQuizIDs
+				console.log data.quizIDs
+				data.division = @$el.find '#divisions-filter'
+                        .val()
+				if $(e.target).hasClass 'send-email'
+                    data.communication_mode = 'email'
+                else
+                    data.communication_mode = 'sms'
+
+                if _.isEmpty data.quizIDs
+                    @$el.find '.send-email'
+                    .after '<span class="m-l-40 text-error small communication_sent">
+                            No quiz has been selected</span>'
+
+                else
+                	console.log data
+                	@trigger "save:communications", data
 
 			onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType) ->
 
@@ -278,9 +312,13 @@ define ['app'
 				.is ':checked'
 					@$el.find '.change-status'
 					.show()
+					@$el.find '.send-email-to-stud'
+					.show()
 
 				else
 					@$el.find '.change-status'
+					.hide()
+					@$el.find '.send-email-to-stud'
 					.hide()
 
 			changeStatus:(e)=>

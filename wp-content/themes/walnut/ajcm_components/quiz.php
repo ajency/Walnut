@@ -209,6 +209,78 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
 
 }
 
+
+//for select quiz email preview
+function get_quiz_list_template_data($comm_data,$quiz_id, $division = 0){
+
+    global $aj_comm;
+
+    $data = array();
+
+    $current_blog=get_current_blog_id();
+
+    if(!$division){
+        if($comm_data['communication_type'] == 'quiz_published_student_mail')
+            $division   = get_user_meta($comm_data['user_id'],'student_division', true);
+
+        else
+            $division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
+    }
+
+    $siteurl = get_site_url();
+
+    $data[] = array(
+        'name' => 'QUIZ_URL',
+        'content' => "<a target='_blank' href='$siteurl/#view-quiz/$quiz_id'>here</a>"
+    );
+
+    switch_to_blog($comm_data['blog_id']);
+
+    $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
+
+    $quiz_details= get_single_quiz_module($quiz_id,$school_admin);
+
+
+    $terms= $quiz_details->term_ids;
+
+    $textbook_id = $terms['textbook'];
+
+    $chapter_id = $terms['chapter'];
+
+    switch_to_blog(1);
+    $textbook_name = get_term_field('name', $textbook_id, 'textbook');
+
+    if($chapter_id)
+        $chapter_name = get_term_field('name', $chapter_id, 'textbook');
+    else
+        $chapter_name = ' -- ';
+
+    $division_data = fetch_single_division($division,$comm_data['blog_id']);
+
+    $division  = $division_data['division'];
+
+    if($quiz_details->quiz_type == 'practice'){
+        $quiz_type = 'Practice Quiz';
+        $data[] = array('name' => 'PRACTICE', 'content' => 'true');
+    }
+    else
+        $quiz_type = 'Class Test';
+
+
+    $data[] = array('name' => 'QUIZ_NAME',      'content' => $quiz_details->name);
+    $data[] = array('name' => 'QUIZ_TYPE',      'content' => $quiz_type);
+    $data[] = array('name' => 'CLASS',          'content' => $division);
+    $data[] = array('name' => 'TEXTBOOK',       'content' => $textbook_name);
+    $data[] = array('name' => 'CHAPTER',        'content' => $chapter_name);
+    $data[] = array('name' => 'QUIZ_MARKS',     'content' => $quiz_details->marks);
+
+    $data[] = get_mail_header($comm_data['blog_id']);
+    $data[] = get_mail_footer($comm_data['blog_id']);
+    switch_to_blog($current_blog);
+    return $data;
+
+}
+
 function get_quiz_summary_data($quiz_id, $student_id){
 
     $data = array();

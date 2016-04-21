@@ -84,9 +84,10 @@
                         .value()
 
                 data.quizIDs = _.difference allQuizIDs,excludeIDs 
-
+                console.log data.quizIDs
                 data.division = @$el.find '#divisions-filter'
                         .val()
+                console.log data.division
 
                 if $(e.target).hasClass 'send-email'
                     data.communication_mode = 'email'

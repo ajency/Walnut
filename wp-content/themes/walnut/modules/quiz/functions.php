@@ -322,8 +322,16 @@ function get_all_quiz_modules($args){
     global $wpdb;
 
 
-    if ($args['post_status'] =='any')
-            $args['post_status'] = '';
+    if ($args['post_status'] =='any'){
+        $args['post_status1'] = '';
+        $args['post_status2'] = '';
+        }
+
+    if ($args['post_status'] =='published'){
+        $args['post_status1'] = 'publish';
+        $args['post_status2'] = 'archive';
+    }
+
     if ( $args['textbook'] =='any')
             $args['textbook'] = '';
     if ( $args['quiz_type'] =='any')
@@ -346,13 +354,15 @@ function get_all_quiz_modules($args){
                 {$wpdb->base_prefix}collection_meta AS meta
             WHERE meta.collection_id = post.id
             AND post.type = %s
-            AND post.post_status LIKE %s
+            AND (post.post_status LIKE %s OR post.post_status LIKE %s)
             AND meta.meta_key = %s
             AND meta.meta_value LIKE %s
             AND post.term_ids LIKE %s".
             $quiz_ids_search_str;
 
-    $post_status_prepare = "%".$args['post_status']."%";
+    $post_status_prepare = "%".$args['post_status1']."%";
+    $post_status_prepare2 = "%".$args['post_status2']."%";
+
     $quiz_type_prepare = "%".$args['quiz_type']."%";
 
     if (empty($args['textbook']))
@@ -362,7 +372,7 @@ function get_all_quiz_modules($args){
         $textbook_prepare = '%"'.$args['textbook'].'"%';
     
 
-    $query = $wpdb->prepare($query_string,'quiz',$post_status_prepare,'quiz_type',$quiz_type_prepare,
+    $query = $wpdb->prepare($query_string,'quiz',$post_status_prepare,$post_status_prepare2,'quiz_type',$quiz_type_prepare,
         $textbook_prepare);
     $quiz_ids = $wpdb->get_col($query);
 
@@ -744,9 +754,12 @@ function save_quiz_schedule($data){
     if(!$data['schedule'] || !$data['schedule']['from'] || !$data['schedule']['to'])
         return false;
 
-    $from   = date('Y-m-d', strtotime($data['schedule']['from']));
-    $to     = date('Y-m-d', strtotime($data['schedule']['to']));
+    #$from   = date('Y-m-d', strtotime($data['schedule']['from']));
+    #$to     = date('Y-m-d', strtotime($data['schedule']['to']));
 
+    $from = $data['schedule']['from'];
+    $to = $data['schedule']['to'];
+    
     $scheduledata = array(
         'quiz_id'       => $data['quiz_id'],
         'division_id'   => $data['division'],

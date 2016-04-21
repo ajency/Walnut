@@ -88,6 +88,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
 
       CollectionDetailsView.prototype.onShow = function() {
         Backbone.Syphon.deserialize(this, this.model.toJSON());
+        console.log(this.model.toJSON());
         if (this.model.get('type') === 'quiz') {
           this.$el.find('#qType').val(this.model.get('quiz_type'));
         }
@@ -102,7 +103,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         }
         this.statusChanged();
         if (this.model.get('type') === 'quiz') {
-          return this._changeLayout();
+          return this._getAdditionaLayout();
         }
       };
 
@@ -226,6 +227,45 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         return this.trigger('show:custom:msg:popup', {
           slug: $(e.target).closest('.customMsgLink').attr('data-slug')
         });
+      };
+
+      CollectionDetailsView.prototype._getAdditionaLayout = function() {
+        var contentGroupCollection, marks, time, totalQuestions;
+        contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
+        totalQuestions = 0;
+        _.each(this.model.get('content_layout'), (function(_this) {
+          return function(content) {
+            if (content.type === 'content-piece') {
+              return totalQuestions += 1;
+            } else {
+              totalQuestions += parseInt(content.data.lvl1);
+              totalQuestions += parseInt(content.data.lvl2);
+              return totalQuestions += parseInt(content.data.lvl3);
+            }
+          };
+        })(this));
+        this.$el.find('#total-question-number').val(totalQuestions);
+        marks = 0;
+        time = 0;
+        contentGroupCollection.each(function(m) {
+          if (m.get('post_type') === 'content_set') {
+            if (m.get('avg_marks')) {
+              marks += parseInt(m.get('avg_marks'));
+            }
+            if (m.get('avg_duration')) {
+              return time += parseInt(m.get('avg_duration'));
+            }
+          } else {
+            if (m.get('marks')) {
+              marks += parseInt(m.get('marks'));
+            }
+            if (m.get('duration')) {
+              return time += parseInt(m.get('duration'));
+            }
+          }
+        });
+        this.$el.find('#total-marks').val(marks);
+        return this.$el.find('#total-time').val(time);
       };
 
       CollectionDetailsView.prototype._changeLayout = function() {

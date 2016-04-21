@@ -11,7 +11,7 @@ define ['app'
                 {@communicationModel} = options
 
                 recipients = @communicationModel.getRecipients()
-
+                #console.log recipients
                 recipients.done (result)=>
                     recipientsCollection= new Backbone.Collection result
                     recipientsCollection.each (m,index)->m.set 'id':index+1

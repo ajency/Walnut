@@ -67,6 +67,18 @@ define ['app'
 
 						@listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
+						###@listenTo @layout.allContentRegion, "save:communications", (data)=>
+                        
+                            data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_completed_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    division        : @division
+
+                            communicationModel = App.request "create:communication",data
+                            @_showSelectRecipientsApp communicationModel###
 
 
 
