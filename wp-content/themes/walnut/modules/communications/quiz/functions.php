@@ -315,13 +315,13 @@ function quiz_published_parent_mail_preview($data){
 
     //print_r($recipient); exit;
 
-    $template_data['template_name']              = 'quiz-completed-parent-mail'; 
+    $template_data['template_name']              = 'quiz-published-parent-mail'; 
     $template_data['template_content']           = array(); 
     $template_data['merge_vars'] = get_quiz_list_template_data($comm_data,$recipient['quiz_id'], $recipient['student_division']);
 
-    //$quiz_summary = get_quiz_summary_data($recipient['quiz_id'],$recipient['student_id']);
+    $quiz_summary = get_quiz_summary_data($recipient['quiz_id'],$recipient['student_id']);
     
-    //$template_data['merge_vars'] = array_merge($template_data['merge_vars'],$quiz_summary);
+    $template_data['merge_vars'] = array_merge($template_data['merge_vars'],$quiz_summary);
     $template_data['merge_vars'][]=array(
         'name'=>'STUDENT_NAME',
         'content'=>$recipient['student_name']
