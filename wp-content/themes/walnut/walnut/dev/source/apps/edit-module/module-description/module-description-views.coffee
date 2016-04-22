@@ -254,6 +254,7 @@ define ['app'
 
                 totalQuestions = 0
                 _.each @model.get('content_layout'), (content)=>
+                    console.log content
                     if content.type is 'content-piece'
                         totalQuestions += 1
                     else
