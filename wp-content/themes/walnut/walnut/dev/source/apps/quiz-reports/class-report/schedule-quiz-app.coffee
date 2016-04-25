@@ -90,36 +90,56 @@ define ['app'
             onShow: ->
 
                 today = new Date();
+                console.log today
+                #@$el.find '#datetimepicker3'
+                #.datetimepicker
+                #    language:'pt-BR'
 
-                @$el.find '#datetimepicker3'
+                #@$el.find '.input-daterange'
+                @$el.find '#scheduleFrom'
                 .datetimepicker
-                    language:'pt-BR'
-
-                @$el.find '.input-daterange'
-                .datetimepicker
-                    language: 'pt-BR'
-                    pickDate: true
-                    pickTime: true
-                    todayHighlight  : true
-                    startDate       : today
-                    format          : 'yyyy-MM-dd hh:mm:ss'
+                    #dayOfWeekStart : 1
+                    #lang:'en'
+                    format: 'Y-m-d H:i'
+                    #setStartDate: 
+                    startDate: today
+                    #todayHighlight  : true
+                    #formatTime: 'g:i A'
+                    formatTime: 'H:i'
 
                 .on 'hide', (e)=>
                     if e.target.id is 'scheduleFrom'
                         #console.log "datte"
-                        @$el.find('#scheduleTo').datetimepicker 'setStartDate', e.date
+                        @$el.find('#scheduleTo').datetimepicker 'startDate', e.date
+
+                @$el.find '#scheduleTo'
+                .datetimepicker
+                    #dayOfWeekStart : 1
+                    #lang:'en'
+                    format: 'Y-m-d H:i'
+                    #startDate: @$el.find '#scheduleFrom'
+                    #.val()
+                    #formatTime: 'g:i A'
+                    formatTime: 'H:i'
 
 
             saveScheduled: (e)=>
                 if @$el.find('form').valid()
 
+
                     scheduleFrom = @$el.find '#scheduleFrom'
                     .val()
-
+                    #console.log scheduleFrom
                     scheduleTo = @$el.find '#scheduleTo'
                     .val()
-
-                    @trigger "save:quiz:schedule", scheduleFrom, scheduleTo
+                    console.log (scheduleFrom < scheduleTo)
+                    if (scheduleFrom < scheduleTo) == 'false'
+                        @$el.find '.success-msg'
+                        .html 'From has to be less than To'
+                        .addClass 'text-error'
+                    else     
+                    #console.log scheduleTo
+                        @trigger "save:quiz:schedule", scheduleFrom, scheduleTo
 
             onScheduleSaved:(response)->
                 @$el.find '.success-msg'

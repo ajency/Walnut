@@ -78,23 +78,22 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       ScheduleQuizView.prototype.onShow = function() {
         var today;
         today = new Date();
-        this.$el.find('#datetimepicker3').datetimepicker({
-          language: 'pt-BR'
-        });
-        return this.$el.find('.input-daterange').datetimepicker({
-          language: 'pt-BR',
-          pickDate: true,
-          pickTime: true,
-          todayHighlight: true,
+        console.log(today);
+        this.$el.find('#scheduleFrom').datetimepicker({
+          format: 'Y-m-d H:i',
           startDate: today,
-          format: 'yyyy-MM-dd hh:mm:ss'
+          formatTime: 'H:i'
         }).on('hide', (function(_this) {
           return function(e) {
             if (e.target.id === 'scheduleFrom') {
-              return _this.$el.find('#scheduleTo').datetimepicker('setStartDate', e.date);
+              return _this.$el.find('#scheduleTo').datetimepicker('startDate', e.date);
             }
           };
         })(this));
+        return this.$el.find('#scheduleTo').datetimepicker({
+          format: 'Y-m-d H:i',
+          formatTime: 'H:i'
+        });
       };
 
       ScheduleQuizView.prototype.saveScheduled = function(e) {
@@ -102,7 +101,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         if (this.$el.find('form').valid()) {
           scheduleFrom = this.$el.find('#scheduleFrom').val();
           scheduleTo = this.$el.find('#scheduleTo').val();
-          return this.trigger("save:quiz:schedule", scheduleFrom, scheduleTo);
+          console.log(scheduleFrom < scheduleTo);
+          if ((scheduleFrom < scheduleTo) === 'false') {
+            return this.$el.find('.success-msg').html('From has to be less than To').addClass('text-error');
+          } else {
+            return this.trigger("save:quiz:schedule", scheduleFrom, scheduleTo);
+          }
         }
       };
 
