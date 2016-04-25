@@ -80,7 +80,7 @@ require.config
 		syphon: ['backbone']
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
-		datepicker: ['jquery', 'bootstrap']
+		#datepicker: ['jquery', 'bootstrap']
 		datetimepicker: ['jquery', 'bootstrap']
 		timepicker: ['jquery', 'bootstrap']
 		timecircles: ['jquery']
