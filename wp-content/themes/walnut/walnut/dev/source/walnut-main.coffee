@@ -36,7 +36,7 @@ require.config
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
 		#datepicker: 'plugins/bootstrap-datepicker'
-		datetimepicker: 'plugins/bootstrap-datetimepicker.min',
+		datetimepicker: 'plugins/bootstrap-datetimepicker.min'
 		jquery_listnav: 'plugins/jquery-listnav'
 		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget: 'plugins/jquery.bridget'
@@ -82,7 +82,7 @@ require.config
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
 		#datepicker: ['jquery', 'bootstrap']
-		datetimepicker: ['jquery', 'bootstrap']
+		datetimepicker: ['jquery']
 		jquery_listnav: ['jquery']
 		screwbuttons: ['jquery']
 		checkbox: ['bootstrap']

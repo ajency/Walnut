@@ -74,7 +74,7 @@ require.config({
     syphon: ['backbone'],
     moment: ['jquery'],
     select2: ['jquery', 'bootstrap'],
-    datetimepicker: ['jquery', 'bootstrap'],
+    datetimepicker: ['jquery'],
     jquery_listnav: ['jquery'],
     screwbuttons: ['jquery'],
     checkbox: ['bootstrap'],
