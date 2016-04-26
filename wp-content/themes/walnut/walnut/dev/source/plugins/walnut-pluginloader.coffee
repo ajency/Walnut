@@ -21,7 +21,6 @@ define [
     'moment'
     'select2'
     #'datepicker'
-    'datetimepicker'
     'jquery_listnav'
     'bridget'
     'isotope'
@@ -39,4 +38,5 @@ define [
     'modenizr'
     'jquerypp'
     'bookblock'
+    'datetimepicker'
 ], ->
