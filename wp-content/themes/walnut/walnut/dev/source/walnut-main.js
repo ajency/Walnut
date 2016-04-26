@@ -78,6 +78,7 @@
       moment: ['jquery'],
       select2: ['jquery', 'bootstrap'],
       datepicker: ['jquery', 'bootstrap'],
+      datetimepicker: ['jquery', 'bootstrap'],
       jquery_listnav: ['jquery'],
       screwbuttons: ['jquery'],
       checkbox: ['bootstrap'],
