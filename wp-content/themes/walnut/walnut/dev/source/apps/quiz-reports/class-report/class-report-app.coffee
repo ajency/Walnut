@@ -112,6 +112,20 @@ define ['app'
                             #console.log @division
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
+
+                    # to send summary email
+                    @listenTo @layout.allContentRegion, "summary:communication", (data)=>
+                            console.log "communictaion"
+                            data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_summary_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    division        : @division
+                            console.log data
+                            communicationModel = App.request "create:communication",data
+                            @_showSelectRecipientsApp communicationModel
                             
 
                     @listenTo @layout.allContentRegion, "schedule:quiz", @_showScheduleQuizApp
@@ -132,6 +146,7 @@ define ['app'
                     quizModel   : quizModel
 
             _showSelectRecipientsApp:(communicationModel)->
+                console.log communicationModel
                 App.execute "show:quiz:select:recipients:popup",
                     region               : App.dialogRegion
                     communicationModel   : communicationModel

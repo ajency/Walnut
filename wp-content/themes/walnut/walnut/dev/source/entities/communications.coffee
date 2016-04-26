@@ -26,6 +26,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 $.post url, 
                     data, (response) =>
+                        console.log response
                         defer.resolve response
                     'json'
                     

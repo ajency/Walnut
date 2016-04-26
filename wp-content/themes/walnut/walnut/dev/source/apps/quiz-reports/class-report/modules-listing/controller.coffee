@@ -44,6 +44,8 @@ define ['app'
 
                         @listenTo @view, "save:communications", (data)=> @region.trigger "save:communications",data
 
+                        @listenTo @view, "summary:communication", (data)=> @region.trigger "summary:communication", data
+
 
             _getAllTermIDs:=>
                 _.chain @contentModulesCollection.pluck 'term_ids'

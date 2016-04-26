@@ -31,6 +31,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         defer = $.Deferred();
         $.post(url, data, (function(_this) {
           return function(response) {
+            console.log(response);
             return defer.resolve(response);
           };
         })(this), 'json');
