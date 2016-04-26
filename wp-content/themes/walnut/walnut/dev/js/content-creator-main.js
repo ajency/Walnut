@@ -38,6 +38,7 @@ require.config({
     resizablecolumns: 'plugins/jquery.resizableColumns.min',
     bootbox: 'plugins/bootbox.min',
     moment: 'plugins/moment.min',
+    datetimepicker: 'plugins/bootstrap-datetimepicker.min',
     imageareaselect: '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min',
     imageedit: '../../../../../../wp-admin/js/image-edit',
     json2: '../../../../../../wp-includes/js/json2',
@@ -83,6 +84,7 @@ require.config({
     panzerlist: ['jquery'],
     resizablecolumns: ['jquery'],
     bootbox: ['jquery', 'bootstrap'],
+    datetimepicker: ['jquery', 'bootstrap'],
     app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
   }
 });
