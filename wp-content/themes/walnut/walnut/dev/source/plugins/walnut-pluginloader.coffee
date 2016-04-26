@@ -20,7 +20,7 @@ define [
     'tablesorter_pager'
     'moment'
     'select2'
-    #'datepicker'
+    'datepicker'
     'datetimepicker'
     'jquery_listnav'
     'bridget'
