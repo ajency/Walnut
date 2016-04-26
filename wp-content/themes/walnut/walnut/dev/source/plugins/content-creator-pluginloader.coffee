@@ -32,6 +32,7 @@ define [
 	'panzer'
 	'panzerlist'
 	'resizablecolumns'
+	'datetimepicker'
 	'bootbox'
     'moment'
 ], ->
