@@ -26,7 +26,6 @@ require.config({
     detect: 'plugins/detect',
     moment: 'plugins/moment.min',
     select2: 'plugins/select2',
-    datetimepicker: 'plugins/bootstrap-datetimepicker.min',
     jquery_listnav: 'plugins/jquery-listnav',
     screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
     bridget: 'plugins/jquery.bridget',
@@ -45,7 +44,8 @@ require.config({
     jPages: 'plugins/jPages.min',
     modenizr: 'plugins/bookBlock/modernizr.custom',
     jquerypp: 'plugins/bookBlock/jquerypp.custom',
-    bookblock: 'plugins/bookBlock/jquery.bookblock'
+    bookblock: 'plugins/bookBlock/jquery.bookblock',
+    datetimepicker: 'plugins/bootstrap-datetimepicker.min',
   },
   shim: {
     underscore: {
@@ -74,7 +74,6 @@ require.config({
     syphon: ['backbone'],
     moment: ['jquery'],
     select2: ['jquery', 'bootstrap'],
-    datetimepicker: ['jquery'],
     jquery_listnav: ['jquery'],
     screwbuttons: ['jquery'],
     checkbox: ['bootstrap'],
@@ -91,6 +90,7 @@ require.config({
     jPages: ['jquery'],
     jquerypp: ['jquery'],
     bookblock: ['jquery'],
+    datetimepicker: ['jquery'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });
