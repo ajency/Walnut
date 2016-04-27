@@ -413,19 +413,39 @@ $target = $_REQUEST['local_path'];
 
 $tables = array();
 $files = array_diff(scandir($target), array('..', '.'));
+
+
+$myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
 foreach($files as $key=>$file){
 chmod($target.'/'.$file, 01777);
 
 
+
 $table = $wpdb->prefix . pathinfo($file)['filename'];
 
+
+
 if($file !== 'options.csv'){
+
+$txt = $table." - truncate start..";
+fwrite($myfile, "\n". $txt);
 $wpdb->query("TRUNCATE TABLE ".$table."");
+$txt = $table." - truncate finished..";
+fwrite($myfile, "\n". $txt);
 
+
+$txt = $table." - started data load.";
+fwrite($myfile, "\n". $txt);
 $tables[] = load_csv_to_table($target.'/'.$file,$table);
+$txt = $table." - finished data load..";
+fwrite($myfile, "\n". $txt);
 }
 
+
+
 }
+
+fclose($myfile);
 
 //set homepage
 $homepage = get_page_by_title( 'Dashboard' );
