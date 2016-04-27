@@ -133,14 +133,6 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
 function num_students_taken_quiz($quiz_id, $division){
 
-    $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
-
-    $txt = $division." - division for the quiz..";
-    fwrite($myfile, "\n". $txt);
-
-    $txt = $quiz_id." - Id quiz..";
-    fwrite($myfile, "\n". $txt);
-
     global $wpdb;
 
     $taken_by = 0;
@@ -167,12 +159,9 @@ function num_students_taken_quiz($quiz_id, $division){
                 array($quiz_id, '%completed%')
                 );
 
-            $txt = $taken_by_query." - taken by query result..";
-            fwrite($myfile, "\n". $txt);
             $taken_by=(int) $wpdb->get_var($taken_by_query);
         }
     }
-    fclose($myfile);
     //return $students;
     return $taken_by;
 
