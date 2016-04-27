@@ -123,6 +123,7 @@ define(["app", 'backbone'], function(App, Backbone) {
           reset: true,
           data: param,
           success: function(resp) {
+            console.log(resp);
             if (!param.search_str) {
               return quizRepository.reset(resp.models);
             }

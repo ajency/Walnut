@@ -7,6 +7,8 @@
  */
 
 function get_single_quiz_module ($id,$user_id=0, $division = 0) {
+
+    $selected_quiz_id = $id;
     global $wpdb;
 
     if(!$user_id)
@@ -119,16 +121,25 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     if($division){        
 
-        $data->taken_by = num_students_taken_quiz($id, $division);
+        $data->taken_by = num_students_taken_quiz($selected_quiz_id, $division);
         
         $data->total_students = get_student_count_in_division($division);
 
     }
 
     return $data;
+    //return $data->taken_by;
 }
 
 function num_students_taken_quiz($quiz_id, $division){
+
+    $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
+
+    $txt = $division." - division for the quiz..";
+    fwrite($myfile, "\n". $txt);
+
+    $txt = $quiz_id." - Id quiz..";
+    fwrite($myfile, "\n". $txt);
 
     global $wpdb;
 
@@ -140,9 +151,11 @@ function num_students_taken_quiz($quiz_id, $division){
         );
 
     $students=get_user_list($args);
+    
 
     if($students){
         $student_ids=__u::pluck($students,'ID');
+
 
         if(sizeof($student_ids)>0){
             $students_str= join($student_ids,',');
@@ -151,12 +164,16 @@ function num_students_taken_quiz($quiz_id, $division){
                 FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
                 AND quiz_meta like '%s'
                 AND student_id in ($students_str)",
-                $quiz_id, '%completed%');
+                array($quiz_id, '%completed%')
+                );
 
+            $txt = $taken_by_query." - taken by query result..";
+            fwrite($myfile, "\n". $txt);
             $taken_by=(int) $wpdb->get_var($taken_by_query);
         }
     }
-
+    fclose($myfile);
+    //return $students;
     return $taken_by;
 
 }
@@ -387,6 +404,7 @@ function get_all_quiz_modules($args){
                     });
                     
     return $result;
+   // return $args['division'];
 }
 
 
