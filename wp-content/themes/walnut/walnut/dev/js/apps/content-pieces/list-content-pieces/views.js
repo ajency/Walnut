@@ -17,7 +17,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{ID}}" id="checkbox{{ID}}"> <label for="checkbox{{ID}}"></label> </div> </td> <td class="cpHeight">{{&post_excerpt}}</td> <td class="cpHeight">{{&present_in_str}}</td> <td>{{textbookName}}</td> <td>{{chapterName}}</td> <td>{{contentType}}</td> <td><span style="display:none">{{sort_date}} </span> {{&modified_date}}</td> <td>{{&statusMessage}}</td> <td data-id="{{ID}}" class="text-center"> <a target="_blank" href="{{view_url}}" class="view-content-piece">View</a> {{&edit_link}} {{#is_under_review}} <span class="nonDevice publishModuleSpan">|</span> <a target="_blank" class="nonDevice publishModule">Publish</a> {{/is_under_review}} {{#is_published}} <span class="nonDevice archiveModuleSpan">|</span> <a target="_blank" class="nonDevice archiveModule">Archive</a> {{/is_published}} {{^is_used}} <span class="nonDevice deleteModuleSpan">|</span> <a target="_blank" class="nonDevice deleteModule">Delete</a> {{/is_used}} <span class="nonDevice">|</span> <a target="_blank"  class="nonDevice cloneModule">Clone</a> <i class="fa spinner"></i> </td>';
 
       ListItemView.prototype.serializeData = function() {
         var data, edit_url, modules;
@@ -190,13 +190,11 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       function ListView() {
         this.changeStatus = bind(this.changeStatus, this);
-
         this.show_destination_subsections = bind(this.show_destination_subsections, this);
         this.show_destination_sections = bind(this.show_destination_sections, this);
         this.show_destination_chapters = bind(this.show_destination_chapters, this);
         this.show_destination_textbooks = bind(this.show_destination_textbooks, this);
         this.moveContent = bind(this.moveContent, this);
-
         return ListView.__super__.constructor.apply(this, arguments);
       }
 

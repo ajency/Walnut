@@ -47,7 +47,6 @@ define(['app', 'text!apps/student-training-module/take-module/item-description/t
 
       TopPanelView.prototype.onShow = function() {
         var ref, timeLeftOrElapsed;
-
         $('.open-sidebar').click(function() {
           $('.video-sidebar').toggleClass('video-is-open');
         });

@@ -1,0 +1,16 @@
+
+wp_class_divisions - truncate start..
+wp_class_divisions - truncate finished..
+wp_class_divisions - started data load.
+wp_class_divisions - finished data load..
+wp_collection_meta - truncate start..
+wp_collection_meta - truncate finished..
+wp_collection_meta - started data load.
+wp_collection_meta - finished data load..
+wp_content_collection - truncate start..
+wp_content_collection - truncate finished..
+wp_content_collection - started data load.
+wp_content_collection - finished data load..
+wp_postmeta - truncate start..
+wp_postmeta - truncate finished..
+wp_postmeta - started data load.

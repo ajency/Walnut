@@ -107,8 +107,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         });
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
-
-        pausedQuestionTime = 0;
         if ((!questionResponseModel) || ((ref = questionResponseModel.get('status')) === 'not_started' || ref === 'paused')) {
           if (questionResponseModel) {
             console.log(questionResponseModel.get('status'));
