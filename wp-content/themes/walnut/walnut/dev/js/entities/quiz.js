@@ -104,6 +104,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemCollection.prototype.parse = function(resp) {
+        console.log(resp);
         return resp.data.reverse();
       };
 

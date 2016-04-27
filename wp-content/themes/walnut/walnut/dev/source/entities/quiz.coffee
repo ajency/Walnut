@@ -73,6 +73,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-quizes'
 
             parse: (resp)->
+                console.log resp
                 resp.data.reverse()
         
         quizRepository= new Quiz.ItemCollection
