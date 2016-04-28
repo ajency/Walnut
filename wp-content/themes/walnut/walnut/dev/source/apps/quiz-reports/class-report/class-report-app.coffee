@@ -70,7 +70,7 @@ define ['app'
                         selectedFilterParamsObject: @selectedFilterParamsObject
                         divisionsCollection : divisionsCollection
                         dataType : 'quiz'
-                        filters : ['divisions','textbooks', 'chapters','post_status']
+                        filters : ['divisions','textbooks', 'chapters','post_status_report']
 
                         
 

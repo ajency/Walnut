@@ -45,7 +45,7 @@ require.config({
     modenizr: 'plugins/bookBlock/modernizr.custom',
     jquerypp: 'plugins/bookBlock/jquerypp.custom',
     bookblock: 'plugins/bookBlock/jquery.bookblock',
-    datetimepicker: 'plugins/bootstrap-datetimepicker.min',
+    datetimepicker: 'plugins/bootstrap-datetimepicker.min'
   },
   shim: {
     underscore: {

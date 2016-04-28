@@ -7,6 +7,8 @@
  */
 
 function get_single_quiz_module ($id,$user_id=0, $division = 0) {
+
+    $selected_quiz_id = $id;
     global $wpdb;
 
     if(!$user_id)
@@ -119,7 +121,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     if($division){        
 
-        $data->taken_by = num_students_taken_quiz($id, $division);
+        $data->taken_by = num_students_taken_quiz($selected_quiz_id, $division);
         
         $data->total_students = get_student_count_in_division($division);
 
