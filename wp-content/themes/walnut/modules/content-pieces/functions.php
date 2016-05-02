@@ -59,6 +59,8 @@ function get_content_pieces($args = array()) {
 
     switch_to_blog(1);
 
+    //get_current_blog_id if not 1 return
+
     if(isset($args['exclude'])){
         $args['exclude'] = $args['exclude'];
     }
@@ -69,7 +71,8 @@ function get_content_pieces($args = array()) {
     }
     
     if(isset($args['textbook'])){
-        
+
+
         $post_ids= $wpdb->prepare(
                 "SELECT post_id from {$wpdb->base_prefix}postmeta WHERE meta_key LIKE %s
                     AND meta_value like %s",

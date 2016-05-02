@@ -15,6 +15,13 @@
 	"use strict";
 	$(function () {
 		// Place your administration-specific JavaScript here
+
+          jQuery('#textselect').change(function(){
+
+            alert("textbook selected");
+          });
+
+
             jQuery("#import-csv-start").on('click',function(){
                  jQuery(this).prop('disabled', true); 
                  jQuery("#log_view").html('Please Wait Import in progress..'); 

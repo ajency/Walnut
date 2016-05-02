@@ -99,26 +99,33 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
     if(!$quiz_id)
         return false;
 
-    $parents=$students= $recipients = array();
+    $parents=$students= array();
     
-    $query = $wpdb->prepare("SELECT DISTINCT student_id 
-        FROM {$wpdb->prefix}quiz_response_summary 
-        WHERE quiz_meta LIKE %s
-            AND collection_id = %d",
-        array('%"completed";%', $quiz_id)
-    );
+    //for all student id's (students hav division)
+    $query1 = $wpdb->prepare("SELECT DISTINCT um1.user_id
+        FROM {$wpdb->base_prefix}usermeta AS um1
+        LEFT JOIN {$wpdb->base_prefix}usermeta AS um2
+        ON um1.user_id = um2.user_id
+        WHERE um1.meta_key LIKE %s
+        AND um1.meta_value LIKE %s
+        AND um2.meta_key LIKE %s
+        AND um2.meta_value = %d",
+        array('%capabilities','%student%','student_division', $division)
+        );
 
-    $student_ids= $wpdb->get_col($query);
+    $txt = $query1." - QUERY..";
+    fwrite($myfile, "\n". $txt);
+    $student_ids= $wpdb->get_col($query1);
 
     foreach($student_ids as $student){
-        $student_division = get_user_meta($student,'student_division',true);
-        if($student_division == $division)
+
             $students[]=$student;
     }
     
     if(sizeof($students)>0)
-        $parents= get_parents_by_student_ids($students);
+        $parents= get_parents_by_student_ids($student_ids);
 
+    fclose($myfile);
     return $parents;
     
 }
@@ -172,7 +179,7 @@ function quiz_published_parent_mail_recipients($quiz_id){
    if (get_current_blog_id() == 1){
 
     $blog_id_query = $wpdb->prepare("SELECT DISTINCT blog_id
-        FROM {$wpdb->prefix}blogs
+        FROM {$wpdb->base_prefix}blogs
         WHERE blog_id != 1");
 
     $blog_ids = $wpdb->get_col($blog_id_query); 
@@ -207,8 +214,8 @@ function quiz_published_parent_mail_recipients($quiz_id){
 
     //for all student id's (students hav division)
     $query1 = $wpdb->prepare("SELECT DISTINCT um1.user_id
-        FROM {$wpdb->prefix}usermeta AS um1
-        LEFT JOIN {$wpdb->prefix}usermeta AS um2
+        FROM {$wpdb->base_prefix}usermeta AS um1
+        LEFT JOIN {$wpdb->base_prefix}usermeta AS um2
         ON um1.user_id = um2.user_id
         WHERE um1.meta_key LIKE %s
         AND um1.meta_value LIKE %s
@@ -260,7 +267,7 @@ function prepare_quiz_completed_parent_mail_recipients($data){
 }
 
 
-/*quiz summary email*/
+/*quiz summary email recipients*/
 function prepare_quiz_summary_parent_mail_recipients($data){
 
     $recipients= array();
