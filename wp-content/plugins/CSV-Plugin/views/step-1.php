@@ -28,7 +28,11 @@ global $ajci_components;
                 <?php } ?>
                 </select>
             </td>
-            </tr>                
+            </tr> 
+            <tr>
+            <td>Export Template excel</td>
+            <td><button name="export" id="template_export" type="button">Export</button></td>
+            </tr>               
             <tr>
             <td>
             <label>Upload a file: 

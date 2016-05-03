@@ -89,7 +89,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                 region: _this.layout.studentFilterRegion,
                 students: students
               });
-              App.execute("show:list:quiz:report:app", {
+              App.execute("show:list:quiz:reptor:app", {
                 region: _this.layout.allContentRegion,
                 contentModulesCollection: quizzes,
                 textbooksCollection: textbooksCollection

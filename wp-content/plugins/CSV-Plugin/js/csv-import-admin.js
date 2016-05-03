@@ -16,9 +16,16 @@
 	$(function () {
 		// Place your administration-specific JavaScript here
 
-          jQuery('#textselect').change(function(){
-
-            alert("textbook selected");
+          jQuery('#template_export').click(function(){
+            jQuery.post(ajaxurl, 
+              {
+                action : 'generate-excel',
+              }, function(result){
+                console.log(result);
+               name = result['name'];
+                console.log(name);
+                window.location.href='01simple.xls';
+              });
           });
 
 

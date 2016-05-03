@@ -1,5 +1,62 @@
 <?php
 
+function get_chapters($textbook_ids){ 
+
+global $wpdb;
+//$textbook_ids = $textbook_ids;
+$textids = $chapter_data = $chapter_da = array();
+$textids = trim($textids,',');
+$textids = split(',',$textbook_ids);
+//$count = sizeof($textids);
+
+ $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
+foreach ($textids as $textid) {
+if($textid == '' || $textid == null){
+    return $chapter_da;
+}
+
+ $chapter_data = $wpdb->get_results("SELECT ter.name , ter.term_id, tax.parent FROM wp_terms AS ter
+                                    LEFT JOIN wp_term_taxonomy AS tax ON ter.term_id=tax.term_id
+                                    WHERE tax.parent = '".$textid."'");
+
+$chapter_da = array_merge($chapter_data,$chapter_da);
+} 
+ return $chapter_da;
+}
+
+function textbook_data()
+{
+    
+    global $wpdb;
+    $defaults = array(
+        'hide_empty'    => false,
+        'parent'        => 0,
+        'fetch_all'     => true,
+        'orderby'       => 'name',
+        'order'         => 'asc'
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+$textbook_ids = get_terms('textbook', $args);
+
+$id_text = '';
+foreach ($textbook_ids as $textid) {
+    $id = $textid->term_id;
+    $id_text = $id.",".$id_text;
+ 
+}
+$id_text = trim($id_text,',');
+ /*   $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
+  //$txt = $textbooks;
+  fwrite($myfile, "\n". $id_text . "\n" );
+ fclose($myfile);*/
+ $textbooks = $wpdb->get_results("SELECT name, term_id FROM wp_terms WHERE term_id IN ($id_text)");
+
+    return $textbooks;
+
+}
+
 function save_content_piece($data){
 
     global $wpdb;
