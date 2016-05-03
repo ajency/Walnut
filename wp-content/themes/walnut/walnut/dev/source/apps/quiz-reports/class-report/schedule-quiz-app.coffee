@@ -102,6 +102,7 @@ define ['app'
                     #lang:'en'
                     format: 'Y-m-d H:i'
                     #setStartDate: 
+                    minDate:0
                     startDate: today
                     #todayHighlight  : true
                     #formatTime: 'g:i A'
