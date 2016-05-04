@@ -93,7 +93,7 @@ define ['app'
                 today = new Date();
                 console.log today
 
-                $('#hiddenFrom').Zebra_DatePicker()
+                #$('#hiddenFrom').Zebra_DatePicker()
 
                 #@$el.find '#datetimepicker3'
                 #.datetimepicker

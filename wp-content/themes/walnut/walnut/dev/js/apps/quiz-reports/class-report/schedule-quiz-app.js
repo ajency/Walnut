@@ -79,7 +79,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var today;
         today = new Date();
         console.log(today);
-        $('#hiddenFrom').Zebra_DatePicker();
         this.$el.find('#scheduleFrom').datetimepicker({
           format: 'Y-m-d H:i',
           minDate: 0,
