@@ -29,7 +29,7 @@
       moment: 'plugins/moment.min',
       select2: 'plugins/select2',
       //datepicker: 'plugins/bootstrap-datepicker',
-      datetimepicker: 'plugins/bootstrap-datetimepicker.min',
+      datetimepicker: 'plugins/bootstrap_datetimepicker.min',
       jquery_listnav: 'plugins/jquery-listnav',
       screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2',
       bridget: 'plugins/jquery.bridget',

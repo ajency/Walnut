@@ -57,6 +57,7 @@ require.config
 		jquerypp : 'plugins/bookBlock/jquerypp.custom'
 		bookblock : 'plugins/bookBlock/jquery.bookblock'
 
+
 	shim:
 		underscore:
 			exports: '_'
