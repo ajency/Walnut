@@ -90,7 +90,7 @@ require.config({
     jPages: ['jquery'],
     jquerypp: ['jquery'],
     bookblock: ['jquery'],
-    datetimepicker: ['jquery'],
+    datetimepicker: ['jquery', 'bootstrap'],
     app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
   }
 });

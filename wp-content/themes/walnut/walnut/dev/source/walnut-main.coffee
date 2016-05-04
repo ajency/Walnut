@@ -36,6 +36,7 @@ require.config
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
 		#datepicker: 'plugins/bootstrap-datepicker'		
+		#zebra_datepicker: 'plugins/zebra_datepicker'
 		jquery_listnav: 'plugins/jquery-listnav'
 		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget: 'plugins/jquery.bridget'
@@ -82,6 +83,7 @@ require.config
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
 		#datepicker: ['jquery', 'bootstrap']
+		#zebra_datepicker: ['jquery']
 		jquery_listnav: ['jquery']
 		screwbuttons: ['jquery']
 		checkbox: ['bootstrap']
@@ -98,7 +100,7 @@ require.config
 		jPages: ['jquery']
 		jquerypp : ['jquery']
 		bookblock :['jquery']
-		datetimepicker: ['jquery']
+		datetimepicker: ['jquery','bootstrap']
 		app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 # Start with application

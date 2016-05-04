@@ -21,6 +21,7 @@ define [
     'moment'
     'select2'
     #'datepicker'
+    #'zebra_datepicker'
     'jquery_listnav'
     'bridget'
     'isotope'

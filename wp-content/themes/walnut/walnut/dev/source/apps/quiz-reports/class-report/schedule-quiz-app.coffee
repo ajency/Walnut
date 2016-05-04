@@ -58,6 +58,7 @@ define ['app'
                                     From: <br>
                                     <div class="input-append success date">
                                           <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
+                                            <!--input id="hiddenFrom" value=""/-->
                                             <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                             </span>
                                     </div>
@@ -107,19 +108,28 @@ define ['app'
                     #todayHighlight  : true
                     #formatTime: 'g:i A'
                     formatTime: 'H:i'
+                    onSelectDate:=>
+                       # @$el.datetimepicker({ format: 'Y-m-d' })
+                        dateVariable = @$el.val()
+                        console.log dateVariable
 
                 .on 'hide', (e)=>
+                    console.log "dewdew"
+                ###.on 'hide', (e)=>
                     if e.target.id is 'scheduleFrom'
-                        #console.log "datte"
-                        @$el.find('#scheduleTo').datetimepicker 'startDate', e.date
+                        console.log @$el.find '#scheduleFrom'
+                        .val()
+                        @$el.find('#scheduleTo').datetimepicker 'minDate', e.date###
 
                 @$el.find '#scheduleTo'
                 .datetimepicker
                     #dayOfWeekStart : 1
                     #lang:'en'
                     format: 'Y-m-d H:i'
-                    #startDate: @$el.find '#scheduleFrom'
+                    #startDate:@$el.find '#scheduleFrom'
                     #.val()
+                    minDate:@$el.find '#scheduleFrom'
+                    .datetimepicker('getDate')
                     #formatTime: 'g:i A'
                     formatTime: 'H:i'
 

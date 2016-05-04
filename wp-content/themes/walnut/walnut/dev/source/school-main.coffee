@@ -36,6 +36,7 @@ require.config
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
 		#datepicker: 'plugins/bootstrap-datepicker'
+		#zebra_datepicker: 'plugins/zebra_datepicker'
 		datetimepicker: 'plugins/bootstrap-datetimepicker.min'
 		jquery_listnav: 'plugins/jquery-listnav'
 		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
