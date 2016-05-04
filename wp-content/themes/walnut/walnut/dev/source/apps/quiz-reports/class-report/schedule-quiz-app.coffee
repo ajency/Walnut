@@ -58,7 +58,7 @@ define ['app'
                                     From: <br>
                                     <div class="input-append success date">
                                           <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
-                                            <!--input id="hiddenFrom" value=""/-->
+                                            <input id="hiddenFrom" value=""/>
                                             <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                             </span>
                                     </div>
@@ -92,6 +92,9 @@ define ['app'
 
                 today = new Date();
                 console.log today
+
+                $('#hiddenFrom').Zebra_DatePicker()
+
                 #@$el.find '#datetimepicker3'
                 #.datetimepicker
                 #    language:'pt-BR'

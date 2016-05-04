@@ -62,7 +62,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return ScheduleQuizView.__super__.constructor.apply(this, arguments);
       }
 
-      ScheduleQuizView.prototype.template = '<form> <!--div id="datetimepicker3" class="input-append"> <input data-format="hh:mm:ss" type="text"></input> <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i> </span> </div--> <div class="row"> <div class="input-daterange"> <div class="col-md-6"> From: <br> <div class="input-append success date"> <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12"> <!--input id="hiddenFrom" value=""/--> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </span> </div> </div> <div class="col-md-6"> To:  <br> <div class="input-append success date"> <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date" class="input-small span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> </div> </div> <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left">Schedule Quiz</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
+      ScheduleQuizView.prototype.template = '<form> <!--div id="datetimepicker3" class="input-append"> <input data-format="hh:mm:ss" type="text"></input> <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i> </span> </div--> <div class="row"> <div class="input-daterange"> <div class="col-md-6"> From: <br> <div class="input-append success date"> <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12"> <input id="hiddenFrom" value=""/> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </span> </div> </div> <div class="col-md-6"> To:  <br> <div class="input-append success date"> <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date" class="input-small span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> </div> </div> <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left">Schedule Quiz</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
 
       ScheduleQuizView.prototype.events = {
         'click .btn-success': 'saveScheduled'
@@ -79,6 +79,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var today;
         today = new Date();
         console.log(today);
+        $('#hiddenFrom').Zebra_DatePicker();
         this.$el.find('#scheduleFrom').datetimepicker({
           format: 'Y-m-d H:i',
           minDate: 0,

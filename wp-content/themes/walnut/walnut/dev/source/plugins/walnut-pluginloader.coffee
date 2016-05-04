@@ -21,7 +21,7 @@ define [
     'moment'
     'select2'
     #'datepicker'
-    #'datetimepicker'
+    'datetimepicker'
     'zebra_datepicker'
     'jquery_listnav'
     'bridget'

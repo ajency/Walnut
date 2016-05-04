@@ -36,6 +36,7 @@
 
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/zebra.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css"/>
     <link href="<?php echo get_template_directory_uri()?>/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
           media="screen"/>
