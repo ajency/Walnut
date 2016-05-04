@@ -35,7 +35,7 @@ require.config
 		detect: 'plugins/detect'
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
-		datetimepicker: 'plugins/bootstrap_datetimepicker.min'
+		datetimepicker: 'plugins/datetimepicker.min'
 		#datepicker: 'plugins/bootstrap-datepicker'		
 		zebra_datepicker: 'plugins/zebra_datepicker'
 		jquery_listnav: 'plugins/jquery-listnav'
