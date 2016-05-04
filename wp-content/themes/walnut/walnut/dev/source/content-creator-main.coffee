@@ -47,7 +47,6 @@ require.config
 		resizablecolumns : 'plugins/jquery.resizableColumns.min'
 		bootbox : 'plugins/bootbox.min'
 		moment: 'plugins/moment.min'
-		#datetimepicker:'plugins/bootstrap-datetimepicker.min'
 
 		# wordpress cropping js
 		imageareaselect : '../../../../../../wp-includes/js/imgareaselect/jquery.imgareaselect.min'
@@ -91,7 +90,6 @@ require.config
 		panzerlist : ['jquery']
 		resizablecolumns : ['jquery']
 		bootbox : ['jquery', 'bootstrap']
-		#datetimepicker : ['jquery', 'bootstrap']
 		app: ['plugins/content-creator-pluginloader', 'config/content-creator-configloader']
 
 
