@@ -91,7 +91,7 @@
         select2: ['jquery', 'bootstrap'],
         datepicker: ['jquery', 'bootstrap'],
         mousewheel: ['jquery'],
-        datetimepicker: ['jquery','mousewheel'],
+        datetimepicker: ['jquery','moment','bootstrap'],
         //zebra_datepicker: ['jquery'],
         //timepicker: ['jquery', 'bootstrap'],
         jquerytimer: ['jquery'],

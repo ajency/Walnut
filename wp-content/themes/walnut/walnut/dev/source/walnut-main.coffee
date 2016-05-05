@@ -84,7 +84,7 @@ require.config
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
 		mousewheel: ['jquery']
-		datetimepicker: ['jquery', 'mousewheel']
+		datetimepicker: ['jquery', 'moment','bootstrap']
 		datepicker: ['jquery', 'bootstrap']
 		#zebra_datepicker: ['jquery']
 		jquery_listnav: ['jquery']

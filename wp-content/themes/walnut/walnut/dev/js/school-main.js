@@ -77,7 +77,7 @@ require.config({
     select2: ['jquery', 'bootstrap'],
     mousewheel: ['jquery'],
     datepicker: ['jquery', 'bootstrap'],
-    datetimepicker: ['jquery', 'mousewheel'],
+    datetimepicker: ['jquery', 'moment', 'bootstrap'],
     timecircles: ['jquery'],
     jquery_listnav: ['jquery'],
     screwbuttons: ['jquery'],

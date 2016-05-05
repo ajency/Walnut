@@ -79,42 +79,17 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var today;
         today = new Date();
         console.log(today);
-        return this.$el.find('.input-daterange').datepicker({
-          language: 'pt-BR',
-          pickDate: true,
-          pickTime: true,
-          todayHighlight: true,
-          startDate: today,
-          format: 'yyyy-mm-dd'
-        }).on('hide', (function(_this) {
-          return function(e) {
-            if (e.target.id === 'scheduleFrom') {
-              return _this.$el.find('#scheduleTo').datepicker('setStartDate', e.date);
-            }
-          };
-        })(this));
 
-        /*@$el.find '#scheduleFrom'
-        .datetimepicker
-            format: 'Y-m-d H:i'
-            minDate:0
-            startDate: today
-            formatTime: 'H:i'
-        
-        .on 'hide', (e)=>
-            if e.target.id is 'scheduleFrom'
-                console.log @$el.find '#scheduleFrom'
-                .val()
-                @$el.find('#scheduleTo').datetimepicker 'minDate', e.date
-         */
-
-        /*@$el.find '#scheduleTo'
-        .datetimepicker
-            format: 'Y-m-d H:i'
-            minDate:@$el.find '#scheduleFrom'
-            .datetimepicker('getDate')
-            formatTime: 'H:i'
-         */
+        $('#scheduleFrom').datetimepicker();
+            $('#scheduleTo').datetimepicker({
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#scheduleFrom").on("dp.change", function (e) {
+                $('#scheduleTo').data("DateTimePicker").minDate(e.date);
+            });
+            $("#scheduleTo").on("dp.change", function (e) {
+                $('#scheduleFrom').data("DateTimePicker").maxDate(e.date);
+            });
       };
 
       ScheduleQuizView.prototype.saveScheduled = function(e) {

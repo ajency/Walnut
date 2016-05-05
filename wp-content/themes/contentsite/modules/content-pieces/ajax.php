@@ -14,7 +14,7 @@ function ajax_generate_excel(){
     $data = $_POST['data'];
 
     $xclObj = new ExportExcel();
-    $excel = $xclObj->excel();
+    $excel = $xclObj->excel($data);
     wp_send_json(array('name'=>$excel));
     //return "01simple.xls";
     /*$myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");

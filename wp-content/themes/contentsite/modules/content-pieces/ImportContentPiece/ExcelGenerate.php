@@ -3,28 +3,34 @@
 //require_once('../classes/PHPExcel.php');
 class ExportExcel {
 
-public function excel(){
+public function excel($text_id){
  
- //require_once('../classes/PHPExcel.php');
-//include '../classes/PHPExcel.php';
 // Create new PHPExcel object
 $objPHPExcel = new PHPExcel();
-//CONST TEXT_DROP = "";
-
-$data =  array(
-		array(
-            'textbook_name',
-            'textbook_id'
-      
+$data_chap =  array(
+        array(
+            'chapter_name',
+            'chapter_id'
 
       )
     );
 
-$data_chap =  array(
+$data_sect =  array(
         array(
-            'textbook_id',
-            'chapter_id',
-            'chapter_name'
+            'section_name',
+            'section_id'
+            
+
+
+      )
+    );
+
+$data_subsect =  array(
+        array(
+            'sub_section_name',
+            'sub_section_id'
+            
+
 
       )
     );
@@ -80,125 +86,157 @@ $objPHPExcel->setActiveSheetIndex(0)
 
 // Rename worksheet
 $objPHPExcel->getActiveSheet()->setTitle('Question');
+$objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
 
 
-//TextBook Sheet
-$textbookSheet = new PHPExcel_Worksheet($objPHPExcel);
-$objPHPExcel->addSheet($textbookSheet);
-$textbookSheet->setTitle('Textbook');
-$textbookSheet->fromArray($data, null, 'A1');
-//$textbookSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+$textbk_name = array();
+$textbk_name = textbook_name($text_id);
+ foreach ($textbk_name as $textbook) {
+        $text_name = $textbook->name;
+    }
 
-/*for ($i = 2; $i <= 11; $i++) {
 
-    $textbookSheet->setCellValue("A{$i}", "List Item {$i}");
-    //$textbookSheet->setCellValue(get_textbooks());
-}*/
-//get textbook name from db
-$textbooks = array();
-$textbooks = textbook_data();
-
- $i='2';
- $textbook_ids = '';
- foreach ($textbooks as $textbook) {
- // $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
-  $name = $textbook->name;
-  $id = $textbook->term_id;
-  $textbookSheet->setCellValue("A{$i}", "{$name}");
-  $textbookSheet->setCellValue("B{$i}", "{$id}");
-  $i+=1;
-  $textbook_ids = $id.",".$textbook_ids;
- // fwrite($myfile, "\n". $id . "\n");
- // fwrite($myfile, "\n". $name . "\n");
- 
-
-}
-$last = $i-1;
-// fclose($myfile); 
-//
-//$textbook = fetch_textbooks();
-
-/*$textbook = implode(',', $textbook);*/
-
-/*$rowCount = 1;
-while($row = mysql_fetch_array($result)){
-    $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $row['name']);
-    $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $row['age']);
-    $rowCount++;
-}*/
 for ($i = 2; $i <= 10; $i++)
 {
-
-$objValidation2 = $objPHPExcel->getActiveSheet()->getCell('C' . $i)->getDataValidation();
-$objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
-$objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
-$objValidation2->setAllowBlank(true);
-$objValidation2->setShowInputMessage(true);
-$objValidation2->setShowDropDown(true);
-$objValidation2->setPromptTitle('Pick from list');
-$objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
-$objValidation2->setErrorTitle('Input error');
-$objValidation2->setError('Value is not in list');
-$objValidation2->setFormula1('Textbook!$A$2:$A'.$last.'');
-//$objValidation2->setCellValue('D$2',$textbookSheet);
+$objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $text_id);
+$objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $text_name);
 }
 
-
-$objPHPExcel->getActiveSheet()->setCellValue('D3','=VLOOKUP(C3,Textbook!$A$2:$B$61,2,0)');
-
-/*for ($i = 2; $i <= 10; $i++)
-{
-$objPHPExcel->getActiveSheet()->setCellValue('D{$i}','=VLOOKUP(C'.$i.',Textbook!$A.'$i.':$B.'$last.',2,0)');
-}*/
-//setCellValue('C2','=VLOOKUP(A9;A3:B32;2)');
 
 //Chapter Sheet
 $chapterSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($chapterSheet);
 $chapterSheet->setTitle('Chapter');
 $chapterSheet->fromArray($data_chap, null, 'A1');
-//$textbookSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+//$chapterSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
- $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
 $chapter_data = array();
-$chapter_data = get_chapters($textbook_ids);
+$chapter_data = get_chapters($text_id);
 
 $i='2';
+$chap_ids = '';
 foreach ($chapter_data as $chapter) {
  $chapter_name = $chapter->name;
  $chapter_id = $chapter->term_id;
- $textbook_id = $chapter->parent; 
+// $textbook_id = $chapter->parent; 
 
- $chapterSheet->setCellValue("A{$i}", "{$chapter_id}");
-  $chapterSheet->setCellValue("B{$i}", "{$textbook_id}");
-    $chapterSheet->setCellValue("C{$i}", "{$chapter_name}");
+ $chapterSheet->setCellValue("A{$i}", "{$chapter_name}");
+  $chapterSheet->setCellValue("B{$i}", "{$chapter_id}");
 $i+=1;
-
+$chap_ids = $chap_ids.",".$chapter_id;
 
 }
 $last = $i-1;
 
-/*for ($i = 2; $i <= 10; $i++)
+for ($i = 2; $i <= 10; $i++)
 {
 
 $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getDataValidation();
 $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
 $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
-$objValidation2->setAllowBlank(true);
+$objValidation2->setAllowBlank(false);
 $objValidation2->setShowInputMessage(true);
 $objValidation2->setShowDropDown(true);
 $objValidation2->setPromptTitle('Pick from list');
 $objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
 $objValidation2->setErrorTitle('Input error');
 $objValidation2->setError('Value is not in list');
-$objValidation2->setFormula1('Chapter!$C$2:$C'.$last.'');
+$objValidation2->setFormula1('Chapter!$A$2:$A'.$last.'');
 //$objValidation2->setCellValue('D$2',$textbookSheet);
-}*/
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $i,'=VLOOKUP(E' .$i. ',Chapter!$A$2:$B$' .$last. ',2,0)');
+
+}
+
+//Section Sheet
+$sectionSheet = new PHPExcel_Worksheet($objPHPExcel);
+$objPHPExcel->addSheet($sectionSheet);
+$sectionSheet->setTitle('Section');
+$sectionSheet->fromArray($data_sect, null, 'A1');
+//$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+
+
+$section_data = array();
+$section_data = get_sections($chap_ids);
+$i='2';
+$section_ids = '';
+foreach ($section_data as $section) {
+
+ $section_name = $section->chapter_name ." > ". $section->name;
+ $section_id = $section->term_id;
+// $textbook_id = $chapter->parent; 
+
+  $sectionSheet->setCellValue("A{$i}", "{$section_name}");
+  $sectionSheet->setCellValue("B{$i}", "{$section_id}");
+$i+=1;
+$section_ids = $section_id.",".$section_ids;
+}
+$last = $i-1;
+
+for ($i = 2; $i <= 10; $i++)
+{
+
+$objValidation2 = $objPHPExcel->getActiveSheet()->getCell('G' . $i)->getDataValidation();
+$objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+$objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
+$objValidation2->setAllowBlank(false);
+$objValidation2->setShowInputMessage(true);
+$objValidation2->setShowDropDown(true);
+$objValidation2->setPromptTitle('Pick from list');
+$objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
+$objValidation2->setErrorTitle('Input error');
+$objValidation2->setError('Value is not in list');
+$objValidation2->setFormula1('Section!$A$2:$A'.$last.'');
+$objPHPExcel->getActiveSheet()->setCellValue('H' . $i,'=VLOOKUP(G' .$i. ',Section!$A$2:$B$' .$last. ',2,0)');
+}
+
+
+//Sub-section Sheet
+$subsectionSheet = new PHPExcel_Worksheet($objPHPExcel);
+$objPHPExcel->addSheet($subsectionSheet);
+$subsectionSheet->setTitle('SubSection');
+$subsectionSheet->fromArray($data_subsect, null, 'A1');
+//$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+
+
+$subsection_data = array();
+$subsection_data = get_sections($section_ids);
+$i='2';
+foreach ($subsection_data as $section) {
+
+ $section_name = $section->chapter_name ." > ". $section->name;
+ $section_id = $section->term_id;
+// $textbook_id = $chapter->parent; 
+
+  $subsectionSheet->setCellValue("A{$i}", "{$section_name}");
+  $subsectionSheet->setCellValue("B{$i}", "{$section_id}");
+$i+=1;
+}
+$last = $i-1;
+if($last < 2){
+$last = 2;
+}
+
+for ($i = 2; $i <= 10; $i++)
+{
+
+$objValidation2 = $objPHPExcel->getActiveSheet()->getCell('I' . $i)->getDataValidation();
+$objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+$objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
+$objValidation2->setAllowBlank(false);
+$objValidation2->setShowInputMessage(true);
+$objValidation2->setShowDropDown(true);
+$objValidation2->setPromptTitle('Pick from list');
+$objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
+$objValidation2->setErrorTitle('Input error');
+$objValidation2->setError('Value is not in list');
+$objValidation2->setFormula1('SubSection!$A$2:$A'.$last.'');
+$objPHPExcel->getActiveSheet()->setCellValue('J' . $i,'=VLOOKUP(I' .$i. ',SubSection!$A$2:$B$' .$last. ',2,0)');
+}
+
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
 $objPHPExcel->setActiveSheetIndex(0);
 // Redirect output to a client’s web browser (Excel5)
-//$xlfilename = time();
 
 // Redirect output to a client’s web browser (Excel5)
 header('Content-Type: application/vnd.ms-excel');

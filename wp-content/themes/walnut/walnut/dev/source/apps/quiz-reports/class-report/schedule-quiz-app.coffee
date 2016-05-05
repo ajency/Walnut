@@ -93,7 +93,7 @@ define ['app'
                 today = new Date();
                 console.log today
 
-                @$el.find '.input-daterange'
+                ###@$el.find '.input-daterange'
                 .datepicker
                     language: 'pt-BR'
                     pickDate: true
@@ -105,11 +105,11 @@ define ['app'
                 .on 'hide', (e)=>
                     if e.target.id is 'scheduleFrom'
                         #console.log "datte"
-                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date
+                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date###
 
-                ###@$el.find '#scheduleFrom'
+                @$el.find '#scheduleFrom'
                 .datetimepicker
-                    format: 'Y-m-d H:i'
+                    ###format: 'Y-m-d H:i'
                     minDate:0
                     startDate: today
                     formatTime: 'H:i'
@@ -120,9 +120,9 @@ define ['app'
                         .val()
                         @$el.find('#scheduleTo').datetimepicker 'minDate', e.date###
 
-                ###@$el.find '#scheduleTo'
+                @$el.find '#scheduleTo'
                 .datetimepicker
-                    format: 'Y-m-d H:i'
+                    ###format: 'Y-m-d H:i'
                     minDate:@$el.find '#scheduleFrom'
                     .datetimepicker('getDate')
                     formatTime: 'H:i'###

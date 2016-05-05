@@ -40,6 +40,6 @@ define [
     'modenizr'
     'jquerypp'
     'bookblock'
-    #'datetimepicker'
+    'datetimepicker'
     
 ], ->
