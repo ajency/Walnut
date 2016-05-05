@@ -33,8 +33,8 @@
         tablesorter_pager: 'plugins/jquery.tablesorter.pager',
         moment: 'plugins/moment.min',
         select2             : 'plugins/select2',
+        mousewheel: 'plugins/jquery-mousewheel',
         //datepicker          : 'plugins/bootstrap-datepicker',
-        datetimepicker      : 'plugins/datetimepicker.min',
         //zebra_datepicker    : 'plugins/zebra_datepicker',
         //timepicker          : 'plugins/bootstrap-timepicker.min',
         timecircles         : 'plugins/TimeCircles',
@@ -57,7 +57,8 @@
         jPages: 'plugins/jPages.min',
         modenizr: 'plugins/bookBlock/modernizr.custom',
         jquerypp : 'plugins/bookBlock/jquerypp.custom',
-        bookblock : 'plugins/bookBlock/jquery.bookblock'
+        bookblock : 'plugins/bookBlock/jquery.bookblock',
+        datetimepicker      : 'plugins/datetimepicker.min'
     },
     shim: {
         underscore: {
@@ -89,7 +90,8 @@
         mmenu: ['jquery'],
         select2: ['jquery', 'bootstrap'],
         //datepicker: ['jquery', 'bootstrap'],
-        datetimepicker: ['jquery'],
+        mousewheel: ['jquery'],
+        datetimepicker: ['jquery','mousewheel'],
         //zebra_datepicker: ['jquery'],
         //timepicker: ['jquery', 'bootstrap'],
         jquerytimer: ['jquery'],
