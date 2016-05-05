@@ -93,48 +93,39 @@ define ['app'
                 today = new Date();
                 console.log today
 
-                #$('#hiddenFrom').Zebra_DatePicker()
-
-                #@$el.find '#datetimepicker3'
-                #.datetimepicker
-                #    language:'pt-BR'
-
-                #@$el.find '.input-daterange'
-                @$el.find '#scheduleFrom'
-                .datetimepicker
-                    #dayOfWeekStart : 1
-                    #lang:'en'
-                    format: 'Y-m-d H:i'
-                    #setStartDate: 
-                    minDate:0
-                    startDate: today
-                    #todayHighlight  : true
-                    #formatTime: 'g:i A'
-                    formatTime: 'H:i'
-                    onSelectDate:=>
-                       # @$el.datetimepicker({ format: 'Y-m-d' })
-                        dateVariable = @$el.val()
-                        console.log dateVariable
+                @$el.find '.input-daterange'
+                .datepicker
+                    language: 'pt-BR'
+                    pickDate: true
+                    pickTime: true
+                    todayHighlight  : true
+                    startDate       : today
+                    format          : 'yyyy-mm-dd'
 
                 .on 'hide', (e)=>
-                    console.log "dewdew"
-                ###.on 'hide', (e)=>
+                    if e.target.id is 'scheduleFrom'
+                        #console.log "datte"
+                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date
+
+                ###@$el.find '#scheduleFrom'
+                .datetimepicker
+                    format: 'Y-m-d H:i'
+                    minDate:0
+                    startDate: today
+                    formatTime: 'H:i'
+
+                .on 'hide', (e)=>
                     if e.target.id is 'scheduleFrom'
                         console.log @$el.find '#scheduleFrom'
                         .val()
                         @$el.find('#scheduleTo').datetimepicker 'minDate', e.date###
 
-                @$el.find '#scheduleTo'
+                ###@$el.find '#scheduleTo'
                 .datetimepicker
-                    #dayOfWeekStart : 1
-                    #lang:'en'
                     format: 'Y-m-d H:i'
-                    #startDate:@$el.find '#scheduleFrom'
-                    #.val()
                     minDate:@$el.find '#scheduleFrom'
                     .datetimepicker('getDate')
-                    #formatTime: 'g:i A'
-                    formatTime: 'H:i'
+                    formatTime: 'H:i'###
 
 
             saveScheduled: (e)=>

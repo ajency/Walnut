@@ -79,35 +79,42 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         var today;
         today = new Date();
         console.log(today);
-        this.$el.find('#scheduleFrom').datetimepicker({
-          format: 'Y-m-d H:i',
-          minDate: 0,
+        return this.$el.find('.input-daterange').datepicker({
+          language: 'pt-BR',
+          pickDate: true,
+          pickTime: true,
+          todayHighlight: true,
           startDate: today,
-          formatTime: 'H:i',
-          onSelectDate: (function(_this) {
-            return function() {
-              var dateVariable;
-              dateVariable = _this.$el.val();
-              return console.log(dateVariable);
-            };
-          })(this)
+          format: 'yyyy-mm-dd'
         }).on('hide', (function(_this) {
           return function(e) {
-            return console.log("dewdew");
+            if (e.target.id === 'scheduleFrom') {
+              return _this.$el.find('#scheduleTo').datepicker('setStartDate', e.date);
+            }
           };
         })(this));
 
-        /*.on 'hide', (e)=>
+        /*@$el.find '#scheduleFrom'
+        .datetimepicker
+            format: 'Y-m-d H:i'
+            minDate:0
+            startDate: today
+            formatTime: 'H:i'
+        
+        .on 'hide', (e)=>
             if e.target.id is 'scheduleFrom'
                 console.log @$el.find '#scheduleFrom'
                 .val()
                 @$el.find('#scheduleTo').datetimepicker 'minDate', e.date
          */
-        return this.$el.find('#scheduleTo').datetimepicker({
-          format: 'Y-m-d H:i',
-          minDate: this.$el.find('#scheduleFrom').datetimepicker('getDate'),
-          formatTime: 'H:i'
-        });
+
+        /*@$el.find '#scheduleTo'
+        .datetimepicker
+            format: 'Y-m-d H:i'
+            minDate:@$el.find '#scheduleFrom'
+            .datetimepicker('getDate')
+            formatTime: 'H:i'
+         */
       };
 
       ScheduleQuizView.prototype.saveScheduled = function(e) {

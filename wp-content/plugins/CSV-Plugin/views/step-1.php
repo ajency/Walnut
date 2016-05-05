@@ -28,7 +28,15 @@ global $ajci_components;
                 <?php } ?>
                 </select>
             </td>
-            </tr> 
+            </tr>
+            <tr>
+            <td><label>Select Textbook: </label></td>
+            <td>
+                <select name="textbook_list" id="textbook_list">
+                    <option value='-1'>--Select Textbook--</option>
+                </select>
+            </td>
+            </tr>
             <tr>
             <td>Export Template excel</td>
             <td><button name="export" id="template_export" type="button">Export</button></td>

@@ -35,7 +35,7 @@ require.config
 		detect: 'plugins/detect'
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
-		#datepicker: 'plugins/bootstrap-datepicker'
+		datepicker: 'plugins/bootstrap-datepicker'
 		#zebra_datepicker: 'plugins/zebra_datepicker'
 		mousewheel: 'plugins/jquery-mousewheel'
 		datetimepicker: 'plugins/datetimepicker.min'
@@ -84,7 +84,7 @@ require.config
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
 		mousewheel: ['jquery']
-		#datepicker: ['jquery', 'bootstrap']
+		datepicker: ['jquery', 'bootstrap']
 		datetimepicker: ['jquery', 'mousewheel']
 		#zebra_datepicker: ['jquery']
 		#timepicker: ['jquery', 'bootstrap']

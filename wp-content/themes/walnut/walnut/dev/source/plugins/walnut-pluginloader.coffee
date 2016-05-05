@@ -20,7 +20,7 @@ define [
     'tablesorter_pager'
     'moment'
     'select2'
-    #'datepicker'
+    'datepicker'
     #'zebra_datepicker'
     'mousewheel'
     'jquery_listnav'
@@ -40,6 +40,6 @@ define [
     'modenizr'
     'jquerypp'
     'bookblock'
-    'datetimepicker'
+    #'datetimepicker'
     
 ], ->
