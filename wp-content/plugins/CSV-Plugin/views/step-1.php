@@ -43,7 +43,7 @@ global $ajci_components;
                         <option value="<?php echo $textbook->term_id; ?>"><?php echo $textbook->name; ?></option>
                     <?php endforeach ?>
                 </select>
-                <!--input type="text" id="hiddenTextId" value="-1" /-->
+                <input type="hidden" id="hiddenTextId" value="-1" />
             </td>
             </tr>
             <tr ><td></td>
