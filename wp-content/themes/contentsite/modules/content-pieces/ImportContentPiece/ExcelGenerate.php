@@ -86,7 +86,10 @@ $objPHPExcel->setActiveSheetIndex(0)
 
 // Rename worksheet
 $objPHPExcel->getActiveSheet()->setTitle('Question');
-//$objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension ('F')->setVisible(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension ('H')->setVisible(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension ('J')->setVisible(false);
 
 
 $textbk_name = array();

@@ -43,7 +43,7 @@ define ['app'
 
         class ScheduleQuizView extends Marionette.ItemView
 
-            template: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"><form>
+            template: '<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"--><form>
             <!--div id="datetimepicker3" class="input-append">
     <input data-format="hh:mm:ss" type="text"></input>
     <span class="add-on">
@@ -103,7 +103,7 @@ define ['app'
                     useCurrent:false
                     minDate:today
                     format:'YYYY-MM-DD hh:mm:ss'
-                    #debug:true
+                    debug:true
 
                 @$el.find '#scheduleFrom'
                 .on 'dp.change', (e)=>
