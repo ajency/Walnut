@@ -58,6 +58,7 @@
         modenizr: 'plugins/bookBlock/modernizr.custom',
         jquerypp : 'plugins/bookBlock/jquerypp.custom',
         bookblock : 'plugins/bookBlock/jquery.bookblock',
+        new_moment: 'plugins/new_moment',
         datetimepicker      : 'plugins/datetimepicker.min'
     },
     shim: {
@@ -91,7 +92,8 @@
         select2: ['jquery', 'bootstrap'],
         datepicker: ['jquery', 'bootstrap'],
         mousewheel: ['jquery'],
-        datetimepicker: ['jquery','moment','bootstrap'],
+        new_moment: ['jquery'],
+        datetimepicker: ['jquery','new_moment','bootstrap'],
         //zebra_datepicker: ['jquery'],
         //timepicker: ['jquery', 'bootstrap'],
         jquerytimer: ['jquery'],
