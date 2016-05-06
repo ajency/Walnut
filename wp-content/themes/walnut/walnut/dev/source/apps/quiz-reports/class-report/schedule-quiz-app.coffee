@@ -43,7 +43,7 @@ define ['app'
 
         class ScheduleQuizView extends Marionette.ItemView
 
-            template: '<form>
+            template: '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"><form>
             <!--div id="datetimepicker3" class="input-append">
     <input data-format="hh:mm:ss" type="text"></input>
     <span class="add-on">
@@ -93,39 +93,25 @@ define ['app'
                 today = new Date();
                 console.log today
 
-                ###@$el.find '.input-daterange'
-                .datepicker
-                    language: 'pt-BR'
-                    pickDate: true
-                    pickTime: true
-                    todayHighlight  : true
-                    startDate       : today
-                    format          : 'yyyy-mm-dd'
-
-                .on 'hide', (e)=>
-                    if e.target.id is 'scheduleFrom'
-                        #console.log "datte"
-                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date###
-
                 @$el.find '#scheduleFrom'
                 .datetimepicker
-                    ###format: 'Y-m-d H:i'
-                    minDate:0
-                    startDate: today
-                    formatTime: 'H:i'
-
-                .on 'hide', (e)=>
-                    if e.target.id is 'scheduleFrom'
-                        console.log @$el.find '#scheduleFrom'
-                        .val()
-                        @$el.find('#scheduleTo').datetimepicker 'minDate', e.date###
+                    minDate:today
+                    format:'YYYY-MM-DD hh:mm:ss'
 
                 @$el.find '#scheduleTo'
                 .datetimepicker
-                    ###format: 'Y-m-d H:i'
-                    minDate:@$el.find '#scheduleFrom'
-                    .datetimepicker('getDate')
-                    formatTime: 'H:i'###
+                    useCurrent:false
+                    minDate:today
+                    format:'YYYY-MM-DD hh:mm:ss'
+                    #debug:true
+
+                @$el.find '#scheduleFrom'
+                .on 'dp.change', (e)=>
+                    $('#scheduleTo').data('DateTimePicker').minDate(e.date)
+
+                ###@$el.find '#scheduleTo'
+                .on 'dp.change', (e)=>
+                    $('#scheduleFrom').data('DateTimePicker').minDate(e.date)###
 
 
             saveScheduled: (e)=>
