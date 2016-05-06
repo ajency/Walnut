@@ -78,7 +78,8 @@
 
 #dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
 	color: #ffffff;
-    background-color: #259b24; 
+    background-color: #259b24;
+    border-color: #259b24;
 }
 
 
