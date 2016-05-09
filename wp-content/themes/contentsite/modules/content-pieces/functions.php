@@ -67,20 +67,18 @@ function textbook_data()
     );
 
     $args = wp_parse_args( $args, $defaults );
-
+// -- all textbooks with no chapters associated to them 
 $textbook_ids = get_terms('textbook', $args);
+//$textbook_ids = $wpdb->get_results("SELECT textbook_id FROM {$wpdb->base_prefix}textbook_relationships");
 
-$id_text = '';
 foreach ($textbook_ids as $textid) {
     $id = $textid->term_id;
+   // $id = $textid->textbook_id;
     $id_text = $id.",".$id_text;
  
 }
 $id_text = trim($id_text,',');
- /*   $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
-  //$txt = $textbooks;
-  fwrite($myfile, "\n". $id_text . "\n" );
- fclose($myfile);*/
+
  $textbooks = $wpdb->get_results("SELECT name, term_id FROM wp_terms WHERE term_id IN ($id_text)");
 
     return $textbooks;
