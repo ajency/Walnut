@@ -43,8 +43,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               _this.listenTo(_this.view, 'itemview:schedule:quiz', function(itemview, quiz_id) {
                 return this.region.trigger('schedule:quiz', this.contentModulesCollection.get(quiz_id));
               });
-              return _this.listenTo(_this.view, "save:communications", function(data) {
+              _this.listenTo(_this.view, "save:communications", function(data) {
                 return _this.region.trigger("save:communications", data);
+              });
+              return _this.listenTo(_this.view, "summary:communication", function(data) {
+                return _this.region.trigger("summary:communication", data);
               });
             });
           };

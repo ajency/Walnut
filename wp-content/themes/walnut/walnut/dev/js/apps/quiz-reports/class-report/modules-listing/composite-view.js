@@ -33,7 +33,8 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           return $.toggleCheckAll(this.$el.find('#content-pieces-table'));
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
-        'click .send-email, .send-sms': 'saveCommunications'
+        'click .send-email, .send-sms': 'saveCommunications',
+        'click .send-summary': 'saveSummaryCommunication'
       };
 
       ModulesListingView.prototype.initialize = function() {
@@ -71,9 +72,36 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
-          return this.$el.find('.send-email, .send-sms').show();
+          return this.$el.find('.send-email, .send-sms, .send-summary').show();
         } else {
-          return this.$el.find('.send-email, .send-sms').hide();
+          return this.$el.find('.send-email, .send-sms, .send-summary').hide();
+        }
+      };
+
+      ModulesListingView.prototype.saveSummaryCommunication = function(e) {
+        var allQuizIDs, data, excludeIDs;
+        console.log("summary");
+        data = [];
+        this.$el.find('.communication-sent').remove();
+        allQuizIDs = _.map($.getCheckedItems(this.$el.find('#content-pieces-table')), function(m) {
+          return parseInt(m);
+        });
+        excludeIDs = _.chain(this.collection.where({
+          'taken_by': 0
+        })).pluck('id').value();
+        data.quizIDs = _.difference(allQuizIDs, excludeIDs);
+        console.log(data.quizIDs);
+        data.division = this.$el.find('#divisions-filter').val();
+        console.log(data.division);
+        if ($(e.target).hasClass('send-summary')) {
+          data.communication_mode = 'email';
+        } else {
+          data.communication_mode = 'sms';
+        }
+        if (_.isEmpty(data.quizIDs)) {
+          return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
+        } else {
+          return this.trigger("summary:communication", data);
         }
       };
 

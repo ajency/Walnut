@@ -82,7 +82,7 @@ define ['app'
 
                 today = new Date();
 
-                @$el.find '.input-daterange'
+                ###@$el.find '.input-daterange'
                 .datepicker
                     todayHighlight  : true
                     startDate       : today
@@ -90,7 +90,22 @@ define ['app'
 
                 .on 'hide', (e)=>
                     if e.target.id is 'scheduleFrom'
-                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date
+                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date###
+                @$el.find '#scheduleFrom'
+                .datetimepicker
+                    minDate:today
+                    format:'YYYY-MM-DD hh:mm:ss'
+
+                @$el.find '#scheduleTo'
+                .datetimepicker
+                    useCurrent:false
+                    minDate:today
+                    format:'YYYY-MM-DD hh:mm:ss'
+                    debug:true
+
+                @$el.find '#scheduleFrom'
+                .on 'dp.change', (e)=>
+                    $('#scheduleTo').data('DateTimePicker').minDate(e.date)
 
 
             saveScheduled: (e)=>

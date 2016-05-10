@@ -148,7 +148,7 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
     $current_blog=get_current_blog_id();
 
     if(!$division){
-        if($comm_data['communication_type'] == 'quiz_completed_student_mail')
+        if($comm_data['communication_type'] == 'quiz_summary_student_mail')
             $division   = get_user_meta($comm_data['user_id'],'student_division', true);
 
         else

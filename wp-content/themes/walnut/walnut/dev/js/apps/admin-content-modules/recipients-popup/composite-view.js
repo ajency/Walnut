@@ -10,7 +10,7 @@ define(['app', 'apps/admin-content-modules/recipients-popup/item-view'], functio
         return RecipientsView.__super__.constructor.apply(this, arguments);
       }
 
-      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Parent</th> <th>Student</th> <th>Module Name</th> <th>Preview</th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Email </button>';
+      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Parent</th> <th>Student</th> <th>Module Name</th> <th>Preview</th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Emails </button>';
 
       RecipientsView.prototype.itemView = Views.RecipientsItemView;
 

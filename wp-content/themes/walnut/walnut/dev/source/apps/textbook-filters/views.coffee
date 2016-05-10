@@ -48,6 +48,15 @@ define ['app'], (App)->
                                     </select>
                                     {{/post_status_filter}}
 
+                                    {{#post_status_report_filter}}
+                                    <select class="select2-filters selectFilter" id="content-post-status-filter">
+                                        <option value="any">All Status</option>
+                                        <!--option value="pending">Under Review</option-->
+                                        <option value="publish" selected>Published</option>
+                                        <option value="archive">Archived</option>
+                                    </select>
+                                    {{/post_status_report_filter}}
+
                                     {{#module_status_filter}}
                                     <select class="select2-filters selectFilter" id="content-post-status-filter">
                                         <option value="any">All Status</option>
@@ -61,7 +70,7 @@ define ['app'], (App)->
                                     <select class="content-type-filter select2-filters selectFilter" id="content-type-filter">
                                         <option value="">All Types</option>
                                         {{#teacher_question}}
-											<option value="teacher_question">Teacher Question</option>
+                                            <option value="teacher_question">Teacher Question</option>
                                         {{/teacher_question}}
                                         {{#student_question}}
                                            <option value="student_question">Student Question</option>
@@ -132,6 +141,7 @@ define ['app'], (App)->
                 data.sections_filter = true if _.contains filters, 'sections'
                 data.subsections_filter = true if _.contains filters, 'subsections'
                 data.post_status_filter = true if _.contains filters, 'post_status'
+                data.post_status_report_filter = true if _.contains filters, 'post_status_report'
                 data.module_status_filter = true if _.contains filters, 'module_status'
 
                 data.content_type_filter = true if _.contains filters, 'content_type'

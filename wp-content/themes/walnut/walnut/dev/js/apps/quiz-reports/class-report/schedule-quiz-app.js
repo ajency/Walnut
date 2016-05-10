@@ -78,15 +78,30 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       ScheduleQuizView.prototype.onShow = function() {
         var today;
         today = new Date();
-        return this.$el.find('.input-daterange').datepicker({
-          todayHighlight: true,
-          startDate: today,
-          format: 'yyyy-mm-dd'
-        }).on('hide', (function(_this) {
+
+        /*@$el.find '.input-daterange'
+        .datepicker
+            todayHighlight  : true
+            startDate       : today
+            format          : 'yyyy-mm-dd'
+        
+        .on 'hide', (e)=>
+            if e.target.id is 'scheduleFrom'
+                @$el.find('#scheduleTo').datepicker 'setStartDate', e.date
+         */
+        this.$el.find('#scheduleFrom').datetimepicker({
+          minDate: today,
+          format: 'YYYY-MM-DD hh:mm:ss'
+        });
+        this.$el.find('#scheduleTo').datetimepicker({
+          useCurrent: false,
+          minDate: today,
+          format: 'YYYY-MM-DD hh:mm:ss',
+          debug: true
+        });
+        return this.$el.find('#scheduleFrom').on('dp.change', (function(_this) {
           return function(e) {
-            if (e.target.id === 'scheduleFrom') {
-              return _this.$el.find('#scheduleTo').datepicker('setStartDate', e.date);
-            }
+            return $('#scheduleTo').data('DateTimePicker').minDate(e.date);
           };
         })(this));
       };

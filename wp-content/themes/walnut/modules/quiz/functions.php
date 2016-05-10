@@ -751,8 +751,11 @@ function save_quiz_schedule($data){
     if(!$data['schedule'] || !$data['schedule']['from'] || !$data['schedule']['to'])
         return false;
 
-    $from   = date('Y-m-d', strtotime($data['schedule']['from']));
-    $to     = date('Y-m-d', strtotime($data['schedule']['to']));
+    #$from   = date('Y-m-d', strtotime($data['schedule']['from']));
+    #$to     = date('Y-m-d', strtotime($data['schedule']['to']));
+    
+    $from = $data['schedule']['from'];
+    $to = $data['schedule']['to'];
 
     $scheduledata = array(
         'quiz_id'       => $data['quiz_id'],

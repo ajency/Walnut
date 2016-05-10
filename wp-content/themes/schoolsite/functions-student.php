@@ -174,7 +174,9 @@ function student_my_upcoming_quizes($texbook_ids){
 		$term_ids[] = "collection.term_ids like '%\"$value\";%'";
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
-	$today = date("Y-m-d 00:00:00");
+	#$today = date("Y-m-d 00:00:00");
+	$today = date("Y-m-d H:i:s");
+	
 	   $query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
 		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'

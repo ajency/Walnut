@@ -70,7 +70,7 @@ define ['app'
                         selectedFilterParamsObject: @selectedFilterParamsObject
                         divisionsCollection : divisionsCollection
                         dataType : 'quiz'
-                        filters : ['divisions','textbooks', 'chapters']
+                        filters : ['divisions','textbooks', 'chapters','post_status_report']
 
                         
 
@@ -111,6 +111,20 @@ define ['app'
                                     quiz_ids        : data.quizIDs
                                     division        : @division
 
+                            communicationModel = App.request "create:communication",data
+                            @_showSelectRecipientsApp communicationModel
+
+                    # to send summary email
+                    @listenTo @layout.allContentRegion, "summary:communication", (data)=>
+                            console.log "communictaion"
+                            data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_summary_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    division        : @division
+                            console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
                             

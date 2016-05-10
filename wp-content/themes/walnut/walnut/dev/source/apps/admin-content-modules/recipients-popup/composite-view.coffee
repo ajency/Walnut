@@ -22,7 +22,7 @@
                             <tbody id="list-recipients" class="rowlink"></tbody>
                         </table>
                         <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit">
-                            <i class="fa fa-check"></i> Send Email
+                            <i class="fa fa-check"></i> Send Emails
                         </button>'
 
             itemView: Views.RecipientsItemView

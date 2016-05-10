@@ -24,6 +24,7 @@
                 'change #check_all_div'                 :-> $.toggleCheckAll @$el.find '#content-pieces-table'
                 'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
                 'click .send-email, .send-sms'          : 'saveCommunications'
+                'click .send-summary' : 'saveSummaryCommunication'
 
             initialize : ->
                 @textbookNamesCollection = Marionette.getOption @, 'textbookNamesCollection'
@@ -63,12 +64,38 @@
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'
                 .is ':checked'
-                    @$el.find '.send-email, .send-sms'
+                    @$el.find '.send-email, .send-sms, .send-summary'
                     .show()
 
                 else
-                    @$el.find '.send-email, .send-sms'
+                    @$el.find '.send-email, .send-sms, .send-summary'
                     .hide()
+
+             saveSummaryCommunication: (e) ->
+                console.log "summary"
+                data = []
+                @$el.find '.communication-sent'
+                .remove()
+                allQuizIDs= _.map $.getCheckedItems(@$el.find('#content-pieces-table')), (m)-> parseInt m
+                excludeIDs = _.chain @collection.where 'taken_by':0
+                        .pluck 'id'
+                        .value()
+                data.quizIDs = _.difference allQuizIDs,excludeIDs 
+                console.log data.quizIDs
+                data.division = @$el.find '#divisions-filter'
+                        .val()
+                console.log data.division
+                if $(e.target).hasClass 'send-summary'
+                    data.communication_mode = 'email'
+                else
+                    data.communication_mode = 'sms'
+                if _.isEmpty data.quizIDs
+                    @$el.find '.send-summary'
+                    .after '<span class="m-l-40 text-error small communication_sent">
+                            Selected quizzes have not been taken by any student</span>'
+                else
+                    #console.log data
+                    @trigger "summary:communication", data
 
             saveCommunications:(e)->
 
