@@ -96,14 +96,14 @@ define ['app'
                 @$el.find '#scheduleFrom'
                 .datetimepicker
                     minDate:today
-                    format:'YYYY-MM-DD hh:mm:ss'
+                    format:'YYYY-MM-DD HH:mm:ss'
 
                 @$el.find '#scheduleTo'
                 .datetimepicker
                     useCurrent:false
                     minDate:today
-                    format:'YYYY-MM-DD hh:mm:ss'
-                    debug:true
+                    format:'YYYY-MM-DD HH:mm:ss'
+                    #debug:true
 
                 @$el.find '#scheduleFrom'
                 .on 'dp.change', (e)=>

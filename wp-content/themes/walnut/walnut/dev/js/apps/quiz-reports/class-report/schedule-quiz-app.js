@@ -81,13 +81,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         console.log(today);
         this.$el.find('#scheduleFrom').datetimepicker({
           minDate: today,
-          format: 'YYYY-MM-DD hh:mm:ss'
+          format: 'YYYY-MM-DD HH:mm:ss'
         });
         this.$el.find('#scheduleTo').datetimepicker({
           useCurrent: false,
           minDate: today,
-          format: 'YYYY-MM-DD hh:mm:ss',
-          debug: true
+          format: 'YYYY-MM-DD HH:mm:ss'
         });
         return this.$el.find('#scheduleFrom').on('dp.change', (function(_this) {
           return function(e) {
