@@ -85,7 +85,6 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         });
         this.$el.find('#scheduleTo').datetimepicker({
           useCurrent: false,
-          minDate: today,
           format: 'YYYY-MM-DD HH:mm:ss'
         });
         return this.$el.find('#scheduleFrom').on('dp.change', (function(_this) {
