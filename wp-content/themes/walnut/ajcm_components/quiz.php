@@ -8,7 +8,7 @@ function getvars_quizzes_taken_report($recipients_email,$comm_data){
 
     $template_data['subject']   = 'Synapse Notification: Quiz report for today';
 
-    $template_data['from_email'] = 'no-reply@synapselearning.net';
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
     $template_data['from_name'] = 'Synapse';
 
     $blog_data= get_blog_details($comm_data['blog_id'], true);
@@ -50,7 +50,7 @@ function getvars_quiz_completed_student_mail($recipients_email,$comm_data){
 
     $template_data['subject']   = $blog_data->blogname.': You have successfully completed a Quiz!';
 
-    $template_data['from_email'] = 'no-reply@synapselearning.net';
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
     $template_data['from_name'] = 'Synapse';
 
     $quiz_id        = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
@@ -83,7 +83,7 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
 
     $template_data['subject']   = $blog_data->blogname.':  Quiz report for student ';
 
-    $template_data['from_email'] = 'no-reply@synapselearning.net';
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
     $template_data['from_name'] = 'Synapse';
 
     $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
@@ -139,6 +139,207 @@ function getvars_quiz_completed_parent_mail($recipients,$comm_data){
     return $template_data;
 
 }
+
+function getvars_quiz_published_student_mail($recipients_email,$comm_data){
+
+    global $aj_comm;
+
+    $template_data['name']      = 'quiz-published-student-mail';
+
+    $blog_data= get_blog_details($comm_data['blog_id'], true);
+
+    $template_data['subject']   = $blog_data->blogname.': You have the a New Quiz!';
+
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_name'] = 'Synapse';
+
+    $quiz_id        = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
+
+    $quiz_data      = get_quiz_template_data($comm_data,$quiz_id);
+
+    switch_to_blog($comm_data['blog_id']);
+    $summary_data   = get_quiz_summary_data($quiz_id,$comm_data['user_id']);
+    restore_current_blog();
+
+
+    $template_data['global_merge_vars'] = array_merge($quiz_data,$summary_data);
+
+    $template_data['global_merge_vars'][]=array(
+        'name'      => 'BLOG_URL',
+        'content'   => '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+    );
+
+    return $template_data;
+
+}
+
+function getvars_quiz_published_parent_mail($recipients,$comm_data){
+
+    global $aj_comm;
+
+    $template_data['name']      = 'quiz-published-parent-mail';
+
+    $blog_data= get_blog_details($comm_data['blog_id'], true);
+
+    $template_data['subject']   = $blog_data->blogname.':  Quiz List for student ';
+
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_name'] = 'Synapse';
+
+    $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
+
+    $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
+
+    $template_data['global_merge_vars'] = get_quiz_template_data($comm_data,$quiz_id);
+
+    $template_data['global_merge_vars'][]=array(
+        'name'      => 'BLOG_URL',
+        'content'   => '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+    );
+
+    switch_to_blog($comm_data['blog_id']);
+
+    $template_data['merge_vars'] = array();
+
+    foreach($recipients as $user){
+
+        $student_ids = get_user_meta($user->user_id, 'parent_of', true);
+
+        $student_ids = get_parent_of_formated($student_ids);
+
+            foreach($student_ids as $child){
+                $student    = get_userdata($child);
+
+                $student_division = get_user_meta($student->ID,'student_division', true);
+
+                 if($division != $student_division)
+                     continue;
+
+                $overwrite_vars = array();
+
+                $overwrite_vars = get_quiz_summary_data($quiz_id,$child);
+
+                $overwrite_vars[] = array(
+                    'name' => 'STUDENT_NAME',
+                    'content' => $student->display_name
+                );
+
+                $template_data['merge_vars'][] = array(
+
+                    'rcpt'=>$user->value,
+                    'vars' => $overwrite_vars
+                ) ;
+
+            }
+
+        }
+
+    restore_current_blog();
+
+    return $template_data;
+
+}
+
+function getvars_quiz_summary_student_mail($recipients_email,$comm_data){
+
+    global $aj_comm;
+
+    $template_data['name']      = 'quiz-summary-student-mail';
+
+    $blog_data= get_blog_details($comm_data['blog_id'], true);
+
+    $template_data['subject']   = $blog_data->blogname.': You have a summary of quizzes!';
+
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_name'] = 'Synapse';
+
+    $quiz_id        = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
+
+    $quiz_data      = get_quiz_template_data($comm_data,$quiz_id);
+
+    switch_to_blog($comm_data['blog_id']);
+    $summary_data   = get_quiz_summary_data($quiz_id,$comm_data['user_id']);
+    restore_current_blog();
+
+
+    $template_data['global_merge_vars'] = array_merge($quiz_data,$summary_data);
+
+    $template_data['global_merge_vars'][]=array(
+        'name'      => 'BLOG_URL',
+        'content'   => '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+    );
+
+    return $template_data;
+
+}
+
+function getvars_quiz_summary_parent_mail($recipients,$comm_data){
+
+    global $aj_comm;
+
+    $template_data['name']      = 'quiz-summary-parent-mail';
+
+    $blog_data= get_blog_details($comm_data['blog_id'], true);
+
+    $template_data['subject']   = $blog_data->blogname.':  Quiz summary for student ';
+
+    $template_data['from_email'] = 'no-reply@walnutedu.org';
+    $template_data['from_name'] = 'Synapse';
+
+    $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
+
+    $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
+
+    $template_data['global_merge_vars'] = get_quiz_template_data($comm_data,$quiz_id);
+
+    $template_data['global_merge_vars'][]=array(
+        'name'      => 'BLOG_URL',
+        'content'   => '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+    );
+
+    switch_to_blog($comm_data['blog_id']);
+
+    $template_data['merge_vars'] = array();
+
+    foreach($recipients as $user){
+
+        $student_ids = get_user_meta($user->user_id, 'parent_of', true);
+
+        $student_ids = get_parent_of_formated($student_ids);
+
+            foreach($student_ids as $child){
+                $student    = get_userdata($child);
+
+                $student_division = get_user_meta($student->ID,'student_division', true);
+
+                 if($division != $student_division)
+                     continue;
+
+                $overwrite_vars = array();
+
+                $overwrite_vars = get_quiz_summary_data($quiz_id,$child);
+
+                $overwrite_vars[] = array(
+                    'name' => 'STUDENT_NAME',
+                    'content' => $student->display_name
+                );
+
+                $template_data['merge_vars'][] = array(
+
+                    'rcpt'=>$user->value,
+                    'vars' => $overwrite_vars
+                ) ;
+
+            }
+
+        }
+
+    restore_current_blog();
+
+    return $template_data;
+
+}
+
 function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
 
     global $aj_comm;

@@ -59,6 +59,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
           additional_data = this.model.get('additional_data');
           additional_data.raw_recipients = raw_recipients;
           this.model.save();
+          console.log(this.model);
           return this.$el.find('.send-email').after('<span class="m-l-40 text-success small communication_sent"> Your Emails have been queued successfully</span>');
         } else {
           return this.$el.find('.send-email').after('<span class="m-l-40 text-error small communication_sent"> No Recipients Selected</span>');

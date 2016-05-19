@@ -68,6 +68,7 @@
                     additional_data.raw_recipients = raw_recipients
 
                     @model.save()
+                    console.log @model
 
                     @$el.find '.send-email'
                     .after '<span class="m-l-40 text-success small communication_sent">

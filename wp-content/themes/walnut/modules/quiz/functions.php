@@ -122,6 +122,9 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     if($division){        
 
         $data->taken_by = num_students_taken_quiz($selected_quiz_id, $division);
+
+        // students that have missed a quiz
+        $data->missed_by = students_not_taken_quiz($selected_quiz_id, $division);
         
         $data->total_students = get_student_count_in_division($division);
 
@@ -132,7 +135,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
 function num_students_taken_quiz($quiz_id, $division){
 
-    global $wpdb;
+    global $wpdb;  
 
     $taken_by = 0;
 
@@ -160,6 +163,41 @@ function num_students_taken_quiz($quiz_id, $division){
     }
 
     return $taken_by;
+
+}
+
+
+function students_not_taken_quiz($quiz_id, $division){
+
+    global $wpdb;
+
+    $not_taken_by = [];
+    // $not_taken_by = 0;
+
+    $args=array(
+            'role'=>'student',
+            'division'=>$division,
+        );
+
+    $students=get_user_list($args);
+
+    if($students){
+        $student_ids=__u::pluck($students,'ID');
+
+        if(sizeof($student_ids)>0){
+            $students_str= join($student_ids,',');
+
+            $not_taken_by_query = $wpdb->prepare("SELECT DISTINCT student_id
+                FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
+                AND quiz_meta like '%s'
+                AND student_id NOT IN ($students_str)",
+                $quiz_id, '%completed%');
+
+            $not_taken_by = $wpdb->get_results($not_taken_by_query);
+        }
+    }
+    
+    return $not_taken_by;
 
 }
 

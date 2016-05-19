@@ -60,6 +60,127 @@ function add_quiz_completed_parent_mail($data, $comm_data){
 
 }
 
+function add_quiz_published_student_mail($data, $comm_data){
+
+    global $aj_comm;
+
+    $meta = $data['additional_data'];
+
+    $user = get_userdata(get_current_user_id());
+
+    $recipients[] = array(
+                'user_id'   => $user->ID,
+                'type'      => 'email',
+                'value'     => $user->user_email
+            );
+
+    $meta_data['quiz_id']= $meta['quiz_id'];
+
+    $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+
+    return $comm;
+
+}
+
+function add_quiz_published_parent_mail($data, $comm_data){
+
+    global $aj_comm;
+
+    $meta = $data['additional_data'];
+
+    $meta_data['division'] = $meta['division']; 
+
+    $raw_recipients = $meta['raw_recipients'];
+
+    foreach($meta['quiz_ids'] as $quiz_id){
+        $recipients = array();
+
+        $meta_data['quiz_id']= $quiz_id;
+
+        if(sizeof($raw_recipients)>0){
+
+            foreach($raw_recipients as $key=>$user){
+
+                if($user['quiz_id']==$quiz_id){
+                    $recipients[] = array(                
+                            'user_id'   => $user['parent_id'],
+                            'type'      => 'email',
+                            'value'     => $user['parent_email']
+                        ); 
+                    unset($raw_recipients[$key]);
+                }
+            }
+
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        }
+        
+    }
+
+    return $comm;
+
+}
+
+function add_quiz_summary_student_mail($data, $comm_data){
+
+    global $aj_comm;
+
+    $meta = $data['additional_data'];
+
+    $user = get_userdata(get_current_user_id());
+
+    $recipients[] = array(
+                'user_id'   => $user->ID,
+                'type'      => 'email',
+                'value'     => $user->user_email
+            );
+
+    $meta_data['quiz_id']= $meta['quiz_id'];
+
+    $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+
+    return $comm;
+
+}
+
+function add_quiz_summary_parent_mail($data, $comm_data){
+
+    global $aj_comm;
+
+    $meta = $data['additional_data'];
+
+    $meta_data['division'] = $meta['division']; 
+
+    $raw_recipients = $meta['raw_recipients'];
+
+    foreach($meta['quiz_ids'] as $quiz_id){
+        $recipients = array();
+
+        $meta_data['quiz_id']= $quiz_id;
+
+        if(sizeof($raw_recipients)>0){
+
+            foreach($raw_recipients as $key=>$user){
+
+                if($user['quiz_id']==$quiz_id){
+                    $recipients[] = array(                
+                            'user_id'   => $user['parent_id'],
+                            'type'      => 'email',
+                            'value'     => $user['parent_email']
+                        ); 
+                    unset($raw_recipients[$key]);
+                }
+            }
+
+            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+        }
+        
+    }
+
+    return $comm;
+
+}
+
+
 function quiz_completed_parent_mail_recipients($quiz_id,$division){
 
     global $wpdb;
