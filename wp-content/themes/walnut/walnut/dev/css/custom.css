@@ -3119,6 +3119,13 @@ a.browse-content-pieces-item{height:160px;}
   width: 100%;
 }
 
+
+.filters > .table-tools-actions > #s2id_divisions-filter{
+  width: 12%;
+}
+
+
+
 a.browse-content-pieces-item{height:160px;}
 
 /*# sourceMappingURL=custom.css.map */
