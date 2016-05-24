@@ -68,7 +68,7 @@
                     .show()
 
                 else
-                    @$el.find '.send-email, .send-sms, .send-summary'
+                    @$el.find '.send-email, .send-sms, .send-summary, .communication_sent'
                     .hide()
             saveSummaryCommunication: (e) ->
                 console.log "summary"

@@ -10,12 +10,15 @@ define(['app'], function(App) {
         return TextbookFiltersView.__super__.constructor.apply(this, arguments);
       }
 
-      TextbookFiltersView.prototype.template = '<div class="col-xs-11"> <div class="filters"> <div class="table-tools-actions"> {{#divisions_filter}} <select class="select2-filters" id="divisions-filter"> {{#divisions}} <option value="{{id}}">{{&name}}</option> {{/divisions}} </select> {{/divisions_filter}} {{#textbooks_filter}} <select class="textbook-filter select2-filters" id="textbooks-filter"> {{#textbooks}} <option value="{{id}}">{{&name}}</option> {{/textbooks}} </select> {{/textbooks_filter}} {{#chapters_filter}} <select class="textbook-filter select2-filters" id="chapters-filter"> <option value="">All Chapters</option> </select> {{/chapters_filter}} {{#sections_filter}} <select class="textbook-filter select2-filters" id="sections-filter"> <option value="">All Sections</option> </select> {{/sections_filter}} {{#subsections_filter}} <select class="textbook-filter select2-filters" id="subsections-filter"> <option value="">All Sub Sections</option> </select> {{/subsections_filter}} {{#post_status_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <option value="pending">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/post_status_filter}} {{#post_status_report_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <!--option value="pending">Under Review</option--> <option value="publish" selected>Published</option> <option value="archive">Archived</option> </select> {{/post_status_report_filter}} {{#module_status_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <option value="underreview">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/module_status_filter}} {{#content_type_filter}} <select class="content-type-filter select2-filters selectFilter" id="content-type-filter"> <option value="">All Types</option> {{#teacher_question}} <option value="teacher_question">Teacher Question</option> {{/teacher_question}} {{#student_question}} <option value="student_question">Student Question</option> {{/student_question}} <option value="content_piece">Content Piece</option> </select> {{/content_type_filter}} <select class="select2-filters selectFilter difficulty-level-filter" style="display: none;" id="difficulty-level-filter"> <option value="">All Levels</option> <option value="1">Level 1</option> <option value="2">Level 2</option> <option value="3">level 3</option> </select> </div> </div> </div> <div class="col-xs-1"></div> <div class="clearfix"></div> <div class="col-sm-12"></div>';
+      TextbookFiltersView.prototype.template = '<div class="col-xs-11"> <div class="filters"> <div class="table-tools-actions"> {{#divisions_filter}} <select class="select2-filters" id="divisions-filter"> {{#divisions}} <option value="{{id}}">{{&name}}</option> {{/divisions}} </select> {{/divisions_filter}} {{#textbooks_multi_filter}} <dl class="dropdown"> <dt> <a href="#"> <span class="hida">Select</span> <p class="multiSel"></p> </a> </dt> <dd> <div class="mutliSelect"> <ul> {{#textbooks}} <li> <input type="checkbox" value="{{id}}" />{{&name}}</li> <li> {{/textbooks}} </ul> </div> </dd> <!--button>Filter</button--> </dl> <!--select class="textbook-filter select2-filters" id="textbooks-multi-filter"> <!--{{#textbooks}} <!--option value="{{id}}">{{&name}}</option> <!--{{/textbooks}} <!--/select--> {{/textbooks_multi_filter}} {{#textbooks_filter}} <select class="textbook-filter select2-filters" id="textbooks-filter"> {{#textbooks}} <option value="{{id}}">{{&name}}</option> {{/textbooks}} </select> {{/textbooks_filter}} {{#chapters_filter}} <select class="textbook-filter select2-filters" id="chapters-filter"> <option value="">All Chapters</option> </select> {{/chapters_filter}} {{#sections_filter}} <select class="textbook-filter select2-filters" id="sections-filter"> <option value="">All Sections</option> </select> {{/sections_filter}} {{#subsections_filter}} <select class="textbook-filter select2-filters" id="subsections-filter"> <option value="">All Sub Sections</option> </select> {{/subsections_filter}} {{#post_status_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <option value="pending">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/post_status_filter}} {{#post_status_report_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <!--option value="pending">Under Review</option--> <option value="publish" selected>Published</option> <option value="archive">Archived</option> </select> {{/post_status_report_filter}} {{#module_status_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <option value="underreview">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/module_status_filter}} {{#content_type_filter}} <select class="content-type-filter select2-filters selectFilter" id="content-type-filter"> <option value="">All Types</option> {{#teacher_question}} <option value="teacher_question">Teacher Question</option> {{/teacher_question}} {{#student_question}} <option value="student_question">Student Question</option> {{/student_question}} <option value="content_piece">Content Piece</option> </select> {{/content_type_filter}} <select class="select2-filters selectFilter difficulty-level-filter" style="display: none;" id="difficulty-level-filter"> <option value="">All Levels</option> <option value="1">Level 1</option> <option value="2">Level 2</option> <option value="3">level 3</option> </select> </div> </div> </div> <div class="col-xs-1"></div> <div class="clearfix"></div> <div class="col-sm-12"></div>';
 
       TextbookFiltersView.prototype.className = 'row';
 
       TextbookFiltersView.prototype.events = {
         'change #textbooks-filter': function(e) {
+          return this.trigger("fetch:new:content", $(e.target).val());
+        },
+        'change #textbooks-multi-filter': function(e) {
           return this.trigger("fetch:new:content", $(e.target).val());
         },
         'change #divisions-filter': function(e) {
@@ -63,6 +66,9 @@ define(['app'], function(App) {
         if (_.contains(filters, 'divisions')) {
           data.divisions_filter = true;
         }
+        if (_.contains(filters, 'multi_textbooks')) {
+          data.textbooks_multi_filter = true;
+        }
         if (_.contains(filters, 'textbooks')) {
           data.textbooks_filter = true;
         }
@@ -106,6 +112,8 @@ define(['app'], function(App) {
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');
           $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
+          term_ids = this.contentGroupModel.get('term_ids');
+          $("#textbooks-multi-filter").select2().select2('val', term_ids['textbook']);
           return this.setFilteredContent();
         }
       };
@@ -116,6 +124,9 @@ define(['app'], function(App) {
             $.populateTextbooks(filteredCollection, this.$el, currItem);
             break;
           case 'textbooks-filter':
+            $.populateChapters(filteredCollection, this.$el, currItem);
+            break;
+          case 'textbooks-multi-filter':
             $.populateChapters(filteredCollection, this.$el, currItem);
             break;
           case 'chapters-filter':

@@ -9,7 +9,7 @@ define ['app'
 				{@collection,@model,@filters,@selectedFilterParamsObject, 
 				@dataType, @contentSelectionType, @divisionsCollection,@post_status}=opts
 
-				@filters = ['textbooks', 'chapters','sections','subsections'] if not @filters
+				@filters = ['divisions', 'textbooks', 'chapters','sections','subsections'] if not @filters
 				
 				@filters.push 'student_question' if @contentSelectionType is 'student-training'
 				@filters.push 'teacher_question' if @contentSelectionType is 'teaching-module'
@@ -37,6 +37,9 @@ define ['app'
 					#the final term id is returned
 
 					ele= $(@view.el).find '#textbooks-filter'
+					term_id= $(ele).val() if $(ele).val()
+
+					ele= $(@view.el).find '#textbooks-multi-filter'
 					term_id= $(ele).val() if $(ele).val()
 
 					ele= $(@view.el).find '#chapters-filter'

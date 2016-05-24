@@ -13,6 +13,37 @@ define ['app'], (App)->
                                         {{/divisions}}
                                     </select>
                                     {{/divisions_filter}}
+
+                                    {{#textbooks_multi_filter}}
+                                        <dl class="dropdown"> 
+  
+    <dt>
+    <a href="#">
+      <span class="hida">Select</span>    
+      <p class="multiSel"></p>  
+    </a>
+    </dt>
+  
+    <dd>
+        <div class="mutliSelect">
+            <ul>
+                {{#textbooks}}
+                    <li>
+                        <input type="checkbox" value="{{id}}" />{{&name}}</li>
+                    <li>
+                {{/textbooks}}
+            </ul>
+        </div>
+    </dd>
+  <!--button>Filter</button-->
+</dl>
+                                    <!--select class="textbook-filter select2-filters" id="textbooks-multi-filter">
+                                        <!--{{#textbooks}}
+                                           <!--option value="{{id}}">{{&name}}</option>
+                                        <!--{{/textbooks}}
+                                    <!--/select-->
+                                    {{/textbooks_multi_filter}}
+                                    
                                     {{#textbooks_filter}}
                                     <select class="textbook-filter select2-filters" id="textbooks-filter">
                                         {{#textbooks}}
@@ -98,6 +129,9 @@ define ['app'], (App)->
                 'change #textbooks-filter':(e)->
                     @trigger "fetch:new:content", $(e.target).val()
 
+                'change #textbooks-multi-filter':(e)->
+                    @trigger "fetch:new:content", $(e.target).val()
+
                 'change #divisions-filter':(e)->
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
 
@@ -136,6 +170,7 @@ define ['app'], (App)->
                 filters= Marionette.getOption @, 'filters'
 
                 data.divisions_filter = true if _.contains filters, 'divisions'
+                data.textbooks_multi_filter = true if _.contains filters, 'multi_textbooks'
                 data.textbooks_filter = true if _.contains filters, 'textbooks'
                 data.chapters_filter = true if _.contains filters, 'chapters'
                 data.sections_filter = true if _.contains filters, 'sections'
@@ -166,6 +201,10 @@ define ['app'], (App)->
                     $ "#textbooks-filter"
                     .select2().select2 'val', term_ids['textbook']
 
+                    term_ids= @contentGroupModel.get 'term_ids'
+                    $ "#textbooks-multi-filter"
+                    .select2().select2 'val', term_ids['textbook']
+
                     @setFilteredContent()
 
 
@@ -174,6 +213,7 @@ define ['app'], (App)->
                 switch filterType
                     when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
+                    when 'textbooks-multi-filter' then $.populateChapters filteredCollection, @$el, currItem
                     when 'chapters-filter' then $.populateSections filteredCollection, @$el, currItem
                     when 'sections-filter' then $.populateSubSections filteredCollection, @$el, currItem
 

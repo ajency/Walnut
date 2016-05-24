@@ -74,7 +74,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         if (this.$el.find('.tab_checkbox').is(':checked')) {
           return this.$el.find('.send-email, .send-sms, .send-summary').show();
         } else {
-          return this.$el.find('.send-email, .send-sms, .send-summary').hide();
+          return this.$el.find('.send-email, .send-sms, .send-summary, .communication_sent').hide();
         }
       };
 

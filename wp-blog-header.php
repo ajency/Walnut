@@ -2,8 +2,8 @@
 /**
  * Loads the WordPress environment and template.
  *
- * @package WordPress
- */
+ * @package WordPress 
+ */ 
 
 if ( !isset($wp_did_header) ) {
 
