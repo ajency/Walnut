@@ -129,7 +129,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
             });
             _this.listenTo(_this.layout.allContentRegion, "summary:communication", function(data) {
               var communicationModel;
-              console.log("communictaion");
               data = {
                 component: 'quiz',
                 communication_type: 'quiz_summary_parent_mail',

@@ -15,7 +15,11 @@
     <link href="/wp-content/themes/walnut/walnut/dev/css/panzer.css" rel="stylesheet" type="text/css">
     <link href="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/panzerlist.css" rel="stylesheet" type="text/css">
 
-    <link href="/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
+    <!--link href="/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/-->
+
+    <!--link href="/wp-content/themes/walnut/walnut/dev/css/style-multi.css" rel="stylesheet" type="text/css"/-->
+    <link href="/wp-content/themes/walnut/walnut/dev/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css"/>
+
         <link href="/wp-content/themes/walnut/walnut/dev/css/zebra.css" rel="stylesheet" type="text/css"/>
 
     <link href="/wp-content/themes/walnut/walnut/dev/css/datetimepicker.css" rel="stylesheet" type="text/css"/>

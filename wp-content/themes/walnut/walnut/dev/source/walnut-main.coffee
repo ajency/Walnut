@@ -38,6 +38,7 @@ require.config
 		mousewheel: 'plugins/jquery-mousewheel'
 		new_moment: 'plugins/new_moment'
 		datetimepicker: 'plugins/datetimepicker.min'
+		multiselect: 'plugins/bootstrap-multiselect'
 		datepicker: 'plugins/bootstrap-datepicker'		
 		#zebra_datepicker: 'plugins/zebra_datepicker'
 		jquery_listnav: 'plugins/jquery-listnav'
@@ -87,6 +88,7 @@ require.config
 		mousewheel: ['jquery']
 		new_moment: ['jquery']
 		datetimepicker: ['jquery', 'new_moment','bootstrap']
+		multiselect: ['jquery','bootstrap'],
 		datepicker: ['jquery', 'bootstrap']
 		#zebra_datepicker: ['jquery']
 		jquery_listnav: ['jquery']

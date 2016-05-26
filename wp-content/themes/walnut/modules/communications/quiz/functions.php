@@ -212,7 +212,7 @@ function quiz_completed_parent_mail_recipients($quiz_id,$division){
     
 }
 
-/*quiz summary email recipients*/
+/*quiz summary parent email recipients*/
 function quiz_summary_parent_mail_recipients($quiz_id,$division){
 
     global $wpdb;
@@ -388,7 +388,7 @@ function prepare_quiz_completed_parent_mail_recipients($data){
 }
 
 
-/*quiz summary email recipients*/
+/* quiz summary email recipients function */
 function prepare_quiz_summary_parent_mail_recipients($data){
 
     $recipients= array();
@@ -495,21 +495,23 @@ function quiz_completed_parent_mail_preview($data){
 function quiz_summary_parent_mail_preview($data){
 
     require_once get_template_directory()."/ajcm_components/quiz.php";
-
+#$myfile = fopen("abc.txt", "a");
     $comm_data = array(
         'component'=>$data['component'],
         'communication_type'=>$data['communication_type'],
-        'blog_id'   => get_current_blog_id()
+        'blog_id'   => get_current_blog_id(),
+        'student_id' => $data['additional_data']['preview_recipient']['student_id']
         );
 
     $recipient=$data['additional_data']['preview_recipient'];
     $division =$data['additional_data']['division'];
-
+#fwrite($myfile, $recipient['student_id']);
+#fclose($myfile);
     //print_r($recipient); exit;
 
     $template_data['template_name']              = 'quiz-summary-parent-mail'; 
     $template_data['template_content']           = array(); 
-    $template_data['merge_vars'] = get_quiz_template_data($comm_data,$recipient['quiz_id'], $division);
+    $template_data['merge_vars'] = get_quiz_summary_template_data($comm_data,$recipient['quiz_id'], $division);
 
     $quiz_summary = get_quiz_summary_data($recipient['quiz_id'],$recipient['student_id']);
     
@@ -524,7 +526,7 @@ function quiz_summary_parent_mail_preview($data){
         'name'      => 'BLOG_URL',
         'content'   => '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
     );
-
+#fclose($myfile);
     return $template_data;
 
 }

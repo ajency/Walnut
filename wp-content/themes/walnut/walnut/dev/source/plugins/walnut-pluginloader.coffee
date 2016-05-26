@@ -41,5 +41,6 @@ define [
     'jquerypp'
     'bookblock'
     'datetimepicker'
+    'multiselect'
     
 ], ->

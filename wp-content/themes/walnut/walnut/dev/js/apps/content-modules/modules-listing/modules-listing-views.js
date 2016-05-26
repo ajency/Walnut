@@ -23,14 +23,16 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.serializeData = function() {
         var data;
+        console.log("serializeData");
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
+        console.log(data);
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
             textbook = _.findWhere(_this.textbooks, {
-              "id": data.term_ids.textbook
+              "id": parseInt(data.term_ids.textbook)
             });
             if (textbook != null) {
               return textbook.name;
@@ -102,6 +104,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.initialize = function(options) {
+        console.log("here");
         this.textbooks = options.textbooksCollection;
         this.chapters = options.chaptersCollection;
         return this.groupType = options.groupType;
@@ -227,7 +230,8 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 6);
+        console.log("empty view");
+        return this.$el.attr('colspan', 9);
       };
 
       return EmptyView;

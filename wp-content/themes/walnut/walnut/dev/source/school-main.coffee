@@ -40,6 +40,7 @@ require.config
 		new_moment: 'plugins/new_moment'
 		mousewheel: 'plugins/jquery-mousewheel'
 		datetimepicker: 'plugins/datetimepicker.min'
+		multiselect: 'plugins/bootstrap-multiselect'
 		jquery_listnav: 'plugins/jquery-listnav'
 		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget: 'plugins/jquery.bridget'
@@ -88,6 +89,7 @@ require.config
 		datepicker: ['jquery', 'bootstrap']
 		new_moment: ['jquery']
 		datetimepicker: ['jquery', 'new_moment','bootstrap']
+		multiselect: ['jquery','bootstrap']
 		#zebra_datepicker: ['jquery']
 		#timepicker: ['jquery', 'bootstrap']
 		timecircles: ['jquery']

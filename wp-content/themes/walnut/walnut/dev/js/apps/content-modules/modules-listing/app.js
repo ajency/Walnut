@@ -6,18 +6,15 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
   return App.module("ContentModulesApp.ModulesListing", function(ModulesListing, App) {
     var ContentPiecesLayout;
     ModulesListing.ListController = (function(superClass) {
-      var divisionsCollection, quizzes, schoolsCollection, students, textbooksCollection;
+      var divisionsCollection, schoolsCollection, textbooksCollection;
 
       extend(ListController, superClass);
 
       function ListController() {
         this._fetchQuizzes = bind(this._fetchQuizzes, this);
         this._fetchTextbooks = bind(this._fetchTextbooks, this);
-        this._fetchDivisions = bind(this._fetchDivisions, this);
         return ListController.__super__.constructor.apply(this, arguments);
       }
-
-      students = null;
 
       textbooksCollection = null;
 
@@ -25,17 +22,9 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
 
       schoolsCollection = null;
 
-      quizzes = null;
-
       ListController.prototype.initialize = function(options) {
         this.groupType = options.groupType;
-        console.log(options);
         this.division = 0;
-        schoolsCollection = App.request("get:all:schools");
-        return App.execute("when:fetched", schoolsCollection, this._fetchDivisions);
-      };
-
-      ListController.prototype._fetchDivisions = function() {
         divisionsCollection = App.request("get:divisions");
         return App.execute("when:fetched", divisionsCollection, this._fetchTextbooks);
       };
@@ -134,6 +123,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
       };
 
       ListController.prototype._getContentPiecesLayout = function() {
+        console.log("_getContentPiecesLayout");
         return new ContentPiecesLayout({
           groupType: this.groupType
         });

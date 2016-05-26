@@ -9,7 +9,7 @@ define ['app'
 				{@collection,@model,@filters,@selectedFilterParamsObject, 
 				@dataType, @contentSelectionType, @divisionsCollection,@post_status}=opts
 
-				@filters = ['divisions', 'textbooks', 'chapters','sections','subsections'] if not @filters
+				@filters = ['multi_textbooks','divisions', 'textbooks', 'chapters','sections','subsections'] if not @filters
 				
 				@filters.push 'student_question' if @contentSelectionType is 'student-training'
 				@filters.push 'teacher_question' if @contentSelectionType is 'teaching-module'
@@ -106,11 +106,16 @@ define ['app'
 
 						division = @view.$el.find '#divisions-filter'
 									.val()
+						#textbook = []
+						#textbook = textbook_id
 
 						data = 
 							'textbook'      : textbook_id
 							'post_status'   : post_status if post_status
 							'division'      : division if division
+
+						console.log data.textbook
+
 
 						if @contentSelectionType is 'quiz'
 							data.content_type= ['student_question']
@@ -130,11 +135,13 @@ define ['app'
 
 						else if @dataType is 'quiz'
 							newContent= App.request "get:quizes", data
+							#console.log newContent
 
 						else
 							newContent= App.request "get:content:pieces", data
 
 						App.execute "when:fetched", newContent, =>
+							console.log newContent
 							@view.triggerMethod "new:content:fetched"
 
 					@listenTo @view, "fetch:textbooks:by:division",(division) =>

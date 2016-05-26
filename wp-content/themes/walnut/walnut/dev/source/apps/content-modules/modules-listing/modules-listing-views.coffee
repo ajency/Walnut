@@ -38,11 +38,13 @@ define ['app'
 						</td>'
 
 			serializeData : ->
+				console.log "serializeData"
 				data = super()
 				data.view_url = SITEURL + "/#view-group/#{data.id}"
 				data.edit_url = SITEURL + "/#edit-module/#{data.id}"
+				console.log data
 				data.textbookName = =>
-					textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+					textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
 					textbook.name if textbook?
 
 				data.chapterName = =>
@@ -81,6 +83,7 @@ define ['app'
 				data.is_editable = true if data.post_status is 'underreview'
 				data
 
+
 			mixinTemplateHelpers : (data)->
 				data = super data
 				data.isQuiz = true if @groupType is 'quiz'
@@ -92,6 +95,7 @@ define ['app'
 				'click a.archiveModule':-> @changeModuleStatus 'archive'
 
 			initialize : (options)->
+				console.log "here"
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
 				@groupType = options.groupType
@@ -179,12 +183,14 @@ define ['app'
 
 		class EmptyView extends Marionette.ItemView
 
+
 			template: 'No Content Available'
 
 			tagName: 'td'
 
 			onShow:->
-				@$el.attr 'colspan',6
+				console.log "empty view"
+				@$el.attr 'colspan',9
 
 		class Views.ModulesListingView extends Marionette.CompositeView
 

@@ -1,7 +1,7 @@
 <?php
 
 function get_sections($chapids){ 
- $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
+# $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
  
   
 global $wpdb;
@@ -22,11 +22,11 @@ if($chapid == '' || $chapid == null){
                                     LEFT JOIN wp_terms AS term2 ON tax.parent = term2.term_id
                                     WHERE tax.parent = '".$chapid."'
                                     ORDER BY ter.name");
-  fwrite($myfile, "\n". $txt);
+  #fwrite($myfile, "\n". $txt);
 
 $sect_da = array_merge($section_data,$sect_da);
 }
-fclose($myfile);
+#fclose($myfile);
  return $sect_da;
 }
 

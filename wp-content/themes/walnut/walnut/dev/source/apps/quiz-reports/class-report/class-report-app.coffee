@@ -115,7 +115,7 @@ define ['app'
 
                     # to send summary email
                     @listenTo @layout.allContentRegion, "summary:communication", (data)=>
-                            console.log "communictaion"
+                            #console.log "communictaion"
                             data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_summary_parent_mail'

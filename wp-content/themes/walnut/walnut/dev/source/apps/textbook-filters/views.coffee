@@ -15,33 +15,11 @@ define ['app'], (App)->
                                     {{/divisions_filter}}
 
                                     {{#textbooks_multi_filter}}
-                                        <dl class="dropdown"> 
-  
-    <dt>
-    <a href="#">
-      <span class="hida">Select</span>    
-      <p class="multiSel"></p>  
-    </a>
-    </dt>
-  
-    <dd>
-        <div class="mutliSelect">
-            <ul>
-                {{#textbooks}}
-                    <li>
-                        <input type="checkbox" value="{{id}}" />{{&name}}</li>
-                    <li>
-                {{/textbooks}}
-            </ul>
-        </div>
-    </dd>
-  <!--button>Filter</button-->
-</dl>
-                                    <!--select class="textbook-filter select2-filters" id="textbooks-multi-filter">
-                                        <!--{{#textbooks}}
-                                           <!--option value="{{id}}">{{&name}}</option>
-                                        <!--{{/textbooks}}
-                                    <!--/select-->
+                                    <select id="textbooks-filter" class="textbook-filter select2-filters" multiple="multiple">
+                                    {{#textbooks}}
+                                           <option value="{{id}}">{{&name}}</option>
+                                        <{{/textbooks}}
+                                    </select>
                                     {{/textbooks_multi_filter}}
                                     
                                     {{#textbooks_filter}}
@@ -127,10 +105,12 @@ define ['app'], (App)->
 
             events:
                 'change #textbooks-filter':(e)->
+                    console.log $(e.target).val()
                     @trigger "fetch:new:content", $(e.target).val()
 
-                'change #textbooks-multi-filter':(e)->
-                    @trigger "fetch:new:content", $(e.target).val()
+                #'change #textbooks-multi-filter':(e)->
+                #    textbookIDs = [638,636]
+                #    @trigger "fetch:new:content", textbookIDs
 
                 'change #divisions-filter':(e)->
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
@@ -190,7 +170,7 @@ define ['app'], (App)->
 
 
             onShow:->
-
+                console.log "onShow"
                 $ ".filters select"
                 .select2();
 
@@ -201,19 +181,15 @@ define ['app'], (App)->
                     $ "#textbooks-filter"
                     .select2().select2 'val', term_ids['textbook']
 
-                    term_ids= @contentGroupModel.get 'term_ids'
-                    $ "#textbooks-multi-filter"
-                    .select2().select2 'val', term_ids['textbook']
-
                     @setFilteredContent()
 
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
 
+                console.log currItem
                 switch filterType
                     when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
-                    when 'textbooks-multi-filter' then $.populateChapters filteredCollection, @$el, currItem
                     when 'chapters-filter' then $.populateSections filteredCollection, @$el, currItem
                     when 'sections-filter' then $.populateSubSections filteredCollection, @$el, currItem
 
@@ -221,9 +197,11 @@ define ['app'], (App)->
 
 
             setFilteredContent:->
-
+                console.log @
                 dataType= Marionette.getOption @, 'dataType'
+                #console.log dataType
                 filtered_data= $.filterTableByTextbooks(@,dataType)
+                console.log filtered_data
 
                 @collection.reset filtered_data
                 @trigger "update:pager"

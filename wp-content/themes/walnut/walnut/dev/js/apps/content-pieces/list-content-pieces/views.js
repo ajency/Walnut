@@ -174,6 +174,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
+      console.log("EmptyView");
+
       EmptyView.prototype.template = 'No Content Available';
 
       EmptyView.prototype.tagName = 'td';

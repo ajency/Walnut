@@ -7,25 +7,20 @@ define ['app'
 		App.module "ContentModulesApp.ModulesListing", (ModulesListing, App)->
 			class ModulesListing.ListController extends RegionController
 
-				students = null
 				textbooksCollection = null
 				divisionsCollection = null
 				schoolsCollection   = null
-				quizzes = null
 
 				initialize: (options)->
 
 					{@groupType} = options
-					console.log options
+					#console.log options
 
 					@division = 0
-					schoolsCollection   = App.request "get:all:schools"
-					App.execute "when:fetched", schoolsCollection, @_fetchDivisions
-				_fetchDivisions:=>
-                
-                	divisionsCollection = App.request "get:divisions"
-                	App.execute "when:fetched", divisionsCollection, @_fetchTextbooks
-            	_fetchTextbooks:=>
+
+					divisionsCollection = App.request "get:divisions"
+					App.execute "when:fetched", divisionsCollection, @_fetchTextbooks
+				_fetchTextbooks:=>
                 
                 	class_id= divisionsCollection.first().get 'class_id'
                 	division= divisionsCollection.first().get 'id'
@@ -107,6 +102,7 @@ define ['app'
                             @_showSelectRecipientsApp communicationModel###
 
 				_getContentPiecesLayout:->
+					console.log "_getContentPiecesLayout"
 					new ContentPiecesLayout
 						groupType : @groupType
 
@@ -161,7 +157,3 @@ define ['app'
 
 			App.commands.setHandler 'show:module:listing:app',(options)->
 				new ModulesListing.ListController options
-
-
-
-
