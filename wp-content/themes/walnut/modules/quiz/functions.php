@@ -600,7 +600,7 @@ function get_latest_quiz_response_summary($quiz_id, $user_id){
 
     $summary_id = $wpdb->get_var($query);
 
-    $summary = read_quiz_response_summary($summary_id);
+    $summary = read_quiz_response_summary($summary_id, $user_id);
 
     return $summary;
 
@@ -618,6 +618,7 @@ function read_quiz_response_summary($summary_id,$user_id=0){
     /*if(!$summary_id)
 
         return false;*/
+    file_put_contents("filenamestud.txt", $user_id);
 
     if ($user_id != 0){
     //from student id get the division id
@@ -698,6 +699,8 @@ function read_quiz_response_summary($summary_id,$user_id=0){
     $vi = rtrim($vi);
 
     $marrks_historical = explode(",", $vi);
+
+    file_put_contents("filenameqqq.txt", $marrks_historical."wsws");
 
     $highest_scoreH = max($marrks_historical);
 
