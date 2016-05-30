@@ -15,7 +15,8 @@ define ['app'], (App)->
                                     {{/divisions_filter}}
 
                                     {{#textbooks_multi_filter}}
-                                    <select id="textbooks-filter" class="textbook-filter select2-filters" multiple="multiple">
+                                    <select id="textbooks-filter" class="textbook-filter select2-filters" multiple="multiple" data-placeholder="Select Textbook">
+                                            <!--option value="-1" selected>Select Textbook</option-->
                                     {{#textbooks}}
                                            <option value="{{id}}">{{&name}}</option>
                                         <{{/textbooks}}
