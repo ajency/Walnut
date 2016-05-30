@@ -50,6 +50,7 @@ define ['app'
 						@listenTo @region, "update:pager",=>
 							@view.triggerMethod "update:pager"
 
+						#new quiz email
 						@listenTo @view, "save:communications", (data)=>
                         	console.log "save:communication"
                         	data=

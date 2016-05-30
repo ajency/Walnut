@@ -34,14 +34,14 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
             getPreview:(recipient)->
-                console.log recipient
-                console.log @.toJSON()
+                #console.log recipient
+                #console.log @.toJSON()
                 url     = AJAXURL + '?action=get-communication-preview'
                 data    = @.toJSON()
                 data.additional_data.preview_recipient = recipient.toJSON()
 
                 defer = $.Deferred()
-
+                console.log data
                 $.post url, 
                     data, (response) =>
                         console.log response

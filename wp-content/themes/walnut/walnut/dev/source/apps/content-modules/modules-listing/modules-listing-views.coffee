@@ -44,8 +44,10 @@ define ['app'
 				data.edit_url = SITEURL + "/#edit-module/#{data.id}"
 				console.log data
 				data.textbookName = =>
+					console.log data.term_ids.textbook
 					textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
 					textbook.name if textbook?
+				console.log data.textbookName
 
 				data.chapterName = =>
 					chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter

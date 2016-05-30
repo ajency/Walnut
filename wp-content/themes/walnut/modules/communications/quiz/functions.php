@@ -234,8 +234,8 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
         array('%capabilities','%student%','student_division', $division)
         );
 
-    $txt = $query1." - QUERY..";
-    fwrite($myfile, "\n". $txt);
+    #$txt = $query1." - QUERY..";
+    #fwrite($myfile, "\n". $txt);
     $student_ids= $wpdb->get_col($query1);
 
     foreach($student_ids as $student){
@@ -246,7 +246,7 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
     if(sizeof($students)>0)
         $parents= get_parents_by_student_ids($student_ids);
 
-    fclose($myfile);
+    #fclose($myfile);
     return $parents;
     
 }
@@ -500,7 +500,7 @@ function quiz_summary_parent_mail_preview($data){
         'component'=>$data['component'],
         'communication_type'=>$data['communication_type'],
         'blog_id'   => get_current_blog_id(),
-        'student_id' => $data['additional_data']['preview_recipient']['student_id']
+        #'student_id' => $data['additional_data']['preview_recipient']['student_id']
         );
 
     $recipient=$data['additional_data']['preview_recipient'];

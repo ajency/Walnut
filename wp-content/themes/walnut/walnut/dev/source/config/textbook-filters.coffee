@@ -196,6 +196,8 @@ define ['jquery', 'underscore'], ($, _)->
                 item= ele.value
             item
         filter_ids= _.compact filter_ids
+        filter_ids = $('#textbooks-filter').val()
+        console.log filter_ids
 
         content_type = _this.$el.find('#content-type-filter').val()
 
@@ -236,14 +238,14 @@ define ['jquery', 'underscore'], ($, _)->
             filtered_data = _.filter filtered_models, (item)=>
                 filtered_item = ''
                 term_ids = _.flatten item.get 'term_ids'
-                console.log term_ids
-                console.log filter_ids
-                console.log $('#textbooks-filter').val()
 
+                #filter_ids = $('#textbooks-filter').val()
+                console.log filter_ids
                 #here change it
-                if _.size(_.intersection(term_ids, ['636','635'])) == _.size(filter_ids)
-                    filtered_item = item
+                #if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
+                filtered_item = item
                 filtered_item
+            console.log filtered_data
         else
             filtered_data = filtered_models
 
