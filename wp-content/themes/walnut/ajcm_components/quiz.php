@@ -605,12 +605,12 @@ function get_quiz_list_template_data($comm_data,$quiz_id, $division = 0){
 
 }
 
-function get_quiz_summary_data($quiz_id, $student_id){
+function get_quiz_summary_data($quiz_id, $student_id, $quizz_type=''){
 
     $data = array();
     file_put_contents('log_tempa.txt', print_r($student_id, true));
 
-    $summary= get_latest_quiz_response_summary($quiz_id,$student_id);
+    $summary= get_latest_quiz_response_summary($quiz_id,$student_id, $quizz_type);
 
     if($summary->negative_scored){
         $data[] = array('name' => 'NEG_MARKS',  'content' => $summary->negative_scored);

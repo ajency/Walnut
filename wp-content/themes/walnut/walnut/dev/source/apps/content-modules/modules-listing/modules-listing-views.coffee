@@ -253,9 +253,6 @@ define ['app'
 
 			sendEmailStud :(e)->
 				console.log "email sent module executed"
-				#abc = @$el.find "#textbooks-filter"
-				#.val()
-				#console.log (abc)
 				data = []
 				@$el.find '.communication_sent'
                 .remove()

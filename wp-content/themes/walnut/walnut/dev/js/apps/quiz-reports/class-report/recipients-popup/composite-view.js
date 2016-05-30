@@ -55,6 +55,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
             return _this.collection.get(id).toJSON();
           };
         })(this));
+        console.log(raw_recipients);
         if (!_.isEmpty(raw_recipients)) {
           additional_data = this.model.get('additional_data');
           additional_data.raw_recipients = raw_recipients;

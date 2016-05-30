@@ -65,6 +65,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         API =
 
             createCommunication: (data)->
+                console.log data
                 CommunicationsModel = new Communications.ItemModel()
                 CommunicationsModel.set data
                 CommunicationsModel

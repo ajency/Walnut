@@ -80,6 +80,7 @@ define(["app", 'backbone'], function(App, Backbone) {
     API = {
       createCommunication: function(data) {
         var CommunicationsModel;
+        console.log(data);
         CommunicationsModel = new Communications.ItemModel();
         CommunicationsModel.set(data);
         return CommunicationsModel;

@@ -62,6 +62,7 @@
 
                 allCheckedRecipients= _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
                 raw_recipients = _.map allCheckedRecipients, (id,index)=> @collection.get(id).toJSON()
+                console.log raw_recipients
 
                 if not _.isEmpty raw_recipients
                     additional_data= @model.get 'additional_data'

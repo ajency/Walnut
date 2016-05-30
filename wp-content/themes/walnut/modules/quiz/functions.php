@@ -580,7 +580,7 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
     if($results){
         foreach($results as $summary_id){
-            $data[] = read_quiz_response_summary($summary_id);
+            $data[] = read_quiz_response_summary($summary_id,$user_id);
         }
     }
     
@@ -588,7 +588,7 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
 }
 
-function get_latest_quiz_response_summary($quiz_id, $user_id){
+function get_latest_quiz_response_summary($quiz_id, $user_id, $quizz_type=''){
 
     global $wpdb;
 
@@ -600,7 +600,7 @@ function get_latest_quiz_response_summary($quiz_id, $user_id){
 
     $summary_id = $wpdb->get_var($query);
 
-    $summary = read_quiz_response_summary($summary_id, $user_id);
+    $summary = read_quiz_response_summary($summary_id, $user_id,$quizz_type);
 
     return $summary;
 
@@ -608,7 +608,7 @@ function get_latest_quiz_response_summary($quiz_id, $user_id){
 
 
 // report doesnt show coz of this function
-function read_quiz_response_summary($summary_id,$user_id=0){
+function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     global $wpdb;
 
@@ -618,9 +618,9 @@ function read_quiz_response_summary($summary_id,$user_id=0){
     /*if(!$summary_id)
 
         return false;*/
-    file_put_contents("filenamestud.txt", $user_id);
+    file_put_contents("filenamestud.txt", $quizz_type);
 
-    if ($user_id != 0){
+    if ($quizz_type == ''){
     //from student id get the division id
     $query = $wpdb->prepare("SELECT DISTINCT meta_value FROM {$wpdb->base_prefix}usermeta WHERE meta_key = 'student_division' AND user_id = %d", $user_id);
 
