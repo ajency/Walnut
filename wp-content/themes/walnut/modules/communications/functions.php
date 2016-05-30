@@ -226,3 +226,4 @@ function ajax_get_communication_preview(){
     //return $template_data;
 }
 add_action('wp_ajax_get-communication-preview','ajax_get_communication_preview');
+

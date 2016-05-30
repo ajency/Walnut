@@ -87,6 +87,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       }
     };
     return App.reqres.setHandler("create:communication", function(data) {
+      console.log(data);
       return API.createCommunication(data);
     });
   });

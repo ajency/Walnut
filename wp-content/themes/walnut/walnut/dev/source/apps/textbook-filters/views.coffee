@@ -26,7 +26,7 @@ define ['app'], (App)->
                                     {{#textbooks_filter}}
                                     <select class="textbook-filter select2-filters" id="textbooks-filter">
                                         {{#textbooks}}
-                                           <option value="{{id}}">{{&name}}</option>
+                                           <option value="{{id}}" >{{&name}}</option>
                                         {{/textbooks}}
                                     </select>
                                     {{/textbooks_filter}}
@@ -138,7 +138,10 @@ define ['app'], (App)->
                 data.textbooks= textbooks.map (m)->
                     t=[]
                     t.id = m.get 'term_id'
-                    t.name= m.get 'name'
+                    name= m.get 'name'
+                    name = name.split('(');
+                    t.name = name[0]
+                    console.log t.name
                     t
 
                 if divisions

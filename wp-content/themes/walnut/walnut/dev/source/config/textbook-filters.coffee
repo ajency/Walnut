@@ -50,6 +50,7 @@ define ['jquery', 'underscore'], ($, _)->
         .html ''
         
         textbookElement= ele.find '#textbooks-filter'
+        #console.log textbookElement
 
         chapterElement= ele.find '#chapters-filter'
 
@@ -59,7 +60,12 @@ define ['jquery', 'underscore'], ($, _)->
         if _.size(items) > 0
 
             _.each items, (item, index)=>
-                textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
+                console.log item.get('name')
+                name = item.get('name')
+                name = name.split('(')
+                text = name[0]
+                console.log item.get('name')
+                textbookElement.append '<option value="' + item.get('term_id') + '">' + text + '</option>'
 
             textbookElement.select2().select2 'val', _.first(items).get 'term_id'
         else 

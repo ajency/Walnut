@@ -24,7 +24,8 @@
                         </table>
                         <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit">
                             <i class="fa fa-check"></i> Send Email
-                        </button>'
+                        </button>
+                        <p style="font-size:15px;">&nbsp;&nbsp;*The Emails will be sent to the entire class. One student is randomly picked for email preview'
 
             itemView: Views.RecipientsItemView
 
@@ -67,9 +68,9 @@
                 if not _.isEmpty raw_recipients
                     additional_data= @model.get 'additional_data'
                     additional_data.raw_recipients = raw_recipients
-
-                    @model.save()
                     console.log @model
+                    @model.save()
+                    
 
                     @$el.find '.send-email'
                     .after '<span class="m-l-40 text-success small communication_sent">

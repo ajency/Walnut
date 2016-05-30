@@ -71,4 +71,5 @@ define ["app", 'backbone'], (App, Backbone) ->
                 CommunicationsModel
 
         App.reqres.setHandler "create:communication" ,(data)->
+            console.log data
             API.createCommunication data
