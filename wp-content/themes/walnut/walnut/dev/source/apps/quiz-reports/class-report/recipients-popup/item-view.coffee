@@ -29,6 +29,9 @@
                     $(e.target).find('i').removeClass 'none'
                     @trigger "preview:email", @model.id
 
+            onShow:->
+                console.log "adi"
+
             onShowPreview:(preview_data)->
                 @$el.find('.email-preview i').addClass 'none'
                 w=window.open("", "Test", "width=650,height=800,scrollbars=1,resizable=1"); 

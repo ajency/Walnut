@@ -12,6 +12,7 @@ define ['app'
                 {@communicationModel} = options
 
                 recipients = @communicationModel.getRecipients()
+                data = recipients
                 #console.log recipients
                 recipients.done (result)=>
                     recipientsCollection= new Backbone.Collection result
@@ -21,6 +22,9 @@ define ['app'
                     console.log recipientsCollection
 
                     @view = @_getSelectRecipientsView recipientsCollection
+
+                    #recipientsCollection= new Backbone.Collection result
+                    #recipientsCollection.each (m,index)->m.set 'id':index+1
 
                     @show @view
 
@@ -33,11 +37,11 @@ define ['app'
                         preview.done (content)=>
                             itemview.triggerMethod "show:preview",content.html
 
-            _getSelectRecipientsView :(recipients)=>
-                #console.log recipients
+            _getSelectRecipientsView :(recipients, data)=>
                 new QuizRecipientsPopup.Views.RecipientsView
                     model        : @communicationModel
                     collection   : recipients
+                    data         : data
 
         App.commands.setHandler 'show:quiz:select:recipients:popup',(options)->
             new QuizRecipientsPopup.Controller options

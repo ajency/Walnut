@@ -23,6 +23,10 @@ define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-
         }
       };
 
+      RecipientsItemView.prototype.onShow = function() {
+        return console.log("adi");
+      };
+
       RecipientsItemView.prototype.onShowPreview = function(preview_data) {
         var w;
         this.$el.find('.email-preview i').addClass('none');

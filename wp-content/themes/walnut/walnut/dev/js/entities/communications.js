@@ -26,6 +26,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.getRecipients = function() {
         var data, defer, url;
+        console.log(this.toJSON());
         url = AJAXURL + '?action=get-communication-recipients';
         data = this.toJSON();
         defer = $.Deferred();

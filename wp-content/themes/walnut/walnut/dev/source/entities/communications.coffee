@@ -19,6 +19,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             name: 'communications'
 
             getRecipients:->
+                console.log @.toJSON()
                 url     = AJAXURL + '?action=get-communication-recipients'
                 data    = @.toJSON()
 

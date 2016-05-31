@@ -10,7 +10,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
         return RecipientsView.__super__.constructor.apply(this, arguments);
       }
 
-      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Recipient Name (Parents)</th> <th>Recipient Email</th> <th>Student Name</th> <th>Quiz</th> <th></th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Email </button> <p style="font-size:15px;">&nbsp;&nbsp;*The Emails will be sent to the entire class. One student is randomly picked for email preview';
+      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Recipient Name (Parents)</th> <th>Recipient Email</th> <th>Student Name</th> <th>Quiz</th> <th></th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Email </button>';
 
       RecipientsView.prototype.itemView = Views.RecipientsItemView;
 
@@ -33,7 +33,11 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
       };
 
       RecipientsView.prototype.onShow = function() {
-        return this.$el.find('#check_all_div').trigger('click');
+        console.log(this.model.get('communication_type'));
+        this.$el.find('#check_all_div').trigger('click');
+        if ((this.model.get('communication_type' === 'quiz_published_parent_mail')) || (this.model.get('communication_type' === 'quiz_summary_parent_mail'))) {
+          return this.$el.find('.send-email').after('<span class="m-l-40 text-success small "> &nbsp;&nbsp;*The Emails will be sent to the entire class. One student is randomly picked for email preview</span>');
+        }
       };
 
       RecipientsView.prototype.showSubmitButton = function() {
@@ -45,8 +49,31 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
       };
 
       RecipientsView.prototype.sendEmail = function() {
-        var additional_data, allCheckedRecipients, raw_recipients;
+        var additional_data, allCheckedRecipients, data, defer, raw_recipients, url;
+        console.log(this.model);
+        console.log(this.data);
         this.$el.find('.communication_sent').remove();
+        if (this.model.get('communication_type' === 'quiz_published_parent_mail' || this.model.get('communication_type' === 'quiz_summary_parent_mail'))) {
+          data = {
+            component: 'quiz',
+            communication_type: this.model.get('communication_type'),
+            communication_mode: data.communication_mode,
+            additional_data: {
+              quiz_ids: data.quizIDs,
+              division: null
+            }
+          };
+          url = AJAXURL + '?action=get-communication-recipients';
+          data = this.toJSON();
+          defer = $.Deferred();
+          $.post(url, data, (function(_this) {
+            return function(response) {
+              console.log(response);
+              return defer.resolve(response);
+            };
+          })(this));
+          'json';
+        }
         allCheckedRecipients = _.map($.getCheckedItems(this.$el.find('table')), function(m) {
           return parseInt(m);
         });

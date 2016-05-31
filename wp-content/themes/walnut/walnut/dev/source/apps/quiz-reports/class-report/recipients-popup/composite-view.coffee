@@ -24,8 +24,7 @@
                         </table>
                         <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit">
                             <i class="fa fa-check"></i> Send Email
-                        </button>
-                        <p style="font-size:15px;">&nbsp;&nbsp;*The Emails will be sent to the entire class. One student is randomly picked for email preview'
+                        </button>'
 
             itemView: Views.RecipientsItemView
 
@@ -41,10 +40,16 @@
             initialize:->
                 @dialogOptions = 
                     modal_title : 'Confirm Recipients'
+                
 
             onShow:->
+                console.log @model.get 'communication_type'
                 @$el.find '#check_all_div'
                 .trigger 'click'
+                if ((@model.get 'communication_type' == 'quiz_published_parent_mail') || (@model.get 'communication_type' == 'quiz_summary_parent_mail'))
+                    @$el.find '.send-email'
+                    .after '<span class="m-l-40 text-success small ">
+                            &nbsp;&nbsp;*The Emails will be sent to the entire class. One student is randomly picked for email preview</span>'
 
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'
@@ -58,10 +63,31 @@
 
             sendEmail:->
 
+                console.log @model
+                console.log @data
                 @$el.find '.communication_sent'
                 .remove()
 
-                allCheckedRecipients= _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
+                if (@model.get 'communication_type' == 'quiz_published_parent_mail' || @model.get 'communication_type' == 'quiz_summary_parent_mail')
+                    data=
+                        component           : 'quiz'
+                        communication_type  : @model.get 'communication_type'
+                        communication_mode  : data.communication_mode
+                        additional_data:
+                            quiz_ids        : data.quizIDs
+                            division        : null
+                    url     = AJAXURL + '?action=get-communication-recipients'
+                    data    = @.toJSON()
+
+                    defer = $.Deferred()
+
+                    $.post url, 
+                        data, (response) =>
+                            console.log response
+                            defer.resolve response
+                    'json'
+
+                allCheckedRecipients = _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
                 raw_recipients = _.map allCheckedRecipients, (id,index)=> @collection.get(id).toJSON()
                 console.log raw_recipients
 
