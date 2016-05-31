@@ -50,6 +50,7 @@ define ['jquery', 'underscore'], ($, _)->
         .html ''
         
         textbookElement= ele.find '#textbooks-filter'
+        #console.log textbookElement
 
         chapterElement= ele.find '#chapters-filter'
 
@@ -59,7 +60,12 @@ define ['jquery', 'underscore'], ($, _)->
         if _.size(items) > 0
 
             _.each items, (item, index)=>
-                textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
+                console.log item.get('name')
+                name = item.get('name')
+                name = name.split('(')
+                text = name[0]
+                console.log item.get('name')
+                textbookElement.append '<option value="' + item.get('term_id') + '">' + text + '</option>'
 
             textbookElement.select2().select2 'val', _.first(items).get 'term_id'
         else 
@@ -196,6 +202,8 @@ define ['jquery', 'underscore'], ($, _)->
                 item= ele.value
             item
         filter_ids= _.compact filter_ids
+        filter_ids = $('#textbooks-filter').val()
+        console.log filter_ids
 
         content_type = _this.$el.find('#content-type-filter').val()
 
@@ -236,14 +244,14 @@ define ['jquery', 'underscore'], ($, _)->
             filtered_data = _.filter filtered_models, (item)=>
                 filtered_item = ''
                 term_ids = _.flatten item.get 'term_ids'
-                console.log term_ids
-                console.log filter_ids
-                console.log $('#textbooks-filter').val()
 
+                #filter_ids = $('#textbooks-filter').val()
+                console.log filter_ids
                 #here change it
-                if _.size(_.intersection(term_ids, ['636','635'])) == _.size(filter_ids)
-                    filtered_item = item
+                #if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
+                filtered_item = item
                 filtered_item
+            console.log filtered_data
         else
             filtered_data = filtered_models
 

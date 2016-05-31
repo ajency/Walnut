@@ -32,7 +32,13 @@ define(['jquery', 'underscore'], function($, _) {
     if (_.size(items) > 0) {
       _.each(items, (function(_this) {
         return function(item, index) {
-          return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
+          var name, text;
+          console.log(item.get('name'));
+          name = item.get('name');
+          name = name.split('(');
+          text = name[0];
+          console.log(item.get('name'));
+          return textbookElement.append('<option value="' + item.get('term_id') + '">' + text + '</option>');
         };
       })(this));
       return textbookElement.select2().select2('val', _.first(items).get('term_id'));
@@ -196,6 +202,8 @@ define(['jquery', 'underscore'], function($, _) {
       return item;
     });
     filter_ids = _.compact(filter_ids);
+    filter_ids = $('#textbooks-filter').val();
+    console.log(filter_ids);
     content_type = _this.$el.find('#content-type-filter').val();
     content_status = _this.$el.find('#content-status-filter').val();
     content_post_status = _this.$el.find('#content-post-status-filter').val();
@@ -242,15 +250,12 @@ define(['jquery', 'underscore'], function($, _) {
           var filtered_item, term_ids;
           filtered_item = '';
           term_ids = _.flatten(item.get('term_ids'));
-          console.log(term_ids);
           console.log(filter_ids);
-          console.log($('#textbooks-filter').val());
-          if (_.size(_.intersection(term_ids, ['636', '635'])) === _.size(filter_ids)) {
-            filtered_item = item;
-          }
+          filtered_item = item;
           return filtered_item;
         };
       })(this));
+      console.log(filtered_data);
     } else {
       filtered_data = filtered_models;
     }

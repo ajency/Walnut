@@ -61,12 +61,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
               return _this.listenTo(_this.view, "save:communications", function(data) {
                 var communicationModel;
                 console.log("save:communication");
+                console.log(data);
                 data = {
                   component: 'quiz',
                   communication_type: 'quiz_published_parent_mail',
                   communication_mode: data.communication_mode,
                   additional_data: {
-                    quiz_ids: data.quizIDs
+                    quiz_ids: data.quizIDs,
+                    division: null
                   }
                 };
                 communicationModel = App.request("create:communication", data);

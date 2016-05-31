@@ -234,8 +234,8 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
         array('%capabilities','%student%','student_division', $division)
         );
 
-    $txt = $query1." - QUERY..";
-    fwrite($myfile, "\n". $txt);
+    #$txt = $query1." - QUERY..";
+    #fwrite($myfile, "\n". $txt);
     $student_ids= $wpdb->get_col($query1);
 
     foreach($student_ids as $student){
@@ -246,7 +246,7 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
     if(sizeof($students)>0)
         $parents= get_parents_by_student_ids($student_ids);
 
-    fclose($myfile);
+    #fclose($myfile);
     return $parents;
     
 }
@@ -500,7 +500,7 @@ function quiz_summary_parent_mail_preview($data){
         'component'=>$data['component'],
         'communication_type'=>$data['communication_type'],
         'blog_id'   => get_current_blog_id(),
-        'student_id' => $data['additional_data']['preview_recipient']['student_id']
+        #'student_id' => $data['additional_data']['preview_recipient']['student_id']
         );
 
     $recipient=$data['additional_data']['preview_recipient'];
@@ -526,13 +526,15 @@ function quiz_summary_parent_mail_preview($data){
         'name'      => 'BLOG_URL',
         'content'   => '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
     );
-#fclose($myfile);
+    file_put_contents("template_data.txt", print_r($template_data, true));
     return $template_data;
 
 }
 
 //preview of email for selected quizes
 function quiz_published_parent_mail_preview($data){
+
+    file_put_contents("fwwwilename.txt", "data");
 
     require_once get_template_directory()."/ajcm_components/quiz.php";
 
@@ -550,8 +552,9 @@ function quiz_published_parent_mail_preview($data){
     $template_data['template_name']              = 'quiz-published-parent-mail'; 
     $template_data['template_content']           = array(); 
     $template_data['merge_vars'] = get_quiz_list_template_data($comm_data,$recipient['quiz_id'], $recipient['student_division']);
+    $quiz_tyyype = 'quiz-list';
 
-    $quiz_summary = get_quiz_summary_data($recipient['quiz_id'],$recipient['student_id']);
+    $quiz_summary = get_quiz_summary_data($recipient['quiz_id'],$recipient['student_id'],$quiz_tyyype);
     
     $template_data['merge_vars'] = array_merge($template_data['merge_vars'],$quiz_summary);
     $template_data['merge_vars'][]=array(

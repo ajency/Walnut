@@ -50,15 +50,17 @@ define ['app'
 						@listenTo @region, "update:pager",=>
 							@view.triggerMethod "update:pager"
 
+						#new quiz email
 						@listenTo @view, "save:communications", (data)=>
                         	console.log "save:communication"
+                        	console.log data
                         	data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_published_parent_mail'
                                 communication_mode  : data.communication_mode
                                 additional_data:
                                     quiz_ids        : data.quizIDs
-                                    #division        : null
+                                    division        : null
                             #console.log @allChaptersCollection
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel

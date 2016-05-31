@@ -200,6 +200,8 @@ function ajax_get_communication_preview(){
     
     global $aj_comm;
 
+    file_put_contents("comm.txt", "this is post data ".$_POST['communication_type']."\n");
+
     $functionName = $_POST['communication_type'].'_preview';
 
     if (function_exists($functionName)){
@@ -224,3 +226,4 @@ function ajax_get_communication_preview(){
     //return $template_data;
 }
 add_action('wp_ajax_get-communication-preview','ajax_get_communication_preview');
+

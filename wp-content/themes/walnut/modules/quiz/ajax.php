@@ -78,8 +78,10 @@ add_action('wp_ajax_update-quiz-response-summary','save_quiz_response_summary');
 
 function fetch_quiz_response_summary(){
 
+
     unset($_GET['action']);
     $args = $_GET;
+        file_put_contents("quiz.txt", $_GET);
 
     $quiz_summary = array();
 

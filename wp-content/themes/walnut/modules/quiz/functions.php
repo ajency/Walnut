@@ -130,13 +130,16 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
         $data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
 
-        #fwrite($myfile, $taken_by_stud['student_id']);
+        #fwrite($myfile, "\n".$data->taken_by_stud."\n");
        # $studeentttt = implode(",",$taken_by_stud);
        #fwrite($myfile, $studeentttt);
         
        # $data->stude_ids = $taken_by_stud;
-
+        if ($data->taken_by_stud == 0){
+            $data->taken_by = 0;
+        }else{
         $data->taken_by = sizeof($data->taken_by_stud);
+        }
 
         //$data->stud_ans_id = students_taj
         // students that have missed a quiz
@@ -156,7 +159,7 @@ function num_students_taken_quiz($quiz_id, $division){
 
     global $wpdb;  
 
-#    $myfile = fopen("log_ext.txt", "a");
+    #$myfile = fopen("log_ext.txt", "a");
 
     $taken_by = 0;
 
@@ -183,7 +186,7 @@ function num_students_taken_quiz($quiz_id, $division){
 
             #fclose($myfile);
 
-            $taken_by = $wpdb->get_results($taken_by_query);
+            $taken_by = $wpdb->get_col($taken_by_query);
         }
     }
 
@@ -387,6 +390,7 @@ function get_all_quiz_modules($args){
 
     global $wpdb;
     #$textbookss = [];
+    $textbook_prepare[0] = $textbook_prepare[1] = $$textbook_prepare[2] = $textbook_prepare[3] = $textbook_prepare[4] = $textbook_prepare[5] = '%"xyz"%';
     
     $myfile = fopen("log.txt", "a");
     $textbookss = $args['textbook'];
@@ -394,9 +398,6 @@ function get_all_quiz_modules($args){
     #file_put_contents('abc.txt', print_r($textbookss, true));
 
     $type = is_array($args['textbook']) ? '1' : '0';
-
-
-    #fwrite($myfile, "type of array " . $type);
 
 
     if ($args['post_status'] =='any'){
@@ -427,12 +428,17 @@ function get_all_quiz_modules($args){
     }
 
     if (empty($args['textbook']))
-        $term_id_query = " AND post.term_ids LIKE %'xy@@@zz'%";
+        $textbook_prepare[0] = "%xy@@@zz%";
+        $term_id_query = " AND post.term_ids LIKE ";
+
 
     if($type == 0){
-         $textbook_prepare = '%"'.$textbookss.'"%';
+
+        //onload and quiz report since textbook id is 1
+         $textbook_prepare[0] = '%"'.$textbookss.'"%';
             $term_id_query = " AND post.term_ids LIKE %s";
-            fwrite($myfile, $term_id_query);
+            #fwrite($myfile, "string");
+            #fwrite($myfile, $term_id_querys);
 
 
     }
@@ -441,33 +447,39 @@ function get_all_quiz_modules($args){
     #if its == 1
         $size_text_data = sizeof($textbookss);
         //$text_ids = implode(",",$textbookss);
-        #fwrite($myfile, "size of array " . $size_text_data);
+        #fwrite($myfile, "size of array " . $size_text_data."\n");
         
+        //  '%\"636\"%'
         if ($size_text_data == '1'){
             $text = $textbookss[0];
-            $textbook_prepare = '%"'.$textbookss[0].'"%';
+            $textbook_prepare[0] = "%".$textbookss[0]."%";
             $term_id_query = " AND post.term_ids LIKE %s";
-            fwrite($myfile, $term_id_query);
+           // $term_id_query .= $text;
+           # fwrite($myfile, "1"."\n");
         }
         else{
             $term_id_query_inside = '';
             #$textbook_prepare = 'xyz';
-            $term_id_query = " AND ()";
+            #$term_id_query = " AND ()";
             foreach ($textbookss as $key => $text_id) {
-            #$textbook_prepare = '%"638"%';
-            $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"$text_id\"%' OR ";
-            if( $key == $size_text_data-1)
-                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"$text_id\"%'";
-            #file_put_contents('abc.txt', print_r($text_id, true));
-            #fwrite($myfile, $textbook_prepare);
+            #fwrite($myfile, "key ".$key."\n");
+           # fwrite($myfile, "size_text_data ".$size_text_data-1."\n");
+            $textbook_prepare[$key] = '%"'.$text_id.'"%';
+            $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s OR ";
+
+            if( $key == $size_text_data-1){
+                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s";
+            }
+            #file_put_contents('abcasd.txt', print_r($term_id_query_inside, true));
+            
             #$key
             }
-            $term_id_query = " AND (".$term_id_query_inside.")";
+            $term_id_query = " AND ($term_id_query_inside)";
 
-            $textbook_prepare = '%"638"%';
-            $textbook_prepare1 = '%"636"%';
-            $term_id_query = "AND ( post.term_ids LIKE %s OR post.term_ids LIKE %s)";
-            #file_put_contents('abc.txt', print_r($term_id_query, true));
+            #$textbook_prepare = '%"638"%';
+            #$textbook_prepare1 = '%"636"%';
+            #$term_id_query = "AND ( post.term_ids LIKE %s OR post.term_ids LIKE %s)";
+           # file_put_contents('abca.txt', print_r($term_id_query, true));
 
         }
         #$term_id_query = " AND post.term_ids LIKE %s";
@@ -498,11 +510,18 @@ function get_all_quiz_modules($args){
     $quiz_type_prepare = "%".$args['quiz_type']."%";
 
 
+
     
 
     $query = $wpdb->prepare($query_string,$post_status_prepare,$post_status_prepare2,'quiz_type',$quiz_type_prepare,
-        $textbook_prepare,
-        $textbook_prepare1);
+        $textbook_prepare[0],
+        $textbook_prepare[1],
+        $textbook_prepare[2],
+        $textbook_prepare[3],
+        $textbook_prepare[4],
+        $textbook_prepare[5]);
+
+   # fwrite($myfile, $query);
 
     file_put_contents('abc.txt', print_r($query, true));
 
@@ -535,7 +554,8 @@ function get_all_quiz_modules($args){
     
     $result= __u::sortBy($result, function($item){
                         return $item->last_modified_on;
-                    });                 
+                    });               
+    fclose($myfile);  
     return $result;
 }
 
@@ -560,7 +580,7 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
     if($results){
         foreach($results as $summary_id){
-            $data[] = read_quiz_response_summary($summary_id);
+            $data[] = read_quiz_response_summary($summary_id,$user_id);
         }
     }
     
@@ -568,10 +588,10 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
 }
 
-function get_latest_quiz_response_summary($quiz_id, $user_id){
+function get_latest_quiz_response_summary($quiz_id, $user_id, $quizz_type=''){
 
     global $wpdb;
-    
+
     if(!$quiz_id || !$user_id)
         return false;
 
@@ -580,30 +600,31 @@ function get_latest_quiz_response_summary($quiz_id, $user_id){
 
     $summary_id = $wpdb->get_var($query);
 
-    $summary = read_quiz_response_summary($summary_id,$user_id);
+    $summary = read_quiz_response_summary($summary_id, $user_id,$quizz_type);
 
     return $summary;
 
 }
 
-function read_quiz_response_summary($summary_id,$user_id=0){
+
+// report doesnt show coz of this function
+function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     global $wpdb;
 
     $summ_id = $summary_id;
     //also need class id
 
-    #$myfile = fopen("ggg.txt", "a");
-
     /*if(!$summary_id)
 
         return false;*/
+    file_put_contents("filenamestud.txt", $quizz_type);
 
+    if ($quizz_type == ''){
     //from student id get the division id
-    $query = $wpdb->prepare("SELECT DISTINCT meta_value FROM {$wpdb->base_prefix}usermeta WHERE meta_key = 'student_division' AND user_id = %s", $user_id);
+    $query = $wpdb->prepare("SELECT DISTINCT meta_value FROM {$wpdb->base_prefix}usermeta WHERE meta_key = 'student_division' AND user_id = %d", $user_id);
 
     $division = $wpdb->get_results($query);
-
     /*$student_ids = $wpdb->get_row($wpdb->prepare("SELECT DISTINCT um1.user_id
                     FROM {$wpdb->base_prefix}usermeta AS um1
                     LEFT JOIN {$wpdb->base_prefix}usermeta AS um2
@@ -613,11 +634,11 @@ function read_quiz_response_summary($summary_id,$user_id=0){
                     AND um1.meta_value = um2. 
                     "));*/
 
-    #file_put_contents('abc.txt', print_r($user_id, true));
-
     //select all students from that division
+
     foreach ($division as $divisions) {
         $division = $divisions->meta_value;
+
     }
     $query1 = $wpdb->prepare("SELECT DISTINCT um1.user_id
         FROM {$wpdb->base_prefix}usermeta AS um1
@@ -664,27 +685,24 @@ function read_quiz_response_summary($summary_id,$user_id=0){
     $maks_scored_hist = $wpdb->prepare("SELECT SUM(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
 
     $marks_hist = $wpdb->get_col($maks_scored_hist);
-        #fwrite($myfile, $maks_scored_hist);
         $marks_historical[] = $marks_hist; 
      }
 
-    //avg_hist_score
     $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($marks_historical));
     $vi = '';
     foreach($it as $v) {
         if ($v == '')
             continue;
         $vi = $v.', '.$vi;
-       # fwrite($myfile, "times"."\n");
     }
 
     $vi = rtrim($vi);
 
     $marrks_historical = explode(",", $vi);
 
-    $highest_scoreH = max($marrks_historical);
+    file_put_contents("filenameqqq.txt", $marrks_historical."wsws");
 
-    #$high_student = $wpdb->prepare("SELECT summary_id FROM {$wpdb->prefix} WHERE ")
+    $highest_scoreH = max($marrks_historical);
 
     $sizeH = sizeof($marrks_historical);
     $totlH = 0;
@@ -696,17 +714,11 @@ function read_quiz_response_summary($summary_id,$user_id=0){
 
     $student_ids = $wpdb->get_results($query1);
     foreach ($student_ids as $student) {
-        #fwrite($myfile, $student->user_id);
 
         $query = $wpdb->prepare("SELECT DISTINCT summary_id FROM {$wpdb->prefix}quiz_response_summary WHERE student_id = %d", $student->user_id);
 
-        #fwrite($myfile, $query);
-
     $summary_id = $wpdb->get_results($query);
-    #fwrite($myfile, $summary->summary_id);
     $summary[] = $summary_id;
-
-        #file_put_contents('abc.txt', print_r($student, true));
     }
 
     $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($summary));
@@ -719,20 +731,15 @@ function read_quiz_response_summary($summary_id,$user_id=0){
 
     $sum = explode(",", $vi);
 
-    #file_put_contents('abc.txt', print_r($sum, true));
-
      foreach ($sum as $summary_id) {
         //fetch the marks
-            #fwrite($myfile, $summary_id);
             $maks_scored = $wpdb->prepare("SELECT SUM(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
 
-            #fwrite($myfile, $maks_scored);
             $mak = $wpdb->get_col($maks_scored);
 
             $maks[] = $mak;
 
         }
-#file_put_contents('xyv.txt', print_r($maks, true));
 
 
     $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($maks));
@@ -750,8 +757,6 @@ function read_quiz_response_summary($summary_id,$user_id=0){
 
     $highest_score = max($marrks);
 
-    #$high_student = $wpdb->prepare("SELECT summary_id FROM {$wpdb->prefix} WHERE ")
-
     $size = sizeof($marrks);
     $totl = 0;
     foreach ($marrks as $total_students_marks) {
@@ -759,9 +764,8 @@ function read_quiz_response_summary($summary_id,$user_id=0){
     }
 
     $avg = $totl/$size;
-    #file_put_contents('abc.txt', print_r($highest_score, true));
 
-
+}
     $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
         where summary_id = %s", $summ_id));    
     
@@ -798,8 +802,6 @@ function read_quiz_response_summary($summary_id,$user_id=0){
 
     $additional_details= $wpdb->get_row($additional_details_qry);
 
-    #file_put_contents('abcq.txt', print_r($additional_details, true));
-
     $quiz_response_summary->highest_hist_score = $highest_scoreH;
 
     $quiz_response_summary->avg_hist_score = round($avgH,2);
@@ -821,58 +823,10 @@ function read_quiz_response_summary($summary_id,$user_id=0){
         WHERE status LIKE %s AND summary_id LIKE %s",
         array('skipped', $quiz_response_summary->summary_id)
     );
-    #fclose($myfile);
     $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
     return $quiz_response_summary;
 }
 
-function write_quiz_response_summary($args){
-    global $wpdb;
-    if(!isset($args['student_id'])){
-        $args['student_id'] = get_current_user_id();
-    }
-
-    $quiz_type = get_module_meta($args['collection_id'], 'quiz_type');
-
-    $quiz_meta['status'] = $args['status'];
-    $quiz_meta['questions_order'] = array_map('intval', $args['questions_order']);
-
-
-    if(!isset($args['summary_id'])){
-
-        $summary_id = 'Q'.$args['collection_id'].'S'.$args['student_id'];
-
-        if ($quiz_type=='practice')
-            $summary_id = $summary_id . '_' . date('dmyhis');
-
-        $data = array(
-            'summary_id' => $summary_id,
-            'collection_id' => $args['collection_id'],
-            'student_id' => $args['student_id'],
-            'quiz_meta' => maybe_serialize($quiz_meta)
-            );
-
-        //handling sync status for standalone sites.
-        if (!is_multisite())
-            $data['sync']=0;
-
-        $wpdb->insert(($wpdb->prefix).'quiz_response_summary', $data );
-    }
-    else{
-        $summary_id = $args['summary_id'];
-        $data = array('quiz_meta' => maybe_serialize($quiz_meta));
-
-        //handling sync status for standalone sites.
-        if (!is_multisite())
-            $data['sync']=0;
-
-        $where_array = array('summary_id' => $summary_id);
-        $wpdb->update(($wpdb->prefix).'quiz_response_summary', $data ,$where_array);
-    }
-
-    return $summary_id;
-
-}
 
 function write_quiz_question_response($args){
     global $wpdb;
@@ -968,7 +922,6 @@ function get_all_quiz_question_responses($summary_id){
             'status'            => $response->status,
             'time_taken'        => (int) $response->time_taken
         );
-
         $data[]=$d;
     }
 

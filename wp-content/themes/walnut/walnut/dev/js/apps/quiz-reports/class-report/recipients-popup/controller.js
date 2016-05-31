@@ -14,17 +14,22 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
 
       Controller.prototype.initialize = function(options) {
         var recipients;
+        console.log(options);
         this.communicationModel = options.communicationModel;
         recipients = this.communicationModel.getRecipients();
         return recipients.done((function(_this) {
           return function(result) {
             var recipientsCollection;
             recipientsCollection = new Backbone.Collection(result);
+            if (options.communicationModel.attributes.communication_type === 'quiz_published_parent_mail' || options.communicationModel.attributes.communication_type === 'quiz_summary_parent_mail') {
+              recipientsCollection = new Backbone.Collection(result[0]);
+            }
             recipientsCollection.each(function(m, index) {
               return m.set({
                 'id': index + 1
               });
             });
+            console.log(recipientsCollection);
             _this.view = _this._getSelectRecipientsView(recipientsCollection);
             _this.show(_this.view);
             _this.listenTo(_this.view, 'close:popup:dialog', function() {

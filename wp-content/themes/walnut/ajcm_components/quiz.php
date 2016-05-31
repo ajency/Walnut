@@ -524,7 +524,7 @@ function get_quiz_summary_template_data($comm_data,$quiz_id, $division = 0){
     $data[] = array('name' => 'TEXTBOOK',       'content' => $textbook_name);
     $data[] = array('name' => 'CHAPTER',        'content' => $chapter_name);
     $data[] = array('name' => 'QUIZ_MARKS',     'content' => $quiz_details->marks);
-    $data[] = array('name' => 'TAKEN',     'content' => $taken);
+    $data[] = array('name' => 'TAKEN',          'content' => $taken);
 
     $data[] = get_mail_header($comm_data['blog_id']);
     $data[] = get_mail_footer($comm_data['blog_id']);
@@ -605,12 +605,11 @@ function get_quiz_list_template_data($comm_data,$quiz_id, $division = 0){
 
 }
 
-function get_quiz_summary_data($quiz_id, $student_id){
+function get_quiz_summary_data($quiz_id, $student_id, $quizz_type=''){
 
     $data = array();
-    file_put_contents('log_tempa.txt', print_r($student_id, true));
 
-    $summary= get_latest_quiz_response_summary($quiz_id,$student_id);
+    $summary= get_latest_quiz_response_summary($quiz_id,$student_id, $quizz_type);
 
     if($summary->negative_scored){
         $data[] = array('name' => 'NEG_MARKS',  'content' => $summary->negative_scored);
@@ -629,6 +628,8 @@ function get_quiz_summary_data($quiz_id, $student_id){
     $data[] = array('name' => 'TOTAL_SCORED',   'content' => $summary->total_marks_scored);
     $data[] = array('name' => 'DATE',           'content' => date('d M Y', strtotime($summary->taken_on)));
     $data[] = array('name' => 'ATTEMPTS',       'content' => $quiz_status['attempts']);
+
+    file_put_contents('log_tempa.txt', print_r($data, true));
 
     return $data;
 

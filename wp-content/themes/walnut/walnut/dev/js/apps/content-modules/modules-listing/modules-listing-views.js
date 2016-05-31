@@ -31,6 +31,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
+            console.log(data.term_ids.textbook);
             textbook = _.findWhere(_this.textbooks, {
               "id": parseInt(data.term_ids.textbook)
             });
@@ -39,6 +40,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
             }
           };
         })(this);
+        console.log(data.textbookName);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
