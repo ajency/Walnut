@@ -83,6 +83,63 @@
 }
 
 
+/* ---------------------------
+   QUIZ LIST TEXTBOOK SELECT  -----------
+ ---------------------------
+*/
+
+
+.table-tools-actions .select2-container.textbook-filter{
+	min-width: 160px;
+    width: inherit;
+}
+
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices{
+	max-width: 520px;
+    overflow-x: auto;
+    white-space: nowrap;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+
+.table-tools-actions .select2-container.textbook-filter .select2-search-choice{
+	display: inline-block;
+    float: none;
+    // width: 123px;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field{
+	display: inline-block;
+    float: none;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field input[type="text"]{
+	width: 153px;
+    color: #000 !important;
+    font-weight: 400;
+    text-transform: capitalize;
+    margin-top: -3px;
+    padding-top: 10px !important;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field .select2-focused{
+    margin-top: -10px;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
