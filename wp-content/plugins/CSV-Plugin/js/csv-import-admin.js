@@ -22,6 +22,7 @@
           });
 
           jQuery('#template_export').click(function(){
+            //alert("clicked");
             var id_text = jQuery('#hiddenTextId').val();
             if(id_text == '-1'){
               jQuery("#invalidText").html('Please select a textbook to export');     
@@ -35,7 +36,7 @@
                 console.log(result);
                name = result['name'];
                 console.log(name);
-                window.location.href='01simple.xls';
+                window.location.href='question_upload.xls';
               });
           }
           });

@@ -13,6 +13,8 @@ function ajax_generate_excel(){
 //create object of class ExcelGenerate
     $data = $_POST['data'];
 
+    #file_put_contents("abc.txt", print_r($data, true));
+
     $xclObj = new ExportExcel();
     $excel = $xclObj->excel($data);
     wp_send_json(array('name'=>$excel));

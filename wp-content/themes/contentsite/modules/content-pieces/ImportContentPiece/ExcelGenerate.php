@@ -4,7 +4,8 @@
 class ExportExcel {
 
 public function excel($text_id){
- 
+
+    #file_put_contents("abcd.txt", $text_id);
 // Create new PHPExcel object
 $objPHPExcel = new PHPExcel();
 $data_chap =  array(
@@ -111,7 +112,7 @@ $chapterSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($chapterSheet);
 $chapterSheet->setTitle('Chapter');
 $chapterSheet->fromArray($data_chap, null, 'A1');
-//$chapterSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+$chapterSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $chapter_data = array();
@@ -156,7 +157,7 @@ $sectionSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($sectionSheet);
 $sectionSheet->setTitle('Section');
 $sectionSheet->fromArray($data_sect, null, 'A1');
-//$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $section_data = array();
@@ -199,7 +200,7 @@ $subsectionSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($subsectionSheet);
 $subsectionSheet->setTitle('SubSection');
 $subsectionSheet->fromArray($data_subsect, null, 'A1');
-//$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $subsection_data = array();
@@ -255,7 +256,7 @@ header ('Pragma: public'); // HTTP/1.0
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 //if ($this->_hasCharts) $objWriter->setIncludeCharts(TRUE);
 $objWriter->setPreCalculateFormulas(TRUE);
-$objWriter->save('01simple.xls');
+$objWriter->save('question_upload.xls');
 //$objWriter->save('php://output');
 //$myfile = fopen(get_home_path()."01simple.xls", "w");
 //fclose($myfile);

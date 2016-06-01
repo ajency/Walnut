@@ -27,6 +27,7 @@ if($chapid == '' || $chapid == null){
 $sect_da = array_merge($section_data,$sect_da);
 }
 #fclose($myfile);
+#file_put_contents("abc.txt", print_r($sect_da, true));
  return $sect_da;
 }
 
@@ -51,6 +52,7 @@ if($textid == '' || $textid == null){
 
 /*$chapter_da = array_merge($chapter_data,$chapter_da);
 } */
+
  return $chapter_data;
 }
 
