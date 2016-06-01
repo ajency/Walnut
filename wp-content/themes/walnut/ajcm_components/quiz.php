@@ -427,7 +427,7 @@ function get_quiz_summary_template_data($comm_data,$quiz_id, $division = 0){
 
     $studeny_taken_quiz_id = [];
 
-    $myfile = fopen("log_tempa.txt", "a");
+    #$myfile = fopen("logs_tempa.txt", "a");
 
 
     #file_put_contents('log_tempa.txt', print_r($comm_data, true));
@@ -483,7 +483,8 @@ function get_quiz_summary_template_data($comm_data,$quiz_id, $division = 0){
     
     #fwrite($myfile, $num);
     
-
+    #file_put_contents("acurr.txt", $current_student);
+    #file_put_contents("astudearr.txt", $taken_by_studs_ids);
 
     if (in_array($current_student, $taken_by_studs_ids))
     {
@@ -494,7 +495,7 @@ function get_quiz_summary_template_data($comm_data,$quiz_id, $division = 0){
         $quiz_details->num = '';
     }
 
-    #fwrite($myfile, $quiz_details->num);
+    fwrite($myfile, $quiz_details->num);
 
     $taken = $quiz_details->taken_by;
 
@@ -537,7 +538,7 @@ function get_quiz_summary_template_data($comm_data,$quiz_id, $division = 0){
     $data[] = get_mail_header($comm_data['blog_id']);
     $data[] = get_mail_footer($comm_data['blog_id']);
     switch_to_blog($current_blog);
-    fclose($myfile);
+    #fclose($myfile);
     return $data;
 
 }
@@ -637,7 +638,7 @@ function get_quiz_summary_data($quiz_id, $student_id, $quizz_type=''){
     $data[] = array('name' => 'DATE',           'content' => date('d M Y', strtotime($summary->taken_on)));
     $data[] = array('name' => 'ATTEMPTS',       'content' => $quiz_status['attempts']);
 
-    file_put_contents('log_tempa.txt', print_r($data, true));
+    #file_put_contents('log_tempa.txt', print_r($data, true));
 
     return $data;
 

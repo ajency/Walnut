@@ -201,7 +201,7 @@ function ajax_get_communication_preview(){
     
     global $aj_comm;
 
-    file_put_contents("comm.txt", print_r($_POST, true));
+    #file_put_contents("comm.txt", print_r($_POST, true));
 
     $functionName = $_POST['communication_type'].'_preview';
 

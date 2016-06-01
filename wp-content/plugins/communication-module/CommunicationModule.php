@@ -709,7 +709,7 @@ class CommunicationModule{
          * @param array $comm_data data about the communication to be processed (id,component,communication_type)
          */
         public function procces_communication($comm_data){
-        	file_put_contents("ajcm.txt", print_r($comm_data, true));
+        	#file_put_contents("ajcm.txt", print_r($comm_data, true));
             global $wpdb;
             // group recipients based on communication type email/sms
             $recipients_email = $recipients_sms = array();

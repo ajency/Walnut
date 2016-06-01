@@ -425,7 +425,7 @@ function prepare_quiz_summary_parent_mail_recipients($data){
 
 function prepare_quiz_published_parent_mail_recipients($data){
 
-    file_put_contents("fwwwilename.txt", print_r($data, true));
+    #file_put_contents("fwwwilename.txt", print_r($data, true));
 
     $recipients= array();
 
@@ -499,13 +499,15 @@ function quiz_completed_parent_mail_preview($data){
 // preview for email summary 
 function quiz_summary_parent_mail_preview($data){
 
+    #file_put_contents("awww.txt", print_r($data, true));
+
     require_once get_template_directory()."/ajcm_components/quiz.php";
 #$myfile = fopen("abc.txt", "a");
     $comm_data = array(
         'component'=>$data['component'],
         'communication_type'=>$data['communication_type'],
         'blog_id'   => get_current_blog_id(),
-        #'student_id' => $data['additional_data']['preview_recipient']['student_id']
+        'student_id' => $data['additional_data']['preview_recipient']['student_id']
         );
 
     $recipient=$data['additional_data']['preview_recipient'];
@@ -531,7 +533,7 @@ function quiz_summary_parent_mail_preview($data){
         'name'      => 'BLOG_URL',
         'content'   => '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
     );
-    file_put_contents("template_data.txt", print_r($template_data, true));
+   # file_put_contents("template_data.txt", print_r($template_data, true));
     return $template_data;
 
 }

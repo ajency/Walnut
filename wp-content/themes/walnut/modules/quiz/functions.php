@@ -181,6 +181,7 @@ function num_students_taken_quiz($quiz_id, $division){
                 AND quiz_meta like '%s'
                 AND student_id in ($students_str)",
                 $quiz_id, '%completed%');
+            #file_put_contents("aA.txt", $taken_by_query);
 
             #fwrite($myfile, $taken_by_query);
 
@@ -523,7 +524,7 @@ function get_all_quiz_modules($args){
 
    # fwrite($myfile, $query);
 
-    file_put_contents('abc.txt', print_r($query, true));
+    #file_put_contents('abc.txt', print_r($query, true));
 
     $quiz_ids = $wpdb->get_col($query);
     #fwrite($myfile, $query);
@@ -598,6 +599,7 @@ function get_latest_quiz_response_summary($quiz_id, $user_id, $quizz_type=''){
     $query = $wpdb->prepare("select summary_id from {$wpdb->prefix}quiz_response_summary
             where student_id = %d and collection_id = %d order by taken_on desc limit 1", $user_id,$quiz_id);
 
+    #file_put_contents("aqqqq.txt", $query);
     $summary_id = $wpdb->get_var($query);
 
     $summary = read_quiz_response_summary($summary_id, $user_id,$quizz_type);
@@ -611,14 +613,14 @@ function get_latest_quiz_response_summary($quiz_id, $user_id, $quizz_type=''){
 function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     global $wpdb;
-
+   # $myfile = fopen("aresponse.txt", "a");
     $summ_id = $summary_id;
     //also need class id
 
     /*if(!$summary_id)
 
         return false;*/
-    file_put_contents("filenamestud.txt", $quizz_type);
+    #file_put_contents("filenamestud.txt", $quizz_type);
 
     if ($quizz_type == ''){
     //from student id get the division id
@@ -670,6 +672,8 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     $query = $wpdb->prepare("SELECT DISTINCT summary_id FROM {$wpdb->prefix}quiz_response_summary WHERE student_id IN ($stu_his)");
 
+
+
     $summid = $wpdb->get_col($query);
 
     #$it = new RecursiveIteratorIterator(new RecursiveArrayIterator($summid));
@@ -682,7 +686,9 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     foreach ($summid as $summID) {
    
-    $maks_scored_hist = $wpdb->prepare("SELECT avg(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
+    $maks_scored_hist = $wpdb->prepare("SELECT MAX(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
+    
+    
 
     $marks_hist = $wpdb->get_col($maks_scored_hist);
         $marks_historical[] = $marks_hist; 
@@ -700,8 +706,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     $marrks_historical = explode(",", $vi);
 
-    file_put_contents("filenameqqq.txt", $marrks_historical."wsws");
-
+    #file_put_contents("filenameqqq.txt", $marrks_historical."wsws");
     $highest_scoreH = max($marrks_historical);
 
     $sizeH = sizeof($marrks_historical);
@@ -716,6 +721,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
     foreach ($student_ids as $student) {
 
         $query = $wpdb->prepare("SELECT DISTINCT summary_id FROM {$wpdb->prefix}quiz_response_summary WHERE student_id = %d", $student->user_id);
+
 
     $summary_id = $wpdb->get_results($query);
     $summary[] = $summary_id;
@@ -733,13 +739,14 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
      foreach ($sum as $summary_id) {
         //fetch the marks
-            $maks_scored = $wpdb->prepare("SELECT avg(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
+            $summary_id = trim($summary_id);
+            $maks_scored = $wpdb->prepare("SELECT MAX(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
 
             $mak = $wpdb->get_col($maks_scored);
-
+            #fwrite($myfile, $maks_scored);
             $maks[] = $mak;
-
         }
+        #file_put_contents("aresponse.txt", print_r($maks, true));
 
 
     $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($maks));
@@ -748,15 +755,17 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
         if ($v == '')
             continue;
         $vi = $v.', '.$vi;
-        fwrite($myfile, "times"."\n");
+        #fwrite($myfile, "times"."\n");
     }
 
     $vi = rtrim($vi);
 
     $marrks = explode(",", $vi);
 
-    $highest_score = max($marrks);
+    $highest_score = MAX($marrks);
 
+    //get the student name from max marks
+    
     $size = sizeof($marrks);
     $totl = 0;
     foreach ($marrks as $total_students_marks) {
@@ -767,7 +776,9 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
 }
     $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
-        where summary_id = %s", $summ_id));    
+        where summary_id = %s", $summ_id)); 
+
+        #file_put_contents("aquizres.txt", print_r($summ_id, true));   
     
     /*if(!$quiz_response_summary)
         return false;*/
@@ -781,22 +792,22 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     $additional_details_qry = $wpdb->prepare(
         "SELECT
-            avg(marks_scored) as total_marks_scored,
+            MAX(marks_scored) as total_marks_scored,
 
-            avg(
+            MAX(
                 CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as negative_scored,
 
-            avg(
+            MAX(
                CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as marks_scored,
 
-            avg(time_taken) as total_time_taken
+            MAX(time_taken) as total_time_taken
             FROM {$wpdb->prefix}quiz_question_response
         WHERE summary_id = %s", $summ_id
     );
 
-    file_put_contents("arr.txt", $additional_details_qry);
+    #file_put_contents("arr.txt", $additional_details_qry);
 
     $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
 
@@ -826,6 +837,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
         array('skipped', $quiz_response_summary->summary_id)
     );
     $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
+    #fclose($myfile);
     return $quiz_response_summary;
 }
 
