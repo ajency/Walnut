@@ -177,11 +177,14 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
     global $aj_comm;
 
+    file_put_contents("getvarsReci.txt", print_r($comm_data, true));
+    file_put_contents("getVarsComm.txt", print_r($recipients, true));
     $template_data['name']      = 'quiz-published-parent-mail';
 
     $blog_data= get_blog_details($comm_data['blog_id'], true);
 
-    $template_data['subject']   = $blog_data->blogname.':  Quiz List for student ';
+    #$template_data['subject']   = $blog_data->blogname.':  Quiz List for student ';
+    $template_data['subject']   =  'Go Nuts! More quizzes';
 
     $template_data['from_email'] = 'no-reply@walnutedu.org';
     $template_data['from_name'] = 'Synapse';
@@ -242,6 +245,7 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
 function getvars_quiz_summary_student_mail($recipients_email,$comm_data){
 
+
     global $aj_comm;
 
     $template_data['name']      = 'quiz-summary-student-mail';
@@ -277,11 +281,15 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
 
     global $aj_comm;
 
+    file_put_contents("getvarsReciSUMM.txt", print_r($comm_data, true));
+    file_put_contents("getVarsCommSUMM.txt", print_r($recipients, true));
+
     $template_data['name']      = 'quiz-summary-parent-mail';
 
     $blog_data= get_blog_details($comm_data['blog_id'], true);
 
-    $template_data['subject']   = $blog_data->blogname.':  Quiz summary for student ';
+    #$template_data['subject']   = $blog_data->blogname.':  Quiz summary for student ';
+    $template_data['subject']   =  'Nuts Ah-oye! Some nutlets for you!';
 
     $template_data['from_email'] = 'no-reply@walnutedu.org';
     $template_data['from_name'] = 'Synapse';
@@ -360,7 +368,7 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
 
     $data[] = array(
         'name' => 'QUIZ_URL',
-        'content' => "<a target='_blank' href='$siteurl/#view-quiz/$quiz_id'>here</a>"
+        'content' => "<a target='_blank' href='$siteurl/#view-quiz/$quiz_id'>Click here</a>"
     );
 
     switch_to_blog($comm_data['blog_id']);

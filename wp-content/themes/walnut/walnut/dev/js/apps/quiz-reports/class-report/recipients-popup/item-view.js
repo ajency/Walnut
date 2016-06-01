@@ -23,8 +23,8 @@ define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-
         }
       };
 
-      RecipientsItemView.prototype.onShow = function() {
-        return console.log("adi");
+      RecipientsItemView.prototype.initialize = function() {
+        return console.log(this.model.attributes);
       };
 
       RecipientsItemView.prototype.onShowPreview = function(preview_data) {

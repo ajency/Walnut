@@ -41,6 +41,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.getPreview = function(recipient) {
         var data, defer, url;
+        console.log(this.toJSON());
         url = AJAXURL + '?action=get-communication-preview';
         data = this.toJSON();
         data.additional_data.preview_recipient = recipient.toJSON();

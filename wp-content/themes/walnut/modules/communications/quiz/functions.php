@@ -86,6 +86,9 @@ function add_quiz_published_parent_mail($data, $comm_data){
 
     global $aj_comm;
 
+    file_put_contents("aaaaaaaa.txt", print_r($data, true));
+    file_put_contents("aaaaaaaab.txt", print_r($comm_data, true));
+
     $meta = $data['additional_data'];
 
     $meta_data['division'] = $meta['division']; 
@@ -422,6 +425,8 @@ function prepare_quiz_summary_parent_mail_recipients($data){
 
 function prepare_quiz_published_parent_mail_recipients($data){
 
+    file_put_contents("fwwwilename.txt", print_r($data, true));
+
     $recipients= array();
 
     #$division = $data['additional_data']['division'];
@@ -534,7 +539,7 @@ function quiz_summary_parent_mail_preview($data){
 //preview of email for selected quizes
 function quiz_published_parent_mail_preview($data){
 
-    file_put_contents("fwwwilename.txt", "data");
+    #file_put_contents("fwwwilename.txt", print_r($data, true));
 
     require_once get_template_directory()."/ajcm_components/quiz.php";
 

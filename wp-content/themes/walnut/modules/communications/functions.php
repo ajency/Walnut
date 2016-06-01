@@ -39,6 +39,7 @@ add_filter('add_commponents_filter','add_communication_components',10,1);
 
 function ajax_add_communication_to_queue() {
 
+    file_put_contents("aaapost.txt", print_r($_POST, true));
     $functionName = 'add_'.$_POST['communication_type'];
 
     if (function_exists($functionName)){
@@ -200,7 +201,7 @@ function ajax_get_communication_preview(){
     
     global $aj_comm;
 
-    file_put_contents("comm.txt", "this is post data ".$_POST['communication_type']."\n");
+    file_put_contents("comm.txt", print_r($_POST, true));
 
     $functionName = $_POST['communication_type'].'_preview';
 

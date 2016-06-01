@@ -29,8 +29,8 @@
                     $(e.target).find('i').removeClass 'none'
                     @trigger "preview:email", @model.id
 
-            onShow:->
-                console.log "adi"
+            initialize:->
+                console.log @model.attributes
 
             onShowPreview:(preview_data)->
                 @$el.find('.email-preview i').addClass 'none'

@@ -682,7 +682,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     foreach ($summid as $summID) {
    
-    $maks_scored_hist = $wpdb->prepare("SELECT SUM(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
+    $maks_scored_hist = $wpdb->prepare("SELECT avg(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
 
     $marks_hist = $wpdb->get_col($maks_scored_hist);
         $marks_historical[] = $marks_hist; 
@@ -733,7 +733,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
      foreach ($sum as $summary_id) {
         //fetch the marks
-            $maks_scored = $wpdb->prepare("SELECT SUM(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
+            $maks_scored = $wpdb->prepare("SELECT avg(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
 
             $mak = $wpdb->get_col($maks_scored);
 
@@ -781,20 +781,22 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     $additional_details_qry = $wpdb->prepare(
         "SELECT
-            SUM(marks_scored) as total_marks_scored,
+            avg(marks_scored) as total_marks_scored,
 
-            SUM(
+            avg(
                 CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as negative_scored,
 
-            SUM(
+            avg(
                CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as marks_scored,
 
-            SUM(time_taken) as total_time_taken
+            avg(time_taken) as total_time_taken
             FROM {$wpdb->prefix}quiz_question_response
-        WHERE summary_id = %s", $quiz_response_summary->summary_id
+        WHERE summary_id = %s", $summ_id
     );
+
+    file_put_contents("arr.txt", $additional_details_qry);
 
     $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
 

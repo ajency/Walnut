@@ -336,6 +336,8 @@ class CommunicationModule{
          * @return int|false|WP_Error comm_id on successful add. WP_Error on insert error.
          */
         public function create_communication($args = '',$meta = array(),$recipients_args=''){
+
+        	file_put_contents("aaaafilename.txt", print_r($recipients_args, true));
             $comm_id = $this->communication_add($args,$meta);
             
             // if communication id is added add communication recipients

@@ -10,7 +10,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
         return RecipientsView.__super__.constructor.apply(this, arguments);
       }
 
-      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Recipient Name (Parents)</th> <th>Recipient Email</th> <th>Student Name</th> <th>Quiz</th> <th></th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Email </button>';
+      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Recipient Name (Parents)</th> <th>Recipient Email</th> <th>Student Name</th> <th>Quiz</th> <th></th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Email </button> <p class="email_specific m-l-40 text-default" style="font-size:15px;">&nbsp;</p>';
 
       RecipientsView.prototype.itemView = Views.RecipientsItemView;
 
@@ -33,11 +33,10 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
       };
 
       RecipientsView.prototype.onShow = function() {
-        console.log(this.model.get('communication_type'));
-        this.$el.find('#check_all_div').trigger('click');
-        if ((this.model.get('communication_type' === 'quiz_published_parent_mail')) || (this.model.get('communication_type' === 'quiz_summary_parent_mail'))) {
-          return this.$el.find('.send-email').after('<span class="m-l-40 text-success small "> &nbsp;&nbsp;*The Emails will be sent to the entire class. One student is randomly picked for email preview</span>');
+        if ((this.model.get('communication_type') === 'quiz_published_parent_mail') || (this.model.get('communication_type') === 'quiz_summary_parent_mail')) {
+          this.$el.find('.email_specific').text('*The Emails will be sent to the entire class. One student is randomly picked for email preview');
         }
+        return this.$el.find('#check_all_div').trigger('click');
       };
 
       RecipientsView.prototype.showSubmitButton = function() {
@@ -49,31 +48,13 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
       };
 
       RecipientsView.prototype.sendEmail = function() {
-        var additional_data, allCheckedRecipients, data, defer, raw_recipients, url;
+        var additional_data, allCheckedRecipients, data, defer, div_id, quiz_ids, raw_recipients, url;
         console.log(this.model);
-        console.log(this.data);
+        console.log(this.model.get('additional_data'));
+        additional_data = this.model.get('additional_data');
+        quiz_ids = additional_data['quiz_ids'];
+        div_id = additional_data['division'];
         this.$el.find('.communication_sent').remove();
-        if (this.model.get('communication_type' === 'quiz_published_parent_mail' || this.model.get('communication_type' === 'quiz_summary_parent_mail'))) {
-          data = {
-            component: 'quiz',
-            communication_type: this.model.get('communication_type'),
-            communication_mode: data.communication_mode,
-            additional_data: {
-              quiz_ids: data.quizIDs,
-              division: null
-            }
-          };
-          url = AJAXURL + '?action=get-communication-recipients';
-          data = this.toJSON();
-          defer = $.Deferred();
-          $.post(url, data, (function(_this) {
-            return function(response) {
-              console.log(response);
-              return defer.resolve(response);
-            };
-          })(this));
-          'json';
-        }
         allCheckedRecipients = _.map($.getCheckedItems(this.$el.find('table')), function(m) {
           return parseInt(m);
         });
@@ -83,14 +64,86 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
           };
         })(this));
         console.log(raw_recipients);
-        if (!_.isEmpty(raw_recipients)) {
-          additional_data = this.model.get('additional_data');
-          additional_data.raw_recipients = raw_recipients;
-          console.log(this.model);
-          this.model.save();
-          return this.$el.find('.send-email').after('<span class="m-l-40 text-success small communication_sent"> Your Emails have been queued successfully</span>');
-        } else {
-          return this.$el.find('.send-email').after('<span class="m-l-40 text-error small communication_sent"> No Recipients Selected</span>');
+        if (div_id === null) {
+          div_id = raw_recipients.student_division;
+          console.log(div_id);
+        }
+        if ((this.model.get('communication_type') === 'quiz_published_parent_mail') || (this.model.get('communication_type') === 'quiz_summary_parent_mail')) {
+          allCheckedRecipients = _.map($.getCheckedItems(this.$el.find('table')), function(m) {
+            return parseInt(m);
+          });
+          raw_recipients = _.map(allCheckedRecipients, (function(_this) {
+            return function(id, index) {
+              return _this.collection.get(id).toJSON();
+            };
+          })(this));
+          data = {
+            component: 'quiz',
+            communication_type: this.model.get('communication_type'),
+            communication_mode: this.model.get('communication_mode'),
+            priority: 0,
+            recipients: [],
+            additional_data: {
+              quiz_ids: quiz_ids,
+              division: div_id
+            },
+            status: "OK"
+          };
+          console.log(data);
+          url = AJAXURL + '?action=get-communication-recipients';
+          defer = $.Deferred();
+
+          /*dataResponse =  $.post url, 
+                              data, (response, status) =>
+                                  console.log response
+                                  #response = response
+                                  defer.resolve response
+                              'json'
+                          defer.promise()
+           */
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            dataType: 'json',
+            async: true,
+            success: (function(_this) {
+              return function(response, textStatus, jqXHR) {
+                var comm;
+                console.log(textStatus);
+                console.log(jqXHR);
+                allCheckedRecipients = _.map($.getCheckedItems(_this.$el.find('table')), function(m) {
+                  return parseInt(m);
+                });
+                raw_recipients = _.map(allCheckedRecipients, function(id, index) {
+                  return _this.collection.get(id).toJSON();
+                });
+                console.log(response);
+                additional_data = _this.model.get('additional_data');
+                additional_data.raw_recipients = raw_recipients;
+                console.log(_this.model);
+                comm = _this.model.get('communication_id');
+                additional_data.raw_recipients = response;
+                console.log(_this.model);
+                _this.model.save();
+                return _this.$el.find('.send-email').after('<p class="m-l-40 text-success small communication_sent"> &nbsp;Your Emails have been queued successfully</p>');
+              };
+            })(this)
+          });
+        }
+        if ((this.model.get('communication_type') !== 'quiz_published_parent_mail') && (this.model.get('communication_type') !== 'quiz_summary_parent_mail')) {
+          if (!_.isEmpty(raw_recipients)) {
+            additional_data = this.model.get('additional_data');
+            console.log(additional_data);
+            console.log(raw_recipients);
+            additional_data.raw_recipients = raw_recipients;
+            console.log(this.model);
+            this.model.save();
+            console.log(this.model);
+            return this.$el.find('.send-email').after('<p class="m-l-40 text-success small communication_sent"> &nbsp;Your Emails have been queued successfully</p>');
+          } else {
+            return this.$el.find('.send-email').after('<p class="m-l-40 text-error small communication_sent"> &nbsp;No Recipients Selected</p>');
+          }
         }
       };
 
