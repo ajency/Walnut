@@ -200,7 +200,7 @@ $subsectionSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($subsectionSheet);
 $subsectionSheet->setTitle('SubSection');
 $subsectionSheet->fromArray($data_subsect, null, 'A1');
-$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+$subsectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $subsection_data = array();
