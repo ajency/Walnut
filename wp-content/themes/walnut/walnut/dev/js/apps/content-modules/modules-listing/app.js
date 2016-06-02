@@ -129,6 +129,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         });
       };
 
+
+      /*_showSelectRecipientsApp:(communicationModel)->
+      				console.log communicationModel
+      				App.execute "show:quiz:select:recipients:popup",
+                      region               : App.dialogRegion
+                      communicationModel   : communicationModel
+       */
+
       return ListController;
 
     })(RegionController);

@@ -137,7 +137,7 @@
                     });
 
 
-                if ( (this.model.get('communication_type') != 'quiz_published_parent_mail') && (this.model.get('communication_type') != 'quiz_summary_parent_mail'))
+                if ( (this.model.get('communication_type') != 'quiz_summary_parent_mail'))
                     if not _.isEmpty raw_recipients
                         #console.log dataResponse.responseJSON
                         #raw_recipients = response.responseJSON

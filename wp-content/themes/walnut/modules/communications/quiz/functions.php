@@ -86,8 +86,8 @@ function add_quiz_published_parent_mail($data, $comm_data){
 
     global $aj_comm;
 
-    file_put_contents("aaaaaaaa.txt", print_r($data, true));
-    file_put_contents("aaaaaaaab.txt", print_r($comm_data, true));
+    #file_put_contents("aaaaaaaa.txt", print_r($data, true));
+    #file_put_contents("aaaaaaaab.txt", print_r($comm_data, true));
 
     $meta = $data['additional_data'];
 

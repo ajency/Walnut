@@ -131,7 +131,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
             })(this)
           });
         }
-        if ((this.model.get('communication_type') !== 'quiz_published_parent_mail') && (this.model.get('communication_type') !== 'quiz_summary_parent_mail')) {
+        if (this.model.get('communication_type') !== 'quiz_summary_parent_mail') {
           if (!_.isEmpty(raw_recipients)) {
             additional_data = this.model.get('additional_data');
             console.log(additional_data);

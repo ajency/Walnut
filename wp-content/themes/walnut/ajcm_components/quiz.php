@@ -177,8 +177,7 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
     global $aj_comm;
 
-    file_put_contents("getvarsReci.txt", print_r($comm_data, true));
-    file_put_contents("getVarsComm.txt", print_r($recipients, true));
+    file_put_contents("a3.txt", print_r($recipients, true));
     $template_data['name']      = 'quiz-published-parent-mail';
 
     $blog_data= get_blog_details($comm_data['blog_id'], true);
@@ -208,15 +207,17 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
         $student_ids = get_user_meta($user->user_id, 'parent_of', true);
 
-        $student_ids = get_parent_of_formated($student_ids);
+        #$student_ids = get_parent_of_formated($student_ids);
 
-            foreach($student_ids as $child){
-                $student    = get_userdata($child);
+            #foreach($student_ids as $child){
+
+                file_put_contents("a6.txt", print_r($user->user_id, true));
+                $student    = get_userdata($user->user_id);
 
                 $student_division = get_user_meta($student->ID,'student_division', true);
-
-                 if($division != $student_division)
-                     continue;
+                file_put_contents("a7.txt", print_r($student_division, true));
+                # if($division != $student_division)
+                #     continue;
 
                 $overwrite_vars = array();
 
@@ -233,7 +234,7 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
                     'vars' => $overwrite_vars
                 ) ;
 
-            }
+            #}
 
         }
 
@@ -374,9 +375,16 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
     switch_to_blog($comm_data['blog_id']);
 
     $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
+    file_put_contents("b1.txt", print_r($school_admin, true));
+    file_put_contents("b2.txt", print_r($quiz_id, true));
+
 
     $quiz_details= get_single_quiz_module($quiz_id,$school_admin);
-
+    file_put_contents("b3.txt", print_r($quiz_details, true));
+    if ($comm_data['communication_type'] == 'quiz_published_parent_mail'){
+        $quiz_details= get_single_quiz_module($quiz_id, $comm_data['user_id']);
+        file_put_contents("b3.txt", print_r($quiz_details, true));
+    }
 
     $terms= $quiz_details->term_ids;
 
@@ -414,6 +422,8 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
     $data[] = get_mail_header($comm_data['blog_id']);
     $data[] = get_mail_footer($comm_data['blog_id']);
     switch_to_blog($current_blog);
+
+    file_put_contents("a5.txt", print_r($data, true));
     return $data;
 
 }
@@ -638,7 +648,7 @@ function get_quiz_summary_data($quiz_id, $student_id, $quizz_type=''){
     $data[] = array('name' => 'DATE',           'content' => date('d M Y', strtotime($summary->taken_on)));
     $data[] = array('name' => 'ATTEMPTS',       'content' => $quiz_status['attempts']);
 
-    #file_put_contents('log_tempa.txt', print_r($data, true));
+    file_put_contents('a8.txt', print_r($data, true));
 
     return $data;
 

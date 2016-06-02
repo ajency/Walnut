@@ -106,6 +106,12 @@ define ['app'
 					new ContentPiecesLayout
 						groupType : @groupType
 
+				###_showSelectRecipientsApp:(communicationModel)->
+				console.log communicationModel
+				App.execute "show:quiz:select:recipients:popup",
+                    region               : App.dialogRegion
+                    communicationModel   : communicationModel###
+
 
 			class ContentPiecesLayout extends Marionette.Layout
 				template : '<div class="grid-title no-border">

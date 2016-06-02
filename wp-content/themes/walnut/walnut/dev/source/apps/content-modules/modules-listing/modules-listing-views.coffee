@@ -268,6 +268,8 @@ define ['app'
 				console.log data.quizIDs
 				data.division = @$el.find '#divisions-filter'
                         .val()
+				console.log @$el.find '#divisions-filter'
+                		.val()
 				if $(e.target).hasClass 'send-email'
                     data.communication_mode = 'email'
                 else

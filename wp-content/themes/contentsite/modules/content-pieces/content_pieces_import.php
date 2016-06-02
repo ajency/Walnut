@@ -23,7 +23,7 @@ function theme_add_csv_components($defined_csv_components){
 add_filter('add_csv_components_filter','theme_add_csv_components',10,1);
 
 function import_csv_mcq_record($import_response,$record){
-
+    file_put_contents("abc.txt", $import_response);
     require_once 'ImportContentPiece/ImportMCQ.php';
     $importMCQ = new ImportMCQ($record);
     $response  = $importMCQ->import($import_response);

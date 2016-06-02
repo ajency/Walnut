@@ -337,7 +337,7 @@ class CommunicationModule{
          */
         public function create_communication($args = '',$meta = array(),$recipients_args=''){
 
-        	file_put_contents("aaaafilename.txt", print_r($recipients_args, true));
+        	#file_put_contents("aaaafilename.txt", print_r($recipients_args, true));
             $comm_id = $this->communication_add($args,$meta);
             
             // if communication id is added add communication recipients
@@ -624,6 +624,7 @@ class CommunicationModule{
         public function get_communication_meta($comm_id,$meta_key){
             global $wpdb;
 
+            $myfile = fopen("a4.txt", "a");
             $comm_meta_table_query = $wpdb->prepare(
                 "SELECT meta_value FROM $wpdb->ajcm_communication_meta
                         WHERE communication_id = %d AND meta_key=%s",
@@ -633,7 +634,8 @@ class CommunicationModule{
             $meta_value=$wpdb->get_var($comm_meta_table_query);
 
             $meta_value = maybe_unserialize($meta_value);
-
+            fwrite($myfile, $meta_value);
+            fclose($myfile);
             return $meta_value;
         }
         
@@ -642,6 +644,8 @@ class CommunicationModule{
          */
         public function cron_process_communication_queue(){
             global $wpdb;
+
+           file_put_contents("a.txt", "cron job started");
            
            // get all the communications which are needed to be processed 
            $pending_comms = $this->get_communications('queued');
@@ -709,7 +713,7 @@ class CommunicationModule{
          * @param array $comm_data data about the communication to be processed (id,component,communication_type)
          */
         public function procces_communication($comm_data){
-        	#file_put_contents("ajcm.txt", print_r($comm_data, true));
+        	file_put_contents("a1.txt", print_r($comm_data, true));
             global $wpdb;
             // group recipients based on communication type email/sms
             $recipients_email = $recipients_sms = array();
@@ -731,6 +735,7 @@ class CommunicationModule{
             }
             
             if(!empty($recipients_email)){
+            	file_put_contents("a2.txt", print_r($recipients_email, true));
                 //$template_data = $this->get_template_details($recipients_email,$comm_data);
                 $template_data = $this->get_email_template_details($recipients_email,$comm_data);
                 $this->send_recipient_email($recipients_email,$comm_data,'mandrill',$template_data);
