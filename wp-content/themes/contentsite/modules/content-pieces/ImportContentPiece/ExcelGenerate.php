@@ -112,7 +112,7 @@ $chapterSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($chapterSheet);
 $chapterSheet->setTitle('Chapter');
 $chapterSheet->fromArray($data_chap, null, 'A1');
-$chapterSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+//$chapterSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $chapter_data = array();
@@ -157,7 +157,7 @@ $sectionSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($sectionSheet);
 $sectionSheet->setTitle('Section');
 $sectionSheet->fromArray($data_sect, null, 'A1');
-$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+//$sectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $section_data = array();
@@ -200,7 +200,7 @@ $subsectionSheet = new PHPExcel_Worksheet($objPHPExcel);
 $objPHPExcel->addSheet($subsectionSheet);
 $subsectionSheet->setTitle('SubSection');
 $subsectionSheet->fromArray($data_subsect, null, 'A1');
-$subsectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
+//$subsectionSheet->setSheetState(PHPExcel_Worksheet::SHEETSTATE_HIDDEN);
 
 
 $subsection_data = array();
