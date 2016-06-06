@@ -547,7 +547,7 @@ function quiz_summary_parent_mail_preview($data){
     $blog_data= get_blog_details($comm_data['blog_id'], true);
     $template_data['merge_vars'][]=array(
         'name'      => 'BLOG_URL',
-        'content'   => '<a href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+        'content'   => '<a href="'.$blog_data->siteurl.'">Click here</a>'
     );
    file_put_contents("atemplate_data.txt", print_r($template_data, true));
     return $template_data;
