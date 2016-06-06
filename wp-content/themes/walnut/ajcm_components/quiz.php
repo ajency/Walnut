@@ -190,7 +190,7 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
     $quiz_id   = $aj_comm->get_communication_meta($comm_data['id'],'quiz_id');
 
-    file_put_contents("a3.txt", print_r($quiz_id, true));
+    #file_put_contents("a3.txt", print_r($quiz_id, true));
 
     $division = $aj_comm->get_communication_meta($comm_data['id'],'division');
 
@@ -198,7 +198,7 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
     $template_data['global_merge_vars'][]=array(
         'name'      => 'BLOG_URL',
-        'content'   => '<a target="_blank" href="'.$blog_data->siteurl.'">'.$blog_data->blogname.'</a>'
+        'content'   => '<a target="_blank" href="'.$blog_data->siteurl.'">Click here</a>'
     );
 
     switch_to_blog($comm_data['blog_id']);
@@ -213,11 +213,11 @@ function getvars_quiz_published_parent_mail($recipients,$comm_data){
 
             #foreach($student_ids as $child){
 
-                file_put_contents("a6.txt", print_r($user->user_id, true));
+                #file_put_contents("a6.txt", print_r($user->user_id, true));
                 $student    = get_userdata($user->user_id);
 
                 $student_division = get_user_meta($student->ID,'student_division', true);
-                file_put_contents("a7.txt", print_r($student_division, true));
+                #file_put_contents("a7.txt", print_r($student_division, true));
                 # if($division != $student_division)
                 #     continue;
 
