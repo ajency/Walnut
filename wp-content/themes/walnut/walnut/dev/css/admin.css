@@ -131,9 +131,34 @@
 }
 
 
+/* ---------------------------
+   QUIZ SEARCH ALLIGNED  -----------
+ ---------------------------
+*/
+    
 
+.flexContainer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.flexContainer .flexChild{
+    margin: 0 5px;
+}
 
+.flexContainer .flexChild .input-append{
+	display: flex;
+}
 
+.flexContainer .flexChild .input-append > input[type="text"]{
+	width: 80%;
+}
+
+.flexContainer .flexChild .input-append .dropdown-menu{
+	top: 40px !important;
+    height: 260px;
+    text-align: center;
+}
 
 
 
