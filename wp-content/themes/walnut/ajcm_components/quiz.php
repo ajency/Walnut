@@ -341,7 +341,7 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
 
                 $overwrite_vars = array();
 
-                $overwrite_vars = get_quiz_summary_report_data($comm_data, $quiz_id, $user, $division);
+                $overwrite_vars = get_quiz_summary_report_data($comm_data, $quiz_id, $user->user_id, $division);
 
                 $overwrite_vars[] = array(
                     'name' => 'STUDENT_NAME',
@@ -359,6 +359,8 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
         }
 
     restore_current_blog();
+
+    file_put_contents("amain_template.txt", print_r($template_data, true));
 
     return $template_data;
 
@@ -702,6 +704,12 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     $marks_below='';
     $current_student_max_quizes = '';
     $current_student_id = $student_id;
+    $studs_taken_quiz = '';
+
+    $myfile = fopen("Aaa1.txt", "a");
+    fwrite($myfile, $student_id."\n");
+    fclose($myfile);
+
 
     #file_put_contents("a11.txt", print_r($comm_data, true));
     #file_put_contents("a12.txt", print_r($quiz_id, true));
@@ -731,8 +739,10 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
                     WHERE taken_on BETWEEN %s AND %s
                     AND quiz_meta like %s
                     AND student_id = %d
-                    AND collection_id in ($quizids)", $start_date, $end_date, '%completed%', $student);
+                    AND collection_id in ($quizids)", $start_date, $end_date, '%completed%', $student_id);
     $stud_quiz_data = $wpdb->get_col($query0);
+    $myfile = 
+    file_put_contents("a1.txt", $query0);
 
     if ($stud_quiz_data == '') {
         $quizzes_taken_by_stud = 0;
@@ -767,7 +777,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
                 AND summary.quiz_meta like %s
                 AND summary.student_id = %d
                 AND summary.collection_id in ($quizids)
-                AND meta.meta_key = 'quiz_meta'", $start_date, $end_date, '%completed%', $student);
+                AND meta.meta_key = 'quiz_meta'", $start_date, $end_date, '%completed%', $student_id);
 
     #file_put_contents("a1.txt", $query3);
 
@@ -794,10 +804,10 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     switch_to_blog(1);
     $textbook_id = $term_ids['textbook'];
     $my_max_subj_name = get_term_field('name', $textbook_id, 'textbook');
-
+    switch_to_blog($current_blog_id);
     
     #file_put_contents("asssss2.txt", $current_blog_id);
-    switch_to_blog($current_blog_id);
+    
 
     
 
@@ -839,7 +849,8 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
 
     foreach ($student_ids as $student) {
-            // max qiuz taker
+    
+    // max qiuz taker
     $query1 = $wpdb->prepare(" SELECT count(DISTINCT summary.collection_id) as collection_id, summary.student_id, users.display_name
                     FROM {$wpdb->prefix}quiz_response_summary as summary
                     LEFT JOIN {$wpdb->base_prefix}users as users
@@ -851,6 +862,11 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
     $summary_data_all[] = $wpdb->get_row($query1);
     }
+
+    if($summary_data_all == '' || $summary_data_all == null)
+        $studs_taken_quiz = '';
+    else
+        $studs_taken_quiz = 'taken';
 
 
     file_put_contents("a2.txt", print_r($summary_data_all, true));
@@ -870,6 +886,11 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
         }
     }
 
+    #$max_quiz_taker_id = implode("", $max_quiz_taker_id);
+
+    $myfile = fopen("Aaa2.txt", "a");
+    fwrite($myfile, $max_quiz_taker_id."\n");
+    fclose($myfile);
 
     #file_put_contents("a3.txt", print_r($summary_data_all[$key], true));
 
@@ -907,11 +928,11 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     $current_blog_id = get_current_blog_id();
 
     switch_to_blog(1);
-
     $textbook_id = $term_ids['textbook'];
-
     $textbook_name = get_term_field('name', $textbook_id, 'textbook');
-    #switch_to_blog($current_blog_id);
+    switch_to_blog($current_blog_id);
+
+    #$class_top_scorer_id = implode("", $class_top_scorer_id);
 
     if($class_top_scorer_id == $current_student_id)
         $current_student_top_scorer = 'true';
@@ -935,6 +956,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
      $data[] = array('name' => 'MAX_SCORE_SUBJECT_NAME',   'content' => $textbook_name);
      $data[] = array('name' => 'MY_MAX_SUBJECT_NAME',   'content' => $my_max_subj_name);
      $data[] = array('name' => 'CLASS_TOP_SCORER',   'content' => $class_top_scorer_name);
+     $data[] = array('name' => 'STUDENTS_HAV_TAKEN_QUIZ',   'content' => $studs_taken_quiz);
 
      file_put_contents("a3.txt", print_r($data, true));
 

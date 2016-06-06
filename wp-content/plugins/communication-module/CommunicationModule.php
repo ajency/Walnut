@@ -839,6 +839,8 @@ class CommunicationModule{
             $communication_type = str_replace("-","_",$comm_data['communication_type']);
             $function_name = 'getvars_'.$communication_type;
             $template_data = $function_name($recipients_email,$comm_data);
+
+            file_put_contents("ajcm_template.txt", print_r($template_data, true));
             
             return $template_data;
         }
