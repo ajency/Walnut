@@ -305,8 +305,10 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
 
     $end_date = $aj_comm->get_communication_meta($comm_data['id'],'end_date');
 
-    $comm_data[] = array('start_date' => $start_date,
-                         'end_date' => $end_date, );
+    $comm_data['start_date'] = $start_date;
+
+    $comm_data['end_date'] = $end_date;
+
 
     #$template_data['global_merge_vars'] = get_quiz_template_data($comm_data,$quiz_id);
 
@@ -323,19 +325,23 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
 
         $student_ids = get_user_meta($user->user_id, 'parent_of', true);
 
-        $student_ids = get_parent_of_formated($student_ids);
+       # $student_ids = get_parent_of_formated($student_ids);
 
-            foreach($student_ids as $child){
-                $student    = get_userdata($child);
+        #file_put_contents("aweewew.txt", print_r($student_ids, true));
+
+            #foreach($student_ids as $child){
+                $student    = get_userdata($user->user_id);
+
+                file_put_contents("a11.txt", print_r($student, true));
 
                 $student_division = get_user_meta($student->ID,'student_division', true);
 
-                 if($division != $student_division)
-                     continue;
+                #if($division != $student_division)
+                    #continue;
 
                 $overwrite_vars = array();
 
-                $overwrite_vars = get_quiz_summary_report_data($comm_data, $quiz_id, $child, $division);
+                $overwrite_vars = get_quiz_summary_report_data($comm_data, $quiz_id, $user, $division);
 
                 $overwrite_vars[] = array(
                     'name' => 'STUDENT_NAME',
@@ -348,7 +354,7 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
                     'vars' => $overwrite_vars
                 ) ;
 
-            }
+            #}
 
         }
 
@@ -697,11 +703,11 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     $current_student_max_quizes = '';
     $current_student_id = $student_id;
 
-    #file_put_contents("a1.txt", print_r($comm_data, true));
-    #file_put_contents("a2.txt", print_r($quiz_id, true));
-    #file_put_contents("a3.txt", print_r($student_id, true));
-    #file_put_contents("a4.txt", print_r($division, true));
-    #file_put_contents("a5.txt", print_r($quizz_type, true));
+    #file_put_contents("a11.txt", print_r($comm_data, true));
+    #file_put_contents("a12.txt", print_r($quiz_id, true));
+    #file_put_contents("a13.txt", print_r($student_id, true));
+    #file_put_contents("a14.txt", print_r($division, true));
+    #file_put_contents("a15.txt", print_r($quizz_type, true));
     $data = array();
 
     /*$it = new RecursiveIteratorIterator(new RecursiveArrayIterator($quiz_id));
@@ -905,7 +911,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     $textbook_id = $term_ids['textbook'];
 
     $textbook_name = get_term_field('name', $textbook_id, 'textbook');
-    switch_to_blog($current_blog_id);
+    #switch_to_blog($current_blog_id);
 
     if($class_top_scorer_id == $current_student_id)
         $current_student_top_scorer = 'true';

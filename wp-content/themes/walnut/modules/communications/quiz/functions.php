@@ -160,6 +160,9 @@ function add_quiz_summary_parent_mail($data, $comm_data){
 
     $meta_data['quiz_id'] = $meta['quiz_ids'];
 
+    $meta_data['start_date'] = $meta['start_date'];
+    $meta_data['end_date'] = $meta['end_date'];
+
     foreach($meta['quiz_ids'] as $quiz_id){
         $recipients = array();
 
