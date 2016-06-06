@@ -94,6 +94,9 @@ class CommunicationModule{
                 
                 // hook function to check if defined components have component specific file  
                 add_action("admin_notices", array($this, "add_plugin_dashboard_notices") );
+
+                // hook function to add 
+                add_action("ajcm_process_summary_report", array($this, "cron_process_summary_report"));
                 
                  // hook to add a communication record on forgot password
                 //add_action("retrieve_password_key", array($this, "add_forgot_password_communication"),10,2);
@@ -336,7 +339,7 @@ class CommunicationModule{
          * @return int|false|WP_Error comm_id on successful add. WP_Error on insert error.
          */
         public function create_communication($args = '',$meta = array(),$recipients_args=''){
-
+        	#file_put_contents("az1.txt", print_r($meta, true));
         	#file_put_contents("aaaafilename.txt", print_r($recipients_args, true));
             $comm_id = $this->communication_add($args,$meta);
             
@@ -624,7 +627,9 @@ class CommunicationModule{
         public function get_communication_meta($comm_id,$meta_key){
             global $wpdb;
 
-            $myfile = fopen("a4.txt", "a");
+            #$myfile = fopen("a4.txt", "a");
+            #fwrite($myfile, print_r($comm_id, true));
+            #fwrite($myfile, print_r($meta_key, true));
             $comm_meta_table_query = $wpdb->prepare(
                 "SELECT meta_value FROM $wpdb->ajcm_communication_meta
                         WHERE communication_id = %d AND meta_key=%s",
@@ -634,8 +639,8 @@ class CommunicationModule{
             $meta_value=$wpdb->get_var($comm_meta_table_query);
 
             $meta_value = maybe_unserialize($meta_value);
-            fwrite($myfile, $meta_value);
-            fclose($myfile);
+            #fwrite($myfile, $meta_value);
+            #fclose($myfile);
             return $meta_value;
         }
         
@@ -645,7 +650,7 @@ class CommunicationModule{
         public function cron_process_communication_queue(){
             global $wpdb;
 
-           file_put_contents("a.txt", "cron job started");
+           #file_put_contents("a.txt", "cron job started");
            
            // get all the communications which are needed to be processed 
            $pending_comms = $this->get_communications('queued');
@@ -661,6 +666,34 @@ class CommunicationModule{
                }
            }
            
+        }
+
+        /*
+        * function to add summary report to communication
+        */
+        public function cron_process_summary_report(){
+
+        	global $wpdb;
+
+        	$start_date = "2015-07-01";
+        	$end_date = "2015-07-30";
+        	$query = $wpdb->prepare(" SELECT * 
+        			FROM {$wpdb->prefix}quiz_response_summary 
+        			WHERE taken_on BETWEEN %s AND %s
+        			AND quiz_meta like %s", $start_date, $end_date, '%completed%');
+        	// quiz_meta like '%completed%'
+        	#$query = $wpdb->prepare("SELECT DISTINCT collection_id FROM {$wpdb->prefix}quiz_response_summary WHERE taken_on BETWEEN '$start_date' AND '$end_date'");
+        	#file_put_contents("ajcm1.txt", $query);
+        	$quiz_data = $wpdb->get_results($query);
+
+        	#$myfile = fopen("ajcm.txt", "a");
+        	foreach ($quiz_data as $quiz) {
+        		
+        		#fwrite($myfile, print_r($quiz, true)."\n");
+
+        	}
+        	#fclose($myfile);
+        	
         }
         
         /*
@@ -713,7 +746,7 @@ class CommunicationModule{
          * @param array $comm_data data about the communication to be processed (id,component,communication_type)
          */
         public function procces_communication($comm_data){
-        	file_put_contents("a1.txt", print_r($comm_data, true));
+        	#file_put_contents("a1.txt", print_r($comm_data, true));
             global $wpdb;
             // group recipients based on communication type email/sms
             $recipients_email = $recipients_sms = array();
@@ -735,7 +768,7 @@ class CommunicationModule{
             }
             
             if(!empty($recipients_email)){
-            	file_put_contents("a2.txt", print_r($recipients_email, true));
+            	#file_put_contents("a2.txt", print_r($recipients_email, true));
                 //$template_data = $this->get_template_details($recipients_email,$comm_data);
                 $template_data = $this->get_email_template_details($recipients_email,$comm_data);
                 $this->send_recipient_email($recipients_email,$comm_data,'mandrill',$template_data);
@@ -1103,6 +1136,22 @@ class CommunicationModule{
         }
         
         public function get_email_preview($data){
+
+        	#file_put_contents("abc6.txt", print_r($data, true));
+        	/*$data = array('name' => 'products',
+        					 'content'=> array(
+        					 	'name'=> 'abc',
+        					 	'name'=> 'xyz'));
+
+        	$data  = array('template_name' =>'quiz-published-parent-mail',
+        					'template_content' => array(),
+        					'merge_vars'=> array('name' => 'products',
+        					 					  'content'=> array('name' => 'abc',
+        					 					  					'name' => 'xyz',),
+        					 					) ,
+
+        					);*/
+
 
         //	 $preview_data = array();
             // $preview_data['template_name'] =array();

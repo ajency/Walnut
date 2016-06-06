@@ -49,6 +49,19 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       };
 
       ModulesListingView.prototype.onShow = function() {
+        this.$el.find('#start_date').datetimepicker({
+          useCurrent: false,
+          format: 'YYYY-MM-DD'
+        });
+        this.$el.find('#end_date').datetimepicker({
+          useCurrent: false,
+          format: 'YYYY-MM-DD'
+        });
+        this.$el.find('#start_date').on('dp.change', (function(_this) {
+          return function(e) {
+            return $('#end_date').data('DateTimePicker').minDate(e.date);
+          };
+        })(this));
         this.$el.find('#content-pieces-table').tablesorter();
         return this.onUpdatePager();
       };
@@ -72,20 +85,28 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
-          return this.$el.find('.send-email, .send-sms, .send-summary').show();
+          return this.$el.find('.send-email, .send-sms').show();
         } else {
-          return this.$el.find('.send-email, .send-sms, .send-summary, .communication_sent').hide();
+          return this.$el.find('.send-email, .send-sms, .communication_sent').hide();
         }
       };
 
       ModulesListingView.prototype.saveSummaryCommunication = function(e) {
-        var allQuizIDs, data, excludeIDs;
+        var $end_date, $start_date, allQuizIDs, data, excludeIDs;
+        $start_date = this.$el.find('#start_date').val();
+        $end_date = this.$el.find('#end_date').val();
+        if ($start_date === '' || $end_date === '') {
+          return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> select start and end date</span>');
+        }
+        console.log($start_date);
+        console.log($end_date);
         console.log("summary");
         data = [];
         this.$el.find('.communication-sent').remove();
-        allQuizIDs = _.map($.getCheckedItems(this.$el.find('#content-pieces-table')), function(m) {
+        allQuizIDs = _.map($.getAllItems(this.$el.find('#content-pieces-table')), function(m) {
           return parseInt(m);
         });
+        console.log(allQuizIDs);
         excludeIDs = _.chain(this.collection.where({
           'taken_by': 0
         })).pluck('id').value();
@@ -98,9 +119,12 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         } else {
           data.communication_mode = 'sms';
         }
+        data.start_date = $start_date;
+        data.end_date = $end_date;
         if (_.isEmpty(data.quizIDs)) {
           return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
         } else {
+          console.log(data);
           return this.trigger("summary:communication", data);
         }
       };

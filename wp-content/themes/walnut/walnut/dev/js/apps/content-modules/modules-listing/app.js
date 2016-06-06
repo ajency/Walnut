@@ -92,12 +92,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
                 region: _this.layout.allContentRegion,
                 contentModulesCollection: _this.contentModulesCollection,
                 textbooksCollection: textbooksCollection,
-                groupType: _this.groupType
+                groupType: _this.groupType,
+                division: _this.division
               });
               return new ModulesListing.SearchResults.Controller({
                 region: _this.layout.searchResultsRegion,
                 textbooksCollection: textbooksCollection,
                 selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                division: _this.division,
                 groupType: _this.groupType
               });
             });
@@ -105,7 +107,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
               return _this.layout.allContentRegion.trigger("update:pager");
             });
 
-            /*@listenTo @layout.allContentRegion, "save:communications", (data)=>
+            /*@listenTo @view, "save:communications", (data)=>
                               
                                   data=
                                       component           : 'quiz'

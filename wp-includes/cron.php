@@ -370,6 +370,7 @@ function wp_get_schedules() {
 		'hourly'     => array( 'interval' => HOUR_IN_SECONDS,      'display' => __( 'Once Hourly' ) ),
 		'twicedaily' => array( 'interval' => 12 * HOUR_IN_SECONDS, 'display' => __( 'Twice Daily' ) ),
 		'daily'      => array( 'interval' => DAY_IN_SECONDS,       'display' => __( 'Once Daily' ) ),
+		'oncemonth'  => array('interval'  => 30 * DAY_IN_SECONDS,  'display' => __( 'Once a Month' ) ),
 	);
 	/**
 	 * Filter the non-default cron schedules.

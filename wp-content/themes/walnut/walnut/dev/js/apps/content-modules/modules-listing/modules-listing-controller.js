@@ -16,6 +16,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         var breadcrumb_items;
         console.log("here ModulesListing");
         this.contentModulesCollection = opts.contentModulesCollection, this.textbooksCollection = opts.textbooksCollection, this.groupType = opts.groupType;
+        console.log(opts);
         this.allChaptersCollection = null;
         breadcrumb_items = {
           'items': [
@@ -61,7 +62,6 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
               return _this.listenTo(_this.view, "save:communications", function(data) {
                 var communicationModel;
                 console.log("save:communication");
-                console.log(data);
                 data = {
                   component: 'quiz',
                   communication_type: 'quiz_published_parent_mail',
@@ -71,6 +71,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
                     division: null
                   }
                 };
+                console.log(data);
                 communicationModel = App.request("create:communication", data);
                 return _this._showSelectRecipientsApp(communicationModel);
               });

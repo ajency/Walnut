@@ -39,6 +39,12 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
         return this.$el.find('#check_all_div').trigger('click');
       };
 
+
+      /*mixinTemplateHelpers:->
+          quiz_component = true if (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail')
+          console.log quiz_component
+       */
+
       RecipientsView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
           return this.$el.find('.send-email').show();
@@ -65,18 +71,10 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
         })(this));
         console.log(raw_recipients);
         if (div_id === null) {
-          div_id = raw_recipients.student_division;
+          div_id = raw_recipients[0]['student_division'];
           console.log(div_id);
         }
         if ((this.model.get('communication_type') === 'quiz_published_parent_mail') || (this.model.get('communication_type') === 'quiz_summary_parent_mail')) {
-          allCheckedRecipients = _.map($.getCheckedItems(this.$el.find('table')), function(m) {
-            return parseInt(m);
-          });
-          raw_recipients = _.map(allCheckedRecipients, (function(_this) {
-            return function(id, index) {
-              return _this.collection.get(id).toJSON();
-            };
-          })(this));
           data = {
             component: 'quiz',
             communication_type: this.model.get('communication_type'),
@@ -93,13 +91,13 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
           url = AJAXURL + '?action=get-communication-recipients';
           defer = $.Deferred();
 
-          /*dataResponse =  $.post url, 
-                              data, (response, status) =>
-                                  console.log response
-                                  #response = response
-                                  defer.resolve response
-                              'json'
-                          defer.promise()
+          /*$.post url, 
+              data, (response, status) =>
+                  console.log response
+                  #response = response
+                  defer.resolve response
+              'json'
+          defer.promise()
            */
           $.ajax({
             type: 'POST',
@@ -110,34 +108,53 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
             success: (function(_this) {
               return function(response, textStatus, jqXHR) {
                 var comm;
-                console.log(textStatus);
-                console.log(jqXHR);
                 allCheckedRecipients = _.map($.getCheckedItems(_this.$el.find('table')), function(m) {
                   return parseInt(m);
                 });
                 raw_recipients = _.map(allCheckedRecipients, function(id, index) {
                   return _this.collection.get(id).toJSON();
                 });
-                console.log(response);
+                console.log(raw_recipients);
+                console.log(raw_recipients);
                 additional_data = _this.model.get('additional_data');
+                console.log(additional_data);
                 additional_data.raw_recipients = raw_recipients;
-                console.log(_this.model);
                 comm = _this.model.get('communication_id');
                 additional_data.raw_recipients = response;
                 console.log(_this.model);
                 _this.model.save();
+                if (_this.model.get('communication_type') === 'quiz_published_parent_mail') {
+                  data = {
+                    component: 'quiz',
+                    communication_type: 'quiz_published_parent_mail',
+                    communication_mode: 'email',
+                    priority: 0,
+                    recipients: [],
+                    additional_data: {
+                      quiz_ids: quiz_ids,
+                      division: null,
+                      raw_recipients: response
+                    }
+                  };
+                  url = AJAXURL + '?action=create-communications';
+                  $.post(url, data, function(response, status) {
+                    console.log(response);
+                    return defer.resolve(response);
+                  }, 'json');
+                  defer.promise();
+                }
                 return _this.$el.find('.send-email').after('<p class="m-l-40 text-success small communication_sent"> &nbsp;Your Emails have been queued successfully</p>');
               };
             })(this)
           });
         }
-        if (this.model.get('communication_type') !== 'quiz_summary_parent_mail') {
+        if ((this.model.get('communication_type') !== 'quiz_summary_parent_mail') && (this.model.get('communication_type') !== 'quiz_published_parent_mail')) {
           if (!_.isEmpty(raw_recipients)) {
             additional_data = this.model.get('additional_data');
             console.log(additional_data);
             console.log(raw_recipients);
             additional_data.raw_recipients = raw_recipients;
-            console.log(this.model);
+            console.log(this.odel);
             this.model.save();
             console.log(this.model);
             return this.$el.find('.send-email').after('<p class="m-l-40 text-success small communication_sent"> &nbsp;Your Emails have been queued successfully</p>');

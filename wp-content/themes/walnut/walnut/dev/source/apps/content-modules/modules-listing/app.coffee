@@ -79,16 +79,18 @@ define ['app'
 								contentModulesCollection: @contentModulesCollection
 								textbooksCollection: textbooksCollection
 								groupType : @groupType
+								division: @division
 
 							new ModulesListing.SearchResults.Controller
 								region: @layout.searchResultsRegion
 								textbooksCollection: textbooksCollection
 								selectedFilterParamsObject: @selectedFilterParamsObject
+								division: @division
 								groupType : @groupType
 
 						@listenTo @layout.filtersRegion, "update:pager",=> @layout.allContentRegion.trigger "update:pager"
 
-						###@listenTo @layout.allContentRegion, "save:communications", (data)=>
+						###@listenTo @view, "save:communications", (data)=>
                         
                             data=
                                 component           : 'quiz'

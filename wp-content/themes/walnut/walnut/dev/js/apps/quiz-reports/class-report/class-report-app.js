@@ -135,7 +135,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                 communication_mode: data.communication_mode,
                 additional_data: {
                   quiz_ids: data.quizIDs,
-                  division: _this.division
+                  division: _this.division,
+                  start_date: data.start_date,
+                  end_date: data.end_date
                 }
               };
               console.log(data);

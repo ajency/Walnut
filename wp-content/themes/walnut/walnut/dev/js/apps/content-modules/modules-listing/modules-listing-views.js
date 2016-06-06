@@ -304,7 +304,9 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ModulesListingView.prototype.onShow = function() {
-        var textbookFiltersHTML;
+        var division, textbookFiltersHTML;
+        division = this.$el.find('#s2id_divisions-filter').html();
+        console.log(division);
         textbookFiltersHTML = $.showTextbookFilters({
           textbooks: this.textbooksCollection
         });
@@ -328,7 +330,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         data.quizIDs = allQuizIDs;
         console.log(data.quizIDs);
         data.division = this.$el.find('#divisions-filter').val();
-        console.log(this.$el.find('#divisions-filter')).val();
         if ($(e.target).hasClass('send-email')) {
           data.communication_mode = 'email';
         } else {

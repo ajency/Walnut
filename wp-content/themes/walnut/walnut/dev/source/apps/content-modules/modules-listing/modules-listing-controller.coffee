@@ -11,6 +11,7 @@ define ['app'
 				console.log "here ModulesListing"
 
 				{ @contentModulesCollection,@textbooksCollection,@groupType } = opts
+				console.log opts
 				
 				@allChaptersCollection = null
 
@@ -29,6 +30,7 @@ define ['app'
 						.unique()
 						.compact()
 						.value()
+
 
 					#all chapter names in this set of contentModulesscollection
 					@allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
@@ -53,7 +55,7 @@ define ['app'
 						#new quiz email
 						@listenTo @view, "save:communications", (data)=>
                         	console.log "save:communication"
-                        	console.log data
+                        	#console.log data
                         	data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_published_parent_mail'
@@ -61,7 +63,7 @@ define ['app'
                                 additional_data:
                                     quiz_ids        : data.quizIDs
                                     division        : null
-                            #console.log @allChaptersCollection
+                            console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
 

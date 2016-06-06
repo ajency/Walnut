@@ -123,6 +123,8 @@ define ['app'
                                 additional_data:
                                     quiz_ids        : data.quizIDs
                                     division        : @division
+                                    start_date      : data.start_date
+                                    end_date        : data.end_date
                             console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel

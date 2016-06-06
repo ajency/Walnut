@@ -148,6 +148,8 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
         $data->total_students = get_student_count_in_division($division);
 
     }
+
+    $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";
     
     #fwrite($myfile, $data->taken_by);
     #fwrite($myfile, $data->id);
