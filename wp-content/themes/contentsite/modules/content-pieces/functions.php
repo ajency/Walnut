@@ -1,5 +1,74 @@
 <?php
 
+function get_sections($chapids){ 
+  
+    global $wpdb;
+    $chap_ids = $sect_data = $sect_da = array();
+    $chapids = trim($chapids,',');
+    $chap_ids = split(',',$chapids);
+    foreach ($chap_ids as $chapid) {
+    if($chapid == '' || $chapid == null){
+        return $sect_da;
+        }
+    $section_data = $wpdb->get_results("SELECT ter.name , ter.term_id, tax.parent, term2.name AS chapter_name FROM wp_terms AS ter
+                                    LEFT JOIN wp_term_taxonomy AS tax ON ter.term_id=tax.term_id
+                                    LEFT JOIN wp_terms AS term2 ON tax.parent = term2.term_id
+                                    WHERE tax.parent = '".$chapid."'
+                                    ORDER BY ter.name");
+    $sect_da = array_merge($section_data,$sect_da);
+    }
+
+    return $sect_da;
+}
+
+
+
+function get_chapters($textbook_id){ 
+    global $wpdb;
+    $textids = $chapter_data = $chapter_da = array();
+
+    $chapter_data = $wpdb->get_results("SELECT ter.name , ter.term_id, tax.parent FROM wp_terms AS ter
+                                    LEFT JOIN wp_term_taxonomy AS tax ON ter.term_id=tax.term_id
+                                    WHERE tax.parent = '".$textbook_id."'
+                                    ORDER BY ter.name");
+
+    return $chapter_data;
+}
+
+
+function textbook_data()
+{
+    
+    global $wpdb;
+    $defaults = array(
+        'hide_empty'    => false,
+        'parent'        => 0,
+        'fetch_all'     => true,
+        'orderby'       => 'name',
+        'order'         => 'asc'
+    );
+    $args = wp_parse_args( $args, $defaults );
+    $textbook_ids = get_terms('textbook', $args);
+    foreach ($textbook_ids as $textid) {
+        $id = $textid->term_id;
+        $id_text = $id.",".$id_text;
+ 
+    }
+    $id_text = trim($id_text,',');
+    $textbooks = $wpdb->get_results("SELECT name, term_id FROM wp_terms WHERE term_id IN ($id_text)");
+    return $textbooks;
+}
+
+
+function textbook_name($id_text)
+{
+    
+    global $wpdb;
+    $textbooks = $wpdb->get_results("SELECT name FROM wp_terms WHERE term_id='".$id_text."'");
+    return $textbooks;
+}
+
+
 function save_content_piece($data){
 
     global $wpdb;

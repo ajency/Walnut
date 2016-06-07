@@ -3,6 +3,21 @@
 require_once 'functions.php';
 require_once 'ImportContentPiece/ImportContentPiece.php';
 require_once 'content_pieces_import.php';
+require_once 'ImportContentPiece/ExcelGenerate.php';
+require 'classes/PHPExcel.php';
+
+
+
+function ajax_generate_excel(){
+    //create object of class ExcelGenerate
+    $data = $_POST['data'];
+    $xclObj = new ExportExcel();
+    $excel = $xclObj->excel($data);
+    wp_send_json(array('name'=>$excel));
+
+}
+
+add_action('wp_ajax_generate-excel','ajax_generate_excel');
 
 function ajax_save_content_element() {
 

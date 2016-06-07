@@ -410,7 +410,7 @@ class CsvImport{
             while ($i <= count($csvData)-1 ) {
                 if( count($csvData[$i]) !== count($ajci_components[$_POST['csv_component']]['headers'])){
                     $validate_status = array('success'=>false,'msg'=>'Rows columns incorrect count.');
-                    return $validate_status;
+                    //return $validate_status;
                 }
                 if($i <= 20){
                    $preview_rows[] = $csvData[$i]; 

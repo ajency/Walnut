@@ -15,6 +15,35 @@
 	"use strict";
 	$(function () {
 		// Place your administration-specific JavaScript here
+
+
+        jQuery('#textbook_list').on('change', function(){
+            var id_text = jQuery(this).val();
+            jQuery('#hiddenTextId').val(id_text);
+        });
+
+        jQuery('#template_export').click(function(){
+            //alert("clicked");
+            var id_text = jQuery('#hiddenTextId').val();
+            if(id_text == '-1'){
+              jQuery("#invalidText").html('Please select a textbook to export');     
+            }else{
+              jQuery("#invalidText").html('');
+            jQuery.post(ajaxurl, 
+              {
+                action : 'generate-excel',
+                data : id_text,
+              }, function(result){
+                console.log(result);
+               name = result['name'];
+                console.log(name);
+                window.location.href='question_upload.xls';
+              });
+            }
+          });
+
+
+
             jQuery("#import-csv-start").on('click',function(){
                  jQuery(this).prop('disabled', true); 
                  jQuery("#log_view").html('Please Wait Import in progress..'); 

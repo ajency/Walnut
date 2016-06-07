@@ -28,7 +28,30 @@ global $ajci_components;
                 <?php } ?>
                 </select>
             </td>
-            </tr>                
+            </tr>
+            <tr>
+            <td><label>Select Textbook: </label></td>
+            <td>
+                <?php
+                    $textbooks = $textbook = array();
+                    $textbooks = textbook_data();
+                 ?>
+                <select name="textbook_list" id="textbook_list">
+                    <option value='-1'>--Select Textbook--</option>
+                    <?php foreach ($textbooks as $textbook): ?>
+                        <option value="<?php echo $textbook->term_id; ?>"><?php echo $textbook->name; ?></option>
+                    <?php endforeach ?>
+                </select>
+                <input type="hidden" id="hiddenTextId" value="-1" />
+            </td>
+            </tr>
+            <tr ><td></td>
+                <td><div id="invalidText" style="color: red;"></div></td>
+            </tr> 
+            <tr>
+            <td>Export Template excel</td>
+            <td><button name="export" id="template_export" type="button">Export</button></td>
+            </tr>                 
             <tr>
             <td>
             <label>Upload a file: 
