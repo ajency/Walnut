@@ -874,7 +874,9 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     
     $top_scorer_data = $wpdb->get_row($query13);
 
-    if(empty($top_scorer_data))
+    #file_put_contents("ac.txt", print_r($top_scorer_data, true));
+
+    if($top_scorer_data->student_id == '')
         $studs_taken_quiz = '';
     else
         $studs_taken_quiz = 'taken';
