@@ -552,7 +552,7 @@ function quiz_summary_parent_mail_preview($data){
         'name'      => 'BLOG_URL',
         'content'   => '<a href="'.$blog_data->siteurl.'">Click here</a>'
     );
-   file_put_contents("atemplate_data.txt", print_r($template_data, true));
+   #file_put_contents("atemplate_data.txt", print_r($template_data, true));
     return $template_data;
 
 }

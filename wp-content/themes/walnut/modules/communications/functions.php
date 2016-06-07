@@ -171,7 +171,7 @@ function format_communication_recipients($users=array()){
 function ajax_get_communication_recipients(){
 
     $functionName = 'prepare_'.$_POST['communication_type'].'_recipients';
-    file_put_contents("asss.txt", print_r($_POST, true));    
+    #file_put_contents("asss.txt", print_r($_POST, true));    
 
     if (function_exists($functionName)){
 
@@ -202,7 +202,7 @@ function ajax_get_communication_preview(){
     
     global $aj_comm;
 
-    file_put_contents("comm.txt", print_r($_POST, true));
+    #file_put_contents("comm.txt", print_r($_POST, true));
 
     $functionName = $_POST['communication_type'].'_preview';
 
