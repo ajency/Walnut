@@ -768,7 +768,7 @@ class CommunicationModule{
             }
             
             if(!empty($recipients_email)){
-            	#file_put_contents("a2.txt", print_r($recipients_email, true));
+            	file_put_contents("a1aa2.txt", print_r($recipients_email, true));
                 //$template_data = $this->get_template_details($recipients_email,$comm_data);
                 $template_data = $this->get_email_template_details($recipients_email,$comm_data);
                 $this->send_recipient_email($recipients_email,$comm_data,'mandrill',$template_data);
