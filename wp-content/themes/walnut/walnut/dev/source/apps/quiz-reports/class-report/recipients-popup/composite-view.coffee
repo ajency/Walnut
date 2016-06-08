@@ -51,9 +51,11 @@
                 .trigger 'click'
 
 
-            ###mixinTemplateHelpers:->
-                quiz_component = true if (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail')
-                console.log quiz_component###
+            mixinTemplateHelpers:->
+                console.log this.model.get('communication_type')
+                if ((this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
+                    quiz_component = true
+                console.log quiz_component
 
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'

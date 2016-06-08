@@ -688,7 +688,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     foreach ($summid as $summID) {
    
-    $maks_scored_hist = $wpdb->prepare("SELECT MAX(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
+    $maks_scored_hist = $wpdb->prepare("SELECT SUM(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summID);
     
     
 
@@ -742,7 +742,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
      foreach ($sum as $summary_id) {
         //fetch the marks
             $summary_id = trim($summary_id);
-            $maks_scored = $wpdb->prepare("SELECT MAX(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
+            $maks_scored = $wpdb->prepare("SELECT SUM(marks_scored) FROM {$wpdb->prefix}quiz_question_response WHERE summary_id = %s", $summary_id);
 
             $mak = $wpdb->get_col($maks_scored);
             #fwrite($myfile, $maks_scored);
@@ -794,17 +794,17 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 
     $additional_details_qry = $wpdb->prepare(
         "SELECT
-            MAX(marks_scored) as total_marks_scored,
+            SUM(marks_scored) as total_marks_scored,
 
-            MAX(
+            SUM(
                 CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as negative_scored,
 
-            MAX(
+            SUM(
                CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
             ) as marks_scored,
 
-            MAX(time_taken) as total_time_taken
+            SUM(time_taken) as total_time_taken
             FROM {$wpdb->prefix}quiz_question_response
         WHERE summary_id = %s", $summ_id
     );

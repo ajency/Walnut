@@ -321,7 +321,6 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
     switch_to_blog($comm_data['blog_id']);
 
     $template_data['merge_vars'] = array();
-    $myfile = fopen("a11.txt", "a");
 
     foreach($recipients as $user){
 
@@ -378,11 +377,7 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
 
         }
 
-        fclose($myfile);
-
     restore_current_blog();
-
-    #file_put_contents("amain_template.txt", print_r($template_data, true));
 
     return $template_data;
 
@@ -760,7 +755,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
     
     //max marks in which quiz
-    $query3 = $wpdb->prepare("SELECT max(marks_scored) as marks_scored, collection.name, meta.meta_value, collection.term_ids
+    $query3 = $wpdb->prepare("SELECT SUM(marks_scored) as marks_scored, collection.name, meta.meta_value, collection.term_ids
                 FROM {$wpdb->prefix}quiz_response_summary as summary
                 LEFT JOIN {$wpdb->prefix}quiz_question_response as question
                 ON summary.summary_id = question.summary_id
@@ -856,8 +851,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
 
 
-    // class top scorer ---IMPORTANT
-    $query13 = $wpdb->prepare("SELECT max(marks_scored) as marks_scored,  users.display_name, summary.student_id, collection.term_ids
+    $query14 = $wpdb->prepare("SELECT SUM(marks_scored) as marks_scored,  users.display_name, summary.student_id, collection.term_ids
                 FROM {$wpdb->prefix}quiz_response_summary as summary
                 LEFT JOIN {$wpdb->base_prefix}users as users
                 ON summary.student_id = users.ID
@@ -869,12 +863,11 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
                 AND summary.quiz_meta like %s
                 AND summary.student_id IN ($studentIDS)
                 AND summary.collection_id IN ($quizids)
-                AND question.status = 'correct_answer'", $start_date, $end_date, '%completed%');
-
+                AND question.status = 'correct_answer'
+                GROUP BY users.ID
+                ORDER BY marks_scored desc", $start_date, $end_date, '%completed%');
     
-    $top_scorer_data = $wpdb->get_row($query13);
-
-    #file_put_contents("ac.txt", print_r($top_scorer_data, true));
+    $top_scorer_data = $wpdb->get_row($query14);
 
     if($top_scorer_data->student_id == '')
         $studs_taken_quiz = '';

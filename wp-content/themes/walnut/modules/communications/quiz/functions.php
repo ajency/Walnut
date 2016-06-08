@@ -447,7 +447,6 @@ function prepare_quiz_published_parent_mail_recipients($data){
     $quiz_ids = $data['additional_data']['quiz_ids'];
     $quiz = $quiz_ids[0];
     // get all student ids here
-    file_put_contents("a1.txt", print_r($quiz_ids, true));
 
 
 

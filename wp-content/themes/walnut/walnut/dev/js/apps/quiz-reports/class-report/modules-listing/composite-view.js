@@ -93,10 +93,12 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
 
       ModulesListingView.prototype.saveSummaryCommunication = function(e) {
         var $end_date, $start_date, allQuizIDs, data, excludeIDs;
+        this.$el.find('.communication_sent').hide();
         $start_date = this.$el.find('#start_date').val();
         $end_date = this.$el.find('#end_date').val();
         if ($start_date === '' || $end_date === '') {
-          return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> select start and end date</span>');
+          this.$el.find('.communication_sent').hide();
+          return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> Select start and end date</span>');
         }
         console.log($start_date);
         console.log($end_date);

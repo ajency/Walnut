@@ -39,11 +39,14 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
         return this.$el.find('#check_all_div').trigger('click');
       };
 
-
-      /*mixinTemplateHelpers:->
-          quiz_component = true if (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail')
-          console.log quiz_component
-       */
+      RecipientsView.prototype.mixinTemplateHelpers = function() {
+        var quiz_component;
+        console.log(this.model.get('communication_type'));
+        if ((this.model.get('communication_type') === 'quiz_published_parent_mail') || (this.model.get('communication_type') === 'quiz_summary_parent_mail')) {
+          quiz_component = true;
+        }
+        return console.log(quiz_component);
+      };
 
       RecipientsView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {

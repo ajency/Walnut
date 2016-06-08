@@ -89,14 +89,18 @@
                     @$el.find '.send-email, .send-sms, .communication_sent'
                     .hide()
             saveSummaryCommunication: (e) ->
+                @$el.find '.communication_sent'
+                    .hide()
                 $start_date = @$el.find '#start_date'
                                 .val()
                 $end_date = @$el.find '#end_date'
                                 .val()
                 if($start_date == '' || $end_date == '')
+                    @$el.find '.communication_sent'
+                    .hide()
                     return @$el.find '.send-summary'
                     .after '<span class="m-l-40 text-error small communication_sent">
-                            select start and end date</span>'
+                        Select start and end date</span>'
 
 
                 console.log $start_date
