@@ -107,7 +107,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
                 App.execute("show:textbook:filters:app", {
                   region: _this.layout.filtersRegion,
                   collection: _this.contentModulesCollection,
-                  textbooksCollection: _this.textCollection,
+                  textbooksCollection: textbooksCollection,
                   selectedFilterParamsObject: _this.selectedFilterParamsObject,
                   dataType: dataType,
                   post_status: 'any',

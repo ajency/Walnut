@@ -87,7 +87,7 @@ define ['app'
 								App.execute "show:textbook:filters:app",
 									region: @layout.filtersRegion
 									collection: @contentModulesCollection
-									textbooksCollection: @textCollection
+									textbooksCollection: textbooksCollection
 									selectedFilterParamsObject: @selectedFilterParamsObject
 									#divisionsCollection: divisionsCollection
 									dataType : dataType
