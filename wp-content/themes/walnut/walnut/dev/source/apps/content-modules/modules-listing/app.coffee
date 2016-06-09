@@ -14,7 +14,6 @@ define ['app'
 				initialize: (options)->
 
 					{@groupType} = options
-					#console.log options
 
 					@division = 0
 

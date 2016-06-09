@@ -6,7 +6,6 @@ define ['app'
 		class ModulesListing.Controller extends RegionController
 
 			initialize :(opts) ->
-				#console.log opts
 
 				console.log "here ModulesListing"
 
@@ -52,7 +51,7 @@ define ['app'
 						@listenTo @region, "update:pager",=>
 							@view.triggerMethod "update:pager"
 
-						#new quiz email
+						#new quiz email 
 						@listenTo @view, "save:communications", (data)=>
                         	console.log "save:communication"
                         	#console.log data
