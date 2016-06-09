@@ -94,11 +94,12 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       ModulesListingView.prototype.saveSummaryCommunication = function(e) {
         var $end_date, $start_date, allQuizIDs, data, excludeIDs;
         this.$el.find('.communication_sent').hide();
+        this.$el.find('.input-small').removeClass('error');
         $start_date = this.$el.find('#start_date').val();
         $end_date = this.$el.find('#end_date').val();
         if ($start_date === '' || $end_date === '') {
           this.$el.find('.communication_sent').hide();
-          return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> Select start and end date</span>');
+          return this.$el.find('.input-small').addClass('error');
         }
         console.log($start_date);
         console.log($end_date);
@@ -151,7 +152,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           data.communication_mode = 'sms';
         }
         if (_.isEmpty(data.quizIDs)) {
-          return this.$el.find('.send-email').after('<span class="m-l-40 text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
+          return this.$el.find('.send-email').after('<span class="text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
         } else {
           return this.trigger("save:communications", data);
         }

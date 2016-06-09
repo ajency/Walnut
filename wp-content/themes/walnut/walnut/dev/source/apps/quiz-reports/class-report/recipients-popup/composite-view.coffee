@@ -2,7 +2,7 @@
         'apps/quiz-reports/class-report/recipients-popup/item-view'
         ], (App)->
 
-    App.module "QuizRecipientsPopup.Views", (Views)-> 
+    App.module "QuizRecipientsPopup.Views", (Views, App, Backbone, Marionette, $, _)-> 
 
         class Views.RecipientsView extends Marionette.CompositeView
 
@@ -16,7 +16,9 @@
                                     <th>Recipient Name (Parents)</th>
                                     <th>Recipient Email</th>
                                     <th>Student Name</th>
+                                    {{#quiz_component}}
                                     <th>Quiz</th>
+                                    {{/quiz_component}}
                                     <th></th>
                                 </tr>
                             </thead>
@@ -39,23 +41,38 @@
                 'click .send-email'                     : 'sendEmail'
 
             initialize:->
-                @dialogOptions = 
-                    modal_title : 'Confirm Recipients'
+                if (this.model.get('communication_type') == 'quiz_published_parent_mail')
+                    @dialogOptions = 
+                        modal_title : 'New Quizzes'
+                else if (this.model.get('communication_type') == 'quiz_summary_parent_mail')
+                    @dialogOptions = 
+                        modal_title : 'Summary Report'
+                else
+                    @dialogOptions = 
+                        modal_title : 'Confirm Recipients'
                 
 
             onShow:->
                 if ( (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
                     @$el.find '.email_specific'
                     .text '*The Emails will be sent to the entire class. One student is randomly picked for email preview'
-                @$el.find '#check_all_div'
-                .trigger 'click'
+                    @$el.find '#check_all_div'
+                    .trigger 'click'
+                    @$el.find '#check_all'
+                    .prop 'disabled', true
+                    @$el.find '.checkbox'
+                    .prop 'disabled', true 
+                else 
+                    @$el.find '#check_all_div'
+                    .trigger 'click'
 
 
-            mixinTemplateHelpers:->
+            mixinTemplateHelpers:(data)->
+                data=super data
+                console.log data
                 console.log this.model.get('communication_type')
-                if ((this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
-                    quiz_component = true
-                console.log quiz_component
+                quiz_component = true if (this.model.get('communication_type') == 'quiz_completed_parent_mail')
+                #console.log data.quiz_component
 
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'

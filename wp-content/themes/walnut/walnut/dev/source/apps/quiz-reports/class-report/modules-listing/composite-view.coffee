@@ -91,6 +91,8 @@
             saveSummaryCommunication: (e) ->
                 @$el.find '.communication_sent'
                     .hide()
+                @$el.find '.input-small'
+                    .removeClass 'error'
                 $start_date = @$el.find '#start_date'
                                 .val()
                 $end_date = @$el.find '#end_date'
@@ -98,9 +100,8 @@
                 if($start_date == '' || $end_date == '')
                     @$el.find '.communication_sent'
                     .hide()
-                    return @$el.find '.send-summary'
-                    .after '<span class="m-l-40 text-error small communication_sent">
-                        Select start and end date</span>'
+                    return @$el.find '.input-small'
+                    .addClass 'error'
 
 
                 console.log $start_date
@@ -168,7 +169,7 @@
 
                 if _.isEmpty data.quizIDs
                     @$el.find '.send-email'
-                    .after '<span class="m-l-40 text-error small communication_sent">
+                    .after '<span class="text-error small communication_sent">
                             Selected quizzes have not been taken by any student</span>'
 
                 else

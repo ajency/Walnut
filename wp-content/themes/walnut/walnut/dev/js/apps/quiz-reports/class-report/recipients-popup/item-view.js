@@ -2,7 +2,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   hasProp = {}.hasOwnProperty;
 
 define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-view'], function(App, bootbox) {
-  return App.module("QuizRecipientsPopup.Views", function(Views) {
+  return App.module("QuizRecipientsPopup.Views", function(Views, App, Backbone, Marionette, $, _) {
     return Views.RecipientsItemView = (function(superClass) {
       extend(RecipientsItemView, superClass);
 
@@ -14,7 +14,7 @@ define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-
 
       RecipientsItemView.prototype.className = 'gradeX odd';
 
-      RecipientsItemView.prototype.template = ' <td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{parent_name}}</td> <td>{{parent_email}}</td> <td>{{student_name}}</td> <td>{{quiz_name}}</td> <td><button class="btn btn-info pull-left email-preview"> <i class="progress-spinner fa fa-spinner fa-spin none"></i> Preview</button> </td>';
+      RecipientsItemView.prototype.template = ' <td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{parent_name}}</td> <td>{{parent_email}}</td> <td>{{student_name}}</td> {{#quiz_component}} <td>{{quiz_name}}</td> {{/quiz_component}} <td><button class="btn btn-info pull-left email-preview"> <i class="progress-spinner fa fa-spinner fa-spin none"></i> Preview</button> </td>';
 
       RecipientsItemView.prototype.events = {
         'click .email-preview': function(e) {
