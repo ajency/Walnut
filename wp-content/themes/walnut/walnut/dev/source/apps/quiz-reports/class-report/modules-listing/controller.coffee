@@ -44,6 +44,8 @@ define ['app'
 
                         @listenTo @view, "save:communications", (data)=> @region.trigger "save:communications",data
 
+                        @listenTo @view, "summary:communication", (data)=> @region.trigger "summary:communication", data
+
 
             _getAllTermIDs:=>
                 _.chain @contentModulesCollection.pluck 'term_ids'
@@ -66,5 +68,4 @@ define ['app'
         # set handlers
         App.commands.setHandler "show:list:quiz:report:app", (opt = {})->
             new ClassQuizReportListing.Controller opt
-
 

@@ -1,89 +1,169 @@
-var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 define(['app', 'controllers/region-controller', 'apps/content-modules/modules-listing/modules-listing-controller', 'apps/content-modules/modules-listing/search-results-app', 'apps/textbook-filters/textbook-filters-app'], function(App, RegionController) {
   return App.module("ContentModulesApp.ModulesListing", function(ModulesListing, App) {
     var ContentPiecesLayout;
     ModulesListing.ListController = (function(superClass) {
+      var divisionsCollection, schoolsCollection, textbooksCollection;
+
       extend(ListController, superClass);
 
       function ListController() {
+        this._fetchQuizzes = bind(this._fetchQuizzes, this);
+        this._fetchTextbooks = bind(this._fetchTextbooks, this);
         return ListController.__super__.constructor.apply(this, arguments);
       }
 
+      textbooksCollection = null;
+
+      divisionsCollection = null;
+
+      schoolsCollection = null;
+
       ListController.prototype.initialize = function(options) {
         this.groupType = options.groupType;
-        this.textbooksCollection = App.request("get:textbooks", {
-          "fetch_all": true
-        });
-        return App.execute("when:fetched", this.textbooksCollection, (function(_this) {
+        this.division = 0;
+        divisionsCollection = App.request("get:divisions");
+        return App.execute("when:fetched", divisionsCollection, this._fetchTextbooks);
+      };
+
+      ListController.prototype._fetchTextbooks = function() {
+        var class_id, division;
+        class_id = divisionsCollection.first().get('class_id');
+        division = divisionsCollection.first().get('id');
+        if (this.groupType === 'teaching-module') {
+          textbooksCollection = App.request("get:textbooks", {
+            "fetch_all": true
+          });
+        } else {
+          textbooksCollection = App.request("get:textbooks", {
+            'class_id': class_id
+          });
+        }
+        App.execute("when:fetched", textbooksCollection, (function(_this) {
+          return function() {};
+        })(this));
+        return App.execute("when:fetched", textbooksCollection, this._fetchQuizzes);
+      };
+
+      ListController.prototype._fetchQuizzes = function() {
+        var data, textbook;
+        textbook = textbooksCollection.first();
+        this.division = divisionsCollection.first().get('id');
+        if (this.groupType === 'teaching-module') {
+          data = {
+            'post_status': 'any',
+            'textbook': textbook.id
+          };
+        } else {
+          data = {
+            'post_status': 'any',
+            'textbook': textbook.id,
+            'division': this.division
+          };
+        }
+        if (this.groupType === 'teaching-module') {
+          this.contentModulesCollection = App.request("get:content:groups", data);
+        } else if (this.groupType === 'student-training') {
+          this.contentModulesCollection = App.request("get:student:training:modules", data);
+        } else {
+          console.log(data);
+          this.contentModulesCollection = App.request("get:quizes", data);
+        }
+        this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
+        this.layout = this._getContentPiecesLayout();
+        return App.execute("when:fetched", [this.contentModulesCollection, textbooksCollection], (function(_this) {
           return function() {
-            var data, textbook;
-            textbook = _this.textbooksCollection.first();
-            data = {
-              'post_status': 'any',
-              'textbook': textbook.id
-            };
-            if (_this.groupType === 'teaching-module') {
-              _this.contentModulesCollection = App.request("get:content:groups", data);
-            } else if (_this.groupType === 'student-training') {
-              _this.contentModulesCollection = App.request("get:student:training:modules", data);
-            } else {
-              _this.contentModulesCollection = App.request("get:quizes", data);
-            }
-            _this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();
-            _this.layout = _this._getContentPiecesLayout();
-            return App.execute("when:fetched", [_this.contentModulesCollection, _this.textbooksCollection], function() {
-              _this.show(_this.layout, {
-                loading: true
-              });
-              _this.listenTo(_this.layout, "show", function() {
-                var dataType;
-                dataType = (function() {
-                  switch (this.groupType) {
-                    case 'teaching-module':
-                      return 'teaching-modules';
-                    case 'student-training':
-                      return 'student-training';
-                    default:
-                      return 'quiz';
-                  }
-                }).call(_this);
+            _this.show(_this.layout, {
+              loading: true
+            });
+            _this.listenTo(_this.layout, "show", function() {
+              var dataType;
+              console.log(_this.groupType);
+              dataType = (function() {
+                switch (this.groupType) {
+                  case 'teaching-module':
+                    return 'teaching-modules';
+                  case 'student-training':
+                    return 'student-training';
+                  default:
+                    return 'quiz';
+                }
+              }).call(_this);
+              if (_this.groupType === 'quiz') {
                 App.execute("show:textbook:filters:app", {
                   region: _this.layout.filtersRegion,
                   collection: _this.contentModulesCollection,
-                  textbooksCollection: _this.textbooksCollection,
+                  textbooksCollection: textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                  divisionsCollection: divisionsCollection,
+                  dataType: dataType,
+                  post_status: 'any',
+                  filters: ['divisions', 'multi_textbooks', 'module_status']
+                });
+              } else {
+                App.execute("show:textbook:filters:app", {
+                  region: _this.layout.filtersRegion,
+                  collection: _this.contentModulesCollection,
+                  textbooksCollection: _this.textCollection,
                   selectedFilterParamsObject: _this.selectedFilterParamsObject,
                   dataType: dataType,
                   post_status: 'any',
                   filters: ['textbooks', 'chapters', 'sections', 'subsections', 'module_status']
                 });
-                App.execute("show:list:all:modules:app", {
-                  region: _this.layout.allContentRegion,
-                  contentModulesCollection: _this.contentModulesCollection,
-                  textbooksCollection: _this.textbooksCollection,
-                  groupType: _this.groupType
-                });
-                return new ModulesListing.SearchResults.Controller({
-                  region: _this.layout.searchResultsRegion,
-                  textbooksCollection: _this.textbooksCollection,
-                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
-                  groupType: _this.groupType
-                });
+              }
+              App.execute("show:list:all:modules:app", {
+                region: _this.layout.allContentRegion,
+                contentModulesCollection: _this.contentModulesCollection,
+                textbooksCollection: textbooksCollection,
+                groupType: _this.groupType,
+                division: _this.division
               });
-              return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
-                return _this.layout.allContentRegion.trigger("update:pager");
+              return new ModulesListing.SearchResults.Controller({
+                region: _this.layout.searchResultsRegion,
+                textbooksCollection: textbooksCollection,
+                selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                division: _this.division,
+                groupType: _this.groupType
               });
             });
+            return _this.listenTo(_this.layout.filtersRegion, "update:pager", function() {
+              return _this.layout.allContentRegion.trigger("update:pager");
+            });
+
+            /*@listenTo @view, "save:communications", (data)=>
+                              
+                                  data=
+                                      component           : 'quiz'
+                                      communication_type  : 'quiz_completed_parent_mail'
+                                      communication_mode  : data.communication_mode
+                                      additional_data:
+                                          quiz_ids        : data.quizIDs
+                                          division        : @division
+            
+                                  communicationModel = App.request "create:communication",data
+                                  @_showSelectRecipientsApp communicationModel
+             */
           };
         })(this));
       };
 
       ListController.prototype._getContentPiecesLayout = function() {
+        console.log("_getContentPiecesLayout");
         return new ContentPiecesLayout({
           groupType: this.groupType
         });
       };
+
+
+      /*_showSelectRecipientsApp:(communicationModel)->
+      				console.log communicationModel
+      				App.execute "show:quiz:select:recipients:popup",
+                      region               : App.dialogRegion
+                      communicationModel   : communicationModel
+       */
 
       return ListController;
 

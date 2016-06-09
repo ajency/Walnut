@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         var class_id, data;
         this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType, this.divisionsCollection = opts.divisionsCollection, this.post_status = opts.post_status;
         if (!this.filters) {
-          this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
+          this.filters = ['multi_textbooks', 'divisions', 'textbooks', 'chapters', 'sections', 'subsections'];
         }
         if (this.contentSelectionType === 'student-training') {
           this.filters.push('student_question');
@@ -61,6 +61,10 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
           return function() {
             var content_type, division, ele, post_status, term_id;
             ele = $(_this.view.el).find('#textbooks-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
+            ele = $(_this.view.el).find('#textbooks-multi-filter');
             if ($(ele).val()) {
               term_id = $(ele).val();
             }
@@ -146,6 +150,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
+              console.log(data.textbook);
               if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
@@ -163,6 +168,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 newContent = App.request("get:content:pieces", data);
               }
               return App.execute("when:fetched", newContent, function() {
+                console.log(newContent);
                 return _this.view.triggerMethod("new:content:fetched");
               });
             });

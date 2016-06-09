@@ -21,6 +21,8 @@ define [
     'moment'
     'select2'
     'datepicker'
+    'new_moment'
+    'datetimepicker'
     'jquery_listnav'
     'bridget'
     'isotope'

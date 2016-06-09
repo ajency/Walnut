@@ -18,7 +18,9 @@
                         <td>{{parent_name}}</td>
                         <td>{{parent_email}}</td>
                         <td>{{student_name}}</td>
+                        {{#quiz_component}}
                         <td>{{quiz_name}}</td>
+                        {{/quiz_component}}
                         <td><button class="btn btn-info pull-left email-preview">
                             <i class="progress-spinner fa fa-spinner fa-spin none"></i>
                             Preview</button>

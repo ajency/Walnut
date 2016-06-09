@@ -14,7 +14,9 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
 
       Controller.prototype.initialize = function(opts) {
         var breadcrumb_items;
+        console.log("here ModulesListing");
         this.contentModulesCollection = opts.contentModulesCollection, this.textbooksCollection = opts.textbooksCollection, this.groupType = opts.groupType;
+        console.log(opts);
         this.allChaptersCollection = null;
         breadcrumb_items = {
           'items': [
@@ -54,8 +56,24 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
                   return _this.view.triggerMethod("fetch:chapters:or:sections:completed", chaptersOrSections, filterType);
                 });
               });
-              return _this.listenTo(_this.region, "update:pager", function() {
+              _this.listenTo(_this.region, "update:pager", function() {
                 return _this.view.triggerMethod("update:pager");
+              });
+              return _this.listenTo(_this.view, "save:communications", function(data) {
+                var communicationModel;
+                console.log("save:communication");
+                data = {
+                  component: 'quiz',
+                  communication_type: 'quiz_published_parent_mail',
+                  communication_mode: data.communication_mode,
+                  additional_data: {
+                    quiz_ids: data.quizIDs,
+                    division: null
+                  }
+                };
+                console.log(data);
+                communicationModel = App.request("create:communication", data);
+                return _this._showSelectRecipientsApp(communicationModel);
               });
             });
           };
@@ -69,6 +87,14 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
           textbooksCollection: this.textbooksCollection,
           chaptersCollection: this.allChaptersCollection,
           groupType: this.groupType
+        });
+      };
+
+      Controller.prototype._showSelectRecipientsApp = function(communicationModel) {
+        console.log(communicationModel);
+        return App.execute("show:quiz:select:recipients:popup", {
+          region: App.dialogRegion,
+          communicationModel: communicationModel
         });
       };
 

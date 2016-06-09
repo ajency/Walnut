@@ -83,7 +83,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               selectedFilterParamsObject: _this.selectedFilterParamsObject,
               divisionsCollection: divisionsCollection,
               dataType: 'quiz',
-              filters: ['divisions', 'textbooks', 'chapters']
+              filters: ['divisions', 'textbooks', 'chapters', 'post_status_report']
             }, App.execute("when:fetched", students, function() {
               App.execute("show:student:filter:app", {
                 region: _this.layout.studentFilterRegion,
@@ -127,6 +127,23 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               communicationModel = App.request("create:communication", data);
               return _this._showSelectRecipientsApp(communicationModel);
             });
+            _this.listenTo(_this.layout.allContentRegion, "summary:communication", function(data) {
+              var communicationModel;
+              data = {
+                component: 'quiz',
+                communication_type: 'quiz_summary_parent_mail',
+                communication_mode: data.communication_mode,
+                additional_data: {
+                  quiz_ids: data.quizIDs,
+                  division: _this.division,
+                  start_date: data.start_date,
+                  end_date: data.end_date
+                }
+              };
+              console.log(data);
+              communicationModel = App.request("create:communication", data);
+              return _this._showSelectRecipientsApp(communicationModel);
+            });
             _this.listenTo(_this.layout.allContentRegion, "schedule:quiz", _this._showScheduleQuizApp);
             return _this.listenTo(_this.layout.allContentRegion, "clear:schedule", function(quizModel) {
               var clearSchedule;
@@ -152,6 +169,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       };
 
       Controller.prototype._showSelectRecipientsApp = function(communicationModel) {
+        console.log(communicationModel);
         return App.execute("show:quiz:select:recipients:popup", {
           region: App.dialogRegion,
           communicationModel: communicationModel
