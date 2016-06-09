@@ -392,13 +392,9 @@ function update_quiz_content_layout($data= array()){
 function get_all_quiz_modules($args){
 
     global $wpdb;
-    #$textbookss = [];
     $textbook_prepare[0] = $textbook_prepare[1] = $$textbook_prepare[2] = $textbook_prepare[3] = $textbook_prepare[4] = $textbook_prepare[5] = '%"xyz"%';
     
-    $myfile = fopen("log.txt", "a");
     $textbookss = $args['textbook'];
-
-    #file_put_contents('abc.txt', print_r($textbookss, true));
 
     $type = is_array($args['textbook']) ? '1' : '0';
 
@@ -430,68 +426,49 @@ function get_all_quiz_modules($args){
         $quiz_ids_search_str = " AND post.id in ($quiz_ids_str)";
     }
 
-    if (empty($args['textbook']))
+    if (empty($args['textbook'])){
         $textbook_prepare[0] = "%xy@@@zz%";
-        $term_id_query = " AND post.term_ids LIKE ";
-
+        $term_id_query = " AND post.term_ids LIKE %s";
+    }
 
     if($type == 0){
 
+        if($textbookss == '' || $textbookss == null){
+            $textbook_prepare[0] = "%xy@@@zz%";
+        }
+        else{
+            $textbook_prepare[0] = '%"'.$textbookss.'"%';
+        }
+
         //onload and quiz report since textbook id is 1
-         $textbook_prepare[0] = '%"'.$textbookss.'"%';
-            $term_id_query = " AND post.term_ids LIKE %s";
-            #fwrite($myfile, "string");
-            #fwrite($myfile, $term_id_querys);
-
-
+        $term_id_query = " AND post.term_ids LIKE %s";
     }
 
     else if ($type == 1) {
-    #if its == 1
         $size_text_data = sizeof($textbookss);
         //$text_ids = implode(",",$textbookss);
-        #fwrite($myfile, "size of array " . $size_text_data."\n");
         
-        //  '%\"636\"%'
         if ($size_text_data == '1'){
             $text = $textbookss[0];
-            $textbook_prepare[0] = "%".$textbookss[0]."%";
+            $textbook_prepare[0] = '%"'.$textbookss[0].'"%';
             $term_id_query = " AND post.term_ids LIKE %s";
-           // $term_id_query .= $text;
-           # fwrite($myfile, "1"."\n");
         }
         else{
             $term_id_query_inside = '';
-            #$textbook_prepare = 'xyz';
-            #$term_id_query = " AND ()";
+
             foreach ($textbookss as $key => $text_id) {
-            #fwrite($myfile, "key ".$key."\n");
-           # fwrite($myfile, "size_text_data ".$size_text_data-1."\n");
             $textbook_prepare[$key] = '%"'.$text_id.'"%';
             $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s OR ";
 
             if( $key == $size_text_data-1){
                 $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s";
             }
-            #file_put_contents('abcasd.txt', print_r($term_id_query_inside, true));
-            
-            #$key
+
             }
             $term_id_query = " AND ($term_id_query_inside)";
 
-            #$textbook_prepare = '%"638"%';
-            #$textbook_prepare1 = '%"636"%';
-            #$term_id_query = "AND ( post.term_ids LIKE %s OR post.term_ids LIKE %s)";
-           # file_put_contents('abca.txt', print_r($term_id_query, true));
-
         }
-        #$term_id_query = " AND post.term_ids LIKE %s";
 
-
-
-
-        #fwrite($myfile, $textbook_prepare);
-        #$term_id_query = " AND post.term_ids LIKE %s";
     }
 
 
@@ -524,12 +501,7 @@ function get_all_quiz_modules($args){
         $textbook_prepare[4],
         $textbook_prepare[5]);
 
-   # fwrite($myfile, $query);
-
-    #file_put_contents('abc.txt', print_r($query, true));
-
     $quiz_ids = $wpdb->get_col($query);
-    #fwrite($myfile, $query);
 
 
     $result = array();
@@ -542,15 +514,10 @@ function get_all_quiz_modules($args){
 
 
     foreach ($quiz_ids as $id){
-        #fwrite($myfile, $id);
         $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
-        #fwrite($myfile, $quiz_data);
         
         if(!is_wp_error($quiz_data)){
-            #fwrite($myfile, "NO error wit quiz data");
             $result[] = $quiz_data;
-            #fwrite($myfile, $id);
-           # fclose($myfile);
         }
         
     }
@@ -558,7 +525,6 @@ function get_all_quiz_modules($args){
     $result= __u::sortBy($result, function($item){
                         return $item->last_modified_on;
                     });               
-    fclose($myfile);  
     return $result;
 }
 
