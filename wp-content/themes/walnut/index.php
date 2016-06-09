@@ -15,7 +15,6 @@
  */
 
 ?>
-<meta name="google-site-verification" content="haYHKFx6pBRFJRIFrNz8HW2KFY6jyDuStL3c38pUXAU" />
 <div id="main-content" class="main-content">
 AJENCY THEME
 </div><!-- #main-content -->
