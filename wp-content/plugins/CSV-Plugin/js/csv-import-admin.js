@@ -13,10 +13,9 @@
 
 (function ($) {
 	"use strict";
+
 	$(function () {
 		// Place your administration-specific JavaScript here
-
-
         jQuery('#textbook_list').on('change', function(){
             var id_text = jQuery(this).val();
             jQuery('#hiddenTextId').val(id_text);
@@ -34,9 +33,7 @@
                 action : 'generate-excel',
                 data : id_text,
               }, function(result){
-                console.log(result);
                name = result['name'];
-                console.log(name);
                 window.location.href='question_upload.xls';
               });
             }
@@ -57,7 +54,6 @@
                                   csv_id    : csv_id
                                 },
                                 function(data) { 
-                                  console.log(data);
                                   if(data.code ==='ERROR'){
                                       jQuery(_this).prop('disabled', false);
                                       jQuery("#log_view").html('Error CSV file already imported!!');                                      

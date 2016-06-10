@@ -1,3 +1,4 @@
+
 <?php
 
 function get_sections($chapids){ 
@@ -35,29 +36,12 @@ function get_chapters($textbook_id){
     return $chapter_data;
 }
 
+function text_data(){
 
-function textbook_data()
-{
-    
-    global $wpdb;
-    $defaults = array(
-        'hide_empty'    => false,
-        'parent'        => 0,
-        'fetch_all'     => true,
-        'orderby'       => 'name',
-        'order'         => 'asc'
-    );
-    $args = wp_parse_args( $args, $defaults );
-    $textbook_ids = get_terms('textbook', $args);
-    foreach ($textbook_ids as $textid) {
-        $id = $textid->term_id;
-        $id_text = $id.",".$id_text;
- 
-    }
-    $id_text = trim($id_text,',');
-    $textbooks = $wpdb->get_results("SELECT name, term_id FROM wp_terms WHERE term_id IN ($id_text)");
-    return $textbooks;
+   $data = apply_filters('wp_ajax_get-textbooks', 'fetch_all');
+   return $data;
 }
+
 
 
 function textbook_name($id_text)
@@ -182,3 +166,5 @@ function save_content_element($element_details){
     return $meta_id;
 
 }
+
+

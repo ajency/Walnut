@@ -15,11 +15,15 @@ function fetch_textbooks() {
     if(isset($_GET['parent']))
       $defaults['fetch_all']= true;
 
+    if(isset($_GET['page']))
+      $defaults['fetch_all']= true;
 
     $args = wp_parse_args($args, $defaults);
     $textbooks=get_textbooks($args);
     
-    wp_send_json($textbooks);
+    if(isset($_GET['page']))
+      return $textbooks;
+   wp_send_json($textbooks);
 }
 
 add_action( 'wp_ajax_read-textbook', 'read_textbook' );
