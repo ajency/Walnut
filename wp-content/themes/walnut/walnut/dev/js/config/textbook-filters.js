@@ -38,7 +38,7 @@ define(['jquery', 'underscore'], function($, _) {
           name = name.split('(');
           text = name[0];
           console.log(item.get('name'));
-          return textbookElement.append('<option value="' + item.get('term_id') + '">' + text + '</option>');
+          return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
         };
       })(this));
       return textbookElement.select2().select2('val', _.first(items).get('term_id'));

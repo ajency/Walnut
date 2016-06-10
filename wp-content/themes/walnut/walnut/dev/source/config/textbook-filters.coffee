@@ -65,7 +65,7 @@ define ['jquery', 'underscore'], ($, _)->
                 name = name.split('(')
                 text = name[0]
                 console.log item.get('name')
-                textbookElement.append '<option value="' + item.get('term_id') + '">' + text + '</option>'
+                textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
 
             textbookElement.select2().select2 'val', _.first(items).get 'term_id'
         else 
