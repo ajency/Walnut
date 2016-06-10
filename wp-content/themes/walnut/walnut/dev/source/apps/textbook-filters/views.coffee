@@ -138,10 +138,11 @@ define ['app'], (App)->
                 data.textbooks= textbooks.map (m)->
                     t=[]
                     t.id = m.get 'term_id'
-                    name= m.get 'name'
-                    name = name.split('(');
-                    t.name = name[0]
-                    console.log t.name
+                    t.name= m.get 'name'
+                    #name= m.get 'name'
+                    #name = name.split('(');
+                    #t.name = name[0]
+                    #console.log t.name
                     t
 
                 if divisions

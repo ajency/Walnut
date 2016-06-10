@@ -45,13 +45,10 @@ define(['app'], function(App) {
         textbooks = Marionette.getOption(this, 'textbooksCollection');
         divisions = Marionette.getOption(this, 'divisionsCollection');
         data.textbooks = textbooks.map(function(m) {
-          var name, t;
+          var t;
           t = [];
           t.id = m.get('term_id');
-          name = m.get('name');
-          name = name.split('(');
-          t.name = name[0];
-          console.log(t.name);
+          t.name = m.get('name');
           return t;
         });
         if (divisions) {
