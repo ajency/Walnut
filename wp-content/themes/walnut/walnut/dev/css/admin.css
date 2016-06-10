@@ -127,7 +127,7 @@
 .table-tools-actions .select2-container.textbook-filter .select2-search-choice{
 	display: inline-block;
     float: none;
-    width: 123px;
+    /*width: 123px;*/
 }
 
 .table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field{
