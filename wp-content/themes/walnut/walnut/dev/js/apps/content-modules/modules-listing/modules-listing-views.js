@@ -106,7 +106,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.initialize = function(options) {
-        console.log("here");
         this.textbooks = options.textbooksCollection;
         this.chapters = options.chaptersCollection;
         return this.groupType = options.groupType;
@@ -232,8 +231,12 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        console.log("empty view");
-        return this.$el.attr('colspan', 9);
+        console.log(this.groupType);
+        if (this.groupType === 'quiz') {
+          return this.$el.attr('colspan', 9);
+        } else {
+          return this.$el.attr('colspan', 7);
+        }
       };
 
       return EmptyView;

@@ -97,7 +97,6 @@ define ['app'
 				'click a.archiveModule':-> @changeModuleStatus 'archive'
 
 			initialize : (options)->
-				console.log "here"
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
 				@groupType = options.groupType
@@ -191,8 +190,11 @@ define ['app'
 			tagName: 'td'
 
 			onShow:->
-				console.log "empty view"
-				@$el.attr 'colspan',9
+				console.log @groupType
+				if @groupType is 'quiz'
+					@$el.attr 'colspan',9
+				else
+					@$el.attr 'colspan',7
 
 		class Views.ModulesListingView extends Marionette.CompositeView
 
