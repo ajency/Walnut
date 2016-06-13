@@ -42,7 +42,7 @@
                     useCurrent:false
                     #minDate:today
                     format:'YYYY-MM-DD'
-                    debug:true
+                    #debug:true
 
                 @$el.find '#end_date'
                 .datetimepicker

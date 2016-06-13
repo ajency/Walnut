@@ -29,6 +29,7 @@ $pagenum = $wp_list_table->get_pagenum();
 $title = $tax->labels->name;
 
 if ( 'post' != $post_type ) {
+	// add textbook
 	$parent_file = ( 'attachment' == $post_type ) ? 'upload.php' : "edit.php?post_type=$post_type";
 	$submenu_file = "edit-tags.php?taxonomy=$taxonomy&amp;post_type=$post_type";
 } elseif ( 'link_category' == $tax->name ) {
@@ -46,7 +47,6 @@ $location = false;
 switch ( $wp_list_table->current_action() ) {
 
 case 'add-tag':
-
 	check_admin_referer( 'add-tag', '_wpnonce_add-tag' );
 
 	if ( !current_user_can( $tax->cap->edit_terms ) )

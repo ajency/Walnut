@@ -764,6 +764,7 @@ function wp_ajax_add_link_category( $action ) {
  * @since 3.1.0
  */
 function wp_ajax_add_tag() {
+	//add textbook taxonomy
 	global $wp_list_table;
 
 	check_ajax_referer( 'add-tag', '_wpnonce_add-tag' );

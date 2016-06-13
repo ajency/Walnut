@@ -148,7 +148,26 @@
     margin-top: -10px;
 }
 
+/* ---------------------------
+   BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
+ ---------------------------
+*/
 
+#dialog-region .bootstrap-datetimepicker-widget .table-condensed{
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
+#dialog-region .bootstrap-datetimepicker-widget{
+	cursor: pointer;
+}
+
+#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
+	color: #ffffff;
+    background-color: #259b24; 
+    border-color: #259b24;
+}
 
 
 

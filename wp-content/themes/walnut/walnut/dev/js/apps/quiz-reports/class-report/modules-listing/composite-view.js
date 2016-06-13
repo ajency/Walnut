@@ -51,8 +51,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
       ModulesListingView.prototype.onShow = function() {
         this.$el.find('#start_date').datetimepicker({
           useCurrent: false,
-          format: 'YYYY-MM-DD',
-          debug: true
+          format: 'YYYY-MM-DD'
         });
         this.$el.find('#end_date').datetimepicker({
           useCurrent: false,

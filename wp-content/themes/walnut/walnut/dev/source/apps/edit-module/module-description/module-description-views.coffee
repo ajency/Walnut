@@ -79,6 +79,7 @@ define ['app'
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
+                #console.log @model.toJSON()
 
                 @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
@@ -101,7 +102,7 @@ define ['app'
 
 
                 @statusChanged()
-                @_changeLayout() if @model.get('type') is 'quiz'
+                @_getAdditionaLayout() if @model.get('type') is 'quiz'
 
             statusChanged : ->
                 if @model.get('post_status') in ['publish', 'archive']
@@ -247,6 +248,42 @@ define ['app'
                 @trigger 'show:custom:msg:popup',
                     slug : $(e.target).closest('.customMsgLink').attr 'data-slug'
 
+            # added to auto calculate the time marks and total questions
+            _getAdditionaLayout:->
+                contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
+
+                totalQuestions = 0
+                _.each @model.get('content_layout'), (content)=>
+                    #console.log content
+                    if content.type is 'content-piece'
+                        totalQuestions += 1
+                    else
+                        totalQuestions += parseInt content.data.lvl1
+                        totalQuestions += parseInt content.data.lvl2
+                        totalQuestions += parseInt content.data.lvl3
+                @$el.find('#total-question-number').val totalQuestions
+
+                marks = 0
+                time = 0
+
+                contentGroupCollection.each (m)->
+                    if m.get('post_type') is 'content_set'
+
+                        if m.get 'avg_marks'
+                            marks+= parseInt m.get 'avg_marks'
+
+                        if m.get 'avg_duration'
+                            time += parseInt m.get 'avg_duration'
+
+                    else
+                        if m.get 'marks'
+                            marks+= parseInt m.get 'marks'
+
+                        if m.get 'duration'
+                            time += parseInt m.get 'duration'
+
+                @$el.find('#total-marks').val marks   
+                @$el.find('#total-time').val time
 
             _changeLayout : ->
 
@@ -319,4 +356,3 @@ define ['app'
 
 
                 $("html, body").animate({ scrollTop: 0 }, 700);
-
