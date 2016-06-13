@@ -57,7 +57,7 @@ define ['app'
                                   <div class="col-md-6">
                                     From: <br>
                                     <div class="input-append success date">
-                                          <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
+                                          <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date time" class="input-small span12">
                                             <!--input id="hiddenFrom" value=""/-->
                                             <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                             </span>
@@ -66,7 +66,7 @@ define ['app'
                                 <div class="col-md-6">
                                     To:  <br>
                                     <div class="input-append success date">
-                                      <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date" class="input-small span12">
+                                      <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date time" class="input-small span12">
                                       <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
