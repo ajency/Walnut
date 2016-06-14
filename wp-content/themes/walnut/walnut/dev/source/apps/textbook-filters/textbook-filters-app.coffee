@@ -75,7 +75,9 @@ define ['app'
 					@listenTo @view, "update:pager", => @region.trigger "update:pager"
 
 					@listenTo @view, "show",=>
+						console.log @model
 						if @model
+							console.log 'inside'
 							term_ids = @model.get 'term_ids'
 
 							if term_ids
