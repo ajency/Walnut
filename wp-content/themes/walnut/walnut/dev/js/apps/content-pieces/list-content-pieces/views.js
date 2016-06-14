@@ -211,7 +211,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.itemViewOptions = function() {
         return {
           textbooksCollection: this.textbooks,
-          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
+          chaptersCollection: Marionette.getOption(this, 'chapCollection')
         };
       };
 

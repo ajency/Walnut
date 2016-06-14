@@ -32,12 +32,6 @@ define(['jquery', 'underscore'], function($, _) {
     if (_.size(items) > 0) {
       _.each(items, (function(_this) {
         return function(item, index) {
-          var name, text;
-          console.log(item.get('name'));
-          name = item.get('name');
-          name = name.split('(');
-          text = name[0];
-          console.log(item.get('name'));
           return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
         };
       })(this));
@@ -181,7 +175,7 @@ define(['jquery', 'underscore'], function($, _) {
     }
   };
   return $.filterTableByTextbooks = function(_this, dataType) {
-    var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type;
+    var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type, text_multi, textbk_ids;
     filter_elements = _this.$el.find('select.textbook-filter');
     if (dataType === 'teaching-modules') {
       filterCollection = App.request("get:content:modules:repository");
@@ -189,7 +183,6 @@ define(['jquery', 'underscore'], function($, _) {
       filterCollection = App.request("get:student:training:modules:repository");
     } else if (dataType === 'quiz') {
       filterCollection = App.request("get:quiz:repository");
-      console.log(filterCollection);
     } else {
       filterCollection = App.request("get:content:pieces:repository");
     }
@@ -202,8 +195,12 @@ define(['jquery', 'underscore'], function($, _) {
       return item;
     });
     filter_ids = _.compact(filter_ids);
-    filter_ids = $('#textbooks-filter').val();
-    console.log(filter_ids);
+    textbk_ids = $('#textbooks-filter').val();
+    if (typeof textbk_ids === 'string') {
+      text_multi = false;
+    } else {
+      text_multi = true;
+    }
     content_type = _this.$el.find('#content-type-filter').val();
     content_status = _this.$el.find('#content-status-filter').val();
     content_post_status = _this.$el.find('#content-post-status-filter').val();
@@ -211,34 +208,28 @@ define(['jquery', 'underscore'], function($, _) {
       content_post_status = '';
     }
     quiz_type = _this.$el.find('#quiz-type-filter').val();
-    console.log(quiz_type);
     difficulty_level = parseInt(_this.$el.find('#difficulty-level-filter').val());
     if (content_type) {
-      console.log("content_type");
       filterCollection.reset(filterCollection.where({
         'content_type': content_type
       }));
     }
     if (content_status) {
-      console.log("content_status");
       filterCollection.reset(filterCollection.where({
         'status': content_status
       }));
     }
     if (content_post_status) {
-      console.log("content_post_status");
       filterCollection.reset(filterCollection.where({
         'post_status': content_post_status
       }));
     }
     if (quiz_type) {
-      console.log("quiz_type");
       filterCollection.reset(filterCollection.where({
         'quiz_type': quiz_type
       }));
     }
     if (difficulty_level) {
-      console.log("difficulty_level");
       filterCollection.reset(filterCollection.where({
         'difficulty_level': difficulty_level
       }));
@@ -250,12 +241,16 @@ define(['jquery', 'underscore'], function($, _) {
           var filtered_item, term_ids;
           filtered_item = '';
           term_ids = _.flatten(item.get('term_ids'));
-          console.log(filter_ids);
-          filtered_item = item;
+          if (text_multi === false) {
+            if (_.size(_.intersection(term_ids, filter_ids)) === _.size(filter_ids)) {
+              filtered_item = item;
+            }
+          } else {
+            filtered_item = item;
+          }
           return filtered_item;
         };
       })(this));
-      console.log(filtered_data);
     } else {
       filtered_data = filtered_models;
     }

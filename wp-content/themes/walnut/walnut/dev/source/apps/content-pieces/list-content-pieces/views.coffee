@@ -181,7 +181,7 @@ define ['app'
 
 			itemViewOptions : ->
 				textbooksCollection : @textbooks
-				chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
+				chaptersCollection  : Marionette.getOption @, 'chapCollection'
 
 			events:
 				'change #content-post-status-filter, #difficulty-level-filter'  : 'setFilteredContent'
