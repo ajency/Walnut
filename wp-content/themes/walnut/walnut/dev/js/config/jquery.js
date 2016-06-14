@@ -154,6 +154,13 @@ define(['jquery', 'underscore'], function($, _) {
     }).compact().value();
     return items;
   };
+  $.getAllItems = function(element) {
+    var items;
+    items = _.chain(element.find('.tab_checkbox')).map(function(checkbox) {
+      return $(checkbox).val();
+    }).compact().value();
+    return items;
+  };
   return $.allowRoute = function(route) {
     var user;
     user = App.request("get:user:model");

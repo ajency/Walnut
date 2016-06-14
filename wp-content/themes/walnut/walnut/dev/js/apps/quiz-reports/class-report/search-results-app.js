@@ -68,7 +68,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return SearchResultsLayout.__super__.constructor.apply(this, arguments);
       }
 
-      SearchResultsLayout.prototype.template = 'Search: <input type="text" class="search-box" id="search-box"> <button class="btn btn-success btn-cons2" id="search-btn"> <i class="none progress-spinner fa fa-spinner fa-spin"></i> Search </button> <label id="error-div" class="none"><span class="small text-error">Please enter the search keyword</span></label> <div id="content-selection-region"></div>';
+      SearchResultsLayout.prototype.template = '<div>Search: <input type="text" class="search-box" id="search-box"> <button class="btn btn-success btn-cons2" id="search-btn"> <i class="none progress-spinner fa fa-spinner fa-spin"></i> Search </button> <label id="error-div" class="none"><span class="small text-error">Please enter the search keyword</span></label> </div><div id="content-selection-region"></div>';
 
       SearchResultsLayout.prototype.regions = {
         contentSelectionRegion: '#content-selection-region'

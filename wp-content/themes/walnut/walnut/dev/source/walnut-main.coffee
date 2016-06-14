@@ -35,7 +35,12 @@ require.config
 		detect: 'plugins/detect'
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
-		datepicker: 'plugins/bootstrap-datepicker'
+		#mousewheel: 'plugins/jquery-mousewheel'
+		new_moment: 'plugins/new_moment'
+		datetimepicker: 'plugins/datetimepicker.min'
+		multiselect: 'plugins/bootstrap-multiselect'
+		#datepicker: 'plugins/bootstrap-datepicker'		
+		#zebra_datepicker: 'plugins/zebra_datepicker'
 		jquery_listnav: 'plugins/jquery-listnav'
 		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget: 'plugins/jquery.bridget'
@@ -80,7 +85,12 @@ require.config
 		syphon: ['backbone']
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
-		datepicker: ['jquery', 'bootstrap']
+		#mousewheel: ['jquery']
+		new_moment: ['jquery']
+		datetimepicker: ['jquery', 'new_moment','bootstrap']
+		multiselect: ['jquery','bootstrap'],
+		#datepicker: ['jquery', 'bootstrap']
+		#zebra_datepicker: ['jquery']
 		jquery_listnav: ['jquery']
 		screwbuttons: ['jquery']
 		checkbox: ['bootstrap']

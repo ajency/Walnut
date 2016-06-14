@@ -246,7 +246,7 @@ function generate_sync_data(){
       }
       }
 
-   }
+   }//else ends here
 
     
 

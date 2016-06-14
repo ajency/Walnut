@@ -109,6 +109,8 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         return NoDataItemView.__super__.constructor.apply(this, arguments);
       }
 
+      console.log("EMPYT VIEW");
+
       NoDataItemView.prototype.template = 'No Content Available';
 
       NoDataItemView.prototype.tagName = 'td';

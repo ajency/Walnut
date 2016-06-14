@@ -36,6 +36,11 @@ require.config
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
 		datepicker: 'plugins/bootstrap-datepicker'
+		#zebra_datepicker: 'plugins/zebra_datepicker'
+		new_moment: 'plugins/new_moment'
+		mousewheel: 'plugins/jquery-mousewheel'
+		datetimepicker: 'plugins/datetimepicker.min'
+		multiselect: 'plugins/bootstrap-multiselect'
 		jquery_listnav: 'plugins/jquery-listnav'
 		screwbuttons: 'plugins/jquery.screwdefaultbuttonsV2'
 		bridget: 'plugins/jquery.bridget'
@@ -54,6 +59,7 @@ require.config
 		modenizr: 'plugins/bookBlock/modernizr.custom'
 		jquerypp : 'plugins/bookBlock/jquerypp.custom'
 		bookblock : 'plugins/bookBlock/jquery.bookblock'
+
 
 	shim:
 		underscore:
@@ -79,8 +85,13 @@ require.config
 		syphon: ['backbone']
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
+		mousewheel: ['jquery']
 		datepicker: ['jquery', 'bootstrap']
-		timepicker: ['jquery', 'bootstrap']
+		new_moment: ['jquery']
+		datetimepicker: ['jquery', 'new_moment','bootstrap']
+		multiselect: ['jquery','bootstrap']
+		#zebra_datepicker: ['jquery']
+		#timepicker: ['jquery', 'bootstrap']
 		timecircles: ['jquery']
 		jquery_listnav: ['jquery']
 		screwbuttons: ['jquery']

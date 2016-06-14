@@ -32,7 +32,10 @@
                     $aj_csvimport->display_interface(1); 
                  }
              }   
-         }  
+         } 
+        /* else if(isset($_POST['export'])){
+            echo generate_excel_export();
+         } */
          else{
              $aj_csvimport->display_interface(1);
          }

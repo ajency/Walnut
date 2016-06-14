@@ -14,6 +14,13 @@ require_once( 'api.php');
  * 
  * @return string $output; 
  */
+/*function generate_excel_export(){
+  $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
+  $txt = " generate_excel_export ";
+  fwrite($myfile, "\n". $txt);
+  fclose($myfile);
+}*/
+
 function ajci_display_csv_preview($component_name = '',$validated_response = array()){
     global $ajci_components;
     $output ='';

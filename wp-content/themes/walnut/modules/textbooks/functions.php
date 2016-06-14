@@ -101,6 +101,7 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
  */
 
 function get_textbooks( $args = array() ) {
+
     // set defaults
     $defaults = array(
         'hide_empty'    => false,
@@ -193,6 +194,7 @@ function get_textbooksids_for_current_blog(){
 
             if ($contains){
                 $blog_textbooks[]=$book->textbook_id;
+
             }
         }
 

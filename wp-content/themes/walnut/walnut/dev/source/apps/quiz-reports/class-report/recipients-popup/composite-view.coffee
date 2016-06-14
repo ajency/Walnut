@@ -2,7 +2,7 @@
         'apps/quiz-reports/class-report/recipients-popup/item-view'
         ], (App)->
 
-    App.module "QuizRecipientsPopup.Views", (Views)-> 
+    App.module "QuizRecipientsPopup.Views", (Views, App, Backbone, Marionette, $, _)-> 
 
         class Views.RecipientsView extends Marionette.CompositeView
 
@@ -16,7 +16,9 @@
                                     <th>Recipient Name (Parents)</th>
                                     <th>Recipient Email</th>
                                     <th>Student Name</th>
+                                    {{#quiz_component}}
                                     <th>Quiz</th>
+                                    {{/quiz_component}}
                                     <th></th>
                                 </tr>
                             </thead>
@@ -24,7 +26,8 @@
                         </table>
                         <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit">
                             <i class="fa fa-check"></i> Send Email
-                        </button>'
+                        </button>
+                        <p class="email_specific m-l-40 text-default" style="font-size:15px;">&nbsp;</p>'
 
             itemView: Views.RecipientsItemView
 
@@ -38,12 +41,38 @@
                 'click .send-email'                     : 'sendEmail'
 
             initialize:->
-                @dialogOptions = 
-                    modal_title : 'Confirm Recipients'
+                if (this.model.get('communication_type') == 'quiz_published_parent_mail')
+                    @dialogOptions = 
+                        modal_title : 'New Quizzes'
+                else if (this.model.get('communication_type') == 'quiz_summary_parent_mail')
+                    @dialogOptions = 
+                        modal_title : 'Summary Report'
+                else
+                    @dialogOptions = 
+                        modal_title : 'Confirm Recipients'
+                
 
             onShow:->
-                @$el.find '#check_all_div'
-                .trigger 'click'
+                if ( (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
+                    @$el.find '.email_specific'
+                    .text '*The Emails will be sent to the entire class. One student is randomly picked for email preview'
+                    @$el.find '#check_all_div'
+                    .trigger 'click'
+                    @$el.find '#check_all'
+                    .prop 'disabled', true
+                    @$el.find '.checkbox'
+                    .prop 'disabled', true 
+                else 
+                    @$el.find '#check_all_div'
+                    .trigger 'click'
+
+
+            mixinTemplateHelpers:(data)->
+                data=super data
+                console.log data
+                console.log this.model.get('communication_type')
+                quiz_component = true if (this.model.get('communication_type') == 'quiz_completed_parent_mail')
+                #console.log data.quiz_component
 
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'
@@ -57,23 +86,113 @@
 
             sendEmail:->
 
+                console.log @model
+                console.log @model.get 'additional_data'
+                additional_data = @model.get 'additional_data'
+                quiz_ids = additional_data['quiz_ids']
+                div_id = additional_data['division']
                 @$el.find '.communication_sent'
                 .remove()
 
-                allCheckedRecipients= _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
+                allCheckedRecipients = _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
+
                 raw_recipients = _.map allCheckedRecipients, (id,index)=> @collection.get(id).toJSON()
+                console.log raw_recipients
+                if div_id == null
+                    div_id = raw_recipients[0]['student_division']
+                    console.log div_id
 
-                if not _.isEmpty raw_recipients
-                    additional_data= @model.get 'additional_data'
-                    additional_data.raw_recipients = raw_recipients
+                if ( (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
+                    data=
+                        component           : 'quiz'
+                        communication_type  : @model.get 'communication_type'
+                        communication_mode  : @model.get 'communication_mode'
+                        priority            : 0
+                        recipients          : []
+                        additional_data:
+                            quiz_ids        : quiz_ids
+                            division        : div_id
+                        status              :"OK"
+                    console.log data
+                    url     = AJAXURL + '?action=get-communication-recipients'
+                    #data    = @.toJSON()
 
-                    @model.save()
+                    defer = $.Deferred()
 
-                    @$el.find '.send-email'
-                    .after '<span class="m-l-40 text-success small communication_sent">
-                            Your Emails have been queued successfully</span>'
+                    ###$.post url, 
+                        data, (response, status) =>
+                            console.log response
+                            #response = response
+                            defer.resolve response
+                        'json'
+                    defer.promise()###
 
-                else
-                    @$el.find '.send-email'
-                    .after '<span class="m-l-40 text-error small communication_sent">
-                            No Recipients Selected</span>'
+                    $.ajax({
+                        type : 'POST',
+                        url : url,
+                        data : data,
+                        dataType: 'json',
+                        async: true,
+                        success :(response, textStatus, jqXHR)=>
+                                allCheckedRecipients = _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
+
+                                raw_recipients = _.map allCheckedRecipients, (id,index)=> @collection.get(id).toJSON()
+                                console.log raw_recipients
+                                console.log raw_recipients
+                                additional_data = @model.get 'additional_data'
+                                console.log additional_data
+                                additional_data.raw_recipients = raw_recipients
+                                #additional_data.division = div_id
+                                comm = @model.get 'communication_id'
+                                additional_data.raw_recipients = response
+                                console.log @model
+                                @model.save()
+                                if(this.model.get('communication_type') == 'quiz_published_parent_mail')
+                                    data=
+                                        component           : 'quiz'
+                                        communication_type  : 'quiz_published_parent_mail'
+                                        communication_mode  : 'email'
+                                        priority            : 0
+                                        recipients          : []
+                                        additional_data:
+                                            quiz_ids        : quiz_ids
+                                            division        : null
+                                            raw_recipients  : response
+                                    url = AJAXURL + '?action=create-communications'
+                                    $.post url, 
+                                        data, (response, status) =>
+                                            console.log response
+                                            #response = response
+                                            defer.resolve response
+                                        'json'
+                                    defer.promise()
+                                @$el.find '.send-email'
+                                .after '<p class="m-l-40 text-success small communication_sent">
+                                                        &nbsp;Your Emails have been queued successfully</p>'
+
+                    });
+
+
+                if ( (this.model.get('communication_type') != 'quiz_summary_parent_mail') && (this.model.get('communication_type') != 'quiz_published_parent_mail'))
+                    if not _.isEmpty raw_recipients
+                        #console.log dataResponse.responseJSON
+                        #raw_recipients = response.responseJSON
+                        #console.log raw_recipients
+                        additional_data= @model.get 'additional_data'
+                        console.log additional_data
+                        console.log raw_recipients
+                        additional_data.raw_recipients = raw_recipients
+                        console.log @odel
+                        @model.save()
+                        console.log @model
+                    
+
+                        @$el.find '.send-email'
+                        .after '<p class="m-l-40 text-success small communication_sent">
+                                &nbsp;Your Emails have been queued successfully</p>'
+
+                    else
+                        @$el.find '.send-email'
+                        .after '<p class="m-l-40 text-error small communication_sent">
+                                &nbsp;No Recipients Selected</p>'
+                #@model.save()

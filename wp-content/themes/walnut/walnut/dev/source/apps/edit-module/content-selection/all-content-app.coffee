@@ -103,7 +103,7 @@ define ['app'
 				@groupType = Marionette.getOption @, 'groupType'
 
 		class NoDataItemView extends Marionette.ItemView
-
+			console.log "EMPYT VIEW"
 			template: 'No Content Available'
 
 			tagName: 'td'

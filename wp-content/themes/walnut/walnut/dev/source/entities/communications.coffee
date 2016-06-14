@@ -19,6 +19,7 @@ define ["app", 'backbone'], (App, Backbone) ->
             name: 'communications'
 
             getRecipients:->
+                console.log @.toJSON()
                 url     = AJAXURL + '?action=get-communication-recipients'
                 data    = @.toJSON()
 
@@ -26,6 +27,7 @@ define ["app", 'backbone'], (App, Backbone) ->
 
                 $.post url, 
                     data, (response) =>
+                        console.log response
                         defer.resolve response
                     'json'
                     
@@ -33,15 +35,17 @@ define ["app", 'backbone'], (App, Backbone) ->
 
 
             getPreview:(recipient)->
-                console.log recipient
+                #console.log recipient
+                console.log @.toJSON()
                 url     = AJAXURL + '?action=get-communication-preview'
                 data    = @.toJSON()
                 data.additional_data.preview_recipient = recipient.toJSON()
 
                 defer = $.Deferred()
-
+                console.log data
                 $.post url, 
                     data, (response) =>
+                        console.log response
                         defer.resolve response
                     'json'
                     
@@ -62,9 +66,11 @@ define ["app", 'backbone'], (App, Backbone) ->
         API =
 
             createCommunication: (data)->
+                console.log data
                 CommunicationsModel = new Communications.ItemModel()
                 CommunicationsModel.set data
                 CommunicationsModel
 
         App.reqres.setHandler "create:communication" ,(data)->
+            console.log data
             API.createCommunication data

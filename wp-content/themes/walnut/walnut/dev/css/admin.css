@@ -58,3 +58,115 @@
 #question-display-region > div #skip-question{
 	padding: 10px 18px;
 }
+
+
+
+/* ---------------------------
+   BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
+ ---------------------------
+*/
+
+#dialog-region .bootstrap-datetimepicker-widget .table-condensed{
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
+#dialog-region .bootstrap-datetimepicker-widget{
+	cursor: pointer;
+}
+
+#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
+	color: #ffffff;
+    background-color: #259b24;
+    border-color: #259b24;
+}
+
+
+/* ---------------------------
+   QUIZ LIST TEXTBOOK SELECT  -----------
+ ---------------------------
+*/
+
+
+.table-tools-actions .select2-container.textbook-filter{
+	min-width: 160px;
+    width: inherit;
+}
+
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices{
+	max-width: 520px;
+    overflow-x: auto;
+    white-space: nowrap;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+
+.table-tools-actions .select2-container.textbook-filter .select2-search-choice{
+	display: inline-block;
+    float: none;
+    // width: 123px;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field{
+	display: inline-block;
+    float: none;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field input[type="text"]{
+	width: 153px;
+    color: #000 !important;
+    font-weight: 400;
+    text-transform: capitalize;
+    margin-top: -3px;
+    padding-top: 10px !important;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field .select2-focused{
+    margin-top: -10px;
+}
+
+
+/* ---------------------------
+   QUIZ SEARCH ALLIGNED  -----------
+ ---------------------------
+*/
+    
+
+.flexContainer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.flexContainer .flexChild{
+    margin: 0 5px;
+}
+
+.flexContainer .flexChild .input-append{
+	display: flex;
+}
+
+.flexContainer .flexChild .input-append > input[type="text"]{
+	width: 80%;
+}
+
+.flexContainer .flexChild .input-append .dropdown-menu{
+	top: 40px !important;
+    height: 260px;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+

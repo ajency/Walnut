@@ -159,7 +159,7 @@ define ['app'
 						.remove()
 
 		class EmptyView extends Marionette.ItemView
-
+			console.log "EmptyView"
 			template: 'No Content Available'
 
 			tagName: 'td'

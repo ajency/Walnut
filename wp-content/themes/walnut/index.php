@@ -15,7 +15,6 @@
  */
 
 ?>
-
 <div id="main-content" class="main-content">
 AJENCY THEME
 </div><!-- #main-content -->

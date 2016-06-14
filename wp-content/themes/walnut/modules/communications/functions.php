@@ -24,6 +24,8 @@ function add_communication_components($defined_comm_components){
         'quizzes_taken_report' => $preferences,
         'quiz_completed_student_mail' => $preferences,
         'quiz_completed_parent_mail' => $preferences,
+        'quiz_published_parent_mail' => $preferences,
+        'quiz_summary_parent_mail' => $preferences,
     );
 
     $ajcm_components['user'] = array(
@@ -37,6 +39,7 @@ add_filter('add_commponents_filter','add_communication_components',10,1);
 
 function ajax_add_communication_to_queue() {
 
+    #file_put_contents("aaapost.txt", print_r($_POST, true));
     $functionName = 'add_'.$_POST['communication_type'];
 
     if (function_exists($functionName)){
@@ -198,6 +201,7 @@ function ajax_get_communication_preview(){
     
     global $aj_comm;
 
+
     $functionName = $_POST['communication_type'].'_preview';
 
     if (function_exists($functionName)){
@@ -221,3 +225,4 @@ function ajax_get_communication_preview(){
 
 }
 add_action('wp_ajax_get-communication-preview','ajax_get_communication_preview');
+

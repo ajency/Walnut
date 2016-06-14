@@ -62,8 +62,10 @@ define ['app','bootbox'], (App,bootbox)->
 
                     schedule = @model.get 'schedule'
 
-                    data.scheduleFrom= moment(schedule['from']).format("Do MMM YYYY")
-                    data.scheduleTo= moment(schedule['to']).format("Do MMM YYYY")
+                    #data.scheduleFrom= moment(schedule['from']).format("Do MMM YYYY")
+                    #data.scheduleTo= moment(schedule['to']).format("Do MMM YYYY")
+                    data.scheduleFrom = schedule['from']
+                    data.scheduleTo = schedule['to']
 
                 data.can_schedule = true if App.request 'current:user:can','schedule_quiz'
 
@@ -89,19 +91,20 @@ define ['app','bootbox'], (App,bootbox)->
                 schedule = @model.get 'schedule'
                 from = schedule['from']
                 to   = schedule['to']
-
+                console.log from
+                console.log to
                 console.log schedule
 
-                fromDate= moment(from).format("Do MMM YYYY")
-                toDate= moment(to).format("Do MMM YYYY")
+                #fromDate= moment(from).format("Do MMM YYYY")
+                #toDate= moment(to).format("Do MMM YYYY")
 
                 if from and to
 
                     @$el.find '#schedule-from-date'
-                    .html fromDate
+                    .html from
 
                     @$el.find '#schedule-to-date'
-                    .html toDate
+                    .html to
 
                     @$el.find '.schedule_dates'
                     .show()

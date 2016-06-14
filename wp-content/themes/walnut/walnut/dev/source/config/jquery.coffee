@@ -155,6 +155,18 @@ define ['jquery', 'underscore'], ($, _)->
 
         items
 
+
+    $.getAllItems = (element)->
+
+        items= _.chain element.find('.tab_checkbox')
+                    .map (checkbox)->
+                        #if $(checkbox).is ':checked'
+                        $(checkbox).val()
+                    .compact()
+                    .value()
+
+        items
+
     # --SELECT ALL CHECKBOX FUNCTIONS END --
 
     $.allowRoute = (route)->

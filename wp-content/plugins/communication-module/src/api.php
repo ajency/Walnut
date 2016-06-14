@@ -145,6 +145,8 @@ if(is_plugin_active('json-rest-api/plugin.php')){
         
         public function add_communication($data){
             global $aj_comm;
+
+            file_put_contents("filenameajcnnn.txt", print_r($data, true));
             
             $comm_args = $data['comm_args'];
             $comm_meta = $data['comm_meta'];

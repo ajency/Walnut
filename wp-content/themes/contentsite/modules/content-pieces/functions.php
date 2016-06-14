@@ -1,5 +1,104 @@
 <?php
 
+function get_sections($chapids){ 
+# $myfile = fopen(get_home_path()."log.txt", "a") or die("Unable to open file!");
+ 
+  
+global $wpdb;
+//$textbook_ids = $textbook_ids;
+$chap_ids = $sect_data = $sect_da = array();
+
+$chapids = trim($chapids,',');
+$chap_ids = split(',',$chapids);
+//$count = sizeof($chapids);
+
+foreach ($chap_ids as $chapid) {
+if($chapid == '' || $chapid == null){
+    return $sect_da;
+}
+
+ $section_data = $wpdb->get_results("SELECT ter.name , ter.term_id, tax.parent, term2.name AS chapter_name FROM wp_terms AS ter
+                                    LEFT JOIN wp_term_taxonomy AS tax ON ter.term_id=tax.term_id
+                                    LEFT JOIN wp_terms AS term2 ON tax.parent = term2.term_id
+                                    WHERE tax.parent = '".$chapid."'
+                                    ORDER BY ter.name");
+  #fwrite($myfile, "\n". $txt);
+
+$sect_da = array_merge($section_data,$sect_da);
+}
+#fclose($myfile);
+#file_put_contents("abc.txt", print_r($sect_da, true));
+ return $sect_da;
+}
+
+function get_chapters($textbook_id){ 
+
+global $wpdb;
+//$textbook_ids = $textbook_ids;
+$textids = $chapter_data = $chapter_da = array();
+//$textids = trim($textids,',');
+//$textids = split(',',$textbook_ids);
+//$count = sizeof($textids);
+
+/*foreach ($textids as $textid) {
+if($textid == '' || $textid == null){
+    return $chapter_da;
+}*/
+
+ $chapter_data = $wpdb->get_results("SELECT ter.name , ter.term_id, tax.parent FROM wp_terms AS ter
+                                    LEFT JOIN wp_term_taxonomy AS tax ON ter.term_id=tax.term_id
+                                    WHERE tax.parent = '".$textbook_id."'
+                                    ORDER BY ter.name");
+
+/*$chapter_da = array_merge($chapter_data,$chapter_da);
+} */
+
+ return $chapter_data;
+}
+
+function textbook_data()
+{
+    
+    global $wpdb;
+    $defaults = array(
+        'hide_empty'    => false,
+        'parent'        => 0,
+        'fetch_all'     => true,
+        'orderby'       => 'name',
+        'order'         => 'asc'
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+// -- all textbooks with no chapters associated to them 
+$textbook_ids = get_terms('textbook', $args);
+//$textbook_ids = $wpdb->get_results("SELECT textbook_id FROM {$wpdb->base_prefix}textbook_relationships");
+
+foreach ($textbook_ids as $textid) {
+    $id = $textid->term_id;
+   // $id = $textid->textbook_id;
+    $id_text = $id.",".$id_text;
+ 
+}
+$id_text = trim($id_text,',');
+
+ $textbooks = $wpdb->get_results("SELECT name, term_id FROM wp_terms WHERE term_id IN ($id_text)");
+
+    return $textbooks;
+
+}
+
+function textbook_name($id_text)
+{
+    
+    global $wpdb;
+
+ $textbooks = $wpdb->get_results("SELECT name FROM wp_terms WHERE term_id='".$id_text."'");
+
+    return $textbooks;
+
+}
+
+
 function save_content_piece($data){
 
     global $wpdb;

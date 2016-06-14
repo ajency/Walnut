@@ -17,7 +17,7 @@
         <p>CSV import interface</p>
         <?php 
          global $aj_csvimport;
-         if (isset($_POST['submit'])){   
+         if (isset($_POST['submit'])){
              $uniquefilename= $_POST['uniquename'];
              $realfilename= $_POST['realname'];
              $component = $_POST['csv_component'];

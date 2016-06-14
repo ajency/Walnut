@@ -56,12 +56,7 @@ class ImportContentPiece {
         $attachment_id=0;
         $path = trim($path);
 
-        $path = str_replace('\\', '/', $path);
-
-
-        _log('modified media path: '.$path);
-
-        if($path){
+        if($path){ 
 
             $base_url = $this->get_media_base_url($path);
 

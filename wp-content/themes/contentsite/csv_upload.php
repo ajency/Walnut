@@ -41,9 +41,12 @@
     if (ENV == 'dev') {
         ?>
 
-        <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/>
+        <!--link href="<!--?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/datepicker.css" rel="stylesheet" type="text/css"/-->
+        <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/datetimepicker.css" rel="stylesheet" type="text/css"/>
         <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-timepicker.css" rel="stylesheet"
               type="text/css"/>
+        <!--link href="<!--?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/reset-multi.css" rel="stylesheet" type="text/css"/-->
+        <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css"/>
         <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/pace.coinspin.css" rel="stylesheet" type="text/css"
               media="screen"/>
         <link href="<?=get_site_url()?>/wp-content/themes/walnut/walnut/dev/css/jquery.sidr.light.css" rel="stylesheet" type="text/css"
@@ -82,12 +85,13 @@
 
 $themeUrl = get_template_directory();
 
+
 $divisionCsvUrl = $themeUrl . '/csvupload/division.csv';
 $studentCsvUrl = $themeUrl . '/csvupload/student.csv';
 $teacherCsvUrl = $themeUrl . '/csvupload/teacher.csv';
 $teacherTextbookCsvUrl = $themeUrl . '/csvupload/teacher_textbooks.csv';
 $textbookCsvUrl = $themeUrl . '/csvupload/textbook.csv';
-
+//echo $divisionCsvUrl;
 $divisionCsvJson = parseCSV( $divisionCsvUrl );
 $studentCsvJson = parseCSV( $studentCsvUrl );
 $teacherCsvJson = parseCSV( $teacherCsvUrl );

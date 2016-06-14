@@ -26,11 +26,13 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.getRecipients = function() {
         var data, defer, url;
+        console.log(this.toJSON());
         url = AJAXURL + '?action=get-communication-recipients';
         data = this.toJSON();
         defer = $.Deferred();
         $.post(url, data, (function(_this) {
           return function(response) {
+            console.log(response);
             return defer.resolve(response);
           };
         })(this), 'json');
@@ -39,13 +41,15 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       ItemModel.prototype.getPreview = function(recipient) {
         var data, defer, url;
-        console.log(recipient);
+        console.log(this.toJSON());
         url = AJAXURL + '?action=get-communication-preview';
         data = this.toJSON();
         data.additional_data.preview_recipient = recipient.toJSON();
         defer = $.Deferred();
+        console.log(data);
         $.post(url, data, (function(_this) {
           return function(response) {
+            console.log(response);
             return defer.resolve(response);
           };
         })(this), 'json');
@@ -78,12 +82,14 @@ define(["app", 'backbone'], function(App, Backbone) {
     API = {
       createCommunication: function(data) {
         var CommunicationsModel;
+        console.log(data);
         CommunicationsModel = new Communications.ItemModel();
         CommunicationsModel.set(data);
         return CommunicationsModel;
       }
     };
     return App.reqres.setHandler("create:communication", function(data) {
+      console.log(data);
       return API.createCommunication(data);
     });
   });
