@@ -38,16 +38,17 @@ define ['app'
 						</td>'
 
 			serializeData : ->
-				console.log "serializeData"
 				data = super()
 				data.view_url = SITEURL + "/#view-group/#{data.id}"
 				data.edit_url = SITEURL + "/#edit-module/#{data.id}"
-				console.log data
+				#console.log @groupType
 				data.textbookName = =>
-					console.log data.term_ids.textbook
-					textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
-					textbook.name if textbook?
-				console.log data.textbookName
+					if @groupType == 'quiz'
+						textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
+						textbook.name if textbook?
+					else
+						textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
+						textbook.name if textbook?
 
 				data.chapterName = =>
 					chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter

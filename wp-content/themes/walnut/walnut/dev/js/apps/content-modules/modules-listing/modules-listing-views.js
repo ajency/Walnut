@@ -23,24 +23,29 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.serializeData = function() {
         var data;
-        console.log("serializeData");
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
-        console.log(data);
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            console.log(data.term_ids.textbook);
-            textbook = _.findWhere(_this.textbooks, {
-              "id": parseInt(data.term_ids.textbook)
-            });
-            if (textbook != null) {
-              return textbook.name;
+            if (_this.groupType === 'quiz') {
+              textbook = _.findWhere(_this.textbooks, {
+                "id": parseInt(data.term_ids.textbook)
+              });
+              if (textbook != null) {
+                return textbook.name;
+              }
+            } else {
+              textbook = _.findWhere(_this.textbooks, {
+                "id": data.term_ids.textbook
+              });
+              if (textbook != null) {
+                return textbook.name;
+              }
             }
           };
         })(this);
-        console.log(data.textbookName);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
