@@ -29,11 +29,15 @@ function school_data_sync_screen_new(){
     //$html .= '<div>There are 15 new content since you last updated.</div>';
 
     if(!$last_up_sync){
-        $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> done since the setup was done. Please perform upsync first to enable DownSync.</div>';
+        $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> performed since the setup was done. Please perform upsync first to enable DownSync.</div>';
         $d_disabled = 'disabled';
-    }else{        
-        if(time() - strtotime($last_up_sync) > 3601){
-            $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> done in recent time. Last successfull <strong>UpSync</strong> was performed on '.date('M d, Y h:i A', strtotime($last_up_sync)).'. Please perform upsync first to enable DownSync.</div>';
+    }else{
+    date_default_timezone_set('Asia/Kolkata');
+    $timestamp = strtotime($last_up_sync);
+    $cDate = strtotime(date('Y-m-d H:i:s'));    
+    $oldDate = $timestamp + 3600;
+        if($oldDate < $cDate){
+            $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> performed in recent time. Last successfull <strong>UpSync</strong> was performed on '.date('M d, Y h:i A', strtotime($last_up_sync)).'. Please perform upsync first to enable DownSync.</div>';
             $d_disabled = 'disabled';
         }else{
             $html .= '<div class="u_sync_message"></span><span class="dashicons dashicons-yes"></span> Last successfull <strong>UpSync</strong> was performed on '.date('M d, Y h:i A', strtotime($last_up_sync)).'</div>';
@@ -44,7 +48,7 @@ function school_data_sync_screen_new(){
     if($last_down_sync){
      $html .= '<div class="d_sync_message"><span class="dashicons dashicons-yes"></span> Last successfull <strong>DownSync</strong> completed on '.date('M d, Y h:i A', strtotime($last_down_sync)).'.</div>';
     }else{
-    $html .= '<div class="d_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>DownSync</strong> done since the setup was done.</div>';
+    $html .= '<div class="d_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>DownSync</strong> performed since the setup was done.</div>';
     }
 
 
@@ -470,14 +474,14 @@ if($file !== 'options.csv'){
 if (strpos($file,'postmeta') !== false) {
     //If first postmeta file then truncate the table before inserting data
     if($file == 'postmeta_1.csv'){
-        //$wpdb->query("TRUNCATE TABLE ".$table."");
+        $wpdb->query("TRUNCATE TABLE ".$table."");
     }    
 }else{
-    //$wpdb->query("TRUNCATE TABLE ".$table."");
+    $wpdb->query("TRUNCATE TABLE ".$table."");
 }
 
 //Insert csv data to table
-//$tables[] = load_csv_to_table($target.'/'.$file,$table);
+$tables[] = load_csv_to_table($target.'/'.$file,$table);
 }
 
 
@@ -508,7 +512,7 @@ update_post_meta($front_page_id,'_wp_page_template','dashboard.php');
 update_custom_template_pages();
 
 
-//deleteDir($target);
+deleteDir($target);
 
 
 $last_sync_id = $wpdb->get_var( "SELECT id FROM ".$wpdb->prefix."sync_data ORDER BY id DESC LIMIT 1" );
