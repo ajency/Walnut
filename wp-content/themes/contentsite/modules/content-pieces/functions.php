@@ -1,4 +1,3 @@
-
 <?php
 
 function get_sections($chapids){ 
@@ -166,5 +165,3 @@ function save_content_element($element_details){
     return $meta_id;
 
 }
-
-
