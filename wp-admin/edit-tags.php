@@ -593,7 +593,14 @@ do_action( "{$taxonomy}_add_form", $taxonomy );
 
 <?php if ( ! wp_is_mobile() ) : ?>
 <script type="text/javascript">
+
 try{document.forms.addtag['tag-name'].focus();}catch(e){}
+//jQuery(document).ready(function(){
+	var form = jQuery(this).parents('form');
+jQuery('#submit').click(function(){
+jQuery('input[type="text"]:visible, textarea:visible', form).val('');
+//}
+})
 </script>
 <?php
 endif;
