@@ -29,20 +29,18 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            if (_this.groupType === 'quiz') {
+            if (_this.groupType === 'quiz' || _this.groupType === 'student-training') {
               textbook = _.findWhere(_this.textbooks, {
                 "id": parseInt(data.term_ids.textbook)
               });
-              if (textbook != null) {
-                return textbook.name;
-              }
             } else {
+              console.log(_this.groupType);
               textbook = _.findWhere(_this.textbooks, {
                 "id": data.term_ids.textbook
               });
-              if (textbook != null) {
-                return textbook.name;
-              }
+            }
+            if (textbook != null) {
+              return textbook.name;
             }
           };
         })(this);

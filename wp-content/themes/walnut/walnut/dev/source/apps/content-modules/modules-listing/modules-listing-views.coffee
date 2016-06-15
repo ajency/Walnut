@@ -43,12 +43,13 @@ define ['app'
 				data.edit_url = SITEURL + "/#edit-module/#{data.id}"
 				#console.log @groupType
 				data.textbookName = =>
-					if @groupType == 'quiz'
+					if @groupType == 'quiz' || @groupType == 'student-training'
 						textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
-						textbook.name if textbook?
+						#textbook.name if textbook?
 					else
+						console.log @groupType
 						textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
-						textbook.name if textbook?
+					textbook.name if textbook?
 
 				data.chapterName = =>
 					chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
