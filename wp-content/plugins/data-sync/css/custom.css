@@ -18,3 +18,12 @@ background-position: right 2px top 8px;
 background-image:none;
 color:#858585;
 }
+
+
+#syncwrapper .dashicons-yes{
+	color:#009933;
+}
+
+#syncwrapper .dashicons-no-alt{
+	color:#ff471a;
+}

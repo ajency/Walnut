@@ -3,6 +3,9 @@
 jQuery(document).ready(function() {
 
 
+  var meta_data = {}
+
+
   jQuery("#vsync-data").on('click',function(){
 
     //jQuery("#upsyncstatus").empty();
@@ -27,8 +30,11 @@ jQuery(document).ready(function() {
     .then(generate_content_collection)
     .then(generate_collection_meta)
     .then(generate_posts)
-    .then(generate_postmeta)
-    .then(generate_users)
+    .then(generate_postmeta);
+  });
+
+
+    /*generate_users(promiseResult)
     .then(generate_usermeta)
     .then(generate_options)
 
@@ -52,8 +58,44 @@ jQuery(document).ready(function() {
 
     .then(extract_data)
     .then(import_downloaded_data)
+    .then(complete_sync_process);*/
+
+
+
+
+
+    function post_meta_after_generate(promiseResult){
+      generate_users(promiseResult)
+    .then(generate_usermeta)
+    .then(generate_options)
+
+    .then(download_terms)
+    .then(download_term_relationships)
+    .then(download_term_taxonomy)
+    .then(download_textbook_relationships)
+    .then(download_class_divisions)
+    .then(download_quiz_schedules)
+    .then(download_question_response)
+    .then(download_question_response_meta)
+    .then(download_quiz_question_response)
+    .then(download_quiz_response_summary)
+    .then(download_content_collection)
+    .then(download_collection_meta)
+    .then(download_posts)
+    .then(download_postmeta);    
+    }
+
+
+
+    function post_meta_after_download(promiseResult){
+     download_users(promiseResult)
+    .then(download_usermeta)
+    .then(download_options)
+
+    .then(extract_data)
+    .then(import_downloaded_data)
     .then(complete_sync_process);
-  });
+    }
 
 
 
@@ -100,6 +142,7 @@ jQuery.ajaxSetup({
 // Starting Upsync
 function initiate_up_sync() {
   jQuery("#usync-data").attr('disabled', 'disabled');
+  jQuery('#vsync-data').attr('disabled', 'disabled');
   writeProgressMessageUpsync("Initiating upsync process ","initiate");
   return jQuery.ajax({
         url: ajaxurl+'?action=upsync_initiate',
@@ -233,7 +276,10 @@ function complete_upsync_process(promiseResult) {
     jQuery("." + current).prev().addClass('done');
     jQuery("." + current).css('background','none');
     jQuery("#usync-data").attr('disabled', false);
-    jQuery("#upsyncstatus").append('<div><a class="button" href="'+promiseResult.log_url+'" target="_blank">Download Log</a></div>');
+    jQuery('#vsync-data').attr('disabled', false);
+    jQuery("#upsyncstatus").append('<div><a class="button" href="'+promiseResult.log_url+'" target="_blank">Download Upsync Log</a></div>');
+    jQuery(".u_sync_message").html('<div class="u_sync_message"></span><span class="dashicons dashicons-yes"></span> Last successfull <strong>UpSync</strong> was performed on '+
+moment().format('lll'));  
 }
 
 
@@ -257,6 +303,7 @@ function writeProgressMessageUpsync(msg,msgact) {
 // Starting Downsync
 function initiate_down_sync() {
   jQuery("#vsync-data").attr('disabled', 'disabled');
+  jQuery("#usync-data").attr('disabled', 'disabled');
   writeProgressMessage("Initiating downsync process ","initiate");
   return jQuery.ajax({
         url: ajaxurl+'?action=sync_initiate',
@@ -265,7 +312,7 @@ function initiate_down_sync() {
 
 function generate_terms(promiseResult) {
   var table = 'terms';
-    writeProgressMessage("Generating <span class='curreentgtable'></span> <span class='generatestatus'></span> ","generating");
+    writeProgressMessage("Generating <span class='curreentgtable'></span> <span class='metag-progress'></span> <span class='generatestatus'></span> ","generating");
     jQuery(".generating").prev().addClass('done');
     jQuery(".generatestatus").text('(1/17)');
     jQuery(".curreentgtable").text(table);
@@ -387,11 +434,58 @@ function generate_posts(promiseResult) {
 
 function generate_postmeta(promiseResult) {
   var table = 'postmeta';
+  var total_pages = parseInt(promiseResult.postmeta_pages)+1;
+  var meta_count = parseInt(promiseResult.meta_count);
+  var meta_per_page = parseInt(promiseResult.meta_per_page);
+
+  meta_data['total_pages'] = total_pages;
+  meta_data['meta_count'] = meta_count;
+  meta_data['meta_per_page'] = meta_per_page;
+
+
   jQuery(".generatestatus").text('(14/17)');
-    jQuery(".curreentgtable").text(table);
-    return jQuery.ajax({
-        url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&school='+SCHOOL_URL,
-    });
+  jQuery(".curreentgtable").text(table);
+
+
+  var n = 1;
+
+  gen_meta_loop();
+
+  function gen_meta_loop() {
+
+    jQuery(".metag-progress").text('');
+
+    if(n < total_pages) {
+
+      if (n == 1){
+        var from_count = 1;
+      }else{
+        var from_count = (n-1) * meta_per_page+1;
+      }
+
+      if (n == total_pages-1){
+        var to_count = meta_count;
+      }else{
+        var to_count = n * meta_per_page;
+      }
+
+      var data_range_text = ' > '+from_count+' to '+to_count+' of total '+meta_count+' records';
+      jQuery(".metag-progress").text(data_range_text);
+
+        jQuery.ajax({
+            url: SERVER_AJAXURL+'?action=sync_generate&table='+table+'&path='+promiseResult.path+'&school='+SCHOOL_URL+'&postmeta_page='+n,
+            success: function(data){
+                n++;
+                if(n == total_pages){
+                  jQuery(".metag-progress").text('');
+                  post_meta_after_generate(promiseResult);
+                }
+                gen_meta_loop();
+            }
+        });
+    }
+  }
+    
 }
 
 function generate_users(promiseResult) {
@@ -433,7 +527,7 @@ function download_terms(promiseResult) {
   jQuery(".generatestatus").empty();
   jQuery(".curreentgtable").text('data');
   var table = 'terms';
-    writeProgressMessage("Downloading <span class='curreentdtable'></span> <span class='downstatus'></span>","downloading");
+    writeProgressMessage("Downloading <span class='curreentdtable'></span> <span class='metad-progress'></span> <span class='downstatus'></span>","downloading");
     jQuery(".downloading").prev().addClass('done');
     jQuery(".downstatus").text('(1/17)');
     jQuery(".curreentdtable").text(table);
@@ -557,9 +651,45 @@ function download_postmeta(promiseResult) {
   var table = 'postmeta';
   jQuery(".downstatus").text(' (14/17)');
   jQuery(".curreentdtable").text(table);
-      return jQuery.ajax({
-        url: ajaxurl+'?action=download_tables&table='+table+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
-    });
+
+  jQuery(".metad-progress").text('');
+
+
+  var n = 1;
+
+  dnld_meta_loop();
+
+  function dnld_meta_loop() {
+    if(n < meta_data.total_pages) {
+
+      if (n == 1){
+        var from_count = 1;
+      }else{
+        var from_count = (n-1) * meta_data.meta_per_page+1;
+      }
+
+      if (n == meta_data.total_pages-1){
+        var to_count = meta_data.meta_count;
+      }else{
+        var to_count = n * meta_data.meta_per_page;
+      }
+
+      var data_range_text = ' > '+from_count+' to '+to_count+' of total '+meta_data.meta_count+' records';
+      jQuery(".metad-progress").text(data_range_text);
+
+        jQuery.ajax({
+            url: ajaxurl+'?action=download_tables&table='+table+'_'+n+'&url='+promiseResult.url+'&local_path='+promiseResult.localpath,
+            success: function(data){
+                n++;
+                if(n == meta_data.total_pages){
+                  jQuery(".metad-progress").text('');
+                  post_meta_after_download(promiseResult);
+                }
+                dnld_meta_loop();
+            }
+        });
+    }
+  }
 }
 
 function download_users(promiseResult) {
@@ -624,6 +754,9 @@ function complete_sync_process(promiseResult) {
     jQuery("." + current).prev().addClass('done');
     jQuery("." + current).css('background','none');
     jQuery("#vsync-data").attr('disabled', false);
+    jQuery("#usync-data").attr('disabled', false);
+    jQuery(".d_sync_message").html('<div class="u_sync_message"></span><span class="dashicons dashicons-yes"></span> Last successfull <strong>DownSync</strong> was performed on '+
+moment().format('lll'));
 }
 
 

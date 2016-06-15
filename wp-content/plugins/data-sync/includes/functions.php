@@ -2,7 +2,9 @@
 function school_data_sync_screen_new(){
     global $wpdb;
 
-    $last_sync = $wpdb->get_var( "SELECT last_sync FROM ".$wpdb->prefix."sync_data WHERE status='success' ORDER BY id DESC LIMIT 1" );
+    $last_down_sync = $wpdb->get_var( "SELECT last_sync FROM ".$wpdb->prefix."sync_data WHERE status='success' and type='downsync' ORDER BY id DESC LIMIT 1" );
+
+    $last_up_sync = $wpdb->get_var( "SELECT last_sync FROM ".$wpdb->prefix."sync_data WHERE status='success' and type='upsync' ORDER BY id DESC LIMIT 1" );
 
     if ( !current_user_can( 'manage_options' ) )  {
         wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
@@ -22,17 +24,32 @@ function school_data_sync_screen_new(){
 
     $html = '<h3>School Data Update</h3>';
 
-    $html .= '<div class="wrap">';
+    $html .= '<div class="wrap" id="syncwrapper">';
 
     //$html .= '<div>There are 15 new content since you last updated.</div>';
 
-    if($last_sync){
-     $html .= '<div>Last successfull update on: '.date('H:i a F j, Y', strtotime($last_sync)).'.</div>';
+    if(!$last_up_sync){
+        $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> done since the setup was done. Please perform upsync first to enable DownSync.</div>';
+        $d_disabled = 'disabled';
+    }else{        
+        if(time() - strtotime($last_up_sync) > 3601){
+            $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> done in recent time. Last successfull <strong>UpSync</strong> was performed on '.date('M d, Y h:i A', strtotime($last_up_sync)).'. Please perform upsync first to enable DownSync.</div>';
+            $d_disabled = 'disabled';
+        }else{
+            $html .= '<div class="u_sync_message"></span><span class="dashicons dashicons-yes"></span> Last successfull <strong>UpSync</strong> was performed on '.date('M d, Y h:i A', strtotime($last_up_sync)).'</div>';
+            $d_disabled = '';
+        }
+    }
+
+    if($last_down_sync){
+     $html .= '<div class="d_sync_message"><span class="dashicons dashicons-yes"></span> Last successfull <strong>DownSync</strong> completed on '.date('M d, Y h:i A', strtotime($last_down_sync)).'.</div>';
+    }else{
+    $html .= '<div class="d_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>DownSync</strong> done since the setup was done.</div>';
     }
 
 
     $html .= '<button type="button" class="button" id="usync-data" style="margin:10px 10px;">UpSync</button>';
-    $html .= '<button type="button" class="button" id="vsync-data" style="margin:10px 10px;">DownSync</button>';
+    $html .= '<button type="button" class="button" id="vsync-data" '.$d_disabled.' style="margin:10px 10px;">DownSync</button>';
     
 
     $html .= '<div style="clear:both"></div>';
@@ -53,6 +70,7 @@ function sds_admin_scripts_new($hook) {
     /*if( 'settings_page_school_data_sync' != $hook )
         return;*/
     wp_enqueue_style( 'sds_custom_style', plugins_url( '../css/custom.css', __FILE__ ));
+    wp_enqueue_script( 'sds_moment_js', plugins_url( '../js/moment.js', __FILE__ ), array(), false, true );
     wp_enqueue_script( 'sds_custom_new', plugins_url( '../js/custom.js', __FILE__ ), array(), false, true );
 }
 add_action( 'admin_enqueue_scripts', 'sds_admin_scripts_new',100 );
@@ -233,6 +251,19 @@ $resp_decode = json_decode($upload_status,true);
 if(isset($_REQUEST['last_table'])){
     deleteDir($_REQUEST['path']);
 }
+
+
+
+//Updating sync data table
+global $wpdb;
+$last_sync_id = $wpdb->get_var( "SELECT id FROM ".$wpdb->prefix."sync_data ORDER BY id DESC LIMIT 1" );
+$wpdb->update(
+    $wpdb->prefix.'sync_data',
+    array(
+        'status' => 'success'
+    ),
+    array( 'id' => $last_sync_id ));
+
 
 header("content-type: text/javascript; charset=utf-8");
 header("access-control-allow-origin: *");
@@ -420,16 +451,33 @@ chmod($target.'/'.$file, 01777);
 
 
 
-$table = $wpdb->prefix . pathinfo($file)['filename'];
+//Set the postmeta table name for each postmeta csv file
+if (strpos($file,'postmeta') !== false) {
+    $table = $wpdb->prefix . 'postmeta';
+}else{
+    $table = $wpdb->prefix . pathinfo($file)['filename'];
+}
 
 
 
+
+
+//Not performing data insert to options table for now
 if($file !== 'options.csv'){
 
-$wpdb->query("TRUNCATE TABLE ".$table."");
 
+//check if postmeta table, so we can perform truncate action for others
+if (strpos($file,'postmeta') !== false) {
+    //If first postmeta file then truncate the table before inserting data
+    if($file == 'postmeta_1.csv'){
+        //$wpdb->query("TRUNCATE TABLE ".$table."");
+    }    
+}else{
+    //$wpdb->query("TRUNCATE TABLE ".$table."");
+}
 
-$tables[] = load_csv_to_table($target.'/'.$file,$table);
+//Insert csv data to table
+//$tables[] = load_csv_to_table($target.'/'.$file,$table);
 }
 
 
@@ -460,7 +508,7 @@ update_post_meta($front_page_id,'_wp_page_template','dashboard.php');
 update_custom_template_pages();
 
 
-deleteDir($target);
+//deleteDir($target);
 
 
 $last_sync_id = $wpdb->get_var( "SELECT id FROM ".$wpdb->prefix."sync_data ORDER BY id DESC LIMIT 1" );
