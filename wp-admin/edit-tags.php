@@ -600,7 +600,7 @@ try{document.forms.addtag['tag-name'].focus();}catch(e){}
 jQuery('#submit').click(function(){
 jQuery('input[type="text"]:visible, textarea:visible', form).val('');
 //}
-})
+});
 </script>
 <?php
 endif;
