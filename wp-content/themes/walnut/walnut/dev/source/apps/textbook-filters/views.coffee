@@ -189,7 +189,7 @@ define ['app'], (App)->
                     .select2().select2 'val', term_ids['textbook']
 
                     #@setFilteredContent()
-                @setFilteredContent()
+                    @setFilteredContent()
 
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
