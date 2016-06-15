@@ -23,6 +23,7 @@ function fetch_textbooks() {
     
     if(isset($_GET['page']))
       return $textbooks;
+
    wp_send_json($textbooks);
 }
 

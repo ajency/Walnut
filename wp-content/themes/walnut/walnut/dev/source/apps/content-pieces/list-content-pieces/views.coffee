@@ -180,6 +180,7 @@ define ['app'
 			itemViewContainer: '#list-content-pieces'
 
 			itemViewOptions : ->
+				console.log 'list'
 				textbooksCollection : @textbooks
 				chaptersCollection  : Marionette.getOption @, 'chapCollection'
 
@@ -206,6 +207,7 @@ define ['app'
 						'id' : textbookModel.get('term_id')
 
 			onShow:->
+				@chaptersCollection  = Marionette.getOption @, 'chaptersCollection'
 				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
 				@fullCollection = Marionette.getOption @, 'fullCollection'
 				textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection

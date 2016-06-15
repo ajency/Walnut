@@ -551,6 +551,7 @@ function wp_ajax_delete_tag() {
 		wp_die( 0 );
 }
 
+
 /**
  * Ajax handler for deleting a link.
  *

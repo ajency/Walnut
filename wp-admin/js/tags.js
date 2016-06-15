@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
 
 			$('input[type="text"]:visible, textarea:visible', form).val('');
 		});
-
+		$('input[type="text"]:visible, textarea:visible', form).val('');
 		return false;
 	});
 

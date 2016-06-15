@@ -209,6 +209,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.itemViewContainer = '#list-content-pieces';
 
       ListView.prototype.itemViewOptions = function() {
+        console.log('list');
         return {
           textbooksCollection: this.textbooks,
           chaptersCollection: Marionette.getOption(this, 'chapCollection')
@@ -246,6 +247,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.onShow = function() {
         var textbookFiltersHTML;
+        this.chaptersCollection = Marionette.getOption(this, 'chaptersCollection');
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         textbookFiltersHTML = $.showTextbookFilters({

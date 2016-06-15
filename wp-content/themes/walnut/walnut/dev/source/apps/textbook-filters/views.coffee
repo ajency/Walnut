@@ -178,15 +178,18 @@ define ['app'], (App)->
                 console.log "onShow"
                 $ ".filters select"
                 .select2();
-
+                console.log @
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
+
+                console.log @contentGroupModel
 
                 if @contentGroupModel
                     term_ids= @contentGroupModel.get 'term_ids'
                     $ "#textbooks-filter"
                     .select2().select2 'val', term_ids['textbook']
 
-                    @setFilteredContent()
+                    #@setFilteredContent()
+                @setFilteredContent()
 
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
@@ -202,6 +205,7 @@ define ['app'], (App)->
 
 
             setFilteredContent:->
+                console.log "setFilteredContent"
                 console.log @
                 dataType= Marionette.getOption @, 'dataType'
                 #console.log dataType

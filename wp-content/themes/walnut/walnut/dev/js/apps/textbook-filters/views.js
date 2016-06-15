@@ -107,12 +107,14 @@ define(['app'], function(App) {
         var term_ids;
         console.log("onShow");
         $(".filters select").select2();
+        console.log(this);
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
+        console.log(this.contentGroupModel);
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');
           $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
-          return this.setFilteredContent();
         }
+        return this.setFilteredContent();
       };
 
       TextbookFiltersView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType, currItem) {
@@ -137,6 +139,7 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.setFilteredContent = function() {
         var dataType, filtered_data;
+        console.log("setFilteredContent");
         console.log(this);
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);
