@@ -136,11 +136,12 @@ class ExportExcel {
             $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
-            $objValidation2->setAllowBlank(false);
+            $objValidation2->setAllowBlank(true);
             $objValidation2->setShowInputMessage(true);
             $objValidation2->setShowDropDown(true);
             $objValidation2->setPromptTitle('Pick from list');
-            $objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
+            //$objValidation2->setReadDataOnly(true);
+            $objValidation2->setPrompt('Please pick Chapter from the drop-down list.');
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('Chapter!$A$2:$A'.$last.'');
@@ -182,7 +183,7 @@ class ExportExcel {
             $objValidation2->setShowInputMessage(true);
             $objValidation2->setShowDropDown(true);
             $objValidation2->setPromptTitle('Pick from list');
-            $objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
+            $objValidation2->setPrompt('Please pick a Section from the drop-down list.');
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('Section!$A$2:$A'.$last.'');
@@ -225,7 +226,7 @@ class ExportExcel {
             $objValidation2->setShowInputMessage(true);
             $objValidation2->setShowDropDown(true);
             $objValidation2->setPromptTitle('Pick from list');
-            $objValidation2->setPrompt('Please pick a textbook from the drop-down list.');
+            $objValidation2->setPrompt('Please pick a Sub-section from the drop-down list.');
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('SubSection!$A$2:$A'.$last.'');
