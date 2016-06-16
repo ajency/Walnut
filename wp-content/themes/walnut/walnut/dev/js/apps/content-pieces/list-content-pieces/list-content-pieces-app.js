@@ -15,6 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
         this.contentPiecesCollection = opts.contentPiecesCollection, this.textbooksCollection = opts.textbooksCollection;
         this.allChaptersCollection = null;
         chapter_ids = _.chain(this.contentPiecesCollection.pluck('term_ids')).pluck('chapter').unique().compact().value();
+        this.allChapCollection = App.request("get:textbook:names:by:ids");
         this.allChaptersCollection = App.request("get:textbook:names:by:ids", chapter_ids);
         this.fullCollection = this.contentPiecesCollection.clone();
         return App.execute("when:fetched", this.allChaptersCollection, (function(_this) {
@@ -33,12 +34,12 @@ define(['app', 'controllers/region-controller', 'apps/content-pieces/list-conten
       };
 
       ListContentPiecesController.prototype._getContentPiecesListView = function() {
-        console.log(this.contentPiecesCollection);
         return new ContentList.Views.ListView({
           collection: this.contentPiecesCollection,
           fullCollection: this.fullCollection,
           textbooksCollection: this.textbooksCollection,
-          chaptersCollection: this.allChaptersCollection
+          chaptersCollection: this.allChaptersCollection,
+          chapCollection: this.allChapCollection
         });
       };
 

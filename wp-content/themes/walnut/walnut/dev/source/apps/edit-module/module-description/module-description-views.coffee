@@ -79,7 +79,7 @@ define ['app'
 
             onShow : ->
                 Backbone.Syphon.deserialize @, @model.toJSON()
-                console.log @model.toJSON()
+                #console.log @model.toJSON()
 
                 @$el.find('#qType').val @model.get 'quiz_type' if @model.get('type') is 'quiz'
 
@@ -254,7 +254,7 @@ define ['app'
 
                 totalQuestions = 0
                 _.each @model.get('content_layout'), (content)=>
-                    console.log content
+                    #console.log content
                     if content.type is 'content-piece'
                         totalQuestions += 1
                     else
@@ -356,4 +356,3 @@ define ['app'
 
 
                 $("html, body").animate({ scrollTop: 0 }, 700);
-

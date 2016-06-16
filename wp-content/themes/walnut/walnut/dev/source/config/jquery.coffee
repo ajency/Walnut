@@ -155,7 +155,6 @@ define ['jquery', 'underscore'], ($, _)->
 
         items
 
-
     $.getAllItems = (element)->
 
         items= _.chain element.find('.tab_checkbox')

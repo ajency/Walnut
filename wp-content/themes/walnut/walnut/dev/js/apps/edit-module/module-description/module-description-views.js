@@ -235,7 +235,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         totalQuestions = 0;
         _.each(this.model.get('content_layout'), (function(_this) {
           return function(content) {
-            console.log(content);
             if (content.type === 'content-piece') {
               return totalQuestions += 1;
             } else {

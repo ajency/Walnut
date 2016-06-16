@@ -42,10 +42,14 @@ define ['app'
 				data = super()
 				data.view_url = SITEURL + "/#view-group/#{data.id}"
 				data.edit_url = SITEURL + "/#edit-module/#{data.id}"
-				console.log data
+				#console.log @groupType
 				data.textbookName = =>
-					console.log data.term_ids.textbook
-					textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
+					if @groupType == 'quiz' || @groupType == 'student-training'
+						textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
+						#textbook.name if textbook?
+					else
+						console.log @groupType
+						textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
 					textbook.name if textbook?
 				console.log data.textbookName
 
@@ -191,8 +195,11 @@ define ['app'
 			tagName: 'td'
 
 			onShow:->
-				console.log "empty view"
-				@$el.attr 'colspan',9
+				console.log @groupType
+				if @groupType is 'quiz'
+					@$el.attr 'colspan',9
+				else
+					@$el.attr 'colspan',7
 
 		class Views.ModulesListingView extends Marionette.CompositeView
 

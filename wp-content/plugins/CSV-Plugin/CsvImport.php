@@ -404,14 +404,19 @@ class CsvImport{
             $csv_json = $this->parseCSV($_FILES['csv_file']['tmp_name']);
             
             $csvData = json_decode($csv_json);
+            $row_count = count($csvData);
 
-           
+
+            if ( empty($csvData[$row_count-1][0]) == true && count($csvData[$row_count-1]) == 1){
+            	unset($csvData[$row_count-1]);
+            }            
+            
             $i=0;
             $preview_rows = array();
             while ($i <= count($csvData)-1 ) {
-                if( count($csvData[$i]) != count($ajci_components[$_POST['csv_component']]['headers'])){
+                if( count($csvData[$i]) !== count($ajci_components[$_POST['csv_component']]['headers'])){
                     $validate_status = array('success'=>false,'msg'=>'Rows columns incorrect count.');
-                    //return $validate_status;
+                    return $validate_status;
                 }
                 if($i <= 20){
                    $preview_rows[] = $csvData[$i]; 

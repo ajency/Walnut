@@ -8,12 +8,11 @@
 
 function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
-    #$myfile = fopen("log_ext.txt", "a");
     
     $taken_by_stud = [];
 
     $selected_quiz_id = $id;
-    #fwrite($myfile, $selected_quiz_id);
+
     global $wpdb;
 
     if(!$user_id)
@@ -130,19 +129,12 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
         $data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
 
-        #fwrite($myfile, "\n".$data->taken_by_stud."\n");
-       # $studeentttt = implode(",",$taken_by_stud);
-       #fwrite($myfile, $studeentttt);
-        
-       # $data->stude_ids = $taken_by_stud;
         if ($data->taken_by_stud == 0){
             $data->taken_by = 0;
         }else{
         $data->taken_by = sizeof($data->taken_by_stud);
         }
 
-        //$data->stud_ans_id = students_taj
-        // students that have missed a quiz
         $data->missed_by = students_not_taken_quiz($selected_quiz_id, $division);
         
         $data->total_students = get_student_count_in_division($division);
@@ -151,9 +143,6 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";
     
-    #fwrite($myfile, $data->taken_by);
-    #fwrite($myfile, $data->id);
-    #fclose($myfile);
     return $data;
 }
 
@@ -161,7 +150,6 @@ function num_students_taken_quiz($quiz_id, $division){
 
     global $wpdb;  
 
-    #$myfile = fopen("log_ext.txt", "a");
 
     $taken_by = 0;
 
@@ -185,9 +173,6 @@ function num_students_taken_quiz($quiz_id, $division){
                 $quiz_id, '%completed%');
             #file_put_contents("aA.txt", $taken_by_query);
 
-            #fwrite($myfile, $taken_by_query);
-
-            #fclose($myfile);
 
             $taken_by = $wpdb->get_col($taken_by_query);
         }
@@ -203,7 +188,6 @@ function students_not_taken_quiz($quiz_id, $division){
     global $wpdb;
 
     $not_taken_by = [];
-    // $not_taken_by = 0;
 
     $args=array(
             'role'=>'student',
@@ -501,10 +485,11 @@ function get_all_quiz_modules($args){
         $textbook_prepare[4],
         $textbook_prepare[5]);
 
+
     $quiz_ids = $wpdb->get_col($query);
 
 
-    $result = array();
+    $result = $results = array();
 
 
     if(isset($args['search_str']) && trim($args['search_str']) !=''){
@@ -515,17 +500,19 @@ function get_all_quiz_modules($args){
 
     foreach ($quiz_ids as $id){
         $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
+
         
         if(!is_wp_error($quiz_data)){
             $result[] = $quiz_data;
         }
-        
+
     }
-    
-    $result= __u::sortBy($result, function($item){
+
+     
+    $results = __u::sortBy($result, function($item){
                         return $item->last_modified_on;
-                    });               
-    return $result;
+                    });  
+    return $results;
 }
 
 

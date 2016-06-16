@@ -24,7 +24,10 @@ define ['app'
                 	class_id= divisionsCollection.first().get 'class_id'
                 	division= divisionsCollection.first().get 'id'
 
-                	textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
+                	if @groupType == 'teaching-module'
+                		textbooksCollection = App.request "get:textbooks", "fetch_all":true
+                	else
+                		textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
 
                 	App.execute "when:fetched", textbooksCollection, => 
                 	App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
@@ -32,10 +35,16 @@ define ['app'
 				_fetchQuizzes:=>
 					textbook = textbooksCollection.first()
 					@division= divisionsCollection.first().get 'id'
-					data = 
-						'post_status': 'any' 
-						'textbook'   : textbook.id
-						'division'	 : @division
+					if @groupType == 'teaching-module'
+						data = 
+							'post_status': 'any' 
+							'textbook'   : textbook.id
+					else
+						data = 
+							'post_status': 'any' 
+							'textbook'   : textbook.id
+							'division'	 : @division
+
 					if @groupType is 'teaching-module'
 						@contentModulesCollection = App.request "get:content:groups", data
 
@@ -58,20 +67,32 @@ define ['app'
 							loading: true
 
 						@listenTo @layout, "show",=>
+							console.log @groupType
 							dataType = switch @groupType
 											when 'teaching-module' then 'teaching-modules'
 											when 'student-training' then 'student-training'
 											else 'quiz'
 
-							App.execute "show:textbook:filters:app",
-								region: @layout.filtersRegion
-								collection: @contentModulesCollection
-								textbooksCollection: textbooksCollection
-								selectedFilterParamsObject: @selectedFilterParamsObject
-								divisionsCollection: divisionsCollection
-								dataType : dataType
-								post_status: 'any'
-								filters : ['divisions','multi_textbooks', 'module_status']
+							if @groupType == 'quiz'
+								App.execute "show:textbook:filters:app",
+									region: @layout.filtersRegion
+									collection: @contentModulesCollection
+									textbooksCollection: textbooksCollection
+									selectedFilterParamsObject: @selectedFilterParamsObject
+									divisionsCollection: divisionsCollection
+									dataType : dataType
+									post_status: 'any'
+									filters : ['divisions','multi_textbooks', 'module_status']
+							else
+								App.execute "show:textbook:filters:app",
+									region: @layout.filtersRegion
+									collection: @contentModulesCollection
+									textbooksCollection: textbooksCollection
+									selectedFilterParamsObject: @selectedFilterParamsObject
+									#divisionsCollection: divisionsCollection
+									dataType : dataType
+									post_status: 'any'
+									filters : ['textbooks','chapters', 'sections', 'subsections', 'module_status']
 
 							App.execute "show:list:all:modules:app",
 								region: @layout.allContentRegion

@@ -33,9 +33,15 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         var class_id, division;
         class_id = divisionsCollection.first().get('class_id');
         division = divisionsCollection.first().get('id');
-        textbooksCollection = App.request("get:textbooks", {
-          'class_id': class_id
-        });
+        if (this.groupType === 'teaching-module') {
+          textbooksCollection = App.request("get:textbooks", {
+            "fetch_all": true
+          });
+        } else {
+          textbooksCollection = App.request("get:textbooks", {
+            'class_id': class_id
+          });
+        }
         App.execute("when:fetched", textbooksCollection, (function(_this) {
           return function() {};
         })(this));
@@ -46,11 +52,18 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         var data, textbook;
         textbook = textbooksCollection.first();
         this.division = divisionsCollection.first().get('id');
-        data = {
-          'post_status': 'any',
-          'textbook': textbook.id,
-          'division': this.division
-        };
+        if (this.groupType === 'teaching-module') {
+          data = {
+            'post_status': 'any',
+            'textbook': textbook.id
+          };
+        } else {
+          data = {
+            'post_status': 'any',
+            'textbook': textbook.id,
+            'division': this.division
+          };
+        }
         if (this.groupType === 'teaching-module') {
           this.contentModulesCollection = App.request("get:content:groups", data);
         } else if (this.groupType === 'student-training') {
@@ -68,6 +81,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
             });
             _this.listenTo(_this.layout, "show", function() {
               var dataType;
+              console.log(_this.groupType);
               dataType = (function() {
                 switch (this.groupType) {
                   case 'teaching-module':
@@ -78,16 +92,28 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
                     return 'quiz';
                 }
               }).call(_this);
-              App.execute("show:textbook:filters:app", {
-                region: _this.layout.filtersRegion,
-                collection: _this.contentModulesCollection,
-                textbooksCollection: textbooksCollection,
-                selectedFilterParamsObject: _this.selectedFilterParamsObject,
-                divisionsCollection: divisionsCollection,
-                dataType: dataType,
-                post_status: 'any',
-                filters: ['divisions', 'multi_textbooks', 'module_status']
-              });
+              if (_this.groupType === 'quiz') {
+                App.execute("show:textbook:filters:app", {
+                  region: _this.layout.filtersRegion,
+                  collection: _this.contentModulesCollection,
+                  textbooksCollection: textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                  divisionsCollection: divisionsCollection,
+                  dataType: dataType,
+                  post_status: 'any',
+                  filters: ['divisions', 'multi_textbooks', 'module_status']
+                });
+              } else {
+                App.execute("show:textbook:filters:app", {
+                  region: _this.layout.filtersRegion,
+                  collection: _this.contentModulesCollection,
+                  textbooksCollection: textbooksCollection,
+                  selectedFilterParamsObject: _this.selectedFilterParamsObject,
+                  dataType: dataType,
+                  post_status: 'any',
+                  filters: ['textbooks', 'chapters', 'sections', 'subsections', 'module_status']
+                });
+              }
               App.execute("show:list:all:modules:app", {
                 region: _this.layout.allContentRegion,
                 contentModulesCollection: _this.contentModulesCollection,

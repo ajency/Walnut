@@ -80,7 +80,7 @@ define ['app'], (App)->
                                     <select class="content-type-filter select2-filters selectFilter" id="content-type-filter">
                                         <option value="">All Types</option>
                                         {{#teacher_question}}
-											<option value="teacher_question">Teacher Question</option>
+                                            <option value="teacher_question">Teacher Question</option>
                                         {{/teacher_question}}
                                         {{#student_question}}
                                            <option value="student_question">Student Question</option>
@@ -138,10 +138,11 @@ define ['app'], (App)->
                 data.textbooks= textbooks.map (m)->
                     t=[]
                     t.id = m.get 'term_id'
-                    name= m.get 'name'
-                    name = name.split('(');
-                    t.name = name[0]
-                    console.log t.name
+                    t.name= m.get 'name'
+                    #name= m.get 'name'
+                    #name = name.split('(');
+                    #t.name = name[0]
+                    #console.log t.name
                     t
 
                 if divisions
@@ -177,14 +178,17 @@ define ['app'], (App)->
                 console.log "onShow"
                 $ ".filters select"
                 .select2();
-
+                console.log @
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
+
+                console.log @contentGroupModel
 
                 if @contentGroupModel
                     term_ids= @contentGroupModel.get 'term_ids'
                     $ "#textbooks-filter"
                     .select2().select2 'val', term_ids['textbook']
 
+                    #@setFilteredContent()
                     @setFilteredContent()
 
 
@@ -201,6 +205,7 @@ define ['app'], (App)->
 
 
             setFilteredContent:->
+                console.log "setFilteredContent"
                 console.log @
                 dataType= Marionette.getOption @, 'dataType'
                 #console.log dataType

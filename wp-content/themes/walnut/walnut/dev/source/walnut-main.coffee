@@ -60,6 +60,8 @@ require.config
 		modenizr: 'plugins/bookBlock/modernizr.custom'
 		jquerypp : 'plugins/bookBlock/jquerypp.custom'
 		bookblock : 'plugins/bookBlock/jquery.bookblock'
+		new_moment: 'plugins/new_moment'
+		datetimepicker: 'plugins/datetimepicker.min'
 
 	shim:
 		underscore:
@@ -107,6 +109,8 @@ require.config
 		jPages: ['jquery']
 		jquerypp : ['jquery']
 		bookblock :['jquery']
+		new_moment: ['jquery']
+		datetimepicker: ['jquery', 'new_moment','bootstrap']
 		app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
 
 # Start with application

@@ -31,10 +31,16 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            console.log(data.term_ids.textbook);
-            textbook = _.findWhere(_this.textbooks, {
-              "id": parseInt(data.term_ids.textbook)
-            });
+            if (_this.groupType === 'quiz' || _this.groupType === 'student-training') {
+              textbook = _.findWhere(_this.textbooks, {
+                "id": parseInt(data.term_ids.textbook)
+              });
+            } else {
+              console.log(_this.groupType);
+              textbook = _.findWhere(_this.textbooks, {
+                "id": data.term_ids.textbook
+              });
+            }
             if (textbook != null) {
               return textbook.name;
             }
@@ -232,8 +238,12 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        console.log("empty view");
-        return this.$el.attr('colspan', 9);
+        console.log(this.groupType);
+        if (this.groupType === 'quiz') {
+          return this.$el.attr('colspan', 9);
+        } else {
+          return this.$el.attr('colspan', 7);
+        }
       };
 
       return EmptyView;

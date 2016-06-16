@@ -33,13 +33,12 @@ global $ajci_components;
             <td><label>Select Textbook: </label></td>
             <td>
                 <?php
-                    $textbooks = $textbook = array();
-                    $textbooks = textbook_data();
-
+                    $textbooks = $textbook = $texts = array();
+                    $texts = text_data();
                  ?>
                 <select name="textbook_list" id="textbook_list">
-                    <option value='-1'>--Select Textbook--</option>
-                    <?php foreach ($textbooks as $textbook): ?>
+                    <option value='-1' id="select">--Select Textbook--</option>
+                    <?php foreach ($texts['data'] as $textbook): ?>
                         <option value="<?php echo $textbook->term_id; ?>"><?php echo $textbook->name; ?></option>
                     <?php endforeach ?>
                 </select>
@@ -52,7 +51,7 @@ global $ajci_components;
             <tr>
             <td>Export Template excel</td>
             <td><button name="export" id="template_export" type="button">Export</button></td>
-            </tr>              
+            </tr>                 
             <tr>
             <td>
             <label>Upload a file: 

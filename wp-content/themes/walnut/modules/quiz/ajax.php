@@ -25,11 +25,6 @@ add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');
 function ajax_fetch_all_quizes(){
 
     $args = $_GET;
-    #file_put_contents('abc.txt', print_r($args, true));
-    #$textbook = $_GET['']
-    #$myfile = fopen("log.txt", "a");
-    #fwrite($myfile, "fetch all quizes");
-    #fclose($myfile);
 
     $defaults = array(
         'textbook' => '',

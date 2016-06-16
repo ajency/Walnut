@@ -86,4 +86,3 @@ define ['app'
 		App.commands.setHandler "show:list:all:modules:app", (opt = {})->
 			new ModulesListing.Controller opt
 
-

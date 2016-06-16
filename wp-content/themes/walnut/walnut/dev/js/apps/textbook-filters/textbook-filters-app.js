@@ -106,7 +106,9 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             });
             _this.listenTo(_this.view, "show", function() {
               var chapter_id, fetchChapters, fetchSections, section_id, subsection_id, term_ids, textbook_id;
+              console.log(_this.model);
               if (_this.model) {
+                console.log('inside');
                 term_ids = _this.model.get('term_ids');
                 if (term_ids) {
                   textbook_id = term_ids['textbook'];

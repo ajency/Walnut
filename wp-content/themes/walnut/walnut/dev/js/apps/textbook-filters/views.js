@@ -45,11 +45,11 @@ define(['app'], function(App) {
         textbooks = Marionette.getOption(this, 'textbooksCollection');
         divisions = Marionette.getOption(this, 'divisionsCollection');
         data.textbooks = textbooks.map(function(m) {
-          var name, t;
+          var t;
           t = [];
           t.id = m.get('term_id');
           name = m.get('name');
-          name = name.split('(');
+          t.name = m.get('name');
           t.name = name[0];
           console.log(t.name);
           return t;
@@ -110,7 +110,9 @@ define(['app'], function(App) {
         var term_ids;
         console.log("onShow");
         $(".filters select").select2();
+        console.log(this);
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
+        console.log(this.contentGroupModel);
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');
           $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
@@ -140,6 +142,7 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.setFilteredContent = function() {
         var dataType, filtered_data;
+        console.log("setFilteredContent");
         console.log(this);
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);

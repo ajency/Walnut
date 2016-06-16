@@ -60,27 +60,45 @@
 }
 
 
-
 /* ---------------------------
-   BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
+   QUIZ SEARCH ALLIGNED  -----------
  ---------------------------
 */
+ 
+ 
+/*Date-Time picker fix */
 
-#dialog-region .bootstrap-datetimepicker-widget .table-condensed{
-	width: 100%;
-	text-align: center;
-	cursor: pointer;
+.contentSelect{
+	overflow: inherit !important;
 }
 
-#dialog-region .bootstrap-datetimepicker-widget{
-	cursor: pointer;
+.contentSelect .tab-content{
+	overflow: inherit;
+}    
+
+.flexContainer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.flexContainer .flexChild{
+    margin: 0 5px;
 }
 
-#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
-	color: #ffffff;
-    background-color: #259b24;
-    border-color: #259b24;
+.flexContainer .flexChild .input-append{
+	display: flex;
 }
+
+.flexContainer .flexChild .input-append > input[type="text"]{
+	width: 80%;
+}
+
+.flexContainer .flexChild .input-append .dropdown-menu{
+	top: 40px !important;
+    height: 260px;
+    text-align: center;
+}
+
 
 
 /* ---------------------------
@@ -109,7 +127,7 @@
 .table-tools-actions .select2-container.textbook-filter .select2-search-choice{
 	display: inline-block;
     float: none;
-    // width: 123px;
+    /*width: 123px;*/
 }
 
 .table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field{
@@ -130,36 +148,26 @@
     margin-top: -10px;
 }
 
-
 /* ---------------------------
-   QUIZ SEARCH ALLIGNED  -----------
+   BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
  ---------------------------
 */
-    
 
-.flexContainer{
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-.flexContainer .flexChild{
-    margin: 0 5px;
+#dialog-region .bootstrap-datetimepicker-widget .table-condensed{
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
 }
 
-.flexContainer .flexChild .input-append{
-	display: flex;
+#dialog-region .bootstrap-datetimepicker-widget{
+	cursor: pointer;
 }
 
-.flexContainer .flexChild .input-append > input[type="text"]{
-	width: 80%;
+#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
+	color: #ffffff;
+    background-color: #259b24; 
+    border-color: #259b24;
 }
-
-.flexContainer .flexChild .input-append .dropdown-menu{
-	top: 40px !important;
-    height: 260px;
-    text-align: center;
-}
-
 
 
 

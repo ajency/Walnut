@@ -36,7 +36,7 @@
         mousewheel: 'plugins/jquery-mousewheel',
         datepicker          : 'plugins/bootstrap-datepicker',
         //zebra_datepicker    : 'plugins/zebra_datepicker',
-        //timepicker          : 'plugins/bootstrap-timepicker.min',
+        timepicker          : 'plugins/bootstrap-timepicker.min',
         timecircles         : 'plugins/TimeCircles',
         jquery_listnav      : 'plugins/jquery-listnav',
         screwbuttons        : 'plugins/jquery.screwdefaultbuttonsV2',
@@ -60,7 +60,6 @@
         bookblock : 'plugins/bookBlock/jquery.bookblock',
         new_moment: 'plugins/new_moment',
         datetimepicker      : 'plugins/datetimepicker.min',
-        multiselect         : 'plugins/bootstrap-multiselect'
     },
     shim: {
         underscore: {
@@ -92,8 +91,8 @@
         mmenu: ['jquery'],
         select2: ['jquery', 'bootstrap'],
         //datepicker: ['jquery', 'bootstrap'],
-        //mousewheel: ['jquery'],
-        new_moment: ['jquery'],
+        datepicker: ['jquery', 'bootstrap'],
+        timepicker: ['jquery', 'bootstrap'],
         datetimepicker: ['jquery','new_moment','bootstrap'],
         //multiselect: ['jquery','bootstrap'],
         //zebra_datepicker: ['jquery'],
@@ -115,6 +114,8 @@
         jPages: ['jquery'],
         jquerypp : ['jquery'],
         bookblock :['jquery'],
+        new_moment: ['jquery'],
+        datetimepicker: ['jquery','new_moment','bootstrap'],
         app: ['plugins/walnut-pluginloader', 'config/walnut-configloader']
     }
 })

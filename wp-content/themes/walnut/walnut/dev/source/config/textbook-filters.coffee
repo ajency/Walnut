@@ -60,12 +60,10 @@ define ['jquery', 'underscore'], ($, _)->
         if _.size(items) > 0
 
             _.each items, (item, index)=>
-                console.log item.get('name')
-                name = item.get('name')
-                name = name.split('(')
-                text = name[0]
-                console.log item.get('name')
-                textbookElement.append '<option value="' + item.get('term_id') + '">' + text + '</option>'
+                #name = item.get('name')
+                #name = name.split('(')
+                #text = name[0]
+                textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
 
             textbookElement.select2().select2 'val', _.first(items).get 'term_id'
         else 
@@ -183,7 +181,7 @@ define ['jquery', 'underscore'], ($, _)->
         
         if dataType is 'teaching-modules'
             filterCollection = App.request "get:content:modules:repository"
-			
+            
         else if dataType is 'student-training'
             filterCollection = App.request "get:student:training:modules:repository"
 
@@ -195,15 +193,18 @@ define ['jquery', 'underscore'], ($, _)->
         else 
             filterCollection = App.request "get:content:pieces:repository"
 
-            #change here
-        filter_ids=_.map filter_elements, (ele,index)->
+
+        filter_ids =_.map filter_elements, (ele,index)->
             item = ''
             if not isNaN ele.value
                 item= ele.value
             item
-        filter_ids= _.compact filter_ids
-        filter_ids = $('#textbooks-filter').val()
-        console.log filter_ids
+        filter_ids = _.compact filter_ids
+        textbk_ids = $('#textbooks-filter').val()
+        if typeof textbk_ids == 'string'  
+            text_multi = false
+        else
+            text_multi = true
 
         content_type = _this.$el.find('#content-type-filter').val()
 
@@ -245,13 +246,14 @@ define ['jquery', 'underscore'], ($, _)->
                 filtered_item = ''
                 term_ids = _.flatten item.get 'term_ids'
 
-                #filter_ids = $('#textbooks-filter').val()
-                console.log filter_ids
-                #here change it
-                #if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
-                filtered_item = item
+                if text_multi == false
+                    if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
+                        filtered_item = item
+                else
+                    filtered_item = item
+
                 filtered_item
-            console.log filtered_data
+
         else
             filtered_data = filtered_models
 

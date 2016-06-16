@@ -82,7 +82,7 @@
                                         <hr>
                                         <div class="row text-center">
                                             <div class="col-md-12 reg-login">
-                                                <h4>Come join the Synapse Learning Universal Community</h4>
+                                                <h4>Come join the Walnut Universal Tribe</h4>
                                                 <h5>Lets start up your account here</h5>
                                             </div>
                                         </div>                                          
