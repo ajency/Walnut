@@ -7,16 +7,16 @@ class ImportMCQ extends ImportContentPiece {
 
     private function set_object_values($record){
 
-        $section = $record[7];
+        $section = $record[5];
         $sectionArray = explode(",",$section);
 
-        $section = $record[9];
+        $section = $record[7];
         $subsectionsArray = explode(",",$section);
 
-        $this->question       = $record[0];
-        $this->question_media_path = $record[1];
-        $this->textbook       = $record[3];
-        $this->chapter        = $record[5];
+        $this->question       = $record[8];
+        $this->question_media_path = $record[9];
+        $this->textbook       = $record[1];
+        $this->chapter        = $record[3];
         $this->sections       = $sectionArray;
         $this->subsections    = $subsectionsArray;
         $this->totalmarks     = (int) $record[10];
