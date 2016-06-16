@@ -45,16 +45,17 @@ class ExportExcel {
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A1', 'Question')
-                    ->setCellValue('B1', 'Question Image')
-                    ->setCellValue('C1', 'Textbook_name')
-                    ->setCellValue('D1', 'Textbook')
-                    ->setCellValue('E1', 'Chapter_name')
-                    ->setCellValue('F1', 'Chapter')
-                    ->setCellValue('G1', 'Sections_name')
-                    ->setCellValue('H1', 'Sections')
-                    ->setCellValue('I1', 'Subsections_name')
-                    ->setCellValue('J1', 'Subsections')
+                    ->setCellValue('A1', 'Textbook_name')
+                    ->setCellValue('B1', 'Textbook')
+                    ->setCellValue('C1', 'Chapter_name')
+                    ->setCellValue('D1', 'Chapter')
+                    ->setCellValue('E1', 'Sections_name')
+                    ->setCellValue('F1', 'Sections')
+                    ->setCellValue('G1', 'Subsections_name')
+                    ->setCellValue('H1', 'Subsections')
+
+                    ->setCellValue('I1', 'Question')
+                    ->setCellValue('J1', 'Question Image')
                     ->setCellValue('K1', 'Total Marks')
                     ->setCellValue('L1', 'Multiple Correct Answers')
                     ->setCellValue('M1', 'Correct Answer')
@@ -85,7 +86,7 @@ class ExportExcel {
 
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('Question');
-        $objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
+        $objPHPExcel->getActiveSheet()->getColumnDimension ('B')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('F')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('H')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('J')->setVisible(false);
@@ -100,8 +101,8 @@ class ExportExcel {
 
         for ($i = 2; $i <= 10; $i++)
         {
-            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $text_id);
-            $objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $text_name);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $text_id);
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $text_name);
         }
 
 
