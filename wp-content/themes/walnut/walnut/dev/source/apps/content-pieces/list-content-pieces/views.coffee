@@ -71,6 +71,15 @@ define ['app'
 						.pluck 'name'
 							.compact()
 							.value()
+						console.log chapter
+						if typeof chapter.length = 0
+							console.log "empty"
+							console.log @chap
+							chapter = _.chain @chap.findWhere "id" : data.term_ids.chapter
+							.pluck 'name'
+							.compact()
+							.value()
+
 						chapter
 
 				data.statusMessage = ->
@@ -102,8 +111,10 @@ define ['app'
 				'click a.publishModule' :-> @changeModuleStatus 'publish'
 
 			initialize : (options)->
+				console.log options
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
+				@chap = options.chapCollection
 
 			addSpinner:->
 				@$el.find '.spinner'
@@ -182,7 +193,8 @@ define ['app'
 			itemViewOptions : ->
 				console.log 'list'
 				textbooksCollection : @textbooks
-				chaptersCollection  : Marionette.getOption @, 'chapCollection'
+				chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
+				chapCollection : Marionette.getOption @, 'chapCollection'
 
 			events:
 				'change #content-post-status-filter, #difficulty-level-filter'  : 'setFilteredContent'

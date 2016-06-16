@@ -938,14 +938,14 @@ class WP_List_Table {
 		<?php $this->print_column_headers(); ?>
 	</tr>
 	</thead>
-
+<!-- Display textbook names -->
 	<tbody id="the-list"<?php
 		if ( $singular ) {
 			echo " data-wp-lists='list:$singular'";
 		} ?>>
 		<?php $this->display_rows_or_placeholder(); ?>
 	</tbody>
-
+<!-- Display textbook names ENDS -->
 	<tfoot>
 	<tr>
 		<?php $this->print_column_headers( false ); ?>
@@ -1054,7 +1054,7 @@ class WP_List_Table {
 	 * Generates the columns for a single row of the table
 	 *
 	 * @since 3.1.0
-	 * @access protected
+	 * @access protected 
 	 *
 	 * @param object $item The current item
 	 */
@@ -1069,6 +1069,7 @@ class WP_List_Table {
 				$style = ' style="display:none;"';
 
 			$attributes = "$class$style";
+			file_put_contents("a3.txt", $attributes);
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';
