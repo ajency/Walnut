@@ -24,6 +24,8 @@ function add_communication_components($defined_comm_components){
         'quizzes_taken_report' => $preferences,
         'quiz_completed_student_mail' => $preferences,
         'quiz_completed_parent_mail' => $preferences,
+        'quiz_summary_student_mail' => $preferences,
+        'quiz_summary_parent_mail' => $preferences,
     );
 
     $ajcm_components['user'] = array(
