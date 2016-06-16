@@ -14,7 +14,10 @@ define ['app'
 
                 recipients.done (result)=>
                     recipientsCollection= new Backbone.Collection result
+                    if options.communicationModel.attributes.communication_type == 'quiz_summary_parent_mail'
+                        recipientsCollection= new Backbone.Collection result[0]
                     recipientsCollection.each (m,index)->m.set 'id':index+1
+                    console.log recipientsCollection
 
                     @view = @_getSelectRecipientsView recipientsCollection
 

@@ -62,7 +62,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return ScheduleQuizView.__super__.constructor.apply(this, arguments);
       }
 
-      ScheduleQuizView.prototype.template = '<form> <div class="row"> <div class="input-daterange"> <div class="col-md-6"> From: <br> <div class="input-append success date"> <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> </div> <div class="col-md-6"> To:  <br> <div class="input-append success date"> <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date" class="input-small span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> </div> </div> <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left">Schedule Quiz</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
+      ScheduleQuizView.prototype.template = '<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"--><form> <!--div id="datetimepicker3" class="input-append"> <input data-format="hh:mm:ss" type="text"></input> <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i> </span> </div--> <div class="row"> <div class="input-daterange"> <div class="col-md-6"> From: <br> <div class="input-append success date"> <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date time" class="input-small span12"> <!--input id="hiddenFrom" value=""/--> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </span> </div> </div> <div class="col-md-6"> To:  <br> <div class="input-append success date"> <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date time" class="input-small span12"> <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span> </div> </div> </div> <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left">Schedule Quiz</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
 
       ScheduleQuizView.prototype.events = {
         'click .btn-success': 'saveScheduled'
@@ -78,32 +78,26 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       ScheduleQuizView.prototype.onShow = function() {
         var today;
         today = new Date();
-
-        /*@$el.find '.input-daterange'
-        .datepicker
-            todayHighlight  : true
-            startDate       : today
-            format          : 'yyyy-mm-dd'
-        
-        .on 'hide', (e)=>
-            if e.target.id is 'scheduleFrom'
-                @$el.find('#scheduleTo').datepicker 'setStartDate', e.date
-         */
+        console.log(today);
         this.$el.find('#scheduleFrom').datetimepicker({
+          useCurrent: false,
           minDate: today,
-          format: 'YYYY-MM-DD hh:mm:ss'
+          format: 'YYYY-MM-DD HH:mm:ss'
         });
         this.$el.find('#scheduleTo').datetimepicker({
           useCurrent: false,
-          minDate: today,
-          format: 'YYYY-MM-DD hh:mm:ss',
-          debug: true
+          format: 'YYYY-MM-DD HH:mm:ss'
         });
         return this.$el.find('#scheduleFrom').on('dp.change', (function(_this) {
           return function(e) {
             return $('#scheduleTo').data('DateTimePicker').minDate(e.date);
           };
         })(this));
+
+        /*@$el.find '#scheduleTo'
+        .on 'dp.change', (e)=>
+            $('#scheduleFrom').data('DateTimePicker').minDate(e.date)
+         */
       };
 
       ScheduleQuizView.prototype.saveScheduled = function(e) {
@@ -111,7 +105,12 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         if (this.$el.find('form').valid()) {
           scheduleFrom = this.$el.find('#scheduleFrom').val();
           scheduleTo = this.$el.find('#scheduleTo').val();
-          return this.trigger("save:quiz:schedule", scheduleFrom, scheduleTo);
+          console.log(scheduleFrom < scheduleTo);
+          if ((scheduleFrom < scheduleTo) === 'false') {
+            return this.$el.find('.success-msg').html('From has to be less than To').addClass('text-error');
+          } else {
+            return this.trigger("save:quiz:schedule", scheduleFrom, scheduleTo);
+          }
         }
       };
 

@@ -43,20 +43,30 @@ define ['app'
 
         class ScheduleQuizView extends Marionette.ItemView
 
-            template: '<form>
+            template: '<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"--><form>
+            <!--div id="datetimepicker3" class="input-append">
+    <input data-format="hh:mm:ss" type="text"></input>
+    <span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+  </div-->
                         <div class="row">
+                            
                             <div class="input-daterange">
-                                <div class="col-md-6">
+                                  <div class="col-md-6">
                                     From: <br>
                                     <div class="input-append success date">
-                                      <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date" class="input-small span12">
-                                      <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+                                          <input id="scheduleFrom" name="scheduleFrom" type="text" required="required" value="{{schedule.from}}" placeholder="Select Date time" class="input-small span12">
+                                            <!--input id="hiddenFrom" value=""/-->
+                                            <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
+                                            </span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     To:  <br>
                                     <div class="input-append success date">
-                                      <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date" class="input-small span12">
+                                      <input id="scheduleTo" name="scheduleTo" type="text" required="required" value="{{schedule.to}}" placeholder="Select Date time" class="input-small span12">
                                       <span class="add-on"><span class="arrow"></span><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -81,43 +91,47 @@ define ['app'
             onShow: ->
 
                 today = new Date();
+                console.log today
 
-                ###@$el.find '.input-daterange'
-                .datepicker
-                    todayHighlight  : true
-                    startDate       : today
-                    format          : 'yyyy-mm-dd'
-
-                .on 'hide', (e)=>
-                    if e.target.id is 'scheduleFrom'
-                        @$el.find('#scheduleTo').datepicker 'setStartDate', e.date###
                 @$el.find '#scheduleFrom'
                 .datetimepicker
+                    useCurrent:false
                     minDate:today
-                    format:'YYYY-MM-DD hh:mm:ss'
+                    format:'YYYY-MM-DD HH:mm:ss'
 
                 @$el.find '#scheduleTo'
                 .datetimepicker
                     useCurrent:false
-                    minDate:today
-                    format:'YYYY-MM-DD hh:mm:ss'
-                    debug:true
+                    #minDate:today
+                    format:'YYYY-MM-DD HH:mm:ss'
+                    #debug:true
 
                 @$el.find '#scheduleFrom'
                 .on 'dp.change', (e)=>
                     $('#scheduleTo').data('DateTimePicker').minDate(e.date)
 
+                ###@$el.find '#scheduleTo'
+                .on 'dp.change', (e)=>
+                    $('#scheduleFrom').data('DateTimePicker').minDate(e.date)###
+
 
             saveScheduled: (e)=>
                 if @$el.find('form').valid()
 
+
                     scheduleFrom = @$el.find '#scheduleFrom'
                     .val()
-
+                    #console.log scheduleFrom
                     scheduleTo = @$el.find '#scheduleTo'
                     .val()
-
-                    @trigger "save:quiz:schedule", scheduleFrom, scheduleTo
+                    console.log (scheduleFrom < scheduleTo)
+                    if (scheduleFrom < scheduleTo) == 'false'
+                        @$el.find '.success-msg'
+                        .html 'From has to be less than To'
+                        .addClass 'text-error'
+                    else     
+                    #console.log scheduleTo
+                        @trigger "save:quiz:schedule", scheduleFrom, scheduleTo
 
             onScheduleSaved:(response)->
                 @$el.find '.success-msg'

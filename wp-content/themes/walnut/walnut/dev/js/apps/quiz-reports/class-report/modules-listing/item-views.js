@@ -42,8 +42,8 @@ define(['app', 'bootbox'], function(App, bootbox) {
         })();
         if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule')) {
           schedule = this.model.get('schedule');
-          data.scheduleFrom = moment(schedule['from']).format("Do MMM YYYY");
-          data.scheduleTo = moment(schedule['to']).format("Do MMM YYYY");
+          data.scheduleFrom = schedule['from'];
+          data.scheduleTo = schedule['to'];
         }
         if (App.request('current:user:can', 'schedule_quiz')) {
           data.can_schedule = true;
@@ -73,16 +73,16 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       ListItemView.prototype.changeScheduleDates = function() {
-        var from, fromDate, schedule, to, toDate;
+        var from, schedule, to;
         schedule = this.model.get('schedule');
         from = schedule['from'];
         to = schedule['to'];
+        console.log(from);
+        console.log(to);
         console.log(schedule);
-        fromDate = moment(from).format("Do MMM YYYY");
-        toDate = moment(to).format("Do MMM YYYY");
         if (from && to) {
-          this.$el.find('#schedule-from-date').html(fromDate);
-          this.$el.find('#schedule-to-date').html(toDate);
+          this.$el.find('#schedule-from-date').html(from);
+          this.$el.find('#schedule-to-date').html(to);
           this.$el.find('.schedule_dates').show();
           return this.$el.find('#schedule-button').hide();
         } else {

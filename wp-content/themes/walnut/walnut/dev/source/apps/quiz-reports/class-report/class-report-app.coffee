@@ -102,7 +102,6 @@ define ['app'
                     @listenTo @layout.searchResultsRegion, "show:quiz:report", @_showQuiz
 
                     @listenTo @layout.allContentRegion, "save:communications", (data)=>
-                        
                             data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_completed_parent_mail'
@@ -110,13 +109,13 @@ define ['app'
                                 additional_data:
                                     quiz_ids        : data.quizIDs
                                     division        : @division
-
+                            #console.log @division
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
 
                     # to send summary email
                     @listenTo @layout.allContentRegion, "summary:communication", (data)=>
-                            console.log "communictaion"
+                            #console.log "communictaion"
                             data=
                                 component           : 'quiz'
                                 communication_type  : 'quiz_summary_parent_mail'
@@ -124,6 +123,8 @@ define ['app'
                                 additional_data:
                                     quiz_ids        : data.quizIDs
                                     division        : @division
+                                    start_date      : data.start_date
+                                    end_date        : data.end_date
                             console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
@@ -147,6 +148,7 @@ define ['app'
                     quizModel   : quizModel
 
             _showSelectRecipientsApp:(communicationModel)->
+                console.log communicationModel
                 App.execute "show:quiz:select:recipients:popup",
                     region               : App.dialogRegion
                     communicationModel   : communicationModel

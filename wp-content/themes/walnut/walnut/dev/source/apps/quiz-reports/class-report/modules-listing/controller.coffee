@@ -68,5 +68,3 @@ define ['app'
         # set handlers
         App.commands.setHandler "show:list:quiz:report:app", (opt = {})->
             new ClassQuizReportListing.Controller opt
-
-
