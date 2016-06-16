@@ -181,6 +181,7 @@ class MediaFromFtpAdmin {
 			if ( is_dir($file) ) { // dirctory
 				$new_file = FALSE;
 			} else {
+				$excludefile = '-[0-9]*x[0-9]*';
 				$suffix_file = '.'.end(explode('.', end(explode('/', $file)))); 
 				$new_url = $servername.str_replace($server_root, '', $file);
 				$new_title = str_replace($suffix_file, '', end(explode('/', $new_url)));
@@ -191,6 +192,13 @@ class MediaFromFtpAdmin {
 					$attach_url = $attachment->guid;
 					if ( $attach_url === $new_url || $attach_url === $new_url_md5 ) {
 						$new_file = FALSE;
+					}
+
+					if (preg_match("/".$excludefile."/", $new_url)) {
+						$regexurl = preg_replace("/".$excludefile."/", "", $new_url);
+						if ( $regexurl === $attach_url ) {						
+							$new_file = FALSE;
+						}	
 					}
 				}
 				$new_url = mb_convert_encoding($new_url, "UTF-8", "auto");
