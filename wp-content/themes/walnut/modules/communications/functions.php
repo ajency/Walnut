@@ -39,9 +39,7 @@ add_filter('add_commponents_filter','add_communication_components',10,1);
 
 function ajax_add_communication_to_queue() {
 
-    #file_put_contents("aaapost.txt", print_r($_POST, true));
     $functionName = 'add_'.$_POST['communication_type'];
-
     if (function_exists($functionName)){
 
         unset($_POST['action']);

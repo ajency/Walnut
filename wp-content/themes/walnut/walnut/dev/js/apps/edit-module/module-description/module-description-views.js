@@ -88,7 +88,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
 
       CollectionDetailsView.prototype.onShow = function() {
         Backbone.Syphon.deserialize(this, this.model.toJSON());
-        console.log(this.model.toJSON());
         if (this.model.get('type') === 'quiz') {
           this.$el.find('#qType').val(this.model.get('quiz_type'));
         }

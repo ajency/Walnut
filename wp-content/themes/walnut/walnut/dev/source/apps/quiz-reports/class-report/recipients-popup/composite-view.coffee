@@ -69,8 +69,6 @@
 
             mixinTemplateHelpers:(data)->
                 data=super data
-                console.log data
-                console.log this.model.get('communication_type')
                 quiz_component = true if (this.model.get('communication_type') == 'quiz_completed_parent_mail')
                 #console.log data.quiz_component
 
@@ -85,10 +83,10 @@
                     .hide()
 
             sendEmail:->
-
                 console.log @model
-                console.log @model.get 'additional_data'
                 additional_data = @model.get 'additional_data'
+                start_date = additional_data['start_date']
+                end_date = additional_data['end_date']
                 quiz_ids = additional_data['quiz_ids']
                 div_id = additional_data['division']
                 @$el.find '.communication_sent'
@@ -97,10 +95,8 @@
                 allCheckedRecipients = _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
 
                 raw_recipients = _.map allCheckedRecipients, (id,index)=> @collection.get(id).toJSON()
-                console.log raw_recipients
                 if div_id == null
                     div_id = raw_recipients[0]['student_division']
-                    console.log div_id
 
                 if ( (this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
                     data=
@@ -113,7 +109,6 @@
                             quiz_ids        : quiz_ids
                             division        : div_id
                         status              :"OK"
-                    console.log data
                     url     = AJAXURL + '?action=get-communication-recipients'
                     #data    = @.toJSON()
 
@@ -137,27 +132,27 @@
                                 allCheckedRecipients = _.map $.getCheckedItems(@$el.find('table')), (m)-> parseInt m
 
                                 raw_recipients = _.map allCheckedRecipients, (id,index)=> @collection.get(id).toJSON()
-                                console.log raw_recipients
-                                console.log raw_recipients
                                 additional_data = @model.get 'additional_data'
-                                console.log additional_data
                                 additional_data.raw_recipients = raw_recipients
-                                #additional_data.division = div_id
+                                div_id = additional_data.division
                                 comm = @model.get 'communication_id'
                                 additional_data.raw_recipients = response
-                                console.log @model
-                                @model.save()
-                                if(this.model.get('communication_type') == 'quiz_published_parent_mail')
+                                #@model.save()
+                                if ((this.model.get('communication_type') == 'quiz_published_parent_mail') || (this.model.get('communication_type') == 'quiz_summary_parent_mail'))
                                     data=
                                         component           : 'quiz'
-                                        communication_type  : 'quiz_published_parent_mail'
+                                        communication_type  : this.model.get('communication_type')
                                         communication_mode  : 'email'
                                         priority            : 0
                                         recipients          : []
                                         additional_data:
+                                            start_date : start_date
+                                            end_date : end_date
                                             quiz_ids        : quiz_ids
-                                            division        : null
+                                            division        : div_id
                                             raw_recipients  : response
+                                        
+                                    console.log data
                                     url = AJAXURL + '?action=create-communications'
                                     $.post url, 
                                         data, (response, status) =>
@@ -179,12 +174,8 @@
                         #raw_recipients = response.responseJSON
                         #console.log raw_recipients
                         additional_data= @model.get 'additional_data'
-                        console.log additional_data
-                        console.log raw_recipients
                         additional_data.raw_recipients = raw_recipients
-                        console.log @odel
                         @model.save()
-                        console.log @model
                     
 
                         @$el.find '.send-email'
