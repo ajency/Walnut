@@ -304,7 +304,7 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
     $comm_data['end_date'] = $end_date;
 
 
-    #$template_data['global_merge_vars'] = get_quiz_template_data($comm_data,$quiz_id);
+    $template_data['global_merge_vars'] = get_quiz_summary_template_data($comm_data,$quiz_id);
 
     $template_data['global_merge_vars'][]=array(
         'name'      => 'BLOG_URL',
@@ -339,6 +339,8 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
                 
 
                 $student_division = get_user_meta($student->ID,'student_division', true);
+                $firstname = get_user_meta($student->ID,'first_name', true);
+                $lastname = get_user_meta($student->ID,'las_name', true);
 
                 #if($division != $student_division)
                     #continue;
@@ -349,7 +351,7 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
 
                 $overwrite_vars[] = array(
                     'name' => 'STUDENT_NAME',
-                    'content' => $student->display_name
+                    'content' => $firstname.' '.$lastname
                 );
 
                 $template_data['merge_vars'][] = array(
@@ -363,6 +365,7 @@ function getvars_quiz_summary_parent_mail($recipients,$comm_data){
         }
 
     restore_current_blog();
+
 
     return $template_data;
 
@@ -394,8 +397,6 @@ function get_quiz_template_data($comm_data,$quiz_id, $division = 0){
     switch_to_blog($comm_data['blog_id']);
 
     $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
-    #file_put_contents("b1.txt", print_r($school_admin, true));
-    #file_put_contents("b2.txt", print_r($quiz_id, true));
 
 
     $quiz_details= get_single_quiz_module($quiz_id,$school_admin);
@@ -450,96 +451,9 @@ function get_quiz_summary_template_data($comm_data,$quiz_id, $division = 0){
 
     global $aj_comm;
 
-    $studeny_taken_quiz_id = [];
-
-    $current_student = $comm_data['student_id'];
-
-    $data = array();
-
     $current_blog=get_current_blog_id();
 
-
-    if(!$division){
-        if($comm_data['communication_type'] == 'quiz_summary_student_mail')
-            $division   = get_user_meta($comm_data['user_id'],'student_division', true);
-
-        else
-            $division   = $aj_comm->get_communication_meta($comm_data['id'],'division');
-    }
-
-    $siteurl = get_site_url();
-
-    $data[] = array(
-        'name' => 'QUIZ_URL',
-        'content' => "<a target='_blank' href='$siteurl/#quiz-report/div/$division/quiz/$quiz_id'>here</a>"
-    );
-
-    switch_to_blog($comm_data['blog_id']);
-
-    $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
-
-    $quiz_details= get_single_quiz_module($quiz_id,$school_admin,$division);
-
-
-    // id's of students that have taken the quiz
-    $studeny_taken_quiz_id = $quiz_details->taken_by_stud;
-
-    $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($studeny_taken_quiz_id));
-    $vi = '';
-    foreach($it as $v) {
-        $vi = $v.', '.$vi;
-    }
-
-    $vi = rtrim($vi);
-
-    $taken_by_studs_ids = explode(",", $vi);
-
-    if (in_array($current_student, $taken_by_studs_ids))
-    {
-       $quiz_details->num = 2;
-    }
-    else
-    {
-        $quiz_details->num = '';
-    }
-
-
-    $taken = $quiz_details->taken_by;
-
-    $terms= $quiz_details->term_ids;
-
-    $textbook_id = $terms['textbook'];
-
-    $chapter_id = $terms['chapter'];
-
     switch_to_blog(1);
-    $textbook_name = get_term_field('name', $textbook_id, 'textbook');
-
-    if($chapter_id)
-        $chapter_name = get_term_field('name', $chapter_id, 'textbook');
-    else
-        $chapter_name = ' -- ';
-
-    $division_data = fetch_single_division($division,$comm_data['blog_id']);
-
-    $division  = $division_data['division'];
-
-    if($quiz_details->quiz_type == 'practice'){
-        $quiz_type = 'Practice Quiz';
-        $data[] = array('name' => 'PRACTICE', 'content' => 'true');
-    }
-    else
-        $quiz_type = 'Class Test';
-
-    $data[] = array('name' => 'STUDENT_ANS',    'content' => $quiz_details->num);
-    $data[] = array('name' => 'QUIZ_NAME',      'content' => $quiz_details->name);
-    $data[] = array('name' => 'QUIZ_TYPE',      'content' => $quiz_type);
-    $data[] = array('name' => 'CLASS',          'content' => $division);
-    $data[] = array('name' => 'TEXTBOOK',       'content' => $textbook_name);
-    $data[] = array('name' => 'CHAPTER',        'content' => $chapter_name);
-    $data[] = array('name' => 'QUIZ_MARKS',     'content' => $quiz_details->marks);
-    $data[] = array('name' => 'TAKEN',          'content' => $taken);
-
     $data[] = get_mail_header($comm_data['blog_id']);
     $data[] = get_mail_footer($comm_data['blog_id']);
     switch_to_blog($current_blog);
@@ -618,6 +532,7 @@ function get_quiz_list_template_data($comm_data,$quiz_id, $division = 0){
     $data[] = array('name' => 'QUIZ_MARKS',     'content' => $quiz_details->marks);
 
     }
+    $data[] = array('name' => 'SUBJECT',       'content' => 'Go Nuts! More quizzes');
 
 
     $data[] = get_mail_header($comm_data['blog_id']);
@@ -652,8 +567,6 @@ function get_quiz_summary_data($quiz_id, $student_id, $quizz_type=''){
     $data[] = array('name' => 'DATE',           'content' => date('d M Y', strtotime($summary->taken_on)));
     $data[] = array('name' => 'ATTEMPTS',       'content' => $quiz_status['attempts']);
 
-    #file_put_contents('a8.txt', print_r($data, true));
-
     return $data;
 
 }
@@ -665,6 +578,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
     $student_ans ='';
     $marks_below='';
+    $zero = '';
     $current_student_max_quizes = '';
     $current_student_id = $student_id;
     $studs_taken_quiz = '';
@@ -798,14 +712,18 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     foreach ($student_ids as $student) {
     
     // max qiuz taker
-    $query1 = $wpdb->prepare(" SELECT count(DISTINCT summary.collection_id) as collection_id, summary.student_id, users.display_name
+    $query1 = $wpdb->prepare(" SELECT count(DISTINCT summary.collection_id) as collection_id, summary.student_id, users.meta_value as firstname, users1.meta_value as lastname
                     FROM {$wpdb->prefix}quiz_response_summary as summary
-                    LEFT JOIN {$wpdb->base_prefix}users as users
-                    ON summary.student_id = users.ID
+                    LEFT JOIN {$wpdb->base_prefix}usermeta as users
+                    ON summary.student_id = users.user_id
+                    LEFT JOIN {$wpdb->base_prefix}usermeta as users1
+                    ON summary.student_id = users1.user_id
                     WHERE summary.taken_on BETWEEN %s AND %s
+                    AND users.meta_key like %s
+                    AND users1.meta_key like %s
                     AND summary.quiz_meta like %s
                     AND summary.student_id = %d
-                    AND summary.collection_id in ($quizids)", $start_date, $end_date, '%completed%', $student);
+                    AND summary.collection_id in ($quizids)", $start_date, $end_date,'%first_name%','%last_name%', '%completed%', $student);
 
     $summary_data_all[] = $wpdb->get_row($query1);
     }
@@ -818,7 +736,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     foreach ($summary_data_all as $key => $summary_data) {
         if($key == $max){
        $max_quizes_taken = $summary_data->collection_id;
-       $max_quiz_taker_name = $summary_data->display_name;
+       $max_quiz_taker_name = $summary_data->firstname.' '.$summary_data->lastname;
        $max_quiz_taker_id = $summary_data->student_id;
 
         }
@@ -829,10 +747,12 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
     // top scorer
 
-    $query14 = $wpdb->prepare("SELECT SUM(marks_scored) as marks_scored,  users.display_name, summary.student_id, collection.term_ids, meta.meta_value
+    $query14 = $wpdb->prepare("SELECT SUM(marks_scored) as marks_scored,  users.meta_value as firstname, users1.meta_value as lastname, summary.student_id, collection.term_ids, meta.meta_value
                 FROM {$wpdb->prefix}quiz_response_summary as summary
-                LEFT JOIN {$wpdb->base_prefix}users as users
-                ON summary.student_id = users.ID
+                LEFT JOIN {$wpdb->base_prefix}usermeta as users
+                ON summary.student_id = users.user_id
+                LEFT JOIN {$wpdb->base_prefix}usermeta as users1
+                ON summary.student_id = users1.user_id
                 LEFT JOIN {$wpdb->prefix}quiz_question_response as question
                 ON summary.summary_id = question.summary_id
                 LEFT JOIN {$wpdb->base_prefix}content_collection as collection
@@ -840,20 +760,22 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
                 LEFT JOIN {$wpdb->base_prefix}collection_meta as meta
                 ON summary.collection_id = meta.collection_id
                 WHERE summary.taken_on BETWEEN %s AND %s
+                AND users.meta_key like %s
+                AND users1.meta_key like %s
                 AND summary.quiz_meta like %s
                 AND summary.student_id IN ($studentIDS)
                 AND summary.collection_id IN ($quizids)
                 AND meta.meta_key = 'quiz_meta'
                 AND question.status = 'correct_answer'
                 GROUP BY question.summary_id
-                ORDER BY marks_scored desc", $start_date, $end_date, '%completed%');
+                ORDER BY marks_scored desc", $start_date, $end_date,'%first_name%','%last_name%', '%completed%');
 
 
     if($num_of_quizes_selected == 1){
         $top_scorer_data = $wpdb->get_row($query14);
 
         $class_top_scor = $top_scorer_data->marks_scored;
-        $class_top_scorer_name = $top_scorer_data->display_name;
+        $class_top_scorer_name = $top_scorer_data->firstname.' '.$top_scorer_data->lastname;
         $class_top_scorer_id = $top_scorer_data->student_id;
         $term_ids = $top_scorer_data->term_ids;
 
@@ -927,7 +849,8 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
      $data[] = array('name' => 'MY_MAX_SUBJECT_NAME',   'content' => $my_max_subj_name);
      $data[] = array('name' => 'CLASS_TOP_SCORER',   'content' => $class_top_scorer_name);
      $data[] = array('name' => 'STUDENTS_HAV_TAKEN_QUIZ',   'content' => $studs_taken_quiz);
-     $data[] = array('name' => 'CLASS_TOP_SCOR',   'content' => $class_top_scor);
+     $data[] = array('name' => 'CLASS_TOP_SCORE',   'content' => $class_top_scor);
+
      
     return $data;
 

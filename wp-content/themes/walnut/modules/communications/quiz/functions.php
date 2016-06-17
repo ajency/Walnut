@@ -265,20 +265,11 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
 function quiz_published_parent_mail_recipients($quiz_id){
 
     global $wpdb;
-    #file_put_contents("abc.txt", print_r($quiz_id, true));
 
     if(!$quiz_id)
         return false;
 
     $parents=$students= $recipients = $divison = $stud_report_ids = array();
-    
-    // for studs who have taken the quiz
-   /* $query = $wpdb->prepare("SELECT DISTINCT student_id 
-        FROM {$wpdb->prefix}quiz_response_summary 
-        WHERE quiz_meta LIKE %s
-            AND collection_id = %d",
-        array('%"completed";%', $quiz_id)
-    );*/
 
     // textbook id for that particular quiz id
     $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->prefix}content_collection
@@ -434,7 +425,6 @@ function prepare_quiz_summary_parent_mail_recipients($data){
 
 function prepare_quiz_published_parent_mail_recipients($data){
 
-    #file_put_contents("fwwwilename.txt", print_r($data, true));
 
     $recipients= array();
 
@@ -529,24 +519,27 @@ function quiz_summary_parent_mail_preview($data){
     $template_data['template_name']              = 'quiz-summary-parent-mail'; 
     $template_data['template_content']           = array(); 
 
-    #$template_data['merge_vars'] = get_quiz_summary_template_data($comm_data,$data['additional_data']['quiz_ids'], $division);
+    $quiz_summary= get_quiz_summary_template_data($comm_data,$data['additional_data']['quiz_ids'], $division);
 
     //fetch all student specific data
     $template_data['merge_vars'] = get_quiz_summary_report_data($comm_data, $data['additional_data']['quiz_ids'],$recipient['student_id'], $division);
     
-    #$template_data['merge_vars'] = array_merge($template_data['merge_vars'],$quiz_summary);
+    $template_data['merge_vars'] = array_merge($template_data['merge_vars'],$quiz_summary);
+
+    //get student full name
+    $firstname= get_user_meta($recipient['student_id'], 'first_name', true);
+    $lastname = get_user_meta($recipient['student_id'], 'last_name', true);
+
 
     $template_data['merge_vars'][]=array(
         'name'=>'STUDENT_NAME',
-        'content'=>$recipient['student_name']
-        );
+        'content'=>$firstname.' '.$lastname        );
     #print_r($template_data['global_merge_vars']);exit;
     $blog_data= get_blog_details($comm_data['blog_id'], true);
     $template_data['merge_vars'][]=array(
         'name'      => 'BLOG_URL',
         'content'   => '<a href="'.$blog_data->siteurl.'">Click here</a>'
     );
-   #file_put_contents("atemplate_data.txt", print_r($template_data, true));
     return $template_data;
 
 }
@@ -555,8 +548,6 @@ function quiz_summary_parent_mail_preview($data){
 function quiz_published_parent_mail_preview($data){
 
     $quizes_id = [];
-
-    #file_put_contents("abc.txt", print_r($data, true));
 
     require_once get_template_directory()."/ajcm_components/quiz.php";
 
@@ -590,7 +581,6 @@ function quiz_published_parent_mail_preview($data){
         'name'      => 'BLOG_URL',
         'content'   => '<a href="'.$blog_data->siteurl.'">Click here</a>'
     );
-
     return $template_data;
 
 }
