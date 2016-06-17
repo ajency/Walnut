@@ -5,7 +5,7 @@ require_once 'functions.php';
 require_once 'ImportContentPiece/ImportContentPiece.php';
 
 require_once 'content_pieces_import.php';
-require_once 'ImportContentPiece/ExcelGenerate.php';
+//require_once 'ImportContentPiece/ExcelGenerate.php';
 require 'classes/PHPExcel.php';
 //require '../content-modules/ajax.php';
 
