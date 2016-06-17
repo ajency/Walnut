@@ -240,7 +240,7 @@ switch($step) {
 			extract( $result, EXTR_SKIP );
 			
 			require_once( ABSPATH.'wp-admin/includes/plugin.php');
-			require_once( ABSPATH. 'wp-content/plugins/school-data-sync/school_data_sync.php');
+			//require_once( ABSPATH. 'wp-content/plugins/data-sync/data_sync.php');
 			require_once( ABSPATH . 'wp-content/themes/walnut/standalone_schoolsite_setup.php' );
 			update_option('blog_id', $_POST['blog_id']);
 ?>

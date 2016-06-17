@@ -40,7 +40,7 @@ function run_standalone_school_setup(){
 
     add_pages_to_main_site();
 
-    activate_school_data_sync_plugin('school-data-sync/school_data_sync.php');
+    //activate_school_data_sync_plugin('data-sync/data_sync.php');
     
     activate_plugins(array(
         'custom-taxonomy-order-ne/customtaxorder.php',
@@ -268,5 +268,21 @@ function activate_school_data_sync_plugin($plugin){
         do_action( 'activated_plugin', trim( $plugin) );
     }
 
-    set_sds_plugin_options();
+    //set_sync_plugin_options();
 }
+
+
+
+/*function set_sync_plugin_options() {
+  global $wpdb;  
+  //create tables logic on plugin activation
+  $sync_status_table = "
+            CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_data` (
+         `id` int(11) NOT NULL primary key AUTO_INCREMENT,
+               `last_sync` timestamp NOT NULL,
+               `type` VARCHAR(30) NOT NULL,
+               `status` VARCHAR(30) NOT NULL
+            )";
+
+    $wpdb->query( $sync_status_table );  
+}*/

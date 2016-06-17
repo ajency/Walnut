@@ -21,23 +21,18 @@ require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 
 date_default_timezone_set('Asia/Kolkata');
 
-function set_ds_plugin_options() {
-	global $wpdb;
-	
-	//add_option("sds_syncsite","");
-	//add_option("sds_syncblog_id","");
-	
-	//create tables logic on plugin activation
-	$sync_status_table = "
+function set_ds_plugin_options() {	
+	global $wpdb;  
+  //create tables logic on plugin activation
+  $sync_status_table = "
             CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}sync_data` (
-			   `id` int(11) NOT NULL primary key AUTO_INCREMENT,
+         `id` int(11) NOT NULL primary key AUTO_INCREMENT,
                `last_sync` timestamp NOT NULL,
                `type` VARCHAR(30) NOT NULL,
                `status` VARCHAR(30) NOT NULL
             )";
 
-    $wpdb->query( $sync_status_table );
-	
+    $wpdb->query( $sync_status_table ); 
 }
 
 function unset_ds_plugin_options () {
