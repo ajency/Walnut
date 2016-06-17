@@ -231,7 +231,18 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
 
     $parents=$students= array();
     
-    //for all student id's (students hav division)
+    //for all student id's from a class
+
+    $divisionIds = $wpdb->get_col($wpdb->prepare("SELECT id
+        FROM {$wpdb->prefix}class_divisions
+        WHERE class_id IN (SELECT class_id
+        FROM {$wpdb->prefix}class_divisions
+        WHERE division = %d)", $division));
+
+
+    $division_ids = implode(", ", $divisionIds);
+
+
     $query1 = $wpdb->prepare("SELECT DISTINCT um1.user_id
         FROM {$wpdb->base_prefix}usermeta AS um1
         LEFT JOIN {$wpdb->base_prefix}usermeta AS um2
@@ -239,12 +250,12 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
         WHERE um1.meta_key LIKE %s
         AND um1.meta_value LIKE %s
         AND um2.meta_key LIKE %s
-        AND um2.meta_value = %d",
-        array('%capabilities','%student%','student_division', $division)
+        AND um2.meta_value IN ($division_ids)",
+        array('%capabilities','%student%','student_division')
         );
 
-    #$txt = $query1." - QUERY..";
-    #fwrite($myfile, "\n". $txt);
+    #file_put_contents("a.txt", $query1);
+
     $student_ids= $wpdb->get_col($query1);
 
     foreach($student_ids as $student){

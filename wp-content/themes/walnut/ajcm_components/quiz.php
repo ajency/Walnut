@@ -690,7 +690,13 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
     }
 
+    $divisionIds = $wpdb->get_col($wpdb->prepare("SELECT id
+        FROM {$wpdb->prefix}class_divisions
+        WHERE class_id IN (SELECT class_id
+        FROM {$wpdb->prefix}class_divisions
+        WHERE division = %d)", $division));
 
+    $division_ids = implode(", ", $divisionIds);
 
     // all students from that division
     $query2 = $wpdb->prepare("SELECT DISTINCT um1.user_id
@@ -700,8 +706,8 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
         WHERE um1.meta_key LIKE %s
         AND um1.meta_value LIKE %s
         AND um2.meta_key LIKE %s
-        AND um2.meta_value = %d",
-        array('%capabilities','%student%','student_division', $division)
+        AND um2.meta_value IN ($division_ids)",
+        array('%capabilities','%student%','student_division')
         );
 
     $student_ids = $wpdb->get_col($query2);
