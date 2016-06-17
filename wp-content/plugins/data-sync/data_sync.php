@@ -19,6 +19,8 @@ define('NETWORK_SERVER_URL','http://walnutedu.org');
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 
+date_default_timezone_set('Asia/Kolkata');
+
 function set_ds_plugin_options() {
 	global $wpdb;
 	

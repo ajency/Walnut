@@ -21,8 +21,7 @@ function school_data_sync_screen_new(){
     <?php
 
 
-
-    $html = '<h3>School Data Update</h3>';
+   $html = '<h3>School Data Update</h3>';
 
     $html .= '<div class="wrap" id="syncwrapper">';
 
@@ -31,8 +30,7 @@ function school_data_sync_screen_new(){
     if(!$last_up_sync){
         $html .= '<div class="u_sync_message"><span class="dashicons dashicons-no-alt"></span> No successfull <strong>UpSync</strong> performed since the setup was done. Please perform upsync first to enable DownSync.</div>';
         $d_disabled = 'disabled';
-    }else{
-    date_default_timezone_set('Asia/Kolkata');
+    }else{    
     $timestamp = strtotime($last_up_sync);
     $cDate = strtotime(date('Y-m-d H:i:s'));    
     $oldDate = $timestamp + 3600;
@@ -143,7 +141,8 @@ $wpdb->insert(
     $wpdb->prefix.'sync_data',
     array(
         'type' => 'upsync',
-        'status' => 'pending'
+        'status' => 'pending',
+        'last_sync' => date('Y-m-d H:i:s')
     ));
 
 $response = json_encode(array('status'=>'success'));
@@ -264,7 +263,8 @@ $last_sync_id = $wpdb->get_var( "SELECT id FROM ".$wpdb->prefix."sync_data ORDER
 $wpdb->update(
     $wpdb->prefix.'sync_data',
     array(
-        'status' => 'success'
+        'status' => 'success',
+        'last_sync' => date('Y-m-d H:i:s')
     ),
     array( 'id' => $last_sync_id ));
 
@@ -333,7 +333,8 @@ $wpdb->insert(
     $wpdb->prefix.'sync_data',
     array(
         'type' => 'downsync',
-        'status' => 'pending'
+        'status' => 'pending',
+        'last_sync' => date('Y-m-d H:i:s')
     ));
 
 $response = json_encode(array('status'=>'success'));
@@ -519,7 +520,8 @@ $last_sync_id = $wpdb->get_var( "SELECT id FROM ".$wpdb->prefix."sync_data ORDER
 $wpdb->update(
     $wpdb->prefix.'sync_data',
     array(
-        'status' => 'success'
+        'status' => 'success',
+        'last_sync' => date('Y-m-d H:i:s')
     ),
     array( 'id' => $last_sync_id ));
 
