@@ -27,7 +27,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
-        console.log(data);
         data.textbookName = (function(_this) {
           return function() {
             var textbook;

@@ -1069,7 +1069,6 @@ class WP_List_Table {
 				$style = ' style="display:none;"';
 
 			$attributes = "$class$style";
-			file_put_contents("a3.txt", $attributes);
 
 			if ( 'cb' == $column_name ) {
 				echo '<th scope="row" class="check-column">';

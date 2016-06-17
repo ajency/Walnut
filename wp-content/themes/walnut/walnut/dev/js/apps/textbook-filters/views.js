@@ -48,10 +48,7 @@ define(['app'], function(App) {
           var t;
           t = [];
           t.id = m.get('term_id');
-          name = m.get('name');
           t.name = m.get('name');
-          t.name = name[0];
-          console.log(t.name);
           return t;
         });
         if (divisions) {

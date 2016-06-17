@@ -32,12 +32,6 @@ define(['jquery', 'underscore'], function($, _) {
     if (_.size(items) > 0) {
       _.each(items, (function(_this) {
         return function(item, index) {
-          var name, text;
-          console.log(item.get('name'));
-          name = item.get('name');
-          name = name.split('(');
-          text = name[0];
-          console.log(item.get('name'));
           return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
         };
       })(this));
@@ -264,7 +258,6 @@ define(['jquery', 'underscore'], function($, _) {
           return filtered_item;
         };
       })(this));
-      console.log(filtered_data);
     } else {
       filtered_data = filtered_models;
     }
