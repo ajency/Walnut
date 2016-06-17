@@ -336,7 +336,7 @@ jQuery(document).ready(function() {
     }
     
     function check_server_data_sync(referer,sync_request_id,blog_id,last_sync){
-        referer.next().html('This will take a few minutes. Please contact <a href="mailto:support@synapselearning.net">support@synapselearning.net</a> if the problem persists');
+        referer.next().html('This will take a few minutes. Please contact <a href="mailto:ask@walnutedu.in">ask@walnutedu.in</a> if the problem persists');
         var syncstatus = referer.attr('data-syncstatus');
         var server_sync_id = referer.attr('data-server-sync-id');
         var login_cookie_name = jQuery('#login_cookie_name').val();
