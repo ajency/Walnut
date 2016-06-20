@@ -1,0 +1,20 @@
+Array
+(
+    [action] => add-tag
+    [screen] => edit-textbook
+    [taxonomy] => textbook
+    [post_type] => content-piece
+    [_wpnonce_add-tag] => 5249f8433b
+    [_wp_http_referer] => /wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece
+    [tag-name] => eee
+    [slug] => 
+    [parent] => -1
+    [description] => 
+    [term_meta] => Array
+        (
+            [attachmentid] => 
+            [attachmenturl] => 
+            [author] => 
+        )
+
+)

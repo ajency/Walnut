@@ -1,6 +1,8 @@
 define ['app'
+        'controllers/region-controller'
         'apps/textbooks/list/listcontroller'
         'apps/textbooks/textbook-single/textbookcontroller'
+        'apps/textbooks/textadd-popup/add-textbook-app'
 ], (App)->
     App.module "TextbooksApp", (TextbooksApp, App)->
 

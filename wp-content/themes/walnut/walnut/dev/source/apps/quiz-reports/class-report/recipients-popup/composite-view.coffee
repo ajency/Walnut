@@ -69,8 +69,8 @@
 
             mixinTemplateHelpers:(data)->
                 data=super data
-                quiz_component = true if (this.model.get('communication_type') == 'quiz_completed_parent_mail')
-                #console.log data.quiz_component
+                data.quiz_component = true if (this.model.get('communication_type') == 'quiz_completed_parent_mail')
+                #data
 
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'

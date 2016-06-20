@@ -765,6 +765,7 @@ function wp_ajax_add_link_category( $action ) {
  * @since 3.1.0
  */
 function wp_ajax_add_tag() {
+	file_put_contents("a11.txt", print_r($_POST, true));
 	//add textbook taxonomy
 	global $wp_list_table;
 

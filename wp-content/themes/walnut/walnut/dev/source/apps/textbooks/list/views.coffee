@@ -32,6 +32,7 @@ define ['app'
             serializeData: ->
                 data = super()
                 class_ids = @model.get 'classes'
+                console.log class_ids
                 if class_ids
                     item_classes = _.sortBy(class_ids, (num)->
                         num)
@@ -87,6 +88,14 @@ define ['app'
 
             events:
                 'click #Filters li': 'filterBooks'
+                'click #search-btn' : 'searchTextbooks'
+                'keypress .search-box' :(e)-> @searchTextbooks() if e.which is 13
+                'click .add-textbook' : 'addTextbook'
+
+            addTextbook:=>
+                console.log @collection
+                console.log @model
+                @trigger 'show:add:textbook:popup', @collection
 
 
             sortTable: (e)->
@@ -106,6 +115,22 @@ define ['app'
                     recreation: 'all'
             #console.log @dimensions
 
+            searchTextbooks: (e)=>
+                console.log @dimensions
+                searchStr = $('.search-box').val()
+                if searchStr
+                    @$el.find "#error-div"
+                    .hide()
+                    @$el.find '.progress-spinner'
+                    .show()
+                    @dimensions.region = searchStr
+                    console.log @dimensions
+                    $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
+                    @$el.find '.progress-spinner'
+                    .hide()
+                else
+                    @$el.find "#error-div"
+                    .show()
 
             filterBooks: (e)=>
                 console.log '@dimensions'
@@ -136,11 +161,13 @@ define ['app'
                             filterString = filterString + ' ' + filter
                     else
                         $t.removeClass('active');
+                        console.log filter
+                        console.log filterString
                         re = new RegExp('(\\s|^)' + filter);
                         filterString = filterString.replace(re, '');
 
                 @dimensions[dimension] = filterString;
-
+                console.log @dimensions
                 console.info('dimension 1: ' + @dimensions.region);
                 console.info('dimension 2: ' + @dimensions.recreation);
                 $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])

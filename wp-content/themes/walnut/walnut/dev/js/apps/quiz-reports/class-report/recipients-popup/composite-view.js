@@ -54,10 +54,9 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
       };
 
       RecipientsView.prototype.mixinTemplateHelpers = function(data) {
-        var quiz_component;
         data = RecipientsView.__super__.mixinTemplateHelpers.call(this, data);
         if (this.model.get('communication_type') === 'quiz_completed_parent_mail') {
-          return quiz_component = true;
+          return data.quiz_component = true;
         }
       };
 
