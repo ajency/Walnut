@@ -31,16 +31,17 @@ define ['app'
 
             serializeData: ->
                 data = super()
+                #console.log 'model'
+                #console.log @model
                 class_ids = @model.get 'classes'
-                console.log class_ids
                 if class_ids
                     item_classes = _.sortBy(class_ids, (num)->
                         num)
                     class_string = ''
                     for class_id in item_classes
                         class_string += CLASS_LABEL[class_id]
+                        classString = class_string
                         class_string += ', ' if _.last(item_classes) != class_id
-
                     data.class_string = class_string;
 
                 data
@@ -83,7 +84,7 @@ define ['app'
                 data_subjects = _.union _.flatten collection_subjects
                 data.subjects = _.compact (_.sortBy(data_subjects, (num)->
                     num))
-
+                console.log data
                 data
 
             events:
@@ -93,8 +94,7 @@ define ['app'
                 'click .add-textbook' : 'addTextbook'
 
             addTextbook:=>
-                console.log @collection
-                console.log @model
+                #console.log @collection
                 @trigger 'show:add:textbook:popup', @collection
 
 
@@ -109,14 +109,14 @@ define ['app'
 
 
             onShow: ->
-                console.log 'onShow'
+                #console.log 'onShow'
                 @dimensions =
                     region: 'all'
                     recreation: 'all'
             #console.log @dimensions
 
             searchTextbooks: (e)=>
-                console.log @dimensions
+                #console.log @dimensions
                 searchStr = $('.search-box').val()
                 if searchStr
                     @$el.find "#error-div"
@@ -124,7 +124,7 @@ define ['app'
                     @$el.find '.progress-spinner'
                     .show()
                     @dimensions.region = searchStr
-                    console.log @dimensions
+                    #console.log @dimensions
                     $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
                     @$el.find '.progress-spinner'
                     .hide()
@@ -133,8 +133,8 @@ define ['app'
                     .show()
 
             filterBooks: (e)=>
-                console.log '@dimensions'
-                console.log @dimensions
+                #console.log '@dimensions'
+                #console.log @dimensions
                 $t = $(e.target).closest('li')
                 dimension = $t.attr('data-dimension')
                 filter = $t.attr('data-filter')
@@ -167,8 +167,8 @@ define ['app'
                         filterString = filterString.replace(re, '');
 
                 @dimensions[dimension] = filterString;
-                console.log @dimensions
-                console.info('dimension 1: ' + @dimensions.region);
-                console.info('dimension 2: ' + @dimensions.recreation);
+                #console.log @dimensions
+                #console.info('dimension 1: ' + @dimensions.region);
+                #console.info('dimension 2: ' + @dimensions.recreation);
                 $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
 

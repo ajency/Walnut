@@ -3,7 +3,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
         class List.ListController extends RegionController
 
             initialize: ->
-                console.log App
+                #console.log App
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
                 breadcrumb_items =
                     'items': [

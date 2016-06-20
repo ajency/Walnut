@@ -14,7 +14,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
 
       ListController.prototype.initialize = function() {
         var breadcrumb_items, textbooksCollection, view;
-        console.log(App);
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });

@@ -1,0 +1,25 @@
+Array
+(
+    [action] => add-tag
+    [screen] => edit-textbook
+    [taxonomy] => textbook
+    [post_type] => content-piece
+    [_wpnonce_add-tag] => 631f002eb4
+    [_wp_http_referer] => /wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece
+    [tag-name] => tatata
+    [slug] => tatata
+    [parent] => -1
+    [description] => tatata
+    [term_meta] => Array
+        (
+            [attachmentid] => 
+            [attachmenturl] => 
+            [author] => cvfrgvre
+        )
+
+    [classes] => Array
+        (
+            [0] => 
+        )
+
+)

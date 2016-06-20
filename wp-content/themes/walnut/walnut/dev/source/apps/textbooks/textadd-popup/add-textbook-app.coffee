@@ -6,61 +6,68 @@ define ['app'
         class AddTextbookPopup.Controller extends RegionController
 
             initialize : (options)->
-                #collection = options.collection
+                #console.log options
 
-                @view = @_addTextbookView options.collection
+                @view = @_addTextbookView options.collection 
 
                 @show @view
 
                 @listenTo @view, 'close:popup:dialog',->
                     @region.closeDialog()     
 
-                @listenTo @view, 'save:quiz:schedule', (from,to)->
+                @listenTo @view, 'save:textbook:data', (data)->
+                    console.log AJAXURL
+                    console.log data
+                    url = AJAXURL + '?action=add-textbook'
+                    $.ajax({
+                        type : 'POST',
+                        url : url,
+                        data : data,
+                        dataType: 'json',
+                        async: true,
+                        success :(response, textStatus, jqXHR)=>
+                            console.log response
 
-                    @quizModel.set
-                        'schedule':
-                            'from' : from
-                            'to'   : to
 
-                    data = 
-                        quiz_id     : @quizModel.id
-                        division    : @division
-                        schedule    :
-                            from    : from
-                            to      : to
+                });
 
-                    schedule = App.request "save:quiz:schedule", data
-
-                    schedule.done (response)=>
-                        @view.triggerMethod "schedule:saved", response
+                    
 
 
 
             _addTextbookView :(collection)=>
                 new AddTextbookView
                     collection        : collection
-                    #model        : @quizModel
+                    #model        : @model
         class AddTextbookView extends Marionette.ItemView
 
             template: '<form>
                         <div class="row">
                             <div class="col-md-12">
                                 Name:<br>
-                                          <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12">
+                                <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12">
                             </div><br>
                             <div class="col-md-12">
                                 Classes suitable for:<br/>
                                 {{#classes}}
-                                <input style="width:20px" type="checkbox" name="textClass" value="{{label}}">{{label}}<br>
+                                <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br>
                                 {{/classes}}
                             </div><br>
                             <div class="col-md-12">
                                 Description:<br>
-                                          <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea>
+                                <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea>
                             </div><br>
-                            <div class="col-md-12">
+                            <!--div class="col-md-12">
                                 Textbook Image Url<br>
-                                          <input id="texturl" name="texturl" type="file" class="input-small span12">
+                                <input id="texturl" name="texturl" type="file" class="input-small span12"><br>
+                                <div id="progress" class="progress none">
+                                     <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif">
+                                </div>
+                                <img id="textImage" src="" height="200" alt="Image preview...">
+                            </div><br-->
+                            <div class="col-md-12">
+                                Author Name:<br>
+                                <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12">
                             </div><br>
                             <div class="row">
                                 <div class="col-md-12">
@@ -73,6 +80,7 @@ define ['app'
 
             events:
                 'click .btn-success'    : 'addTextbook'
+                'change #texturl' : 'showImage'
 
             initialize:->
                 @dialogOptions = 
@@ -81,8 +89,10 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                #console.log @collection
+                #console.log data
+                @model = @collection.models
                 collection_classes = @collection.pluck 'classes'
+                #console.log collection_classes
 
                 data.classes=   _.chain collection_classes
                                     .flatten()
@@ -93,37 +103,91 @@ define ['app'
                                         classes=[]
                                         classes.slug = _.slugify CLASS_LABEL[m]
                                         classes.label = CLASS_LABEL[m]
+                                        classes.id = m
                                         classes
                                 .value()
 
-                class_ids = @collection.get 'classes'
-                console.log class_ids
-                if class_ids
-                    item_classes = _.sortBy(class_ids, (num)->
-                        num)
-                    class_string = ''
-                    for class_id in item_classes
-                        class_string += CLASS_LABEL[class_id]
-                        class_string += ', ' if _.last(item_classes) != class_id
-                        console.log class_id+" "+class_string
-                        #console.log class_string
-
-                    data.class_string = class_string;
+                #console.log data
                 data
 
             onShow: ->
                 console.log 'onshow'
 
+            showImage:->
+                defer = $.Deferred()
+                console.log 'image urlchnaged'
+                textUrl = $('#texturl').val()
+                console.log textUrl
+
+                picture = $('input[name="texturl"]')[0].files[0]
+                #data = new FormData()
+                #data.append('file', picture)
+                #console.log picture
+                data = picture['name']
+                console.log data
+                url = AJAXURL + '?action=upload-text-image'
+                console.log url
+                $.ajax({
+                        type : 'POST',
+                        url : url,
+                        data : data,
+                        dataType: 'json',
+                        async: true,
+                        success :(response, textStatus, jqXHR)=>
+                            console.log response
+
+
+                });
+                #console.log picture
+
+                image =  document.getElementById("textImage")                
+                image.src = textUrl
+                ###if textUrl.files[0]
+                    console.log 'inside'
+                    reader = new FileReader();
+                    reader.onload = imageIsLoaded;
+                    reader.readAsDataURL(textUrl.files[0]);###
+
+
 
             addTextbook: (e)=>
-                console.log @model
-                if @$el.find('form').valid()
+                #console.log @model
+                class_ids=[]
+                textbookName = $('#textname').val()
+                if textbookName.trim() != ''
                     name = $('#textname').val()
-                    #class_ids = 
-                else     
+                    slug = $('#textname').val()
+                    #textUrl = $('#texturl').val()
+                    #class_ids = $('.class_checkbox').val()
+                    #checkboxes = document.getElementsByName('textClass');
+                    checkedBoxes = @$el.find('input:checked');
+                    class_ids = _.chain checkedBoxes
+                                    .flatten(true)
+                                    .pluck('value')
+                                    .value();
+
+                    desc = $('#textdesc').val()
+                    authname = $('#authname').val()
+
+                    data = 
+                        action : 'add-tag'
+                        taxonomy : 'textbook'
+                        post_type : 'content-piece'
+                        'tag-name' : name
+                        slug : slug
+                        parent : '-1'
+                        description : desc
+                        term_meta : 
+                            author : authname
+                        classes : class_ids                    
+
+                    @trigger "save:textbook:data", data
+                    #onAddTextbook
+
+                else
+                    @$el.find '#textname'
+                    .addClass 'error'     
                     #console.log scheduleTo
-                    @trigger "save:quiz:schedule", data
-                    onAddTextbook
 
             onAddTextbook:(response)->
                 @$el.find '.success-msg'

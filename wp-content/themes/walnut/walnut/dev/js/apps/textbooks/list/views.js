@@ -45,10 +45,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListItemView.prototype.serializeData = function() {
-        var class_id, class_ids, class_string, data, i, item_classes, len;
+        var classString, class_id, class_ids, class_string, data, i, item_classes, len;
         data = ListItemView.__super__.serializeData.call(this);
         class_ids = this.model.get('classes');
-        console.log(class_ids);
         if (class_ids) {
           item_classes = _.sortBy(class_ids, function(num) {
             return num;
@@ -57,6 +56,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           for (i = 0, len = item_classes.length; i < len; i++) {
             class_id = item_classes[i];
             class_string += CLASS_LABEL[class_id];
+            classString = class_string;
             if (_.last(item_classes) !== class_id) {
               class_string += ', ';
             }
@@ -120,6 +120,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         data.subjects = _.compact(_.sortBy(data_subjects, function(num) {
           return num;
         }));
+        console.log(data);
         return data;
       };
 
@@ -135,8 +136,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.addTextbook = function() {
-        console.log(this.collection);
-        console.log(this.model);
         return this.trigger('show:add:textbook:popup', this.collection);
       };
 
@@ -151,7 +150,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.onShow = function() {
-        console.log('onShow');
         return this.dimensions = {
           region: 'all',
           recreation: 'all'
@@ -160,13 +158,11 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListView.prototype.searchTextbooks = function(e) {
         var searchStr;
-        console.log(this.dimensions);
         searchStr = $('.search-box').val();
         if (searchStr) {
           this.$el.find("#error-div").hide();
           this.$el.find('.progress-spinner').show();
           this.dimensions.region = searchStr;
-          console.log(this.dimensions);
           $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
           return this.$el.find('.progress-spinner').hide();
         } else {
@@ -176,8 +172,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListView.prototype.filterBooks = function(e) {
         var $t, dimension, filter, filterString, re;
-        console.log('@dimensions');
-        console.log(this.dimensions);
         $t = $(e.target).closest('li');
         dimension = $t.attr('data-dimension');
         filter = $t.attr('data-filter');
@@ -209,9 +203,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           }
         }
         this.dimensions[dimension] = filterString;
-        console.log(this.dimensions);
-        console.info('dimension 1: ' + this.dimensions.region);
-        console.info('dimension 2: ' + this.dimensions.recreation);
         return $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
       };
 
