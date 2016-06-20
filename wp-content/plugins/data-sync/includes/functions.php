@@ -450,6 +450,7 @@ $target = $_REQUEST['local_path'];
 $tables = array();
 $files = array_diff(scandir($target), array('..', '.'));
 
+$path_list = array();
 
 foreach($files as $key=>$file){
 chmod($target.'/'.$file, 01777);
@@ -470,6 +471,8 @@ if (strpos($file,'postmeta') !== false) {
 //Not performing data insert to options table for now
 if($file !== 'options.csv'){
 
+$csv_file_path = esc_url( home_url( '/' ) ).str_replace(get_home_path(), "", $target.'/'.$file);
+$path_list[] = $csv_file_path;
 
 //check if postmeta table, so we can perform truncate action for others
 if (strpos($file,'postmeta') !== false) {
@@ -525,7 +528,7 @@ $wpdb->update(
     ),
     array( 'id' => $last_sync_id ));
 
-$response = json_encode(array('status'=>'success','last_id'=>$last_sync_id));
+$response = json_encode(array('status'=>'success','last_id'=>$last_sync_id,'pathlist'=>$path_list));
     header("content-type: text/javascript; charset=utf-8");
     header("access-control-allow-origin: *");
     echo htmlspecialchars($_GET['callback']) . '(' . $response . ')';
@@ -554,10 +557,21 @@ function uncompress_gzip($file_name){
 
 
 function load_csv_to_table($file,$table){
-global $wpdb;
+
+/*global $wpdb;
 $sql = "LOAD DATA INFILE '".$file."' INTO TABLE ".$table." CHARACTER SET UTF8
         FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
-return $wpdb->query($sql);
+return $wpdb->query($sql);*/
+
+
+$csv_file_path = esc_url( home_url( '/' ) ).str_replace(get_home_path(), "", $file);
+$sql = "LOAD DATA LOCAL INFILE '".$file."' INTO TABLE ".$table." CHARACTER SET UTF8
+        FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
+$con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD,false,128);
+$selected = mysql_select_db(DB_NAME,$con);
+$result = mysql_query($sql, $con);
+return $result;
+
 }
 
 
