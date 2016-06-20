@@ -93,7 +93,6 @@
         //datepicker: ['jquery', 'bootstrap'],
         datepicker: ['jquery', 'bootstrap'],
         timepicker: ['jquery', 'bootstrap'],
-        datetimepicker: ['jquery','new_moment','bootstrap'],
         //multiselect: ['jquery','bootstrap'],
         //zebra_datepicker: ['jquery'],
         //timepicker: ['jquery', 'bootstrap'],
