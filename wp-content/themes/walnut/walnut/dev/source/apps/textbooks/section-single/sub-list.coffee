@@ -1,12 +1,12 @@
 define ['app'
-		'text!apps/textbooks/textbook-single/templates/chapters-list.html'
-		'text!apps/textbooks/textbook-single/templates/chapter-list-item.html'
-		'text!apps/textbooks/textbook-single/templates/no-chapters.html'
-		],(App,chapterslistTpl, listitemTpl,nochaptersTpl)->
+		'text!apps/textbooks/section-single/templates/sub-list.html'
+		'text!apps/textbooks/section-single/templates/sub-list-item.html'
+		'text!apps/textbooks/section-single/templates/no-sub.html'
+		],(App,sublistTpl, listitemTpl,nosubTpl)->
 
 	App.module "TextbooksApp.Single.Views",(Views, App)->
 
-		class ChapterListItemView extends Marionette.ItemView
+		class SubListItemView extends Marionette.ItemView
 
 			tagName : 'tr'
 			className: 'gradeX odd'
@@ -14,16 +14,16 @@ define ['app'
 
 		class EmptyView extends Marionette.ItemView
 			
-			template:	nochaptersTpl	
+			template:	nosubTpl	
 			className: 'gradeX odd'
 
-		class Views.ChapterListView extends Marionette.CompositeView
+		class Views.SubListView extends Marionette.CompositeView
 
-			template : chapterslistTpl
+			template : sublistTpl
 
 			className : 'grid simple '
 
-			itemView 	: ChapterListItemView
+			itemView 	: SubListItemView
 
 			emptyView  : EmptyView
 
@@ -38,10 +38,3 @@ define ['app'
 
 				console.log 'collection'
 				console.log @collection  
-
-			###events :->
-				'click .add-chapter' : 'addChapter'
-
-			addChapter:->
-                console.log @model
-                @trigger 'show:add:textbook:popup', 'chapter'###

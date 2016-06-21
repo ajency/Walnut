@@ -104,7 +104,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
-        console.log(this.collection);
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -120,7 +119,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         data.subjects = _.compact(_.sortBy(data_subjects, function(num) {
           return num;
         }));
-        console.log(data);
         return data;
       };
 

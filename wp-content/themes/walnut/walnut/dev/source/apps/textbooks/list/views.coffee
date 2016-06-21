@@ -65,7 +65,7 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                console.log @collection
+                #console.log @collection
                 collection_classes = @collection.pluck 'classes'
 
                 data.classes=   _.chain collection_classes
@@ -84,7 +84,7 @@ define ['app'
                 data_subjects = _.union _.flatten collection_subjects
                 data.subjects = _.compact (_.sortBy(data_subjects, (num)->
                     num))
-                console.log data
+                #console.log data
                 data
 
             events:

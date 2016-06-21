@@ -6,7 +6,7 @@ define ['app'
         class AddTextbookPopup.Controller extends RegionController
 
             initialize : (options)->
-                #console.log options
+                #console.log options.collection
 
                 @view = @_addTextbookView options.collection 
 
@@ -25,9 +25,9 @@ define ['app'
                         data : data,
                         dataType: 'json',
                         async: true,
-                        success :(response, textStatus, jqXHR)=>
-                            console.log response
-
+                        success:(response, textStatus, jqXHR) =>
+                                console.log response
+                        ,
 
                 });
 
@@ -46,13 +46,16 @@ define ['app'
                             <div class="col-md-12">
                                 Name:<br>
                                 <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12">
+                                <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12">
                             </div><br>
+                            {{#noClasses}}
                             <div class="col-md-12">
                                 Classes suitable for:<br/>
                                 {{#classes}}
                                 <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br>
                                 {{/classes}}
                             </div><br>
+                            {{/noClasses}}
                             <div class="col-md-12">
                                 Description:<br>
                                 <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea>
@@ -65,10 +68,12 @@ define ['app'
                                 </div>
                                 <img id="textImage" src="" height="200" alt="Image preview...">
                             </div><br-->
+                            {{#noClasses}}
                             <div class="col-md-12">
                                 Author Name:<br>
                                 <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12">
                             </div><br>
+                            {{/noClasses}}
                             <div class="row">
                                 <div class="col-md-12">
                                     <button type="button" class="clear btn btn-success m-t-20 pull-left">Add Textbook</button>
@@ -83,18 +88,51 @@ define ['app'
                 'change #texturl' : 'showImage'
 
             initialize:->
-                @dialogOptions = 
-                    modal_title : 'Add Textbook'
-                    modal_size  : 'small'
+                #toAdd = 
+                console.log @collection
+                if @collection.toAddText
+
+                    if @collection.textbook_id
+                        @dialogOptions = 
+                        modal_title : 'Add Section'
+                        modal_size  : 'small'
+
+                    if @collection.chapter_id &&  @collection.textbook_id
+                        @dialogOptions = 
+                            modal_title : 'Add Sub Section'
+                            modal_size  : 'small'
+
+                    else
+                        @dialogOptions = 
+                            modal_title : 'Add Chapter'
+                            modal_size  : 'small'
+
+                else
+                    @dialogOptions = 
+                        modal_title : 'Add Textbook'
+                        modal_size  : 'small'
 
             serializeData: ->
-                data = super()
-                #console.log data
-                @model = @collection.models
-                collection_classes = @collection.pluck 'classes'
-                #console.log collection_classes
+                console.log @collection
+                if @collection.toAddText == 'true'
+                    data = super()
+                    @model = @collection.models
+                    parent = @collection.parent
+                    if parent == null || parent == '' || parent == undefined
+                        parent = @model[0].get 'parent'
 
-                data.classes=   _.chain collection_classes
+                    console.log parent
+
+                    data.parent = parent
+                    data
+                else
+                    data = super()
+                    console.log 'collection'
+                    @model = @collection.models
+                    collection_classes = @collection.pluck 'classes'
+                    #console.log collection_classes
+
+                    data.classes=   _.chain collection_classes
                                     .flatten()
                                     .union()
                                     .compact()
@@ -105,10 +143,12 @@ define ['app'
                                         classes.label = CLASS_LABEL[m]
                                         classes.id = m
                                         classes
-                                .value()
+                                    .value()
+                    data.noClasses = true
+                    data.parent = '-1'
+                    #console.log data
+                    data              
 
-                #console.log data
-                data
 
             onShow: ->
                 console.log 'onshow'
@@ -157,6 +197,8 @@ define ['app'
                 if textbookName.trim() != ''
                     name = $('#textname').val()
                     slug = $('#textname').val()
+                    parent = $('#parent').val()
+                    console.log parent
                     #textUrl = $('#texturl').val()
                     #class_ids = $('.class_checkbox').val()
                     #checkboxes = document.getElementsByName('textClass');
@@ -175,38 +217,38 @@ define ['app'
                         post_type : 'content-piece'
                         'tag-name' : name
                         slug : slug
-                        parent : '-1'
+                        parent : parent
                         description : desc
                         term_meta : 
                             author : authname
                         classes : class_ids                    
 
                     @trigger "save:textbook:data", data
-                    #onAddTextbook
+                    @onAddTextbook
 
                 else
                     @$el.find '#textname'
                     .addClass 'error'     
                     #console.log scheduleTo
 
-            onAddTextbook:(response)->
+            onAddTextbook:->
                 @$el.find '.success-msg'
                 .html ''
                 .removeClass 'text-success, text-error'
 
-                if response.code is 'ERROR'
+                ###if response.code is 'ERROR'
                     @$el.find '.success-msg'
                     .html 'Failed to save schedule'
                     .addClass 'text-error'
 
-                else
-                    @$el.find '.success-msg'
-                    .html 'Saved Successfully'
-                    .addClass 'text-success'
+                else###
+                @$el.find '.success-msg'
+                .html 'Saved Successfully'
+                .addClass 'text-success'
 
-                    setTimeout =>
-                        @trigger 'close:popup:dialog'
-                    ,500
+                setTimeout =>
+                    @trigger 'close:popup:dialog'
+                ,500
 
         App.commands.setHandler 'add:textbook:popup',(options)->
             new AddTextbookPopup.Controller options

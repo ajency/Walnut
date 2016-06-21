@@ -21,6 +21,9 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                         region      : App.dialogRegion
                         collection : @collection
 
+                @listenTo @view, 'search:textbooks', (searchStr)=>
+                    textbookcollection = App.request "get:textbooks", "fetch_all":true
+
                 @show view, (loading: true)
 
             _getTextbooksView: (collection)->

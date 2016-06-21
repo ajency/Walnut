@@ -43,6 +43,14 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             });
           };
         })(this));
+        this.listenTo(this.view, 'search:textbooks', (function(_this) {
+          return function(searchStr) {
+            var textbookcollection;
+            return textbookcollection = App.request("get:textbooks", {
+              "fetch_all": true
+            });
+          };
+        })(this));
         return this.show(view, {
           loading: true
         });
