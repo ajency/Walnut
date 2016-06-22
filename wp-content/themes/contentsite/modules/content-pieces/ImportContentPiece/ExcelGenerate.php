@@ -6,6 +6,8 @@ class ExportExcel {
 
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
+
+        
         $data_chap =  array(
                 array(
                     'chapter_name',
@@ -44,49 +46,47 @@ class ExportExcel {
         							 ->setCategory("mcq"); 
 
         // Add some data
-        $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A1', 'Textbook_name')
-                    ->setCellValue('B1', 'Textbook')
-                    ->setCellValue('C1', 'Chapter_name')
-                    ->setCellValue('D1', 'Chapter')
-                    ->setCellValue('E1', 'Sections_name')
-                    ->setCellValue('F1', 'Sections')
-                    ->setCellValue('G1', 'Subsections_name')
-                    ->setCellValue('H1', 'Subsections')
+        $objPHPExcel->setActiveSheetIndex(0);
 
-                    ->setCellValue('I1', 'Question')
-                    ->setCellValue('J1', 'Question Image')
-                    ->setCellValue('K1', 'Total Marks')
-                    ->setCellValue('L1', 'Multiple Correct Answers')
-                    ->setCellValue('M1', 'Correct Answer')
-                    ->setCellValue('N1', 'Option1')
-                    ->setCellValue('O1', 'Option1 Image')
-                    ->setCellValue('P1', 'Mark1')
-                    ->setCellValue('Q1', 'Option2')
-                    ->setCellValue('R1', 'Option2 Image')
-                    ->setCellValue('S1', 'Mark2')
-                    ->setCellValue('T1', 'Option3')
-                    ->setCellValue('U1', 'Option3 Image')
-                    ->setCellValue('V1', 'Mark3')
-                    ->setCellValue('W1', 'Option4')
-                    ->setCellValue('X1', 'Option4 Image')
-                    ->setCellValue('Y1', 'Mark4')
-                    ->setCellValue('Z1', 'Option5')
-                    ->setCellValue('AA1', 'Option5 Image')
-                    ->setCellValue('AB1', 'Mark5')
-                    ->setCellValue('AC1', 'Option6')
-                    ->setCellValue('AD1', 'Option6 Image')
-                    ->setCellValue('AE1', 'Mark6')
-                    ->setCellValue('AF1', 'Columns')
-                    ->setCellValue('AG1', 'Level')
-                    ->setCellValue('AH1', 'Tags')
-                    ->setCellValue('AI1', 'Hint')
-                    ->setCellValue('AJ1', 'Comment')
-                    ->setCellValue('AK1', 'Duration');
+
+        $header_list = array(
+            'Question',
+            'Question Image',
+            'Textbook_name',
+            'TextBook',
+            'Chapter_name',
+            'Chapter',
+            'Sections_name',
+            'Sections',
+            'Subsections_name',
+            'Subsections',
+            'Total Marks',
+            'Multiple Correct Answers',
+            'Correct Answer',
+            'Option1',
+            'Option1 Image',
+            'Mark1',
+            'Option2',
+            'Option2 Image',
+            'Mark2',
+            'Option3',
+            'Option3 Image',
+            'Mark3',
+            'Option4',
+            'Option4 Image',
+            'Mark4',
+            'Option5',
+            'Option5 Image',
+            'Mark5',
+            'Option6',
+            'Option6 Image',
+            'Mark6'
+            );
+        $objPHPExcel->getActiveSheet()->fromArray($header_list, NULL, 'A1');
 
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('Question');
-        $objPHPExcel->getActiveSheet()->getColumnDimension ('B')->setVisible(false);
+        $objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('F')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('H')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('J')->setVisible(false);
@@ -101,8 +101,8 @@ class ExportExcel {
 
         for ($i = 2; $i <= 10; $i++)
         {
-            $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $text_id);
-            $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $text_name);
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $text_id);
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $text_name);
         }
 
 
@@ -239,7 +239,7 @@ class ExportExcel {
         // Redirect output to a client’s web browser (Excel5)
 
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="01simple.xls"');
+        header('Content-Disposition: attachment;filename="question_upload.xls"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
@@ -250,8 +250,13 @@ class ExportExcel {
         header ('Pragma: public'); // HTTP/1.0
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->setPreCalculateFormulas(TRUE);
-        $objWriter->save('question_upload.xls');
-        return "question_upload.xls";
+        /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
+        return get_home_path().'wp-content/uploads/q_upload.xls';*/
+
+        ob_clean();
+        $objWriter->save('php://output');
+
+
 }
 }
 
