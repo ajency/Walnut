@@ -59,7 +59,7 @@
         jquerypp : 'plugins/bookBlock/jquerypp.custom',
         bookblock : 'plugins/bookBlock/jquery.bookblock',
         new_moment: 'plugins/new_moment',
-        datetimepicker      : 'plugins/datetimepicker.min',
+        datetimepicker      : 'plugins/datetimepicker.min'
     },
     shim: {
         underscore: {
@@ -91,7 +91,7 @@
         mmenu: ['jquery'],
         select2: ['jquery', 'bootstrap'],
         //datepicker: ['jquery', 'bootstrap'],
-        datepicker: ['jquery', 'bootstrap'],
+        //datepicker: ['jquery', 'bootstrap'],
         timepicker: ['jquery', 'bootstrap'],
         //multiselect: ['jquery','bootstrap'],
         //zebra_datepicker: ['jquery'],

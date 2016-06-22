@@ -25,3 +25,13 @@ define ['app'
 				textbookDescriptionRegion 	: '#textbook-description-region'
 				chaptersRegion				: '#chapters-list-region'
 
+
+
+			events :->
+				'click .add-chapter' : 'addChapter'
+
+			addChapter:->
+				console.log @collection
+				@collection.toAddText = 'true'
+				@trigger 'show:add:textbook:popup', @collection
+

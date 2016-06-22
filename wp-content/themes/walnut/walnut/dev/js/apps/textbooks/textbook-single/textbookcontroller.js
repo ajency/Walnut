@@ -23,6 +23,16 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
         this.listenTo(layout, "show", this._showChaptersView);
+        this.listenTo(this.layout, 'show:add:textbook:popup', (function(_this) {
+          return function(collection) {
+            _this.collection = collection;
+            App.execute('add:textbook:popup', {
+              region: App.dialogRegion,
+              collection: _this.collection
+            });
+            return _this.chapters.parent = term_id;
+          };
+        })(this));
         return this.show(layout);
       };
 
@@ -58,7 +68,9 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       };
 
       SingleTextbook.prototype._getTextbookSingleLayout = function() {
-        return new Single.Views.TextbookSingleLayout;
+        return new Single.Views.TextbookSingleLayout({
+          collection: this.chapters
+        });
       };
 
       SingleTextbook.prototype._showChaptersView = function() {

@@ -12,10 +12,18 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 
 
 				@chapters = App.request "get:chapters", ('parent': term_id)
+				#@chapters.textbook_id = term_id
 
 				@layout= layout = @_getTextbookSingleLayout()
 				@listenTo layout, "show", @_showTextBookSingle
 				@listenTo layout, "show", @_showChaptersView
+
+				@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
+					App.execute 'add:textbook:popup',
+                        region      : App.dialogRegion
+                        collection : @collection
+
+                @chapters.parent = term_id
 
 				@show layout
 
@@ -40,6 +48,7 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 			
 			_getTextbookSingleLayout : ->
 				new Single.Views.TextbookSingleLayout
+					collection: @chapters
 
 			_showChaptersView : =>
 				App.execute "when:fetched", @chapters, =>

@@ -38,6 +38,18 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
         chaptersRegion: '#chapters-list-region'
       };
 
+      TextbookSingleLayout.prototype.events = function() {
+        return {
+          'click .add-chapter': 'addChapter'
+        };
+      };
+
+      TextbookSingleLayout.prototype.addChapter = function() {
+        console.log(this.collection);
+        this.collection.toAddText = 'true';
+        return this.trigger('show:add:textbook:popup', this.collection);
+      };
+
       return TextbookSingleLayout;
 
     })(Marionette.Layout);

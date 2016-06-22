@@ -31,6 +31,8 @@ define ['app'
 
             serializeData: ->
                 data = super()
+                #console.log 'model'
+                #console.log @model
                 class_ids = @model.get 'classes'
                 if class_ids
                     item_classes = _.sortBy(class_ids, (num)->
@@ -38,8 +40,8 @@ define ['app'
                     class_string = ''
                     for class_id in item_classes
                         class_string += CLASS_LABEL[class_id]
+                        classString = class_string
                         class_string += ', ' if _.last(item_classes) != class_id
-
                     data.class_string = class_string;
 
                 data
@@ -63,7 +65,7 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                console.log @collection
+                #console.log @collection
                 collection_classes = @collection.pluck 'classes'
 
                 data.classes=   _.chain collection_classes
@@ -82,11 +84,18 @@ define ['app'
                 data_subjects = _.union _.flatten collection_subjects
                 data.subjects = _.compact (_.sortBy(data_subjects, (num)->
                     num))
-
+                #console.log data
                 data
 
             events:
                 'click #Filters li': 'filterBooks'
+                'click #search-btn' : 'searchTextbooks'
+                'keypress .search-box' :(e)-> @searchTextbooks() if e.which is 13
+                'click .add-textbook' : 'addTextbook'
+
+            addTextbook:=>
+                #console.log @collection
+                @trigger 'show:add:textbook:popup', @collection
 
 
             sortTable: (e)->
@@ -100,16 +109,32 @@ define ['app'
 
 
             onShow: ->
-                console.log 'onShow'
+                #console.log 'onShow'
                 @dimensions =
                     region: 'all'
                     recreation: 'all'
             #console.log @dimensions
 
+            searchTextbooks: (e)=>
+                #console.log @dimensions
+                searchStr = $('.search-box').val()
+                if searchStr
+                    @$el.find "#error-div"
+                    .hide()
+                    @$el.find '.progress-spinner'
+                    .show()
+                    @dimensions.region = searchStr
+                    #console.log @dimensions
+                    $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
+                    @$el.find '.progress-spinner'
+                    .hide()
+                else
+                    @$el.find "#error-div"
+                    .show()
 
             filterBooks: (e)=>
-                console.log '@dimensions'
-                console.log @dimensions
+                #console.log '@dimensions'
+                #console.log @dimensions
                 $t = $(e.target).closest('li')
                 dimension = $t.attr('data-dimension')
                 filter = $t.attr('data-filter')
@@ -136,12 +161,14 @@ define ['app'
                             filterString = filterString + ' ' + filter
                     else
                         $t.removeClass('active');
+                        console.log filter
+                        console.log filterString
                         re = new RegExp('(\\s|^)' + filter);
                         filterString = filterString.replace(re, '');
 
                 @dimensions[dimension] = filterString;
-
-                console.info('dimension 1: ' + @dimensions.region);
-                console.info('dimension 2: ' + @dimensions.recreation);
+                #console.log @dimensions
+                #console.info('dimension 1: ' + @dimensions.region);
+                #console.info('dimension 2: ' + @dimensions.recreation);
                 $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
 

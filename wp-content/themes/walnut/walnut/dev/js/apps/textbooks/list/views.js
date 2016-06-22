@@ -45,7 +45,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListItemView.prototype.serializeData = function() {
-        var class_id, class_ids, class_string, data, i, item_classes, len;
+        var classString, class_id, class_ids, class_string, data, i, item_classes, len;
         data = ListItemView.__super__.serializeData.call(this);
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -56,6 +56,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           for (i = 0, len = item_classes.length; i < len; i++) {
             class_id = item_classes[i];
             class_string += CLASS_LABEL[class_id];
+            classString = class_string;
             if (_.last(item_classes) !== class_id) {
               class_string += ', ';
             }
@@ -85,6 +86,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       function ListView() {
         this.filterBooks = bind(this.filterBooks, this);
+        this.searchTextbooks = bind(this.searchTextbooks, this);
+        this.addTextbook = bind(this.addTextbook, this);
         return ListView.__super__.constructor.apply(this, arguments);
       }
 
@@ -101,7 +104,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
-        console.log(this.collection);
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -121,7 +123,18 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.events = {
-        'click #Filters li': 'filterBooks'
+        'click #Filters li': 'filterBooks',
+        'click #search-btn': 'searchTextbooks',
+        'keypress .search-box': function(e) {
+          if (e.which === 13) {
+            return this.searchTextbooks();
+          }
+        },
+        'click .add-textbook': 'addTextbook'
+      };
+
+      ListView.prototype.addTextbook = function() {
+        return this.trigger('show:add:textbook:popup', this.collection);
       };
 
       ListView.prototype.sortTable = function(e) {
@@ -135,17 +148,28 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.onShow = function() {
-        console.log('onShow');
         return this.dimensions = {
           region: 'all',
           recreation: 'all'
         };
       };
 
+      ListView.prototype.searchTextbooks = function(e) {
+        var searchStr;
+        searchStr = $('.search-box').val();
+        if (searchStr) {
+          this.$el.find("#error-div").hide();
+          this.$el.find('.progress-spinner').show();
+          this.dimensions.region = searchStr;
+          $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
+          return this.$el.find('.progress-spinner').hide();
+        } else {
+          return this.$el.find("#error-div").show();
+        }
+      };
+
       ListView.prototype.filterBooks = function(e) {
         var $t, dimension, filter, filterString, re;
-        console.log('@dimensions');
-        console.log(this.dimensions);
         $t = $(e.target).closest('li');
         dimension = $t.attr('data-dimension');
         filter = $t.attr('data-filter');
@@ -170,13 +194,13 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
             }
           } else {
             $t.removeClass('active');
+            console.log(filter);
+            console.log(filterString);
             re = new RegExp('(\\s|^)' + filter);
             filterString = filterString.replace(re, '');
           }
         }
         this.dimensions[dimension] = filterString;
-        console.info('dimension 1: ' + this.dimensions.region);
-        console.info('dimension 2: ' + this.dimensions.recreation);
         return $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
       };
 
