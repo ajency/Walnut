@@ -28,15 +28,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
         this.chapters.textbook_id = textbook_id;
         this.chapters.parent = term_id;
         console.log(this.chapters);
-
-        /*model = @chapters.get(1)
-        				console.log model
-         */
-
-        /*@chapters.forEach (models) ->
-        					models.set 'textbook_id', textbook_id
-         */
-        console.log(this.chapters);
         this.layout = layout = this._getChaptersSingleLayout();
         this.listenTo(layout, "show", this._showChapterSingle);
         this.listenTo(layout, "show", this._showSectionsView(this.chapters));

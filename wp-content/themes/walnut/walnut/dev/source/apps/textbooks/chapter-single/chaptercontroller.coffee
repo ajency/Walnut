@@ -21,13 +21,6 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 				@chapters.parent = term_id
 
 				console.log @chapters
-				###model = @chapters.get(1)
-				console.log model###				
-                    
-				###@chapters.forEach (models) ->
-					models.set 'textbook_id', textbook_id###
-
-				console.log @chapters
 
 
 				@layout= layout = @_getChaptersSingleLayout()

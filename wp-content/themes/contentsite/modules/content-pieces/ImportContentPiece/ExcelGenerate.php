@@ -45,7 +45,7 @@ class ExportExcel {
 
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A1', 'Question')
+                    ->setCellValue('A1', 'Textbook_name')
                     ->setCellValue('B1', 'Question Image')
                     ->setCellValue('C1', 'Textbook_name')
                     ->setCellValue('D1', 'Textbook')

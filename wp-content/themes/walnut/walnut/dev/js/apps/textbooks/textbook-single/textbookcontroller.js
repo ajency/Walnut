@@ -15,22 +15,23 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
 
       SingleTextbook.prototype.initialize = function(opt) {
         var layout, term_id;
+        console.log(opt);
         term_id = opt.model_id;
         this.textbook = App.request("get:textbook:by:id", term_id);
         this.chapters = App.request("get:chapters", {
           'parent': term_id
         });
+        this.chapters.parent = term_id;
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
         this.listenTo(layout, "show", this._showChaptersView);
         this.listenTo(this.layout, 'show:add:textbook:popup', (function(_this) {
           return function(collection) {
             _this.collection = collection;
-            App.execute('add:textbook:popup', {
+            return App.execute('add:textbook:popup', {
               region: App.dialogRegion,
               collection: _this.collection
             });
-            return _this.chapters.parent = term_id;
           };
         })(this));
         return this.show(layout);

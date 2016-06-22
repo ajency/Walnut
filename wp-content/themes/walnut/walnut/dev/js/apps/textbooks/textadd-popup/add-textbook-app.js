@@ -32,7 +32,10 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             async: true,
             success: (function(_this) {
               return function(response, textStatus, jqXHR) {
-                return console.log(response);
+                _this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
+                return setTimeout(function() {
+                  return _this.trigger('close:popup:dialog', 500);
+                });
               };
             })(this)
           });
@@ -56,7 +59,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return AddTextbookView.__super__.constructor.apply(this, arguments);
       }
 
-      AddTextbookView.prototype.template = '<form> <div class="row"> <div class="col-md-12"> Name:<br> <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12"> <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12"> </div><br> {{#noClasses}} <div class="col-md-12"> Classes suitable for:<br/> {{#classes}} <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br> {{/classes}} </div><br> {{/noClasses}} <div class="col-md-12"> Description:<br> <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea> </div><br> <!--div class="col-md-12"> Textbook Image Url<br> <input id="texturl" name="texturl" type="file" class="input-small span12"><br> <div id="progress" class="progress none"> <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif"> </div> <img id="textImage" src="" height="200" alt="Image preview..."> </div><br--> {{#noClasses}} <div class="col-md-12"> Author Name:<br> <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12"> </div><br> {{/noClasses}} <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left">Add Textbook</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
+      AddTextbookView.prototype.template = '<form> <div class="row"> <div class="col-md-12"> Name:<br> <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12"> <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12"> </div><br> {{#noClasses}} <div class="col-md-12"> Classes suitable for:<br/> {{#classes}} <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br> {{/classes}} </div><br> {{/noClasses}} <div class="col-md-12"> Description:<br> <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea> </div><br> <!--div class="col-md-12"> Textbook Image Url<br> <input id="texturl" name="texturl" type="file" class="input-small span12"><br> <div id="progress" class="progress none"> <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif"> </div> <img id="textImage" src="" height="200" alt="Image preview..."> </div><br--> {{#noClasses}} <div class="col-md-12"> Author Name:<br> <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12"> </div><br> {{/noClasses}} <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
 
       AddTextbookView.prototype.events = {
         'click .btn-success': 'addTextbook',
@@ -66,15 +69,14 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       AddTextbookView.prototype.initialize = function() {
         console.log(this.collection);
         if (this.collection.toAddText) {
-          if (this.collection.textbook_id) {
-            this.dialogOptions = {
-              modal_title: 'Add Section',
-              modal_size: 'small'
-            };
-          }
           if (this.collection.chapter_id && this.collection.textbook_id) {
             return this.dialogOptions = {
               modal_title: 'Add Sub Section',
+              modal_size: 'small'
+            };
+          } else if (this.collection.textbook_id) {
+            return this.dialogOptions = {
+              modal_title: 'Add Section',
               modal_size: 'small'
             };
           } else {
@@ -103,6 +105,13 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           }
           console.log(parent);
           data.parent = parent;
+          if (this.collection.chapter_id && this.collection.textbook_id) {
+            data.AddButton = 'Add Sub Section';
+          } else if (this.collection.textbook_id) {
+            data.AddButton = 'Add Section';
+          } else {
+            data.AddButton = 'Add Chapter';
+          }
           return data;
         } else {
           data = AddTextbookView.__super__.serializeData.call(this);
@@ -121,6 +130,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           }).value();
           data.noClasses = true;
           data.parent = '-1';
+          data.AddButton = 'Add Textbook';
           return data;
         }
       };
@@ -190,28 +200,16 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
             classes: class_ids
           };
           this.trigger("save:textbook:data", data);
-          return this.onAddTextbook;
+          this.$el.find('.success-msg').html('').removeClass('text-success, text-error');
+          this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
+          return setTimeout((function(_this) {
+            return function() {
+              return _this.trigger('close:popup:dialog');
+            };
+          })(this), 500);
         } else {
           return this.$el.find('#textname').addClass('error');
         }
-      };
-
-      AddTextbookView.prototype.onAddTextbook = function() {
-        this.$el.find('.success-msg').html('').removeClass('text-success, text-error');
-
-        /*if response.code is 'ERROR'
-            @$el.find '.success-msg'
-            .html 'Failed to save schedule'
-            .addClass 'text-error'
-        
-        else
-         */
-        this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
-        return setTimeout((function(_this) {
-          return function() {
-            return _this.trigger('close:popup:dialog');
-          };
-        })(this), 500);
       };
 
       return AddTextbookView;

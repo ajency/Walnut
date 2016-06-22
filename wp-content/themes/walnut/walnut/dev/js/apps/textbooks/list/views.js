@@ -104,6 +104,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
+        console.log(this.collection);
+        console.log(this.model);
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -119,6 +121,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         data.subjects = _.compact(_.sortBy(data_subjects, function(num) {
           return num;
         }));
+        console.log(data);
         return data;
       };
 
@@ -155,13 +158,44 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.searchTextbooks = function(e) {
-        var searchStr;
+        var id, models, searchStr;
+        console.log(this.collections);
+        id = [];
         searchStr = $('.search-box').val();
         if (searchStr) {
           this.$el.find("#error-div").hide();
           this.$el.find('.progress-spinner').show();
-          this.dimensions.region = searchStr;
-          $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
+
+          /*@dimensions.region = searchStr
+          #console.log @dimensions
+          $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
+           */
+          models = this.collection.filter(function(model) {
+            return _.any(model.attributes, function(val, attr) {
+              var m, n, name, nameL;
+              name = model.get('name');
+              nameL = model.get('name').toLowerCase();
+              n = name.search(searchStr);
+              m = nameL.search(searchStr);
+              n = n.toString();
+              m = m.toString();
+              if (n !== '-1' || m !== '-1') {
+                id = model.get('term_id');
+                return model.pick(id);
+              } else {
+                return console.log("none found");
+              }
+            });
+          });
+          this.collection.reset(models);
+          console.log(this.collections);
+          this.trigger('search:textbooks', this.collection, this.collections);
+
+          /*@collection.filter((model) ->
+              _.some _.values(model.pick('name')), (value) ->
+                  console.log value.toLowerCase().indexOf(searchStr)
+          )
+           */
           return this.$el.find('.progress-spinner').hide();
         } else {
           return this.$el.find("#error-div").show();
@@ -201,6 +235,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           }
         }
         this.dimensions[dimension] = filterString;
+        console.log(this.dimensions);
+        console.info('dimension 1: ' + this.dimensions.region);
+        console.info('dimension 2: ' + this.dimensions.recreation);
         return $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
       };
 

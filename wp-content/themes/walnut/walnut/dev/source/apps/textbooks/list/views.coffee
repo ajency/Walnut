@@ -65,7 +65,8 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                #console.log @collection
+                console.log @collection
+                console.log @model
                 collection_classes = @collection.pluck 'classes'
 
                 data.classes=   _.chain collection_classes
@@ -84,7 +85,7 @@ define ['app'
                 data_subjects = _.union _.flatten collection_subjects
                 data.subjects = _.compact (_.sortBy(data_subjects, (num)->
                     num))
-                #console.log data
+                console.log data
                 data
 
             events:
@@ -109,23 +110,58 @@ define ['app'
 
 
             onShow: ->
-                #console.log 'onShow'
                 @dimensions =
                     region: 'all'
                     recreation: 'all'
             #console.log @dimensions
 
             searchTextbooks: (e)=>
-                #console.log @dimensions
+                #@collections = @collection
+                console.log @collections
+                #console.log @collectionall
+                id =[]
                 searchStr = $('.search-box').val()
                 if searchStr
+                    #@trigger 'before:search:textbook'
+                    #console.log @collectionAll
                     @$el.find "#error-div"
                     .hide()
                     @$el.find '.progress-spinner'
                     .show()
-                    @dimensions.region = searchStr
+                    ###@dimensions.region = searchStr
                     #console.log @dimensions
-                    $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
+                    $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])###
+                    models = @collection.filter (model) ->
+                        #console.log 'entered'
+                        _.any model.attributes, (val, attr) ->
+                            name = model.get('name')
+                            nameL = model.get('name').toLowerCase()
+                            n = name.search(searchStr)
+                            m = nameL.search(searchStr)
+                            #console.log n
+                            #console.log m
+                            n = n.toString()
+                            m = m.toString()
+                            if n != '-1' || m != '-1'
+                                #console.log 'not -1'
+                                id = model.get('term_id')
+                                #console.log id
+                                model.pick(id)
+                            else
+                                console.log "none found"
+                    @collection.reset(models)
+                    console.log @collections
+                    @trigger 'search:textbooks', @collection, @collections
+                    
+                            #search = model.values().contains searchStr
+                            #console.log search
+                            #val.indexOf(search)
+                    ###@collection.filter((model) ->
+                        _.some _.values(model.pick('name')), (value) ->
+                            console.log value.toLowerCase().indexOf(searchStr)
+                    )###
+
+
                     @$el.find '.progress-spinner'
                     .hide()
                 else
@@ -167,8 +203,9 @@ define ['app'
                         filterString = filterString.replace(re, '');
 
                 @dimensions[dimension] = filterString;
-                #console.log @dimensions
-                #console.info('dimension 1: ' + @dimensions.region);
-                #console.info('dimension 2: ' + @dimensions.recreation);
+                #@dimensions['region'] = 'Concepts-KG'
+                console.log @dimensions
+                console.info('dimension 1: ' + @dimensions.region);
+                console.info('dimension 2: ' + @dimensions.recreation);
                 $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
 
