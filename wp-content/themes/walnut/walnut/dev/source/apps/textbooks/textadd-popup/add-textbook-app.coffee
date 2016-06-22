@@ -26,7 +26,13 @@ define ['app'
                         dataType: 'json',
                         async: true,
                         success:(response, textStatus, jqXHR) =>
-                                console.log response
+                                @$el.find '.success-msg'
+                                .html 'Saved Successfully'
+                                .addClass 'text-success'
+
+                                setTimeout =>
+                                    @trigger 'close:popup:dialog'
+                                    ,500
                         ,
 
                 });
@@ -76,7 +82,7 @@ define ['app'
                             {{/noClasses}}
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="button" class="clear btn btn-success m-t-20 pull-left">Add Textbook</button>
+                                    <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button>
                                     <div class=" p-l-10 p-t-30 pull-left success-msg"></div>
                                 </div>
                             </div>
@@ -92,15 +98,15 @@ define ['app'
                 console.log @collection
                 if @collection.toAddText
 
-                    if @collection.textbook_id
-                        @dialogOptions = 
-                        modal_title : 'Add Section'
-                        modal_size  : 'small'
-
                     if @collection.chapter_id &&  @collection.textbook_id
                         @dialogOptions = 
                             modal_title : 'Add Sub Section'
                             modal_size  : 'small'
+
+                    else if @collection.textbook_id
+                        @dialogOptions = 
+                        modal_title : 'Add Section'
+                        modal_size  : 'small'
 
                     else
                         @dialogOptions = 
@@ -124,6 +130,16 @@ define ['app'
                     console.log parent
 
                     data.parent = parent
+
+                    if @collection.chapter_id &&  @collection.textbook_id
+                            data.AddButton = 'Add Sub Section'
+
+
+                    else if @collection.textbook_id
+                        data.AddButton = 'Add Section'
+
+                    else
+                        data.AddButton = 'Add Chapter'
                     data
                 else
                     data = super()
@@ -146,6 +162,7 @@ define ['app'
                                     .value()
                     data.noClasses = true
                     data.parent = '-1'
+                    data.AddButton = 'Add Textbook'
                     #console.log data
                     data              
 
@@ -224,31 +241,24 @@ define ['app'
                         classes : class_ids                    
 
                     @trigger "save:textbook:data", data
-                    @onAddTextbook
+
+                    @$el.find '.success-msg'
+                    .html ''
+                    .removeClass 'text-success, text-error'
+
+                    @$el.find '.success-msg'
+                    .html 'Saved Successfully'
+                    .addClass 'text-success'
+    
+                    setTimeout =>
+                        @trigger 'close:popup:dialog'
+                    ,500
 
                 else
                     @$el.find '#textname'
                     .addClass 'error'     
                     #console.log scheduleTo
-
-            onAddTextbook:->
-                @$el.find '.success-msg'
-                .html ''
-                .removeClass 'text-success, text-error'
-
-                ###if response.code is 'ERROR'
-                    @$el.find '.success-msg'
-                    .html 'Failed to save schedule'
-                    .addClass 'text-error'
-
-                else###
-                @$el.find '.success-msg'
-                .html 'Saved Successfully'
-                .addClass 'text-success'
-
-                setTimeout =>
-                    @trigger 'close:popup:dialog'
-                ,500
+                
 
         App.commands.setHandler 'add:textbook:popup',(options)->
             new AddTextbookPopup.Controller options
