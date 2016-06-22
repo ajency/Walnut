@@ -12,13 +12,32 @@ require 'classes/PHPExcel.php';
 
 
 
+
+function generate_excell(){
+    if(isset($_GET['import_id'])){
+        date_default_timezone_set('Asia/Kolkata');
+        require_once 'ImportContentPiece/ExcelGenerate.php';
+    //create object of class ExcelGenerate
+        $data = $_GET['import_id'];
+        $xclObj = new ExportExcel();
+        $excel = $xclObj->excel($data);
+    }
+}
+add_action('init','generate_excell');
+
+
+
+
 function ajax_generate_excel(){
+    date_default_timezone_set('Asia/Kolkata');
     require_once 'ImportContentPiece/ExcelGenerate.php';
     //create object of class ExcelGenerate
     $data = $_POST['data'];
     $xclObj = new ExportExcel();
     $excel = $xclObj->excel($data);
-    wp_send_json(array('name'=>$excel));
+    //wp_send_json(array('name'=>$excel));
+
+    wp_send_json(array('status'=>'success'));
 
 }
 

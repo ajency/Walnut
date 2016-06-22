@@ -21,7 +21,7 @@
             jQuery('#hiddenTextId').val(id_text);
         });
 
-        jQuery('#template_export').click(function(){
+        /*jQuery('#template_export').click(function(){
             //alert("clicked");
             var id_text = jQuery('#hiddenTextId').val();
             if(id_text == '-1'){
@@ -36,6 +36,17 @@
                name = result['name'];
                 window.location.href='question_upload.xls';
               });
+            }
+          });*/
+
+
+          jQuery('#template_export').click(function(){
+            //alert("clicked");
+            var id_text = jQuery('#hiddenTextId').val();
+            if(id_text == '-1'){
+              jQuery("#invalidText").html('Please select a textbook to export');     
+            }else{
+              window.open(jQuery(location).attr('href')+'&import_id='+id_text);
             }
           });
 
