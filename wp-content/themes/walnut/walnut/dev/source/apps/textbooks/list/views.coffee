@@ -67,8 +67,6 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                console.log @collection
-                console.log @newcollections
                 collection_classes = @collection.pluck 'classes'
 
                 data.classes=   _.chain collection_classes
@@ -118,9 +116,9 @@ define ['app'
             #console.log @dimensions
 
             searchTextbooks: (e)=>
-                id =[]
-                searchStr = $('.search-box').val()
-                if searchStr
+                    id =[]
+                    searchStr = $('.search-box').val()
+                #if searchStr
                     #@trigger 'before:search:textbook'
                     #console.log @collectionAll
                     @$el.find "#error-div"
@@ -165,9 +163,9 @@ define ['app'
 
                     @$el.find '.progress-spinner'
                     .hide()
-                else
+                ###else
                     @$el.find "#error-div"
-                    .show()
+                    .show()###
 
             filterBooks: (e)=>
                 #console.log '@dimensions'

@@ -8,6 +8,8 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
+                classesCollection = 
+
                 breadcrumb_items =
                     'items': [
                         {'label': 'Dashboard', 'link': 'javascript://'},
@@ -28,10 +30,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                     @_getSearchTextbooksView collection
 
                 @listenTo @view, 'before:search:textbook' :->
-                    console.log textbooksCollection  
-
-                @listenTo @view, 'get:all:classes' :->
-                    App.request             
+                    console.log textbooksCollection           
 
                 @show view, (loading: true)
 

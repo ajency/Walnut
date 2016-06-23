@@ -24,17 +24,26 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           'parent': term_id,
           'term_type': 'chapter'
         });
+        window.chaptersOriginalCollection = App.request("get:chapters", {
+          'parent': term_id
+        });
         this.chapters.parent = term_id;
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
         this.listenTo(layout, "show", this._showChaptersView);
         this.listenTo(this.layout, 'show:add:textbook:popup', (function(_this) {
-          return function(collection) {
-            _this.collection = collection;
+          return function(collection1) {
+            _this.collection = collection1;
             return App.execute('add:textbook:popup', {
               region: App.dialogRegion,
               collection: _this.collection
             });
+          };
+        })(this));
+        this.listenTo(this.layout, 'search:textbooks', (function(_this) {
+          return function(collection) {
+            console.log(collection);
+            return _this._getSearchChaptersView(collection);
           };
         })(this));
         return this.show(layout);
@@ -74,6 +83,12 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       SingleTextbook.prototype._getTextbookSingleLayout = function() {
         return new Single.Views.TextbookSingleLayout({
           collection: this.chapters
+        });
+      };
+
+      SingleTextbook.prototype._getSearchChaptersView = function(collection) {
+        return new Single.Views.TextbookSingleLayout({
+          collection: collection
         });
       };
 
