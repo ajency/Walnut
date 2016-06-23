@@ -73,9 +73,9 @@
                                             <div class="col-xs-6 col-sm-6 col-lg-6">
                                                 <div class="school-details">
                                                     <div class="profile-pic">
-                                                          <a href="http://empireschool.<?php echo $_SERVER['SERVER_NAME']; ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block"></a>
+                                                          <a href="http://fursungi.<?php echo $_SERVER['SERVER_NAME']; ?>"><img src="<?php echo STUDENT_ASSET_PATH ;?>images/fursungi.png" alt="" class="img-responsive center-block"></a>
                                                     </div>   
-                                                    <h5><a href="http://empireschool.<?php echo $_SERVER['SERVER_NAME']; ?>">Login at Fursungi</a></h5>
+                                                    <h5><a href="http://fursungi.<?php echo $_SERVER['SERVER_NAME']; ?>">Login at Fursungi</a></h5>
                                                 </div>
                                             </div>
                                         </div>
