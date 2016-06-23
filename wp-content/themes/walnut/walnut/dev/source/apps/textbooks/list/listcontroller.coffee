@@ -4,10 +4,10 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
             initialize: ->
                 #console.log App
+                window.textbooksCollectionOrigninal = App.request "get:textbooks", "fetch_all":true
+
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
-                newCollection = App.request "get:textbooks", "fetch_all":true
-                console.log newCollection
                 breadcrumb_items =
                     'items': [
                         {'label': 'Dashboard', 'link': 'javascript://'},
@@ -17,31 +17,30 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                @view = view = @_getTextbooksView textbooksCollection, newCollection
+                @view = view = @_getTextbooksView textbooksCollection
 
                 @listenTo @view, 'show:add:textbook:popup', (@collection)=>
                     App.execute 'add:textbook:popup',
                         region      : App.dialogRegion
                         collection : @collection
 
-                @listenTo @view, 'search:textbooks', (collection,collections)=>
-                    console.log collection
-                    console.log collections
-                    @_getSearchTextbooksView collection, collections
+                @listenTo @view, 'search:textbooks', (collection)=>
+                    @_getSearchTextbooksView collection
 
                 @listenTo @view, 'before:search:textbook' :->
-                    console.log textbooksCollection               
+                    console.log textbooksCollection  
+
+                @listenTo @view, 'get:all:classes' :->
+                    App.request             
 
                 @show view, (loading: true)
 
-            _getTextbooksView: (collection,collections)->
+            _getTextbooksView: (collection)->
                 new List.Views.ListView
                     collection: collection
-                    collections: collections
 
-            _getSearchTextbooksView: (collection,collections)->
+            _getSearchTextbooksView: (collection)->
                 new List.Views.ListView
                     collection: collection
-                    model: collections
 
 

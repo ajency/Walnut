@@ -13,10 +13,12 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 				term_id = opt.chapter
 
 				console.log term_id
+				@textbook_name = App.request "get:textbook:name:by:id", textbook_id
+				console.log @textbook_name
 				@textbook = App.request "get:textbook:by:id", term_id
 				@textbook.textbook_id = textbook_id
 
-				@chapters = App.request "get:chapters", ('parent': term_id)
+				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'sections')
 				@chapters.textbook_id = textbook_id
 				@chapters.parent = term_id
 

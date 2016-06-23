@@ -11,6 +11,8 @@ define ['app'
             template: listitemTpl
 
             onShow: ->
+                console.log 'global collection'
+                console.log textbooksCollectionOrigninal
                 @$el.attr 'data-name', @model.get 'name'
                 class_ids = @model.get 'classes'
                 if class_ids
@@ -66,7 +68,7 @@ define ['app'
             serializeData: ->
                 data = super()
                 console.log @collection
-                console.log @model
+                console.log @newcollections
                 collection_classes = @collection.pluck 'classes'
 
                 data.classes=   _.chain collection_classes
@@ -116,9 +118,6 @@ define ['app'
             #console.log @dimensions
 
             searchTextbooks: (e)=>
-                #@collections = @collection
-                console.log @collections
-                #console.log @collectionall
                 id =[]
                 searchStr = $('.search-box').val()
                 if searchStr
@@ -128,10 +127,12 @@ define ['app'
                     .hide()
                     @$el.find '.progress-spinner'
                     .show()
+                    console.log textbooksCollectionOrigninal
+                    console.log @collection
                     ###@dimensions.region = searchStr
                     #console.log @dimensions
                     $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])###
-                    models = @collection.filter (model) ->
+                    models = textbooksCollectionOrigninal.filter (model) ->
                         #console.log 'entered'
                         _.any model.attributes, (val, attr) ->
                             name = model.get('name')
@@ -150,8 +151,8 @@ define ['app'
                             else
                                 console.log "none found"
                     @collection.reset(models)
-                    console.log @collections
-                    @trigger 'search:textbooks', @collection, @collections
+                    console.log @collection
+                    @trigger 'search:textbooks', @collection
                     
                             #search = model.values().contains searchStr
                             #console.log search

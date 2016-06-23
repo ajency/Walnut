@@ -12,7 +12,7 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				@textbook = App.request "get:textbook:by:id", term_id
 
 
-				@chapters = App.request "get:chapters", ('parent': term_id)
+				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
 				@chapters.parent = term_id
 
 				@layout= layout = @_getTextbookSingleLayout()

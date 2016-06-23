@@ -136,8 +136,8 @@
 
                 if _.isEmpty data.quizIDs
                     @$el.find '.send-summary'
-                    .after '<span class="m-l-40 text-error small communication_sent">
-                            Selected quizzes have not been taken by any student</span>'
+                    .after '<span class="m-l-20 text-error small communication_sent">
+                            Not taken by any student</span>'
 
                 else
                     console.log data
@@ -169,8 +169,7 @@
 
                 if _.isEmpty data.quizIDs
                     @$el.find '.send-email'
-                    .after '<span class="text-error small communication_sent">
-                            Selected quizzes have not been taken by any student</span>'
+                    .after '<span class="text-error small communication_sent">Not taken by any student</span>'
 
                 else
                     @trigger "save:communications", data

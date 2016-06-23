@@ -11,14 +11,13 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       }
 
       ListController.prototype.initialize = function() {
-        var breadcrumb_items, newCollection, textbooksCollection, view;
+        var breadcrumb_items, textbooksCollection, view;
+        window.textbooksCollectionOrigninal = App.request("get:textbooks", {
+          "fetch_all": true
+        });
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        newCollection = App.request("get:textbooks", {
-          "fetch_all": true
-        });
-        console.log(newCollection);
         breadcrumb_items = {
           'items': [
             {
@@ -35,7 +34,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        this.view = view = this._getTextbooksView(textbooksCollection, newCollection);
+        this.view = view = this._getTextbooksView(textbooksCollection);
         this.listenTo(this.view, 'show:add:textbook:popup', (function(_this) {
           return function(collection1) {
             _this.collection = collection1;
@@ -46,10 +45,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
           };
         })(this));
         this.listenTo(this.view, 'search:textbooks', (function(_this) {
-          return function(collection, collections) {
-            console.log(collection);
-            console.log(collections);
-            return _this._getSearchTextbooksView(collection, collections);
+          return function(collection) {
+            return _this._getSearchTextbooksView(collection);
           };
         })(this));
         this.listenTo(this.view, {
@@ -57,22 +54,25 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             return console.log(textbooksCollection);
           }
         });
+        this.listenTo(this.view, {
+          'get:all:classes': function() {
+            return App.request;
+          }
+        });
         return this.show(view, {
           loading: true
         });
       };
 
-      ListController.prototype._getTextbooksView = function(collection, collections) {
+      ListController.prototype._getTextbooksView = function(collection) {
         return new List.Views.ListView({
-          collection: collection,
-          collections: collections
+          collection: collection
         });
       };
 
-      ListController.prototype._getSearchTextbooksView = function(collection, collections) {
+      ListController.prototype._getSearchTextbooksView = function(collection) {
         return new List.Views.ListView({
-          collection: collection,
-          model: collections
+          collection: collection
         });
       };
 

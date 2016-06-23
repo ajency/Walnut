@@ -20,10 +20,13 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
         console.log(textbook_id);
         term_id = opt.chapter;
         console.log(term_id);
+        this.textbook_name = App.request("get:textbook:name:by:id", textbook_id);
+        console.log(this.textbook_name);
         this.textbook = App.request("get:textbook:by:id", term_id);
         this.textbook.textbook_id = textbook_id;
         this.chapters = App.request("get:chapters", {
-          'parent': term_id
+          'parent': term_id,
+          'term_type': 'sections'
         });
         this.chapters.textbook_id = textbook_id;
         this.chapters.parent = term_id;

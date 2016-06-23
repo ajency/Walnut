@@ -19,7 +19,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         term_id = opt.model_id;
         this.textbook = App.request("get:textbook:by:id", term_id);
         this.chapters = App.request("get:chapters", {
-          'parent': term_id
+          'parent': term_id,
+          'term_type': 'chapter'
         });
         this.chapters.parent = term_id;
         this.layout = layout = this._getTextbookSingleLayout();

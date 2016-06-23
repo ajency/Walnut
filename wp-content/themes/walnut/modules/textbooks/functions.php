@@ -101,7 +101,7 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
  */
 
 function get_textbooks( $args = array() ) {
-
+    
     // set defaults
     $defaults = array(
         'hide_empty'    => false,
@@ -109,6 +109,7 @@ function get_textbooks( $args = array() ) {
         'fetch_all'     => false,
         'orderby'       => 'name',
         'order'         => 'asc',
+        'term_type'     => 'textbook',
         //'number'=>2,
         'user_id'       => get_current_user_id(),
         'class_id'      => ''
@@ -116,8 +117,11 @@ function get_textbooks( $args = array() ) {
 
     $count_total=0;
     $args = wp_parse_args( $args, $defaults );
+    $parentID = $args['parent'];
+    #file_put_contents("a1.txt", print_r($args, true));
+    $term_type = $args['term_type'];
     $textbooks_for_blog = get_textbooksids_for_current_blog();
-
+ 
     if($args['parent'] ==0 && current_user_can('administrator')==false)
         $args['include']=$textbooks_for_blog;
 
@@ -158,7 +162,7 @@ function get_textbooks( $args = array() ) {
             $division = $args['division'];
 
         foreach ($textbooks as $book){
-            $book= get_book( $book,$division,$user_id );
+            $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             if($book){
                 $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
                 $data[]= $book;               
@@ -203,10 +207,11 @@ function get_textbooksids_for_current_blog(){
 
 }
 
-function get_book( $book, $division=0,$user_id=0) {
+function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
     global $wpdb;
     $current_blog = get_current_blog_id();
-
+    $parentID = $parent;
+    #file_put_contents("a.txt", $parentID);
     switch_to_blog( 1 );
 
     if (is_numeric( $book )) {
@@ -292,8 +297,34 @@ function get_book( $book, $division=0,$user_id=0) {
     $book_dets->practice_count = (int) $quizzes_count->practice;
     $book_dets->take_at_home_count = (int) $quizzes_count->test;
 
-    $questions_count = $wpdb->get_row( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='textbook' and meta_value=" . $book_id );
-    $book_dets->questions_count = (int) $questions_count->count;
+   // if($term_type == 'textbook'){
+
+        $IDbook =  '%"'.$book_id.'"%';
+        $questions_count = $wpdb->get_row($wpdb->prepare("SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$IDbook ));
+
+        $book_dets->questions_count = (int) $questions_count->count;
+        #file_put_contents("a4.txt", "dcc");
+
+    /*}else{
+
+        $parent_id = '%"'.$parentID.'"%';
+
+        $questions_count = $wpdb->get_row($wpdb->prepare( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$parent_id ));
+
+        $book_dets->questions_count = (int) $questions_count->count;
+
+        $bookID = '%"'.$book_id.'"%';
+        $sub_questions_count = $wpdb->get_row($wpdb->prepare( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$bookID ));
+
+        /*$myfile = fopen("a7.txt", "a");
+        fwrite($myfile, print_r($sub_questions_count, true));
+        fclose($myfile);*/
+
+        $book_dets->sub_questions_count = (int) $sub_questions_count->count;
+
+       
+    //}
+
 
     $args = array( 'hide_empty' => false,
         'parent' => $book_id,
@@ -336,6 +367,9 @@ function get_book( $book, $division=0,$user_id=0) {
 
 
     restore_current_blog();
+    /*$myfile = fopen("a6.txt", "a");
+    fwrite($myfile, print_r($book_dets, true));
+    fclose($myfile);*/
     return $book_dets;
 }
 

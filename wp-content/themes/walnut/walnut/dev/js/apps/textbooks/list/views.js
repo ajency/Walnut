@@ -20,6 +20,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListItemView.prototype.onShow = function() {
         var class_id, class_ids, i, j, len, len1, subject, subjects;
+        console.log('global collection');
+        console.log(textbooksCollectionOrigninal);
         this.$el.attr('data-name', this.model.get('name'));
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -105,7 +107,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
         console.log(this.collection);
-        console.log(this.model);
+        console.log(this.newcollections);
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -159,18 +161,19 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListView.prototype.searchTextbooks = function(e) {
         var id, models, searchStr;
-        console.log(this.collections);
         id = [];
         searchStr = $('.search-box').val();
         if (searchStr) {
           this.$el.find("#error-div").hide();
           this.$el.find('.progress-spinner').show();
+          console.log(textbooksCollectionOrigninal);
+          console.log(this.collection);
 
           /*@dimensions.region = searchStr
           #console.log @dimensions
           $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
            */
-          models = this.collection.filter(function(model) {
+          models = textbooksCollectionOrigninal.filter(function(model) {
             return _.any(model.attributes, function(val, attr) {
               var m, n, name, nameL;
               name = model.get('name');
@@ -188,8 +191,8 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
             });
           });
           this.collection.reset(models);
-          console.log(this.collections);
-          this.trigger('search:textbooks', this.collection, this.collections);
+          console.log(this.collection);
+          this.trigger('search:textbooks', this.collection);
 
           /*@collection.filter((model) ->
               _.some _.values(model.pick('name')), (value) ->
