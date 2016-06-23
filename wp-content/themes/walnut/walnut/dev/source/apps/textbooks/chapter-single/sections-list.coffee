@@ -36,7 +36,7 @@ define ['app'
 
 			itemViewOptions:->
 				textbook_id : @collection.textbook_id
-				textbook_name: textbooksCollectionOrigninal.
+				#textbook_name: textbooksCollectionOrigninal.
 
 			onShow:->
 				textbook_id = '5425'

@@ -10,7 +10,8 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				console.log opt
 				term_id = opt.model_id
 				@textbook = App.request "get:textbook:by:id", term_id
-
+				console.log @textbook
+				console.log @textbook.get 'description'
 
 				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
 				@chapters.parent = term_id
