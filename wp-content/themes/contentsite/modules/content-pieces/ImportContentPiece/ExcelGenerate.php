@@ -6,6 +6,8 @@ class ExportExcel {
 
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
+
+        
         $data_chap =  array(
                 array(
                     'chapter_name',
@@ -44,6 +46,7 @@ class ExportExcel {
         							 ->setCategory("mcq"); 
 
         // Add some data
+
         $objPHPExcel->setActiveSheetIndex(0)
                     ->setCellValue('A1', 'Textbook_name')
                     ->setCellValue('B1', 'Question Image')
@@ -82,10 +85,47 @@ class ExportExcel {
                     ->setCellValue('AI1', 'Hint')
                     ->setCellValue('AJ1', 'Comment')
                     ->setCellValue('AK1', 'Duration');
+        $objPHPExcel->setActiveSheetIndex(0);
+
+
+        $header_list = array(            
+            'Textbook_name',
+            'TextBook',
+            'Chapter_name',
+            'Chapter',
+            'Sections_name',
+            'Sections',
+            'Subsections_name',
+            'Subsections',
+            'Question',
+            'Question Image',
+            'Total Marks',
+            'Multiple Correct Answers',
+            'Correct Answer',
+            'Option1',
+            'Option1 Image',
+            'Mark1',
+            'Option2',
+            'Option2 Image',
+            'Mark2',
+            'Option3',
+            'Option3 Image',
+            'Mark3',
+            'Option4',
+            'Option4 Image',
+            'Mark4',
+            'Option5',
+            'Option5 Image',
+            'Mark5',
+            'Option6',
+            'Option6 Image',
+            'Mark6'
+            );
+        $objPHPExcel->getActiveSheet()->fromArray($header_list, NULL, 'A1');
 
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('Question');
-        $objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
+        $objPHPExcel->getActiveSheet()->getColumnDimension ('B')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('F')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('H')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('J')->setVisible(false);
@@ -100,8 +140,8 @@ class ExportExcel {
 
         for ($i = 2; $i <= 10; $i++)
         {
-            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $text_id);
-            $objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $text_name);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $text_id);
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $text_name);
         }
 
 
@@ -133,7 +173,7 @@ class ExportExcel {
         for ($i = 2; $i <= 10; $i++)
         {
 
-            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getDataValidation();
+            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('C' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation2->setAllowBlank(true);
@@ -145,7 +185,7 @@ class ExportExcel {
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('Chapter!$A$2:$A'.$last.'');
-            $objPHPExcel->getActiveSheet()->setCellValue('F' . $i,'=VLOOKUP(E' .$i. ',Chapter!$A$2:$B$' .$last. ',2,0)');
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i,'=VLOOKUP(C' .$i. ',Chapter!$A$2:$B$' .$last. ',2,0)');
 
         }
 
@@ -176,7 +216,7 @@ class ExportExcel {
         for ($i = 2; $i <= 10; $i++)
         {
 
-            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('G' . $i)->getDataValidation();
+            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation2->setAllowBlank(false);
@@ -187,7 +227,7 @@ class ExportExcel {
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('Section!$A$2:$A'.$last.'');
-            $objPHPExcel->getActiveSheet()->setCellValue('H' . $i,'=VLOOKUP(G' .$i. ',Section!$A$2:$B$' .$last. ',2,0)');
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $i,'=VLOOKUP(E' .$i. ',Section!$A$2:$B$' .$last. ',2,0)');
         }
 
 
@@ -219,7 +259,7 @@ class ExportExcel {
         for ($i = 2; $i <= 10; $i++)
         {
 
-            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('I' . $i)->getDataValidation();
+            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('G' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation2->setAllowBlank(false);
@@ -230,7 +270,7 @@ class ExportExcel {
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('SubSection!$A$2:$A'.$last.'');
-            $objPHPExcel->getActiveSheet()->setCellValue('J' . $i,'=VLOOKUP(I' .$i. ',SubSection!$A$2:$B$' .$last. ',2,0)');
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $i,'=VLOOKUP(G' .$i. ',SubSection!$A$2:$B$' .$last. ',2,0)');
         }
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
@@ -238,7 +278,7 @@ class ExportExcel {
         // Redirect output to a client’s web browser (Excel5)
 
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="01simple.xls"');
+        header('Content-Disposition: attachment;filename="question_upload.xls"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
@@ -249,8 +289,13 @@ class ExportExcel {
         header ('Pragma: public'); // HTTP/1.0
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->setPreCalculateFormulas(TRUE);
-        $objWriter->save('question_upload.xls');
-        return "question_upload.xls";
+        /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
+        return get_home_path().'wp-content/uploads/q_upload.xls';*/
+
+        ob_clean();
+        $objWriter->save('php://output');
+
+
 }
 }
 
