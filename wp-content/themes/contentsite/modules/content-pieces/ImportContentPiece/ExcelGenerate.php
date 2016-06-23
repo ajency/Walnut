@@ -49,9 +49,7 @@ class ExportExcel {
         $objPHPExcel->setActiveSheetIndex(0);
 
 
-        $header_list = array(
-            'Question',
-            'Question Image',
+        $header_list = array(            
             'Textbook_name',
             'TextBook',
             'Chapter_name',
@@ -60,6 +58,8 @@ class ExportExcel {
             'Sections',
             'Subsections_name',
             'Subsections',
+            'Question',
+            'Question Image',
             'Total Marks',
             'Multiple Correct Answers',
             'Correct Answer',
@@ -86,7 +86,7 @@ class ExportExcel {
 
         // Rename worksheet
         $objPHPExcel->getActiveSheet()->setTitle('Question');
-        $objPHPExcel->getActiveSheet()->getColumnDimension ('D')->setVisible(false);
+        $objPHPExcel->getActiveSheet()->getColumnDimension ('B')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('F')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('H')->setVisible(false);
         //$objPHPExcel->getActiveSheet()->getColumnDimension ('J')->setVisible(false);
@@ -101,8 +101,8 @@ class ExportExcel {
 
         for ($i = 2; $i <= 10; $i++)
         {
-            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $text_id);
-            $objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $text_name);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $text_id);
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $text_name);
         }
 
 
@@ -134,7 +134,7 @@ class ExportExcel {
         for ($i = 2; $i <= 10; $i++)
         {
 
-            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getDataValidation();
+            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('C' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation2->setAllowBlank(true);
@@ -146,7 +146,7 @@ class ExportExcel {
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('Chapter!$A$2:$A'.$last.'');
-            $objPHPExcel->getActiveSheet()->setCellValue('F' . $i,'=VLOOKUP(E' .$i. ',Chapter!$A$2:$B$' .$last. ',2,0)');
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i,'=VLOOKUP(C' .$i. ',Chapter!$A$2:$B$' .$last. ',2,0)');
 
         }
 
@@ -177,7 +177,7 @@ class ExportExcel {
         for ($i = 2; $i <= 10; $i++)
         {
 
-            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('G' . $i)->getDataValidation();
+            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('E' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation2->setAllowBlank(false);
@@ -188,7 +188,7 @@ class ExportExcel {
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('Section!$A$2:$A'.$last.'');
-            $objPHPExcel->getActiveSheet()->setCellValue('H' . $i,'=VLOOKUP(G' .$i. ',Section!$A$2:$B$' .$last. ',2,0)');
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $i,'=VLOOKUP(E' .$i. ',Section!$A$2:$B$' .$last. ',2,0)');
         }
 
 
@@ -220,7 +220,7 @@ class ExportExcel {
         for ($i = 2; $i <= 10; $i++)
         {
 
-            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('I' . $i)->getDataValidation();
+            $objValidation2 = $objPHPExcel->getActiveSheet()->getCell('G' . $i)->getDataValidation();
             $objValidation2->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
             $objValidation2->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
             $objValidation2->setAllowBlank(false);
@@ -231,7 +231,7 @@ class ExportExcel {
             $objValidation2->setErrorTitle('Input error');
             $objValidation2->setError('Value is not in list');
             $objValidation2->setFormula1('SubSection!$A$2:$A'.$last.'');
-            $objPHPExcel->getActiveSheet()->setCellValue('J' . $i,'=VLOOKUP(I' .$i. ',SubSection!$A$2:$B$' .$last. ',2,0)');
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $i,'=VLOOKUP(G' .$i. ',SubSection!$A$2:$B$' .$last. ',2,0)');
         }
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
