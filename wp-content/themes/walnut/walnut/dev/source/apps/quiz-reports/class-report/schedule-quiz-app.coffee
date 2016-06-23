@@ -33,6 +33,7 @@ define ['app'
                     schedule = App.request "save:quiz:schedule", data
 
                     schedule.done (response)=>
+                        console.log response
                         @view.triggerMethod "schedule:saved", response
 
 

@@ -29,6 +29,9 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                 @listenTo @view, 'search:textbooks', (collection)=>
                     @_getSearchTextbooksView collection
 
+                @listenTo @view, 'reload:textbooks', (collection) =>
+                    @
+
                 @listenTo @view, 'before:search:textbook' :->
                     console.log textbooksCollection           
 

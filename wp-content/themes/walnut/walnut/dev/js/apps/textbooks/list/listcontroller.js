@@ -49,6 +49,11 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             return _this._getSearchTextbooksView(collection);
           };
         })(this));
+        this.listenTo(this.view, 'reload:textbooks', (function(_this) {
+          return function(collection) {
+            return _this;
+          };
+        })(this));
         this.listenTo(this.view, {
           'before:search:textbook': function() {
             return console.log(textbooksCollection);

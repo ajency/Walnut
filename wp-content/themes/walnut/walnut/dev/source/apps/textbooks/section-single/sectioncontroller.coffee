@@ -16,7 +16,7 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 				@textbook = App.request "get:textbook:by:id", term_id
 
 
-				@chapters = App.request "get:chapters", ('parent': term_id)
+				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'subsections')
 
 				@chapters.textbook_id = textbook_id
 				@chapters.chapter_id = chapter_id

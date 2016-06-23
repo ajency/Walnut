@@ -39,6 +39,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           schedule = App.request("save:quiz:schedule", data);
           return schedule.done((function(_this) {
             return function(response) {
+              console.log(response);
               return _this.view.triggerMethod("schedule:saved", response);
             };
           })(this));

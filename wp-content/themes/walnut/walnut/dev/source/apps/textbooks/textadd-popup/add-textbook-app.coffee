@@ -19,23 +19,25 @@ define ['app'
                     console.log AJAXURL
                     console.log data
                     url = AJAXURL + '?action=add-textbook'
-                    $.ajax({
-                        type : 'POST',
-                        url : url,
-                        data : data,
-                        dataType: 'json',
-                        async: true,
-                        success:(response, textStatus, jqXHR) =>
-                                @$el.find '.success-msg'
+                    data = $.ajax({
+                                type : 'POST',
+                                url : url,
+                                data : data,
+                                dataType: 'json',
+                                async: true,
+                                success:(response) =>
+                                    return response
+                                ###@$el.find '.success-msg'
                                 .html 'Saved Successfully'
                                 .addClass 'text-success'
 
                                 setTimeout =>
                                     @trigger 'close:popup:dialog'
-                                    ,500
-                        ,
+                                    ,500###
+                                ,
 
-                });
+                        });
+                    console.log data
 
                     
 
@@ -253,6 +255,8 @@ define ['app'
                     setTimeout =>
                         @trigger 'close:popup:dialog'
                     ,500
+
+                    
 
                 else
                     @$el.find '#textname'

@@ -24,21 +24,28 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
           console.log(AJAXURL);
           console.log(data);
           url = AJAXURL + '?action=add-textbook';
-          return $.ajax({
+          data = $.ajax({
             type: 'POST',
             url: url,
             data: data,
             dataType: 'json',
             async: true,
             success: (function(_this) {
-              return function(response, textStatus, jqXHR) {
-                _this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
-                return setTimeout(function() {
-                  return _this.trigger('close:popup:dialog', 500);
-                });
+              return function(response) {
+                return response;
               };
             })(this)
+
+            /*@$el.find '.success-msg'
+            .html 'Saved Successfully'
+            .addClass 'text-success'
+            
+            setTimeout =>
+                @trigger 'close:popup:dialog'
+                ,500
+             */
           });
+          return console.log(data);
         });
       };
 
