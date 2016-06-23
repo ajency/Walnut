@@ -25,7 +25,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if _.isArray classes
                     classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
                     classesArray.join()
-
+                console.log 'classes'
+                console.log classesArray
                 classesArray
 
 

@@ -14,6 +14,9 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				console.log @textbook.get 'description'
 
 				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+
+				window.chaptersOriginalCollection = App.request "get:chapters", 'parent': term_id
+
 				@chapters.parent = term_id
 
 				@layout= layout = @_getTextbookSingleLayout()
@@ -24,6 +27,10 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 					App.execute 'add:textbook:popup',
                         region      : App.dialogRegion
                         collection : @collection
+
+				@listenTo @layout, 'search:textbooks', (collection)=>
+					console.log collection
+					@_getSearchChaptersView collection
 
 				@show layout
 
@@ -49,6 +56,10 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 			_getTextbookSingleLayout : ->
 				new Single.Views.TextbookSingleLayout
 					collection: @chapters
+
+			_getSearchChaptersView: (collection)->
+                new Single.Views.TextbookSingleLayout
+                    collection: collection
 
 			_showChaptersView : =>
 				App.execute "when:fetched", @chapters, =>

@@ -36,6 +36,8 @@ define(["app", 'backbone'], function(App, Backbone) {
           }
           classesArray.join();
         }
+        console.log('classes');
+        console.log(classesArray);
         return classesArray;
       };
 

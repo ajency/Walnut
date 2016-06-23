@@ -11,14 +11,14 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       }
 
       ListController.prototype.initialize = function() {
-        var breadcrumb_items, textbooksCollection, view;
+        var breadcrumb_items, classesCollection, textbooksCollection, view;
         window.textbooksCollectionOrigninal = App.request("get:textbooks", {
           "fetch_all": true
         });
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        breadcrumb_items = {
+        classesCollection = breadcrumb_items = {
           'items': [
             {
               'label': 'Dashboard',
@@ -52,11 +52,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         this.listenTo(this.view, {
           'before:search:textbook': function() {
             return console.log(textbooksCollection);
-          }
-        });
-        this.listenTo(this.view, {
-          'get:all:classes': function() {
-            return App.request;
           }
         });
         return this.show(view, {

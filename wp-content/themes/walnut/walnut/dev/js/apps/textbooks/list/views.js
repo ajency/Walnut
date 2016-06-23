@@ -106,8 +106,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
-        console.log(this.collection);
-        console.log(this.newcollections);
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -163,47 +161,49 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         var id, models, searchStr;
         id = [];
         searchStr = $('.search-box').val();
-        if (searchStr) {
-          this.$el.find("#error-div").hide();
-          this.$el.find('.progress-spinner').show();
-          console.log(textbooksCollectionOrigninal);
-          console.log(this.collection);
+        this.$el.find("#error-div").hide();
+        this.$el.find('.progress-spinner').show();
+        console.log(textbooksCollectionOrigninal);
+        console.log(this.collection);
 
-          /*@dimensions.region = searchStr
-          #console.log @dimensions
-          $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
-           */
-          models = textbooksCollectionOrigninal.filter(function(model) {
-            return _.any(model.attributes, function(val, attr) {
-              var m, n, name, nameL;
-              name = model.get('name');
-              nameL = model.get('name').toLowerCase();
-              n = name.search(searchStr);
-              m = nameL.search(searchStr);
-              n = n.toString();
-              m = m.toString();
-              if (n !== '-1' || m !== '-1') {
-                id = model.get('term_id');
-                return model.pick(id);
-              } else {
-                return console.log("none found");
-              }
-            });
+        /*@dimensions.region = searchStr
+        #console.log @dimensions
+        $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
+         */
+        models = textbooksCollectionOrigninal.filter(function(model) {
+          return _.any(model.attributes, function(val, attr) {
+            var m, n, name, nameL;
+            name = model.get('name');
+            nameL = model.get('name').toLowerCase();
+            n = name.search(searchStr);
+            m = nameL.search(searchStr);
+            n = n.toString();
+            m = m.toString();
+            if (n !== '-1' || m !== '-1') {
+              id = model.get('term_id');
+              return model.pick(id);
+            } else {
+              return console.log("none found");
+            }
           });
-          this.collection.reset(models);
-          console.log(this.collection);
-          this.trigger('search:textbooks', this.collection);
+        });
+        this.collection.reset(models);
+        console.log(this.collection);
+        this.trigger('search:textbooks', this.collection);
 
-          /*@collection.filter((model) ->
-              _.some _.values(model.pick('name')), (value) ->
-                  console.log value.toLowerCase().indexOf(searchStr)
-          )
-           */
-          return this.$el.find('.progress-spinner').hide();
-        } else {
-          return this.$el.find("#error-div").show();
-        }
+        /*@collection.filter((model) ->
+            _.some _.values(model.pick('name')), (value) ->
+                console.log value.toLowerCase().indexOf(searchStr)
+        )
+         */
+        return this.$el.find('.progress-spinner').hide();
       };
+
+
+      /*else
+          @$el.find "#error-div"
+          .show()
+       */
 
       ListView.prototype.filterBooks = function(e) {
         var $t, dimension, filter, filterString, re;
