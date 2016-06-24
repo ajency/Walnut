@@ -66,7 +66,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         return AddTextbookView.__super__.constructor.apply(this, arguments);
       }
 
-      AddTextbookView.prototype.template = '<form> <div class="row"> <div class="col-md-12"> Name:<br> <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12"> <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12"> </div><br> {{#noClasses}} <div class="col-md-12"> Classes suitable for:<br/> {{#classes}} <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br> {{/classes}} </div><br> {{/noClasses}} <div class="col-md-12"> Description:<br> <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea> </div><br> <!--div class="col-md-12"> Textbook Image Url<br> <input id="texturl" name="texturl" type="file" class="input-small span12"><br> <div id="progress" class="progress none"> <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif"> </div> <img id="textImage" src="" height="200" alt="Image preview..."> </div><br--> {{#noClasses}} <div class="col-md-12"> Author Name:<br> <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12"> </div><br> {{/noClasses}} <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
+      AddTextbookView.prototype.template = '<form> <div class="row"> <div class="col-md-12"> Name:<br> <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12"> <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12"> </div><br> {{#noClasses}} <div class="col-md-12"> Classes suitable for:<br/> {{#classids}} <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br> {{/classids}} </div><br> {{/noClasses}} <div class="col-md-12"> Description:<br> <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea> </div><br> <!--div class="col-md-12"> Textbook Image Url<br> <input id="texturl" name="texturl" type="file" class="input-small span12"><br> <div id="progress" class="progress none"> <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif"> </div> <img id="textImage" src="" height="200" alt="Image preview..."> </div><br--> {{#noClasses}} <div class="col-md-12"> Author Name:<br> <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12"> </div><br> {{/noClasses}} <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
 
       AddTextbookView.prototype.events = {
         'click .btn-success': 'addTextbook',
@@ -101,7 +101,7 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
       };
 
       AddTextbookView.prototype.serializeData = function() {
-        var collection_classes, data, parent;
+        var classes, data, parent;
         console.log(this.collection);
         if (this.collection.toAddText === 'true') {
           data = AddTextbookView.__super__.serializeData.call(this);
@@ -123,18 +123,27 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
         } else {
           data = AddTextbookView.__super__.serializeData.call(this);
           console.log('collection');
+          console.log(this.collection.class_ids);
+          classes = this.collection.class_ids;
           this.model = this.collection.models;
-          collection_classes = this.collection.pluck('classes');
-          data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
-            return parseInt(num);
-          }).map(function(m) {
-            var classes;
-            classes = [];
-            classes.slug = _.slugify(CLASS_LABEL[m]);
-            classes.label = CLASS_LABEL[m];
-            classes.id = m;
-            return classes;
-          }).value();
+
+          /*collection_classes = @collection.pluck 'classes'
+          #console.log collection_classes
+          
+          data.classes=   _.chain collection_classes
+                          .flatten()
+                          .union()
+                          .compact()
+                          .sortBy (num)-> parseInt num
+                          .map (m)->
+                              classes=[]
+                              classes.slug = _.slugify CLASS_LABEL[m]
+                              classes.label = CLASS_LABEL[m]
+                              classes.id = m
+                              classes
+                          .value()
+          console.log data.classes
+           */
           data.noClasses = true;
           data.parent = '-1';
           data.AddButton = 'Add Textbook';

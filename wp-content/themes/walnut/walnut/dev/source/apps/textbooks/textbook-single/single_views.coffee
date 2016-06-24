@@ -36,6 +36,7 @@ define ['app'
 				console.log @collection
 				@collection.toAddText = 'true'
 				@trigger 'show:add:textbook:popup', @collection
+				
 
 			searchTextbooks: (e)=>
 					#console.log 'search'

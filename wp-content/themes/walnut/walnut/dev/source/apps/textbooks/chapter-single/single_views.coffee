@@ -29,6 +29,7 @@ define ['app'
 				'click .add-section' : 'addSection'
 
 			addSection:->
+				
 				console.log @collection
 				@collection.toAddText = 'true'
 				@trigger 'show:add:textbook:popup', @collection

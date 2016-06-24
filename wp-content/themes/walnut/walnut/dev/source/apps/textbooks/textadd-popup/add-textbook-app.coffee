@@ -59,9 +59,9 @@ define ['app'
                             {{#noClasses}}
                             <div class="col-md-12">
                                 Classes suitable for:<br/>
-                                {{#classes}}
+                                {{#classids}}
                                 <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br>
-                                {{/classes}}
+                                {{/classids}}
                             </div><br>
                             {{/noClasses}}
                             <div class="col-md-12">
@@ -146,8 +146,13 @@ define ['app'
                 else
                     data = super()
                     console.log 'collection'
+                    console.log @collection.class_ids
+                    classes = @collection.class_ids
+
+                    
+
                     @model = @collection.models
-                    collection_classes = @collection.pluck 'classes'
+                    ###collection_classes = @collection.pluck 'classes'
                     #console.log collection_classes
 
                     data.classes=   _.chain collection_classes
@@ -162,6 +167,7 @@ define ['app'
                                         classes.id = m
                                         classes
                                     .value()
+                    console.log data.classes###
                     data.noClasses = true
                     data.parent = '-1'
                     data.AddButton = 'Add Textbook'

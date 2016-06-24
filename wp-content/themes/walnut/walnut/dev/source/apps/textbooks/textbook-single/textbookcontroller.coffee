@@ -7,11 +7,11 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 		class Single.SingleTextbook extends RegionController
 
 			initialize : (opt) ->
-				console.log opt
+				#@console.log opt
 				term_id = opt.model_id
 				@textbook = App.request "get:textbook:by:id", term_id
-				console.log @textbook
-				console.log @textbook.get 'description'
+
+				@classes = App.request "get:all:classes"
 
 				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
 
@@ -24,9 +24,11 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				@listenTo layout, "show", @_showChaptersView
 
 				@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
-					App.execute 'add:textbook:popup',
-                        region      : App.dialogRegion
-                        collection : @collection
+					popup = App.execute 'add:textbook:popup',
+                        		region      : App.dialogRegion
+                        		collection : @collection
+					popup.done (response)=>
+						@_getSearchChaptersView chaptersOriginalCollection
 
 				@listenTo @layout, 'search:textbooks', (collection)=>
 					console.log collection

@@ -106,6 +106,20 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
+
+        /*defer = $.Deferred()
+        url     = AJAXURL + '?action=get-all-classes'
+        datas = 'data'
+        $.post url, 
+            datas, (response) =>
+                class_ids = response
+                console.log response
+                defer.resolve response
+            'json'
+        #console.log response
+        
+        defer.promise()
+         */
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -137,7 +151,21 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.addTextbook = function() {
-        return this.trigger('show:add:textbook:popup', this.collection);
+        var datas, defer, url;
+        defer = $.Deferred();
+        url = AJAXURL + '?action=get-all-classes';
+        datas = 'data';
+        $.post(url, datas, (function(_this) {
+          return function(response) {
+            var classids;
+            classids = response;
+            console.log(classids);
+            defer.resolve(response);
+            _this.collection.class_ids = classids;
+            return _this.trigger('show:add:textbook:popup', _this.collection);
+          };
+        })(this), 'json');
+        return defer.promise();
       };
 
       ListView.prototype.sortTable = function(e) {

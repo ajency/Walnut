@@ -15,6 +15,7 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 				console.log term_id
 				@textbook_name = App.request "get:textbook:name:by:id", textbook_id
 				console.log @textbook_name
+				
 				@textbook = App.request "get:textbook:by:id", term_id
 				@textbook.textbook_id = textbook_id
 
@@ -23,7 +24,6 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 				@chapters.parent = term_id
 
 				console.log @chapters
-
 
 				@layout= layout = @_getChaptersSingleLayout()
 				@listenTo layout, "show", @_showChapterSingle

@@ -67,6 +67,21 @@ define ['app'
 
             serializeData: ->
                 data = super()
+                ###defer = $.Deferred()
+                url     = AJAXURL + '?action=get-all-classes'
+                datas = 'data'
+                $.post url, 
+                    datas, (response) =>
+                        class_ids = response
+                        console.log response
+                        defer.resolve response
+                    'json'
+                #console.log response
+
+                defer.promise()###
+
+                
+                
                 collection_classes = @collection.pluck 'classes'
 
                 data.classes=   _.chain collection_classes
@@ -95,8 +110,20 @@ define ['app'
                 'click .add-textbook' : 'addTextbook'
 
             addTextbook:=>
-                #console.log @collection
-                @trigger 'show:add:textbook:popup', @collection
+                    defer = $.Deferred()
+                    url     = AJAXURL + '?action=get-all-classes'
+                    datas = 'data'
+                    $.post url, 
+                        datas, (response) =>
+                            classids = response
+                            console.log classids
+                            defer.resolve response
+                            @collection.class_ids = classids
+                            @trigger 'show:add:textbook:popup', @collection
+                        'json'
+
+                    defer.promise()
+                
 
 
             sortTable: (e)->

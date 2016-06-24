@@ -54,6 +54,7 @@ function fetch_chapter_subsections() {
 }
 
 add_action( 'wp_ajax_get-textbook-names', 'get_textbook_names' );
+
 function get_textbook_names(){
     $current_blog = get_current_blog_id();
     switch_to_blog(1);
@@ -71,4 +72,29 @@ function get_textbook_names(){
    }
    switch_to_blog($current_blog);
    wp_send_json($textbook_names);
+}
+
+add_action( 'wp_ajax_get-all-classes', 'get_all_classes' );
+
+function get_all_classes(){
+
+  global $wpdb;
+
+  $class_id = [];
+
+  $class_id = $wpdb->get_col("SELECT DISTINCT class_id FROM {$wpdb->prefix}class_divisions");
+
+  /*foreach ($class_id as $value) {
+    file_put_contents("a2.txt", $value);
+    if $value == '1'
+      {$class_ids='Nursery';}
+    if $value == '2'
+      {$class_ids='Junior KG';}
+    if $value == '3'
+      {$class_ids='Senior KG';}
+    else
+      {$class_ids='Class ';}
+  }
+  file_put_contents("ad.txt", $class_ids);*/
+  wp_send_json($class_id);
 }
