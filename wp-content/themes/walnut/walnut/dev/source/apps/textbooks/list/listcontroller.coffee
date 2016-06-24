@@ -3,7 +3,13 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
         class List.ListController extends RegionController
 
             initialize: ->
+                #console.log App
+                window.textbooksCollectionOrigninal = App.request "get:textbooks", "fetch_all":true
+
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
+
+                classesCollection = 
+
                 breadcrumb_items =
                     'items': [
                         {'label': 'Dashboard', 'link': 'javascript://'},
@@ -15,9 +21,24 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 @view = view = @_getTextbooksView textbooksCollection
 
+                @listenTo @view, 'show:add:textbook:popup', (@collection)=>
+                    App.execute 'add:textbook:popup',
+                        region      : App.dialogRegion
+                        collection : @collection
+
+                @listenTo @view, 'search:textbooks', (collection)=>
+                    @_getSearchTextbooksView collection
+
+                @listenTo @view, 'before:search:textbook' :->
+                    console.log textbooksCollection           
+
                 @show view, (loading: true)
 
             _getTextbooksView: (collection)->
+                new List.Views.ListView
+                    collection: collection
+
+            _getSearchTextbooksView: (collection)->
                 new List.Views.ListView
                     collection: collection
 

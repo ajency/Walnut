@@ -25,7 +25,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if _.isArray classes
                     classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
                     classesArray.join()
-
+                console.log 'classes'
+                console.log classesArray
                 classesArray
 
 
@@ -45,6 +46,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-textbooks'
 
             parse: (resp)->
+                console.log resp
                 @total = resp.count
                 resp.data
 
@@ -60,6 +62,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-textbook-names'
 
             getTextbookName:(terms)->
+                console.log  terms
                 textbook = @.get terms.textbook
                 texbookName = textbook.get 'name' if textbook?
 

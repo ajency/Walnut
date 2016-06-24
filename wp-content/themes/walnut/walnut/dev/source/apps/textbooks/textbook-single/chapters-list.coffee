@@ -38,3 +38,10 @@ define ['app'
 
 				console.log 'collection'
 				console.log @collection  
+
+			###events :->
+				'click .add-chapter' : 'addChapter'
+
+			addChapter:->
+                console.log @model
+                @trigger 'show:add:textbook:popup', 'chapter'###

@@ -46,6 +46,45 @@ class ExportExcel {
         							 ->setCategory("mcq"); 
 
         // Add some data
+
+        $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A1', 'Textbook_name')
+                    ->setCellValue('B1', 'Question Image')
+                    ->setCellValue('C1', 'Textbook_name')
+                    ->setCellValue('D1', 'Textbook')
+                    ->setCellValue('E1', 'Chapter_name')
+                    ->setCellValue('F1', 'Chapter')
+                    ->setCellValue('G1', 'Sections_name')
+                    ->setCellValue('H1', 'Sections')
+                    ->setCellValue('I1', 'Subsections_name')
+                    ->setCellValue('J1', 'Subsections')
+                    ->setCellValue('K1', 'Total Marks')
+                    ->setCellValue('L1', 'Multiple Correct Answers')
+                    ->setCellValue('M1', 'Correct Answer')
+                    ->setCellValue('N1', 'Option1')
+                    ->setCellValue('O1', 'Option1 Image')
+                    ->setCellValue('P1', 'Mark1')
+                    ->setCellValue('Q1', 'Option2')
+                    ->setCellValue('R1', 'Option2 Image')
+                    ->setCellValue('S1', 'Mark2')
+                    ->setCellValue('T1', 'Option3')
+                    ->setCellValue('U1', 'Option3 Image')
+                    ->setCellValue('V1', 'Mark3')
+                    ->setCellValue('W1', 'Option4')
+                    ->setCellValue('X1', 'Option4 Image')
+                    ->setCellValue('Y1', 'Mark4')
+                    ->setCellValue('Z1', 'Option5')
+                    ->setCellValue('AA1', 'Option5 Image')
+                    ->setCellValue('AB1', 'Mark5')
+                    ->setCellValue('AC1', 'Option6')
+                    ->setCellValue('AD1', 'Option6 Image')
+                    ->setCellValue('AE1', 'Mark6')
+                    ->setCellValue('AF1', 'Columns')
+                    ->setCellValue('AG1', 'Level')
+                    ->setCellValue('AH1', 'Tags')
+                    ->setCellValue('AI1', 'Hint')
+                    ->setCellValue('AJ1', 'Comment')
+                    ->setCellValue('AK1', 'Duration');
         $objPHPExcel->setActiveSheetIndex(0);
 
 

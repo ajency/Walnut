@@ -36,6 +36,8 @@ define(["app", 'backbone'], function(App, Backbone) {
           }
           classesArray.join();
         }
+        console.log('classes');
+        console.log(classesArray);
         return classesArray;
       };
 
@@ -74,6 +76,7 @@ define(["app", 'backbone'], function(App, Backbone) {
       };
 
       ItemCollection.prototype.parse = function(resp) {
+        console.log(resp);
         this.total = resp.count;
         return resp.data;
       };
@@ -105,6 +108,7 @@ define(["app", 'backbone'], function(App, Backbone) {
 
       NamesCollection.prototype.getTextbookName = function(terms) {
         var texbookName, textbook;
+        console.log(terms);
         textbook = this.get(terms.textbook);
         if (textbook != null) {
           return texbookName = textbook.get('name');

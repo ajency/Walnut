@@ -765,10 +765,12 @@ function wp_ajax_add_link_category( $action ) {
  * @since 3.1.0
  */
 function wp_ajax_add_tag() {
+	#file_put_contents("a12.txt", print_r($data, true));
+	file_put_contents("a11.txt", print_r($_POST, true));
 	//add textbook taxonomy
 	global $wp_list_table;
 
-	check_ajax_referer( 'add-tag', '_wpnonce_add-tag' );
+	#check_ajax_referer( 'add-tag', '_wpnonce_add-tag' );
 	$taxonomy = !empty($_POST['taxonomy']) ? $_POST['taxonomy'] : 'post_tag';
 	$tax = get_taxonomy($taxonomy);
 
