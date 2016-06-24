@@ -35,7 +35,7 @@ class MediaFromFtp {
 	       	}
 	   	}
 
-		$excludefile = '--[0-9]*x[0-9]*---';	// thumbnail
+		$excludefile = '-[0-9]*x[0-9]*';	// thumbnail
 		if( get_option('mediafromftp_exclude_file') ){
 			$excludefile .= '|'.get_option('mediafromftp_exclude_file');
 		}
