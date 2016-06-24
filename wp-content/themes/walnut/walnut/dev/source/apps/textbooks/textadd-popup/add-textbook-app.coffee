@@ -59,9 +59,9 @@ define ['app'
                             {{#noClasses}}
                             <div class="col-md-12">
                                 Classes suitable for:<br/>
-                                {{#classids}}
-                                <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{label}}<br>
-                                {{/classids}}
+                                {{#class_data}}
+                                <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{name}}<br>
+                                {{/class_data}}
                             </div><br>
                             {{/noClasses}}
                             <div class="col-md-12">
@@ -150,12 +150,27 @@ define ['app'
                     classes = @collection.class_ids
 
                     
+                    data.class_data = classes.map (item, i)->
+                                            classes_data=[]
+                                            classes_data.id = item
+                                            if item == '1'
+                                                classes_data.name = 'Nursery'
+                                            else if item == '2'
+                                                classes_data.name = 'Junior KG'
+                                            else if item == '3'
+                                                classes_data.name = 'Senior KG'
+                                            else
+                                                val = item-3
+                                                classes_data.name ='Class '+val
+
+                                            classes_data
+                    #console.log class_data
 
                     @model = @collection.models
-                    ###collection_classes = @collection.pluck 'classes'
+                    collection_classes = @collection.pluck 'classes'
                     #console.log collection_classes
 
-                    data.classes=   _.chain collection_classes
+                    ###data.classes=   _.chain collection_classes
                                     .flatten()
                                     .union()
                                     .compact()
@@ -171,7 +186,7 @@ define ['app'
                     data.noClasses = true
                     data.parent = '-1'
                     data.AddButton = 'Add Textbook'
-                    #console.log data
+                    console.log data
                     data              
 
 

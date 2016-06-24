@@ -35,8 +35,10 @@ define ['app'
 			addChapter:->
 				console.log @collection
 				@collection.toAddText = 'true'
-				@trigger 'show:add:textbook:popup', @collection
+				@trigger 'show:add:textbook:popup', @collection ,
 				
+			onAddReload :->
+				console.log 'done'
 
 			searchTextbooks: (e)=>
 					#console.log 'search'

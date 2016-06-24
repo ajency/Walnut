@@ -82,7 +82,7 @@ function get_all_classes(){
 
   $class_id = [];
 
-  $class_id = $wpdb->get_col("SELECT DISTINCT class_id FROM {$wpdb->prefix}class_divisions");
+  $class_id = $wpdb->get_col("SELECT DISTINCT class_id FROM {$wpdb->prefix}class_divisions order by class_id asc");
 
   /*foreach ($class_id as $value) {
     file_put_contents("a2.txt", $value);
