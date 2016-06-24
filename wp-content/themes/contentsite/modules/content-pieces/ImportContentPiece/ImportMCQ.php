@@ -6,9 +6,15 @@ class ImportMCQ extends ImportContentPiece {
     }
 
     private function set_object_values($record){
+        
 
+        if ($record[5] == '#N/A')
+            {$record[5] = '';}
         $section = $record[5];
         $sectionArray = explode(",",$section);
+
+        if ($record[7] == '#N/A')
+            {$record[7] = '';}
 
         $section = $record[7];
         $subsectionsArray = explode(",",$section);
@@ -16,6 +22,9 @@ class ImportMCQ extends ImportContentPiece {
         $this->question       = $record[8];
         $this->question_media_path = $record[9];
         $this->textbook       = $record[1];
+        if ($record[3] == '#N/A')
+            {$record[3] = '';}
+        
         $this->chapter        = $record[3];
         $this->sections       = $sectionArray;
         $this->subsections    = $subsectionsArray;

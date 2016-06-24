@@ -119,7 +119,13 @@ class ExportExcel {
             'Mark5',
             'Option6',
             'Option6 Image',
-            'Mark6'
+            'Mark6',
+            'Columns',
+            'Level',
+            'Tags',
+            'Hint',
+            'Comment',
+            'Duration'
             );
         $objPHPExcel->getActiveSheet()->fromArray($header_list, NULL, 'A1');
 
