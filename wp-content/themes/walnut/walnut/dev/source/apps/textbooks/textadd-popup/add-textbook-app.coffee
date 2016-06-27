@@ -82,8 +82,9 @@ define ['app'
                             {{/noClasses}}
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button>
-                                    <div class=" p-l-10 p-t-30 pull-left success-msg"></div>
+                                    <button type="button" class="clear btn btn-success m-t-20 pull-left m-l-15" >&nbsp;&nbsp;{{AddButton}}</button>
+                                    <div class=" p-l-10 p-t-30 pull-left success-msg p-r-10"></div>
+                                    <button type="button" class="clear btn btn-default m-t-20 pull-left" data-dismiss="modal" aria-hidden="true" class="close">Cancel</button>   
                                 </div>
                             </div>
                         </div>
