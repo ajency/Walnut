@@ -63,15 +63,6 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
         return console.log(this.collection);
       };
 
-
-      /*events :->
-      				'click .add-chapter' : 'addChapter'
-      
-      			addChapter:->
-                   console.log @model
-                   @trigger 'show:add:textbook:popup', 'chapter'
-       */
-
       return ChapterListView;
 
     })(Marionette.CompositeView);

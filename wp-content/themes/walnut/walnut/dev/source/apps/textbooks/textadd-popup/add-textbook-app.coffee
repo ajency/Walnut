@@ -1,5 +1,6 @@
 define ['app'
         'controllers/region-controller'
+        'apps/textbooks/textbook-single/textbookcontroller'
 ],(App,RegionController)->
     App.module 'AddTextbookPopup', (AddTextbookPopup,App)->
 
@@ -12,8 +13,14 @@ define ['app'
 
                 @show @view
 
-                @listenTo @view, 'close:popup:dialog',->
+                @listenTo @view, 'close:popup:dialog',(collection)->
+                    @region.reloadCollection(collection)
                     @region.closeDialog()     
+
+                ###@listenTo @view, 'reload:collection', (collection)->
+                    chaptersListView= new Single.Views.ChapterListView
+                        collection: collection###
+                                
 
                 @listenTo @view, 'save:textbook:data', (data)->
                     console.log AJAXURL
@@ -27,13 +34,6 @@ define ['app'
                                 async: true,
                                 success:(response) =>
                                     return response
-                                ###@$el.find '.success-msg'
-                                .html 'Saved Successfully'
-                                .addClass 'text-success'
-
-                                setTimeout =>
-                                    @trigger 'close:popup:dialog'
-                                    ,500###
                                 ,
 
                         });
@@ -49,7 +49,7 @@ define ['app'
                     #model        : @model
         class AddTextbookView extends Marionette.ItemView
 
-            template: '<form>
+            template: '<form id="addTerm">
                         <div class="row">
                             <div class="col-md-12">
                                 Name:<br>
@@ -90,6 +90,9 @@ define ['app'
                             </div>
                         </div>
                     </form>'
+
+            regions:
+                addTerm : "#addTerm"
 
             events:
                 'click .btn-success'    : 'addTextbook'
@@ -231,7 +234,8 @@ define ['app'
 
 
             addTextbook: (e)=>
-                #console.log @model
+                console.log @collection
+                models = @collection.models
                 class_ids=[]
                 textbookName = $('#textname').val()
                 if textbookName.trim() != ''
@@ -272,13 +276,15 @@ define ['app'
                     @$el.find '.success-msg'
                     .html 'Saved Successfully'
                     .addClass 'text-success'
+
+                    @collection.reset(models)
+
+                    console.log @collection
     
                     setTimeout =>
-                        @trigger 'close:popup:dialog'
+                        @trigger 'close:popup:dialog', @collection
                     ,500
-
-                    
-
+                                         
                 else
                     @$el.find '#textname'
                     .addClass 'error'     

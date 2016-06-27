@@ -14,33 +14,47 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
       }
 
       SingleSection.prototype.initialize = function(opt) {
-        var chapter_id, layout, term_id, textbook_id;
+        var chapter_id, term_id, textbook_id;
         console.log(opt);
         textbook_id = opt.model_id;
         chapter_id = opt.chapter;
         term_id = opt.section;
+        window.base_textbook_id = textbook_id;
+        window.base_chapter_id = chapter_id;
         console.log(term_id);
         this.textbook = App.request("get:textbook:by:id", term_id);
-        this.chapters = App.request("get:chapters", {
-          'parent': term_id,
-          'term_type': 'subsections'
-        });
-        this.chapters.textbook_id = textbook_id;
-        this.chapters.chapter_id = chapter_id;
-        this.chapters.parent = term_id;
-        this.layout = layout = this._getSectionSingleLayout();
-        this.listenTo(layout, "show", this._showSectionSingle);
-        this.listenTo(layout, "show", this._showSubView);
-        this.listenTo(this.layout, 'show:add:textbook:popup', (function(_this) {
-          return function(collection) {
-            _this.collection = collection;
-            return App.execute('add:textbook:popup', {
-              region: App.dialogRegion,
-              collection: _this.collection
+        this.base_textbook = App.request("get:textbook:by:id", textbook_id);
+        return App.execute("when:fetched", this.base_textbook, (function(_this) {
+          return function() {
+            window.base_textbook_name = _this.base_textbook.get('name');
+            window.base_classes_applicable = _this.base_textbook.get('classes_applicable');
+            _this.base_chapter = App.request("get:textbook:by:id", chapter_id);
+            return App.execute("when:fetched", _this.base_chapter, function() {
+              var layout;
+              console.log('chapter window data');
+              console.log(_this.base_chapter);
+              window.base_chapter_name = _this.base_chapter.get('name');
+              _this.chapters = App.request("get:chapters", {
+                'parent': term_id,
+                'term_type': 'subsections'
+              });
+              _this.chapters.textbook_id = textbook_id;
+              _this.chapters.chapter_id = chapter_id;
+              _this.chapters.parent = term_id;
+              _this.layout = layout = _this._getSectionSingleLayout();
+              _this.listenTo(layout, "show", _this._showSectionSingle);
+              _this.listenTo(layout, "show", _this._showSubView);
+              _this.listenTo(_this.layout, 'show:add:textbook:popup', function(collection) {
+                _this.collection = collection;
+                return App.execute('add:textbook:popup', {
+                  region: App.dialogRegion,
+                  collection: _this.collection
+                });
+              });
+              return _this.show(layout);
             });
           };
         })(this));
-        return this.show(layout);
       };
 
       SingleSection.prototype._showSectionSingle = function() {

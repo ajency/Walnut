@@ -1,5 +1,5 @@
 define ['app','controllers/region-controller','apps/textbooks/textbook-single/single_views'
-		'apps/textbooks/textbook-single/chapters-list'
+		'apps/textbooks/textbook-single/chapters-list','apps/textbooks/textadd-popup/add-textbook-app'
 ], (App, RegionController)->
 
 	App.module "TextbooksApp.Single", (Single, App)->
@@ -10,6 +10,7 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				#@console.log opt
 				term_id = opt.model_id
 				@textbook = App.request "get:textbook:by:id", term_id
+				#console.log textbook_name
 
 				@classes = App.request "get:all:classes"
 
@@ -24,11 +25,17 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				@listenTo layout, "show", @_showChaptersView
 
 				@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
-					popup = App.execute 'add:textbook:popup',
-                        		region      : App.dialogRegion
-                        		collection : @collection
-					popup.done (response)=>
-						@_getSearchChaptersView chaptersOriginalCollection
+					App.execute 'add:textbook:popup',
+                        region      : App.dialogRegion
+                        collection : @collection
+
+                @region =  new Marionette.Region el : '#dialog-region'
+                region : @region
+				
+
+				@listenTo Backbone, 'reload:collection', (collection) =>
+					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+					@_showChaptersView @chapters
 
 				@listenTo @layout, 'search:textbooks', (collection)=>
 					console.log collection
@@ -71,4 +78,5 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 
 					@layout.chaptersRegion.show(chaptersListView)
 
+		
 					

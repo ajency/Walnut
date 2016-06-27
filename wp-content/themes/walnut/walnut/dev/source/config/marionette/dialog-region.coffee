@@ -26,6 +26,11 @@ define ['marionette','mustache', 'text!config/marionette/templates/modal.html'],
 			@$el.on 'hidden.bs.modal', ()=>
 				@clearDialog()
 
+		reloadCollection:(collection)->
+			console.log 'reloadCollection'
+			#console.log @collection
+			Backbone.trigger "reload:collection", @collection
+
 		closeDialog:->
 			@$el.modal 'hide'
 

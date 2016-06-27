@@ -16,8 +16,7 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
       TextbookDescriptionView.prototype.className = '';
 
       TextbookDescriptionView.prototype.onShow = function() {
-        console.log('Show Model');
-        return console.log(this.model);
+        return console.log('Show Model');
       };
 
       return TextbookDescriptionView;
@@ -37,7 +36,8 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
 
       TextbookSingleLayout.prototype.regions = {
         textbookDescriptionRegion: '#textbook-description-region',
-        chaptersRegion: '#chapters-list-region'
+        chaptersRegion: '#chapters-list-region',
+        dialogeRegion: "#dialoge-region"
       };
 
       TextbookSingleLayout.prototype.events = {
@@ -51,14 +51,11 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
       };
 
       TextbookSingleLayout.prototype.addChapter = function() {
-        console.log(this.collection);
         this.collection.toAddText = 'true';
         return this.trigger('show:add:textbook:popup', this.collection);
       };
 
-      TextbookSingleLayout.prototype.onAddReload = function() {
-        return console.log('done');
-      };
+      TextbookSingleLayout.prototype.onAddReload = function() {};
 
       TextbookSingleLayout.prototype.searchTextbooks = function(e) {
         var id, models, searchStr;
@@ -66,13 +63,6 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
         searchStr = $('.search-box').val();
         this.$el.find("#error-div").hide();
         this.$el.find('.progress-spinner').show();
-        console.log(chaptersOriginalCollection);
-        console.log(this.collection);
-
-        /*@dimensions.region = searchStr
-                       #console.log @dimensions
-                       $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
-         */
         models = chaptersOriginalCollection.filter(function(model) {
           return _.any(model.attributes, function(val, attr) {
             var m, n, name, nameL;
@@ -91,7 +81,6 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
           });
         });
         this.collection.reset(models);
-        console.log(this.collection);
         this.$el.find('.progress-spinner').hide();
         return this.trigger('search:textbooks', this.collection);
 
