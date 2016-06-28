@@ -169,6 +169,10 @@
     border-color: #259b24;
 }
 
+/*no result found*/
+.visible-msg{
+  opacity: 1;
+}
 
 
 
