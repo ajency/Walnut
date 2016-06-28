@@ -189,7 +189,7 @@ function get_quiz_schedule($quiz_id, $division){
     if(!$result)
         return false;
 
-    $today = date('Y-m-d');
+    $today = date('Y-m-d H:m:s');
 
     $from   = $result->schedule_from;
     $to     = $result->schedule_to;

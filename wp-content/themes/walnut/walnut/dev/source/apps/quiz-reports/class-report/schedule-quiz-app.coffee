@@ -96,7 +96,7 @@ define ['app'
                 @$el.find '#scheduleFrom'
                 .datetimepicker
                     useCurrent:false
-                    minDate:today
+                    #minDate:today
                     format:'YYYY-MM-DD HH:mm:ss'
 
                 @$el.find '#scheduleTo'
