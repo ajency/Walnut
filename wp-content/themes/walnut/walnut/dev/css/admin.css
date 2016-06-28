@@ -174,7 +174,15 @@
   opacity: 1;
 }
 
+.table-div{
+  display: table;
+}
 
+.table-cell-div,
+.table-cell-div2{
+  display: table-cell;
+  vertical-align: middle;
+}
 
 
 

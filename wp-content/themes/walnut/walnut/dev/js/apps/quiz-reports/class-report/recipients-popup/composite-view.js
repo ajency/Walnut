@@ -10,7 +10,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
         return RecipientsView.__super__.constructor.apply(this, arguments);
       }
 
-      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Recipient Name (Parents)</th> <th>Recipient Email</th> <th>Student Name</th> {{#quiz_component}} <th>Quiz</th> {{/quiz_component}} <th></th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit"> <i class="fa fa-check"></i> Send Email </button> <p class="email_specific m-l-40 text-default" style="font-size:15px;">&nbsp;</p>';
+      RecipientsView.prototype.template = '<table class="table table-bordered tiles white"> <thead> <tr> <th><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;"> <input id="check_all" type="checkbox"> <label for="check_all"></label> </div></th> <th>Recipient Name (Parents)</th> <th>Recipient Email</th> <th>Student Name</th> {{#quiz_component}} <th>Quiz</th> {{/quiz_component}} <th></th> </tr> </thead> <tbody id="list-recipients" class="rowlink"></tbody> </table> <div class="table-div"> <div class="table-cell-div"> <button class="send-email pull-left m-l-15 none btn btn-success" type="submit"> <i class="fa fa-check"></i> Send Email </button> </div> <div class="table-cell-div2"> <p class="email_specific m-l-40 text-default m-b-0" style="font-size:15px;">&nbsp;</p> </div> </div>';
 
       RecipientsView.prototype.itemView = Views.RecipientsItemView;
 
@@ -155,7 +155,7 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
                   }, 'json');
                   defer.promise();
                 }
-                return _this.$el.find('.send-email').after('<p class="m-l-40 text-success small communication_sent"> &nbsp;Your Emails have been queued successfully</p>');
+                return _this.$el.find('.table-cell-div2').append('<p class="m-l-40 text-success small communication_sent m-b-0"> &nbsp;Your Emails have been queued successfully</p>');
               };
             })(this)
           });
@@ -165,9 +165,9 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
             additional_data = this.model.get('additional_data');
             additional_data.raw_recipients = raw_recipients;
             this.model.save();
-            return this.$el.find('.send-email').after('<p class="m-l-40 text-success small communication_sent"> &nbsp;Your Emails have been queued successfully</p>');
+            return this.$el.find('.table-cell-div2').append('<p class="m-l-40 text-success small communication_sent m-b-0"> &nbsp;Your Emails have been queued successfully</p>');
           } else {
-            return this.$el.find('.send-email').after('<p class="m-l-40 text-error small communication_sent"> &nbsp;No Recipients Selected</p>');
+            return this.$el.find('.table-cell-div2').append('<p class="m-l-40 text-error small communication_sent"> &nbsp;No Recipients Selected</p>');
           }
         }
       };
