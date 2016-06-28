@@ -40,6 +40,10 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 						@listenTo layout, "show", @_showSectionSingle
 						@listenTo layout, "show", @_showSubView
 
+						@listenTo Backbone, 'reload:collection', (collection) =>
+							@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+							@_showChaptersView @chapters
+
 						@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
 							App.execute 'add:textbook:popup',
                         		region      : App.dialogRegion

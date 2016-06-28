@@ -49,16 +49,18 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             return _this._getSearchTextbooksView(collection);
           };
         })(this));
-        this.listenTo(this.view, 'reload:textbooks', (function(_this) {
+        this.listenTo(Backbone, 'reload:collection', (function(_this) {
           return function(collection) {
-            return _this;
+            var textbooks;
+            console.log('Backbone');
+            textbooks = App.request("get:textbooks", {
+              "fetch_all": true
+            });
+            return App.execute("when:fetched", textbooks, function() {
+              return _this._getSearchTextbooksView(textbooks);
+            });
           };
         })(this));
-        this.listenTo(this.view, {
-          'before:search:textbook': function() {
-            return console.log(textbooksCollection);
-          }
-        });
         return this.show(view, {
           loading: true
         });

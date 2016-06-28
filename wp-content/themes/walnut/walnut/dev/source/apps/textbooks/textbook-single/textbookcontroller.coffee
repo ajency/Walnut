@@ -28,14 +28,12 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 					App.execute 'add:textbook:popup',
                         region      : App.dialogRegion
                         collection : @collection
-
-                @region =  new Marionette.Region el : '#dialog-region'
-                region : @region
 				
 
 				@listenTo Backbone, 'reload:collection', (collection) =>
 					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
-					@_showChaptersView @chapters
+					App.execute "when:fetched", @chapters, =>
+						@_showChaptersView @chapters
 
 				@listenTo @layout, 'search:textbooks', (collection)=>
 					console.log collection
@@ -67,8 +65,10 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 					collection: @chapters
 
 			_getSearchChaptersView: (collection)->
-                new Single.Views.TextbookSingleLayout
-                    collection: collection
+				chaptersListView = new Single.Views.ChapterListView
+					collection: collection
+					
+				@layout.chaptersRegion.show(chaptersListView)
 
 			_showChaptersView : =>
 				App.execute "when:fetched", @chapters, =>

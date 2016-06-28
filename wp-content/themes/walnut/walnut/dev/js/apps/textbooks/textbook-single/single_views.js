@@ -36,8 +36,7 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
 
       TextbookSingleLayout.prototype.regions = {
         textbookDescriptionRegion: '#textbook-description-region',
-        chaptersRegion: '#chapters-list-region',
-        dialogeRegion: "#dialoge-region"
+        chaptersRegion: '#chapters-list-region'
       };
 
       TextbookSingleLayout.prototype.events = {

@@ -44,8 +44,15 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
               _this.layout = layout = _this._getSectionSingleLayout();
               _this.listenTo(layout, "show", _this._showSectionSingle);
               _this.listenTo(layout, "show", _this._showSubView);
-              _this.listenTo(_this.layout, 'show:add:textbook:popup', function(collection) {
-                _this.collection = collection;
+              _this.listenTo(Backbone, 'reload:collection', function(collection) {
+                _this.chapters = App.request("get:chapters", {
+                  'parent': term_id,
+                  'term_type': 'chapter'
+                });
+                return _this._showChaptersView(_this.chapters);
+              });
+              _this.listenTo(_this.layout, 'show:add:textbook:popup', function(collection1) {
+                _this.collection = collection1;
                 return App.execute('add:textbook:popup', {
                   region: App.dialogRegion,
                   collection: _this.collection

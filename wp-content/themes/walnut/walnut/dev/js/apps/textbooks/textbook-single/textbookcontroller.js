@@ -32,16 +32,10 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         this.listenTo(this.layout, 'show:add:textbook:popup', (function(_this) {
           return function(collection1) {
             _this.collection = collection1;
-            App.execute('add:textbook:popup', {
+            return App.execute('add:textbook:popup', {
               region: App.dialogRegion,
               collection: _this.collection
             });
-            _this.region = new Marionette.Region({
-              el: '#dialog-region'
-            });
-            return {
-              region: _this.region
-            };
           };
         })(this));
         this.listenTo(Backbone, 'reload:collection', (function(_this) {
@@ -50,7 +44,9 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
               'parent': term_id,
               'term_type': 'chapter'
             });
-            return _this._showChaptersView(_this.chapters);
+            return App.execute("when:fetched", _this.chapters, function() {
+              return _this._showChaptersView(_this.chapters);
+            });
           };
         })(this));
         this.listenTo(this.layout, 'search:textbooks', (function(_this) {
@@ -100,9 +96,11 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       };
 
       SingleTextbook.prototype._getSearchChaptersView = function(collection) {
-        return new Single.Views.TextbookSingleLayout({
+        var chaptersListView;
+        chaptersListView = new Single.Views.ChapterListView({
           collection: collection
         });
+        return this.layout.chaptersRegion.show(chaptersListView);
       };
 
       SingleTextbook.prototype._showChaptersView = function() {

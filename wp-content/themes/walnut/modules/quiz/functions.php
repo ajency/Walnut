@@ -381,33 +381,22 @@ function get_all_quiz_modules($args){
     $textbookss = $args['textbook'];
 
     $type = is_array($args['textbook']) ? '1' : '0';
-    file_put_contents("a1.txt", $type);
+
 
     if ($args['post_status'] =='any'){
-        $post_status1 = '';
-        $post_status2 = '';
+        $args['post_status1'] = '';
+        $args['post_status2'] = '';
         }
 
     if ($args['post_status'] =='published'){
-        $post_status1 = 'publish';
-        $post_status2 = 'archive';
+        $args['post_status1'] = 'publish';
+        $args['post_status2'] = 'archive';
     }
 
     if ( $args['textbook'] =='any')
             $args['textbook'] = '';
     if ( $args['quiz_type'] =='any')
-            $quiz_type = '';
-    else
-        $quiz_type = 'quiz';
-
-    $appendQuery = "SELECT DISTINCT post.id ";
-    $appendQuery .= "FROM {$wpdb->base_prefix}content_collection AS post,
-                {$wpdb->base_prefix}collection_meta AS meta ";
-    $appendQuery .= "WHERE meta.collection_id = post.id
-            AND post.type = '$quiz_type' ";
-    $appendQuery .= "AND (post.post_status LIKE '%$post_status1%' OR post.post_status LIKE '%$post_status2%') ";
-    $appendQuery .= "AND meta.meta_key = 'quiz_type' ";
-    $appendQuery .= "";
+            $args['quiz_type'] = '';
 
     $user_id=0;
     
@@ -418,72 +407,88 @@ function get_all_quiz_modules($args){
 
     if(isset($args['quiz_ids']) && sizeof($args['quiz_ids'])>0){
         $quiz_ids_str = join(',', $args['quiz_ids']);
-        $appendQuery .= "AND post.id in ($quiz_ids_str) ";
+        $quiz_ids_search_str = " AND post.id in ($quiz_ids_str)";
     }
 
     if (empty($args['textbook'])){
-        return 0;
         $textbook_prepare[0] = "%xy@@@zz%";
-         $appendQuery .= "AND post.term_ids LIKE '%\"xyzwewwq\"%' ";
+        $term_id_query = " AND post.term_ids LIKE %s";
     }
 
     if($type == 0){
 
         if($textbookss == '' || $textbookss == null){
-            $textbookArgs = "xy@@@zz";
+            $textbook_prepare[0] = "%xy@@@zz%";
         }
         else{
-            $textbookArgs = '%\"'.$textbookss.'\"%';
+            $textbook_prepare[0] = '%"'.$textbookss.'"%';
         }
 
         //onload and quiz report since textbook id is 1
-        $appendQuery .= "AND post.term_ids LIKE '$textbookArgs' ";
+        $term_id_query = " AND post.term_ids LIKE %s";
     }
 
     else if ($type == 1) {
         $size_text_data = sizeof($textbookss);
-        file_put_contents("a3.txt", $size_text_data);
         //$text_ids = implode(",",$textbookss);
         
         if ($size_text_data == '1'){
-            $textbookArgs = '%\"'.$textbookss[0].'\"%';
-            $appendQuery .= "AND post.term_ids LIKE '$textbookArgs' ";
+            $text = $textbookss[0];
+            $textbook_prepare[0] = '%"'.$textbookss[0].'"%';
+            $term_id_query = " AND post.term_ids LIKE %s";
         }
         else{
             $term_id_query_inside = '';
 
             foreach ($textbookss as $key => $text_id) {
-            $textbook_prepare[$key] = '%\"'.$text_id.'\"%';
-            $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '$textbook_prepare[$key]' OR ";
+            $textbook_prepare[$key] = '%"'.$text_id.'"%';
+            $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s OR ";
 
             if( $key == $size_text_data-1){
-                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"xyzwewwq\"%' ";
+                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s";
             }
 
             }
-            $appendQuery .= " AND ($term_id_query_inside)";
+            $term_id_query = " AND ($term_id_query_inside)";
 
         }
 
     }
 
 
+    $query_string = "SELECT DISTINCT post.id
+            FROM {$wpdb->base_prefix}content_collection AS post,
+                {$wpdb->base_prefix}collection_meta AS meta
+            WHERE meta.collection_id = post.id
+            AND post.type = 'quiz'
+            AND (post.post_status LIKE %s OR post.post_status LIKE %s)
+            AND meta.meta_key = %s
+            AND meta.meta_value LIKE %s".
+            $term_id_query.
+            $quiz_ids_search_str;
 
 
+    $post_status_prepare = "%".$args['post_status1']."%";
+    $post_status_prepare2 = "%".$args['post_status2']."%";
 
-    file_put_contents("a3.txt", $appendQuery);
-
-
+    $quiz_type_prepare = "%".$args['quiz_type']."%";
 
 
 
     
 
-    $query = $wpdb->prepare($appendQuery);
+    $query = $wpdb->prepare($query_string,$post_status_prepare,$post_status_prepare2,'quiz_type',$quiz_type_prepare,
+        $textbook_prepare[0],
+        $textbook_prepare[1],
+        $textbook_prepare[2],
+        $textbook_prepare[3],
+        $textbook_prepare[4],
+        $textbook_prepare[5]);
 
+    #file_put_contents("a.txt", $query);
     $quiz_ids = $wpdb->get_col($query);
 
-    file_put_contents("a4.txt", print_r($quiz_ids, true));
+
     $result = $results = array();
 
 

@@ -24,7 +24,6 @@ define ['app'
 			regions: 
 				textbookDescriptionRegion 	: '#textbook-description-region'
 				chaptersRegion				: '#chapters-list-region'
-				dialogeRegion : "#dialoge-region"
 
 
 

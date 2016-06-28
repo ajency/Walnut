@@ -29,11 +29,15 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 					@chapters.textbook_id = textbook_id
 					@chapters.parent = term_id
 
-				#console.log @chapters
+					#console.log @chapters
 
 					@layout= layout = @_getChaptersSingleLayout()
 					@listenTo layout, "show", @_showChapterSingle
 					@listenTo layout, "show", @_showSectionsView @chapters
+
+					@listenTo Backbone, 'reload:collection', (collection) =>
+						@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+						@_showChaptersView @chapters
 
 					@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
 						App.execute 'add:textbook:popup',

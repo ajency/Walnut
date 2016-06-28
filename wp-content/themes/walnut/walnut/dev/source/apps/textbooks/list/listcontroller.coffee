@@ -29,11 +29,11 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                 @listenTo @view, 'search:textbooks', (collection)=>
                     @_getSearchTextbooksView collection
 
-                @listenTo @view, 'reload:textbooks', (collection) =>
-                    @
-
-                @listenTo @view, 'before:search:textbook' :->
-                    console.log textbooksCollection           
+                @listenTo Backbone, 'reload:collection', (collection) =>
+                    console.log 'Backbone'
+                    textbooks = App.request "get:textbooks", "fetch_all":true
+                    App.execute "when:fetched", textbooks, =>
+                        @_getSearchTextbooksView textbooks        
 
                 @show view, (loading: true)
 
