@@ -189,17 +189,24 @@ function get_quiz_schedule($quiz_id, $division){
     if(!$result)
         return false;
 
-    $today = date('Y-m-d H:m:s');
+    date_default_timezone_set("Asia/Kolkata");
+
+    $today = date('Y-m-d h:i:s A');
+
+    $today_date = strtotime($today);
 
     $from   = $result->schedule_from;
     $to     = $result->schedule_to;
+
+    $from_date = strtotime($from);
+    $to_date = strtotime($to);
     
-    if( ($today >= $from) && ($today <= $to))
+    if( ($today_date >= $from_date) && ($today_date <= $to_date))
         $active = true;
     else
         $active = false;
 
-    if($today > $to)
+    if($today_date > $to_date)
         $expired = true;
     
     else
