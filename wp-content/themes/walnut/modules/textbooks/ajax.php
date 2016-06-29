@@ -54,6 +54,7 @@ function fetch_chapter_subsections() {
 }
 
 add_action( 'wp_ajax_get-textbook-names', 'get_textbook_names' );
+
 function get_textbook_names(){
     $current_blog = get_current_blog_id();
     switch_to_blog(1);
@@ -71,4 +72,30 @@ function get_textbook_names(){
    }
    switch_to_blog($current_blog);
    wp_send_json($textbook_names);
+}
+
+add_action( 'wp_ajax_get-all-classes', 'get_all_classes' );
+
+function get_all_classes(){
+
+  global $wpdb;
+
+  $class_id = [];
+
+  $class_id = $wpdb->get_col("SELECT DISTINCT class_id FROM {$wpdb->prefix}class_divisions order by class_id asc");
+
+  wp_send_json($class_id);
+}
+
+add_action( 'wp_ajax_get-admin-capability', 'get_admin_capability' );
+
+function get_admin_capability(){
+
+  $current_blog = get_current_blog_id();
+  if ($current_blog == 1)
+    $isAdmin = true;
+  else
+    $isAdmin = false;
+
+  wp_send_json($isAdmin);
 }

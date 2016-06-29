@@ -13,7 +13,7 @@ define ['app'
 
 			onShow :->
 				console.log 'Show Model'
-				console.log @model 
+				#console.log @model 
 
 		class Views.TextbookSingleLayout extends Marionette.Layout
 
@@ -33,9 +33,10 @@ define ['app'
 				'keypress .search-box' :(e)-> @searchTextbooks() if e.which is 13
 
 			addChapter:->
-				console.log @collection
+				#console.log @collection
 				@collection.toAddText = 'true'
 				@trigger 'show:add:textbook:popup', @collection
+				
 
 			searchTextbooks: (e)=>
 					#console.log 'search'
@@ -48,11 +49,8 @@ define ['app'
                     .hide()
                     @$el.find '.progress-spinner'
                     .show()
-                    console.log chaptersOriginalCollection
-                    console.log @collection
-                    ###@dimensions.region = searchStr
-                    #console.log @dimensions
-                    $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])###
+                    #console.log chaptersOriginalCollection
+                    #console.log @collection
                     models = chaptersOriginalCollection.filter (model) ->
                         #console.log 'entered'
                         _.any model.attributes, (val, attr) ->
@@ -72,7 +70,7 @@ define ['app'
                             else
                                 console.log "none found"
                     @collection.reset(models)
-                    console.log @collection
+                    #console.log @collection
                     @$el.find '.progress-spinner'
                     .hide()
                     @trigger 'search:textbooks', @collection

@@ -297,7 +297,7 @@ function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0
     $book_dets->practice_count = (int) $quizzes_count->practice;
     $book_dets->take_at_home_count = (int) $quizzes_count->test;
 
-   // if($term_type == 'textbook'){
+    if($term_type == 'textbook'){
 
         $IDbook =  '%"'.$book_id.'"%';
         $questions_count = $wpdb->get_row($wpdb->prepare("SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$IDbook ));
@@ -305,7 +305,7 @@ function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0
         $book_dets->questions_count = (int) $questions_count->count;
         #file_put_contents("a4.txt", "dcc");
 
-    /*}else{
+    }else{
 
         $parent_id = '%"'.$parentID.'"%';
 
@@ -323,7 +323,7 @@ function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0
         $book_dets->sub_questions_count = (int) $sub_questions_count->count;
 
        
-    //}
+    }
 
 
     $args = array( 'hide_empty' => false,

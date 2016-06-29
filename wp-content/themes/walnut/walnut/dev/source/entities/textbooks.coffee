@@ -101,6 +101,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         API =
         # get all textbooks
             getTextbooks: (param = {})->
+                console.log param
                 textbookCollection = new Textbooks.ItemCollection
                 textbookCollection.fetch
                     reset: true
@@ -111,7 +112,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             getTextBookByID: (id)->
                 textbook = textbookCollection.get id if textbookCollection?
-
+                console.log 'getTextBookByID'
+                console.log textbook
                 if not textbook
                     textbook = new Textbooks.ItemModel term_id: id
                     textbook.fetch()

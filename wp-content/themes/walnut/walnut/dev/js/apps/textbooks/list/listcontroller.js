@@ -11,14 +11,28 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       }
 
       ListController.prototype.initialize = function() {
-        var breadcrumb_items, classesCollection, textbooksCollection, view;
+        var breadcrumb_items, datas, defer, textbooksCollection, url, view;
         window.textbooksCollectionOrigninal = App.request("get:textbooks", {
           "fetch_all": true
         });
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        classesCollection = breadcrumb_items = {
+        defer = $.Deferred();
+        url = AJAXURL + '?action=get-admin-capability';
+        datas = 'data';
+        $.post(url, datas, (function(_this) {
+          return function(response) {
+            console.log(response);
+            if (response) {
+              textbooksCollectionOrigninal.isAdmin = response;
+              window.isAdmin = response;
+            }
+            return defer.resolve(response);
+          };
+        })(this), 'json');
+        defer.promise();
+        breadcrumb_items = {
           'items': [
             {
               'label': 'Dashboard',
@@ -34,7 +48,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        this.view = view = this._getTextbooksView(textbooksCollection);
+        this.view = view = this._getTextbooksView(textbooksCollectionOrigninal);
         this.listenTo(this.view, 'show:add:textbook:popup', (function(_this) {
           return function(collection1) {
             _this.collection = collection1;
@@ -49,11 +63,21 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
             return _this._getSearchTextbooksView(collection);
           };
         })(this));
-        this.listenTo(this.view, {
-          'before:search:textbook': function() {
-            return console.log(textbooksCollection);
-          }
-        });
+        this.listenTo(Backbone, 'reload:collection', (function(_this) {
+          return function(collection) {
+            var textbooks;
+            textbooks = App.request("get:textbooks", {
+              "fetch_all": true
+            });
+            return App.execute("when:fetched", textbooks, function() {
+              var models;
+              window.textbooksCollectionOrigninal = textbooks;
+              models = textbooks.models;
+              _this.collection.reset(models);
+              return _this._getSearchTextbooksView(_this.collection);
+            });
+          };
+        })(this));
         return this.show(view, {
           loading: true
         });

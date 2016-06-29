@@ -21,6 +21,7 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/sections-list.html'
         var data;
         data = SectionListItemView.__super__.serializeData.call(this);
         data.textbook_id = Marionette.getOption(this, 'textbook_id');
+        console.log(data);
         return data;
       };
 
@@ -60,13 +61,13 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/sections-list.html'
 
       SectionListView.prototype.itemViewOptions = function() {
         return {
-          textbook_id: this.collection.textbook_id
+          textbook_id: base_textbook_id,
+          base_textbook_name: base_textbook_name,
+          base_class: base_classes_applicable
         };
       };
 
       SectionListView.prototype.onShow = function() {
-        var textbook_id;
-        textbook_id = '5425';
         $('#example2').tablesorter();
         $('#example2').tablesorterPager({
           container: $("#pager")
@@ -74,8 +75,7 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/sections-list.html'
         $("html, body").animate({
           scrollTop: 0
         }, 700);
-        console.log('collection');
-        return console.log(this.collection);
+        return console.log('collection');
       };
 
       return SectionListView;
