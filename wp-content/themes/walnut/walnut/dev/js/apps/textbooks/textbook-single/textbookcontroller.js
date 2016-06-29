@@ -33,8 +33,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           return function(response) {
             console.log(response);
             if (response) {
-              _this.chapter.isAdmin = response;
-              window.isAdmin = response;
+              console.log(response);
             }
             return defer.resolve(response);
           };

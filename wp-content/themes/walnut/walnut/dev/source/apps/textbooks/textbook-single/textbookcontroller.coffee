@@ -29,9 +29,9 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
                         #current_blog_id = response
                         #response = response.toString
                         if response
-                            @chapter.isAdmin = response
-                            window.isAdmin = response
-                            #console.log isAdmin
+                            #@chapter.isAdmin = response
+                            #window.isAdmin = response
+                            console.log response
                         defer.resolve response
                     'json'
 
