@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       }
 
       SingleTextbook.prototype.initialize = function(opt) {
-        var datas, defer, layout, term_id, url;
+        var layout, term_id;
         term_id = opt.model_id;
         this.textbook = App.request("get:textbook:by:id", term_id);
         this.classes = App.request("get:all:classes");
@@ -26,20 +26,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         window.chaptersOriginalCollection = App.request("get:chapters", {
           'parent': term_id
         });
-        defer = $.Deferred();
-        url = AJAXURL + '?action=get-admin-capability';
-        datas = 'data';
-        $.post(url, datas, (function(_this) {
-          return function(response) {
-            console.log(response);
-            if (response) {
-              console.log(response);
-            }
-            return defer.resolve(response);
-          };
-        })(this), 'json');
-        defer.promise();
         this.chapters.parent = term_id;
+        this.chapters.isAdmin = isAdmin;
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
         this.listenTo(layout, "show", this._showChaptersView);
@@ -136,7 +124,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       };
 
       SingleTextbook.prototype._getTextbookSingleLayout = function() {
-        console.log(this.chapters);
         return new Single.Views.TextbookSingleLayout({
           collection: this.chapters
         });

@@ -15,6 +15,7 @@ define ['app'
 				console.log 'Show Model'
 				#console.log @model 
 
+
 		class Views.TextbookSingleLayout extends Marionette.Layout
 
 			template : textbookSingleTpl
@@ -25,7 +26,12 @@ define ['app'
 				textbookDescriptionRegion 	: '#textbook-description-region'
 				chaptersRegion				: '#chapters-list-region'
 
-
+			serializeData: ->
+				data = super()
+				console.log 'check Admin'
+				console.log @collection
+				data.isAdmin = @collection.isAdmin
+				data
 
 			events :
 				'click .add-chapter' : 'addChapter'

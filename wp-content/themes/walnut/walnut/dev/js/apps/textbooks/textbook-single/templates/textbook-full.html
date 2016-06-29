@@ -2,9 +2,11 @@
 	<div id="textbook-description-region"></div>	
 </div>
 <div class="col-md-7">
+{{#isAdmin}}
 	<div id="Filters" class="pull-right">
 		<button class="add-chapter btn-default btn" type="button">Add Chapter</button>
 	</div>
+{{/isAdmin}}
 	<div class="pull-right" style="margin-right:2%">Chapters: 
 	<input type="text" class="search-box" id="search-box">
 	<button class="btn btn-success btn-cons2" id="search-btn">

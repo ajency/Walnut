@@ -42,6 +42,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
               _this.chapters.textbook_id = textbook_id;
               _this.chapters.chapter_id = chapter_id;
               _this.chapters.parent = term_id;
+              _this.chapters.isAdmin = isAdmin;
               _this.layout = layout = _this._getSectionSingleLayout();
               _this.listenTo(layout, "show", _this._showSectionSingle);
               _this.listenTo(layout, "show", _this._showSubView);

@@ -24,10 +24,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         $.post(url, datas, (function(_this) {
           return function(response) {
             console.log(response);
-            if (response) {
-              textbooksCollectionOrigninal.isAdmin = response;
-              window.isAdmin = response;
-            }
+            textbooksCollectionOrigninal.isAdmin = response;
+            window.isAdmin = response;
             return defer.resolve(response);
           };
         })(this), 'json');

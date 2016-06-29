@@ -56,6 +56,15 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/chapter-full.html',
         chaptersRegion: '#chapters-list-region'
       };
 
+      ChapterSingleLayout.prototype.serializeData = function() {
+        var data;
+        data = ChapterSingleLayout.__super__.serializeData.call(this);
+        console.log('check Admin');
+        console.log(this.collection);
+        data.isAdmin = this.collection.isAdmin;
+        return data;
+      };
+
       ChapterSingleLayout.prototype.events = function() {
         return {
           'click .add-section': 'addSection'

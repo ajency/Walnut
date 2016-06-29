@@ -39,6 +39,15 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
         chaptersRegion: '#chapters-list-region'
       };
 
+      TextbookSingleLayout.prototype.serializeData = function() {
+        var data;
+        data = TextbookSingleLayout.__super__.serializeData.call(this);
+        console.log('check Admin');
+        console.log(this.collection);
+        data.isAdmin = this.collection.isAdmin;
+        return data;
+      };
+
       TextbookSingleLayout.prototype.events = {
         'click .add-chapter': 'addChapter',
         'click #search-btn': 'searchTextbooks',

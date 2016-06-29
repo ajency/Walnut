@@ -19,25 +19,10 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 
 				window.chaptersOriginalCollection = App.request "get:chapters", 'parent': term_id
 
-				defer = $.Deferred()
-				url     = AJAXURL + '?action=get-admin-capability'
-				datas = 'data'
-				$.post url, 
-                    datas, (response) =>
-                        #console.log 'ADMIN'
-                        console.log response
-                        #current_blog_id = response
-                        #response = response.toString
-                        if response
-                            #@chapter.isAdmin = response
-                            #window.isAdmin = response
-                            console.log response
-                        defer.resolve response
-                    'json'
-
-                defer.promise()
-
 				@chapters.parent = term_id
+				@chapters.isAdmin = isAdmin
+
+				#console.log isAdmin
 
 				@layout= layout = @_getTextbookSingleLayout()
 				@listenTo layout, "show", @_showTextBookSingle
@@ -108,7 +93,7 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 
 			
 			_getTextbookSingleLayout : ->
-				console.log @chapters
+				#console.log @chapters
 				new Single.Views.TextbookSingleLayout
 					collection: @chapters
 

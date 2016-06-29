@@ -17,9 +17,9 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                         console.log response
                         #current_blog_id = response
                         #response = response.toString
-                        if response
-                            textbooksCollectionOrigninal.isAdmin = response
-                            window.isAdmin = response
+                        #if response
+                        textbooksCollectionOrigninal.isAdmin = response
+                        window.isAdmin = response
                             #console.log isAdmin
                         defer.resolve response
                     'json'

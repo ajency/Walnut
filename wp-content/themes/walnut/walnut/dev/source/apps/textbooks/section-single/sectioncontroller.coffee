@@ -35,6 +35,7 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 						@chapters.textbook_id = textbook_id
 						@chapters.chapter_id = chapter_id
 						@chapters.parent = term_id
+						@chapters.isAdmin = isAdmin
 
 						@layout= layout = @_getSectionSingleLayout()
 						@listenTo layout, "show", @_showSectionSingle
