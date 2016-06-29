@@ -54,8 +54,6 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
         return this.trigger('show:add:textbook:popup', this.collection);
       };
 
-      TextbookSingleLayout.prototype.onAddReload = function() {};
-
       TextbookSingleLayout.prototype.searchTextbooks = function(e) {
         var id, models, searchStr;
         id = [];

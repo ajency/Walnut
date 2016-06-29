@@ -11,8 +11,8 @@ define ['app'
             template: listitemTpl
 
             onShow: ->
-                console.log 'global collection'
-                console.log textbooksCollectionOrigninal
+                #console.log 'global collection'
+                #console.log collection
                 @$el.attr 'data-name', @model.get 'name'
                 class_ids = @model.get 'classes'
                 if class_ids
@@ -67,18 +67,23 @@ define ['app'
 
             serializeData: ->
                 data = super()
+                console.log @collection
                 ###defer = $.Deferred()
-                url     = AJAXURL + '?action=get-all-classes'
+                url     = AJAXURL + '?action=get-admin-capability'
                 datas = 'data'
-                $.post url, 
-                    datas, (response) =>
-                        class_ids = response
-                        console.log response
-                        defer.resolve response
-                    'json'
-                #console.log response
+                    $.post url, 
+                        datas, (response) =>
+                            #console.log 'ADMIN'
+                            console.log response
+                            #current_blog_id = response
+                            #response = response.toString
+                            if response
+                                data.isAdmin = response
+                                console.log isAdmin
+                            defer.resolve response
+                        'json'
 
-                defer.promise()###
+                    defer.promise()###
 
                 
                 
@@ -95,12 +100,12 @@ define ['app'
                                         classes.label = CLASS_LABEL[m]
                                         classes
                                 .value()
-
+                data.isAdmin = @collection.isAdmin
                 collection_subjects = @collection.pluck 'subjects'
                 data_subjects = _.union _.flatten collection_subjects
                 data.subjects = _.compact (_.sortBy(data_subjects, (num)->
                     num))
-                console.log data
+                #console.log data
                 data
 
             events:
@@ -116,7 +121,7 @@ define ['app'
                     $.post url, 
                         datas, (response) =>
                             classids = response
-                            console.log classids
+                            #console.log classids
                             defer.resolve response
                             @collection.class_ids = classids
                             @trigger 'show:add:textbook:popup', @collection
@@ -152,8 +157,8 @@ define ['app'
                     .hide()
                     @$el.find '.progress-spinner'
                     .show()
-                    console.log textbooksCollectionOrigninal
-                    console.log @collection
+                    #console.log textbooksCollectionOrigninal
+                    #console.log @collection
                     ###@dimensions.region = searchStr
                     #console.log @dimensions
                     $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])###
@@ -176,7 +181,7 @@ define ['app'
                             else
                                 console.log "none found"
                     @collection.reset(models)
-                    console.log @collection
+                    #console.log @collection
                     @trigger 'search:textbooks', @collection
                     
                             #search = model.values().contains searchStr
@@ -223,15 +228,15 @@ define ['app'
                             filterString = filterString + ' ' + filter
                     else
                         $t.removeClass('active');
-                        console.log filter
-                        console.log filterString
+                        #console.log filter
+                        #console.log filterString
                         re = new RegExp('(\\s|^)' + filter);
                         filterString = filterString.replace(re, '');
 
                 @dimensions[dimension] = filterString;
                 #@dimensions['region'] = 'Concepts-KG'
-                console.log @dimensions
-                console.info('dimension 1: ' + @dimensions.region);
-                console.info('dimension 2: ' + @dimensions.recreation);
+                #console.log @dimensions
+                #console.info('dimension 1: ' + @dimensions.region);
+                #console.info('dimension 2: ' + @dimensions.recreation);
                 $('#textbooks').mixitup('filter', [@dimensions.region, @dimensions.recreation])
 

@@ -8,7 +8,23 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
 
-                classesCollection = 
+                defer = $.Deferred()
+                url     = AJAXURL + '?action=get-admin-capability'
+                datas = 'data'
+                $.post url, 
+                    datas, (response) =>
+                        #console.log 'ADMIN'
+                        console.log response
+                        #current_blog_id = response
+                        #response = response.toString
+                        if response
+                            textbooksCollectionOrigninal.isAdmin = response
+                            window.isAdmin = response
+                            #console.log isAdmin
+                        defer.resolve response
+                    'json'
+
+                defer.promise()
 
                 breadcrumb_items =
                     'items': [
@@ -19,7 +35,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                @view = view = @_getTextbooksView textbooksCollection
+                @view = view = @_getTextbooksView textbooksCollectionOrigninal
 
                 @listenTo @view, 'show:add:textbook:popup', (@collection)=>
                     App.execute 'add:textbook:popup',
@@ -30,10 +46,13 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                     @_getSearchTextbooksView collection
 
                 @listenTo Backbone, 'reload:collection', (collection) =>
-                    console.log 'Backbone'
+                    #console.log 'Backbone'
                     textbooks = App.request "get:textbooks", "fetch_all":true
                     App.execute "when:fetched", textbooks, =>
-                        @_getSearchTextbooksView textbooks        
+                        window.textbooksCollectionOrigninal = textbooks
+                        models = textbooks.models
+                        @collection.reset(models)
+                        @_getSearchTextbooksView @collection        
 
                 @show view, (loading: true)
 

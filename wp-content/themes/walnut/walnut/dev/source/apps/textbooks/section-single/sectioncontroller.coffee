@@ -42,7 +42,10 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 
 						@listenTo Backbone, 'reload:collection', (collection) =>
 							@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
-							@_showChaptersView @chapters
+							@textbook = App.request "get:textbook:by:id", term_id
+							App.execute "when:fetched", @textbook, =>
+								@_showReloadSectionSingle @textbook
+							@_showSubView @chapters
 
 						@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
 							App.execute 'add:textbook:popup',
@@ -55,6 +58,25 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 			_showSectionSingle: =>
 
 				App.execute "when:fetched", @textbook, =>
+					breadcrumb_items = 'items':[
+						{'label':'Dashboard','link':'javascript://'},
+						{'label':'Content Management','link':'javascript:;'},
+						{'label':'Textbooks','link':'#textbooks'},
+						{'label':@textbook.get('name'),'link':'javascript:;','active':'active'}
+					]
+						
+					App.execute "update:breadcrumb:model", breadcrumb_items
+
+					# get the single view 
+					sectionDescView= new Single.Views.SectionDescriptionView 
+						model: @textbook
+
+					@layout.sectionDescriptionRegion.show(sectionDescView)
+
+
+			_showReloadSectionSingle:(@textbook) =>
+
+				#App.execute "when:fetched", @textbook, =>
 					breadcrumb_items = 'items':[
 						{'label':'Dashboard','link':'javascript://'},
 						{'label':'Content Management','link':'javascript:;'},

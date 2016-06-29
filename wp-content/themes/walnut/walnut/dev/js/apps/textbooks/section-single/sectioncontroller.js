@@ -9,6 +9,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
 
       function SingleSection() {
         this._showSubView = bind(this._showSubView, this);
+        this._showReloadSectionSingle = bind(this._showReloadSectionSingle, this);
         this._showSectionSingle = bind(this._showSectionSingle, this);
         return SingleSection.__super__.constructor.apply(this, arguments);
       }
@@ -49,7 +50,11 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
                   'parent': term_id,
                   'term_type': 'chapter'
                 });
-                return _this._showChaptersView(_this.chapters);
+                _this.textbook = App.request("get:textbook:by:id", term_id);
+                App.execute("when:fetched", _this.textbook, function() {
+                  return _this._showReloadSectionSingle(_this.textbook);
+                });
+                return _this._showSubView(_this.chapters);
               });
               _this.listenTo(_this.layout, 'show:add:textbook:popup', function(collection1) {
                 _this.collection = collection1;
@@ -93,6 +98,34 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
             return _this.layout.sectionDescriptionRegion.show(sectionDescView);
           };
         })(this));
+      };
+
+      SingleSection.prototype._showReloadSectionSingle = function(textbook) {
+        var breadcrumb_items, sectionDescView;
+        this.textbook = textbook;
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript:;'
+            }, {
+              'label': 'Textbooks',
+              'link': '#textbooks'
+            }, {
+              'label': this.textbook.get('name'),
+              'link': 'javascript:;',
+              'active': 'active'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
+        sectionDescView = new Single.Views.SectionDescriptionView({
+          model: this.textbook
+        });
+        return this.layout.sectionDescriptionRegion.show(sectionDescView);
       };
 
       SingleSection.prototype._getSectionSingleLayout = function() {

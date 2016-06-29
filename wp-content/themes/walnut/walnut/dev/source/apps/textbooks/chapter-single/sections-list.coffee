@@ -17,7 +17,7 @@ define ['app'
 				#data.base_textbook_name = Marionette.getOption @, 'base_textbook_name'
 				data.textbook_id = Marionette.getOption @, 'textbook_id'
 				#data.base_class = Marionette.getOption @, 'base_class'
-				#console.log data
+				console.log data
 				data
 
 		class EmptyView extends Marionette.ItemView
@@ -38,7 +38,7 @@ define ['app'
 			itemViewContainer : '#list-chapters'
 
 			itemViewOptions:->
-				textbook_id : @collection.textbook_id
+				textbook_id : base_textbook_id
 				base_textbook_name : base_textbook_name
 				base_class : base_classes_applicable
 				#textbook_name: textbooksCollectionOrigninal.

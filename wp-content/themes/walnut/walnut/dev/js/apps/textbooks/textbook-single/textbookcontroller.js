@@ -9,12 +9,13 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
 
       function SingleTextbook() {
         this._showChaptersView = bind(this._showChaptersView, this);
+        this._showReloadTextBookSingle = bind(this._showReloadTextBookSingle, this);
         this._showTextBookSingle = bind(this._showTextBookSingle, this);
         return SingleTextbook.__super__.constructor.apply(this, arguments);
       }
 
       SingleTextbook.prototype.initialize = function(opt) {
-        var layout, term_id;
+        var datas, defer, layout, term_id, url;
         term_id = opt.model_id;
         this.textbook = App.request("get:textbook:by:id", term_id);
         this.classes = App.request("get:all:classes");
@@ -25,6 +26,20 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         window.chaptersOriginalCollection = App.request("get:chapters", {
           'parent': term_id
         });
+        defer = $.Deferred();
+        url = AJAXURL + '?action=get-admin-capability';
+        datas = 'data';
+        $.post(url, datas, (function(_this) {
+          return function(response) {
+            console.log(response);
+            if (response) {
+              _this.chapter.isAdmin = response;
+              window.isAdmin = response;
+            }
+            return defer.resolve(response);
+          };
+        })(this), 'json');
+        defer.promise();
         this.chapters.parent = term_id;
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
@@ -45,13 +60,17 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
               'term_type': 'chapter'
             });
             return App.execute("when:fetched", _this.chapters, function() {
+              window.chaptersOriginalCollection = _this.chapters;
+              _this.textbook = App.request("get:textbook:by:id", term_id);
+              App.execute("when:fetched", _this.textbook, function() {
+                return _this._showReloadTextBookSingle(_this.textbook);
+              });
               return _this._showChaptersView(_this.chapters);
             });
           };
         })(this));
         this.listenTo(this.layout, 'search:textbooks', (function(_this) {
           return function(collection) {
-            console.log(collection);
             return _this._getSearchChaptersView(collection);
           };
         })(this));
@@ -89,7 +108,36 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         })(this));
       };
 
+      SingleTextbook.prototype._showReloadTextBookSingle = function(textbook) {
+        var breadcrumb_items, textbookDescView;
+        this.textbook = textbook;
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript:;'
+            }, {
+              'label': 'Textbooks',
+              'link': '#textbooks'
+            }, {
+              'label': this.textbook.get('name'),
+              'link': 'javascript:;',
+              'active': 'active'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
+        textbookDescView = new Single.Views.TextbookDescriptionView({
+          model: this.textbook
+        });
+        return this.layout.textbookDescriptionRegion.show(textbookDescView);
+      };
+
       SingleTextbook.prototype._getTextbookSingleLayout = function() {
+        console.log(this.chapters);
         return new Single.Views.TextbookSingleLayout({
           collection: this.chapters
         });

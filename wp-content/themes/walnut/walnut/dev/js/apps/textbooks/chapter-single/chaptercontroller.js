@@ -9,6 +9,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
 
       function SingleChapter() {
         this._showSectionsView = bind(this._showSectionsView, this);
+        this._showReloadChapterSingle = bind(this._showReloadChapterSingle, this);
         this._showChapterSingle = bind(this._showChapterSingle, this);
         return SingleChapter.__super__.constructor.apply(this, arguments);
       }
@@ -40,7 +41,11 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
                 'parent': term_id,
                 'term_type': 'chapter'
               });
-              return _this._showChaptersView(_this.chapters);
+              _this.textbook = App.request("get:textbook:by:id", term_id);
+              App.execute("when:fetched", _this.textbook, function() {
+                return _this._showReloadChapterSingle(_this.textbook);
+              });
+              return _this._showSectionsView(_this.chapters);
             });
             _this.listenTo(_this.layout, 'show:add:textbook:popup', function(collection1) {
               _this.collection = collection1;
@@ -83,6 +88,34 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
             return _this.layout.chapterDescriptionRegion.show(chapterDescView);
           };
         })(this));
+      };
+
+      SingleChapter.prototype._showReloadChapterSingle = function(textbook) {
+        var breadcrumb_items, chapterDescView;
+        this.textbook = textbook;
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript:;'
+            }, {
+              'label': 'Textbooks',
+              'link': '#textbooks'
+            }, {
+              'label': this.textbook.get('name'),
+              'link': 'javascript:;',
+              'active': 'active'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
+        chapterDescView = new Single.Views.ChapterDescriptionView({
+          model: this.textbook
+        });
+        return this.layout.chapterDescriptionRegion.show(chapterDescView);
       };
 
       SingleChapter.prototype._getChaptersSingleLayout = function() {

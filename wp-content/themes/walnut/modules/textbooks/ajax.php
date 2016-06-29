@@ -84,17 +84,18 @@ function get_all_classes(){
 
   $class_id = $wpdb->get_col("SELECT DISTINCT class_id FROM {$wpdb->prefix}class_divisions order by class_id asc");
 
-  /*foreach ($class_id as $value) {
-    file_put_contents("a2.txt", $value);
-    if $value == '1'
-      {$class_ids='Nursery';}
-    if $value == '2'
-      {$class_ids='Junior KG';}
-    if $value == '3'
-      {$class_ids='Senior KG';}
-    else
-      {$class_ids='Class ';}
-  }
-  file_put_contents("ad.txt", $class_ids);*/
   wp_send_json($class_id);
+}
+
+add_action( 'wp_ajax_get-admin-capability', 'get_admin_capability' );
+
+function get_admin_capability(){
+
+  $current_blog = get_current_blog_id();
+  if ($current_blog == 1)
+    $isAdmin = true;
+  else
+    $isAdmin = false;
+
+  wp_send_json($isAdmin);
 }

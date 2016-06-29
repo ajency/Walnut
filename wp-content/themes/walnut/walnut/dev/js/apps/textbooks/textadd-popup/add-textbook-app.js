@@ -27,10 +27,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
          */
         return this.listenTo(this.view, 'save:textbook:data', function(data) {
           var url;
-          console.log(AJAXURL);
-          console.log(data);
           url = AJAXURL + '?action=add-textbook';
-          data = $.ajax({
+          return data = $.ajax({
             type: 'POST',
             url: url,
             data: data,
@@ -42,7 +40,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
               };
             })(this)
           });
-          return console.log(data);
         });
       };
 
@@ -63,7 +60,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         return AddTextbookView.__super__.constructor.apply(this, arguments);
       }
 
-      AddTextbookView.prototype.template = '<form id="addTerm"> <div class="row"> <div class="col-md-12"> Name:<br> <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12"> <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12"> </div><br> {{#noClasses}} <div class="col-md-12"> Classes suitable for:<br/> {{#class_data}} <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{name}}<br> {{/class_data}} </div><br> {{/noClasses}} <div class="col-md-12"> Description:<br> <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea> </div><br> <!--div class="col-md-12"> Textbook Image Url<br> <input id="texturl" name="texturl" type="file" class="input-small span12"><br> <div id="progress" class="progress none"> <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif"> </div> <img id="textImage" src="" height="200" alt="Image preview..."> </div><br--> {{#noClasses}} <div class="col-md-12"> Author Name:<br> <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12"> </div><br> {{/noClasses}} <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
+      AddTextbookView.prototype.template = '<form id="addTerm"> <div class="row"> <div class="col-md-12"> Name:<br> <input id="textname" name="textname" type="text" placeholder="Name" class="input-small span12"> <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12"> </div><br> {{#noClasses}} <div class="col-md-12 class_check"> Classes suitable for:<br/> {{#class_data}} <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{name}}<br> {{/class_data}} </div><br> {{/noClasses}} <div class="col-md-12"> Description:<br> <textarea id="textdesc" name="textdesc" type="text" class="input-small span12"></textarea> </div><br> <!--div class="col-md-12"> Textbook Image Url<br> <input id="texturl" name="texturl" type="file" class="input-small span12"><br> <div id="progress" class="progress none"> <img src="<?= site_url() ?>/wp-content/themes/walnut/images/loader.gif"> </div> <img id="textImage" src="" height="200" alt="Image preview..."> </div><br--> {{#noClasses}} <div class="col-md-12"> Author Name:<br> <input id="authname" name="authname" type="text" placeholder="Author Name" class="input-small span12"> </div><br> {{/noClasses}} <div class="row"> <div class="col-md-12"> <button type="button" class="clear btn btn-success m-t-20 pull-left" style="margin-left: 3%;">&nbsp;&nbsp;{{AddButton}}</button> <div class=" p-l-10 p-t-30 pull-left success-msg"></div> </div> </div> </div> </form>';
 
       AddTextbookView.prototype.regions = {
         addTerm: "#addTerm"
@@ -75,7 +72,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       };
 
       AddTextbookView.prototype.initialize = function() {
-        console.log(this.collection);
         if (this.collection.toAddText) {
           if (this.collection.chapter_id && this.collection.textbook_id) {
             return this.dialogOptions = {
@@ -103,7 +99,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
 
       AddTextbookView.prototype.serializeData = function() {
         var classes, collection_classes, data, parent;
-        console.log(this.collection);
         if (this.collection.toAddText === 'true') {
           data = AddTextbookView.__super__.serializeData.call(this);
           this.model = this.collection.models;
@@ -111,7 +106,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           if (parent === null || parent === '' || parent === void 0) {
             parent = this.model[0].get('parent');
           }
-          console.log(parent);
           data.parent = parent;
           if (this.collection.chapter_id && this.collection.textbook_id) {
             data.AddButton = 'Add Sub Section';
@@ -123,8 +117,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           return data;
         } else {
           data = AddTextbookView.__super__.serializeData.call(this);
-          console.log('collection');
-          console.log(this.collection.class_ids);
           classes = this.collection.class_ids;
           data.class_data = classes.map(function(item, i) {
             var classes_data, val;
@@ -162,7 +154,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           data.noClasses = true;
           data.parent = '-1';
           data.AddButton = 'Add Textbook';
-          console.log(data);
           return data;
         }
       };
@@ -174,14 +165,10 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
       AddTextbookView.prototype.showImage = function() {
         var data, defer, image, picture, textUrl, url;
         defer = $.Deferred();
-        console.log('image urlchnaged');
         textUrl = $('#texturl').val();
-        console.log(textUrl);
         picture = $('input[name="texturl"]')[0].files[0];
         data = picture['name'];
-        console.log(data);
         url = AJAXURL + '?action=upload-text-image';
-        console.log(url);
         $.ajax({
           type: 'POST',
           url: url,
@@ -207,44 +194,84 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
 
       AddTextbookView.prototype.addTextbook = function(e) {
         var authname, checkedBoxes, class_ids, data, desc, models, name, parent, slug, textbookName;
-        console.log(this.collection);
         models = this.collection.models;
         class_ids = [];
         textbookName = $('#textname').val();
-        if (textbookName.trim() !== '') {
-          name = $('#textname').val();
-          slug = $('#textname').val();
-          parent = $('#parent').val();
-          console.log(parent);
-          checkedBoxes = this.$el.find('input:checked');
-          class_ids = _.chain(checkedBoxes).flatten(true).pluck('value').value();
-          desc = $('#textdesc').val();
-          authname = $('#authname').val();
-          data = {
-            action: 'add-tag',
-            taxonomy: 'textbook',
-            post_type: 'content-piece',
-            'tag-name': name,
-            slug: slug,
-            parent: parent,
-            description: desc,
-            term_meta: {
-              author: authname
-            },
-            classes: class_ids
-          };
-          this.trigger("save:textbook:data", data);
-          this.$el.find('.success-msg').html('').removeClass('text-success, text-error');
-          this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
-          this.collection.reset(models);
-          console.log(this.collection);
-          return setTimeout((function(_this) {
-            return function() {
-              return _this.trigger('close:popup:dialog', _this.collection);
+        checkedBoxes = this.$el.find('input:checked');
+        if (this.collection.toAddText === 'true') {
+          if (textbookName.trim() !== '') {
+            name = $('#textname').val();
+            slug = $('#textname').val();
+            parent = $('#parent').val();
+            checkedBoxes = this.$el.find('input:checked');
+            class_ids = _.chain(checkedBoxes).flatten(true).pluck('value').value();
+            desc = $('#textdesc').val();
+            authname = $('#authname').val();
+            data = {
+              action: 'add-tag',
+              taxonomy: 'textbook',
+              post_type: 'content-piece',
+              'tag-name': name,
+              slug: slug,
+              parent: parent,
+              description: desc,
+              term_meta: {
+                author: authname
+              },
+              classes: class_ids
             };
-          })(this), 500);
+            this.trigger("save:textbook:data", data);
+            this.$el.find('.success-msg').html('').removeClass('text-success, text-error');
+            this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
+            return setTimeout((function(_this) {
+              return function() {
+                return _this.trigger('close:popup:dialog', _this.collection);
+              };
+            })(this), 600);
+          } else {
+            return this.$el.find('#textname').addClass('error');
+          }
         } else {
-          return this.$el.find('#textname').addClass('error');
+          this.$el.find('.class-error').html('').removeClass('error');
+          this.$el.find('#textname').html('').removeClass('error');
+          class_ids = _.chain(checkedBoxes).flatten(true).pluck('value').value();
+          if (textbookName.trim() !== '' && class_ids.length > 0) {
+            name = $('#textname').val();
+            slug = $('#textname').val();
+            parent = $('#parent').val();
+            checkedBoxes = this.$el.find('input:checked');
+            class_ids = _.chain(checkedBoxes).flatten(true).pluck('value').value();
+            desc = $('#textdesc').val();
+            authname = $('#authname').val();
+            data = {
+              action: 'add-tag',
+              taxonomy: 'textbook',
+              post_type: 'content-piece',
+              'tag-name': name,
+              slug: slug,
+              parent: parent,
+              description: desc,
+              term_meta: {
+                author: authname
+              },
+              classes: class_ids
+            };
+            this.trigger("save:textbook:data", data);
+            this.$el.find('.success-msg').html('').removeClass('text-success, text-error');
+            this.$el.find('.success-msg').html('Saved Successfully').addClass('text-success');
+            return setTimeout((function(_this) {
+              return function() {
+                return _this.trigger('close:popup:dialog', _this.collection);
+              };
+            })(this), 600);
+          } else {
+            if (textbookName.trim() === '') {
+              this.$el.find('#textname').addClass('error');
+            }
+            if (class_ids.length <= 0) {
+              return this.$el.find('.class_check').after('<p class="class-error error m-l-20 m-t-10">Please select classes</p>');
+            }
+          }
         }
       };
 

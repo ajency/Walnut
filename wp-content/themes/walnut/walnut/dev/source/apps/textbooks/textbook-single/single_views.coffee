@@ -37,8 +37,6 @@ define ['app'
 				@collection.toAddText = 'true'
 				@trigger 'show:add:textbook:popup', @collection
 				
-			onAddReload :->
-				#console.log 'done'
 
 			searchTextbooks: (e)=>
 					#console.log 'search'

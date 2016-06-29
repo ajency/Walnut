@@ -23,8 +23,8 @@ define ['app'
                                 
 
                 @listenTo @view, 'save:textbook:data', (data)->
-                    console.log AJAXURL
-                    console.log data
+                    #console.log AJAXURL
+                    #console.log data
                     url = AJAXURL + '?action=add-textbook'
                     data = $.ajax({
                                 type : 'POST',
@@ -37,7 +37,7 @@ define ['app'
                                 ,
 
                         });
-                    console.log data
+                    #console.log data
 
                     
 
@@ -57,7 +57,7 @@ define ['app'
                                 <input id="parent" name="parent" type="hidden" value="{{parent}}" class="input-small span12">
                             </div><br>
                             {{#noClasses}}
-                            <div class="col-md-12">
+                            <div class="col-md-12 class_check">
                                 Classes suitable for:<br/>
                                 {{#class_data}}
                                 <input style="width:20px" type="checkbox" name="textClass" value="{{id}}" class="class_checkbox">{{name}}<br>
@@ -100,7 +100,7 @@ define ['app'
 
             initialize:->
                 #toAdd = 
-                console.log @collection
+                #console.log @collection
                 if @collection.toAddText
 
                     if @collection.chapter_id &&  @collection.textbook_id
@@ -124,7 +124,7 @@ define ['app'
                         modal_size  : 'small'
 
             serializeData: ->
-                console.log @collection
+                #console.log @collection
                 if @collection.toAddText == 'true'
                     data = super()
                     @model = @collection.models
@@ -132,7 +132,7 @@ define ['app'
                     if parent == null || parent == '' || parent == undefined
                         parent = @model[0].get 'parent'
 
-                    console.log parent
+                    #console.log parent
 
                     data.parent = parent
 
@@ -148,8 +148,8 @@ define ['app'
                     data
                 else
                     data = super()
-                    console.log 'collection'
-                    console.log @collection.class_ids
+                    #console.log 'collection'
+                    #console.log @collection.class_ids
                     classes = @collection.class_ids
 
                     
@@ -189,7 +189,7 @@ define ['app'
                     data.noClasses = true
                     data.parent = '-1'
                     data.AddButton = 'Add Textbook'
-                    console.log data
+                    #console.log data
                     data              
 
 
@@ -198,18 +198,18 @@ define ['app'
 
             showImage:->
                 defer = $.Deferred()
-                console.log 'image urlchnaged'
+                #console.log 'image urlchnaged'
                 textUrl = $('#texturl').val()
-                console.log textUrl
+                #console.log textUrl
 
                 picture = $('input[name="texturl"]')[0].files[0]
                 #data = new FormData()
                 #data.append('file', picture)
                 #console.log picture
                 data = picture['name']
-                console.log data
+                #console.log data
                 url = AJAXURL + '?action=upload-text-image'
-                console.log url
+                #console.log url
                 $.ajax({
                         type : 'POST',
                         url : url,
@@ -234,61 +234,130 @@ define ['app'
 
 
             addTextbook: (e)=>
-                console.log @collection
+                #console.log @collection
                 models = @collection.models
                 class_ids=[]
                 textbookName = $('#textname').val()
-                if textbookName.trim() != ''
-                    name = $('#textname').val()
-                    slug = $('#textname').val()
-                    parent = $('#parent').val()
-                    console.log parent
-                    #textUrl = $('#texturl').val()
-                    #class_ids = $('.class_checkbox').val()
-                    #checkboxes = document.getElementsByName('textClass');
-                    checkedBoxes = @$el.find('input:checked');
-                    class_ids = _.chain checkedBoxes
-                                    .flatten(true)
-                                    .pluck('value')
-                                    .value();
+                checkedBoxes = @$el.find('input:checked');
 
-                    desc = $('#textdesc').val()
-                    authname = $('#authname').val()
+                if @collection.toAddText == 'true'
+                    if textbookName.trim() != ''
+                        name = $('#textname').val()
+                        slug = $('#textname').val()
+                        parent = $('#parent').val()
+                        #console.log parent
+                        #textUrl = $('#texturl').val()
+                        #class_ids = $('.class_checkbox').val()
+                        #checkboxes = document.getElementsByName('textClass');
+                        checkedBoxes = @$el.find('input:checked');
+                        class_ids = _.chain checkedBoxes
+                                        .flatten(true)
+                                        .pluck('value')
+                                        .value();
 
-                    data = 
-                        action : 'add-tag'
-                        taxonomy : 'textbook'
-                        post_type : 'content-piece'
-                        'tag-name' : name
-                        slug : slug
-                        parent : parent
-                        description : desc
-                        term_meta : 
-                            author : authname
-                        classes : class_ids                    
+                        desc = $('#textdesc').val()
+                        authname = $('#authname').val()
 
-                    @trigger "save:textbook:data", data
+                        data = 
+                            action : 'add-tag'
+                            taxonomy : 'textbook'
+                            post_type : 'content-piece'
+                            'tag-name' : name
+                            slug : slug
+                            parent : parent
+                            description : desc
+                            term_meta : 
+                                author : authname
+                            classes : class_ids                    
 
-                    @$el.find '.success-msg'
-                    .html ''
-                    .removeClass 'text-success, text-error'
+                        @trigger "save:textbook:data", data
 
-                    @$el.find '.success-msg'
-                    .html 'Saved Successfully'
-                    .addClass 'text-success'
+                        @$el.find '.success-msg'
+                        .html ''
+                        .removeClass 'text-success, text-error'
 
-                    @collection.reset(models)
+                        @$el.find '.success-msg'
+                        .html 'Saved Successfully'
+                        .addClass 'text-success'
 
-                    console.log @collection
+                        #console.log @collection
     
-                    setTimeout =>
-                        @trigger 'close:popup:dialog', @collection
-                    ,500
+                        setTimeout =>
+                            @trigger 'close:popup:dialog', @collection
+                        ,600
                                          
+                    else
+                        @$el.find '#textname'
+                        .addClass 'error'     
+                        #console.log scheduleTo
                 else
+                    @$el.find '.class-error'
+                        .html ''
+                        .removeClass 'error'
+
                     @$el.find '#textname'
-                    .addClass 'error'     
-                    #console.log scheduleTo
+                        .html ''
+                        .removeClass 'error'
+
+                    class_ids = _.chain checkedBoxes
+                                .flatten(true)
+                                .pluck('value')
+                                .value();
+                    #console.log class_ids
+                    if textbookName.trim() != '' && class_ids.length > 0
+                        name = $('#textname').val()
+                        slug = $('#textname').val()
+                        parent = $('#parent').val()
+                        #console.log parent
+                        #textUrl = $('#texturl').val()
+                        #class_ids = $('.class_checkbox').val()
+                        #checkboxes = document.getElementsByName('textClass');
+                        checkedBoxes = @$el.find('input:checked');
+                        class_ids = _.chain checkedBoxes
+                                        .flatten(true)
+                                        .pluck('value')
+                                        .value();
+
+                        desc = $('#textdesc').val()
+                        authname = $('#authname').val()
+
+                        data = 
+                            action : 'add-tag'
+                            taxonomy : 'textbook'
+                            post_type : 'content-piece'
+                            'tag-name' : name
+                            slug : slug
+                            parent : parent
+                            description : desc
+                            term_meta : 
+                                author : authname
+                            classes : class_ids                    
+
+                        @trigger "save:textbook:data", data
+
+                        @$el.find '.success-msg'
+                        .html ''
+                        .removeClass 'text-success, text-error'
+
+                        @$el.find '.success-msg'
+                        .html 'Saved Successfully'
+                        .addClass 'text-success'
+
+                        #console.log @collection
+    
+                        setTimeout =>
+                            @trigger 'close:popup:dialog', @collection
+                        ,600
+                                         
+                    else
+                        if textbookName.trim() == ''
+                            @$el.find '#textname'
+                            .addClass 'error'
+                        if class_ids.length <= 0
+                            @$el.find '.class_check'
+                            .after '<p class="class-error error m-l-20 m-t-10">Please select classes</p>'
+
+
                 
 
         App.commands.setHandler 'add:textbook:popup',(options)->
