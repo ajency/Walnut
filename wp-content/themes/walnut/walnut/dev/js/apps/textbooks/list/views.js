@@ -78,6 +78,10 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       EmptyView.prototype.template = notextbooksTpl;
 
+      EmptyView.prototype.tagName = 'div';
+
+      EmptyView.prototype.className = 'visible-msg';
+
       return EmptyView;
 
     })(Marionette.ItemView);
@@ -92,8 +96,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       }
 
       ListView.prototype.template = textbooksListTpl;
-
-      ListView.prototype.className = '';
 
       ListView.prototype.itemView = ListItemView;
 
@@ -189,6 +191,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListView.prototype.searchTextbooks = function(e) {
         var id, models, searchStr;
+        this.$el.find('.anim250').removeClass('visible-msg');
         id = [];
         searchStr = $('.search-box').val();
         console.log(searchStr);
@@ -216,6 +219,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
             }
           });
         });
+        if (models.length === 0) {
+          this.$el.find('.anim250').addClass('visible-msg');
+        }
         this.collection.reset(models);
         this.trigger('search:textbooks', this.collection);
 

@@ -35,6 +35,8 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/sections-list.html'
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
+      EmptyView.prototype.tagName = 'tr';
+
       EmptyView.prototype.template = nosectionsTpl;
 
       EmptyView.prototype.className = 'gradeX odd';

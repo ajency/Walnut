@@ -53,11 +53,16 @@ define ['app'
 
             template: notextbooksTpl
 
+            tagName: 'div'
+
+            className: 'visible-msg'
+
         class Views.ListView extends Marionette.CompositeView
 
             template: textbooksListTpl
 
-            className: ''
+
+           # className: 'visible-msg'
 
             itemView: ListItemView
 
@@ -148,6 +153,8 @@ define ['app'
             #console.log @dimensions
 
             searchTextbooks: (e)=>
+                    @$el.find '.anim250'
+                    .removeClass 'visible-msg'
                     id =[]
                     searchStr = $('.search-box').val()
                     console.log searchStr
@@ -182,6 +189,9 @@ define ['app'
                                 model.pick(id)
                             else
                                 console.log "none found"
+                    if models.length == 0
+                        @$el.find '.anim250'
+                        .addClass 'visible-msg'
                     @collection.reset(models)
                     #console.log @collection
                     @trigger 'search:textbooks', @collection
