@@ -20,7 +20,9 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				window.chaptersOriginalCollection = App.request "get:chapters", 'parent': term_id
 
 				@chapters.parent = term_id
-				@chapters.isAdmin = isAdmin
+				console.log 'isAdmin'
+				console.log localStorage.getItem('isAdmin');
+				@chapters.isAdmin = localStorage.getItem('isAdmin');
 
 				#console.log isAdmin
 

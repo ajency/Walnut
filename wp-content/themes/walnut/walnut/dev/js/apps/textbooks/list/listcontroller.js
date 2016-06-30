@@ -11,25 +11,26 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       }
 
       ListController.prototype.initialize = function() {
-        var breadcrumb_items, datas, defer, textbooksCollection, url, view;
+        var breadcrumb_items, textbooksCollection, view;
         window.textbooksCollectionOrigninal = App.request("get:textbooks", {
           "fetch_all": true
         });
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        defer = $.Deferred();
-        url = AJAXURL + '?action=get-admin-capability';
-        datas = 'data';
-        $.post(url, datas, (function(_this) {
-          return function(response) {
-            console.log(response);
-            textbooksCollectionOrigninal.isAdmin = response;
-            window.isAdmin = response;
-            return defer.resolve(response);
+        App.execute("when:fetched", textbooksCollection, (function(_this) {
+          return function() {
+            var isAdmin, models;
+            models = textbooksCollection.models;
+            console.log(models[0].get('isAdmin'));
+            isAdmin = models[0].get('isAdmin');
+            if (isAdmin === true) {
+              return localStorage.setItem('isAdmin', isAdmin);
+            } else {
+              return localStorage.setItem('isAdmin', '');
+            }
           };
-        })(this), 'json');
-        defer.promise();
+        })(this));
         breadcrumb_items = {
           'items': [
             {

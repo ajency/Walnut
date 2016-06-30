@@ -28,7 +28,7 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'sections')
 					@chapters.textbook_id = textbook_id
 					@chapters.parent = term_id
-					@chapters.isAdmin = isAdmin
+					@chapters.isAdmin = localStorage.getItem('isAdmin');
 
 					#console.log @chapters
 

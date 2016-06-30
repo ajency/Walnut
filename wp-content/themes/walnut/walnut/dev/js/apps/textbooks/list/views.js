@@ -133,7 +133,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           classes.label = CLASS_LABEL[m];
           return classes;
         }).value();
-        data.isAdmin = this.collection.isAdmin;
+        data.isAdmin = this.collection.models[0].get('isAdmin');
         collection_subjects = this.collection.pluck('subjects');
         data_subjects = _.union(_.flatten(collection_subjects));
         data.subjects = _.compact(_.sortBy(data_subjects, function(num) {

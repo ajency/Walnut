@@ -100,7 +100,7 @@ define ['app'
                                         classes.label = CLASS_LABEL[m]
                                         classes
                                 .value()
-                data.isAdmin = @collection.isAdmin
+                data.isAdmin = @collection.models[0].get 'isAdmin'
                 collection_subjects = @collection.pluck 'subjects'
                 data_subjects = _.union _.flatten collection_subjects
                 data.subjects = _.compact (_.sortBy(data_subjects, (num)->
