@@ -16,7 +16,6 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                     else
                         localStorage.setItem('isAdmin', '')
                     
-
                 breadcrumb_items =
                     'items': [
                         {'label': 'Dashboard', 'link': 'javascript://'},
@@ -26,7 +25,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 App.execute "update:breadcrumb:model", breadcrumb_items
 
-                @view = view = @_getTextbooksView textbooksCollectionOrigninal
+                @view = view = @_getTextbooksView textbooksCollection
 
                 @listenTo @view, 'show:add:textbook:popup', (@collection)=>
                     App.execute 'add:textbook:popup',
@@ -34,16 +33,19 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                         collection : @collection
 
                 @listenTo @view, 'search:textbooks', (collection)=>
+                    console.log collection
                     @_getSearchTextbooksView collection
 
                 @listenTo Backbone, 'reload:collection', (collection) =>
                     #console.log 'Backbone'
-                    textbooks = App.request "get:textbooks", "fetch_all":true
-                    App.execute "when:fetched", textbooks, =>
-                        window.textbooksCollectionOrigninal = textbooks
-                        models = textbooks.models
+                    @textbooks = App.request "get:textbooks", "fetch_all":true
+                    App.execute "when:fetched", @textbooks, =>
+                        #console.log 'textbooks'
+                        window.textbooksCollectionOrigninal = @textbooks
+                        #console.log @textbooks
+                        models = @textbooks.models
                         @collection.reset(models)
-                        @_getSearchTextbooksView @collection        
+                        @_getSearchTextbooksView @collection
 
                 @show view, (loading: true)
 

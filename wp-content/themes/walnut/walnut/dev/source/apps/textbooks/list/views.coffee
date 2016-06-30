@@ -150,6 +150,7 @@ define ['app'
             searchTextbooks: (e)=>
                     id =[]
                     searchStr = $('.search-box').val()
+                    console.log searchStr
                 #if searchStr
                     #@trigger 'before:search:textbook'
                     #console.log @collectionAll
@@ -157,7 +158,8 @@ define ['app'
                     .hide()
                     @$el.find '.progress-spinner'
                     .show()
-                    #console.log textbooksCollectionOrigninal
+                    #console.log 'original'
+                    #console.log window.textbooksCollectionOrigninal
                     #console.log @collection
                     ###@dimensions.region = searchStr
                     #console.log @dimensions

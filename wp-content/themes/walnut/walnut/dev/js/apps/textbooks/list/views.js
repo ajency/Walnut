@@ -191,6 +191,7 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         var id, models, searchStr;
         id = [];
         searchStr = $('.search-box').val();
+        console.log(searchStr);
         this.$el.find("#error-div").hide();
         this.$el.find('.progress-spinner').show();
 

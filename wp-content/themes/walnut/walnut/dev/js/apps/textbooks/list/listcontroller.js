@@ -47,7 +47,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
           ]
         };
         App.execute("update:breadcrumb:model", breadcrumb_items);
-        this.view = view = this._getTextbooksView(textbooksCollectionOrigninal);
+        this.view = view = this._getTextbooksView(textbooksCollection);
         this.listenTo(this.view, 'show:add:textbook:popup', (function(_this) {
           return function(collection1) {
             _this.collection = collection1;
@@ -59,19 +59,19 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         })(this));
         this.listenTo(this.view, 'search:textbooks', (function(_this) {
           return function(collection) {
+            console.log(collection);
             return _this._getSearchTextbooksView(collection);
           };
         })(this));
         this.listenTo(Backbone, 'reload:collection', (function(_this) {
           return function(collection) {
-            var textbooks;
-            textbooks = App.request("get:textbooks", {
+            _this.textbooks = App.request("get:textbooks", {
               "fetch_all": true
             });
-            return App.execute("when:fetched", textbooks, function() {
+            return App.execute("when:fetched", _this.textbooks, function() {
               var models;
-              window.textbooksCollectionOrigninal = textbooks;
-              models = textbooks.models;
+              window.textbooksCollectionOrigninal = _this.textbooks;
+              models = _this.textbooks.models;
               _this.collection.reset(models);
               return _this._getSearchTextbooksView(_this.collection);
             });
