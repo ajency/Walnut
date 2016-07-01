@@ -24,7 +24,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           'term_type': 'chapter'
         });
         window.chaptersOriginalCollection = App.request("get:chapters", {
-          'parent': term_id
+          'parent': term_id,
+          'term_type': 'chapter'
         });
         this.chapters.parent = term_id;
         console.log('isAdmin');
@@ -60,6 +61,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         })(this));
         this.listenTo(this.layout, 'search:textbooks', (function(_this) {
           return function(collection) {
+            console.log('reload chapters');
+            console.log(collection);
             return _this._getSearchChaptersView(collection);
           };
         })(this));
