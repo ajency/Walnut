@@ -27,6 +27,8 @@ define(['app', 'text!apps/textbooks/section-single/templates/sub-list.html', 'te
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
+      EmptyView.prototype.tagName = 'tr';
+
       EmptyView.prototype.template = nosubTpl;
 
       EmptyView.prototype.className = 'gradeX odd';

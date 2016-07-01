@@ -14,6 +14,7 @@ define ['app'
 
 		class EmptyView extends Marionette.ItemView
 			
+			tagName : 'tr'
 			template:	nosubTpl	
 			className: 'gradeX odd'
 
