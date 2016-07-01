@@ -17,7 +17,7 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 
 				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
 
-				window.chaptersOriginalCollection = App.request "get:chapters", 'parent': term_id
+				window.chaptersOriginalCollection = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
 
 				@chapters.parent = term_id
 				console.log 'isAdmin'
@@ -50,7 +50,8 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 						#@_showTextBookSingle
 
 				@listenTo @layout, 'search:textbooks', (collection)=>
-					#console.log collection
+					console.log 'reload chapters'
+					console.log collection
 					@_getSearchChaptersView collection
 
 				@show layout
