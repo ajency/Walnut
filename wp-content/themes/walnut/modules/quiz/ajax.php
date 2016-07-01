@@ -32,7 +32,10 @@ function ajax_fetch_all_quizes(){
         'quiz_type' => ''
     );
     $args = wp_parse_args($args,$defaults);
-    $quiz_modules = get_all_quiz_modules($args);
+    if (is_array($args['textbook']))
+        $quiz_modules = get_required_quiz_modules($args);
+    else
+        $quiz_modules = get_all_quiz_modules($args);
     wp_send_json(array('code' => 'OK', 'data' =>$quiz_modules));
 }
 
