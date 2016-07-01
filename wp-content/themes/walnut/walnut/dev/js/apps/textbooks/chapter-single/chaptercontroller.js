@@ -9,41 +9,55 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
 
       function SingleChapter() {
         this._showSectionsView = bind(this._showSectionsView, this);
+        this._showReloadChapterSingle = bind(this._showReloadChapterSingle, this);
         this._showChapterSingle = bind(this._showChapterSingle, this);
         return SingleChapter.__super__.constructor.apply(this, arguments);
       }
 
       SingleChapter.prototype.initialize = function(opt) {
-        var layout, term_id, textbook_id;
-        console.log(opt);
+        var term_id, textbook_id;
         textbook_id = opt.model_id;
-        console.log(textbook_id);
         term_id = opt.chapter;
-        console.log(term_id);
-        this.textbook_name = App.request("get:textbook:name:by:id", textbook_id);
-        console.log(this.textbook_name);
-        this.textbook = App.request("get:textbook:by:id", term_id);
-        this.textbook.textbook_id = textbook_id;
-        this.chapters = App.request("get:chapters", {
-          'parent': term_id,
-          'term_type': 'sections'
-        });
-        this.chapters.textbook_id = textbook_id;
-        this.chapters.parent = term_id;
-        console.log(this.chapters);
-        this.layout = layout = this._getChaptersSingleLayout();
-        this.listenTo(layout, "show", this._showChapterSingle);
-        this.listenTo(layout, "show", this._showSectionsView(this.chapters));
-        this.listenTo(this.layout, 'show:add:textbook:popup', (function(_this) {
-          return function(collection) {
-            _this.collection = collection;
-            return App.execute('add:textbook:popup', {
-              region: App.dialogRegion,
-              collection: _this.collection
+        window.base_textbook_id = textbook_id;
+        this.base_textbook = App.request("get:textbook:by:id", textbook_id);
+        return App.execute("when:fetched", this.base_textbook, (function(_this) {
+          return function() {
+            var layout;
+            window.base_textbook_name = _this.base_textbook.get('name');
+            window.base_classes_applicable = _this.base_textbook.get('classes_applicable');
+            _this.textbook = App.request("get:textbook:by:id", term_id);
+            _this.textbook.textbook_id = textbook_id;
+            _this.chapters = App.request("get:chapters", {
+              'parent': term_id,
+              'term_type': 'sections'
             });
+            _this.chapters.textbook_id = textbook_id;
+            _this.chapters.parent = term_id;
+            _this.chapters.isAdmin = localStorage.getItem('isAdmin');
+            _this.layout = layout = _this._getChaptersSingleLayout();
+            _this.listenTo(layout, "show", _this._showChapterSingle);
+            _this.listenTo(layout, "show", _this._showSectionsView(_this.chapters));
+            _this.listenTo(Backbone, 'reload:collection', function(collection) {
+              _this.chapters = App.request("get:chapters", {
+                'parent': term_id,
+                'term_type': 'chapter'
+              });
+              _this.textbook = App.request("get:textbook:by:id", term_id);
+              App.execute("when:fetched", _this.textbook, function() {
+                return _this._showReloadChapterSingle(_this.textbook);
+              });
+              return _this._showSectionsView(_this.chapters);
+            });
+            _this.listenTo(_this.layout, 'show:add:textbook:popup', function(collection1) {
+              _this.collection = collection1;
+              return App.execute('add:textbook:popup', {
+                region: App.dialogRegion,
+                collection: _this.collection
+              });
+            });
+            return _this.show(layout);
           };
         })(this));
-        return this.show(layout);
       };
 
       SingleChapter.prototype._showChapterSingle = function() {
@@ -77,6 +91,34 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
         })(this));
       };
 
+      SingleChapter.prototype._showReloadChapterSingle = function(textbook) {
+        var breadcrumb_items, chapterDescView;
+        this.textbook = textbook;
+        breadcrumb_items = {
+          'items': [
+            {
+              'label': 'Dashboard',
+              'link': 'javascript://'
+            }, {
+              'label': 'Content Management',
+              'link': 'javascript:;'
+            }, {
+              'label': 'Textbooks',
+              'link': '#textbooks'
+            }, {
+              'label': this.textbook.get('name'),
+              'link': 'javascript:;',
+              'active': 'active'
+            }
+          ]
+        };
+        App.execute("update:breadcrumb:model", breadcrumb_items);
+        chapterDescView = new Single.Views.ChapterDescriptionView({
+          model: this.textbook
+        });
+        return this.layout.chapterDescriptionRegion.show(chapterDescView);
+      };
+
       SingleChapter.prototype._getChaptersSingleLayout = function() {
         return new Single.Views.ChapterSingleLayout({
           collection: this.chapters
@@ -87,7 +129,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
         return App.execute("when:fetched", this.chapters, (function(_this) {
           return function() {
             var sectionsListView;
-            console.log(_this.chapters);
             sectionsListView = new Single.Views.SectionListView({
               collection: _this.chapters
             });

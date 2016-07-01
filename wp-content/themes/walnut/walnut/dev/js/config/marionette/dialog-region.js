@@ -32,6 +32,11 @@ define(['marionette', 'mustache', 'text!config/marionette/templates/modal.html']
       })(this));
     };
 
+    Dialog.prototype.reloadCollection = function(collection) {
+      console.log('reloadCollection');
+      return Backbone.trigger("reload:collection", this.collection);
+    };
+
     Dialog.prototype.closeDialog = function() {
       return this.$el.modal('hide');
     };

@@ -14,7 +14,10 @@ define ['app'
 
 			serializeData:->
 				data = super()
+				#data.base_textbook_name = Marionette.getOption @, 'base_textbook_name'
 				data.textbook_id = Marionette.getOption @, 'textbook_id'
+				#data.base_class = Marionette.getOption @, 'base_class'
+				console.log data
 				data
 
 		class EmptyView extends Marionette.ItemView
@@ -35,11 +38,14 @@ define ['app'
 			itemViewContainer : '#list-chapters'
 
 			itemViewOptions:->
-				textbook_id : @collection.textbook_id
+				textbook_id : base_textbook_id
+				base_textbook_name : base_textbook_name
+				base_class : base_classes_applicable
 				#textbook_name: textbooksCollectionOrigninal.
 
 			onShow:->
-				textbook_id = '5425'
+				#console.log base_textbook_name
+				#textbook_id = '5425'
 				$('#example2').tablesorter()
 				$('#example2').tablesorterPager({container: $("#pager")}); 
 				#$('#example2').dataTable({"bPaginate": true,"bSort": true}) if @collection and @collection.length>0
@@ -47,4 +53,4 @@ define ['app'
 				$("html, body").animate({ scrollTop: 0 }, 700);
 
 				console.log 'collection'
-				console.log @collection
+				#console.log @collection

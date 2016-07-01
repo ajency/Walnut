@@ -24,10 +24,18 @@
                             </thead>
                             <tbody id="list-recipients" class="rowlink"></tbody>
                         </table>
-                        <button class="send-email pull-left m-l-20 none btn btn-success m-t-10" type="submit">
-                            <i class="fa fa-check"></i> Send Email
-                        </button>
-                        <p class="email_specific m-l-40 text-default" style="font-size:15px;">&nbsp;</p>'
+                        <div class="table-div">
+                            <div class="table-cell-div">
+                                <button class="send-email pull-left m-l-15 none btn btn-success" type="submit">
+                                    <i class="fa fa-check"></i> Send Email
+                                </button>
+                            </div>
+
+                            <div class="table-cell-div2">
+                                <p class="email_specific m-l-40 text-default m-b-0" style="font-size:15px;">&nbsp;</p>
+                            </div>
+                        
+                        </div>'
 
             itemView: Views.RecipientsItemView
 
@@ -161,8 +169,8 @@
                                             defer.resolve response
                                         'json'
                                     defer.promise()
-                                @$el.find '.send-email'
-                                .after '<p class="m-l-40 text-success small communication_sent">
+                                @$el.find '.table-cell-div2'
+                                .append '<p class="m-l-40 text-success small communication_sent m-b-0">
                                                         &nbsp;Your Emails have been queued successfully</p>'
 
                     });
@@ -178,12 +186,12 @@
                         @model.save()
                     
 
-                        @$el.find '.send-email'
-                        .after '<p class="m-l-40 text-success small communication_sent">
+                        @$el.find '.table-cell-div2'
+                        .append '<p class="m-l-40 text-success small communication_sent m-b-0">
                                 &nbsp;Your Emails have been queued successfully</p>'
 
                     else
-                        @$el.find '.send-email'
-                        .after '<p class="m-l-40 text-error small communication_sent">
+                        @$el.find '.table-cell-div2'
+                        .append '<p class="m-l-40 text-error small communication_sent">
                                 &nbsp;No Recipients Selected</p>'
                 #@model.save()

@@ -15,6 +15,25 @@ define ['app'
 				console.log 'Show Model'
 				console.log @model 
 
+			options:->
+				textbook_id : base_textbook_id
+				base_textbook_name : base_textbook_name
+				base_class : base_classes_applicable
+				base_chapter_name : base_chapter_name
+				base_chapter_id : base_chapter_id
+
+			serializeData:->
+				console.log Marionette.getOption @, 'base_textbook_name'
+				data = super()
+				data.base_textbook_name = Marionette.getOption @, 'base_textbook_name'
+				data.textbook_id = Marionette.getOption @, 'textbook_id'
+				data.base_class = Marionette.getOption @, 'base_class'
+				data.base_chapter_name = Marionette.getOption @, 'base_chapter_name'
+				data.base_chapter_id = Marionette.getOption @, 'base_chapter_id'
+				console.log data
+				data
+
+
 		class Views.SectionSingleLayout extends Marionette.Layout
 
 			template : sectionSingleTpl
@@ -24,6 +43,13 @@ define ['app'
 			regions: 
 				sectionDescriptionRegion 	: '#textbook-description-region'
 				sectionRegion				: '#chapters-list-region'
+
+			serializeData: ->
+				data = super()
+				console.log 'check Admin'
+				console.log @collection
+				data.isAdmin = @collection.isAdmin
+				data
 
 			events :->
 				'click .add-sub' : 'addSub'

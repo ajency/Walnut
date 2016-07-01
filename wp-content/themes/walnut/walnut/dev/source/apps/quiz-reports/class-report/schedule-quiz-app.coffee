@@ -33,6 +33,7 @@ define ['app'
                     schedule = App.request "save:quiz:schedule", data
 
                     schedule.done (response)=>
+                        console.log response
                         @view.triggerMethod "schedule:saved", response
 
 
@@ -96,7 +97,7 @@ define ['app'
                 @$el.find '#scheduleFrom'
                 .datetimepicker
                     useCurrent:false
-                    minDate:today
+                    #minDate:today
                     format:'YYYY-MM-DD HH:mm:ss'
 
                 @$el.find '#scheduleTo'

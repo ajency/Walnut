@@ -20,8 +20,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
 
       ListItemView.prototype.onShow = function() {
         var class_id, class_ids, i, j, len, len1, subject, subjects;
-        console.log('global collection');
-        console.log(textbooksCollectionOrigninal);
         this.$el.attr('data-name', this.model.get('name'));
         class_ids = this.model.get('classes');
         if (class_ids) {
@@ -106,6 +104,25 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
+        console.log(this.collection);
+
+        /*defer = $.Deferred()
+        url     = AJAXURL + '?action=get-admin-capability'
+        datas = 'data'
+            $.post url, 
+                datas, (response) =>
+                    #console.log 'ADMIN'
+                    console.log response
+                    #current_blog_id = response
+                    #response = response.toString
+                    if response
+                        data.isAdmin = response
+                        console.log isAdmin
+                    defer.resolve response
+                'json'
+        
+            defer.promise()
+         */
         collection_classes = this.collection.pluck('classes');
         data.classes = _.chain(collection_classes).flatten().union().compact().sortBy(function(num) {
           return parseInt(num);
@@ -116,12 +133,12 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           classes.label = CLASS_LABEL[m];
           return classes;
         }).value();
+        data.isAdmin = this.collection.models[0].get('isAdmin');
         collection_subjects = this.collection.pluck('subjects');
         data_subjects = _.union(_.flatten(collection_subjects));
         data.subjects = _.compact(_.sortBy(data_subjects, function(num) {
           return num;
         }));
-        console.log(data);
         return data;
       };
 
@@ -137,7 +154,20 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       };
 
       ListView.prototype.addTextbook = function() {
-        return this.trigger('show:add:textbook:popup', this.collection);
+        var datas, defer, url;
+        defer = $.Deferred();
+        url = AJAXURL + '?action=get-all-classes';
+        datas = 'data';
+        $.post(url, datas, (function(_this) {
+          return function(response) {
+            var classids;
+            classids = response;
+            defer.resolve(response);
+            _this.collection.class_ids = classids;
+            return _this.trigger('show:add:textbook:popup', _this.collection);
+          };
+        })(this), 'json');
+        return defer.promise();
       };
 
       ListView.prototype.sortTable = function(e) {
@@ -161,10 +191,9 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
         var id, models, searchStr;
         id = [];
         searchStr = $('.search-box').val();
+        console.log(searchStr);
         this.$el.find("#error-div").hide();
         this.$el.find('.progress-spinner').show();
-        console.log(textbooksCollectionOrigninal);
-        console.log(this.collection);
 
         /*@dimensions.region = searchStr
         #console.log @dimensions
@@ -188,7 +217,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
           });
         });
         this.collection.reset(models);
-        console.log(this.collection);
         this.trigger('search:textbooks', this.collection);
 
         /*@collection.filter((model) ->
@@ -231,16 +259,11 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
             }
           } else {
             $t.removeClass('active');
-            console.log(filter);
-            console.log(filterString);
             re = new RegExp('(\\s|^)' + filter);
             filterString = filterString.replace(re, '');
           }
         }
         this.dimensions[dimension] = filterString;
-        console.log(this.dimensions);
-        console.info('dimension 1: ' + this.dimensions.region);
-        console.info('dimension 2: ' + this.dimensions.recreation);
         return $('#textbooks').mixitup('filter', [this.dimensions.region, this.dimensions.recreation]);
       };
 

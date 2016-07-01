@@ -435,7 +435,8 @@ function import_uploaded_data(){
   $data = array();
   $log_file = $_REQUEST['blog_id'].'_'.date('d-m-y-H-i-s',time()).'_log.txt';
   $log_path = get_home_path().'tmp/logs/'.$log_file;
-  $log_url = get_site_url().'?download_import_log='.$log_file;
+  //$log_url = get_site_url().'?download_import_log='.$log_file;
+  $log_url = get_site_url().'/tmp/logs/'.$log_file;
   foreach($files as $key=>$file){
     $table = basename($file, ".csv");
     chmod($target.'/'.$file, 01777);

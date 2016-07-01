@@ -167,6 +167,7 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (param == null) {
           param = {};
         }
+        console.log(param);
         textbookCollection = new Textbooks.ItemCollection;
         textbookCollection.fetch({
           reset: true,
@@ -179,6 +180,8 @@ define(["app", 'backbone'], function(App, Backbone) {
         if (typeof textbookCollection !== "undefined" && textbookCollection !== null) {
           textbook = textbookCollection.get(id);
         }
+        console.log('getTextBookByID');
+        console.log(textbook);
         if (!textbook) {
           textbook = new Textbooks.ItemModel({
             term_id: id

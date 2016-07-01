@@ -194,10 +194,8 @@ add_action('wp_ajax_clear-quiz-schedule', 'ajax_clear_quiz_schedule');
 
 function wp_ajax_add_textbook(){
 
-    file_put_contents("a.txt", print_r($_POST, true));
     #wp_handle_upload( $file, $overrides, $time );
     $data = apply_filters('wp_ajax_add_tag', $_POST);
-    file_put_contents("a2.txt", $data);
     return $data;
 
 }

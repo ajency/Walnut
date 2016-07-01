@@ -19,6 +19,29 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
         return console.log(this.model);
       };
 
+      SectionDescriptionView.prototype.options = function() {
+        return {
+          textbook_id: base_textbook_id,
+          base_textbook_name: base_textbook_name,
+          base_class: base_classes_applicable,
+          base_chapter_name: base_chapter_name,
+          base_chapter_id: base_chapter_id
+        };
+      };
+
+      SectionDescriptionView.prototype.serializeData = function() {
+        var data;
+        console.log(Marionette.getOption(this, 'base_textbook_name'));
+        data = SectionDescriptionView.__super__.serializeData.call(this);
+        data.base_textbook_name = Marionette.getOption(this, 'base_textbook_name');
+        data.textbook_id = Marionette.getOption(this, 'textbook_id');
+        data.base_class = Marionette.getOption(this, 'base_class');
+        data.base_chapter_name = Marionette.getOption(this, 'base_chapter_name');
+        data.base_chapter_id = Marionette.getOption(this, 'base_chapter_id');
+        console.log(data);
+        return data;
+      };
+
       return SectionDescriptionView;
 
     })(Marionette.ItemView);
@@ -36,6 +59,15 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
       SectionSingleLayout.prototype.regions = {
         sectionDescriptionRegion: '#textbook-description-region',
         sectionRegion: '#chapters-list-region'
+      };
+
+      SectionSingleLayout.prototype.serializeData = function() {
+        var data;
+        data = SectionSingleLayout.__super__.serializeData.call(this);
+        console.log('check Admin');
+        console.log(this.collection);
+        data.isAdmin = this.collection.isAdmin;
+        return data;
       };
 
       SectionSingleLayout.prototype.events = function() {

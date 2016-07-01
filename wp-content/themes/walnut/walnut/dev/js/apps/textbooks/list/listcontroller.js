@@ -11,14 +11,27 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       }
 
       ListController.prototype.initialize = function() {
-        var breadcrumb_items, classesCollection, textbooksCollection, view;
+        var breadcrumb_items, textbooksCollection, view;
         window.textbooksCollectionOrigninal = App.request("get:textbooks", {
           "fetch_all": true
         });
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        classesCollection = breadcrumb_items = {
+        App.execute("when:fetched", textbooksCollection, (function(_this) {
+          return function() {
+            var isAdmin, models;
+            models = textbooksCollection.models;
+            console.log(models[0].get('isAdmin'));
+            isAdmin = models[0].get('isAdmin');
+            if (isAdmin === true) {
+              return localStorage.setItem('isAdmin', isAdmin);
+            } else {
+              return localStorage.setItem('isAdmin', '');
+            }
+          };
+        })(this));
+        breadcrumb_items = {
           'items': [
             {
               'label': 'Dashboard',
@@ -46,14 +59,24 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         })(this));
         this.listenTo(this.view, 'search:textbooks', (function(_this) {
           return function(collection) {
+            console.log(collection);
             return _this._getSearchTextbooksView(collection);
           };
         })(this));
-        this.listenTo(this.view, {
-          'before:search:textbook': function() {
-            return console.log(textbooksCollection);
-          }
-        });
+        this.listenTo(Backbone, 'reload:collection', (function(_this) {
+          return function(collection) {
+            _this.textbooks = App.request("get:textbooks", {
+              "fetch_all": true
+            });
+            return App.execute("when:fetched", _this.textbooks, function() {
+              var models;
+              window.textbooksCollectionOrigninal = _this.textbooks;
+              models = _this.textbooks.models;
+              _this.collection.reset(models);
+              return _this._getSearchTextbooksView(_this.collection);
+            });
+          };
+        })(this));
         return this.show(view, {
           loading: true
         });

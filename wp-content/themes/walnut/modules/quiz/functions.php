@@ -382,7 +382,6 @@ function get_all_quiz_modules($args){
 
     $type = is_array($args['textbook']) ? '1' : '0';
 
-
     if ($args['post_status'] =='any'){
         $args['post_status1'] = '';
         $args['post_status2'] = '';
@@ -415,23 +414,24 @@ function get_all_quiz_modules($args){
         $term_id_query = " AND post.term_ids LIKE %s";
     }
 
+    //onload the type is 0(string)
     if($type == 0){
 
-        if($textbookss == '' || $textbookss == null){
+        //if($textbookss == '' || $textbookss == null){
             $textbook_prepare[0] = "%xy@@@zz%";
-        }
-        else{
+        //}
+        /*else{
             $textbook_prepare[0] = '%"'.$textbookss.'"%';
-        }
+        }*/
 
         //onload and quiz report since textbook id is 1
         $term_id_query = " AND post.term_ids LIKE %s";
     }
 
+    //on selecting textbook
     else if ($type == 1) {
         $size_text_data = sizeof($textbookss);
         //$text_ids = implode(",",$textbookss);
-        
         if ($size_text_data == '1'){
             $text = $textbookss[0];
             $textbook_prepare[0] = '%"'.$textbookss[0].'"%';
@@ -485,7 +485,7 @@ function get_all_quiz_modules($args){
         $textbook_prepare[4],
         $textbook_prepare[5]);
 
-
+    #file_put_contents("a.txt", $query);
     $quiz_ids = $wpdb->get_col($query);
 
 

@@ -15,8 +15,26 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/chapter-full.html',
       ChapterDescriptionView.prototype.className = '';
 
       ChapterDescriptionView.prototype.onShow = function() {
-        console.log('Show Model');
-        return console.log(this.model);
+        return console.log('Show Model');
+      };
+
+      ChapterDescriptionView.prototype.options = function() {
+        return {
+          textbook_id: base_textbook_id,
+          base_textbook_name: base_textbook_name,
+          base_class: base_classes_applicable
+        };
+      };
+
+      ChapterDescriptionView.prototype.serializeData = function() {
+        var data;
+        console.log(Marionette.getOption(this, 'base_textbook_name'));
+        data = ChapterDescriptionView.__super__.serializeData.call(this);
+        data.base_textbook_name = Marionette.getOption(this, 'base_textbook_name');
+        data.textbook_id = Marionette.getOption(this, 'textbook_id');
+        data.base_class = Marionette.getOption(this, 'base_class');
+        console.log(data);
+        return data;
       };
 
       return ChapterDescriptionView;
@@ -36,6 +54,15 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/chapter-full.html',
       ChapterSingleLayout.prototype.regions = {
         chapterDescriptionRegion: '#textbook-description-region',
         chaptersRegion: '#chapters-list-region'
+      };
+
+      ChapterSingleLayout.prototype.serializeData = function() {
+        var data;
+        data = ChapterSingleLayout.__super__.serializeData.call(this);
+        console.log('check Admin');
+        console.log(this.collection);
+        data.isAdmin = this.collection.isAdmin;
+        return data;
       };
 
       ChapterSingleLayout.prototype.events = function() {

@@ -11,32 +11,73 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 				textbook_id = opt.model_id
 				chapter_id = opt.chapter
 				term_id = opt.section
+				window.base_textbook_id = textbook_id
+				window.base_chapter_id = chapter_id
 
 				console.log term_id
 				@textbook = App.request "get:textbook:by:id", term_id
 
+				@base_textbook = App.request "get:textbook:by:id", textbook_id
 
-				@chapters = App.request "get:chapters", ('parent': term_id)
+				App.execute "when:fetched", @base_textbook, =>
+					window.base_textbook_name = @base_textbook.get 'name'
+					window.base_classes_applicable = @base_textbook.get 'classes_applicable'
 
-				@chapters.textbook_id = textbook_id
-				@chapters.chapter_id = chapter_id
-				@chapters.parent = term_id
+					@base_chapter = App.request "get:textbook:by:id", chapter_id
 
-				@layout= layout = @_getSectionSingleLayout()
-				@listenTo layout, "show", @_showSectionSingle
-				@listenTo layout, "show", @_showSubView
+					App.execute "when:fetched", @base_chapter, =>
+						console.log 'chapter window data'
+						console.log @base_chapter
+						window.base_chapter_name = @base_chapter.get 'name'
 
-				@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
-					App.execute 'add:textbook:popup',
-                        region      : App.dialogRegion
-                        collection : @collection
+						@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'subsections')
 
-				@show layout
+						@chapters.textbook_id = textbook_id
+						@chapters.chapter_id = chapter_id
+						@chapters.parent = term_id
+						@chapters.isAdmin = localStorage.getItem('isAdmin');
+
+						@layout= layout = @_getSectionSingleLayout()
+						@listenTo layout, "show", @_showSectionSingle
+						@listenTo layout, "show", @_showSubView
+
+						@listenTo Backbone, 'reload:collection', (collection) =>
+							@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+							@textbook = App.request "get:textbook:by:id", term_id
+							App.execute "when:fetched", @textbook, =>
+								@_showReloadSectionSingle @textbook
+							@_showSubView @chapters
+
+						@listenTo @layout, 'show:add:textbook:popup',(@collection)=>
+							App.execute 'add:textbook:popup',
+                        		region      : App.dialogRegion
+                        		collection : @collection
+
+						@show layout
 
 
 			_showSectionSingle: =>
 
 				App.execute "when:fetched", @textbook, =>
+					breadcrumb_items = 'items':[
+						{'label':'Dashboard','link':'javascript://'},
+						{'label':'Content Management','link':'javascript:;'},
+						{'label':'Textbooks','link':'#textbooks'},
+						{'label':@textbook.get('name'),'link':'javascript:;','active':'active'}
+					]
+						
+					App.execute "update:breadcrumb:model", breadcrumb_items
+
+					# get the single view 
+					sectionDescView= new Single.Views.SectionDescriptionView 
+						model: @textbook
+
+					@layout.sectionDescriptionRegion.show(sectionDescView)
+
+
+			_showReloadSectionSingle:(@textbook) =>
+
+				#App.execute "when:fetched", @textbook, =>
 					breadcrumb_items = 'items':[
 						{'label':'Dashboard','link':'javascript://'},
 						{'label':'Content Management','link':'javascript:;'},
