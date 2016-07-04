@@ -25,8 +25,8 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if _.isArray classes
                     classesArray.push(CLASS_LABEL[classLabel]) for classLabel in classes
                     classesArray.join()
-                console.log 'classes'
-                console.log classesArray
+                #console.log 'classes'
+                #console.log classesArray
                 classesArray
 
 
@@ -46,7 +46,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-textbooks'
 
             parse: (resp)->
-                console.log resp
+                #console.log resp
                 @total = resp.count
                 resp.data
 
@@ -62,7 +62,7 @@ define ["app", 'backbone'], (App, Backbone) ->
                 AJAXURL + '?action=get-textbook-names'
 
             getTextbookName:(terms)->
-                console.log  terms
+                #console.log  terms
                 textbook = @.get terms.textbook
                 texbookName = textbook.get 'name' if textbook?
 
@@ -101,7 +101,7 @@ define ["app", 'backbone'], (App, Backbone) ->
         API =
         # get all textbooks
             getTextbooks: (param = {})->
-                console.log param
+                #console.log param
                 textbookCollection = new Textbooks.ItemCollection
                 textbookCollection.fetch
                     reset: true
@@ -112,8 +112,8 @@ define ["app", 'backbone'], (App, Backbone) ->
 
             getTextBookByID: (id)->
                 textbook = textbookCollection.get id if textbookCollection?
-                console.log 'getTextBookByID'
-                console.log textbook
+                #console.log 'getTextBookByID'
+                #console.log textbook
                 if not textbook
                     textbook = new Textbooks.ItemModel term_id: id
                     textbook.fetch()

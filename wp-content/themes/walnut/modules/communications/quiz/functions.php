@@ -85,6 +85,7 @@ function add_quiz_published_student_mail($data, $comm_data){
 function add_quiz_published_parent_mail($data, $comm_data){
 
     global $aj_comm;
+    $recipients = array();
 
     $meta = $data['additional_data'];
 
@@ -94,7 +95,7 @@ function add_quiz_published_parent_mail($data, $comm_data){
     $meta_data['quiz_id'] = $meta['quiz_ids'];
 
     foreach($meta['quiz_ids'] as $quiz_id){
-        $recipients = array();
+        
 
         #$meta_data['quiz_id']= $quiz_id;
 
@@ -112,11 +113,11 @@ function add_quiz_published_parent_mail($data, $comm_data){
                 }
             }
 
-            $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
+            
         }
         
     }
-
+    $comm= $aj_comm->create_communication($comm_data,$meta_data,$recipients);
     return $comm;
 
 }
@@ -237,8 +238,7 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
         FROM {$wpdb->prefix}class_divisions
         WHERE class_id IN (SELECT class_id
         FROM {$wpdb->prefix}class_divisions
-        WHERE division = %d)", $division));
-
+        WHERE id = %d)", $division));
 
     $division_ids = implode(", ", $divisionIds);
 
@@ -253,8 +253,6 @@ function quiz_summary_parent_mail_recipients($quiz_id,$division){
         AND um2.meta_value IN ($division_ids)",
         array('%capabilities','%student%','student_division')
         );
-
-    #file_put_contents("a.txt", $query1);
 
     $student_ids= $wpdb->get_col($query1);
 

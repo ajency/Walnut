@@ -106,7 +106,6 @@ define(['app', 'text!apps/textbooks/templates/textbooks-list.html', 'text!apps/t
       ListView.prototype.serializeData = function() {
         var collection_classes, collection_subjects, data, data_subjects;
         data = ListView.__super__.serializeData.call(this);
-        console.log(this.collection);
 
         /*defer = $.Deferred()
         url     = AJAXURL + '?action=get-admin-capability'

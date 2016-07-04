@@ -58,11 +58,9 @@ define(['app', 'text!apps/textbooks/section-single/templates/sub-list.html', 'te
         $('#example2').tablesorterPager({
           container: $("#pager")
         });
-        $("html, body").animate({
+        return $("html, body").animate({
           scrollTop: 0
         }, 700);
-        console.log('collection');
-        return console.log(this.collection);
       };
 
       return SubListView;

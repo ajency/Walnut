@@ -177,7 +177,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           async: true,
           success: (function(_this) {
             return function(response, textStatus, jqXHR) {
-              return console.log(response);
+              return console.log('response');
             };
           })(this)
         });

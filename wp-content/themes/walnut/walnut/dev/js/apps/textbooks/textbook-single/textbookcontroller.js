@@ -28,8 +28,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           'term_type': 'chapter'
         });
         this.chapters.parent = term_id;
-        console.log('isAdmin');
-        console.log(localStorage.getItem('isAdmin'));
         this.chapters.isAdmin = localStorage.getItem('isAdmin');
         this.layout = layout = this._getTextbookSingleLayout();
         this.listenTo(layout, "show", this._showTextBookSingle);
@@ -61,8 +59,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
         })(this));
         this.listenTo(this.layout, 'search:textbooks', (function(_this) {
           return function(collection) {
-            console.log('reload chapters');
-            console.log(collection);
             return _this._getSearchChaptersView(collection);
           };
         })(this));
