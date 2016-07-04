@@ -9,7 +9,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
                 App.execute "when:fetched", textbooksCollection, =>
                     models = textbooksCollection.models
-                    console.log models[0].get('isAdmin')
+                    #console.log models[0].get('isAdmin')
                     isAdmin = models[0].get('isAdmin')
                     if isAdmin == true
                         localStorage.setItem('isAdmin', isAdmin)
@@ -33,7 +33,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                         collection : @collection
 
                 @listenTo @view, 'search:textbooks', (collection)=>
-                    console.log collection
+                    #console.log collection
                     @_getSearchTextbooksView collection
 
                 @listenTo Backbone, 'reload:collection', (collection) =>

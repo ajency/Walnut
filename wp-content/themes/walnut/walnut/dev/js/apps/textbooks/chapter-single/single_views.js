@@ -33,7 +33,6 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/chapter-full.html',
         data.base_textbook_name = Marionette.getOption(this, 'base_textbook_name');
         data.textbook_id = Marionette.getOption(this, 'textbook_id');
         data.base_class = Marionette.getOption(this, 'base_class');
-        console.log(data);
         return data;
       };
 
@@ -59,8 +58,6 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/chapter-full.html',
       ChapterSingleLayout.prototype.serializeData = function() {
         var data;
         data = ChapterSingleLayout.__super__.serializeData.call(this);
-        console.log('check Admin');
-        console.log(this.collection);
         data.isAdmin = this.collection.isAdmin;
         return data;
       };
@@ -72,7 +69,6 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/chapter-full.html',
       };
 
       ChapterSingleLayout.prototype.addSection = function() {
-        console.log(this.collection);
         this.collection.toAddText = 'true';
         return this.trigger('show:add:textbook:popup', this.collection);
       };

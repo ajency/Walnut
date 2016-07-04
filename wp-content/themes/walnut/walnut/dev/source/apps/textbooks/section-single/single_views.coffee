@@ -13,7 +13,7 @@ define ['app'
 
 			onShow :->
 				console.log 'Show Model'
-				console.log @model 
+				#console.log @model 
 
 			options:->
 				textbook_id : base_textbook_id
@@ -30,7 +30,7 @@ define ['app'
 				data.base_class = Marionette.getOption @, 'base_class'
 				data.base_chapter_name = Marionette.getOption @, 'base_chapter_name'
 				data.base_chapter_id = Marionette.getOption @, 'base_chapter_id'
-				console.log data
+				#console.log data
 				data
 
 
@@ -46,8 +46,8 @@ define ['app'
 
 			serializeData: ->
 				data = super()
-				console.log 'check Admin'
-				console.log @collection
+				#console.log 'check Admin'
+				#console.log @collection
 				data.isAdmin = @collection.isAdmin
 				data
 
@@ -55,7 +55,7 @@ define ['app'
 				'click .add-sub' : 'addSub'
 
 			addSub:->
-				console.log @collection
+				#console.log @collection
 				@collection.toAddText = 'true'
 				@trigger 'show:add:textbook:popup', @collection
 

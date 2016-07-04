@@ -218,7 +218,7 @@ define ['app'
                         dataType: 'json',
                         async: true,
                         success :(response, textStatus, jqXHR)=>
-                            console.log response
+                            console.log 'response'
 
 
                 });
