@@ -361,7 +361,7 @@ function students_not_taken_quiz($quiz_id, $division){
 
 function get_quiz_schedule($quiz_id, $division){
 
-    file_put_contents("a.txt", $quiz_id);
+    #file_put_contents("a.txt", $quiz_id);
     global $wpdb;
     global $user_ID;
 
