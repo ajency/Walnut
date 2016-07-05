@@ -694,7 +694,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
         FROM {$wpdb->prefix}class_divisions
         WHERE class_id IN (SELECT class_id
         FROM {$wpdb->prefix}class_divisions
-        WHERE division = %d)", $division));
+        WHERE id = %d)", $division));
 
     $division_ids = implode(", ", $divisionIds);
 
