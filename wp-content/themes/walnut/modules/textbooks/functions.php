@@ -165,12 +165,6 @@ function get_textbooks( $args = array() ) {
             $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             if($book){
                 $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
-                $current_blog = get_current_blog_id();
-                if($current_blog == '1')
-                    $isAdmin = true;
-                else
-                    $isAdmin = false;
-                $book->isAdmin = $isAdmin;
                 $data[]= $book;               
             }
                 

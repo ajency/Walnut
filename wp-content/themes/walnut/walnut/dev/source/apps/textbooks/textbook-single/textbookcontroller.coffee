@@ -20,11 +20,6 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				window.chaptersOriginalCollection = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
 
 				@chapters.parent = term_id
-				#console.log 'isAdmin'
-				#console.log localStorage.getItem('isAdmin');
-				@chapters.isAdmin = localStorage.getItem('isAdmin');
-
-				#console.log isAdmin
 
 				@layout= layout = @_getTextbookSingleLayout()
 				@listenTo layout, "show", @_showTextBookSingle

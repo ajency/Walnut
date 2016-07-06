@@ -62,6 +62,7 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
+    <link href="./wp-content/themes/walnut/walnut/dev/css/admin.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <?php 

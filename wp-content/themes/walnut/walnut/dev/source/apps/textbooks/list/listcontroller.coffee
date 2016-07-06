@@ -7,14 +7,6 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                 window.textbooksCollectionOrigninal = App.request "get:textbooks", "fetch_all":true
 
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
-                App.execute "when:fetched", textbooksCollection, =>
-                    models = textbooksCollection.models
-                    #console.log models[0].get('isAdmin')
-                    isAdmin = models[0].get('isAdmin')
-                    if isAdmin == true
-                        localStorage.setItem('isAdmin', isAdmin)
-                    else
-                        localStorage.setItem('isAdmin', '')
                     
                 breadcrumb_items =
                     'items': [

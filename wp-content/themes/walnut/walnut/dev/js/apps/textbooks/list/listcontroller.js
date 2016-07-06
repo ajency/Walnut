@@ -18,18 +18,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         textbooksCollection = App.request("get:textbooks", {
           "fetch_all": true
         });
-        App.execute("when:fetched", textbooksCollection, (function(_this) {
-          return function() {
-            var isAdmin, models;
-            models = textbooksCollection.models;
-            isAdmin = models[0].get('isAdmin');
-            if (isAdmin === true) {
-              return localStorage.setItem('isAdmin', isAdmin);
-            } else {
-              return localStorage.setItem('isAdmin', '');
-            }
-          };
-        })(this));
         breadcrumb_items = {
           'items': [
             {
