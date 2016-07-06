@@ -24,7 +24,14 @@ define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-
       };
 
       RecipientsItemView.prototype.initialize = function() {
-        return console.log(this.model.attributes);
+        return console.log(this.model);
+      };
+
+      RecipientsItemView.prototype.serializeData = function() {
+        var data;
+        data = RecipientsItemView.__super__.serializeData.call(this);
+        data.quiz_component = localStorage.getItem('quiz_component');
+        return data;
       };
 
       RecipientsItemView.prototype.onShowPreview = function(preview_data) {

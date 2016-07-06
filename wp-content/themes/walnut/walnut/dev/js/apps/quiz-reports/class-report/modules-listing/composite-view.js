@@ -101,22 +101,16 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           this.$el.find('.communication_sent').hide();
           return this.$el.find('.input-small').addClass('error');
         }
-        console.log($start_date);
-        console.log($end_date);
-        console.log("summary");
         data = [];
         this.$el.find('.communication-sent').remove();
         allQuizIDs = _.map($.getAllItems(this.$el.find('#content-pieces-table')), function(m) {
           return parseInt(m);
         });
-        console.log(allQuizIDs);
         excludeIDs = _.chain(this.collection.where({
           'taken_by': 0
         })).pluck('id').value();
         data.quizIDs = _.difference(allQuizIDs, excludeIDs);
-        console.log(data.quizIDs);
         data.division = this.$el.find('#divisions-filter').val();
-        console.log(data.division);
         if ($(e.target).hasClass('send-summary')) {
           data.communication_mode = 'email';
         } else {
@@ -127,7 +121,6 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         if (_.isEmpty(data.quizIDs)) {
           return this.$el.find('.send-summary').after('<span class="m-l-20 text-error small communication_sent"> Not taken by any student</span>');
         } else {
-          console.log(data);
           return this.trigger("summary:communication", data);
         }
       };
@@ -143,9 +136,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           'taken_by': 0
         })).pluck('id').value();
         data.quizIDs = _.difference(allQuizIDs, excludeIDs);
-        console.log(data.quizIDs);
         data.division = this.$el.find('#divisions-filter').val();
-        console.log(data.division);
         if ($(e.target).hasClass('send-email')) {
           data.communication_mode = 'email';
         } else {

@@ -32,7 +32,12 @@
                     @trigger "preview:email", @model.id
 
             initialize:->
-                console.log @model.attributes
+                console.log @model
+
+            serializeData:->
+                data = super()
+                data.quiz_component = localStorage.getItem('quiz_component')
+                data
 
             onShowPreview:(preview_data)->
                 @$el.find('.email-preview i').addClass 'none'

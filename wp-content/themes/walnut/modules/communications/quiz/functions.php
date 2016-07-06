@@ -207,6 +207,7 @@ function quiz_completed_parent_mail_recipients($quiz_id,$division){
         array('%"completed";%', $quiz_id)
     );
 
+
     $student_ids= $wpdb->get_col($query);
 
     foreach($student_ids as $student){

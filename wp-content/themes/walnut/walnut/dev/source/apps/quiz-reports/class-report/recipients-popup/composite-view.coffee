@@ -52,10 +52,13 @@
                 if (this.model.get('communication_type') == 'quiz_published_parent_mail')
                     @dialogOptions = 
                         modal_title : 'New Quizzes'
+                    localStorage.setItem('quiz_component', '')
                 else if (this.model.get('communication_type') == 'quiz_summary_parent_mail')
                     @dialogOptions = 
                         modal_title : 'Summary Report'
+                    localStorage.setItem('quiz_component', '')
                 else
+                    localStorage.setItem('quiz_component', 'true')
                     @dialogOptions = 
                         modal_title : 'Confirm Recipients'
                 
@@ -76,9 +79,11 @@
 
 
             mixinTemplateHelpers:(data)->
-                data=super data
+                console.log this.model.get 'communication_type'
+                data= super()
                 data.quiz_component = true if (this.model.get('communication_type') == 'quiz_completed_parent_mail')
-                #data
+                console.log data
+                data
 
             showSubmitButton:->
                 if @$el.find '.tab_checkbox'
@@ -91,7 +96,7 @@
                     .hide()
 
             sendEmail:->
-                console.log @model
+                #console.log @model
                 additional_data = @model.get 'additional_data'
                 start_date = additional_data['start_date']
                 end_date = additional_data['end_date']

@@ -83,7 +83,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               selectedFilterParamsObject: _this.selectedFilterParamsObject,
               divisionsCollection: divisionsCollection,
               dataType: 'quiz',
-              filters: ['divisions', 'multi_textbooks', 'chapters', 'post_status_report']
+              filters: ['divisions', 'multi_textbooks', 'post_status_report']
             }, App.execute("when:fetched", students, function() {
               App.execute("show:student:filter:app", {
                 region: _this.layout.studentFilterRegion,
