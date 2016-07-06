@@ -64,6 +64,7 @@ define ['app'
                     questionsCollection = App.request "empty:content:pieces:collection"
 
                     App.execute "when:fetched", @contentPiece, =>
+                        console.log 'dummyQuizModel'
                         questionsCollection.add @contentPiece
 
                         dummyQuizModel= App.request "create:dummy:quiz:module", content_piece_id

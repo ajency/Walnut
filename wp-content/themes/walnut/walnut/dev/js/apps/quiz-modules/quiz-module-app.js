@@ -86,6 +86,7 @@ define(['app', 'apps/quiz-modules/view-single-quiz/single-quiz-controller'], fun
           return App.execute("when:fetched", this.contentPiece, (function(_this) {
             return function() {
               var data, dummyQuizModel, quizResponseSummary, term_ids, textbookNames;
+              console.log('dummyQuizModel');
               questionsCollection.add(_this.contentPiece);
               dummyQuizModel = App.request("create:dummy:quiz:module", content_piece_id);
               term_ids = _this.contentPiece.get('term_ids');
