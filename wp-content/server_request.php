@@ -1,5 +1,5 @@
 <?php
-    $remote_url = 'http://synapselearning.net/wp-admin/admin-ajax.php';
+    $remote_url = 'http://synapselearning.dev/wp-admin/admin-ajax.php';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
