@@ -13,9 +13,9 @@
 
 //define('NETWORK_SERVER_URL','http://localhost/walnut');
 
-define('NETWORK_SERVER_URL','http://walnutedu.org');
+//define('NETWORK_SERVER_URL','http://walnutedu.org');
 
-//define('NETWORK_SERVER_URL','http://synapsedu.info');
+define('NETWORK_SERVER_URL','http://synapsedu.info');
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 
