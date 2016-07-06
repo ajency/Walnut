@@ -84,6 +84,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/take-module-ite
           this._showQuestionDisplayView(nextItem);
           return this.layout.triggerMethod("change:content:piece", currentItem);
         } else {
+          $(".is-back").remove();
           return this._gotoViewModule();
         }
       };

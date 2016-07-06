@@ -1,3 +1,4 @@
+
  //   _____ _       _           _    _____ _         _           
  //  / ____| |     | |         | |  / ____| |       | |          
  // | |  __| | ___ | |__   __ _| | | (___ | |_ _   _| | ___  ___ 
@@ -70,7 +71,7 @@ h1, h2, h3, h4, h5 {
 // ---------------------------
 
 @-moz-document url-prefix() { 
-    h1, h2, h3, h4, h5 {
+    h1, h2, h3, h4, h5, label, body, .semi-bold, .bold{
         font-weight: lighter !important; 
     }
 }
@@ -154,7 +155,6 @@ img{
 
 
 
-
 // ---------------------------
 // CUSTOM NAVBAR STYLES -----------
 // ---------------------------
@@ -219,8 +219,6 @@ nav {
         }
     }
 }
-
-
 
 
 
@@ -298,14 +296,9 @@ nav {
 
 
 
-
-
-
-
- // ---------------------------
+// ---------------------------
 // OVERWRITING PAGE CONENT STYLES TO BRING CONTENT IN CENTER -----------
 // ---------------------------
-
 
 
  .page-content{
@@ -378,7 +371,7 @@ nav {
 
 
 // ---------------------------
-// MODAL STYLES FOR PRACTICE QUIZ ALERTS -----------
+// BOOTBOX MODALS ACCORDING TO THEME DESIGN -----------
 // ---------------------------
 
 
@@ -386,6 +379,9 @@ nav {
 	.modal-body{
 		background: @dashboard-color;
 		color: #fff;
+        .bootbox-close-button{
+            display: none;
+        }
 	}
 	.modal-footer{
 		text-align: center;
@@ -731,7 +727,7 @@ nav {
     .display(flex);
     .align-items(center);
     .justify-content(flex-start);
-    margin: 25px 0;
+    margin: 10px 0 25px 0;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
     .icon {
@@ -776,6 +772,60 @@ nav {
             span {
                 font-size: 0.8em;
                 color: @quiz-link-color3;
+            }
+        }
+    }
+}
+
+
+
+
+// ---------------------------
+// FIREFIX FIX FOR BACK BUTTON - DIRECTIONS -----------
+// ---------------------------
+
+
+@-moz-document url-prefix() { 
+.direction {
+    .welcome-text {
+        font-weight: lighter;
+        }
+    }
+}
+
+
+// ---------------------------
+// LOGOUT CUSTOM MODAL -----------
+// ---------------------------
+
+#logout-modal{
+    &.modal{
+        .modal-body{
+            background: @dashboard-color;
+            color: @color-white;
+            padding: 15px;
+            h4{
+                margin: 0;
+                font-size: 1em;
+            }
+        }
+        .modal-footer{
+            text-align: center;
+            padding: 15px;
+            button{
+                color: @color-white;
+                border: 0;
+                color: #fff;
+                padding: 8px;
+                width: 20%;
+                text-transform: uppercase;
+                .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.2));
+                &.cancel{
+                    background: @button-1-danger;
+                }
+                &.confirm{
+                    background: @dashboard-color;
+                }
             }
         }
     }

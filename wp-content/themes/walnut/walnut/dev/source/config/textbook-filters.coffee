@@ -50,6 +50,7 @@ define ['jquery', 'underscore'], ($, _)->
         .html ''
         
         textbookElement= ele.find '#textbooks-filter'
+        #console.log textbookElement
 
         chapterElement= ele.find '#chapters-filter'
 
@@ -59,6 +60,9 @@ define ['jquery', 'underscore'], ($, _)->
         if _.size(items) > 0
 
             _.each items, (item, index)=>
+                #name = item.get('name')
+                #name = name.split('(')
+                #text = name[0]
                 textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
 
             textbookElement.select2().select2 'val', _.first(items).get 'term_id'
@@ -177,23 +181,30 @@ define ['jquery', 'underscore'], ($, _)->
         
         if dataType is 'teaching-modules'
             filterCollection = App.request "get:content:modules:repository"
-			
+            
         else if dataType is 'student-training'
             filterCollection = App.request "get:student:training:modules:repository"
 
         else if dataType is 'quiz'
+            #console.log dataType
             filterCollection = App.request "get:quiz:repository"
+            console.log filterCollection
 
         else 
             filterCollection = App.request "get:content:pieces:repository"
 
 
-        filter_ids=_.map filter_elements, (ele,index)->
+        filter_ids =_.map filter_elements, (ele,index)->
             item = ''
             if not isNaN ele.value
                 item= ele.value
             item
-        filter_ids= _.compact filter_ids
+        filter_ids = _.compact filter_ids
+        textbk_ids = $('#textbooks-filter').val()
+        if typeof textbk_ids == 'string'  
+            text_multi = false
+        else
+            text_multi = true
 
         content_type = _this.$el.find('#content-type-filter').val()
 
@@ -204,21 +215,28 @@ define ['jquery', 'underscore'], ($, _)->
 
         quiz_type = _this.$el.find('#quiz-type-filter').val()
 
+        console.log quiz_type
+
         difficulty_level = parseInt _this.$el.find('#difficulty-level-filter').val()
 
         if content_type
+            console.log "content_type"
             filterCollection.reset  filterCollection.where 'content_type': content_type
 
         if content_status
+            console.log "content_status"
             filterCollection.reset  filterCollection.where 'status': content_status
 
         if content_post_status
+            console.log "content_post_status"
             filterCollection.reset  filterCollection.where 'post_status': content_post_status
 
         if quiz_type
+            console.log "quiz_type"
             filterCollection.reset  filterCollection.where 'quiz_type': quiz_type            
 
         if difficulty_level
+            console.log "difficulty_level"
             filterCollection.reset filterCollection.where 'difficulty_level' : difficulty_level
 
         filtered_models= filterCollection.models
@@ -228,9 +246,14 @@ define ['jquery', 'underscore'], ($, _)->
                 filtered_item = ''
                 term_ids = _.flatten item.get 'term_ids'
 
-                if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
+                if text_multi == false
+                    if _.size(_.intersection(term_ids, filter_ids)) == _.size(filter_ids)
+                        filtered_item = item
+                else
                     filtered_item = item
+
                 filtered_item
+
         else
             filtered_data = filtered_models
 

@@ -14,6 +14,7 @@ define ['app'
 
 		class EmptyView extends Marionette.ItemView
 			
+			tagName : 'tr'
 			template:	nochaptersTpl	
 			className: 'gradeX odd'
 
@@ -36,5 +37,5 @@ define ['app'
 				
 				$("html, body").animate({ scrollTop: 0 }, 700);
 
-				console.log 'collection'
-				console.log @collection  
+				#console.log 'collection'
+				#console.log @collection  

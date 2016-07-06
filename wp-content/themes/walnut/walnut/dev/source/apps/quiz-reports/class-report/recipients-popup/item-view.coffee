@@ -3,7 +3,7 @@
         'apps/quiz-reports/class-report/recipients-popup/item-view'
         ], (App,bootbox)->
 
-    App.module "QuizRecipientsPopup.Views", (Views)-> 
+    App.module "QuizRecipientsPopup.Views", (Views, App, Backbone, Marionette, $, _)-> 
 
     	class Views.RecipientsItemView extends Marionette.ItemView
 
@@ -30,6 +30,9 @@
                 'click .email-preview'    :(e)-> 
                     $(e.target).find('i').removeClass 'none'
                     @trigger "preview:email", @model.id
+
+            initialize:->
+                console.log @model.attributes
 
             onShowPreview:(preview_data)->
                 @$el.find('.email-preview i').addClass 'none'

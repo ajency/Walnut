@@ -7,7 +7,10 @@ define ['app'
 
 			initialize :(opts) ->
 
+				console.log "here ModulesListing"
+
 				{ @contentModulesCollection,@textbooksCollection,@groupType } = opts
+				console.log opts
 				
 				@allChaptersCollection = null
 
@@ -26,6 +29,7 @@ define ['app'
 						.unique()
 						.compact()
 						.value()
+
 
 					#all chapter names in this set of contentModulesscollection
 					@allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
@@ -47,6 +51,21 @@ define ['app'
 						@listenTo @region, "update:pager",=>
 							@view.triggerMethod "update:pager"
 
+						#new quiz email 
+						@listenTo @view, "save:communications", (data)=>
+                        	console.log "save:communication"
+                        	#console.log data
+                        	data=
+                                component           : 'quiz'
+                                communication_type  : 'quiz_published_parent_mail'
+                                communication_mode  : data.communication_mode
+                                additional_data:
+                                    quiz_ids        : data.quizIDs
+                                    division        : null
+                            console.log data
+                            communicationModel = App.request "create:communication",data
+                            @_showSelectRecipientsApp communicationModel
+
 			_getContentModulessListingView : =>
 				new ModulesListing.Views.ModulesListingView
 					collection          : @contentModulesCollection
@@ -55,10 +74,15 @@ define ['app'
 					chaptersCollection  : @allChaptersCollection
 					groupType : @groupType
 
+			_showSelectRecipientsApp:(communicationModel)->
+				console.log communicationModel
+				App.execute "show:quiz:select:recipients:popup",
+                    region               : App.dialogRegion
+                    communicationModel   : communicationModel
+
 
 
 		# set handlers
 		App.commands.setHandler "show:list:all:modules:app", (opt = {})->
 			new ModulesListing.Controller opt
-
 

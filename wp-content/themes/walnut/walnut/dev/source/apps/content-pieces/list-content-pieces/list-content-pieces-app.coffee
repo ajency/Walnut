@@ -9,13 +9,15 @@ define ['app'
                 {@contentPiecesCollection, @textbooksCollection}=opts
                 @allChaptersCollection = null
 
-                chapter_ids= _.chain @contentPiecesCollection.pluck 'term_ids'
+                chapter_ids = _.chain @contentPiecesCollection.pluck 'term_ids'
                 .pluck 'chapter'
                     .unique()
                     .compact()
                     .value()
 
                 #all chapter names in this set of contentgroupscollection
+                @allChapCollection = App.request "get:textbook:names:by:ids"
+
                 @allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
 
                 @fullCollection = @contentPiecesCollection.clone()
@@ -31,12 +33,12 @@ define ['app'
                         @view.triggerMethod "update:pager"
 
             _getContentPiecesListView: ->
-                console.log @contentPiecesCollection
                 new ContentList.Views.ListView
                     collection: @contentPiecesCollection
                     fullCollection: @fullCollection
                     textbooksCollection: @textbooksCollection
                     chaptersCollection  : @allChaptersCollection
+                    chapCollection: @allChapCollection
 
         # set handlers
         App.commands.setHandler "show:list:content:pieces:app", (opt = {})->

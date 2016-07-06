@@ -1085,8 +1085,10 @@ function check_admin_referer( $action = -1, $query_arg = '_wpnonce' ) {
 	$referer = strtolower(wp_get_referer());
 	$result = isset($_REQUEST[$query_arg]) ? wp_verify_nonce($_REQUEST[$query_arg], $action) : false;
 	if ( !$result && !(-1 == $action && strpos($referer, $adminurl) === 0) ) {
-		wp_nonce_ays($action);
-		die();
+		if(!$action=='log-out'){//modified by kapil to skip the msg: do u really waant to log out
+			wp_nonce_ays($action);
+			die();
+		}
 	}
 
 	/**

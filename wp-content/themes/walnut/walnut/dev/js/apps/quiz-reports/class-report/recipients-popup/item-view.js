@@ -2,7 +2,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   hasProp = {}.hasOwnProperty;
 
 define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-view'], function(App, bootbox) {
-  return App.module("QuizRecipientsPopup.Views", function(Views) {
+  return App.module("QuizRecipientsPopup.Views", function(Views, App, Backbone, Marionette, $, _) {
     return Views.RecipientsItemView = (function(superClass) {
       extend(RecipientsItemView, superClass);
 
@@ -21,6 +21,10 @@ define(['app', 'bootbox', 'apps/quiz-reports/class-report/recipients-popup/item-
           $(e.target).find('i').removeClass('none');
           return this.trigger("preview:email", this.model.id);
         }
+      };
+
+      RecipientsItemView.prototype.initialize = function() {
+        return console.log(this.model.attributes);
       };
 
       RecipientsItemView.prototype.onShowPreview = function(preview_data) {

@@ -17,7 +17,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
         var class_id, data;
         this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType, this.divisionsCollection = opts.divisionsCollection, this.post_status = opts.post_status;
         if (!this.filters) {
-          this.filters = ['textbooks', 'chapters', 'sections', 'subsections'];
+          this.filters = ['multi_textbooks', 'divisions', 'textbooks', 'chapters', 'sections', 'subsections'];
         }
         if (this.contentSelectionType === 'student-training') {
           this.filters.push('student_question');
@@ -64,6 +64,10 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             if ($(ele).val()) {
               term_id = $(ele).val();
             }
+            ele = $(_this.view.el).find('#textbooks-multi-filter');
+            if ($(ele).val()) {
+              term_id = $(ele).val();
+            }
             ele = $(_this.view.el).find('#chapters-filter');
             if ($(ele).val()) {
               term_id = $(ele).val();
@@ -102,7 +106,9 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             });
             _this.listenTo(_this.view, "show", function() {
               var chapter_id, fetchChapters, fetchSections, section_id, subsection_id, term_ids, textbook_id;
+              console.log(_this.model);
               if (_this.model) {
+                console.log('inside');
                 term_ids = _this.model.get('term_ids');
                 if (term_ids) {
                   textbook_id = term_ids['textbook'];
@@ -146,6 +152,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
+              console.log(data.textbook);
               if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
@@ -163,6 +170,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 newContent = App.request("get:content:pieces", data);
               }
               return App.execute("when:fetched", newContent, function() {
+                console.log(newContent);
                 return _this.view.triggerMethod("new:content:fetched");
               });
             });

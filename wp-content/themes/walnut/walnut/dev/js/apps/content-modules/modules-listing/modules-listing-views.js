@@ -23,20 +23,29 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.serializeData = function() {
         var data;
+        console.log("serializeData");
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
         data.textbookName = (function(_this) {
           return function() {
             var textbook;
-            textbook = _.findWhere(_this.textbooks, {
-              "id": data.term_ids.textbook
-            });
+            if (_this.groupType === 'quiz' || _this.groupType === 'student-training') {
+              textbook = _.findWhere(_this.textbooks, {
+                "id": parseInt(data.term_ids.textbook)
+              });
+            } else {
+              console.log(_this.groupType);
+              textbook = _.findWhere(_this.textbooks, {
+                "id": data.term_ids.textbook
+              });
+            }
             if (textbook != null) {
               return textbook.name;
             }
           };
         })(this);
+        console.log(data.textbookName);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
@@ -102,6 +111,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.initialize = function(options) {
+        console.log("here");
         this.textbooks = options.textbooksCollection;
         this.chapters = options.chaptersCollection;
         return this.groupType = options.groupType;
@@ -227,7 +237,12 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        return this.$el.attr('colspan', 6);
+        console.log(this.groupType);
+        if (this.groupType === 'quiz') {
+          return this.$el.attr('colspan', 9);
+        } else {
+          return this.$el.attr('colspan', 7);
+        }
       };
 
       return EmptyView;
@@ -271,14 +286,16 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ModulesListingView.prototype.events = {
         'change .textbook-filter': function(e) {
-          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+          this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+          return console.log(e.target.id);
         },
         'change #check_all_div': function() {
           return $.toggleCheckAll(this.$el.find('table'));
         },
         'change .tab_checkbox,#check_all_div ': 'showSubmitButton',
         'change #content-post-status-filter': 'setFilteredContent',
-        'click .change-status button': 'changeStatus'
+        'click .change-status button': 'changeStatus',
+        'click .send-email-to-stud button': 'sendEmailStud'
       };
 
       ModulesListingView.prototype.initialize = function() {
@@ -296,15 +313,43 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ModulesListingView.prototype.onShow = function() {
-        var textbookFiltersHTML;
+        var division, textbookFiltersHTML;
+        division = this.$el.find('#s2id_divisions-filter').html();
+        console.log(division);
         textbookFiltersHTML = $.showTextbookFilters({
           textbooks: this.textbooksCollection
         });
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         this.$el.find('#textbook-filters').html(textbookFiltersHTML);
-        this.$el.find(".select2-filters").select2();
         this.$el.find('#content-pieces-table').tablesorter();
         return this.onUpdatePager();
+      };
+
+      ModulesListingView.prototype.sendEmailStud = function(e) {
+        var allQuizIDs, data, excludeIDs;
+        console.log("email sent module executed");
+        data = [];
+        this.$el.find('.communication_sent').remove();
+        allQuizIDs = _.map($.getCheckedItems(this.$el.find('#content-pieces-table')), function(m) {
+          return parseInt(m);
+        });
+        excludeIDs = _.chain(this.collection.where({
+          'taken_by': 0
+        })).pluck('id').value();
+        data.quizIDs = allQuizIDs;
+        console.log(data.quizIDs);
+        data.division = this.$el.find('#divisions-filter').val();
+        if ($(e.target).hasClass('send-email')) {
+          data.communication_mode = 'email';
+        } else {
+          data.communication_mode = 'sms';
+        }
+        if (_.isEmpty(data.quizIDs)) {
+          return this.$el.find('.send-email').after('<span class="m-l-40 text-error small communication_sent"> No quiz has been selected</span>');
+        } else {
+          console.log(data);
+          return this.trigger("save:communications", data);
+        }
       };
 
       ModulesListingView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType) {
@@ -340,9 +385,11 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ModulesListingView.prototype.showSubmitButton = function() {
         if (this.$el.find('.tab_checkbox').is(':checked')) {
-          return this.$el.find('.change-status').show();
+          this.$el.find('.change-status').show();
+          return this.$el.find('.send-email-to-stud').show();
         } else {
-          return this.$el.find('.change-status').hide();
+          this.$el.find('.change-status').hide();
+          return this.$el.find('.send-email-to-stud').hide();
         }
       };
 

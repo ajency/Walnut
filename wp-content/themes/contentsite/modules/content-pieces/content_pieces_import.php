@@ -3,8 +3,10 @@
 function theme_add_csv_components($defined_csv_components){
 
    $defined_csv_components['mcq'] = array(
+      'Textbook_name', 'Textbook', 'Chapter_name',
+      'Chapter', 'Sections_name', 'Sections',
+      'Subsections_name', 'Subsections',
       'Question', 'Question Image',
-      'Textbook', 'Chapter', 'Sections', 'Subsections',
       'Total Marks', 'Multiple Correct Answers', 'Correct Answer',
       'Option1','Option1 Image','Mark1',
       'Option2','Option2 Image','Mark2',
@@ -21,7 +23,6 @@ function theme_add_csv_components($defined_csv_components){
 add_filter('add_csv_components_filter','theme_add_csv_components',10,1);
 
 function import_csv_mcq_record($import_response,$record){
-
     require_once 'ImportContentPiece/ImportMCQ.php';
     $importMCQ = new ImportMCQ($record);
     $response  = $importMCQ->import($import_response);

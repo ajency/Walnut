@@ -54,6 +54,14 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
               chapter = _.chain(_this.chapters.findWhere({
                 "id": data.term_ids.chapter
               })).pluck('name').compact().value();
+              console.log(chapter);
+              if (typeof (chapter.length = 0)) {
+                console.log("empty");
+                console.log(_this.chap);
+                chapter = _.chain(_this.chap.findWhere({
+                  "id": data.term_ids.chapter
+                })).pluck('name').compact().value();
+              }
               return chapter;
             }
           };
@@ -101,8 +109,10 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListItemView.prototype.initialize = function(options) {
+        console.log(options);
         this.textbooks = options.textbooksCollection;
-        return this.chapters = options.chaptersCollection;
+        this.chapters = options.chaptersCollection;
+        return this.chap = options.chapCollection;
       };
 
       ListItemView.prototype.addSpinner = function() {
@@ -174,6 +184,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
+      console.log("EmptyView");
+
       EmptyView.prototype.template = 'No Content Available';
 
       EmptyView.prototype.tagName = 'td';
@@ -209,9 +221,11 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.itemViewContainer = '#list-content-pieces';
 
       ListView.prototype.itemViewOptions = function() {
+        console.log('list');
         return {
           textbooksCollection: this.textbooks,
-          chaptersCollection: Marionette.getOption(this, 'chaptersCollection')
+          chaptersCollection: Marionette.getOption(this, 'chaptersCollection'),
+          chapCollection: Marionette.getOption(this, 'chapCollection')
         };
       };
 
@@ -246,6 +260,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.onShow = function() {
         var textbookFiltersHTML;
+        this.chaptersCollection = Marionette.getOption(this, 'chaptersCollection');
         this.textbooksCollection = Marionette.getOption(this, 'textbooksCollection');
         this.fullCollection = Marionette.getOption(this, 'fullCollection');
         textbookFiltersHTML = $.showTextbookFilters({
@@ -323,11 +338,18 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
           return function(result) {
             data.action = 'bulk-move-content-pieces';
             return $.post(AJAXURL, data).success(function(resp) {
+              var i;
+              i = 0;
+              while (i < data.IDs.length) {
+                $('#checkbox' + data.IDs[i]).closest('tr').remove();
+                i++;
+              }
               return bootbox.alert('Moved Successfully.');
             }).fail(function(resp) {
               console.log('some error occurred');
               return console.log(resp);
             }).done(function() {
+              $("#destination_textbook").hide();
               return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
             });
           };

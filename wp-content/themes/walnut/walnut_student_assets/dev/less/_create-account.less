@@ -10,10 +10,82 @@
 
 
 
-
 // ---------------------------
 // CREATE ACCOUNT STYLES -----------
 // ---------------------------
+
+
+// .create-ac-card {
+//     position: relative;
+//     .create-ac-wrapper {
+//         position: absolute;
+//         width: 100%;
+//         z-index: 999;
+//         // top: -30px;
+//         top: 56px;
+//         margin-bottom: 30px;
+//         font-family: open-sans;
+//         .wrapped {
+//             .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
+//             background: #fff;
+//             padding: 15px 15px 0 15px;
+//             .account-head {
+//                 text-align: center;
+//                 font-weight: bold;
+//                 color: @quiz-link-color1;
+//             }
+//             .student-info, .parents-info {
+//                 margin-bottom: 15px;
+//                 h5 {
+//                     padding-left: 30px;
+//                     color: #602f1a;
+//                 }
+//                 .info {
+//                     .sel-mandatory{
+//                         &:before{
+//                             content: '*';
+//                             font-weight: bold;
+//                             color: #FF0D00;
+//                         }
+//                     }
+//                      select {
+//                         margin: 12px 0 0 0;
+//                         padding: 11px 0;
+//                         border: 0;
+//                         outline: none;
+//                         border-bottom: 1px solid #ccc;
+//                         width: 82%;
+//                         color: #928E8E;
+//                         background: none;
+//                     }
+//                     .mat-holder{
+//                         margin: 0;
+//                         .mat-label,.mat-input,&:after,&:before{
+//                             width: 80%;
+//                             .mandatory{
+//                                 color: #FF0D00;
+//                                 font-weight: bold;
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//             .create-ac {
+//                 background: #f3f3f3;
+//                 padding: 20px;
+//                 button {
+//                     background: @button-2-theme;
+//                     color: #fff;
+//                     padding: 10px 25px;
+//                     text-transform: uppercase;
+//                     &:hover {
+//                         background: lighten(@button-2-theme, 10%);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 
 
 .create-ac-card {
@@ -23,15 +95,59 @@
         width: 100%;
         z-index: 999;
         top: -30px;
+        // top: 56px;
         margin-bottom: 30px;
+        font-family: open-sans;
         .wrapped {
             .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
             background: #fff;
-            padding: 15px 15px 0 15px;
+            padding: 15px 0px 0 0px;
+            hr{
+                margin-bottom: 0;
+            }
             .account-head {
                 text-align: center;
                 font-weight: bold;
                 color: @quiz-link-color1;
+            }
+            .panel-group{
+                margin: 0;
+                .panel{
+                    margin-top: 0;
+                    border-top: 0;
+                    border-radius: 0;
+                    .panel-heading{
+                        border-radius: 0;
+                        text-align: center;
+                        padding: 0;
+                        transition: all 0.5s ease-in-out;
+                        &:hover{
+                            background: #D8D4D4;
+                        }
+                        .panel-title{
+                            a{
+                                text-decoration: none;
+                                display: block;
+                                padding: 15px;
+                            }
+                        }
+                    }
+                    .panel-body{
+
+                    }
+                }
+            }
+            .panel-body{
+                padding: 0;
+                .student-alert{
+                    text-align: center;
+                    margin: 0;
+                    padding: 20px;
+                    font-size: 1.1em;
+                }
+            }
+            .parents-info{
+                padding: 15px 0;
             }
             .student-info, .parents-info {
                 margin-bottom: 15px;
@@ -40,6 +156,13 @@
                     color: #602f1a;
                 }
                 .info {
+                    .sel-mandatory{
+                        &:before{
+                            content: '*';
+                            font-weight: bold;
+                            color: #FF0D00;
+                        }
+                    }
                      select {
                         margin: 12px 0 0 0;
                         padding: 11px 0;
@@ -63,18 +186,191 @@
                 }
             }
             .create-ac {
-                background: #f3f3f3;
-                padding: 20px;
-                button {
-                    background: @button-2-theme;
-                    color: #fff;
-                    padding: 10px 25px;
-                    text-transform: uppercase;
-                    &:hover {
-                        background: lighten(@button-2-theme, 10%);
+                padding: 0px 15px;
+                & > div{
+                        background: #f3f3f3;
+                        padding: 20px;
+                    button {
+                        background: @button-2-theme;
+                        color: #fff;
+                        padding: 10px 25px;
+                        text-transform: uppercase;
+                        &:hover {
+                            background: lighten(@button-2-theme, 10%);
+                        }
                     }
+                }
+            }
+            .added_students{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                button{
+                    color: #fff;
+                    padding: 10px;
+                    margin: 5px;
+                    text-transform: uppercase;
+                    border-radius: 5px;
+                    &.odd{
+                        background: @button-2-theme;
+                        &:hover{
+                            background: lighten(@button-2-theme, 10%);
+                        }
+                    }
+                    &.even{
+                        background: @button-1-danger;
+                        &:hover{
+                            background: lighten(@button-1-danger, 10%);
+                        }
+                    }   
                 }
             }
         }
     }
 }
+
+// ---------------------------
+// FOR SELECTING CHILDREN IF MANY -----------
+// ---------------------------
+
+
+#walnut-modal{
+    &.modal{
+        &.in{
+            display: flex !important;
+            align-items:center;
+            justify-content:center;
+            background: rgba(255,255,255,0.3);
+            font-family: open-sans;
+        }
+        .modal-body{
+            text-align: center;
+            padding: 20px;
+            h4{
+                margin: 0;
+                color: @quiz-link-color3;
+                text-transform: capitalize;
+            }
+            .child{
+                color: #fff;
+                padding: 10px 0;
+                text-transform: uppercase;
+                width: 30%;
+                border-radius: 5px;
+                &.old{
+                    background: @button-2-theme;
+                    &:hover{
+                        background: lighten(@button-2-theme, 10%);
+                    }
+                }
+                &.new{
+                    background: @button-1-danger;
+                    &:hover{
+                        background: lighten(@button-1-danger, 10%);
+                    }
+                }            
+            }
+            form{
+                hr{
+                    width: 35%;
+                    margin:8px auto;
+                    border-color: #B8C1C1;
+                }
+            }
+        }
+    }
+}
+
+
+
+// ---------------------------
+// FOR ADDING MULTIPLE CHILDREN -----------
+// ---------------------------
+
+
+.add-student{
+    font-family: open-sans;
+    .modal-header{
+        color: @quiz-link-color3;
+        text-align: center;
+        text-transform: capitalize;
+    }
+    .modal-body{
+        padding-top: 0;
+        .student-info{
+            // margin-bottom: 15px;
+            padding: 10px;
+            h5 {
+                padding-left: 30px;
+                color: #602f1a;
+            }
+            .info {
+                text-align: center;
+                .sel-mandatory{
+                    &:before{
+                        content: '*';
+                        font-weight: bold;
+                        color: #FF0D00;
+                    }
+                }
+                 select {
+                    margin: 12px 0 0 0;
+                    padding: 11px 0;
+                    border: 0;
+                    outline: none;
+                    border-bottom: 1px solid #ccc;
+                    width: 82%;
+                    color: #928E8E;
+                    background: none;
+                }
+                .mat-holder{
+                    margin: 0;
+                    .mat-label,.mat-input,&:after,&:before{
+                        width: 80%;
+                        .mandatory{
+                            color: #FF0D00;
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .modal-footer{
+            background: #f3f3f3;
+            padding: 20px;
+        button {
+            background: @button-2-theme;
+            color: #fff;
+            padding: 10px 25px;
+            text-transform: uppercase;
+            &:hover {
+                background: lighten(@button-2-theme, 10%);
+            }
+            &.cancel{
+                background: @button-1-danger;
+                &:hover{
+                    background: lighten(@button-1-danger, 10%);
+                }
+            }
+        }
+    }    
+}
+
+
+
+// ---------------------------
+// DISABLE STUDENT INFORMATION ONLOAD -----------
+// ---------------------------
+
+.panel-disabled{
+    pointer-events: none;
+}
+
+
+
+
+
+
+

@@ -25,9 +25,29 @@ add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');
 function ajax_fetch_all_quizes(){
 
     $args = $_GET;
+
     $defaults = array(
         'textbook' => '',
-        'post_status' => 'publish',
+        'post_status' => 'published', // published
+        'quiz_type' => ''
+    );
+    $args = wp_parse_args($args,$defaults);
+    if (is_array($args['textbook']))
+        $quiz_modules = get_required_quiz_modules($args);
+    else
+        $quiz_modules = get_all_quiz_modules($args);
+    wp_send_json(array('code' => 'OK', 'data' =>$quiz_modules));
+}
+
+add_action('wp_ajax_get-quizes','ajax_fetch_all_quizes');
+
+/* function to get archived quizes*/
+function ajax_fetch_archived_quizes(){
+
+    $args = $_GET;
+    $defaults = array(
+        'textbook' => '',
+        'post_status' => 'archive',
         'quiz_type' => ''
     );
     $args = wp_parse_args($args,$defaults);
@@ -35,7 +55,8 @@ function ajax_fetch_all_quizes(){
     wp_send_json(array('code' => 'OK', 'data' =>$quiz_modules));
 }
 
-add_action('wp_ajax_get-quizes','ajax_fetch_all_quizes');
+add_action('wp_ajax_get-archived-quizes','ajax_fetch_archived_quizes');
+
 
 function save_quiz_response_summary(){
     
@@ -55,8 +76,10 @@ add_action('wp_ajax_update-quiz-response-summary','save_quiz_response_summary');
 
 function fetch_quiz_response_summary(){
 
+
     unset($_GET['action']);
     $args = $_GET;
+       # file_put_contents("quiz.txt", $_GET);
 
     $quiz_summary = array();
 
@@ -170,3 +193,14 @@ function ajax_clear_quiz_schedule(){
     }
 }
 add_action('wp_ajax_clear-quiz-schedule', 'ajax_clear_quiz_schedule');
+
+
+function wp_ajax_add_textbook(){
+
+    #wp_handle_upload( $file, $overrides, $time );
+    $data = apply_filters('wp_ajax_add_tag', $_POST);
+    return $data;
+
+}
+
+add_action('wp_ajax_add-textbook', 'wp_ajax_add_textbook');

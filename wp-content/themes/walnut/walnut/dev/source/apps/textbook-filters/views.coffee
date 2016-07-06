@@ -13,10 +13,20 @@ define ['app'], (App)->
                                         {{/divisions}}
                                     </select>
                                     {{/divisions_filter}}
+
+                                    {{#textbooks_multi_filter}}
+                                    <select id="textbooks-filter" class="textbook-filter select2-filters" multiple="multiple" data-placeholder="Select Textbook">
+                                            <!--option value="-1" selected>Select Textbook</option-->
+                                    {{#textbooks}}
+                                           <option value="{{id}}">{{&name}}</option>
+                                        <{{/textbooks}}
+                                    </select>
+                                    {{/textbooks_multi_filter}}
+                                    
                                     {{#textbooks_filter}}
                                     <select class="textbook-filter select2-filters" id="textbooks-filter">
                                         {{#textbooks}}
-                                           <option value="{{id}}">{{&name}}</option>
+                                           <option value="{{id}}" >{{&name}}</option>
                                         {{/textbooks}}
                                     </select>
                                     {{/textbooks_filter}}
@@ -96,7 +106,12 @@ define ['app'], (App)->
 
             events:
                 'change #textbooks-filter':(e)->
+                    console.log $(e.target).val()
                     @trigger "fetch:new:content", $(e.target).val()
+
+                #'change #textbooks-multi-filter':(e)->
+                #    textbookIDs = [638,636]
+                #    @trigger "fetch:new:content", textbookIDs
 
                 'change #divisions-filter':(e)->
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
@@ -124,6 +139,10 @@ define ['app'], (App)->
                     t=[]
                     t.id = m.get 'term_id'
                     t.name= m.get 'name'
+                    #name= m.get 'name'
+                    #name = name.split('(');
+                    #t.name = name[0]
+                    #console.log t.name
                     t
 
                 if divisions
@@ -136,6 +155,7 @@ define ['app'], (App)->
                 filters= Marionette.getOption @, 'filters'
 
                 data.divisions_filter = true if _.contains filters, 'divisions'
+                data.textbooks_multi_filter = true if _.contains filters, 'multi_textbooks'
                 data.textbooks_filter = true if _.contains filters, 'textbooks'
                 data.chapters_filter = true if _.contains filters, 'chapters'
                 data.sections_filter = true if _.contains filters, 'sections'
@@ -155,22 +175,26 @@ define ['app'], (App)->
 
 
             onShow:->
-
+                console.log "onShow"
                 $ ".filters select"
                 .select2();
-
+                console.log @
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
+
+                console.log @contentGroupModel
 
                 if @contentGroupModel
                     term_ids= @contentGroupModel.get 'term_ids'
                     $ "#textbooks-filter"
                     .select2().select2 'val', term_ids['textbook']
 
+                    #@setFilteredContent()
                     @setFilteredContent()
 
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
 
+                console.log currItem
                 switch filterType
                     when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
@@ -181,9 +205,12 @@ define ['app'], (App)->
 
 
             setFilteredContent:->
-
+                console.log "setFilteredContent"
+                console.log @
                 dataType= Marionette.getOption @, 'dataType'
+                #console.log dataType
                 filtered_data= $.filterTableByTextbooks(@,dataType)
+                console.log filtered_data
 
                 @collection.reset filtered_data
                 @trigger "update:pager"

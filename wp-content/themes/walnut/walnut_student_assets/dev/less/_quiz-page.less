@@ -37,7 +37,7 @@
      }
      .direction {
          margin: 0;
-         padding-top: 30px;
+         padding-top: 10px;
      }
      // ---------------------------
      // IF QUIZES ARE ATTEMPTED THEN DETAIL DROPDOWN -----------
@@ -51,7 +51,7 @@
                      margin: 0;
                      .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
                      .grid-title{
-                        padding: 20px 15px;
+                        padding: 0 15px;
                         background: #eee;
                         .tools{
                             & > a{
@@ -80,7 +80,12 @@
                  h4 {
                      font-size: 1.2em;
                      margin: 0;
+                     padding: 20px 0;
+                     width: 98%;
                      color: @quiz-link-color3;
+                 }
+                 .tools{
+                    padding: 20px 0;
                  }
              }
          }
@@ -101,7 +106,6 @@
      // ---------------------------
 
      #quiz-details-region {
-         // margin-top: 20px;
          & > div {
              background: #F0F0F0;
              .box-shadow(0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12));
@@ -213,8 +217,33 @@
      }
  }
 
-
-
  .all-d-best{
         margin:30px 0;
  }
+
+
+
+
+// ---------------------------
+// MOZILLA LIGHTER FONT FOR QUIZ SUMMARY INFO -----------
+// ---------------------------
+
+
+
+@-moz-document url-prefix() { 
+     .teacher-app {
+         #quiz-details-region {
+             & > div {
+                 .grid {
+                     .grid-body {
+                         h3 {
+                             & > span {
+                                 font-weight: lighter;
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+     }
+}

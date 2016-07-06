@@ -1,0 +1,38 @@
+<!-- BEGIN PAGE TITLE -->
+<div class="page-title"><!--<i class="icon-custom-left"></i>-->
+	<h3>Chapter<span class="semi-bold"> {{&name}}</span></h3>		
+</div>
+<!-- END PAGE TITLE -->
+<div class="tiles cover-pic-wrapper">						
+	<div class="overlayer bottom-right"></div>
+{{&cover_pic}}
+</div>
+<div class="tiles white">
+
+	<div class="row">
+		<div class="col-md-4 col-sm-4" >
+			<div class="user-mini-description">
+				<!--h3 class="text-success semi-bold">
+					{{chapter_count}}
+				</h3>
+				<h5>Chapters</h5-->
+				<h3 class="text-success semi-bold">
+					{{questions_count}}
+				</h3>
+				<h5>Questions</h5>
+			</div>
+		</div>
+		<div class="col-md-7 user-description-box  col-sm-7">
+			<h4 class="semi-bold no-margin">{{&name}}</h4>
+			{{#author}}<h6 class="no-margin">By {{author}}</h6>{{/author}}
+			<p>{{&description}}</p>
+		</div>
+		<!--<div class="col-md-3  col-sm-3">
+			<h5 class="normal">Chapters ( <span class="text-success">{{chapter_count}}</span> )</h5>
+			<h5 class="normal">Questions ( <span class="text-success">{{count}}</span> )</h5>
+			
+			<div class="clearfix"></div>
+		</div>	-->			
+	</div>
+
+</div>

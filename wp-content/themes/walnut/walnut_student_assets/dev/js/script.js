@@ -133,10 +133,12 @@ $(function() {
 
      $( ".mat-input" ).each(function( index ) {
         if($(this).val()!==""){
-
             $( this ).parent().addClass("is-active is-completed");
         }
     });
+
+
+
 
     //Grid load effect onload
 
@@ -180,19 +182,11 @@ $(function() {
     // }
 
 
-
-
-
-
-
-
     //Popover onclick for notification
         
     $('.notification').click(function(){
-          
 
     $(this).toggleClass('generate-popover').removeClass('destroy-popover').parent().parent().siblings().children().find('.notification').toggleClass('destroy-popover').removeClass('generate-popover');
-
 
      });
 
@@ -214,30 +208,43 @@ $(function() {
 
     //Orientation check if portrait or landscape
 
-    $(window).bind("orientationchange", function(){
-       
-    if(window.innerHeight > window.innerWidth){
-         $('body').css({
-            "display": "block"
-        });
-    }
-    else
-    {
-         $('body').css({
-            "display": "none"
-        });
-         alert('Please Load in Landscape mode to view this site!');
-    }
-
+    $(window).bind("orientationchange", function() {
+        if (window.innerHeight > window.innerWidth) {
+            $('body').css({
+                "display": "block"
+            });
+        } else {
+            $('body').css({
+                "display": "none"
+            });
+            alert('Please Load in Landscape mode to view this site!');
+        }
     });
-
-    if(window.innerHeight > window.innerWidth){
+    if (window.innerHeight > window.innerWidth) {
         $('body').css({
             "display": "none"
         });
         alert("Please Load in Landscape mode to view this site!");
     }
 
+
+    //Modal for selcting children account if many
+
+    $('#walnut-modal,#logout-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+
+
+
+
+    $('#logout').click(function(){
+        $('#logout-modal').removeClass('hidden');
+        $('#logout-modal').modal({
+        backdrop: 'static',
+        keyboard: false
+        });
+    })
 
 
 });

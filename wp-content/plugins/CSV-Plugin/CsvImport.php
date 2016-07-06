@@ -404,6 +404,12 @@ class CsvImport{
             $csv_json = $this->parseCSV($_FILES['csv_file']['tmp_name']);
             
             $csvData = json_decode($csv_json);
+            $row_count = count($csvData);
+
+
+            if ( empty($csvData[$row_count-1][0]) == true && count($csvData[$row_count-1]) == 1){
+            	unset($csvData[$row_count-1]);
+            }            
             
             $i=0;
             $preview_rows = array();

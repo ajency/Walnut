@@ -119,6 +119,7 @@ function get_taught_in_class_template_data($comm_data, $module_id, $division){
 
     switch_to_blog($comm_data['blog_id']);
 
+
     $school_admin = get_school_admin_for_cronjob($comm_data['blog_id']);
 
     $module_details= get_single_content_module($module_id,$division,$school_admin);

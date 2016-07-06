@@ -71,6 +71,15 @@ define ['app'
 						.pluck 'name'
 							.compact()
 							.value()
+						console.log chapter
+						if typeof chapter.length = 0
+							console.log "empty"
+							console.log @chap
+							chapter = _.chain @chap.findWhere "id" : data.term_ids.chapter
+							.pluck 'name'
+							.compact()
+							.value()
+
 						chapter
 
 				data.statusMessage = ->
@@ -102,8 +111,10 @@ define ['app'
 				'click a.publishModule' :-> @changeModuleStatus 'publish'
 
 			initialize : (options)->
+				console.log options
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
+				@chap = options.chapCollection
 
 			addSpinner:->
 				@$el.find '.spinner'
@@ -159,7 +170,7 @@ define ['app'
 						.remove()
 
 		class EmptyView extends Marionette.ItemView
-
+			console.log "EmptyView"
 			template: 'No Content Available'
 
 			tagName: 'td'
@@ -180,8 +191,10 @@ define ['app'
 			itemViewContainer: '#list-content-pieces'
 
 			itemViewOptions : ->
+				console.log 'list'
 				textbooksCollection : @textbooks
 				chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
+				chapCollection : Marionette.getOption @, 'chapCollection'
 
 			events:
 				'change #content-post-status-filter, #difficulty-level-filter'  : 'setFilteredContent'
@@ -206,6 +219,7 @@ define ['app'
 						'id' : textbookModel.get('term_id')
 
 			onShow:->
+				@chaptersCollection  = Marionette.getOption @, 'chaptersCollection'
 				@textbooksCollection = Marionette.getOption @, 'textbooksCollection'
 				@fullCollection = Marionette.getOption @, 'fullCollection'
 				textbookFiltersHTML= $.showTextbookFilters  textbooks: @textbooksCollection
@@ -290,11 +304,16 @@ define ['app'
 						data.action = 'bulk-move-content-pieces'
 						$.post AJAXURL, data
 						.success (resp)=>
+							i = 0
+							while i < data.IDs.length
+							  $('#checkbox' + data.IDs[i]).closest('tr').remove()
+							  i++
 							bootbox.alert 'Moved Successfully.'
 						.fail (resp)->
 							console.log 'some error occurred'
 							console.log resp
 						.done ->
+							$("#destination_textbook").hide()
 							$(e.target).find '.fa'
 							.removeClass 'fa-spin fa-spinner'
 							.addClass 'fa-check'

@@ -6,31 +6,40 @@ class ImportMCQ extends ImportContentPiece {
     }
 
     private function set_object_values($record){
+        
 
-        $section = $record[4];
+        if ($record[5] == '#N/A')
+            {$record[5] = '';}
+        $section = $record[5];
         $sectionArray = explode(",",$section);
 
-        $section = $record[5];
+        if ($record[7] == '#N/A')
+            {$record[7] = '';}
+
+        $section = $record[7];
         $subsectionsArray = explode(",",$section);
 
-        $this->question       = $record[0];
-        $this->question_media_path = $record[1];
-        $this->textbook       = $record[2];
+        $this->question       = $record[8];
+        $this->question_media_path = $record[9];
+        $this->textbook       = $record[1];
+        if ($record[3] == '#N/A')
+            {$record[3] = '';}
+        
         $this->chapter        = $record[3];
         $this->sections       = $sectionArray;
         $this->subsections    = $subsectionsArray;
-        $this->totalmarks     = (int) $record[6];
-        $this->multiple       = $record[7];
-        $this->correct        = $record[8];
-        $this->columns        = (int) $record[27];
-        $this->level          = $record[28];
-        $this->tags           = $record[29];
-        $this->hint           = $record[30];
-        $this->comment        = $record[31];
-        $this->duration       = (int) $record[32];
+        $this->totalmarks     = (int) $record[10];
+        $this->multiple       = $record[11];
+        $this->correct        = $record[12];
+        $this->columns        = (int) $record[31];
+        $this->level          = $record[32];
+        $this->tags           = $record[33];
+        $this->hint           = $record[34];
+        $this->comment        = $record[35];
+        $this->duration       = (int) $record[36];
 
         $this->options= array();
-        $optionCols = array(9,12,15,18,21,24);
+        $optionCols = array(13,16,19,22,25,28);
         foreach($optionCols as $optCol){
             if(!empty($record[$optCol]) || !empty($record[$optCol+1])){
                 $this->options[]=array(

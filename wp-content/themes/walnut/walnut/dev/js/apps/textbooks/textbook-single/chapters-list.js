@@ -27,6 +27,8 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
         return EmptyView.__super__.constructor.apply(this, arguments);
       }
 
+      EmptyView.prototype.tagName = 'tr';
+
       EmptyView.prototype.template = nochaptersTpl;
 
       EmptyView.prototype.className = 'gradeX odd';
@@ -56,11 +58,9 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
         $('#example2').tablesorterPager({
           container: $("#pager")
         });
-        $("html, body").animate({
+        return $("html, body").animate({
           scrollTop: 0
         }, 700);
-        console.log('collection');
-        return console.log(this.collection);
       };
 
       return ChapterListView;
