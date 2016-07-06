@@ -44,13 +44,6 @@ define ['app'
 				chapterDescriptionRegion 	: '#textbook-description-region'
 				chaptersRegion				: '#chapters-list-region'
 
-			serializeData: ->
-				data = super()
-				#console.log 'check Admin'
-				#console.log @collection
-				data.isAdmin = @collection.isAdmin
-				data
-
 			events :->
 				'click .add-section' : 'addSection'
 
