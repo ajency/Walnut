@@ -117,7 +117,7 @@ function get_parent_recipients($division){
 
 function get_mail_header($blog_id){
 
-    $header_img = 'http://synapsedu.info/wp-content/themes/walnut/images/synapse-logo-main.png';
+    $header_img = 'http://walnutedu.org/wp-content/themes/walnut/images/synapse-logo-main.png';
 
     $blog= get_blog_details($blog_id, true);
 
@@ -135,7 +135,7 @@ function get_mail_header($blog_id){
 
 function get_mail_footer($blog_id){
 
-    $support_mail = "<a href='mailto:support@synapsedu.info'>support@synapsedu.info</a>";
+    $support_mail = "<a href='mailto:support@walnutedu.org'>support@walnutedu.org</a>";
 
     $footer = "If you are facing any difficulty in accessing the site simply mail us at $support_mail.<br><br>
                 Regards,<br>

@@ -406,7 +406,7 @@ function send_user_notification_email($device_type,$blog_id,$device_meta,$days_r
     
     $msgcontent = $blog_details->blogname .' On Your device/standalone site will expire in '.$days_remaining.' days. <br>'
             . 'You have '.$days_remaining.' days to get the school internet to work and ping before complete deletion of data. ';
-    $headers = 'From: Synapse Learning <admin@synapsedu.info>' . "\r\n";
+    $headers = 'From: Synapse Learning <admin@walnutedu.org>' . "\r\n";
     add_filter('wp_mail_content_type', create_function('', 'return "text/html";'));
     $subject = "Site Content Delete Notification";
     wp_mail($recipient, $subject, $msgcontent, $headers);

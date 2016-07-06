@@ -33,6 +33,7 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
             });
             _this.chapters.textbook_id = textbook_id;
             _this.chapters.parent = term_id;
+            _this.chapters.isAdmin = localStorage.getItem('isAdmin');
             _this.layout = layout = _this._getChaptersSingleLayout();
             _this.listenTo(layout, "show", _this._showChapterSingle);
             _this.listenTo(layout, "show", _this._showSectionsView(_this.chapters));

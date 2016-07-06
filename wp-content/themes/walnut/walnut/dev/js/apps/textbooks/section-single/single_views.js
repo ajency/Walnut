@@ -59,6 +59,13 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
         sectionRegion: '#chapters-list-region'
       };
 
+      SectionSingleLayout.prototype.serializeData = function() {
+        var data;
+        data = SectionSingleLayout.__super__.serializeData.call(this);
+        data.isAdmin = this.collection.isAdmin;
+        return data;
+      };
+
       SectionSingleLayout.prototype.events = function() {
         return {
           'click .add-sub': 'addSub'
