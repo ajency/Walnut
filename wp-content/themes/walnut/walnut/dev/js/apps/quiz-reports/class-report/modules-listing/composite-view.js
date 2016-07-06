@@ -125,7 +125,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
         data.start_date = $start_date;
         data.end_date = $end_date;
         if (_.isEmpty(data.quizIDs)) {
-          return this.$el.find('.send-summary').after('<span class="m-l-40 text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
+          return this.$el.find('.send-summary').after('<span class="m-l-20 text-error small communication_sent"> Not taken by any student</span>');
         } else {
           console.log(data);
           return this.trigger("summary:communication", data);
@@ -152,7 +152,7 @@ define(['app', 'text!apps/quiz-reports/class-report/modules-listing/templates/ou
           data.communication_mode = 'sms';
         }
         if (_.isEmpty(data.quizIDs)) {
-          return this.$el.find('.send-email').after('<span class="text-error small communication_sent"> Selected quizzes have not been taken by any student</span>');
+          return this.$el.find('.send-email').after('<span class="text-error small communication_sent">Not taken by any student</span>');
         } else {
           return this.trigger("save:communications", data);
         }

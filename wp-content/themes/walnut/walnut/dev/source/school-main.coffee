@@ -35,7 +35,7 @@ require.config
 		detect: 'plugins/detect'
 		moment: 'plugins/moment.min'
 		select2: 'plugins/select2'
-		datepicker: 'plugins/bootstrap-datepicker'
+		#datepicker: 'plugins/bootstrap-datepicker'
 		new_moment: 'plugins/new_moment'
 		datetimepicker: 'plugins/datetimepicker.min'
 		jquery_listnav: 'plugins/jquery-listnav'
@@ -81,7 +81,7 @@ require.config
 		syphon: ['backbone']
 		moment: ['jquery']
 		select2: ['jquery', 'bootstrap']
-		datepicker: ['jquery', 'bootstrap']
+		#datepicker: ['jquery', 'bootstrap']
 		timepicker: ['jquery', 'bootstrap']
 		new_moment: ['jquery']
 		datetimepicker: ['jquery', 'new_moment', 'bootstrap']

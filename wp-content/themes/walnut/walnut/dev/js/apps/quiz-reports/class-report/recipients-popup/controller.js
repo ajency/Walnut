@@ -13,14 +13,16 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       }
 
       Controller.prototype.initialize = function(options) {
-        var recipients;
+        var data, recipients;
+        console.log(options);
         this.communicationModel = options.communicationModel;
         recipients = this.communicationModel.getRecipients();
+        data = recipients;
         return recipients.done((function(_this) {
           return function(result) {
             var recipientsCollection;
             recipientsCollection = new Backbone.Collection(result);
-            if (options.communicationModel.attributes.communication_type === 'quiz_summary_parent_mail') {
+            if (options.communicationModel.attributes.communication_type === 'quiz_published_parent_mail' || options.communicationModel.attributes.communication_type === 'quiz_summary_parent_mail') {
               recipientsCollection = new Backbone.Collection(result[0]);
             }
             recipientsCollection.each(function(m, index) {
@@ -48,10 +50,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
         })(this));
       };
 
-      Controller.prototype._getSelectRecipientsView = function(recipients) {
+      Controller.prototype._getSelectRecipientsView = function(recipients, data) {
         return new QuizRecipientsPopup.Views.RecipientsView({
           model: this.communicationModel,
-          collection: recipients
+          collection: recipients,
+          data: data
         });
       };
 
