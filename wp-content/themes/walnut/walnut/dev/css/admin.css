@@ -186,6 +186,7 @@
 
 .page-content{
   min-height: auto;
+  overflow: initial;
 }
 
 
