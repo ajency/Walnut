@@ -1023,10 +1023,53 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 }
 
 
+function read_current_quiz_response_summary($summary_id){
+    global $wpdb;
+    if(!$summary_id)
+        return false;
+    $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
+        where summary_id = %s", $summary_id));    
+    
+    if(!$quiz_response_summary)
+        return false;
+    $quiz_meta = maybe_unserialize($quiz_response_summary->quiz_meta);
+    unset($quiz_response_summary->quiz_meta);
+    $quiz_response_summary->status = $quiz_meta['status'];
+    $quiz_response_summary->questions_order = $quiz_meta['questions_order'];
+    $additional_details_qry = $wpdb->prepare(
+        "SELECT
+            SUM(marks_scored) as total_marks_scored,
+            SUM(
+                CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as negative_scored,
+            SUM(
+               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as marks_scored,
+            SUM(time_taken) as total_time_taken
+            FROM {$wpdb->prefix}quiz_question_response
+        WHERE summary_id = %s", $quiz_response_summary->summary_id
+    );
+    $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
+    $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
+    $additional_details= $wpdb->get_row($additional_details_qry);
+    $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;
+    $quiz_response_summary->negative_scored = (float) $additional_details->negative_scored;
+    $quiz_response_summary->total_marks_scored = (float) $additional_details->total_marks_scored;
+    $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
+    $questions_skipped_qry = $wpdb->prepare(
+        "SELECT count(status) from {$wpdb->prefix}quiz_question_response
+        WHERE status LIKE %s AND summary_id LIKE %s",
+        array('skipped', $quiz_response_summary->summary_id)
+    );
+    $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
+    return $quiz_response_summary;
+}
+
+
 function write_quiz_question_response($args){
     global $wpdb;
 
-    $quiz_details = read_quiz_response_summary(array('summary_id'=>$args['summary_id']));
+    $quiz_details = read_current_quiz_response_summary(array('summary_id'=>$args['summary_id']));
 
     $quiz_module = get_single_quiz_module($quiz_details->collection_id);
 
