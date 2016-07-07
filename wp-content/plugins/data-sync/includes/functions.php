@@ -234,9 +234,11 @@ add_action( 'wp_ajax_nopriv_upsync_upload', 'upload_upsync_data' );
 
 function upload_upsync_data(){
 
+
+$file = $_REQUEST['path'].'/'.$_REQUEST['table'].'.csv.gz';
 $cfile = curl_file_create($file,'application/x-gzip',$_REQUEST['table'].'.csv.gz');
 
-if(file_exists($cfile)){
+if(file_exists($file)){
 
 //$post = array('action' => 'save_upsync_upload','file'=>'@'.$file,'folder_id'=>basename($_REQUEST['path']));
 $post = array('action' => 'save_upsync_upload','file'=>$cfile,'folder_id'=>basename($_REQUEST['path']));
