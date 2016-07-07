@@ -86,7 +86,7 @@
 }
 
 .flexContainer .flexChild .input-append{
-	display: flex;
+	/*display: flex;*/
 }
 
 .flexContainer .flexChild .input-append > input[type="text"]{
@@ -184,6 +184,9 @@
   vertical-align: middle;
 }
 
+.page-content{
+  min-height: auto;
+}
 
 
 
