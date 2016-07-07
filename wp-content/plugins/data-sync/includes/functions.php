@@ -230,7 +230,7 @@ function upload_upsync_data(){
 
 $cfile = curl_file_create($file,'application/x-gzip',$_REQUEST['table'].'.csv.gz');
 
-if(file_exists($file)){
+if(file_exists($cfile)){
 
 //$post = array('action' => 'save_upsync_upload','file'=>'@'.$file,'folder_id'=>basename($_REQUEST['path']));
 $post = array('action' => 'save_upsync_upload','file'=>$cfile,'folder_id'=>basename($_REQUEST['path']));
