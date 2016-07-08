@@ -27,7 +27,7 @@ function authenticate_login( $data ) {
 
         $response_data['login_details'] = $login_check;
 
-        restore_current_blog();
+        switch_to_blog($current_blog);
 
         return $response_data;
     }
