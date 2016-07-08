@@ -58,11 +58,9 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/chapters-list.html
         $('#example2').tablesorterPager({
           container: $("#pager")
         });
-        $("html, body").animate({
+        return $("html, body").animate({
           scrollTop: 0
         }, 700);
-        console.log('collection');
-        return console.log(this.collection);
       };
 
       return ChapterListView;

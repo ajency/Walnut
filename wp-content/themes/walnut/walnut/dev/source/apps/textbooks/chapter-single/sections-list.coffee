@@ -17,7 +17,7 @@ define ['app'
 				#data.base_textbook_name = Marionette.getOption @, 'base_textbook_name'
 				data.textbook_id = Marionette.getOption @, 'textbook_id'
 				#data.base_class = Marionette.getOption @, 'base_class'
-				console.log data
+				#console.log data
 				data
 
 		class EmptyView extends Marionette.ItemView
@@ -53,5 +53,5 @@ define ['app'
 				
 				$("html, body").animate({ scrollTop: 0 }, 700);
 
-				console.log 'collection'
+				#console.log 'collection'
 				#console.log @collection

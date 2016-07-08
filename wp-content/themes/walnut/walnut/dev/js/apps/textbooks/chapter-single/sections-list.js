@@ -21,7 +21,6 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/sections-list.html'
         var data;
         data = SectionListItemView.__super__.serializeData.call(this);
         data.textbook_id = Marionette.getOption(this, 'textbook_id');
-        console.log(data);
         return data;
       };
 
@@ -74,10 +73,9 @@ define(['app', 'text!apps/textbooks/chapter-single/templates/sections-list.html'
         $('#example2').tablesorterPager({
           container: $("#pager")
         });
-        $("html, body").animate({
+        return $("html, body").animate({
           scrollTop: 0
         }, 700);
-        return console.log('collection');
       };
 
       return SectionListView;

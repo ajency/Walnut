@@ -12,7 +12,7 @@ define ['app'
 			className: ''
 
 			onShow :->
-				console.log 'Show Model'
+				console.log 'show'
 				#console.log @model 
 
 
@@ -28,8 +28,8 @@ define ['app'
 
 			serializeData: ->
 				data = super()
-				console.log 'check Admin'
-				console.log @collection
+				#console.log 'check Admin'
+				#console.log @collection
 				data.isAdmin = @collection.isAdmin
 				data
 

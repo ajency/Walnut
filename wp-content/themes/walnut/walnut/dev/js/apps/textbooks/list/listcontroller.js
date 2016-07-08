@@ -22,7 +22,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
           return function() {
             var isAdmin, models;
             models = textbooksCollection.models;
-            console.log(models[0].get('isAdmin'));
             isAdmin = models[0].get('isAdmin');
             if (isAdmin === true) {
               return localStorage.setItem('isAdmin', isAdmin);
@@ -59,7 +58,6 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         })(this));
         this.listenTo(this.view, 'search:textbooks', (function(_this) {
           return function(collection) {
-            console.log(collection);
             return _this._getSearchTextbooksView(collection);
           };
         })(this));

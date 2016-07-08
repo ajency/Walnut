@@ -29,7 +29,7 @@ define ['app'
 				data.base_textbook_name = Marionette.getOption @, 'base_textbook_name'
 				data.textbook_id = Marionette.getOption @, 'textbook_id'
 				data.base_class = Marionette.getOption @, 'base_class'
-				console.log data
+				#console.log data
 				data
 
 
@@ -46,8 +46,8 @@ define ['app'
 
 			serializeData: ->
 				data = super()
-				console.log 'check Admin'
-				console.log @collection
+				#console.log 'check Admin'
+				#console.log @collection
 				data.isAdmin = @collection.isAdmin
 				data
 
@@ -56,6 +56,6 @@ define ['app'
 
 			addSection:->
 				
-				console.log @collection
+				#console.log @collection
 				@collection.toAddText = 'true'
 				@trigger 'show:add:textbook:popup', @collection

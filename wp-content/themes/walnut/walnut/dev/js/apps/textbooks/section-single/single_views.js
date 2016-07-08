@@ -15,8 +15,7 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
       SectionDescriptionView.prototype.className = '';
 
       SectionDescriptionView.prototype.onShow = function() {
-        console.log('Show Model');
-        return console.log(this.model);
+        return console.log('Show Model');
       };
 
       SectionDescriptionView.prototype.options = function() {
@@ -38,7 +37,6 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
         data.base_class = Marionette.getOption(this, 'base_class');
         data.base_chapter_name = Marionette.getOption(this, 'base_chapter_name');
         data.base_chapter_id = Marionette.getOption(this, 'base_chapter_id');
-        console.log(data);
         return data;
       };
 
@@ -64,8 +62,6 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
       SectionSingleLayout.prototype.serializeData = function() {
         var data;
         data = SectionSingleLayout.__super__.serializeData.call(this);
-        console.log('check Admin');
-        console.log(this.collection);
         data.isAdmin = this.collection.isAdmin;
         return data;
       };
@@ -77,7 +73,6 @@ define(['app', 'text!apps/textbooks/section-single/templates/section-full.html',
       };
 
       SectionSingleLayout.prototype.addSub = function() {
-        console.log(this.collection);
         this.collection.toAddText = 'true';
         return this.trigger('show:add:textbook:popup', this.collection);
       };

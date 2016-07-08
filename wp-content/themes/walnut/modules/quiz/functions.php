@@ -146,6 +146,149 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     return $data;
 }
 
+//new function created for quiz list and quiz report--with less data fetched
+function get_single_quiz_module_list_report ($id,$user_id=0, $division = 0) {
+
+    
+    $taken_by_stud = [];
+
+    $selected_quiz_id = $id;
+
+    global $wpdb;
+
+    if(!$user_id)
+        $user_id = get_current_user_id();
+
+    $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $selected_quiz_id);
+
+    $data = $wpdb->get_row ($select_query);
+
+    $terms = maybe_unserialize($data->term_ids);
+    $textbook = $terms['textbook'];
+    #fwrite($myfile, $textbook);
+    
+    if (!user_has_access_to_textbook($textbook,$user_id)){
+        return new WP_Error('No Access', __('You do not have access to this quiz') );
+    }
+
+    $data->id = (int)$data->id;
+    $data->name = wp_unslash($data->name);
+
+    $duration = (int)$data->duration;
+    $data->term_ids = $terms;
+
+    $data->duration = $duration;
+    $data->minshours = 'mins';
+    $data->total_minutes = (int)$data->duration;
+    if ($duration >= 60) {
+        $data->minshours = 'hrs';
+        $data->duration = $duration/60;
+    }
+
+    $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
+    $quiz_details = $wpdb->get_results($query_meta);
+
+    $data->permissions = $data->description = array();
+
+    foreach ($quiz_details as $key=>$value){
+
+        /*if ($value->meta_key == 'permissions')
+            $permissions = maybe_unserialize($value->meta_value);
+            if ($permissions)
+                foreach ($permissions as $k=>$v){
+                    $permissions[$k] = filter_var($permissions[$k], FILTER_VALIDATE_BOOLEAN);
+                }
+            $data->permissions = $permissions;*/
+
+        /*if ($value->meta_key == 'description'){
+            $description = maybe_unserialize($value->meta_value);
+
+            if(isset($description['instruction']))
+                $data->description['instruction'] =wp_unslash($description['instruction']);
+
+        }*/
+
+        if ($value->meta_key == 'quiz_type')
+            $data->quiz_type = $value->meta_value;
+
+        /*if ($value->meta_key == 'content_layout')
+            $data->content_layout = maybe_unserialize($value->meta_value);*/
+
+        if ($value->meta_key == 'quiz_meta'){
+            $quiz_meta = maybe_unserialize($value->meta_value);
+            $data->marks = (int)$quiz_meta['marks'];
+            $data->negMarksEnable = $quiz_meta['negMarksEnable'];
+            $data->negMarks = (int)$quiz_meta['negMarks'];
+            $data->message = $quiz_meta['message'];
+        }
+    }
+
+   /* if($user_id){
+        $quiz_status= get_quiz_status($id,$user_id);
+        $data->taken_on= $quiz_status['date'];
+        $data->status = $quiz_status['status'];
+
+        if($data->quiz_type == 'practice')
+            $data->attempts = (int) $quiz_status['attempts'];
+    }*/
+
+    $content_ids = array();
+
+    $show_questions = true;
+    $schedule       = array();
+
+    if($data->quiz_type == 'class_test'){
+        $schedule = get_quiz_schedule($id, $division);
+
+        if($schedule)
+            $data->schedule  = $schedule;        
+
+        if(current_user_can('view_all_quizzes') || $schedule['is_active'] || $data->status =='completed')
+            $show_questions = true;
+        else
+            $show_questions = false;
+    }
+    
+    /*if ($data->content_layout && $show_questions){
+        foreach($data->content_layout as $content){
+            if ($content['type'] == 'content-piece'){
+                $content_ids[] = $content['id'];
+            }
+
+            elseif ($content['type'] == 'content_set'){
+                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
+                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids);
+                foreach($set_content_ids as $id){
+                    $content_ids[] = $id;
+                }
+            }
+        }
+        $data->content_pieces = $content_ids;
+    }*/
+
+    if($division){        
+
+        $data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
+
+        if ($data->taken_by_stud == 0){
+            $data->taken_by = 0;
+        }else{
+        $data->taken_by = sizeof($data->taken_by_stud);
+        }
+
+        $data->missed_by = students_not_taken_quiz($selected_quiz_id, $division);
+        
+        $data->total_students = get_student_count_in_division($division);
+
+    }
+
+    $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";
+    
+    return $data;
+}
+
+
+
 function num_students_taken_quiz($quiz_id, $division){
 
     global $wpdb;  
@@ -218,6 +361,7 @@ function students_not_taken_quiz($quiz_id, $division){
 
 function get_quiz_schedule($quiz_id, $division){
 
+    #file_put_contents("a.txt", $quiz_id);
     global $wpdb;
     global $user_ID;
 
@@ -238,17 +382,19 @@ function get_quiz_schedule($quiz_id, $division){
     if(!$result)
         return false;
 
-    $today = date('Y-m-d');
-
+    date_default_timezone_set("Asia/Kolkata");
+    $today = date('Y-m-d h:i:s A');
+    $today_date = strtotime($today);
     $from   = $result->schedule_from;
     $to     = $result->schedule_to;
+    $from_date = strtotime($from);
+    $to_date = strtotime($to);
     
-    if( ($today >= $from) && ($today <= $to))
+    if( ($today_date >= $from_date) && ($today_date <= $to_date))
         $active = true;
     else
         $active = false;
-
-    if($today > $to)
+    if($today_date > $to_date)
         $expired = true;
     
     else
@@ -376,26 +522,73 @@ function update_quiz_content_layout($data= array()){
 function get_all_quiz_modules($args){
 
     global $wpdb;
-    $textbook_prepare[0] = $textbook_prepare[1] = $$textbook_prepare[2] = $textbook_prepare[3] = $textbook_prepare[4] = $textbook_prepare[5] = '%"xyz"%';
-    
+   
     $textbookss = $args['textbook'];
 
     $type = is_array($args['textbook']) ? '1' : '0';
 
     if ($args['post_status'] =='any'){
-        $args['post_status1'] = '';
-        $args['post_status2'] = '';
+        $post_status1 = '';
+        $post_status2 = '';
         }
 
     if ($args['post_status'] =='published'){
-        $args['post_status1'] = 'publish';
-        $args['post_status2'] = 'archive';
+        $post_status1 = 'publish';
+        $post_status2 = 'archive';
     }
 
     if ( $args['textbook'] =='any')
-            $args['textbook'] = '';
+        $args['textbook'] = '';
+
     if ( $args['quiz_type'] =='any')
-            $args['quiz_type'] = '';
+        $quiz_type = '';
+    else
+        $quiz_type = 'quiz';
+
+    $appendQuery = "SELECT DISTINCT post.id ";
+    $appendQuery .= "FROM {$wpdb->base_prefix}content_collection AS post,
+                {$wpdb->base_prefix}collection_meta AS meta ";
+    $appendQuery .= "WHERE meta.collection_id = post.id
+            AND post.type = '$quiz_type' ";
+    $appendQuery .= "AND (post.post_status LIKE '%$post_status1%' OR post.post_status LIKE '%$post_status2%') ";
+    $appendQuery .= "AND meta.meta_key = 'quiz_type' ";
+    #$appendQuery .= "";
+
+        //onload the type is 0(string)
+    if($type == 0 && !(isset($args['search_str']))){
+        //onload and quiz report since textbook id is 1
+         $appendQuery .= "AND post.term_ids LIKE '%\"xyz@wedgvged\";%' ";
+    }
+
+    //on selecting textbook
+    else if ($type == 1) {
+        $size_text_data = sizeof($textbookss);
+        //$text_ids = implode(",",$textbookss);
+        if ($size_text_data == '1'){
+            $text = $textbookss[0];
+            $appendQuery .= "AND post.term_ids LIKE '%\"$text\";%' ";
+        }
+        else{
+            $term_id_query_inside = '';
+
+            foreach ($textbookss as $key => $text_id) {
+            $textbook_prepare[$key] = '%"'.$text_id.'"%';
+
+            if( $key == $size_text_data-1){
+                 $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"$text_id\";%'";
+            }
+            else{
+                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"$text_id\";%' OR ";
+            }
+
+            }
+            $appendQuery .= "AND ($term_id_query_inside) ";
+
+        }
+
+    }
+
+
 
     $user_id=0;
     
@@ -406,87 +599,10 @@ function get_all_quiz_modules($args){
 
     if(isset($args['quiz_ids']) && sizeof($args['quiz_ids'])>0){
         $quiz_ids_str = join(',', $args['quiz_ids']);
-        $quiz_ids_search_str = " AND post.id in ($quiz_ids_str)";
+        $appendQuery .= "AND post.id in ($quiz_ids_str) ";
     }
 
-    if (empty($args['textbook'])){
-        $textbook_prepare[0] = "%xy@@@zz%";
-        $term_id_query = " AND post.term_ids LIKE %s";
-    }
-
-    //onload the type is 0(string)
-    if($type == 0){
-
-        //if($textbookss == '' || $textbookss == null){
-            $textbook_prepare[0] = "%xy@@@zz%";
-        //}
-        /*else{
-            $textbook_prepare[0] = '%"'.$textbookss.'"%';
-        }*/
-
-        //onload and quiz report since textbook id is 1
-        $term_id_query = " AND post.term_ids LIKE %s";
-    }
-
-    //on selecting textbook
-    else if ($type == 1) {
-        $size_text_data = sizeof($textbookss);
-        //$text_ids = implode(",",$textbookss);
-        if ($size_text_data == '1'){
-            $text = $textbookss[0];
-            $textbook_prepare[0] = '%"'.$textbookss[0].'"%';
-            $term_id_query = " AND post.term_ids LIKE %s";
-        }
-        else{
-            $term_id_query_inside = '';
-
-            foreach ($textbookss as $key => $text_id) {
-            $textbook_prepare[$key] = '%"'.$text_id.'"%';
-            $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s OR ";
-
-            if( $key == $size_text_data-1){
-                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE %s";
-            }
-
-            }
-            $term_id_query = " AND ($term_id_query_inside)";
-
-        }
-
-    }
-
-
-    $query_string = "SELECT DISTINCT post.id
-            FROM {$wpdb->base_prefix}content_collection AS post,
-                {$wpdb->base_prefix}collection_meta AS meta
-            WHERE meta.collection_id = post.id
-            AND post.type = 'quiz'
-            AND (post.post_status LIKE %s OR post.post_status LIKE %s)
-            AND meta.meta_key = %s
-            AND meta.meta_value LIKE %s".
-            $term_id_query.
-            $quiz_ids_search_str;
-
-
-    $post_status_prepare = "%".$args['post_status1']."%";
-    $post_status_prepare2 = "%".$args['post_status2']."%";
-
-    $quiz_type_prepare = "%".$args['quiz_type']."%";
-
-
-
-    
-
-    $query = $wpdb->prepare($query_string,$post_status_prepare,$post_status_prepare2,'quiz_type',$quiz_type_prepare,
-        $textbook_prepare[0],
-        $textbook_prepare[1],
-        $textbook_prepare[2],
-        $textbook_prepare[3],
-        $textbook_prepare[4],
-        $textbook_prepare[5]);
-
-    #file_put_contents("a.txt", $query);
-    $quiz_ids = $wpdb->get_col($query);
+    $quiz_ids = $wpdb->get_col($appendQuery);
 
 
     $result = $results = array();
@@ -500,7 +616,117 @@ function get_all_quiz_modules($args){
 
     foreach ($quiz_ids as $id){
         $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
+        
+        if(!is_wp_error($quiz_data)){
+            $result[] = $quiz_data;
+        }
 
+    }
+
+     
+    $results = __u::sortBy($result, function($item){
+                        return $item->last_modified_on;
+                    });  
+    return $results;
+}
+
+
+function get_required_quiz_modules($args){
+
+    global $wpdb;
+ 
+    $textbookss = $args['textbook'];
+
+    $type = is_array($args['textbook']) ? '1' : '0';
+
+    if ($args['post_status'] =='any'){
+        $post_status1 = '';
+        $post_status2 = '';
+        }
+
+    if ($args['post_status'] =='published'){
+        $post_status1 = 'publish';
+        $post_status2 = 'archive';
+    }
+
+    if ( $args['textbook'] =='any')
+        $args['textbook'] = '';
+
+    if ( $args['quiz_type'] =='any')
+        $quiz_type = '';
+    else
+        $quiz_type = 'quiz';
+
+    $appendQuery = "SELECT DISTINCT post.id ";
+    $appendQuery .= "FROM {$wpdb->base_prefix}content_collection AS post,
+                {$wpdb->base_prefix}collection_meta AS meta ";
+    $appendQuery .= "WHERE meta.collection_id = post.id
+            AND post.type = '$quiz_type' ";
+    $appendQuery .= "AND (post.post_status LIKE '%$post_status1%' OR post.post_status LIKE '%$post_status2%') ";
+    $appendQuery .= "AND meta.meta_key = 'quiz_type' ";
+
+        //onload the type is 0(string)
+    if($type == 0 && !(isset($args['search_str']))){
+        //onload and quiz report since textbook id is 1
+         $appendQuery .= "AND post.term_ids LIKE '%\"xyz@wedgvged\";%' ";
+    }
+
+    //on selecting textbook
+    else if ($type == 1) {
+        $size_text_data = sizeof($textbookss);
+        //$text_ids = implode(",",$textbookss);
+        if ($size_text_data == '1'){
+            $text = $textbookss[0];
+            $appendQuery .= "AND post.term_ids LIKE '%\"$text\";%' ";
+        }
+        else{
+            $term_id_query_inside = '';
+
+            foreach ($textbookss as $key => $text_id) {
+            $textbook_prepare[$key] = '%"'.$text_id.'"%';
+
+            if( $key == $size_text_data-1){
+                 $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"$text_id\";%'";
+            }
+            else{
+                $term_id_query_inside = $term_id_query_inside . "post.term_ids LIKE '%\"$text_id\";%' OR ";
+            }
+
+            }
+            $appendQuery .= "AND ($term_id_query_inside) ";
+
+        }
+
+    }
+
+
+
+    $user_id=0;
+    
+    $quiz_ids_search_str = '';
+
+    if(isset($args['user_id']))
+        $user_id=$args['user_id'];
+
+    if(isset($args['quiz_ids']) && sizeof($args['quiz_ids'])>0){
+        $quiz_ids_str = join(',', $args['quiz_ids']);
+        $appendQuery .= "AND post.id in ($quiz_ids_str) ";
+    }
+
+    $quiz_ids = $wpdb->get_col($appendQuery);
+
+
+    $result = $results = array();
+
+
+    if(isset($args['search_str']) && trim($args['search_str']) !=''){
+        $quiz_ids = get_modules_by_search_string($args['search_str'],$quiz_ids);
+    }
+    $quiz_ids = __u::flatten($quiz_ids);
+
+
+    foreach ($quiz_ids as $id){
+        $quiz_data = get_single_quiz_module_list_report((int)$id,$user_id, $args['division']);
         
         if(!is_wp_error($quiz_data)){
             $result[] = $quiz_data;

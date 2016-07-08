@@ -16,7 +16,7 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
       TextbookDescriptionView.prototype.className = '';
 
       TextbookDescriptionView.prototype.onShow = function() {
-        return console.log('Show Model');
+        return console.log('show');
       };
 
       return TextbookDescriptionView;
@@ -42,8 +42,6 @@ define(['app', 'text!apps/textbooks/textbook-single/templates/textbook-full.html
       TextbookSingleLayout.prototype.serializeData = function() {
         var data;
         data = TextbookSingleLayout.__super__.serializeData.call(this);
-        console.log('check Admin');
-        console.log(this.collection);
         data.isAdmin = this.collection.isAdmin;
         return data;
       };

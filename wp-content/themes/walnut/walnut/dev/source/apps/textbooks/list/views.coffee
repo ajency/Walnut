@@ -72,7 +72,7 @@ define ['app'
 
             serializeData: ->
                 data = super()
-                console.log @collection
+                #console.log @collection
                 ###defer = $.Deferred()
                 url     = AJAXURL + '?action=get-admin-capability'
                 datas = 'data'
