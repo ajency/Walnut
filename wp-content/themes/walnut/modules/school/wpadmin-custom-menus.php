@@ -83,6 +83,13 @@ function import_student_csv($file_path){
     
     $csvData = json_decode($csv_json);
     
+    //new line csv issue
+    $row_count = count($csvData);
+    if ( empty($csvData[$row_count-1][0]) == true && count($csvData[$row_count-1]) == 1){
+        
+        unset($csvData[$row_count-1]);
+    } 
+
     $student_csv_headers = array('USERNAME',
                                  'FIRST_NAME',
                                  'LAST_NAME',
