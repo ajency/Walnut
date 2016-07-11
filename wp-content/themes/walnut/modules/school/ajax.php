@@ -7,7 +7,7 @@ add_action( 'wp_ajax_read-schools', 'fetch_school' );
 function fetch_school(){
 
     $current_blog= get_current_blog_id();
-    if(current_blog==1){
+    if($current_blog==1){
 
     }
     else {
