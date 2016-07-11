@@ -21,7 +21,7 @@ define ['app'], (App)->
                                            <option value="{{id}}">{{&name}}</option>
                                         <{{/textbooks}}
                                     </select>
-                                    <button type="button" class="multi-filters">Go</button>
+                                    <button type="button" class="multi-filters btn btn-small btn-success">Go</button>
                                     {{/textbooks_multi_filter}}
                                     
                                     {{#textbooks_filter}}
