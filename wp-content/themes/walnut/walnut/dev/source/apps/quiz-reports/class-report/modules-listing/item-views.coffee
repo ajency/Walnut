@@ -91,9 +91,6 @@ define ['app','bootbox'], (App,bootbox)->
                 schedule = @model.get 'schedule'
                 from = schedule['from']
                 to   = schedule['to']
-                console.log from
-                console.log to
-                console.log schedule
 
                 #fromDate= moment(from).format("Do MMM YYYY")
                 #toDate= moment(to).format("Do MMM YYYY")

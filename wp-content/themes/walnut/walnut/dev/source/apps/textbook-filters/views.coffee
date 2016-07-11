@@ -107,13 +107,10 @@ define ['app'], (App)->
 
             events:
                 'change #textbooks-filter.div-filters':(e)->
-                    console.log "textbooks-filter"
                     @trigger "fetch:new:content", $(e.target).val()
 
 
                 'click .multi-filters':->
-                    console.log "multi-textbooks-filter"
-                    console.log $('.multi-textbook-filter').select2("val")
                     @trigger "fetch:new:content", $('.multi-textbook-filter').select2("val")
 
                 #'change #textbooks-multi-filter':(e)->
@@ -121,18 +118,15 @@ define ['app'], (App)->
                 #    @trigger "fetch:new:content", textbookIDs
 
                 'change #divisions-filter':(e)->
-                    console.log 'divisions-filter'
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
 
                 'change .filters.new-filter .div-filters' :(e)->
-                    console.log "DIV Filters"
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
                         @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change .filters.new-filter .multi-filters' :(e)->
-                    console.log "MULTI Filters"
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
@@ -194,10 +188,8 @@ define ['app'], (App)->
                 console.log "onShow"
                 $ ".filters select"
                 .select2();
-                console.log @
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 
-                console.log @contentGroupModel
 
                 if @contentGroupModel
                     term_ids= @contentGroupModel.get 'term_ids'
@@ -210,7 +202,6 @@ define ['app'], (App)->
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
 
-                console.log currItem
                 switch filterType
                     when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
@@ -222,11 +213,9 @@ define ['app'], (App)->
 
             setFilteredContent:->
                 console.log "setFilteredContent"
-                console.log @
                 dataType= Marionette.getOption @, 'dataType'
                 #console.log dataType
                 filtered_data= $.filterTableByTextbooks(@,dataType)
-                console.log filtered_data
 
                 @collection.reset filtered_data
                 @trigger "update:pager"

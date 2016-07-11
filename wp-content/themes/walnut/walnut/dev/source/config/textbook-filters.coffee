@@ -188,7 +188,6 @@ define ['jquery', 'underscore'], ($, _)->
         else if dataType is 'quiz'
             #console.log dataType
             filterCollection = App.request "get:quiz:repository"
-            console.log filterCollection
 
         else 
             filterCollection = App.request "get:content:pieces:repository"
@@ -215,28 +214,22 @@ define ['jquery', 'underscore'], ($, _)->
 
         quiz_type = _this.$el.find('#quiz-type-filter').val()
 
-        console.log quiz_type
 
         difficulty_level = parseInt _this.$el.find('#difficulty-level-filter').val()
 
         if content_type
-            console.log "content_type"
             filterCollection.reset  filterCollection.where 'content_type': content_type
 
         if content_status
-            console.log "content_status"
             filterCollection.reset  filterCollection.where 'status': content_status
 
         if content_post_status
-            console.log "content_post_status"
             filterCollection.reset  filterCollection.where 'post_status': content_post_status
 
         if quiz_type
-            console.log "quiz_type"
             filterCollection.reset  filterCollection.where 'quiz_type': quiz_type            
 
         if difficulty_level
-            console.log "difficulty_level"
             filterCollection.reset filterCollection.where 'difficulty_level' : difficulty_level
 
         filtered_models= filterCollection.models
