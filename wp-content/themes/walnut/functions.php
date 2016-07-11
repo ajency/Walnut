@@ -1041,6 +1041,8 @@ if(count($students)>0){
 //Adding student
 add_action( 'wp_ajax_add_parent_student', 'add_parent_student' );
 add_action( 'wp_ajax_nopriv_add_parent_student', 'add_parent_student' );
+
+
 function add_parent_student(){
   $query = $_POST['data'];
   $validate = array(
@@ -1107,6 +1109,8 @@ function get_all_class_divisions(){
 //Logging in universal student
 add_action( 'wp_ajax_login_universal_student', 'login_universal_student' );
 add_action( 'wp_ajax_nopriv_login_universal_student', 'login_universal_student' );
+
+
 function login_universal_student(){
   $userId = $_POST['student_id']; 
   $user = get_user_by( 'id', $userId );
