@@ -189,8 +189,9 @@
   overflow: initial;
 }
 
-.btn.view-report{
-  padding: 2px 4px;
+.btn.view-report,
+.btn.schedule-quiz{
+  padding: 2px 6px;
 }
 
 .table .checkbox{
