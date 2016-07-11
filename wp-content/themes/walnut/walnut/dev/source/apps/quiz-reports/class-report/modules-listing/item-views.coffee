@@ -17,7 +17,7 @@ define ['app','bootbox'], (App,bootbox)->
                         <td>{{quiz_type}}</td>
                         <td>{{taken_by}}</td>
                         {{#can_schedule}}
-                            <td>
+                            <td style="padding: 0 !important; vertical-align: middle;">
                                 {{#class_test}}
                                     <div class="schedule_dates none">
                                         From: 
@@ -31,13 +31,13 @@ define ['app','bootbox'], (App,bootbox)->
                                         <span class="schedule-quiz">change</a></span> | 
                                         <span class="clear-schedule">clear</a>
                                     </div>
-                                    <button id="schedule-button" type="button" class="btn btn-white btn-small pull-left m-r-10 schedule-quiz">
+                                    <button id="schedule-button" type="button" class="btn btn-white btn-small schedule-quiz">
                                         <i class="fa fa-calendar"></i> Schedule
                                     </button>
                                 {{/class_test}}
                             </td>
                         {{/can_schedule}}
-                        <td><button class="btn btn-small btn-success view-report">view report</button></td>'
+                        <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button></td>'
 
             mixinTemplateHelpers :(data) ->
                 textbooks = Marionette.getOption @, 'textbookNamesCollection'
