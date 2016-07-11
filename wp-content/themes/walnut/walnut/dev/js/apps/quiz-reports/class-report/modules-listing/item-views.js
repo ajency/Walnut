@@ -77,9 +77,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
         schedule = this.model.get('schedule');
         from = schedule['from'];
         to = schedule['to'];
-        console.log(from);
-        console.log(to);
-        console.log(schedule);
         if (from && to) {
           this.$el.find('#schedule-from-date').html(from);
           this.$el.find('#schedule-to-date').html(to);

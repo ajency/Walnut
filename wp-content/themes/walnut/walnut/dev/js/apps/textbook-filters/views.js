@@ -16,27 +16,21 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.events = {
         'change #textbooks-filter.div-filters': function(e) {
-          console.log("textbooks-filter");
           return this.trigger("fetch:new:content", $(e.target).val());
         },
         'click .multi-filters': function() {
-          console.log("multi-textbooks-filter");
-          console.log($('.multi-textbook-filter').select2("val"));
           return this.trigger("fetch:new:content", $('.multi-textbook-filter').select2("val"));
         },
         'change #divisions-filter': function(e) {
-          console.log('divisions-filter');
           return this.trigger("fetch:textbooks:by:division", $(e.target).val());
         },
         'change .filters.new-filter .div-filters': function(e) {
-          console.log("DIV Filters");
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
             return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
           }
         },
         'change .filters.new-filter .multi-filters': function(e) {
-          console.log("MULTI Filters");
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
             return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
@@ -121,9 +115,7 @@ define(['app'], function(App) {
         var term_ids;
         console.log("onShow");
         $(".filters select").select2();
-        console.log(this);
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
-        console.log(this.contentGroupModel);
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');
           $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
@@ -132,7 +124,6 @@ define(['app'], function(App) {
       };
 
       TextbookFiltersView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType, currItem) {
-        console.log(currItem);
         switch (filterType) {
           case 'divisions-filter':
             $.populateTextbooks(filteredCollection, this.$el, currItem);
@@ -154,10 +145,8 @@ define(['app'], function(App) {
       TextbookFiltersView.prototype.setFilteredContent = function() {
         var dataType, filtered_data;
         console.log("setFilteredContent");
-        console.log(this);
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);
-        console.log(filtered_data);
         this.collection.reset(filtered_data);
         this.trigger("update:pager");
         return this.$el.find('.loading-collection').remove();
