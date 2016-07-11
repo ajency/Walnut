@@ -200,7 +200,11 @@
   margin-left: 0;
 }
 
-
+.elem-50 input[type="text"],
+.elem-50 textarea{
+  max-width: 50%;
+  width: 50%;
+}
 
 
 

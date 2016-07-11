@@ -49,7 +49,7 @@ define ['app'
                     #model        : @model
         class AddTextbookView extends Marionette.ItemView
 
-            template: '<form id="addTerm">
+            template: '<form id="addTerm" class="elem-50">
                         <div class="row">
                             <div class="col-md-12">
                                 Name:<br>
