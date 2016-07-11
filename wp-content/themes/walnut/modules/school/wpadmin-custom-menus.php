@@ -87,7 +87,7 @@ function import_student_csv($file_path){
     $row_count = count($csvData);
     if ( empty($csvData[$row_count-1][0]) == true && count($csvData[$row_count-1]) == 1){
           
-          unset($csvData[$row_count-1]);
+        unset($csvData[$row_count-1]);
     } 
     
     $student_csv_headers = array('USERNAME',
