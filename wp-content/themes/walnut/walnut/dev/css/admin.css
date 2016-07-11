@@ -189,6 +189,13 @@
   overflow: initial;
 }
 
+.btn.view-report{
+  padding: 2px 4px;
+}
+
+.table .checkbox{
+  margin-left: 0;
+}
 
 
 
