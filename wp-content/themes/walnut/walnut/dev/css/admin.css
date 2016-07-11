@@ -189,7 +189,14 @@
   overflow: initial;
 }
 
+.btn.view-report,
+.btn.schedule-quiz{
+  padding: 2px 6px;
+}
 
+.table .checkbox{
+  margin-left: 0;
+}
 
 
 
