@@ -4,10 +4,10 @@ define ['app'], (App)->
         class Views.TextbookFiltersView extends Marionette.ItemView
 
             template: '<div class="col-xs-11">
-                            <div class="filters">
+                            <div class="filters new-filter">
                                 <div class="table-tools-actions">
                                     {{#divisions_filter}}
-                                        <select class="select2-filters" id="divisions-filter">
+                                        <select class="select2-filters div-filters" id="divisions-filter">
                                         {{#divisions}}
                                            <option value="{{id}}">{{&name}}</option>
                                         {{/divisions}}
@@ -15,16 +15,17 @@ define ['app'], (App)->
                                     {{/divisions_filter}}
 
                                     {{#textbooks_multi_filter}}
-                                    <select id="textbooks-filter" class="textbook-filter select2-filters" multiple="multiple" data-placeholder="Select Textbook">
+                                    <select id="textbooks-filter" class="textbook-filter select2-filters multi-textbook-filter" multiple="multiple" data-placeholder="Select Textbook">
                                             <!--option value="-1" selected>Select Textbook</option-->
                                     {{#textbooks}}
                                            <option value="{{id}}">{{&name}}</option>
                                         <{{/textbooks}}
                                     </select>
+                                    <button type="button" class="multi-filters">Go</button>
                                     {{/textbooks_multi_filter}}
                                     
                                     {{#textbooks_filter}}
-                                    <select class="textbook-filter select2-filters" id="textbooks-filter">
+                                    <select class="textbook-filter select2-filters div-filters" id="textbooks-filter">
                                         {{#textbooks}}
                                            <option value="{{id}}" >{{&name}}</option>
                                         {{/textbooks}}
@@ -32,25 +33,25 @@ define ['app'], (App)->
                                     {{/textbooks_filter}}
 
                                     {{#chapters_filter}}
-                                    <select class="textbook-filter select2-filters" id="chapters-filter">
+                                    <select class="textbook-filter select2-filters div-filters" id="chapters-filter">
                                         <option value="">All Chapters</option>
                                     </select>
                                     {{/chapters_filter}}
 
                                     {{#sections_filter}}
-                                    <select class="textbook-filter select2-filters" id="sections-filter">
+                                    <select class="textbook-filter select2-filters div-filters" id="sections-filter">
                                         <option value="">All Sections</option>
                                     </select>
                                     {{/sections_filter}}
 
                                     {{#subsections_filter}}
-                                    <select class="textbook-filter select2-filters" id="subsections-filter">
+                                    <select class="textbook-filter select2-filters div-filters" id="subsections-filter">
                                         <option value="">All Sub Sections</option>
                                     </select>
                                     {{/subsections_filter}}
 
                                     {{#post_status_filter}}
-                                    <select class="select2-filters selectFilter" id="content-post-status-filter">
+                                    <select class="select2-filters selectFilter div-filters" id="content-post-status-filter">
                                         <option value="any">All Status</option>
                                         <option value="pending">Under Review</option>
                                         <option value="publish">Published</option>
@@ -59,7 +60,7 @@ define ['app'], (App)->
                                     {{/post_status_filter}}
 
                                     {{#post_status_report_filter}}
-                                    <select class="select2-filters selectFilter" id="content-post-status-filter">
+                                    <select class="select2-filters selectFilter div-filters" id="content-post-status-filter">
                                         <option value="any">All Status</option>
                                         <!--option value="pending">Under Review</option-->
                                         <option value="publish" selected>Published</option>
@@ -68,7 +69,7 @@ define ['app'], (App)->
                                     {{/post_status_report_filter}}
 
                                     {{#module_status_filter}}
-                                    <select class="select2-filters selectFilter" id="content-post-status-filter">
+                                    <select class="select2-filters selectFilter div-filters" id="content-post-status-filter">
                                         <option value="any">All Status</option>
                                         <option value="underreview">Under Review</option>
                                         <option value="publish">Published</option>
@@ -77,7 +78,7 @@ define ['app'], (App)->
                                     {{/module_status_filter}}
 
                                     {{#content_type_filter}}
-                                    <select class="content-type-filter select2-filters selectFilter" id="content-type-filter">
+                                    <select class="content-type-filter select2-filters selectFilter div-filters" id="content-type-filter">
                                         <option value="">All Types</option>
                                         {{#teacher_question}}
                                             <option value="teacher_question">Teacher Question</option>
@@ -89,7 +90,7 @@ define ['app'], (App)->
                                     </select>
                                     {{/content_type_filter}}
 
-                                    <select class="select2-filters selectFilter difficulty-level-filter" style="display: none;" id="difficulty-level-filter">
+                                    <select class="select2-filters selectFilter difficulty-level-filter div-filters" style="display: none;" id="difficulty-level-filter">
                                         <option value="">All Levels</option>
                                         <option value="1">Level 1</option>
                                         <option value="2">Level 2</option>
@@ -105,18 +106,33 @@ define ['app'], (App)->
             className: 'row'
 
             events:
-                'change #textbooks-filter':(e)->
-                    console.log $(e.target).val()
+                'change #textbooks-filter.div-filters':(e)->
+                    console.log "textbooks-filter"
                     @trigger "fetch:new:content", $(e.target).val()
+
+
+                'click .multi-filters':->
+                    console.log "multi-textbooks-filter"
+                    console.log $('.multi-textbook-filter').select2("val")
+                    @trigger "fetch:new:content", $('.multi-textbook-filter').select2("val")
 
                 #'change #textbooks-multi-filter':(e)->
                 #    textbookIDs = [638,636]
                 #    @trigger "fetch:new:content", textbookIDs
 
                 'change #divisions-filter':(e)->
+                    console.log 'divisions-filter'
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
 
-                'change .filters' :(e)->
+                'change .filters.new-filter .div-filters' :(e)->
+                    console.log "DIV Filters"
+                    if e.target.id isnt 'divisions-filter'
+                        @$el.find '.filters .table-tools-actions'
+                        .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
+                        @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+
+                'change .filters.new-filter .multi-filters' :(e)->
+                    console.log "MULTI Filters"
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
