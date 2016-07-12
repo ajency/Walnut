@@ -206,5 +206,11 @@
   width: 50%;
 }
 
+.input-append.success .add-on{
+  background-color: #D1DADE;
+}
 
+.input-append.success .add-on .arrow{
+  color: #D1DADE;
+}
 
