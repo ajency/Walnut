@@ -10,22 +10,30 @@ define(['app'], function(App) {
         return TextbookFiltersView.__super__.constructor.apply(this, arguments);
       }
 
-      TextbookFiltersView.prototype.template = '<div class="col-xs-11"> <div class="filters"> <div class="table-tools-actions"> {{#divisions_filter}} <select class="select2-filters" id="divisions-filter"> {{#divisions}} <option value="{{id}}">{{&name}}</option> {{/divisions}} </select> {{/divisions_filter}} {{#textbooks_multi_filter}} <select id="textbooks-filter" class="textbook-filter select2-filters" multiple="multiple" data-placeholder="Select Textbook"> <!--option value="-1" selected>Select Textbook</option--> {{#textbooks}} <option value="{{id}}">{{&name}}</option> <{{/textbooks}} </select> {{/textbooks_multi_filter}} {{#textbooks_filter}} <select class="textbook-filter select2-filters" id="textbooks-filter"> {{#textbooks}} <option value="{{id}}" >{{&name}}</option> {{/textbooks}} </select> {{/textbooks_filter}} {{#chapters_filter}} <select class="textbook-filter select2-filters" id="chapters-filter"> <option value="">All Chapters</option> </select> {{/chapters_filter}} {{#sections_filter}} <select class="textbook-filter select2-filters" id="sections-filter"> <option value="">All Sections</option> </select> {{/sections_filter}} {{#subsections_filter}} <select class="textbook-filter select2-filters" id="subsections-filter"> <option value="">All Sub Sections</option> </select> {{/subsections_filter}} {{#post_status_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <option value="pending">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/post_status_filter}} {{#post_status_report_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <!--option value="pending">Under Review</option--> <option value="publish" selected>Published</option> <option value="archive">Archived</option> </select> {{/post_status_report_filter}} {{#module_status_filter}} <select class="select2-filters selectFilter" id="content-post-status-filter"> <option value="any">All Status</option> <option value="underreview">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/module_status_filter}} {{#content_type_filter}} <select class="content-type-filter select2-filters selectFilter" id="content-type-filter"> <option value="">All Types</option> {{#teacher_question}} <option value="teacher_question">Teacher Question</option> {{/teacher_question}} {{#student_question}} <option value="student_question">Student Question</option> {{/student_question}} <option value="content_piece">Content Piece</option> </select> {{/content_type_filter}} <select class="select2-filters selectFilter difficulty-level-filter" style="display: none;" id="difficulty-level-filter"> <option value="">All Levels</option> <option value="1">Level 1</option> <option value="2">Level 2</option> <option value="3">level 3</option> </select> </div> </div> </div> <div class="col-xs-1"></div> <div class="clearfix"></div> <div class="col-sm-12"></div>';
+      TextbookFiltersView.prototype.template = '<div class="col-xs-11"> <div class="filters new-filter"> <div class="table-tools-actions"> {{#divisions_filter}} <select class="select2-filters div-filters" id="divisions-filter"> {{#divisions}} <option value="{{id}}">{{&name}}</option> {{/divisions}} </select> {{/divisions_filter}} {{#textbooks_multi_filter}} <select id="textbooks-filter" class="textbook-filter select2-filters multi-textbook-filter" multiple="multiple" data-placeholder="Select Textbook"> <!--option value="-1" selected>Select Textbook</option--> {{#textbooks}} <option value="{{id}}">{{&name}}</option> <{{/textbooks}} </select> <button type="button" class="multi-filters btn btn-small btn-success">Go</button> {{/textbooks_multi_filter}} {{#textbooks_filter}} <select class="textbook-filter select2-filters div-filters" id="textbooks-filter"> {{#textbooks}} <option value="{{id}}" >{{&name}}</option> {{/textbooks}} </select> {{/textbooks_filter}} {{#chapters_filter}} <select class="textbook-filter select2-filters div-filters" id="chapters-filter"> <option value="">All Chapters</option> </select> {{/chapters_filter}} {{#sections_filter}} <select class="textbook-filter select2-filters div-filters" id="sections-filter"> <option value="">All Sections</option> </select> {{/sections_filter}} {{#subsections_filter}} <select class="textbook-filter select2-filters div-filters" id="subsections-filter"> <option value="">All Sub Sections</option> </select> {{/subsections_filter}} {{#post_status_filter}} <select class="select2-filters selectFilter div-filters" id="content-post-status-filter"> <option value="any">All Status</option> <option value="pending">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/post_status_filter}} {{#post_status_report_filter}} <select class="select2-filters selectFilter div-filters" id="content-post-status-filter"> <option value="any">All Status</option> <!--option value="pending">Under Review</option--> <option value="publish" selected>Published</option> <option value="archive">Archived</option> </select> {{/post_status_report_filter}} {{#module_status_filter}} <select class="select2-filters selectFilter div-filters" id="content-post-status-filter"> <option value="any">All Status</option> <option value="underreview">Under Review</option> <option value="publish">Published</option> <option value="archive">Archived</option> </select> {{/module_status_filter}} {{#content_type_filter}} <select class="content-type-filter select2-filters selectFilter div-filters" id="content-type-filter"> <option value="">All Types</option> {{#teacher_question}} <option value="teacher_question">Teacher Question</option> {{/teacher_question}} {{#student_question}} <option value="student_question">Student Question</option> {{/student_question}} <option value="content_piece">Content Piece</option> </select> {{/content_type_filter}} <select class="select2-filters selectFilter difficulty-level-filter div-filters" style="display: none;" id="difficulty-level-filter"> <option value="">All Levels</option> <option value="1">Level 1</option> <option value="2">Level 2</option> <option value="3">level 3</option> </select> </div> </div> </div> <div class="col-xs-1"></div> <div class="clearfix"></div> <div class="col-sm-12"></div>';
 
       TextbookFiltersView.prototype.className = 'row';
 
       TextbookFiltersView.prototype.events = {
-        'change #textbooks-filter': function(e) {
-          console.log($(e.target).val());
+        'change #textbooks-filter.div-filters': function(e) {
           return this.trigger("fetch:new:content", $(e.target).val());
         },
-        'change #divisions-filter': function(e) {
-          return this.trigger("fetch:textbooks:by:division", $(e.target).val());
+        'click .multi-filters': function() {
+          return this.trigger("fetch:new:content", $('.multi-textbook-filter').select2("val"));
         },
-        'change .filters': function(e) {
+        'change #divisions-filter': function(e) {
+          this.trigger("fetch:textbooks:by:division", $(e.target).val());
+          return this.trigger("fetch:new:content", $(e.target).val());
+        },
+        'change .filters.new-filter .div-filters': function(e) {
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
             return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+          }
+        },
+        'click .filters.new-filter .multi-filters': function(e) {
+          if (e.target.id !== 'divisions-filter') {
+            return this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
           }
         },
         'change .content-type-filter': function(e) {
@@ -107,9 +115,7 @@ define(['app'], function(App) {
         var term_ids;
         console.log("onShow");
         $(".filters select").select2();
-        console.log(this);
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
-        console.log(this.contentGroupModel);
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');
           $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
@@ -118,7 +124,6 @@ define(['app'], function(App) {
       };
 
       TextbookFiltersView.prototype.onFetchChaptersOrSectionsCompleted = function(filteredCollection, filterType, currItem) {
-        console.log(currItem);
         switch (filterType) {
           case 'divisions-filter':
             $.populateTextbooks(filteredCollection, this.$el, currItem);
@@ -140,10 +145,8 @@ define(['app'], function(App) {
       TextbookFiltersView.prototype.setFilteredContent = function() {
         var dataType, filtered_data;
         console.log("setFilteredContent");
-        console.log(this);
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);
-        console.log(filtered_data);
         this.collection.reset(filtered_data);
         this.trigger("update:pager");
         return this.$el.find('.loading-collection').remove();

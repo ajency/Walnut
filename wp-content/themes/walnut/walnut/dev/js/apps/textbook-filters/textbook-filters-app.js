@@ -106,9 +106,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
             });
             _this.listenTo(_this.view, "show", function() {
               var chapter_id, fetchChapters, fetchSections, section_id, subsection_id, term_ids, textbook_id;
-              console.log(_this.model);
               if (_this.model) {
-                console.log('inside');
                 term_ids = _this.model.get('term_ids');
                 if (term_ids) {
                   textbook_id = term_ids['textbook'];
@@ -152,7 +150,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
-              console.log(data.textbook);
               if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
@@ -170,7 +167,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 newContent = App.request("get:content:pieces", data);
               }
               return App.execute("when:fetched", newContent, function() {
-                console.log(newContent);
                 return _this.view.triggerMethod("new:content:fetched");
               });
             });

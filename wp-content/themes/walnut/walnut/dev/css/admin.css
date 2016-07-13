@@ -189,7 +189,28 @@
   overflow: initial;
 }
 
+.btn.view-report,
+.btn.schedule-quiz{
+  padding: 6px 8px;
+  display: block;
+  margin: auto; 
+}
 
+.table .checkbox{
+  margin-left: 0;
+}
 
+.elem-50 input[type="text"],
+.elem-50 textarea{
+  max-width: 50%;
+  width: 50%;
+}
 
+.input-append.success .add-on{
+  background-color: #D1DADE;
+}
+
+.input-append.success .add-on .arrow{
+  color: #D1DADE;
+}
 

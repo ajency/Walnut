@@ -28,14 +28,17 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
 
       RecipientsView.prototype.initialize = function() {
         if (this.model.get('communication_type') === 'quiz_published_parent_mail') {
-          return this.dialogOptions = {
+          this.dialogOptions = {
             modal_title: 'New Quizzes'
           };
+          return localStorage.setItem('quiz_component', '');
         } else if (this.model.get('communication_type') === 'quiz_summary_parent_mail') {
-          return this.dialogOptions = {
+          this.dialogOptions = {
             modal_title: 'Summary Report'
           };
+          return localStorage.setItem('quiz_component', '');
         } else {
+          localStorage.setItem('quiz_component', 'true');
           return this.dialogOptions = {
             modal_title: 'Confirm Recipients'
           };
@@ -54,10 +57,13 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
       };
 
       RecipientsView.prototype.mixinTemplateHelpers = function(data) {
-        data = RecipientsView.__super__.mixinTemplateHelpers.call(this, data);
+        console.log(this.model.get('communication_type'));
+        data = RecipientsView.__super__.mixinTemplateHelpers.call(this);
         if (this.model.get('communication_type') === 'quiz_completed_parent_mail') {
-          return data.quiz_component = true;
+          data.quiz_component = true;
         }
+        console.log(data);
+        return data;
       };
 
       RecipientsView.prototype.showSubmitButton = function() {
@@ -70,7 +76,6 @@ define(['app', 'apps/quiz-reports/class-report/recipients-popup/item-view'], fun
 
       RecipientsView.prototype.sendEmail = function() {
         var additional_data, allCheckedRecipients, data, defer, div_id, end_date, quiz_ids, raw_recipients, start_date, url;
-        console.log(this.model);
         additional_data = this.model.get('additional_data');
         start_date = additional_data['start_date'];
         end_date = additional_data['end_date'];

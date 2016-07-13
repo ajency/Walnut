@@ -104,16 +104,16 @@
                     .addClass 'error'
 
 
-                console.log $start_date
-                console.log $end_date
-                console.log "summary"
+                #console.log $start_date
+                #console.log $end_date
+                #console.log "summary"
                 data = []
 
                 @$el.find '.communication-sent'
                 .remove()
 
                 allQuizIDs= _.map $.getAllItems(@$el.find('#content-pieces-table')), (m)-> parseInt m
-                console.log allQuizIDs
+                #console.log allQuizIDs
 
                 #allQuizIDs= _.map $.getCheckedItems(@$el.find('#content-pieces-table')), (m)-> parseInt m
 
@@ -122,10 +122,10 @@
                         .value()
 
                 data.quizIDs = _.difference allQuizIDs,excludeIDs 
-                console.log data.quizIDs
+                #console.log data.quizIDs
                 data.division = @$el.find '#divisions-filter'
                         .val()
-                console.log data.division
+                #console.log data.division
 
                 if $(e.target).hasClass 'send-summary'
                     data.communication_mode = 'email'
@@ -140,7 +140,7 @@
                             Not taken by any student</span>'
 
                 else
-                    console.log data
+                    #console.log data
                     @trigger "summary:communication", data
 
             saveCommunications:(e)->
@@ -157,10 +157,10 @@
                         .value()
 
                 data.quizIDs = _.difference allQuizIDs,excludeIDs 
-                console.log data.quizIDs
+                #console.log data.quizIDs
                 data.division = @$el.find '#divisions-filter'
                         .val()
-                console.log data.division
+                #console.log data.division
 
                 if $(e.target).hasClass 'send-email'
                     data.communication_mode = 'email'

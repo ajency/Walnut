@@ -75,9 +75,7 @@ define ['app'
 					@listenTo @view, "update:pager", => @region.trigger "update:pager"
 
 					@listenTo @view, "show",=>
-						console.log @model
 						if @model
-							console.log 'inside'
 							term_ids = @model.get 'term_ids'
 
 							if term_ids
@@ -116,7 +114,6 @@ define ['app'
 							'post_status'   : post_status if post_status
 							'division'      : division if division
 
-						console.log data.textbook
 
 
 						if @contentSelectionType is 'quiz'
@@ -143,7 +140,6 @@ define ['app'
 							newContent= App.request "get:content:pieces", data
 
 						App.execute "when:fetched", newContent, =>
-							console.log newContent
 							@view.triggerMethod "new:content:fetched"
 
 					@listenTo @view, "fetch:textbooks:by:division",(division) =>

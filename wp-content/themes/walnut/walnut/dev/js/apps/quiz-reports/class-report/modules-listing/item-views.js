@@ -14,7 +14,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> {{#can_schedule}} <td> {{#class_test}} <div class="schedule_dates none"> From: <span id="schedule-from-date"> {{scheduleFrom}} </span> <br> To: <span id="schedule-to-date"> {{scheduleTo}} </span><br> <span class="schedule-quiz">change</a></span> | <span class="clear-schedule">clear</a> </div> <button id="schedule-button" type="button" class="btn btn-white btn-small pull-left m-r-10 schedule-quiz"> <i class="fa fa-calendar"></i> Schedule </button> {{/class_test}} </td> {{/can_schedule}} <td><button class="btn btn-small btn-success view-report">view report</button></td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> {{#can_schedule}} <td style="padding: 0 !important; vertical-align: middle;"> {{#class_test}} <div class="schedule_dates none"> From: <span id="schedule-from-date"> {{scheduleFrom}} </span> <br> To: <span id="schedule-to-date"> {{scheduleTo}} </span><br> <span class="schedule-quiz">change</a></span> | <span class="clear-schedule">clear</a> </div> <button id="schedule-button" type="button" class="btn btn-white btn-small schedule-quiz"> <i class="fa fa-calendar"></i> Schedule </button> {{/class_test}} </td> {{/can_schedule}} <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button></td>';
 
       ListItemView.prototype.mixinTemplateHelpers = function(data) {
         var schedule, term_ids, textbooks;
@@ -77,9 +77,6 @@ define(['app', 'bootbox'], function(App, bootbox) {
         schedule = this.model.get('schedule');
         from = schedule['from'];
         to = schedule['to'];
-        console.log(from);
-        console.log(to);
-        console.log(schedule);
         if (from && to) {
           this.$el.find('#schedule-from-date').html(from);
           this.$el.find('#schedule-to-date').html(to);

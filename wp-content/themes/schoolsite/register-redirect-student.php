@@ -426,6 +426,7 @@ $(document).ready(function() {
 
 
         $( ".students button" ).click(function( event ) {
+            console.log('universal student');
             event.preventDefault();
             var student_id = $(this).attr('data-student-id');
             jQuery.ajax({
