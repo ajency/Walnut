@@ -22,7 +22,8 @@ define(['app'], function(App) {
           return this.trigger("fetch:new:content", $('.multi-textbook-filter').select2("val"));
         },
         'change #divisions-filter': function(e) {
-          return this.trigger("fetch:textbooks:by:division", $(e.target).val());
+          this.trigger("fetch:textbooks:by:division", $(e.target).val());
+          return this.trigger("fetch:new:content", $(e.target).val());
         },
         'change .filters.new-filter .div-filters': function(e) {
           if (e.target.id !== 'divisions-filter') {
@@ -32,8 +33,7 @@ define(['app'], function(App) {
         },
         'change .filters.new-filter .multi-filters': function(e) {
           if (e.target.id !== 'divisions-filter') {
-            this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
-            return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+            return this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
           }
         },
         'change .content-type-filter': function(e) {

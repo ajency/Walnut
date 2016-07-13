@@ -119,6 +119,7 @@ define ['app'], (App)->
 
                 'change #divisions-filter':(e)->
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
+                    @trigger "fetch:new:content", $(e.target).val()
 
                 'change .filters.new-filter .div-filters' :(e)->
                     if e.target.id isnt 'divisions-filter'
@@ -130,7 +131,7 @@ define ['app'], (App)->
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
-                        @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+                        #@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
                 'change .content-type-filter' : (e)->
                     if $(e.target).val() is 'student_question'
