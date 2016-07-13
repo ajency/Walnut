@@ -31,7 +31,7 @@ define(['app'], function(App) {
             return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
           }
         },
-        'change .filters.new-filter .multi-filters': function(e) {
+        'click .filters.new-filter .multi-filters': function(e) {
           if (e.target.id !== 'divisions-filter') {
             return this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
           }

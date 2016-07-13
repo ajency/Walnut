@@ -127,7 +127,7 @@ define ['app'], (App)->
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
                         @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
-                'change .filters.new-filter .multi-filters' :(e)->
+                'click .filters.new-filter .multi-filters' :(e)->
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
