@@ -1022,11 +1022,54 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
     return $quiz_response_summary;
 }
 
+function read_current_quiz_response_summary($summary_id){
+    global $wpdb;
+    if(!$summary_id)
+        return false;
+    $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
+        where summary_id = %s", $summary_id));    
+    
+    if(!$quiz_response_summary)
+        return false;
+    $quiz_meta = maybe_unserialize($quiz_response_summary->quiz_meta);
+    unset($quiz_response_summary->quiz_meta);
+    $quiz_response_summary->status = $quiz_meta['status'];
+    $quiz_response_summary->questions_order = $quiz_meta['questions_order'];
+    $additional_details_qry = $wpdb->prepare(
+        "SELECT
+            SUM(marks_scored) as total_marks_scored,
+            SUM(
+                CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as negative_scored,
+            SUM(
+               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as marks_scored,
+            SUM(time_taken) as total_time_taken
+            FROM {$wpdb->prefix}quiz_question_response
+        WHERE summary_id = %s", $quiz_response_summary->summary_id
+    );
+    $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
+    $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
+    $additional_details= $wpdb->get_row($additional_details_qry);
+    $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;
+    $quiz_response_summary->negative_scored = (float) $additional_details->negative_scored;
+    $quiz_response_summary->total_marks_scored = (float) $additional_details->total_marks_scored;
+    $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
+    $questions_skipped_qry = $wpdb->prepare(
+        "SELECT count(status) from {$wpdb->prefix}quiz_question_response
+        WHERE status LIKE %s AND summary_id LIKE %s",
+        array('skipped', $quiz_response_summary->summary_id)
+    );
+    $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
+    return $quiz_response_summary;
+}
+
+
 
 function write_quiz_question_response($args){
     global $wpdb;
 
-    $quiz_details = read_quiz_response_summary(array('summary_id'=>$args['summary_id']));
+    $quiz_details = read_current_quiz_response_summary(array('summary_id'=>$args['summary_id']));
 
     $quiz_module = get_single_quiz_module($quiz_details->collection_id);
 
@@ -1278,5 +1321,53 @@ function clear_quiz_schedule($quiz_id, $division){
         );
 
     return $del;
+
+}
+
+function write_quiz_response_summary($args){
+    global $wpdb;
+    if(!isset($args['student_id'])){
+        $args['student_id'] = get_current_user_id();
+    }
+
+    $quiz_type = get_module_meta($args['collection_id'], 'quiz_type');
+
+    $quiz_meta['status'] = $args['status'];
+    $quiz_meta['questions_order'] = array_map('intval', $args['questions_order']);
+
+
+    if(!isset($args['summary_id'])){
+
+        $summary_id = 'Q'.$args['collection_id'].'S'.$args['student_id'];
+
+        if ($quiz_type=='practice')
+            $summary_id = $summary_id . '_' . date('dmyhis');
+
+        $data = array(
+            'summary_id' => $summary_id,
+            'collection_id' => $args['collection_id'],
+            'student_id' => $args['student_id'],
+            'quiz_meta' => maybe_serialize($quiz_meta)
+            );
+
+        //handling sync status for standalone sites.
+        if (!is_multisite())
+            $data['sync']=0;
+
+        $wpdb->insert(($wpdb->prefix).'quiz_response_summary', $data );
+    }
+    else{
+        $summary_id = $args['summary_id'];
+        $data = array('quiz_meta' => maybe_serialize($quiz_meta));
+
+        //handling sync status for standalone sites.
+        if (!is_multisite())
+            $data['sync']=0;
+
+        $where_array = array('summary_id' => $summary_id);
+        $wpdb->update(($wpdb->prefix).'quiz_response_summary', $data ,$where_array);
+    }
+
+    return $summary_id;
 
 }
