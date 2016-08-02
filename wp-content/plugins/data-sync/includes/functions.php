@@ -255,7 +255,7 @@ $resp_decode = json_decode($upload_status,true);
 }
 
 if(isset($_REQUEST['last_table'])){
-    deleteDir($_REQUEST['path']);
+    //deleteDir($_REQUEST['path']);
 }
 
 
