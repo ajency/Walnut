@@ -6,7 +6,8 @@
 //Client Secret 57c7f44ce733f7e646aecc34830f85f580b5a38a
 function school_data_sync_screen_new(){
     global $wpdb;
-
+    $local_content = '';
+    $content ='';
 
     $last_down_sync = $wpdb->get_var( "SELECT last_sync FROM ".$wpdb->prefix."sync_data WHERE status='success' and type='downsync' ORDER BY id DESC LIMIT 1" );
 
@@ -25,24 +26,56 @@ function school_data_sync_screen_new(){
     SCHOOL_URL = '<?php echo $school_url; ?>';
     </script>
     <?php
-     $c = curl_init();
+        /*$myfile = fopen(get_home_path().".git/ORIG_HEAD", "r") or die("Unable to open file!");
+        $local_content = fread($myfile,filesize(get_home_path().".git/ORIG_HEAD"));
+        $local_content = (string)$local_content;
+        fclose($myfile);*/
+        /*$local_url = get_home_path().".git/ORIG_HEAD";
+        $ch = curl_init();
+
+        #curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        #curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $local_url);
+        #curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);       
+
+        $local_content = curl_exec($ch);
+        $local_content = (string)$local_content;
+        curl_close($ch);*/
+
+        $local_con = file_get_contents(get_home_path().".git/ORIG_HEAD");
+        $local_content = (string)$local_con;
+
+
+        $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_HTTPHEADER, array('Accept: application/vnd.github.VERSION.sha', 'User-Agent:odoricaAjency', 'Authorization: token 7b12302fef82fe627a7c09c42d8ebac12b54d328'));
         #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/users/odoricaAjency');
         #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/?access_token=7b12302fef82fe627a7c09c42d8ebac12b54d328');
         #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/issues');
-        curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/Walnut/standalone_site/commit/');
+        curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/Walnut/commits/standalone_site');
+        #/f18b7753d182dcb1abd5da9d34a44b655f8725a1');
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/Walnut/standalone_site/commit/');
         #curl_setopt($c, CURLOPT_URL, 'https://github.com/login/oauth/authorize?scopr=user:odorica@ajency.in&client_id=78f0e200dfb7abb6f91c');
         #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/users/whatever?client_id=78f0e200dfb7abb6f91c&client_secret=57c7f44ce733f7e646aecc34830f85f580b5a38a');
         #curl_setopt($ch, CURLOPT_USERPWD, "odoricaAjency:odrica1ajency");
         #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/standalone_site/branches');
         #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/odorica@ajency.in/standalone_site/commits/97e2bf54f5b459ae412ac0be364599838a39e1b6');
         $content = curl_exec($c);
+        $content = (string)$content;
+        #$content = "f18b7753d182dcb1abd5da9d34a44b655f8725a1";
         curl_close($c);
-        $api = json_decode($content);
+        #$api = json_decode($content);
         file_put_contents('a.txt', print_r($content, true));
-        echo $api->open_issues_count;
+        file_put_contents('a1.txt', $local_content);
+        file_put_contents('a2.txt', print_r($local_url, true));
 
+        $cpm_value = strcmp($local_content, $content);
+
+        if($content != $local_content){
+            $html = $cpm_value;
+            $html .= '<div>The local copy does not match the remote copy. Please pull the latest code to proceed.</div>';
+        }else {
 
    $html = '<h3>School Data Update</h3>';
 
@@ -83,7 +116,7 @@ function school_data_sync_screen_new(){
     $html .= '<div style="clear:both"></div>';
 
     $html .= '</div>';
-
+}
     echo $html;
 
 }
