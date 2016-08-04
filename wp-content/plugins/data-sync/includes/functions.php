@@ -1,6 +1,12 @@
+<!--?php require_once 'lib/Github/Autoloader.php'; 
+    Github_Autoloader::register(); ?-->
 <?php
+
+//client id = 78f0e200dfb7abb6f91c
+//Client Secret 57c7f44ce733f7e646aecc34830f85f580b5a38a
 function school_data_sync_screen_new(){
     global $wpdb;
+
 
     $last_down_sync = $wpdb->get_var( "SELECT last_sync FROM ".$wpdb->prefix."sync_data WHERE status='success' and type='downsync' ORDER BY id DESC LIMIT 1" );
 
@@ -19,6 +25,23 @@ function school_data_sync_screen_new(){
     SCHOOL_URL = '<?php echo $school_url; ?>';
     </script>
     <?php
+     $c = curl_init();
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($c, CURLOPT_HTTPHEADER, array('Accept: application/vnd.github.VERSION.sha', 'User-Agent:odoricaAjency', 'Authorization: token 7b12302fef82fe627a7c09c42d8ebac12b54d328'));
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/users/odoricaAjency');
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/?access_token=7b12302fef82fe627a7c09c42d8ebac12b54d328');
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/issues');
+        curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/Walnut/standalone_site/commit/');
+        #curl_setopt($c, CURLOPT_URL, 'https://github.com/login/oauth/authorize?scopr=user:odorica@ajency.in&client_id=78f0e200dfb7abb6f91c');
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/users/whatever?client_id=78f0e200dfb7abb6f91c&client_secret=57c7f44ce733f7e646aecc34830f85f580b5a38a');
+        #curl_setopt($ch, CURLOPT_USERPWD, "odoricaAjency:odrica1ajency");
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/standalone_site/branches');
+        #curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/odorica@ajency.in/standalone_site/commits/97e2bf54f5b459ae412ac0be364599838a39e1b6');
+        $content = curl_exec($c);
+        curl_close($c);
+        $api = json_decode($content);
+        file_put_contents('a.txt', print_r($content, true));
+        echo $api->open_issues_count;
 
 
    $html = '<h3>School Data Update</h3>';
