@@ -21,14 +21,16 @@ function school_data_sync_screen_new(){
     SCHOOL_URL = '<?php echo $school_url; ?>';
     </script>
     <?php
-        $local_con = file_get_contents(get_home_path().".git/refs/heads/standalone_test");
+        $local_con = file_get_contents(get_home_path().".git/refs/remotes/origin/standalone_test");
         $local_content = rtrim($local_con);
 
 
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt( $c, CURLOPT_SSL_VERIFYPEER, false );
         curl_setopt($c, CURLOPT_HTTPHEADER, array('Accept: application/vnd.github.VERSION.sha', 'User-Agent:odoricaAjency', 'Authorization: token 7b12302fef82fe627a7c09c42d8ebac12b54d328'));
         curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/Walnut/commits/standalone_test');
+        curl_setopt( $c, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
 
         $content = curl_exec($c);
         $content = (string)$content;
