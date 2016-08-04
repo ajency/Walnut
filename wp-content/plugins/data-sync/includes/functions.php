@@ -1,6 +1,8 @@
 <?php
 function school_data_sync_screen_new(){
     global $wpdb;
+    $local_content = '';
+    $content ='';
 
     $last_down_sync = $wpdb->get_var( "SELECT last_sync FROM ".$wpdb->prefix."sync_data WHERE status='success' and type='downsync' ORDER BY id DESC LIMIT 1" );
 
@@ -19,7 +21,23 @@ function school_data_sync_screen_new(){
     SCHOOL_URL = '<?php echo $school_url; ?>';
     </script>
     <?php
+        $local_con = file_get_contents(get_home_path().".git/refs/heads/standalone_test");
+        $local_content = rtrim($local_con);
 
+
+        $c = curl_init();
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($c, CURLOPT_HTTPHEADER, array('Accept: application/vnd.github.VERSION.sha', 'User-Agent:odoricaAjency', 'Authorization: token 7b12302fef82fe627a7c09c42d8ebac12b54d328'));
+        curl_setopt($c, CURLOPT_URL, 'https://api.github.com/repos/ajency/Walnut/commits/standalone_test');
+
+        $content = curl_exec($c);
+        $content = (string)$content;
+        curl_close($c);
+
+        if($content != $local_content){
+            $html = '<br><br><br>';
+            $html .= '<div class="error"><p><b>The local copy does not match the remote copy. Please pull the latest code to proceed.</b></p></div>';
+        } else {
 
    $html = '<h3>School Data Update</h3>';
 
@@ -60,7 +78,7 @@ function school_data_sync_screen_new(){
     $html .= '<div style="clear:both"></div>';
 
     $html .= '</div>';
-
+}
     echo $html;
 
 }
@@ -225,12 +243,6 @@ exit;
 
 add_action( 'wp_ajax_upsync_upload', 'upload_upsync_data' );
 add_action( 'wp_ajax_nopriv_upsync_upload', 'upload_upsync_data' );
-
-
-
-
-
-
 
 function upload_upsync_data(){
 
