@@ -43,7 +43,7 @@ function school_data_sync_screen_new(){
         $local_content = (string)$local_content;
         curl_close($ch);*/
 
-        $local_con = file_get_contents(get_home_path().".git/ORIG_HEAD");
+        $local_con = file_get_contents(get_home_path().".git/refs/heads/standalone_site");
         $local_content = (string)$local_con;
 
 
