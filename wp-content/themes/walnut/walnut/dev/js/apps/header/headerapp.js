@@ -28,7 +28,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
           return function(response) {
             var redirect_url, usermodel;
             if (response.error) {
-              return console.log(response);
+              return console.log('response');
             } else {
               redirect_url = window.location.hostname;
               usermodel = App.request("get:user:model");
