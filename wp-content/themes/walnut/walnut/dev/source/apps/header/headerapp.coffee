@@ -21,10 +21,13 @@ define ['app'
                 $.post AJAXURL + '?action=logout_user',
                 (response) =>
                     if response.error
-                        console.log response
+                        console.log 'response'
                     else
+                        console.log response 
+                        console.log response.redirect_url
                         usermodel = App.request "get:user:model"
                         usermodel.clear()
+                        #location.href=response.redirect_url
                         location.href=MAIN_SITE+"/login"
 
             _showLeftRightViews: =>

@@ -28,8 +28,10 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
           return function(response) {
             var usermodel;
             if (response.error) {
-              return console.log(response);
+              return console.log('response');
             } else {
+              console.log(response);
+              console.log(response.redirect_url);
               usermodel = App.request("get:user:model");
               usermodel.clear();
               return location.href = MAIN_SITE + "/login";
