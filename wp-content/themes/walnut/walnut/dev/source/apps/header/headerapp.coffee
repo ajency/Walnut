@@ -21,7 +21,7 @@ define ['app'
                 $.post AJAXURL + '?action=logout_user',
                 (response) =>
                     if response.error
-                        console.log response
+                        console.log 'response'
                     else
                         redirect_url = window.location.hostname
                         usermodel = App.request "get:user:model"
