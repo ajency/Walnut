@@ -149,7 +149,6 @@ function student_go_login(){
 	#return ($actual_link."/#login");
 	wp_redirect($actual_link."/#login");
 	exit();
-
 }
 
 function student_fetch_division(){
