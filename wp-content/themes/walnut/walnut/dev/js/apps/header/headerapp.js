@@ -26,15 +26,14 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
       HeaderController.prototype._logoutCurrentUser = function() {
         return $.post(AJAXURL + '?action=logout_user', (function(_this) {
           return function(response) {
-            var usermodel;
+            var redirect_url, usermodel;
             if (response.error) {
               return console.log('response');
             } else {
-              console.log(response);
-              console.log(response.redirect_url);
+              redirect_url = window.location.hostname;
               usermodel = App.request("get:user:model");
               usermodel.clear();
-              return location.href = MAIN_SITE + "/login";
+              return location.href = redirect_url + "/#login";
             }
           };
         })(this));
