@@ -146,7 +146,9 @@ function student_fetch_chapters($term_id){
 add_action('wp_logout','student_go_login');
 function student_go_login(){
 	$actual_link = "http://$_SERVER[HTTP_HOST]";
-	return ($actual_link."/#login");
+	#return ($actual_link."/#login");
+	wp_redirect($actual_link."/#login");
+	exit();
 }
 
 function student_fetch_division(){

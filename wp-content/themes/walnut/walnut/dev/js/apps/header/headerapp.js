@@ -34,7 +34,7 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
               console.log(response.redirect_url);
               usermodel = App.request("get:user:model");
               usermodel.clear();
-              return location.href = MAIN_SITE + "/#login";
+              return location.href = response.redirect_url;
             }
           };
         })(this));
