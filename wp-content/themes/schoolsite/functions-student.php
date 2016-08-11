@@ -28,7 +28,7 @@ function student_fetch_name(){
 
 
 
-function student_fetch_textbooks() {
+function student_fetch_textbooks() { 
     $args=$_GET;
     $defaults['parent']= 0;
     if(isset($_GET['parent']))
@@ -145,8 +145,8 @@ function student_fetch_chapters($term_id){
 
 add_action('wp_logout','student_go_login');
 function student_go_login(){
-	wp_redirect(MAIN_SITE."/login" );
-	exit();
+	$actual_link = "http://$_SERVER[HTTP_HOST]";
+	return ($actual_link."/#login");
 }
 
 function student_fetch_division(){

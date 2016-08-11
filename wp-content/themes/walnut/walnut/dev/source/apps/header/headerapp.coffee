@@ -23,9 +23,12 @@ define ['app'
                     if response.error
                         console.log response
                     else
+                        console.log response
+                        console.log response.redirect_url
                         usermodel = App.request "get:user:model"
                         usermodel.clear()
-                        location.href=MAIN_SITE+"/login"
+                        #location.href=response.redirect_url
+                        location.href=MAIN_SITE+"/#login"
 
             _showLeftRightViews: =>
                 App.execute "show:leftheaderapp", region: @layout.leftRegion

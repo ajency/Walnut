@@ -30,9 +30,11 @@ define(['app', 'controllers/region-controller', 'apps/header/left/leftapp', 'app
             if (response.error) {
               return console.log(response);
             } else {
+              console.log(response);
+              console.log(response.redirect_url);
               usermodel = App.request("get:user:model");
               usermodel.clear();
-              return location.href = MAIN_SITE + "/login";
+              return location.href = MAIN_SITE + "/#login";
             }
           };
         })(this));
