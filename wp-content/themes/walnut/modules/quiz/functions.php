@@ -8,7 +8,7 @@
 
 function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
-    
+   
     $taken_by_stud = [];
 
     $selected_quiz_id = $id;
@@ -46,6 +46,8 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
     $quiz_details = $wpdb->get_results($query_meta);
+    #file_put_contents("a1.txt", print_r($quiz_details, true));
+
 
     $data->permissions = $data->description = array();
 
@@ -55,7 +57,11 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
             $permissions = maybe_unserialize($value->meta_value);
             if ($permissions)
                 foreach ($permissions as $k=>$v){
-                    $permissions[$k] = filter_var($permissions[$k], FILTER_VALIDATE_BOOLEAN);
+                    if($k == 'displayAfterDays' || $k == 'displayAfterHours'){
+
+                    }else{
+                        $permissions[$k] = filter_var($permissions[$k], FILTER_VALIDATE_BOOLEAN);
+                    }
                 }
             $data->permissions = $permissions;
 
@@ -558,6 +564,7 @@ function get_all_quiz_modules($args){
     if($type == 0 && !(isset($args['search_str']))){
         //onload and quiz report since textbook id is 1
          $appendQuery .= "AND post.term_ids LIKE '%\"xyz@wedgvged\";%' ";
+         return [];
     }
 
     //on selecting textbook
@@ -669,6 +676,7 @@ function get_required_quiz_modules($args){
     if($type == 0 && !(isset($args['search_str']))){
         //onload and quiz report since textbook id is 1
          $appendQuery .= "AND post.term_ids LIKE '%\"xyz@wedgvged\";%' ";
+         return [];
     }
 
     //on selecting textbook
