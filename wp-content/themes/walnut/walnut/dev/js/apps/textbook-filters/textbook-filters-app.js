@@ -168,7 +168,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 newContent = App.request("get:content:pieces", data);
               }
               return App.execute("when:fetched", newContent, function() {
-                console.log(newContent);
                 return _this.view.triggerMethod("new:content:fetched");
               });
             });

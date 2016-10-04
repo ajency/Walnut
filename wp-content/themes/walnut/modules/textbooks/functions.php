@@ -118,6 +118,11 @@ function get_textbooks( $args = array() ) {
     $count_total=0;
     $args = wp_parse_args( $args, $defaults );
     $parentID = $args['parent'];
+    if($parentID == ''){
+        $parentID = 0;
+        $args['parent'] = 0;
+    }
+
     #file_put_contents("a1.txt", print_r($args, true));
     $term_type = $args['term_type'];
     $textbooks_for_blog = get_textbooksids_for_current_blog();

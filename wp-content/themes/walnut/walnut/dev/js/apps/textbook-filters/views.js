@@ -27,13 +27,11 @@ define(['app'], function(App) {
         },
         'change .filters.new-filter .div-filters': function(e) {
           var parent_id;
+          console.log($(e.target).val());
           parent_id = $(e.target).val();
-          if (parent_id === '' || parent_id === null) {
-            parent_id = $('#textbooks-filter').val();
-          }
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
-            return this.trigger("fetch:chapters:or:sections", parent_id, e.target.id);
+            return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
           }
         },
         'click .filters.new-filter .multi-filters': function(e) {
