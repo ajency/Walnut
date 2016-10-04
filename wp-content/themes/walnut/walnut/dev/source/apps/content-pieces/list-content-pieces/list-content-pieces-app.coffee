@@ -16,9 +16,10 @@ define ['app'
                     .value()
 
                 #all chapter names in this set of contentgroupscollection
-                @allChapCollection = App.request "get:textbook:names:by:ids"
+                #@allChapCollection = App.request "get:textbook:names:by:ids"
 
                 @allChaptersCollection = App.request "get:textbook:names:by:ids", chapter_ids
+                @allChapCollection = @allChaptersCollection
 
                 @fullCollection = @contentPiecesCollection.clone()
 
