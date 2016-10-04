@@ -179,7 +179,11 @@ foreach ($chapters['data'] as $key => $value) {
 	get_footer('student');
 ?>
 <script type="text/javascript">
+var textbook_id = '<?php echo $textbook_id ?>';
+
 $(document).ready(function(){
+   localStorage.textbook_id = textbook_id;
+
    $(".statuses").click(function(){
         var show_class = this.id;
         var is_checked = ($("#"+show_class +" div").hasClass('is-checked'));
