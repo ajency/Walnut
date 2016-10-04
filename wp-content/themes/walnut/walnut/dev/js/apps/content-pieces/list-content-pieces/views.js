@@ -54,10 +54,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
               chapter = _.chain(_this.chapters.findWhere({
                 "id": data.term_ids.chapter
               })).pluck('name').compact().value();
-              console.log(chapter);
               if (typeof (chapter.length = 0)) {
-                console.log("empty");
-                console.log(_this.chap);
                 chapter = _.chain(_this.chap.findWhere({
                   "id": data.term_ids.chapter
                 })).pluck('name').compact().value();
@@ -109,7 +106,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       };
 
       ListItemView.prototype.initialize = function(options) {
-        console.log(options);
         this.textbooks = options.textbooksCollection;
         this.chapters = options.chaptersCollection;
         return this.chap = options.chapCollection;
@@ -221,7 +217,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
       ListView.prototype.itemViewContainer = '#list-content-pieces';
 
       ListView.prototype.itemViewOptions = function() {
-        console.log('list');
         return {
           textbooksCollection: this.textbooks,
           chaptersCollection: Marionette.getOption(this, 'chaptersCollection'),
@@ -374,6 +369,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.show_destination_chapters = function(e) {
         var chaptersCollection, term_id;
+        console.log($("#textbooks-filter option:selected").val());
         term_id = $("#textbooks-filter option:selected").val();
         chaptersCollection = App.request("get:chapters", {
           'parent': term_id

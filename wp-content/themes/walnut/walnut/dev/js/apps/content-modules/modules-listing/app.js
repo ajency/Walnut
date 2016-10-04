@@ -76,6 +76,7 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         this.layout = this._getContentPiecesLayout();
         return App.execute("when:fetched", [this.contentModulesCollection, textbooksCollection], (function(_this) {
           return function() {
+            console.log(_this.contentModulesCollection);
             _this.show(_this.layout, {
               loading: true
             });

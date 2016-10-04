@@ -122,10 +122,14 @@ define ['app'], (App)->
                     @trigger "fetch:new:content", $(e.target).val()
 
                 'change .filters.new-filter .div-filters' :(e)->
+
+                    parent_id = $(e.target).val()
+                    if parent_id == '' || parent_id == null
+                        parent_id = $('#textbooks-filter').val()                        
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
-                        @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
+                        @trigger "fetch:chapters:or:sections", parent_id, e.target.id
 
                 'click .filters.new-filter .multi-filters' :(e)->
                     if e.target.id isnt 'divisions-filter'
@@ -186,7 +190,6 @@ define ['app'], (App)->
 
 
             onShow:->
-                console.log "onShow"
                 $ ".filters select"
                 .select2();
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
@@ -213,7 +216,6 @@ define ['app'], (App)->
 
 
             setFilteredContent:->
-                console.log "setFilteredContent"
                 dataType= Marionette.getOption @, 'dataType'
                 #console.log dataType
                 filtered_data= $.filterTableByTextbooks(@,dataType)

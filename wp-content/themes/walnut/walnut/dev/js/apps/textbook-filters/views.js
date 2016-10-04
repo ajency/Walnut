@@ -26,9 +26,14 @@ define(['app'], function(App) {
           return this.trigger("fetch:new:content", $(e.target).val());
         },
         'change .filters.new-filter .div-filters': function(e) {
+          var parent_id;
+          parent_id = $(e.target).val();
+          if (parent_id === '' || parent_id === null) {
+            parent_id = $('#textbooks-filter').val();
+          }
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
-            return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
+            return this.trigger("fetch:chapters:or:sections", parent_id, e.target.id);
           }
         },
         'click .filters.new-filter .multi-filters': function(e) {
@@ -113,7 +118,6 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.onShow = function() {
         var term_ids;
-        console.log("onShow");
         $(".filters select").select2();
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
         if (this.contentGroupModel) {
@@ -144,7 +148,6 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.setFilteredContent = function() {
         var dataType, filtered_data;
-        console.log("setFilteredContent");
         dataType = Marionette.getOption(this, 'dataType');
         filtered_data = $.filterTableByTextbooks(this, dataType);
         this.collection.reset(filtered_data);

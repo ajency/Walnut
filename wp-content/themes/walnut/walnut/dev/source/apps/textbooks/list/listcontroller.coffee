@@ -9,7 +9,6 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
                 textbooksCollection = App.request "get:textbooks", "fetch_all":true
                 App.execute "when:fetched", textbooksCollection, =>
                     models = textbooksCollection.models
-                    #console.log models[0].get('isAdmin')
                     isAdmin = models[0].get('isAdmin')
                     if isAdmin == true
                         localStorage.setItem('isAdmin', isAdmin)

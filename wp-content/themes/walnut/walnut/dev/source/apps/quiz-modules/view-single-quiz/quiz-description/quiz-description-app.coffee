@@ -13,7 +13,7 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') not in ['replay','quiz_report']
                     if @model._fetch.responseJSON.data.content_pieces != undefined
                         r = @model._fetch.responseJSON.data.content_layout
-                        console.log(@model._fetch.responseJSON.data)
+                        #console.log(@model._fetch.responseJSON.data)
                         c = @model._fetch.responseJSON.data.content_pieces.length
                         total = 0
                         i = 0
@@ -121,6 +121,26 @@ define ['app'
                 data  
 
             onShow:->
+                # console.log @model
+                # permission = @model.get 'permissions'
+                # #console.log permission.displayAfterDays
+                # #console.log permission.displayAfterHours
+
+                # if(permission.displayAfterDays != '')
+                #     replay_after_day = moment(permission.displayAfterDays * 24, 'h')
+                # else
+                #     replay_after_day = moment('10', 'h')
+
+                # if(permission.displayAfterHours == '')
+                #     after_hours = moment(0, 'h')
+                # else
+                #     after_hours = moment('20', 'h')
+
+                # taken_on_date = moment(@model.get 'taken_on')
+
+                # replay_time = replay_after_day.add(after_hours)
+                
+                # console.log replay_time
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
                 if responseSummary.get('status') is 'started'                    
@@ -131,6 +151,11 @@ define ['app'
 
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
 
+                    #if @model.get 'status' == 'completed'
+                        #if 
+                        
+                    
+                    #else if @model.hasPermission 'disable_quiz_replay'
                     if @model.hasPermission 'disable_quiz_replay'
                         @$el.find "#take-quiz"
                         .remove()

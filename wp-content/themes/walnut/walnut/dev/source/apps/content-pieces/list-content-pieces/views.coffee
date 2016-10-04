@@ -71,10 +71,7 @@ define ['app'
 						.pluck 'name'
 							.compact()
 							.value()
-						console.log chapter
 						if typeof chapter.length = 0
-							console.log "empty"
-							console.log @chap
 							chapter = _.chain @chap.findWhere "id" : data.term_ids.chapter
 							.pluck 'name'
 							.compact()
@@ -111,7 +108,6 @@ define ['app'
 				'click a.publishModule' :-> @changeModuleStatus 'publish'
 
 			initialize : (options)->
-				console.log options
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
 				@chap = options.chapCollection
@@ -191,7 +187,6 @@ define ['app'
 			itemViewContainer: '#list-content-pieces'
 
 			itemViewOptions : ->
-				console.log 'list'
 				textbooksCollection : @textbooks
 				chaptersCollection  : Marionette.getOption @, 'chaptersCollection'
 				chapCollection : Marionette.getOption @, 'chapCollection'
@@ -246,7 +241,6 @@ define ['app'
 
 			setFilteredContent:->
 				filtered_data= $.filterTableByTextbooks(@)
-
 				@collection.set filtered_data
 
 				@onUpdatePager()
@@ -336,6 +330,7 @@ define ['app'
 
 
 			show_destination_chapters:(e)=>
+					console.log $("#textbooks-filter option:selected").val()
 					term_id = $("#textbooks-filter option:selected").val()
 					chaptersCollection = App.request "get:chapters", ('parent': term_id)
 					App.execute "when:fetched", chaptersCollection, =>
