@@ -118,9 +118,8 @@ function get_textbooks( $args = array() ) {
     $count_total=0;
     $args = wp_parse_args( $args, $defaults );
     $parentID = $args['parent'];
-    if($parentID == ''){
-        $parentID = 0;
-        $args['parent'] = 0;
+    if($parentID == '' && $args['action'] == 'get-chapters'){
+        return [];
     }
 
     #file_put_contents("a1.txt", print_r($args, true));
