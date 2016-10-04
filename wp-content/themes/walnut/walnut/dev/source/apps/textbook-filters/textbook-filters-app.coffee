@@ -141,7 +141,6 @@ define ['app'
 
 
 						App.execute "when:fetched", newContent, =>
-							console.log newContent
 							@view.triggerMethod "new:content:fetched"
 
 					@listenTo @view, "fetch:textbooks:by:division",(division) =>
