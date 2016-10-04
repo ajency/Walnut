@@ -15,7 +15,7 @@ define ['app'
                     @trigger "fetch:chapters", $(e.target).val()
 
                 'change #chapters' : (e)->
-                    @trigger "fetch:sections", $(e.target).val()
+                    @trigger "fetch:sections", $(e.target).val() 
 
                 'change #secs' : (e)->
                     @trigger "fetch:subsections", $(e.target).val()
@@ -78,6 +78,16 @@ define ['app'
 
 
             onShow : ->
+                @$el.find "#replaydays"
+                    .innerHTML '1'
+
+                @$el.find '#replayhours'
+                .datetimepicker
+                    #useCurrent:false
+                    #minDate:today
+                    format:'HH:mm:ss'
+                    debug:true
+
                 Backbone.Syphon.deserialize @, @model.toJSON()
                 #console.log @model.toJSON()
 

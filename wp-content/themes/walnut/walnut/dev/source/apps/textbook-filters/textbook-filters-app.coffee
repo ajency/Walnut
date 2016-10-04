@@ -114,7 +114,7 @@ define ['app'
 							'post_status'   : post_status if post_status
 							'division'      : division if division
 
-
+						console.log data
 
 						if @contentSelectionType is 'quiz'
 							data.content_type= ['student_question']
@@ -139,7 +139,9 @@ define ['app'
 						else
 							newContent= App.request "get:content:pieces", data
 
+
 						App.execute "when:fetched", newContent, =>
+							console.log newContent
 							@view.triggerMethod "new:content:fetched"
 
 					@listenTo @view, "fetch:textbooks:by:division",(division) =>
