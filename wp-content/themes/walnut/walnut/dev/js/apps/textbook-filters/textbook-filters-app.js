@@ -150,6 +150,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
+              console.log(data);
               if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
@@ -167,6 +168,7 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 newContent = App.request("get:content:pieces", data);
               }
               return App.execute("when:fetched", newContent, function() {
+                console.log(newContent);
                 return _this.view.triggerMethod("new:content:fetched");
               });
             });
