@@ -120,7 +120,7 @@ function get_content_pieces($args = array()) {
     $content_pieces=array();
 
     foreach ($content_items as $id) {
-        $cpiece=get_single_content_piece_filtered($id);
+        $cpiece=get_single_content_piece($id);
         $cpiece->order=0;
         if(isset($args['ids']) && sizeof($args['ids'])>0){
             foreach($args['ids'] as $key=>$val){

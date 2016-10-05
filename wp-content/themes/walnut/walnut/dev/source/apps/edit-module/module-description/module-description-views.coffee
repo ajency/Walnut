@@ -78,15 +78,15 @@ define ['app'
 
 
             onShow : ->
-                @$el.find "#replaydays"
-                    .innerHTML '1'
+                # @$el.find "#replaydays"
+                #     .innerHTML '1'
 
-                @$el.find '#replayhours'
-                .datetimepicker
-                    #useCurrent:false
-                    #minDate:today
-                    format:'HH:mm:ss'
-                    debug:true
+                # @$el.find '#replayhours'
+                # .datetimepicker
+                #     #useCurrent:false
+                #     #minDate:today
+                #     format:'HH:mm:ss'
+                #     debug:true
 
                 Backbone.Syphon.deserialize @, @model.toJSON()
                 #console.log @model.toJSON()
