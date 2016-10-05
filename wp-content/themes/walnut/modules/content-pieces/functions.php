@@ -134,7 +134,6 @@ function get_content_pieces($args = array()) {
     }
 
     switch_to_blog($current_blog_id);
-    #file_put_contents("a1.txt", print_r($content_pieces, true));
 
     return $content_pieces;
 
@@ -310,63 +309,23 @@ function get_single_content_piece_filtered($id){
 
     $content_piece= get_post($id);
 
-    $authordata = get_userdata($content_piece->post_author);
     $post_modified= $content_piece->post_modified; 
     $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($post_modified)));
-    #$content_piece->post_author_name = $authordata->display_name;
 
     $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);
 
-/* CHECK IF NEEEDED
     $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
 
-    if($content_piece_meta)
-        extract($content_piece_meta);
-        */
+    $term_ids = $content_piece_meta['term_ids'];
+
 
     // Content Type is 'teacher question' or 'student question' etc
     $content_type = get_post_meta($id, 'content_type', true);
 
     $content_piece->content_type = ($content_type) ? $content_type : '--';
 
-    //        get negative marks
-//    if( $content_type == 'student_question'){
-//        $negative_marks = get_post_meta($id,'negative_marks',true);
-//
-//        $content_piece->negative_marks = (int) $negative_marks;
-//    }
-
     $content_piece->question_type = get_post_meta($id, 'question_type', true);
 
-    $content_piece->post_tags = (isset($post_tags)) ? $post_tags : '';
-
-    $content_piece->instructions = (isset($instructions)) ? $instructions : '';
-
-    $content_piece->duration = (isset($duration)) ? $duration : '';
-
-    $content_piece->hint_enable = (isset($hint_enable))? $hint_enable === "true" : false;
-
-    $content_piece->hint = (isset($hint))? $hint : '';
-
-    $content_piece->comment_enable = (isset($comment_enable))? $comment_enable === "true" : false;
-
-    $content_piece->comment = (isset($comment))? $comment : '';
-
-    $content_piece->difficulty_level = (int) get_post_meta($id,'difficulty_level',true);
-
-    $content_piece->last_modified_by='';
-
-    if(isset($last_modified_by)){
-        $last_modified_by_user=get_userdata($last_modified_by);
-        $content_piece->last_modified_by = $last_modified_by_user->display_name;
-    }
-
-    $content_piece->published_by = '';
-
-    if(isset($published_by)){
-        $published_by_user=get_userdata($published_by);
-        $content_piece->published_by = $published_by_user->display_name;
-    }
 
     $content_piece->term_ids= array();
     if(isset($term_ids)){
@@ -384,18 +343,10 @@ function get_single_content_piece_filtered($id){
 
     if($content_layout){
         $content_elements = get_json_to_clone($content_layout);
-        $content_piece->marks = 0; 
-        
-        if($content_elements['marks'] > 0)
-           $content_piece->marks = $content_elements['marks'];
-
-        $content_piece->layout = $content_elements['elements'];
         $excerpt_array = $content_elements['excerpt'];
     }
 
     $grading_details= get_grading_parameters($id);
-
-    $content_piece->grading_params = $grading_details['parameters']; //$grading_params;
 
     $content_piece->present_in_modules = get_modules_containing_content_piece($id);
 

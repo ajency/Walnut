@@ -9,6 +9,10 @@ add_action( 'wp_ajax_get-chapters', 'fetch_textbooks' );
 function fetch_textbooks() {
     
     $args=$_GET;
+    if( $args['action'] == 'get-chapters' && !isset($args['term_type']))
+      $all='0';
+    else
+      $all='1';
     
     $defaults['parent']= 0;
     
@@ -19,11 +23,10 @@ function fetch_textbooks() {
       $defaults['fetch_all']= true;
 
     $args = wp_parse_args($args, $defaults);
-    $textbooks=get_textbooks($args);
+    $textbooks=get_textbooks($args, $all);
     
     if(isset($_GET['page']))
       return $textbooks;
-
    wp_send_json($textbooks);
 }
 
