@@ -114,8 +114,6 @@ define ['app'
 							'post_status'   : post_status if post_status
 							'division'      : division if division
 
-						console.log data
-
 						if @contentSelectionType is 'quiz'
 							data.content_type= ['student_question']
 
@@ -134,7 +132,6 @@ define ['app'
 
 						else if @dataType is 'quiz'
 							newContent= App.request "get:quizes", data
-							#console.log newContent
 
 						else
 							newContent= App.request "get:content:pieces", data
