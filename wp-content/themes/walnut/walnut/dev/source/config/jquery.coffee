@@ -14,7 +14,8 @@ define ['jquery', 'underscore'], ($, _)->
             $(icon).removeClass("expand").addClass("collapse");
     
     $( document ).on "click", '.goto-prev-page', ->
-        window.history.back()        
+        #window.history.back()        
+        window.location.href = "/quiz-listview-student/?textbook_id="+localStorage.textbook_id+""
 
     # define helper functions
     $.fn.isEmptyColumn = (params = {})->
