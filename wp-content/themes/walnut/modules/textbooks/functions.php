@@ -100,7 +100,7 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
  * if parent is set then chapters/sections/subsections of that parent will be fetched
  */
 
-function get_textbooks( $args = array() ) {
+function get_textbooks( $args = array() , $all='1') {
     
     // set defaults
     $defaults = array(
@@ -166,7 +166,10 @@ function get_textbooks( $args = array() ) {
             $division = $args['division'];
 
         foreach ($textbooks as $book){
-            $book= get_book( $book,$division,$user_id,$term_type,$parentID);
+            if($all == '0')
+               $book= get_book_filtered( $book,$division,$user_id,$term_type,$parentID);
+            else 
+                $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             if($book){
                 $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
                 $current_blog = get_current_blog_id();
@@ -381,6 +384,54 @@ function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0
     /*$myfile = fopen("a6.txt", "a");
     fwrite($myfile, print_r($book_dets, true));
     fclose($myfile);*/
+    return $book_dets;
+}
+
+function get_book_filtered( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
+    global $wpdb;
+    $current_blog = get_current_blog_id();
+    $parentID = $parent;
+    switch_to_blog( 1 );
+
+    if (is_numeric( $book )) {
+        $book_id = $book;
+        $book_dets = get_term( $book, 'textbook' );
+
+        if(!$book_dets){
+            restore_current_blog();
+            return false;
+        }
+
+    } else if (is_numeric( $book->term_id )) {
+        $book_id = $book->term_id;
+        $book_dets = $book;
+
+    } else {
+        restore_current_blog();
+        return false;
+    }
+
+    $classes = $wpdb->get_row( "select class_id, tags from wp_textbook_relationships
+                where textbook_id=" . $book_id, ARRAY_A );
+
+    $book_dets->classes = maybe_unserialize( $classes['class_id'] );
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+
+    //added by kapil to fetch textbook names with class name starts
+    $class_names_applicable="";
+    $book_dets->classes_applicable = $class_names_applicable;
+    $class_names_applicable_arr = array();
+    global $classids;
+    foreach ($book_dets->classes as $book_dets_key => $book_dets_value) {
+       $class_names_applicable_arr[]=$classids[$book_dets_value]['label'];
+    }
+    if(count($class_names_applicable_arr)!=0){
+     $class_names_applicable = implode(", ", $class_names_applicable_arr);        
+     $book_dets->classes_applicable = "(".$class_names_applicable.")";
+    }
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+
+    restore_current_blog();
     return $book_dets;
 }
 
