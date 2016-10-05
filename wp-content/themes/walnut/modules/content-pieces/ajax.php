@@ -9,10 +9,14 @@ function ajax_get_content_pieces() {
     $defaults = array(
         'post_type' => 'content-piece'
     );
+    if(isset($args['ids']) || isset($args['content_type']))
+        $filtered = '0';
+    else
+        $filtered = '1';
 
     $args = wp_parse_args($args, $defaults);
 
-    $content_pieces = get_content_pieces($args);
+    $content_pieces = get_content_pieces($args, $filtered);
 
     wp_send_json($content_pieces);
 }
