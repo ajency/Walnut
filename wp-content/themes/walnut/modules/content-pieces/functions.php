@@ -79,6 +79,7 @@ function get_content_pieces($args = array()) {
                 array('term_ids', '%"'.$args['textbook'].'";%')                
         );
         $textbook_posts=$wpdb->get_col($post_ids);
+        #file_put_contents("a2.txt", print_r($textbook_posts, true));
         if($textbook_posts)
             $args['post__in'] = $textbook_posts;
 
@@ -109,6 +110,8 @@ function get_content_pieces($args = array()) {
         $args['post_status'] = 'any';
      
     $content_items = get_posts($args);
+
+    #file_put_contents("a3.txt", print_r($content_items, true));
     
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
@@ -117,7 +120,7 @@ function get_content_pieces($args = array()) {
     $content_pieces=array();
 
     foreach ($content_items as $id) {
-        $cpiece=get_single_content_piece($id);
+        $cpiece=get_single_content_piece_filtered($id);
         $cpiece->order=0;
         if(isset($args['ids']) && sizeof($args['ids'])>0){
             foreach($args['ids'] as $key=>$val){
@@ -131,6 +134,7 @@ function get_content_pieces($args = array()) {
     }
 
     switch_to_blog($current_blog_id);
+    #file_put_contents("a1.txt", print_r($content_pieces, true));
 
     return $content_pieces;
 
@@ -295,6 +299,122 @@ function get_single_content_piece($id){
 
     return $content_piece;
 }
+
+function get_single_content_piece_filtered($id){
+
+    $current_blog_id= get_current_blog_id();
+
+    switch_to_blog(1);
+    
+    global $wpdb;
+
+    $content_piece= get_post($id);
+
+    $authordata = get_userdata($content_piece->post_author);
+    $post_modified= $content_piece->post_modified; 
+    $content_piece->post_modified = date('Y-m-d H:i:s',strtotime('+5 hours +30 minutes',strtotime($post_modified)));
+    #$content_piece->post_author_name = $authordata->display_name;
+
+    $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);
+
+/* CHECK IF NEEEDED
+    $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
+
+    if($content_piece_meta)
+        extract($content_piece_meta);
+        */
+
+    // Content Type is 'teacher question' or 'student question' etc
+    $content_type = get_post_meta($id, 'content_type', true);
+
+    $content_piece->content_type = ($content_type) ? $content_type : '--';
+
+    //        get negative marks
+//    if( $content_type == 'student_question'){
+//        $negative_marks = get_post_meta($id,'negative_marks',true);
+//
+//        $content_piece->negative_marks = (int) $negative_marks;
+//    }
+
+    $content_piece->question_type = get_post_meta($id, 'question_type', true);
+
+    $content_piece->post_tags = (isset($post_tags)) ? $post_tags : '';
+
+    $content_piece->instructions = (isset($instructions)) ? $instructions : '';
+
+    $content_piece->duration = (isset($duration)) ? $duration : '';
+
+    $content_piece->hint_enable = (isset($hint_enable))? $hint_enable === "true" : false;
+
+    $content_piece->hint = (isset($hint))? $hint : '';
+
+    $content_piece->comment_enable = (isset($comment_enable))? $comment_enable === "true" : false;
+
+    $content_piece->comment = (isset($comment))? $comment : '';
+
+    $content_piece->difficulty_level = (int) get_post_meta($id,'difficulty_level',true);
+
+    $content_piece->last_modified_by='';
+
+    if(isset($last_modified_by)){
+        $last_modified_by_user=get_userdata($last_modified_by);
+        $content_piece->last_modified_by = $last_modified_by_user->display_name;
+    }
+
+    $content_piece->published_by = '';
+
+    if(isset($published_by)){
+        $published_by_user=get_userdata($published_by);
+        $content_piece->published_by = $published_by_user->display_name;
+    }
+
+    $content_piece->term_ids= array();
+    if(isset($term_ids)){
+
+        $term_ids = maybe_unserialize($term_ids);
+
+        $content_piece->term_ids = $term_ids;
+    }
+    $content_layout= get_post_meta($id, 'layout_json', true);
+
+    $content_layout = maybe_unserialize($content_layout);
+
+    $excerpt_array = array();
+    $excerpt = '';
+
+    if($content_layout){
+        $content_elements = get_json_to_clone($content_layout);
+        $content_piece->marks = 0; 
+        
+        if($content_elements['marks'] > 0)
+           $content_piece->marks = $content_elements['marks'];
+
+        $content_piece->layout = $content_elements['elements'];
+        $excerpt_array = $content_elements['excerpt'];
+    }
+
+    $grading_details= get_grading_parameters($id);
+
+    $content_piece->grading_params = $grading_details['parameters']; //$grading_params;
+
+    $content_piece->present_in_modules = get_modules_containing_content_piece($id);
+
+    $excerpt_array= array_merge($excerpt_array, $grading_details['excerpts']);
+
+    $excerpt = prettify_content_piece_excerpt($excerpt_array);
+
+    if(strlen(trim($excerpt))==0)
+        $excerpt='No excerpt';
+    else
+        $excerpt.='';
+        //original commented by kapil $excerpt.='...';    
+    $content_piece->post_excerpt =$excerpt;
+    
+    switch_to_blog($current_blog_id);
+
+    return $content_piece;
+}
+
 
 function get_modules_containing_content_piece($content_id){
 
