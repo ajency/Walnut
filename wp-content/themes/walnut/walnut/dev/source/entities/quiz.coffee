@@ -100,7 +100,6 @@ define ["app", 'backbone'], (App, Backbone) ->
                 if not quiz
                     quiz = new Quiz.ItemModel 'id': id
                     quiz.fetch()
-
                 quiz
 
 

@@ -38,7 +38,6 @@ define ['app'
 						</td>'
 
 			serializeData : ->
-				console.log "serializeData"
 				data = super()
 				data.view_url = SITEURL + "/#view-group/#{data.id}"
 				data.edit_url = SITEURL + "/#edit-module/#{data.id}"
@@ -48,10 +47,10 @@ define ['app'
 						textbook = _.findWhere @textbooks, "id" : parseInt data.term_ids.textbook
 						#textbook.name if textbook?
 					else
-						console.log @groupType
+						#console.log @groupType
 						textbook = _.findWhere @textbooks, "id" : data.term_ids.textbook
 					textbook.name if textbook?
-				console.log data.textbookName
+				#console.log data.textbookName
 
 				data.chapterName = =>
 					chapter = _.chain @chapters.findWhere "id" : data.term_ids.chapter
@@ -101,7 +100,6 @@ define ['app'
 				'click a.archiveModule':-> @changeModuleStatus 'archive'
 
 			initialize : (options)->
-				console.log "here"
 				@textbooks = options.textbooksCollection
 				@chapters = options.chaptersCollection
 				@groupType = options.groupType
@@ -195,7 +193,6 @@ define ['app'
 			tagName: 'td'
 
 			onShow:->
-				console.log @groupType
 				if @groupType is 'quiz'
 					@$el.attr 'colspan',9
 				else
@@ -222,13 +219,11 @@ define ['app'
 				data = super data
 				data.isQuiz = true if @groupType is 'quiz'
 				data.type = _.titleize _.humanize data.type
-				console.log @groupType
 				data
 
 			events :
 				'change .textbook-filter' :(e)->
 					@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
-					console.log e.target.id
 
 				'change #check_all_div'     :-> $.toggleCheckAll @$el.find 'table'
 				'change .tab_checkbox,#check_all_div '  : 'showSubmitButton'
@@ -248,7 +243,6 @@ define ['app'
 			onShow : ->
 				division = @$el.find '#s2id_divisions-filter'
 					.html()
-				console.log division
 
 				textbookFiltersHTML= $.showTextbookFilters textbooks: @textbooksCollection
 				@fullCollection = Marionette.getOption @, 'fullCollection'

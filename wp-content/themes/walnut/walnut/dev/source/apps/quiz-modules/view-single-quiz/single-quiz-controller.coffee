@@ -19,8 +19,7 @@ define ['app'
 			#display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
 			display_mode = null
 
-			initialize: (opts) ->
-				
+			initialize: (opts) ->				
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts

@@ -18,7 +18,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         if ((ref = Marionette.getOption(this, 'display_mode')) !== 'replay' && ref !== 'quiz_report') {
           if (this.model._fetch.responseJSON.data.content_pieces !== void 0) {
             r = this.model._fetch.responseJSON.data.content_layout;
-            console.log(this.model._fetch.responseJSON.data);
             c = this.model._fetch.responseJSON.data.content_pieces.length;
             total = 0;
             i = 0;

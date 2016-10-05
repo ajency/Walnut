@@ -7,10 +7,7 @@ define ['app'
 
 			initialize :(opts) ->
 
-				console.log "here ModulesListing"
-
 				{ @contentModulesCollection,@textbooksCollection,@groupType } = opts
-				console.log opts
 				
 				@allChaptersCollection = null
 
@@ -53,7 +50,6 @@ define ['app'
 
 						#new quiz email 
 						@listenTo @view, "save:communications", (data)=>
-                        	console.log "save:communication"
                         	#console.log data
                         	data=
                                 component           : 'quiz'
@@ -75,7 +71,6 @@ define ['app'
 					groupType : @groupType
 
 			_showSelectRecipientsApp:(communicationModel)->
-				console.log communicationModel
 				App.execute "show:quiz:select:recipients:popup",
                     region               : App.dialogRegion
                     communicationModel   : communicationModel

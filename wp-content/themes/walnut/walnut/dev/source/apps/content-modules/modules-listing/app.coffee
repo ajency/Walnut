@@ -61,7 +61,7 @@ define ['app'
 					@layout = @_getContentPiecesLayout()
 
 					App.execute "when:fetched", [@contentModulesCollection, textbooksCollection], =>
-
+						console.log @contentModulesCollection
 
 						@show @layout,
 							loading: true

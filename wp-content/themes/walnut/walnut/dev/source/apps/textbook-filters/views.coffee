@@ -154,10 +154,6 @@ define ['app'], (App)->
                     t=[]
                     t.id = m.get 'term_id'
                     t.name= m.get 'name'
-                    #name= m.get 'name'
-                    #name = name.split('(');
-                    #t.name = name[0]
-                    #console.log t.name
                     t
 
                 if divisions
@@ -190,7 +186,6 @@ define ['app'], (App)->
 
 
             onShow:->
-                console.log "onShow"
                 $ ".filters select"
                 .select2();
                 @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
@@ -217,9 +212,7 @@ define ['app'], (App)->
 
 
             setFilteredContent:->
-                console.log "setFilteredContent"
                 dataType= Marionette.getOption @, 'dataType'
-                #console.log dataType
                 filtered_data= $.filterTableByTextbooks(@,dataType)
 
                 @collection.reset filtered_data

@@ -23,7 +23,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
 
       ListItemView.prototype.serializeData = function() {
         var data;
-        console.log("serializeData");
         data = ListItemView.__super__.serializeData.call(this);
         data.view_url = SITEURL + ("/#view-group/" + data.id);
         data.edit_url = SITEURL + ("/#edit-module/" + data.id);
@@ -35,7 +34,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
                 "id": parseInt(data.term_ids.textbook)
               });
             } else {
-              console.log(_this.groupType);
               textbook = _.findWhere(_this.textbooks, {
                 "id": data.term_ids.textbook
               });
@@ -45,7 +43,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
             }
           };
         })(this);
-        console.log(data.textbookName);
         data.chapterName = (function(_this) {
           return function() {
             var chapter;
@@ -111,7 +108,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.initialize = function(options) {
-        console.log("here");
         this.textbooks = options.textbooksCollection;
         this.chapters = options.chaptersCollection;
         return this.groupType = options.groupType;
@@ -237,7 +233,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       EmptyView.prototype.tagName = 'td';
 
       EmptyView.prototype.onShow = function() {
-        console.log(this.groupType);
         if (this.groupType === 'quiz') {
           return this.$el.attr('colspan', 9);
         } else {
@@ -280,14 +275,12 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
           data.isQuiz = true;
         }
         data.type = _.titleize(_.humanize(data.type));
-        console.log(this.groupType);
         return data;
       };
 
       ModulesListingView.prototype.events = {
         'change .textbook-filter': function(e) {
-          this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
-          return console.log(e.target.id);
+          return this.trigger("fetch:chapters:or:sections", $(e.target).val(), e.target.id);
         },
         'change #check_all_div': function() {
           return $.toggleCheckAll(this.$el.find('table'));
@@ -315,7 +308,6 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       ModulesListingView.prototype.onShow = function() {
         var division, textbookFiltersHTML;
         division = this.$el.find('#s2id_divisions-filter').html();
-        console.log(division);
         textbookFiltersHTML = $.showTextbookFilters({
           textbooks: this.textbooksCollection
         });
