@@ -167,7 +167,7 @@ function get_textbooks( $args = array() , $all='1') {
 
         foreach ($textbooks as $book){
             if($all == '0')
-               $book= get_book_filtered( $book,$division,$user_id,$term_type,$parentID);
+               $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             else 
                 $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             if($book){
