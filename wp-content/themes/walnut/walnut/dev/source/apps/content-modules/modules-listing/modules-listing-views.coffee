@@ -143,7 +143,7 @@ define ['app'
 
 			
 			errorFn : ->
-				console.log 'error'
+				console.log 'errorFn'
 			
 			addSpinner:->
 				@$el.find '.spinner'

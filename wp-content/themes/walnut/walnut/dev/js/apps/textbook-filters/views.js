@@ -27,7 +27,6 @@ define(['app'], function(App) {
         },
         'change .filters.new-filter .div-filters': function(e) {
           var parent_id;
-          console.log($(e.target).val());
           parent_id = $(e.target).val();
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
