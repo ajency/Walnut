@@ -150,7 +150,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
-              console.log(data);
               if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
