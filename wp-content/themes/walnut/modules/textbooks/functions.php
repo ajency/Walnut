@@ -100,7 +100,7 @@ add_action( 'edited_textbook', 'save_extra_taxonomy_fields', 10, 2 );
  * if parent is set then chapters/sections/subsections of that parent will be fetched
  */
 
-function get_textbooks( $args = array() , $all='1') {
+function get_textbooks( $args = array() , $all='0') {
     
     // set defaults
     $defaults = array(
@@ -166,10 +166,10 @@ function get_textbooks( $args = array() , $all='1') {
             $division = $args['division'];
 
         foreach ($textbooks as $book){
-            if($all == '0')
-               $book= get_book( $book,$division,$user_id,$term_type,$parentID);
-            else 
-                $book= get_book( $book,$division,$user_id,$term_type,$parentID);
+            // if($all == '1')
+            //    $book= get_book( $book,$division,$user_id,$term_type,$parentID);
+            // else 
+            $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             if($book){
                 $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
                 $current_blog = get_current_blog_id();

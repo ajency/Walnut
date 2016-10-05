@@ -51,7 +51,7 @@ function create_content_piece_post_type() {
 
 add_action('init', 'create_content_piece_post_type');
 
-function get_content_pieces($args = array()) {
+function get_content_pieces($args = array(), $filtered='0') {
     
     global $wpdb;
     
@@ -120,7 +120,10 @@ function get_content_pieces($args = array()) {
     $content_pieces=array();
 
     foreach ($content_items as $id) {
-        $cpiece=get_single_content_piece($id);
+        if($filtered == '1')
+            $cpiece=get_single_content_piece_filtered($id);
+        else
+            $cpiece=get_single_content_piece($id);
         $cpiece->order=0;
         if(isset($args['ids']) && sizeof($args['ids'])>0){
             foreach($args['ids'] as $key=>$val){
