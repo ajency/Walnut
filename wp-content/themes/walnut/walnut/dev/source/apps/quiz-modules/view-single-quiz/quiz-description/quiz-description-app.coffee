@@ -106,6 +106,7 @@ define ['app'
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
+
                     else 
                         data.taken_on_date = moment().format("Do MMM YYYY")
 
@@ -121,26 +122,52 @@ define ['app'
                 data  
 
             onShow:->
-                # console.log @model
-                # permission = @model.get 'permissions'
-                # #console.log permission.displayAfterDays
-                # #console.log permission.displayAfterHours
+                if @model.get 'permissions'
+                    permission = @model.get 'permissions'
+                    if(permission.displayAfterDays != '')
+                        replay_after_day_min = (permission.displayAfterDays * 24 * 60)
 
-                # if(permission.displayAfterDays != '')
-                #     replay_after_day = moment(permission.displayAfterDays * 24, 'h')
-                # else
-                #     replay_after_day = moment('10', 'h')
+                    else
+                        replay_after_day_min = 0
 
-                # if(permission.displayAfterHours == '')
-                #     after_hours = moment(0, 'h')
-                # else
-                #     after_hours = moment('20', 'h')
+                    if(permission.displayAfterHours != '')
+                        after_hours_time_result = permission.displayAfterHours.split(':')
 
-                # taken_on_date = moment(@model.get 'taken_on')
+                        after_hours_time = after_hours_time_result[0] * 60
+                        after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time)
+                    else
+                        after_hours_time_min = 0
 
-                # replay_time = replay_after_day.add(after_hours)
-                
-                # console.log replay_time
+
+                    total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min)
+
+                    taken_on_date = moment(@model.get 'taken_on').format('YYYY-MM-DD HH:mm:ss')
+
+                    # total_replay_mins = moment().minute(total_replay_mins);
+
+                    # console.log total_replay_mins
+
+                    replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+
+                    console.log replay_take
+
+                    today = moment().format('YYYY-MM-DD HH:mm:ss')
+                    console.log moment('2016-10-07 15:56:35').diff(today, 'minutes')
+
+
+                    # console.log after_hours_time
+                    # console.log after_hours_time_min
+
+                    # replay_after_day_hour = moment(replay_after_day , 'HH:mm')
+                    # replay_after_hour = moment(after_hours_time, 'HH:mm')
+
+                    # taken_on_date = moment(@model.get 'taken_on').format('YYYY-MM-DD hh:mm:ss')
+
+                    # total_replay_time = replay_after_day_hour.add(replay_after_hour)
+
+                    # console.log total_replay_time
+
+
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
                 if responseSummary.get('status') is 'started'                    

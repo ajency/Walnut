@@ -161,7 +161,28 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        var ref, responseSummary;
+        var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
+        if (this.model.get('permissions')) {
+          permission = this.model.get('permissions');
+          if (permission.displayAfterDays !== '') {
+            replay_after_day_min = permission.displayAfterDays * 24 * 60;
+          } else {
+            replay_after_day_min = 0;
+          }
+          if (permission.displayAfterHours !== '') {
+            after_hours_time_result = permission.displayAfterHours.split(':');
+            after_hours_time = after_hours_time_result[0] * 60;
+            after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time);
+          } else {
+            after_hours_time_min = 0;
+          }
+          total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min);
+          taken_on_date = moment(this.model.get('taken_on')).format('YYYY-MM-DD HH:mm:ss');
+          replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+          console.log(replay_take);
+          today = moment().format('YYYY-MM-DD HH:mm:ss');
+          console.log(moment('2016-10-07 15:56:35').diff(today, 'minutes'));
+        }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
           this.$el.find("#take-quiz").html('Continue');

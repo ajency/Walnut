@@ -7,8 +7,6 @@
  */
 
 function get_single_quiz_module ($id,$user_id=0, $division = 0) {
-
-   
     $taken_by_stud = [];
 
     $selected_quiz_id = $id;
@@ -46,8 +44,6 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
     $quiz_details = $wpdb->get_results($query_meta);
-    #file_put_contents("a1.txt", print_r($quiz_details, true));
-
 
     $data->permissions = $data->description = array();
 
@@ -58,6 +54,10 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
             if ($permissions)
                 foreach ($permissions as $k=>$v){
                     if($k == 'displayAfterDays' || $k == 'displayAfterHours'){
+
+                        //check if replay button should be available
+
+                        $permissions['isReplay'] = '0';
 
                     }else{
                         $permissions[$k] = filter_var($permissions[$k], FILTER_VALIDATE_BOOLEAN);

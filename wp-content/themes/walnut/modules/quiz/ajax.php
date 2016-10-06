@@ -10,6 +10,7 @@ require_once 'functions.php';
 
 function ajax_fetch_single_quiz ()
 {
+    
     $id = $_GET['id'];
     $quiz_module = get_single_quiz_module ($id);
 
