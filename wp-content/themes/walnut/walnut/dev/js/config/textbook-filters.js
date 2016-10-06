@@ -4,18 +4,19 @@ define(['jquery', 'underscore'], function($, _) {
     if (opts == null) {
       opts = {};
     }
+    console.log('showTextbookFilters');
     divHtml = '';
     if (opts.textbooks) {
       textbookItems = '';
       opts.textbooks.each(function(t) {
-        return textbookItems += '<option value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
+        return textbookItems += '<option id=' + t.get('term_id') + ' value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
       });
       divHtml += '<select class="textbook-filter select2-filters" id="textbooks-filter"> <option value="">All Textbooks</option>' + textbookItems + '</select> <select class="textbook-filter select2-filters" id="chapters-filter"> <option value="">All Chapters</option> </select>';
     }
     if (opts.chapters) {
       ChapterItems = '';
       opts.chapters.each(function(t) {
-        return ChapterItems += '<option value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
+        return ChapterItems += '<option id=chap' + t.get('term_id') + ' value=' + t.get('term_id') + '>' + t.get('name') + '</option>';
       });
       divHtml += '<select class="textbook-filter select2-filters" id="chapters-filter"> <option value="">All Chapters</option>' + ChapterItems + '</select>';
     }
@@ -23,7 +24,8 @@ define(['jquery', 'underscore'], function($, _) {
   };
   $.populateTextbooks = function(items, ele) {
     var chapterElement, textbookElement;
-    ele.find('#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter').html('');
+    console.log('populateTextbooks');
+    ele.find('#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter').text('');
     textbookElement = ele.find('#textbooks-filter');
     chapterElement = ele.find('#chapters-filter');
     if (items instanceof Backbone.Collection) {
@@ -32,11 +34,17 @@ define(['jquery', 'underscore'], function($, _) {
     if (_.size(items) > 0) {
       _.each(items, (function(_this) {
         return function(item, index) {
-          return textbookElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
+          return textbookElement.append('<option id="' + item.get('term_id') + '" value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
         };
       })(this));
-      return textbookElement.select2().select2('val', _.first(items).get('term_id'));
+      if (window.division_id) {
+        return textbookElement.select2().select2('val', window.textbook_ids);
+      } else {
+        console.log('window else');
+        return textbookElement.select2().select2('val', _.first(items).get('term_id'));
+      }
     } else {
+      console.log('else');
       return textbookElement.select2('data', null);
     }
   };
@@ -58,7 +66,7 @@ define(['jquery', 'underscore'], function($, _) {
       chapterElement.append('<option value="">All Chapters</option>');
       _.each(items, (function(_this) {
         return function(item, index) {
-          return chapterElement.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
+          return chapterElement.append('<option id="chap' + item.get('term_id') + '" value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
         };
       })(this));
       if (curr_item) {
@@ -165,7 +173,7 @@ define(['jquery', 'underscore'], function($, _) {
     if (_.size(items) > 0) {
       _.each(items, (function(_this) {
         return function(item, index) {
-          return ele.append('<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
+          return ele.append('<option id="chap' + item.get('term_id') + '" value="' + item.get('term_id') + '">' + item.get('name') + '</option>');
         };
       })(this));
       if (_.isArray(curr_item)) {
@@ -176,6 +184,7 @@ define(['jquery', 'underscore'], function($, _) {
   };
   return $.filterTableByTextbooks = function(_this, dataType) {
     var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type, text_multi, textbk_ids;
+    console.log('filterTableByTextbooks');
     filter_elements = _this.$el.find('select.textbook-filter');
     if (dataType === 'teaching-modules') {
       filterCollection = App.request("get:content:modules:repository");

@@ -9,17 +9,16 @@ define ['app'], (App)->
                                     {{#divisions_filter}}
                                         <select class="select2-filters div-filters" id="divisions-filter">
                                         {{#divisions}}
-                                           <option value="{{id}}">{{&name}}</option>
+                                           <option value="{{id}}" id="div{{id}}">{{&name}}</option>
                                         {{/divisions}}
                                     </select>
                                     {{/divisions_filter}}
 
                                     {{#textbooks_multi_filter}}
                                     <select id="textbooks-filter" class="textbook-filter select2-filters multi-textbook-filter" multiple="multiple" data-placeholder="Select Textbook">
-                                            <!--option value="-1" selected>Select Textbook</option-->
                                     {{#textbooks}}
-                                           <option value="{{id}}">{{&name}}</option>
-                                        <{{/textbooks}}
+                                           <option value="{{id}}" id="{{id}}">{{&name}}</option>
+                                    {{/textbooks}}
                                     </select>
                                     <button type="button" class="multi-filters btn btn-small btn-success">Go</button>
                                     {{/textbooks_multi_filter}}
@@ -107,10 +106,16 @@ define ['app'], (App)->
 
             events:
                 'change #textbooks-filter.div-filters':(e)->
+                    window.textbook_ids = $('.multi-textbook-filter').select2("val")
                     @trigger "fetch:new:content", $(e.target).val()
 
 
                 'click .multi-filters':->
+                    if $('#content-post-status-filter').val() == 'publish'
+                        window.quiz_report_status = 'published'
+                    else
+                        window.quiz_report_status = $('#content-post-status-filter').val()
+                    window.textbook_ids = $('.multi-textbook-filter').select2("val")
                     @trigger "fetch:new:content", $('.multi-textbook-filter').select2("val")
 
                 #'change #textbooks-multi-filter':(e)->
@@ -122,7 +127,7 @@ define ['app'], (App)->
                     @trigger "fetch:new:content", $(e.target).val()
 
                 'change .filters.new-filter .div-filters' :(e)->
-                    console.log $(e.target).val()
+                    #console.log $(e.target).val()
                     parent_id = $(e.target).val()
                     # if parent_id == '' || parent_id == null
                     #     parent_id = $('#textbooks-filter').val()     
@@ -155,13 +160,12 @@ define ['app'], (App)->
                     t.id = m.get 'term_id'
                     t.name= m.get 'name'
                     t
-
-                if divisions
-                    data.divisions = divisions.map (m)->
-                        d=[]
-                        d.id = m.get 'id'
-                        d.name= m.get 'division'
-                        d
+                
+                data.divisions = divisions.map (m)->
+                    d=[]
+                    d.id = m.get 'id'
+                    d.name= m.get 'division'
+                    d
 
                 filters= Marionette.getOption @, 'filters'
 
@@ -182,26 +186,36 @@ define ['app'], (App)->
 
                 data.status_filter = true if _.contains filters, 'status'
 
+
                 data
 
 
             onShow:->
+                #$('#div2 option:selected').text()
+                if window.division_id
+
+                    $ '#div'+window.division_id
+                    .attr('selected','selected')
+
+                    $ '#textbooks-filter'
+                    .val(window.textbook_ids)
+                    .trigger('change')
+
                 $ ".filters select"
                 .select2();
-                @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 
+                @contentGroupModel = Marionette.getOption @, 'contentGroupModel'
 
                 if @contentGroupModel
                     term_ids= @contentGroupModel.get 'term_ids'
-                    $ "#textbooks-filter"
-                    .select2().select2 'val', term_ids['textbook']
+                    # $ "#textbooks-filter"
+                    # .select2().select2 'val', term_ids['textbook']
 
                     #@setFilteredContent()
                     @setFilteredContent()
 
 
             onFetchChaptersOrSectionsCompleted :(filteredCollection, filterType, currItem) ->
-
                 switch filterType
                     when 'divisions-filter' then $.populateTextbooks filteredCollection, @$el, currItem
                     when 'textbooks-filter' then $.populateChapters filteredCollection, @$el, currItem
@@ -211,7 +225,7 @@ define ['app'], (App)->
                 @setFilteredContent() if filterType not in ['divisions-filter','textbooks-filter']
 
 
-            setFilteredContent:->
+            setFilteredContent:->                
                 dataType= Marionette.getOption @, 'dataType'
                 filtered_data= $.filterTableByTextbooks(@,dataType)
 
@@ -219,6 +233,11 @@ define ['app'], (App)->
                 @trigger "update:pager"
                 @$el.find '.loading-collection'
                 .remove()
+
+                
+
+                #@$el.find '#div2 option:selected'
+                #.text()
 
             onNewContentFetched:->
                 @setFilteredContent()

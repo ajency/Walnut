@@ -40,11 +40,16 @@ define ['app'
 
             events:
                 'click #addContent a': 'changeTab'
-                'click #go-back-button':-> App.navigate "quiz-report", true
+                'click #go-back-button': 'navigateToQuizReport'
+
+
+            navigateToQuizReport:->
+                App.navigate "quiz-report", true
 
             mixinTemplateHelpers:(data)->
-
+                #console.log @
                 data.totalStudents  = _.size Marionette.getOption @,'students'
                 data.takenBy        = Marionette.getOption @, 'takenBy'
-
+                data.division       = Marionette.getOption @, 'division'
+                #document.division_id  = Marionette.getOption @, 'division'
                 data

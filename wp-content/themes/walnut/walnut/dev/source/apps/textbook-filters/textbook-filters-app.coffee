@@ -5,6 +5,7 @@ define ['app'
 	App.module "TextbookFiltersApp", (TextbookFilters, App, Backbone, Marionette, $, _)->
 		class TextbookFilters.Controller extends RegionController
 			initialize: (opts) ->
+				console.log opts
 
 				{@collection,@model,@filters,@selectedFilterParamsObject, 
 				@dataType, @contentSelectionType, @divisionsCollection,@post_status}=opts
@@ -17,8 +18,12 @@ define ['app'
 				if @divisionsCollection
 					class_id= @divisionsCollection.first().get('class_id') 
 
-					data = 'class_id': class_id if class_id
+					if window.class_id
+						data = 'class_id': (window.class_id)
+					else
+						data = 'class_id': class_id
 				else
+					console.log 'else'
 					data = 'fetch_all' : true
 
 				@textbooksCollection = App.request "get:textbooks", data

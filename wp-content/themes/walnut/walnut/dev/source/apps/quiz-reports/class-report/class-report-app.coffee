@@ -13,43 +13,65 @@ define ['app'
             students = null
             textbooksCollection = null
             divisionsCollection = null
+            divisionsSelectCollection = null
             schoolsCollection   = null
             quizzes = null
 
             initialize: ->
-
                 @division = 0
 
                 schoolsCollection   = App.request "get:all:schools"
                 App.execute "when:fetched", schoolsCollection, @_fetchDivisions                        
 
             _fetchDivisions:=>
-                
+
                 divisionsCollection = App.request "get:divisions"
                 App.execute "when:fetched", divisionsCollection, @_fetchTextbooks  
 
             _fetchTextbooks:=>
-                
-                class_id= divisionsCollection.first().get 'class_id'
-                division= divisionsCollection.first().get 'id'
+                if(window.division_id)
+                    divisionsSelectCollection = App.request "get:division:by:id", window.division_id
+                    App.execute "when:fetched", divisionsSelectCollection, =>
+                        class_id= divisionsSelectCollection.get 'class_id'
+                        division= divisionsSelectCollection.get 'id'
 
-                textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
+                        textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
+                        
+                        App.execute "when:fetched", textbooksCollection, => 
+                        App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
+                else
+                    class_id= divisionsCollection.first().get 'class_id'
+                    division= divisionsCollection.first().get 'id'
 
-                App.execute "when:fetched", textbooksCollection, => 
-                App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
+                    textbooksCollection = App.request "get:textbooks", 'class_id' : class_id
+
+                    App.execute "when:fetched", textbooksCollection, => 
+                    App.execute "when:fetched", textbooksCollection, @_fetchQuizzes
 
             _fetchQuizzes:=>
+                if(window.division_id)
+                    textbook = textbooksCollection.first()
+                    @division= divisionsSelectCollection.get 'id'
 
-                textbook = textbooksCollection.first()
-                @division= divisionsCollection.first().get 'id'
+                    data = 
+                        'textbook'      : window.textbook_ids
+                        'division'      : @division
+                        'post_status'   : quiz_report_status
+                else
+                    textbook = textbooksCollection.first()
+                    @division= divisionsCollection.first().get 'id'
+
+                    data = 
+                        'textbook'      : textbook.id
+                        'division'      : @division
                 
-                data = 
-                    'textbook'      : textbook.id
-                    'division'      : @division
-
+                #console.log data
                 quizzes = App.request "get:quizes", data
 
-                students = App.request "get:students:by:division", divisionsCollection.first().get 'id'
+                if(window.division_id)
+                    students = App.request "get:students:by:division", divisionsSelectCollection.get 'id'
+                else
+                    students = App.request "get:students:by:division", divisionsCollection.first().get 'id'
                 App.execute "when:fetched", [quizzes,students], @_showViews 
 
             _showViews:=>
@@ -125,7 +147,6 @@ define ['app'
                                     division        : @division
                                     start_date      : data.start_date
                                     end_date        : data.end_date
-                            console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
                             
@@ -154,6 +175,7 @@ define ['app'
                     communicationModel   : communicationModel
 
             _showQuiz:(quizModel)->
+                window.division_id = @division
                 App.navigate "quiz-report/div/#{@division}/quiz/#{quizModel.id}"
                 
                 App.execute "show:quiz:report:app",

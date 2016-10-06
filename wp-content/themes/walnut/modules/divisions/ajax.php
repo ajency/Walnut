@@ -5,6 +5,7 @@ require_once 'wpadmin-custom-menus.php';
 
 function fetch_divisions() {
 
+
     if(isset($_REQUEST['user_id']))
         $user_id= $_REQUEST['user_id'];
     else

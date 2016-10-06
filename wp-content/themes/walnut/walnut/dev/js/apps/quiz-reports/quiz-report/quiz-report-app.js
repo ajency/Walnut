@@ -19,19 +19,20 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
         this.quizModel = quiz instanceof Backbone.Model ? quiz : App.request("get:quiz:by:id", quiz);
         return App.execute("when:fetched", [this.divisionModel, this.quizModel], (function(_this) {
           return function() {
+            window.class_id = _this.divisionModel.get('class_id');
             if (_this.students instanceof Backbone.Collection) {
               return _this._showViews(_this.students);
             } else {
               _this.students = App.request("get:students:by:division", _this.divisionModel.id);
               return App.execute("when:fetched", _this.students, function() {
-                return _this._showViews(_this.students);
+                return _this._showViews(_this.students, division);
               });
             }
           };
         })(this));
       };
 
-      Controller.prototype._showViews = function(students) {
+      Controller.prototype._showViews = function(students, division) {
         var data;
         data = {
           'student_ids': this.students.pluck('ID'),
@@ -42,7 +43,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
           return function() {
             var takenBy;
             takenBy = _.size(_.uniq(_this.quizResponseSummaries.pluck('student_id')));
-            _this.layout = _this._getQuizReportLayout(students, takenBy);
+            _this.layout = _this._getQuizReportLayout(students, takenBy, division);
             _this.show(_this.layout, {
               loading: true
             });
@@ -73,10 +74,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/quiz-report/q
         })(this));
       };
 
-      Controller.prototype._getQuizReportLayout = function(students, takenBy) {
+      Controller.prototype._getQuizReportLayout = function(students, takenBy, division) {
         return new QuizReportApp.Layout.QuizReportLayout({
           students: students,
-          takenBy: takenBy
+          takenBy: takenBy,
+          division: division
         });
       };
 

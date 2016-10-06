@@ -8,13 +8,14 @@ define ['jquery', 'underscore'], ($, _)->
     ##
 
     $.showTextbookFilters =(opts={}) ->
+        console.log 'showTextbookFilters'
 
         divHtml= ''
 
         if opts.textbooks
             textbookItems= ''
             opts.textbooks.each (t) ->
-                textbookItems += '<option value='+t.get('term_id')+'>'+t.get('name')+'</option>'
+                textbookItems += '<option id='+t.get('term_id')+' value='+t.get('term_id')+'>'+t.get('name')+'</option>'
 
             divHtml +='<select class="textbook-filter select2-filters" id="textbooks-filter">
                 <option value="">All Textbooks</option>'+textbookItems +
@@ -26,7 +27,7 @@ define ['jquery', 'underscore'], ($, _)->
         if opts.chapters
             ChapterItems= ''
             opts.chapters.each (t) ->
-                ChapterItems += '<option value='+t.get('term_id')+'>'+t.get('name')+'</option>'
+                ChapterItems += '<option id=chap'+t.get('term_id')+' value='+t.get('term_id')+'>'+t.get('name')+'</option>'
 
             divHtml +='<select class="textbook-filter select2-filters" id="chapters-filter">
                             <option value="">All Chapters</option>'+ChapterItems +
@@ -46,8 +47,9 @@ define ['jquery', 'underscore'], ($, _)->
     # ie. values which must be selected by default
 
     $.populateTextbooks = (items, ele)->
+        console.log 'populateTextbooks'
         ele.find '#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter'
-        .html ''
+        .text ''
         
         textbookElement= ele.find '#textbooks-filter'
         #console.log textbookElement
@@ -63,10 +65,15 @@ define ['jquery', 'underscore'], ($, _)->
                 #name = item.get('name')
                 #name = name.split('(')
                 #text = name[0]
-                textbookElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
+                textbookElement.append '<option id="' + item.get('term_id') + '" value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
 
-            textbookElement.select2().select2 'val', _.first(items).get 'term_id'
-        else 
+            if window.division_id
+                textbookElement.select2().select2 'val', window.textbook_ids
+            else
+                console.log 'window else'
+                textbookElement.select2().select2 'val', _.first(items).get 'term_id'
+        else
+            console.log 'else' 
             textbookElement.select2 'data', null
 
     $.populateChapters = (items, ele, curr_item='' )->
@@ -85,7 +92,7 @@ define ['jquery', 'underscore'], ($, _)->
             chapterElement.append '<option value="">All Chapters</option>'
 
             _.each items, (item, index)=>
-                chapterElement.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
+                chapterElement.append '<option id="chap' + item.get('term_id') + '" value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
 
             if curr_item
                 chapterElement.select2().select2 'val', curr_item
@@ -169,7 +176,7 @@ define ['jquery', 'underscore'], ($, _)->
 
         if _.size(items) > 0
             _.each items, (item, index)=>
-                ele.append '<option value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
+                ele.append '<option id="chap' + item.get('term_id') + '" value="' + item.get('term_id') + '">' + item.get('name') + '</option>'
 
             curr_item = _.flatten _.compact curr_item if _.isArray curr_item
 
@@ -177,6 +184,7 @@ define ['jquery', 'underscore'], ($, _)->
 
 
     $.filterTableByTextbooks = (_this, dataType)->
+        console.log 'filterTableByTextbooks'
         filter_elements= _this.$el.find('select.textbook-filter')
         
         if dataType is 'teaching-modules'

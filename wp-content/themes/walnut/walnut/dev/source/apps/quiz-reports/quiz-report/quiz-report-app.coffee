@@ -23,6 +23,7 @@ define ['app'
                 
 
                 App.execute "when:fetched", [@divisionModel,@quizModel], =>
+                    window.class_id = @divisionModel.get 'class_id'
 
                     if @students instanceof Backbone.Collection
                         @_showViews @students
@@ -30,9 +31,11 @@ define ['app'
                     else
                         @students= App.request "get:students:by:division", @divisionModel.id
 
-                        App.execute "when:fetched", @students, => @_showViews @students
+                        App.execute "when:fetched", @students, => @_showViews @students,division
 
-            _showViews:(students)=>
+            _showViews:(students,division)=>
+
+                #document.division_id = division
 
                 data=
                     'student_ids'   : @students.pluck 'ID'
@@ -46,7 +49,7 @@ define ['app'
 
                     takenBy = _.size _.uniq @quizResponseSummaries.pluck 'student_id'
 
-                    @layout = @_getQuizReportLayout students,takenBy
+                    @layout = @_getQuizReportLayout students,takenBy,division
                             
                     @show @layout,
                         loading: true
@@ -73,10 +76,11 @@ define ['app'
                             quizModel   : @quizModel
                             quizResponseSummaries : @quizResponseSummaries
 
-            _getQuizReportLayout:(students,takenBy)->
+            _getQuizReportLayout:(students,takenBy,division)->
                 new QuizReportApp.Layout.QuizReportLayout
                     students : students
                     takenBy  : takenBy
+                    division : division
 
         # set handlers
         App.commands.setHandler "show:quiz:report:app", (opt = {})->

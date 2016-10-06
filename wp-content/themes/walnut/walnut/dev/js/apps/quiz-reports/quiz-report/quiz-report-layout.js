@@ -20,14 +20,17 @@ define(['app', 'controllers/region-controller'], function(App, RegionController)
 
       QuizReportLayout.prototype.events = {
         'click #addContent a': 'changeTab',
-        'click #go-back-button': function() {
-          return App.navigate("quiz-report", true);
-        }
+        'click #go-back-button': 'navigateToQuizReport'
+      };
+
+      QuizReportLayout.prototype.navigateToQuizReport = function() {
+        return App.navigate("quiz-report", true);
       };
 
       QuizReportLayout.prototype.mixinTemplateHelpers = function(data) {
         data.totalStudents = _.size(Marionette.getOption(this, 'students'));
         data.takenBy = Marionette.getOption(this, 'takenBy');
+        data.division = Marionette.getOption(this, 'division');
         return data;
       };
 

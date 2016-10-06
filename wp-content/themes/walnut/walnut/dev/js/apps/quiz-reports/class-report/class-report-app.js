@@ -5,7 +5,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/class-report-layout', 'apps/quiz-reports/class-report/modules-listing/controller', 'apps/quiz-reports/student-filter/student-filter-app', 'apps/quiz-reports/class-report/search-results-app', 'apps/quiz-reports/class-report/schedule-quiz-app', 'apps/quiz-reports/class-report/recipients-popup/controller'], function(App, RegionController) {
   return App.module("ClassReportApp", function(ClassReportApp, App) {
     ClassReportApp.Controller = (function(superClass) {
-      var divisionsCollection, quizzes, schoolsCollection, students, textbooksCollection;
+      var divisionsCollection, divisionsSelectCollection, quizzes, schoolsCollection, students, textbooksCollection;
 
       extend(Controller, superClass);
 
@@ -22,6 +22,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       textbooksCollection = null;
 
       divisionsCollection = null;
+
+      divisionsSelectCollection = null;
 
       schoolsCollection = null;
 
@@ -40,27 +42,57 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
 
       Controller.prototype._fetchTextbooks = function() {
         var class_id, division;
-        class_id = divisionsCollection.first().get('class_id');
-        division = divisionsCollection.first().get('id');
-        textbooksCollection = App.request("get:textbooks", {
-          'class_id': class_id
-        });
-        App.execute("when:fetched", textbooksCollection, (function(_this) {
-          return function() {};
-        })(this));
-        return App.execute("when:fetched", textbooksCollection, this._fetchQuizzes);
+        if (window.division_id) {
+          divisionsSelectCollection = App.request("get:division:by:id", window.division_id);
+          return App.execute("when:fetched", divisionsSelectCollection, (function(_this) {
+            return function() {
+              var class_id, division;
+              class_id = divisionsSelectCollection.get('class_id');
+              division = divisionsSelectCollection.get('id');
+              textbooksCollection = App.request("get:textbooks", {
+                'class_id': class_id
+              });
+              App.execute("when:fetched", textbooksCollection, function() {});
+              return App.execute("when:fetched", textbooksCollection, _this._fetchQuizzes);
+            };
+          })(this));
+        } else {
+          class_id = divisionsCollection.first().get('class_id');
+          division = divisionsCollection.first().get('id');
+          textbooksCollection = App.request("get:textbooks", {
+            'class_id': class_id
+          });
+          App.execute("when:fetched", textbooksCollection, (function(_this) {
+            return function() {};
+          })(this));
+          return App.execute("when:fetched", textbooksCollection, this._fetchQuizzes);
+        }
       };
 
       Controller.prototype._fetchQuizzes = function() {
         var data, textbook;
-        textbook = textbooksCollection.first();
-        this.division = divisionsCollection.first().get('id');
-        data = {
-          'textbook': textbook.id,
-          'division': this.division
-        };
+        if (window.division_id) {
+          textbook = textbooksCollection.first();
+          this.division = divisionsSelectCollection.get('id');
+          data = {
+            'textbook': window.textbook_ids,
+            'division': this.division,
+            'post_status': quiz_report_status
+          };
+        } else {
+          textbook = textbooksCollection.first();
+          this.division = divisionsCollection.first().get('id');
+          data = {
+            'textbook': textbook.id,
+            'division': this.division
+          };
+        }
         quizzes = App.request("get:quizes", data);
-        students = App.request("get:students:by:division", divisionsCollection.first().get('id'));
+        if (window.division_id) {
+          students = App.request("get:students:by:division", divisionsSelectCollection.get('id'));
+        } else {
+          students = App.request("get:students:by:division", divisionsCollection.first().get('id'));
+        }
         return App.execute("when:fetched", [quizzes, students], this._showViews);
       };
 
@@ -140,7 +172,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                   end_date: data.end_date
                 }
               };
-              console.log(data);
               communicationModel = App.request("create:communication", data);
               return _this._showSelectRecipientsApp(communicationModel);
             });
@@ -177,6 +208,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       };
 
       Controller.prototype._showQuiz = function(quizModel) {
+        window.division_id = this.division;
         App.navigate("quiz-report/div/" + this.division + "/quiz/" + quizModel.id);
         return App.execute("show:quiz:report:app", {
           region: App.mainContentRegion,
