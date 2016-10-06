@@ -41,9 +41,7 @@ define(['app'], function(App) {
           }
         },
         'click .filters.new-filter .multi-filters': function(e) {
-          if (e.target.id !== 'divisions-filter') {
-            return this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
-          }
+          return this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');
         },
         'change .content-type-filter': function(e) {
           if ($(e.target).val() === 'student_question') {
@@ -68,13 +66,15 @@ define(['app'], function(App) {
           t.name = m.get('name');
           return t;
         });
-        data.divisions = divisions.map(function(m) {
-          var d;
-          d = [];
-          d.id = m.get('id');
-          d.name = m.get('division');
-          return d;
-        });
+        if (divisions) {
+          data.divisions = divisions.map(function(m) {
+            var d;
+            d = [];
+            d.id = m.get('id');
+            d.name = m.get('division');
+            return d;
+          });
+        }
         filters = Marionette.getOption(this, 'filters');
         if (_.contains(filters, 'divisions')) {
           data.divisions_filter = true;

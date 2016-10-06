@@ -127,17 +127,14 @@ define ['app'], (App)->
                     @trigger "fetch:new:content", $(e.target).val()
 
                 'change .filters.new-filter .div-filters' :(e)->
-                    #console.log $(e.target).val()
-                    parent_id = $(e.target).val()
-                    # if parent_id == '' || parent_id == null
-                    #     parent_id = $('#textbooks-filter').val()     
+                    parent_id = $(e.target).val()   
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
                         @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
+
                 'click .filters.new-filter .multi-filters' :(e)->
-                    if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
                         #@trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
@@ -160,12 +157,12 @@ define ['app'], (App)->
                     t.id = m.get 'term_id'
                     t.name= m.get 'name'
                     t
-                
-                data.divisions = divisions.map (m)->
-                    d=[]
-                    d.id = m.get 'id'
-                    d.name= m.get 'division'
-                    d
+                if divisions
+                    data.divisions = divisions.map (m)->
+                        d=[]
+                        d.id = m.get 'id'
+                        d.name= m.get 'division'
+                        d
 
                 filters= Marionette.getOption @, 'filters'
 
