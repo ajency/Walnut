@@ -128,6 +128,7 @@ define(['app'], function(App) {
         this.contentGroupModel = Marionette.getOption(this, 'contentGroupModel');
         if (this.contentGroupModel) {
           term_ids = this.contentGroupModel.get('term_ids');
+          $("#textbooks-filter").select2().select2('val', term_ids['textbook']);
           return this.setFilteredContent();
         }
       };

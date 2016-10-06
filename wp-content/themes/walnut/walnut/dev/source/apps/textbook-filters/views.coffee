@@ -205,8 +205,8 @@ define ['app'], (App)->
 
                 if @contentGroupModel
                     term_ids= @contentGroupModel.get 'term_ids'
-                    # $ "#textbooks-filter"
-                    # .select2().select2 'val', term_ids['textbook']
+                    $ "#textbooks-filter"
+                    .select2().select2 'val', term_ids['textbook']
 
                     #@setFilteredContent()
                     @setFilteredContent()

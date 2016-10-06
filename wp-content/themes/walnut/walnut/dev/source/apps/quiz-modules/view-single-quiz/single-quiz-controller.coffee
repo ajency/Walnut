@@ -19,7 +19,7 @@ define ['app'
 			#display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
 			display_mode = null
 
-			initialize: (opts) ->				
+			initialize: (opts) ->	
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -27,6 +27,8 @@ define ['app'
 				{quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts
 
 				quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
+
+				console.log quizModel
 
 				#incase the display mode is sent from router on page refresh
 				display_mode = d_mode if d_mode
