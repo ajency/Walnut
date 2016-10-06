@@ -56,7 +56,9 @@ define ['app'
                     return 'selected' if parseInt(@id) is parseInt(data.term_ids['textbook'])
 
                 data.defaultRandomize = =>
-                    return 'checked="checked"' if data.isQuiz and @model.isNew()
+                    return 'checked="checked"' if data.isQuiz and @model.isNew().
+
+                console.log data
 
                 data
 

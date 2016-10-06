@@ -157,10 +157,10 @@ define ['app'
 							@region.trigger "division:changed", division
 
 			fetchSectionOrSubsection:(parentID, filterType, currItem) =>
-				console.log window.location.href
+				#console.log window.location.href
 				locat = window.location.href
 				location1 = locat.split("#")
-				console.log location1
+				#console.log location1
 
 				defer = $.Deferred()
 				if location1[1] && location1[1] == 'content-pieces'

@@ -195,10 +195,8 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
 
       Controller.prototype.fetchSectionOrSubsection = function(parentID, filterType, currItem) {
         var chaptersOrSections, defer, locat, location1;
-        console.log(window.location.href);
         locat = window.location.href;
         location1 = locat.split("#");
-        console.log(location1);
         defer = $.Deferred();
         if (location1[1] && location1[1] === 'content-pieces') {
           chaptersOrSections = App.request("get:chapters", {
