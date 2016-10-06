@@ -173,7 +173,7 @@ define(['app', 'text!apps/content-modules/modules-listing/templates/content-modu
       };
 
       ListItemView.prototype.errorFn = function() {
-        return console.log('error');
+        return console.log('errorFn');
       };
 
       ListItemView.prototype.addSpinner = function() {

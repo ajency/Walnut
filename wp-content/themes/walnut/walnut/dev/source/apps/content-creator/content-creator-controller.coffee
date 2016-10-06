@@ -169,7 +169,6 @@ define ['app'
 
 				data.urlBase = SITEURL + '/#dummy-'
 				data.urlBase += if data.content_type is 'student_question' then 'quiz' else 'module'
-				console.log data
 				data
 
 			events:->

@@ -180,7 +180,6 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
         });
         data.urlBase = SITEURL + '/#dummy-';
         data.urlBase += data.content_type === 'student_question' ? 'quiz' : 'module';
-        console.log(data);
         return data;
       };
 
