@@ -122,7 +122,7 @@ define ['app'
                 data  
 
             onShow:->
-                if @model.get 'permissions'
+                if @model.get 'permissions' && @model.get 'quiz_type' == 'class_test'
                     permission = @model.get 'permissions'
                     if(permission.displayAfterDays != '')
                         replay_after_day_min = (permission.displayAfterDays * 24 * 60)
@@ -131,7 +131,7 @@ define ['app'
                         replay_after_day_min = 0
 
                     if(permission.displayAfterHours != '')
-                        after_hours_time_result = permission.displayAfterHours.split(':')
+                        after_hours_time_result = (permission.displayAfterHours).split(':')
 
                         after_hours_time = after_hours_time_result[0] * 60
                         after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time)
@@ -143,27 +143,16 @@ define ['app'
 
                     taken_on_date = moment(@model.get 'taken_on').format('YYYY-MM-DD HH:mm:ss')
 
-                    # total_replay_mins = moment().minute(total_replay_mins);
-
-                    # console.log total_replay_mins
-
                     replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss')
 
-                    console.log replay_take
+                    #console.log replay_take
 
                     today = moment().format('YYYY-MM-DD HH:mm:ss')
-                    console.log moment('2016-10-07 15:56:35').diff(today, 'minutes')
 
+                    #console.log today
 
-                    # console.log after_hours_time
-                    # console.log after_hours_time_min
-
-                    # replay_after_day_hour = moment(replay_after_day , 'HH:mm')
-                    # replay_after_hour = moment(after_hours_time, 'HH:mm')
-
-                    # taken_on_date = moment(@model.get 'taken_on').format('YYYY-MM-DD hh:mm:ss')
-
-                    # total_replay_time = replay_after_day_hour.add(replay_after_hour)
+                    #console.log moment('2016-10-07 10:12:19').diff(today, 'minutes') # 0
+                    #console.log moment(replay_take).diff(today, 'minutes')
 
                     # console.log total_replay_time
 
@@ -175,15 +164,14 @@ define ['app'
                     .html 'Continue'
 
 
-
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
-
-                    #if @model.get 'status' == 'completed'
-                        #if 
-                        
+                    if @model.get('status') == 'completed'
+                        if moment('2016-10-07 10:14:10').diff(today, 'minutes') <= 0
+                            @$el.find "#take-quiz"
+                            .html 'Replay'                       
                     
-                    #else if @model.hasPermission 'disable_quiz_replay'
-                    if @model.hasPermission 'disable_quiz_replay'
+                    else if @model.hasPermission 'disable_quiz_replay'
+                    #if @model.hasPermission 'disable_quiz_replay'
                         @$el.find "#take-quiz"
                         .remove()
                     else

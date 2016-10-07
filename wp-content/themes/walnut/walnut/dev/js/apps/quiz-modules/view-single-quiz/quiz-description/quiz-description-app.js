@@ -162,7 +162,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       QuizDetailsView.prototype.onShow = function() {
         var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
-        if (this.model.get('permissions')) {
+        if (this.model.get('permissions' && this.model.get('quiz_type' === 'class_test'))) {
           permission = this.model.get('permissions');
           if (permission.displayAfterDays !== '') {
             replay_after_day_min = permission.displayAfterDays * 24 * 60;
@@ -179,16 +179,18 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min);
           taken_on_date = moment(this.model.get('taken_on')).format('YYYY-MM-DD HH:mm:ss');
           replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss');
-          console.log(replay_take);
           today = moment().format('YYYY-MM-DD HH:mm:ss');
-          console.log(moment('2016-10-07 15:56:35').diff(today, 'minutes'));
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
           this.$el.find("#take-quiz").html('Continue');
         }
         if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
-          if (this.model.hasPermission('disable_quiz_replay')) {
+          if (this.model.get('status') === 'completed') {
+            if (moment('2016-10-07 10:14:10').diff(today, 'minutes') <= 0) {
+              return this.$el.find("#take-quiz").html('Replay');
+            }
+          } else if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {
             return this.$el.find("#take-quiz").html('Replay');

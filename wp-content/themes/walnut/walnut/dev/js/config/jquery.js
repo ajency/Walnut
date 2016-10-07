@@ -14,6 +14,7 @@ define(['jquery', 'underscore'], function($, _) {
     }
   });
   $(document).on("click", '.goto-prev-page', function() {
+    console.log('goto-prev-page');
     return window.location.href = "/quiz-listview-student/?textbook_id=" + localStorage.textbook_id + "";
   });
   $.fn.isEmptyColumn = function(params) {
