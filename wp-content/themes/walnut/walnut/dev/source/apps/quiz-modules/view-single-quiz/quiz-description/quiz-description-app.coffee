@@ -122,7 +122,7 @@ define ['app'
                 data  
 
             onShow:->
-                if @model.get 'permissions' && @model.get 'quiz_type' == 'class_test'
+                if @model.get('permissions') && @model.get('quiz_type') == 'class_test'
                     permission = @model.get 'permissions'
                     if(permission.displayAfterDays != '')
                         replay_after_day_min = (permission.displayAfterDays * 24 * 60)
@@ -151,13 +151,6 @@ define ['app'
 
                     #console.log today
 
-                    #console.log moment('2016-10-07 10:12:19').diff(today, 'minutes') # 0
-                    #console.log moment(replay_take).diff(today, 'minutes')
-
-                    # console.log total_replay_time
-
-
-
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
                 if responseSummary.get('status') is 'started'                    
                     @$el.find "#take-quiz"
@@ -166,9 +159,13 @@ define ['app'
 
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
                     if @model.get('status') == 'completed'
-                        if moment('2016-10-07 10:14:10').diff(today, 'minutes') <= 0
+                        if moment(replay_take).diff(today, 'minutes') <= 0
+                            @model.get('permissions').display_answer = true
                             @$el.find "#take-quiz"
-                            .html 'Replay'                       
+                            .html 'Replay'    
+                        else
+                            @$el.find "#take-quiz"
+                            .remove()                   
                     
                     else if @model.hasPermission 'disable_quiz_replay'
                     #if @model.hasPermission 'disable_quiz_replay'

@@ -14,7 +14,6 @@ define ['jquery', 'underscore'], ($, _)->
             $(icon).removeClass("expand").addClass("collapse");
     
     $( document ).on "click", '.goto-prev-page', ->
-        console.log 'goto-prev-page'
         window.location.href = "/quiz-listview-student/?textbook_id="+localStorage.textbook_id+""
 
     # define helper functions

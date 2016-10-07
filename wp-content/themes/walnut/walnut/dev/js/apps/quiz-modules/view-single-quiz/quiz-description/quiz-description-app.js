@@ -162,7 +162,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       QuizDetailsView.prototype.onShow = function() {
         var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
-        if (this.model.get('permissions' && this.model.get('quiz_type' === 'class_test'))) {
+        if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test') {
           permission = this.model.get('permissions');
           if (permission.displayAfterDays !== '') {
             replay_after_day_min = permission.displayAfterDays * 24 * 60;
@@ -187,8 +187,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
           if (this.model.get('status') === 'completed') {
-            if (moment('2016-10-07 10:14:10').diff(today, 'minutes') <= 0) {
+            if (moment(replay_take).diff(today, 'minutes') <= 0) {
+              this.model.get('permissions').display_answer = true;
               return this.$el.find("#take-quiz").html('Replay');
+            } else {
+              return this.$el.find("#take-quiz").remove();
             }
           } else if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
