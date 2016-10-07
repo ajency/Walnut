@@ -122,16 +122,62 @@ define ['app'
 
             onShow:->
 
+                if @model.get('permissions') && @model.get('quiz_type') == 'class_test' && @model.get('status') == 'completed'
+                    permission = @model.get 'permissions'
+                    if(permission.displayAfterDays != '' &&  permission.displayAfterDays != undefined)
+                        replay_after_day_min = (permission.displayAfterDays * 24 * 60)
+
+                    else
+                        replay_after_day_min = 0
+
+                    if(permission.displayAfterHours != '' && permission.displayAfterHours != undefined)
+                        after_hours_time_result = (permission.displayAfterHours).split(':')
+
+                        after_hours_time = after_hours_time_result[0] * 60
+                        after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time)
+                    else
+                        after_hours_time_min = 0
+
+                    if (permission.displayAfterDays == '' && permission.displayAfterHours == '') || (permission.displayAfterDays == undefined && permission.displayAfterHours == undefined)
+                        replay_after_day_min = 24 * 60
+                        after_hours_time_min = 0
+
+
+                    total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min)
+
+                    taken_on_date = moment(@model.get 'taken_on').format('YYYY-MM-DD HH:mm:ss')
+
+                    replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+
+                    #console.log replay_take
+
+                    today = moment().format('YYYY-MM-DD HH:mm:ss')
+
+                    #console.log today
+
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
-                if responseSummary.get('status') is 'started'                    
+                if responseSummary.get('status') is 'started'    
                     @$el.find "#take-quiz"
                     .html 'Continue'
 
-
-
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
+                    
+                    if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
+                        if moment(replay_take).diff(today, 'minutes') <= 0
+                            @model.get('permissions').display_answer = true
+                            @$el.find "#take-quiz"
+                            .html 'Replay'    
+                        else
+                            @$el.find "#take-quiz"
+                            .remove()  
 
-                    if @model.hasPermission 'disable_quiz_replay'
+                    else if Marionette.getOption(@, 'display_mode') == 'quiz_report'
+                        @model.get('permissions').display_answer = true 
+                        @$el.find "#take-quiz"
+                        .html 'Replay'         
+                    
+                    else if @model.hasPermission 'disable_quiz_replay'
+                    #if @model.hasPermission 'disable_quiz_replay'
                         @$el.find "#take-quiz"
                         .remove()
                     else
