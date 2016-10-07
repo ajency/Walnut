@@ -93,11 +93,11 @@
                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
 
-                                                     <?php do_action( 'wordpress_social_login' ); ?>
+                                                     <!-- <?php do_action( 'wordpress_social_login' ); ?> -->
                                                        <!-- <i id="theChampGoogleButton" class="fa fa-google-plus btn g-plus " alt="Login with Google" title="Login with Google" onclick="theChampInitiateLogin(this)" >
                                                        Sign in with google
                                                        </i> -->
-                                                       <!-- <a rel="nofollow" href="javascript:void(0);" title="Connect with Google" class="fa fa-google-plus btn g-plus wp-social-login-provider" data-provider="Google"> Sign in with google</a> -->
+                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Google" class="fa fa-google-plus btn g-plus wp-social-login-provider" data-provider="Google"> Sign in with google</a>
                                                     </ul>
                                                  </div>
                                               </div>
@@ -109,7 +109,7 @@
                                                        <!-- <i id="theChampFacebookButton" class="fa fa-facebook btn fb " alt="Login with Facebook" title="Login with Facebook" onclick="theChampInitiateLogin(this)" >
                                                        Sign in with facebook
                                                        </i> -->
-                                                       <!-- <a rel="nofollow" href="javascript:void(0);" title="Connect with Facebook" class="fa fa-facebook btn fb wp-social-login-provider" data-provider="Facebook"> Sign in with facebook</a> -->
+                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Facebook" class="fa fa-facebook btn fb wp-social-login-provider" data-provider="Facebook"> Sign in with facebook</a>
                                                     </ul>
                                                  </div>
                                               </div>
