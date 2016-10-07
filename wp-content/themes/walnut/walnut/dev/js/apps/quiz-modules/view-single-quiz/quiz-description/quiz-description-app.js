@@ -162,13 +162,46 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        var ref, responseSummary;
+        var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
+        if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test' && this.model.get('status') === 'completed') {
+          permission = this.model.get('permissions');
+          if (permission.displayAfterDays !== '' && permission.displayAfterDays !== void 0) {
+            replay_after_day_min = permission.displayAfterDays * 24 * 60;
+          } else {
+            replay_after_day_min = 0;
+          }
+          if (permission.displayAfterHours !== '' && permission.displayAfterHours !== void 0) {
+            after_hours_time_result = permission.displayAfterHours.split(':');
+            after_hours_time = after_hours_time_result[0] * 60;
+            after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time);
+          } else {
+            after_hours_time_min = 0;
+          }
+          if ((permission.displayAfterDays === '' && permission.displayAfterHours === '') || (permission.displayAfterDays === void 0 && permission.displayAfterHours === void 0)) {
+            replay_after_day_min = 24 * 60;
+            after_hours_time_min = 0;
+          }
+          total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min);
+          taken_on_date = moment(this.model.get('taken_on')).format('YYYY-MM-DD HH:mm:ss');
+          replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+          today = moment().format('YYYY-MM-DD HH:mm:ss');
+        }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
           this.$el.find("#take-quiz").html('Continue');
         }
         if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
-          if (this.model.hasPermission('disable_quiz_replay')) {
+          if (this.model.get('status') === 'completed' && Marionette.getOption(this, 'display_mode') === 'replay') {
+            if (moment(replay_take).diff(today, 'minutes') <= 0) {
+              this.model.get('permissions').display_answer = true;
+              return this.$el.find("#take-quiz").html('Replay');
+            } else {
+              return this.$el.find("#take-quiz").remove();
+            }
+          } else if (Marionette.getOption(this, 'display_mode') === 'quiz_report') {
+            this.model.get('permissions').display_answer = true;
+            return this.$el.find("#take-quiz").html('Replay');
+          } else if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {
             return this.$el.find("#take-quiz").html('Replay');
