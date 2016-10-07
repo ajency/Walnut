@@ -78,8 +78,6 @@ define ['app'
 
 
             onShow : ->
-                @$el.find "#replaydays"
-                .innerHTML '1'
 
                 @$el.find '#replayhours'
                 .datetimepicker

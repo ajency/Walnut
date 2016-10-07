@@ -87,7 +87,6 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.onShow = function() {
-        this.$el.find("#replaydays").innerHTML('1');
         this.$el.find('#replayhours').datetimepicker({
           format: 'HH:mm:ss',
           debug: true
