@@ -157,6 +157,10 @@ define ['app'
 
                     #console.log today
 
+                    #quiz schedule
+                    schedule = @model.get 'schedule'
+                    to = schedule.to
+
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
                 if responseSummary.get('status') is 'started'    
                     @$el.find "#take-quiz"
@@ -165,7 +169,7 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
                     
                     if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
-                        if moment(replay_take).diff(today, 'minutes') <= 0
+                        if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0 
                             @model.get('permissions').display_answer = true
                             @$el.find "#take-quiz"
                             .html 'Replay'    

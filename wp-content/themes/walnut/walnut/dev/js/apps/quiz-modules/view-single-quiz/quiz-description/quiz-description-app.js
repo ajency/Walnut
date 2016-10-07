@@ -161,7 +161,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       };
 
       QuizDetailsView.prototype.onShow = function() {
-        var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
+        var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, schedule, taken_on_date, to, today, total_replay_mins;
         if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test' && this.model.get('status') === 'completed') {
           permission = this.model.get('permissions');
           if (permission.displayAfterDays !== '' && permission.displayAfterDays !== void 0) {
@@ -184,6 +184,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           taken_on_date = moment(this.model.get('taken_on')).format('YYYY-MM-DD HH:mm:ss');
           replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss');
           today = moment().format('YYYY-MM-DD HH:mm:ss');
+          schedule = this.model.get('schedule');
+          to = schedule.to;
         }
         responseSummary = Marionette.getOption(this, 'quizResponseSummary');
         if (responseSummary.get('status') === 'started') {
@@ -191,7 +193,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         }
         if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
           if (this.model.get('status') === 'completed' && Marionette.getOption(this, 'display_mode') === 'replay') {
-            if (moment(replay_take).diff(today, 'minutes') <= 0) {
+            if (moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0) {
               this.model.get('permissions').display_answer = true;
               return this.$el.find("#take-quiz").html('Replay');
             } else {
