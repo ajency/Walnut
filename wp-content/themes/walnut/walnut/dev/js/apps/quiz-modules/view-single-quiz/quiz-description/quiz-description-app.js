@@ -164,12 +164,12 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
         if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test' && this.model.get('status') === 'completed') {
           permission = this.model.get('permissions');
-          if (permission.displayAfterDays !== '') {
+          if (permission.displayAfterDays !== '' && permission.displayAfterDays !== void 0) {
             replay_after_day_min = permission.displayAfterDays * 24 * 60;
           } else {
             replay_after_day_min = 0;
           }
-          if (permission.displayAfterHours !== '') {
+          if (permission.displayAfterHours !== '' && permission.displayAfterHours !== void 0) {
             after_hours_time_result = permission.displayAfterHours.split(':');
             after_hours_time = after_hours_time_result[0] * 60;
             after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time);
@@ -178,6 +178,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           }
           if (permission.displayAfterDays === '' && permission.displayAfterHours === '') {
             replay_after_day_min = 24 * 60;
+            after_hours_time_min = 0;
           }
           total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min);
           taken_on_date = moment(this.model.get('taken_on')).format('YYYY-MM-DD HH:mm:ss');
