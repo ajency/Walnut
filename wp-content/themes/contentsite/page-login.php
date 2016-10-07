@@ -93,7 +93,6 @@
                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
 
-                                                     <!-- <?php do_action( 'wordpress_social_login' ); ?> -->
                                                        <!-- <i id="theChampGoogleButton" class="fa fa-google-plus btn g-plus " alt="Login with Google" title="Login with Google" onclick="theChampInitiateLogin(this)" >
                                                        Sign in with google
                                                        </i> -->
