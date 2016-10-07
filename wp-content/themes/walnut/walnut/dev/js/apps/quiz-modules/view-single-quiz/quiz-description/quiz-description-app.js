@@ -127,7 +127,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         } else {
           if (!data.status === 'completed' || App.request("current:user:can", "view_all_quizzes")) {
             if (data.quiz_type === 'class_test' && !IS_STANDALONE_SITE) {
-              data.takeQuizError = 'Class tests can be taken from school site only';
+              console.log('');
             }
           }
         }
@@ -190,13 +190,16 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           this.$el.find("#take-quiz").html('Continue');
         }
         if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
-          if (this.model.get('status') === 'completed') {
+          if (this.model.get('status') === 'completed' && Marionette.getOption(this, 'display_mode') === 'replay') {
             if (moment(replay_take).diff(today, 'minutes') <= 0) {
               this.model.get('permissions').display_answer = true;
               return this.$el.find("#take-quiz").html('Replay');
             } else {
               return this.$el.find("#take-quiz").remove();
             }
+          } else if (Marionette.getOption(this, 'display_mode') === 'quiz_report') {
+            this.model.get('permissions').display_answer = true;
+            return this.$el.find("#take-quiz").html('Replay');
           } else if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {

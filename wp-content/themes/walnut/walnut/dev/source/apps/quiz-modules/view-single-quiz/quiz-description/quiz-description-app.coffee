@@ -89,9 +89,11 @@ define ['app'
                     data.takeQuizError = 'Sorry this quiz has no questions in it.'
 
                 else 
+                    #console.log App.request "current:user:can", "view_all_quizzes"
                     if not data.status is 'completed' or App.request "current:user:can", "view_all_quizzes"
                         if data.quiz_type is 'class_test' and not IS_STANDALONE_SITE
-                            data.takeQuizError = 'Class tests can be taken from school site only'
+                            console.log ''
+                            #data.takeQuizError = 'Class tests can be taken from school site only'
 
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
@@ -156,20 +158,25 @@ define ['app'
                     #console.log today
 
                 responseSummary = Marionette.getOption @, 'quizResponseSummary'
-                if responseSummary.get('status') is 'started'                    
+                if responseSummary.get('status') is 'started'    
                     @$el.find "#take-quiz"
                     .html 'Continue'
 
-
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
-                    if @model.get('status') == 'completed'
+                    
+                    if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
                         if moment(replay_take).diff(today, 'minutes') <= 0
                             @model.get('permissions').display_answer = true
                             @$el.find "#take-quiz"
                             .html 'Replay'    
                         else
                             @$el.find "#take-quiz"
-                            .remove()                   
+                            .remove()  
+
+                    else if Marionette.getOption(@, 'display_mode') == 'quiz_report'
+                        @model.get('permissions').display_answer = true 
+                        @$el.find "#take-quiz"
+                        .html 'Replay'         
                     
                     else if @model.hasPermission 'disable_quiz_replay'
                     #if @model.hasPermission 'disable_quiz_replay'

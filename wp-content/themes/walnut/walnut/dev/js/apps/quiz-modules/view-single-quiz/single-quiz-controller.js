@@ -40,6 +40,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
+        console.log(quizModel);
         if (d_mode) {
           display_mode = d_mode;
         }
