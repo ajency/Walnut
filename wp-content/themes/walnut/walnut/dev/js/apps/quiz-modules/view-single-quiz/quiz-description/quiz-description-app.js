@@ -162,7 +162,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       QuizDetailsView.prototype.onShow = function() {
         var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, taken_on_date, today, total_replay_mins;
-        if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test') {
+        if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test' && this.model.get('status') === 'completed') {
           permission = this.model.get('permissions');
           if (permission.displayAfterDays !== '') {
             replay_after_day_min = permission.displayAfterDays * 24 * 60;
@@ -175,6 +175,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time);
           } else {
             after_hours_time_min = 0;
+          }
+          if (permission.displayAfterDays === '' && permission.displayAfterHours === '') {
+            replay_after_day_min = 24 * 60;
           }
           total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min);
           taken_on_date = moment(this.model.get('taken_on')).format('YYYY-MM-DD HH:mm:ss');

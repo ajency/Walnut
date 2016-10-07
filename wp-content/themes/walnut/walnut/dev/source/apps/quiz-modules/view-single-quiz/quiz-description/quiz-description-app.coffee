@@ -122,7 +122,7 @@ define ['app'
                 data  
 
             onShow:->
-                if @model.get('permissions') && @model.get('quiz_type') == 'class_test'
+                if @model.get('permissions') && @model.get('quiz_type') == 'class_test' && @model.get('status') == 'completed'
                     permission = @model.get 'permissions'
                     if(permission.displayAfterDays != '')
                         replay_after_day_min = (permission.displayAfterDays * 24 * 60)
@@ -137,6 +137,9 @@ define ['app'
                         after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time)
                     else
                         after_hours_time_min = 0
+
+                    if permission.displayAfterDays == '' && permission.displayAfterHours == ''
+                        replay_after_day_min = 24 * 60
 
 
                     total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min)
