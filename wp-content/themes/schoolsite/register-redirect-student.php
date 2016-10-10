@@ -4,6 +4,7 @@
  */
 ?>
 <?php
+    file_put_contents("a3.txt", 'page_slug');
 	get_header('student');
 ?>
 
