@@ -944,7 +944,7 @@ if(count($students)>0){
 }
 file_put_contents("a12.txt", $redirect_url);
 wp_redirect($redirect_url);
-die();
+exit();
 }
 }
 }
