@@ -24,6 +24,7 @@
     }
 
     $divisions = get_all_class_divisions();
+    file_put_contents("a2.txt", print_r($divisions, true));
 
    if(!$students){     
     $nostudent = '';

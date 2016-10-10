@@ -11,10 +11,12 @@
             global $post;
             $page_slug=$post->post_name;
             $current_user = wp_get_current_user();
+            file_put_contents("a1.txt", $page_slug." ".$current_user);
             $login_header_pages = array('register-redirect-student', 'social-login-student','dashboard');
             if ( is_user_logged_in() ) {
                 array_pop($login_header_pages);
             }
+            
             define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/");
             define("ANIMATED_LIBRARY", get_template_directory_uri()."/walnut/dev/");
         ?>        
