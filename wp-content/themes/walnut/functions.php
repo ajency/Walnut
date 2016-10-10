@@ -925,6 +925,7 @@ add_filter('login_redirect', function($redirect_to, $request_redirect_to, $user)
 
 
 function login_social_redirect($login_user, $user){
+  file_put_contents("a11.txt", 'data');
   global $wpdb;
 //$user_info = get_userdata($user->ID);
 //$user = new WP_User( $user->ID );
