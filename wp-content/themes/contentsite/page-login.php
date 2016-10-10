@@ -88,25 +88,6 @@
                                         </div>                                          
                                         <div class="row text-center">
 
-                                            <!-- <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
-                                              <div class="social-signup">
-                                                 <div class="the_champ_login_container">
-                                                    <ul class="the_champ_login_ul">
-                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Google" class="fa fa-google-plus btn g-plus wp-social-login-provider wp-social-login-provider-google" data-provider="Google"> Sign in with google</a>
-                                                    </ul>
-                                                 </div>
-                                              </div>
-                                            </div>
-                                            <div class="col-xs-6 col-sm-6 col-lg-6">
-                                              <div class="social-signup">
-                                                 <div class="the_champ_login_container">
-                                                    <ul class="the_champ_login_ul">
-                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Facebook" class="fa fa-facebook btn fb wp-social-login-provider wp-social-login-provider-facebook" data-provider="Facebook"> Sign in with facebook</a>
-                                                    </ul>
-                                                 </div>
-                                              </div>
-                                            </div> -->
-
                                             <div class="wp-social-login-provider-list">
                                               <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
                                                 <div class="social-signup">

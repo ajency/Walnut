@@ -858,7 +858,6 @@ if (!is_multisite()) {
 
 //SOCIAL MEDIA LOGIN
 function check_social_login_redirect($userId, $provider, $hybridauth_user_profile){
-  file_put_contents('b2.txt', 'userId');
   $school_site_name = 'universal';
   $universal_id = get_id_from_blogname( $school_site_name );
   $universal_url = get_site_url($universal_id);
@@ -926,7 +925,6 @@ add_filter('login_redirect', function($redirect_to, $request_redirect_to, $user)
 
 
 function login_social_redirect($login_user, $user){
-  file_put_contents("a11.txt", 'data');
   global $wpdb;
 //$user_info = get_userdata($user->ID);
 //$user = new WP_User( $user->ID );
@@ -942,7 +940,6 @@ if(count($students)>0){
 }else{
   $redirect_url = $school_url.'/register-redirect-student';
 }
-file_put_contents("a12.txt", $redirect_url);
 wp_redirect($redirect_url);
 exit();
 }
@@ -1122,7 +1119,6 @@ function login_universal_student(){
   $user = get_user_by( 'id', $userId );
   wp_set_current_user($userId, $user->user_login);
   wp_set_auth_cookie($userId);
-  file_put_contents('b1.txt', $user->user_login);
   do_action('wp_login', $user->user_login);
   $response = array('status'=>'success','login_redirect'=>get_site_url().'/dashboard-student'); 
   echo json_encode($response);

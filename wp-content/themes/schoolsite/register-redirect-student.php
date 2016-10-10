@@ -366,10 +366,7 @@ $(document).ready(function() {
         var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         var siteurl = '<?php echo get_site_url(); ?>';
         var profile_status = '<?php echo $profile_status; ?>';
-        console.log(ajaxurl);
-        console.log(siteurl);
-        console.log(profile_status);
-        
+
         if(profile_status === 'completed'){
             $(".student-panel").collapse('toggle');
             $(".parent-panel").collapse('hide');
