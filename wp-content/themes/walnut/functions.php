@@ -858,6 +858,7 @@ if (!is_multisite()) {
 
 //SOCIAL MEDIA LOGIN
 function check_social_login_redirect($userId, $provider, $hybridauth_user_profile){
+  file_put_contents('b2.txt', 'userId');
   $school_site_name = 'universal';
   $universal_id = get_id_from_blogname( $school_site_name );
   $universal_url = get_site_url($universal_id);
@@ -936,10 +937,12 @@ $school_url = get_site_url($user_info->primary_blog);
 if(array_key_exists('parent',$capabilities)){
 $students = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE meta_key = 'parent_email1' AND meta_value = '".$user_info->user_email."'");
 if(count($students)>0){
+
    $redirect_url = $school_url.'/register-redirect-student';
 }else{
   $redirect_url = $school_url.'/register-redirect-student';
 }
+file_put_contents("a12.txt", $redirect_url);
 wp_redirect($redirect_url);
 die();
 }
@@ -1117,9 +1120,10 @@ add_action( 'wp_ajax_nopriv_login_universal_student', 'login_universal_student' 
 function login_universal_student(){
   $userId = $_POST['student_id']; 
   $user = get_user_by( 'id', $userId );
-  wp_set_current_user($userId, $user -> user_login);
+  wp_set_current_user($userId, $user->user_login);
   wp_set_auth_cookie($userId);
-  do_action('wp_login', $user -> user_login);
+  file_put_contents('b1.txt', $user->user_login);
+  do_action('wp_login', $user->user_login);
   $response = array('status'=>'success','login_redirect'=>get_site_url().'/dashboard-student'); 
   echo json_encode($response);
   die();
