@@ -10,6 +10,7 @@ define ['app'
 		class ViewQuiz.Controller extends RegionController
 
 			quizModel = null
+			quizModelNew = null
 			questionsCollection = null
 			quizResponseSummary = null
 			quizResponseSummaryCollection = null
@@ -27,8 +28,6 @@ define ['app'
 				{quizResponseSummary,@quizResponseSummaryCollection,display_mode,@student,d_mode} = opts
 
 				quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
-
-				console.log quizModel
 
 				#incase the display mode is sent from router on page refresh
 				display_mode = d_mode if d_mode
@@ -130,27 +129,36 @@ define ['app'
 				@defer.promise()
 
 			_tryAgain:->
+				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id' if not quizModelNew
+				App.execute "when:fetched", quizModelNew, =>
+					quizModel = quizModelNew			
 
-				return false if quizModel.get('quiz_type') isnt 'practice'
+					return false if quizModel.get('quiz_type') isnt 'practice'
 
-				@questionResponseCollection = null
+					@questionResponseCollection = null
 
-				quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+					quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
 
-				@summary_data= 
-					'collection_id' : quizModel.get 'id'
-					'student_id'    : App.request "get:loggedin:user:id"
-					'taken_on'      : moment().format("YYYY-MM-DD")
+					@summary_data= 
+						'collection_id' : quizModel.get 'id'
+						'student_id'    : App.request "get:loggedin:user:id"
+						'taken_on'      : moment().format("YYYY-MM-DD")
 
-				quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
-				App.execute "when:fetched", quizResponseSummary, => console.log quizResponseSummary
-				quizResponseSummaryCollection.add quizResponseSummary
+					#console.log @summary_data
 
-				display_mode = 'class_mode'
+					quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
+					quizResponseSummaryCollection.add quizResponseSummary
 
-				@_randomizeOrder()
+					questionsCollection = App.request "get:content:pieces:by:ids", quizModelNew.get 'content_pieces'
 
-				@startQuiz()
+					App.execute "when:fetched", questionsCollection, =>
+						@_setMarks()
+
+						display_mode = 'class_mode'
+
+						@_randomizeOrder()
+
+						@startQuiz()
 
 			_viewSummary:(summary_id)->
 				quizResponseSummary = quizResponseSummaryCollection.get summary_id

@@ -5,7 +5,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/layout', 'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app', 'apps/quiz-modules/view-single-quiz/content-display/content-display-app', 'apps/quiz-modules/view-single-quiz/attempts/app', 'apps/quiz-modules/take-quiz-module/take-quiz-app'], function(App, RegionController) {
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
     ViewQuiz.Controller = (function(superClass) {
-      var display_mode, questionsCollection, quizModel, quizResponseSummary, quizResponseSummaryCollection, studentModel, studentTrainingModule;
+      var display_mode, questionsCollection, quizModel, quizModelNew, quizResponseSummary, quizResponseSummaryCollection, studentModel, studentTrainingModule;
 
       extend(Controller, superClass);
 
@@ -19,6 +19,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       }
 
       quizModel = null;
+
+      quizModelNew = null;
 
       questionsCollection = null;
 
@@ -40,7 +42,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
-        console.log(quizModel);
         if (d_mode) {
           display_mode = d_mode;
         }
@@ -154,28 +155,35 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._tryAgain = function() {
-        if (quizModel.get('quiz_type') !== 'practice') {
-          return false;
+        if (!quizModelNew) {
+          quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         }
-        this.questionResponseCollection = null;
-        quizModel.set({
-          'attempts': parseInt(quizModel.get('attempts')) + 1
-        });
-        this.summary_data = {
-          'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id"),
-          'taken_on': moment().format("YYYY-MM-DD")
-        };
-        quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
-        App.execute("when:fetched", quizResponseSummary, (function(_this) {
+        return App.execute("when:fetched", quizModelNew, (function(_this) {
           return function() {
-            return console.log(quizResponseSummary);
+            quizModel = quizModelNew;
+            if (quizModel.get('quiz_type') !== 'practice') {
+              return false;
+            }
+            _this.questionResponseCollection = null;
+            quizModel.set({
+              'attempts': parseInt(quizModel.get('attempts')) + 1
+            });
+            _this.summary_data = {
+              'collection_id': quizModel.get('id'),
+              'student_id': App.request("get:loggedin:user:id"),
+              'taken_on': moment().format("YYYY-MM-DD")
+            };
+            quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
+            quizResponseSummaryCollection.add(quizResponseSummary);
+            questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
+            return App.execute("when:fetched", questionsCollection, function() {
+              _this._setMarks();
+              display_mode = 'class_mode';
+              _this._randomizeOrder();
+              return _this.startQuiz();
+            });
           };
         })(this));
-        quizResponseSummaryCollection.add(quizResponseSummary);
-        display_mode = 'class_mode';
-        this._randomizeOrder();
-        return this.startQuiz();
       };
 
       Controller.prototype._viewSummary = function(summary_id) {
