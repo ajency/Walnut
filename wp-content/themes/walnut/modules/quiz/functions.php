@@ -554,10 +554,16 @@ function get_all_quiz_modules($args){
     $appendQuery .= "AND meta.meta_key = 'quiz_type' ";
     #$appendQuery .= "";
 
+    if(isset($args['quiz_ids']) && sizeof($args['quiz_ids'])>0){
+        $quiz_ids_str = join(',', $args['quiz_ids']);
+        $appendQuery .= "AND post.id in ($quiz_ids_str) ";
+    }
+
         //onload the type is 0(string)
-    if($type == 0 && !(isset($args['search_str']))){
+    if($type == 0 && !(isset($args['search_str'])) && !(isset($args['quiz_ids']))){
         //onload and quiz report since textbook id is 1
          $appendQuery .= "AND post.term_ids LIKE '%\"xyz@wedgvged\";%' ";
+        return [];
     }
 
     //on selecting textbook
@@ -596,11 +602,6 @@ function get_all_quiz_modules($args){
 
     if(isset($args['user_id']))
         $user_id=$args['user_id'];
-
-    if(isset($args['quiz_ids']) && sizeof($args['quiz_ids'])>0){
-        $quiz_ids_str = join(',', $args['quiz_ids']);
-        $appendQuery .= "AND post.id in ($quiz_ids_str) ";
-    }
 
     $quiz_ids = $wpdb->get_col($appendQuery);
 
