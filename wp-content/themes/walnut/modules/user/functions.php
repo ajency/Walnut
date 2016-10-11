@@ -40,6 +40,17 @@ function get_primary_blog_details( $user_id = '' ) {
         $user_id = get_current_user_id();
 
     $blog = get_active_blog_for_user( $user_id );
+    if(count($blog) < 1){
+        
+        $blog_user_data = new WP_User($user_id);
+
+        $blog_data = array(
+            'blog_roles' =>$blog_user_data->roles
+        );
+        $blog_data['site_url']=get_site_url();
+        return $blog_data;
+    }
+
     $blog_logo_id = get_blog_option( $blog->blog_id, 'blog_logo' );
 
     switch_to_blog( $blog->blog_id );
