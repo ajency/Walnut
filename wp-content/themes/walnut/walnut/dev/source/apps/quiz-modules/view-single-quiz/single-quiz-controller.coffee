@@ -28,7 +28,7 @@ define ['app'
 
 				quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
-				#console.log quizModel
+				console.log quizModel
 
 				#incase the display mode is sent from router on page refresh
 				display_mode = d_mode if d_mode
@@ -143,6 +143,7 @@ define ['app'
 					'taken_on'      : moment().format("YYYY-MM-DD")
 
 				quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
+				App.execute "when:fetched", quizResponseSummary, => console.log quizResponseSummary
 				quizResponseSummaryCollection.add quizResponseSummary
 
 				display_mode = 'class_mode'

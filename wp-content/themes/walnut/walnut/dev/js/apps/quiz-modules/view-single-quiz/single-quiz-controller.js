@@ -40,6 +40,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
+        console.log(quizModel);
         if (d_mode) {
           display_mode = d_mode;
         }
@@ -166,6 +167,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           'taken_on': moment().format("YYYY-MM-DD")
         };
         quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
+        App.execute("when:fetched", quizResponseSummary, (function(_this) {
+          return function() {
+            return console.log(quizResponseSummary);
+          };
+        })(this));
         quizResponseSummaryCollection.add(quizResponseSummary);
         display_mode = 'class_mode';
         this._randomizeOrder();
