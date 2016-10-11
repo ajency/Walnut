@@ -14,7 +14,13 @@ define(['jquery', 'underscore'], function($, _) {
     }
   });
   $(document).on("click", '.goto-prev-page', function() {
-    return window.location.href = "/quiz-listview-student/?textbook_id=" + localStorage.textbook_id + "";
+    var abc;
+    abc = window.location.hash.split('/');
+    if (abc[0] === '#students') {
+      return window.location.href = "/quiz-listview-student/?textbook_id=" + localStorage.textbook_id + "";
+    } else {
+      return window.history.back();
+    }
   });
   $.fn.isEmptyColumn = function(params) {
     if (params == null) {
