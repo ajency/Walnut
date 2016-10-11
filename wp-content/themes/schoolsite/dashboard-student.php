@@ -42,13 +42,15 @@
                                         </div>
                                     </div>
                                         <div class="row">
+
                                         <?php foreach($textbooks as $textbook): ?>
                                             <?php 
                                                 $str = $textbook->thumbnail;
-                                                $doc = new DOMDocument();
-                                                $doc->loadHTML($str);
-                                                $xpath = new DOMXPath($doc);
-                                                $src = $xpath->evaluate("string(//img/@src)");
+                                                // var_dump($str);
+                                                // $doc = new DOMDocument();
+                                                // $doc->loadHTML($str);
+                                                // $xpath = new DOMXPath($doc);
+                                                // $src = $xpath->evaluate("string(//img/@src)");
                                             ?>                                                                                 
                                             <div class="col-sm-6 col-md-6 col-lg-6">
                                                 <div class="quiz-cards animated bounceIn <?php echo $src=="" ?"no-img":"" ?>">
