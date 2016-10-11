@@ -26,13 +26,13 @@ add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');
 function ajax_fetch_all_quizes(){
 
     $args = $_GET;
-
     $defaults = array(
         'textbook' => '',
         'post_status' => 'published', // published
         'quiz_type' => ''
     );
     $args = wp_parse_args($args,$defaults);
+
     if (is_array($args['textbook']))
         $quiz_modules = get_required_quiz_modules($args);
     else

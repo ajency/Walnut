@@ -114,10 +114,14 @@ define ['app'
 						#textbook = []
 						#textbook = textbook_id
 
+
 						data = 
 							'textbook'      : textbook_id
 							'post_status'   : post_status if post_status
 							'division'      : division if division
+
+						if window.location.hash == '#quiz-report'
+							data.quiz_report = 'quiz_report'
 
 						if @contentSelectionType is 'quiz'
 							data.content_type= ['student_question']
