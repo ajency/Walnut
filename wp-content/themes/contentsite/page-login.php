@@ -116,8 +116,8 @@
 
                                             <?php //do_action( 'wordpress_social_login' ); ?>
 
-                                            <input type="hidden" id="wsl_popup_base_url" value="http://synapselearning.dev/wp-login.php?action=wordpress_social_authenticate&#038;mode=login&#038;" />
-                                            <input type="hidden" id="wsl_login_form_uri" value="http://synapselearning.dev/wp-login.php" />
+                                            <input type="hidden" id="wsl_popup_base_url" value="http://synapsedu.info/wp-login.php?action=wordpress_social_authenticate&#038;mode=login&#038;" />
+                                            <input type="hidden" id="wsl_login_form_uri" value="http://synapsedu.info/wp-login.php" />
 
 
                                         </div>
