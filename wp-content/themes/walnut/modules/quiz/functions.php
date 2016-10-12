@@ -167,22 +167,17 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
 
     //query to get quiz reort data
 
-    $combined_query = "SELECT * FROM {$wpdb->base_prefix}content_collection AS collection, {$wpdb->base_prefix}collection_meta AS meta, {$wpdb->base_prefix}collection_meta AS meta1";
+    $combined_query = "SELECT collection.*, meta.meta_key AS meta_keys, meta.meta_value AS meta_values, meta1.meta_key AS meta_key1, meta1.meta_value AS meta_value1  FROM {$wpdb->base_prefix}content_collection AS collection, {$wpdb->base_prefix}collection_meta AS meta, {$wpdb->base_prefix}collection_meta AS meta1";
     $combined_query .= " WHERE collection.id = meta.collection_id";
     $combined_query .= " AND collection.id = meta1.collection_id";
     $combined_query .= " AND collection.id = $selected_quiz_id";
     $combined_query .= " AND meta.meta_key like 'quiz_meta'";
     $combined_query .= " AND meta1.meta_key like 'quiz_type'";
 
-    $data = $wpdb->get_results($combined_query);  
-
-    $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $selected_quiz_id);
-
-    $data = $wpdb->get_row ($select_query);
+    $data = $wpdb->get_row($combined_query);  
 
     $terms = maybe_unserialize($data->term_ids);
     $textbook = $terms['textbook'];
-    #fwrite($myfile, $textbook);
     
     if (!user_has_access_to_textbook($textbook,$user_id)){
         return new WP_Error('No Access', __('You do not have access to this quiz') );
@@ -202,21 +197,8 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
         $data->duration = $duration/60;
     }
 
-    $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
-    $quiz_details = $wpdb->get_results($query_meta);
-
-    $data->permissions = $data->description = array();
-
-    foreach ($quiz_details as $key=>$value){
-
-        if ($value->meta_key == 'quiz_type')
-            $data->quiz_type = $value->meta_value;
-
-        if ($value->meta_key == 'quiz_meta'){
-            $quiz_meta = maybe_unserialize($value->meta_value);
-            $data->marks = (int)$quiz_meta['marks'];
-        }
-    }
+    if ($data->meta_key1 == 'quiz_type')
+        $data->quiz_type = $data->meta_value1;
 
     $content_ids = array();
 
@@ -229,10 +211,6 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
         if($schedule)
             $data->schedule  = $schedule;        
 
-        if(current_user_can('view_all_quizzes') || $schedule['is_active'] || $data->status =='completed')
-            $show_questions = true;
-        else
-            $show_questions = false;
     }
 
 

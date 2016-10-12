@@ -106,11 +106,13 @@ define ['app'], (App)->
 
             events:
                 'change #textbooks-filter.div-filters':(e)->
+                    console.log 'change #textbooks-filter.div-filters'
                     window.textbook_ids = $('.multi-textbook-filter').select2("val")
                     @trigger "fetch:new:content", $(e.target).val()
 
 
                 'click .multi-filters':->
+                    console.log 'click .multi-filters'
                     if $('#content-post-status-filter').val() == 'publish'
                         window.quiz_report_status = 'published'
                     else
@@ -123,10 +125,12 @@ define ['app'], (App)->
                 #    @trigger "fetch:new:content", textbookIDs
 
                 'change #divisions-filter':(e)->
+                    console.log 'change #divisions-filter'
                     @trigger "fetch:textbooks:by:division", $(e.target).val()
                     @trigger "fetch:new:content", $(e.target).val()
 
                 'change .filters.new-filter .div-filters' :(e)->
+                    console.log 'change .filters.new-filter .div-filters'
                     parent_id = $(e.target).val()   
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
