@@ -153,8 +153,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 }
 
 //only for quiz report
-function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
-
+function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {   
     
     $taken_by_stud = [];
 
@@ -166,7 +165,6 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
         $user_id = get_current_user_id();
 
     //query to get quiz report data
-
     $combined_query = "SELECT collection.*, meta.meta_key AS meta_keys, meta.meta_value AS meta_values, meta1.meta_key AS meta_key1, meta1.meta_value AS meta_value1  FROM {$wpdb->base_prefix}content_collection AS collection, {$wpdb->base_prefix}collection_meta AS meta, {$wpdb->base_prefix}collection_meta AS meta1";
     $combined_query .= " WHERE collection.id = meta.collection_id";
     $combined_query .= " AND collection.id = meta1.collection_id";
@@ -211,8 +209,7 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
 
     }
 
-
-    $data->taken_by = sizeof(num_students_taken_quiz($selected_quiz_id, $division));
+    $data->taken_by = sizeof(num_students_taken_quiz_report($selected_quiz_id, $division));
     
     return $data;
 }
@@ -316,6 +313,41 @@ function get_single_quiz_module_list_report ($id,$user_id=0, $division = 0) {
 
 
 
+function num_students_taken_quiz_report($quiz_id, $division){
+
+    global $wpdb;  
+
+    $taken_by = 0;
+
+    $query1 = $wpdb->prepare("SELECT DISTINCT um1.user_id
+        FROM {$wpdb->base_prefix}usermeta AS um1
+        LEFT JOIN {$wpdb->base_prefix}usermeta AS um2
+        ON um1.user_id = um2.user_id
+        WHERE um1.meta_key LIKE %s
+        AND um1.meta_value LIKE %s
+        AND um2.meta_key LIKE %s
+        AND um2.meta_value = %s",
+        array('%capabilities','%student%','student_division', $division)
+        );
+    $student_ids = $wpdb->get_col($query1);
+
+    if($student_ids){
+
+        $students_str = implode(", ", $student_ids);
+            $taken_by_query = $wpdb->prepare("SELECT DISTINCT student_id
+                FROM `{$wpdb->prefix}quiz_response_summary` where collection_id = %d
+                AND quiz_meta like '%s'
+                AND student_id in ($students_str)",
+                $quiz_id, '%completed%');
+
+            $taken_by = $wpdb->get_col($taken_by_query);
+    }
+
+    return $taken_by;
+
+}
+
+
 function num_students_taken_quiz($quiz_id, $division){
 
     global $wpdb;  
@@ -346,7 +378,7 @@ function num_students_taken_quiz($quiz_id, $division){
         }
     }
 
-    return $taken_by;
+    return 0;
 
 }
 
