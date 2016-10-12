@@ -135,6 +135,7 @@ define ['app'], (App)->
                     if e.target.id isnt 'divisions-filter'
                         @$el.find '.filters .table-tools-actions'
                         .append '<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>'
+                        #if window.location.hash != '#quiz-report'
                         @trigger "fetch:chapters:or:sections", $(e.target).val(), e.target.id
 
 
