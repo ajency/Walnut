@@ -19,7 +19,6 @@ define ['app'
                     @textbookNamesCollection = App.request "get:textbook:names:by:ids", term_ids
 
                     App.execute "when:fetched", @textbookNamesCollection, =>
-                        console.log @textbookNamesCollection
                         @view = view = @_getContentModulessListingView()
 
                         @show view,

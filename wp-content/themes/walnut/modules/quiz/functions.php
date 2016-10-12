@@ -214,13 +214,9 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
     }
 
 
-    if($division){        
+$data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
+$data->taken_by = sizeof($data->taken_by_stud);
 
-        $data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
-        $data->taken_by = sizeof($data->taken_by_stud);
-        $data->total_students = get_student_count_in_division($division);
-
-    }
 
     $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";
     
@@ -351,8 +347,6 @@ function num_students_taken_quiz($quiz_id, $division){
                 AND quiz_meta like '%s'
                 AND student_id in ($students_str)",
                 $quiz_id, '%completed%');
-            #file_put_contents("aA.txt", $taken_by_query);
-
 
             $taken_by = $wpdb->get_col($taken_by_query);
         }

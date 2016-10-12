@@ -23,7 +23,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
             _this.textbookNamesCollection = App.request("get:textbook:names:by:ids", term_ids);
             return App.execute("when:fetched", _this.textbookNamesCollection, function() {
               var view;
-              console.log(_this.textbookNamesCollection);
               _this.view = view = _this._getContentModulessListingView();
               _this.show(view, {
                 loading: true,
