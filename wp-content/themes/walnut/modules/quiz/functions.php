@@ -162,10 +162,10 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
 
     global $wpdb;
 
-    if(!$user_id)
+    if($user_id == 0)
         $user_id = get_current_user_id();
 
-    //query to get quiz reort data
+    //query to get quiz report data
 
     $combined_query = "SELECT collection.*, meta.meta_key AS meta_keys, meta.meta_value AS meta_values, meta1.meta_key AS meta_key1, meta1.meta_value AS meta_value1  FROM {$wpdb->base_prefix}content_collection AS collection, {$wpdb->base_prefix}collection_meta AS meta, {$wpdb->base_prefix}collection_meta AS meta1";
     $combined_query .= " WHERE collection.id = meta.collection_id";
@@ -200,9 +200,7 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
     if ($data->meta_key1 == 'quiz_type')
         $data->quiz_type = $data->meta_value1;
 
-    $content_ids = array();
 
-    $show_questions = true;
     $schedule       = array();
 
     if($data->quiz_type == 'class_test'){
@@ -214,11 +212,7 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
     }
 
 
-$data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
-$data->taken_by = sizeof($data->taken_by_stud);
-
-
-    $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";
+    $data->taken_by = sizeof(num_students_taken_quiz($selected_quiz_id, $division));
     
     return $data;
 }
