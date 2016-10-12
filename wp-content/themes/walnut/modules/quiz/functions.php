@@ -15,7 +15,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
     global $wpdb;
 
-    if(!$user_id)
+    if($user_id == 0)
         $user_id = get_current_user_id();
 
     $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $selected_quiz_id);
