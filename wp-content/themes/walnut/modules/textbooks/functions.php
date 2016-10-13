@@ -222,6 +222,7 @@ function get_textbooksids_for_current_blog(){
 }
 
 function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
+
     global $wpdb;
     $current_blog = get_current_blog_id();
     $parentID = $parent;
@@ -381,9 +382,36 @@ function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0
 
 
     restore_current_blog();
-    /*$myfile = fopen("a6.txt", "a");
-    fwrite($myfile, print_r($book_dets, true));
-    fclose($myfile);*/
+    return $book_dets;
+}
+
+function get_book_student( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
+    global $wpdb;
+    $current_blog = get_current_blog_id();
+
+    switch_to_blog( 1 );
+
+    if (is_numeric( $book )) {
+        $book_id = $book;
+        $book_dets = get_term( $book, 'textbook' );
+
+        file_put_contents("a1.txt", print_r($book_dets, true));
+
+        if(!$book_dets){
+            restore_current_blog();
+            return false;
+        }
+
+    } else if (is_numeric( $book->term_id )) {
+        $book_id = $book->term_id;
+        $book_dets = $book;
+
+    } else {
+        restore_current_blog();
+        return false;
+    }
+
+    restore_current_blog();
     return $book_dets;
 }
 

@@ -8,7 +8,7 @@
 ?>
 <?php
 $textbook_id = $_GET['textbook_id'];
-$textbook    = get_book($textbook_id);
+$textbook    = get_book_student($textbook_id);
 $chapters    = student_fetch_chapters($textbook_id);
 $quizzes     = student_fetch_quizzes_by_textbook_id($textbook_id);
 
