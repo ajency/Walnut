@@ -26,6 +26,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       TakeQuizController.prototype.initialize = function(opts) {
+        var abc, result;
+        abc = opts.quizModel;
+        if (abc.get('status') === 'completed' && abc.get('quiz_type') === 'class_test') {
+          result = abc.get('permissions');
+          result.display_answer = true;
+        }
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, studentTrainingModule = opts.studentTrainingModule;
         this._startTakeQuiz();
         return App.vent.bind("closed:quiz", this._autosaveQuestionTime);

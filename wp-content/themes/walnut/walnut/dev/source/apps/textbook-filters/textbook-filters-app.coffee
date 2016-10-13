@@ -114,10 +114,14 @@ define ['app'
 						#textbook = []
 						#textbook = textbook_id
 
+
 						data = 
 							'textbook'      : textbook_id
 							'post_status'   : post_status if post_status
 							'division'      : division if division
+
+						if window.location.hash == '#quiz-report'
+							data.quiz_report = 'quiz_report'
 
 						if @contentSelectionType is 'quiz'
 							data.content_type= ['student_question']
@@ -157,10 +161,10 @@ define ['app'
 							@region.trigger "division:changed", division
 
 			fetchSectionOrSubsection:(parentID, filterType, currItem) =>
-				console.log window.location.href
+				#console.log window.location.href
 				locat = window.location.href
 				location1 = locat.split("#")
-				console.log location1
+				#console.log location1
 
 				defer = $.Deferred()
 				if location1[1] && location1[1] == 'content-pieces'

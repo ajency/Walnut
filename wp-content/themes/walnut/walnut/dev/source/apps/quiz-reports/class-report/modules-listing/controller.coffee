@@ -7,6 +7,8 @@ define ['app'
 
             initialize :(opts) ->
 
+                console.log opts
+
                 { @contentModulesCollection,@textbooksCollection } = opts
 
                 @textbookNamesCollection = null
@@ -15,9 +17,11 @@ define ['app'
                     term_ids= @_getAllTermIDs()
 
                     #all chapter names in this set of contentModulesscollection
+                    #if window.location.hash != '#quiz-report'
                     @textbookNamesCollection = App.request "get:textbook:names:by:ids", term_ids
 
                     App.execute "when:fetched", @textbookNamesCollection, =>
+                        console.log @textbookNamesCollection
                         @view = view = @_getContentModulessListingView()
 
                         @show view,
@@ -31,6 +35,7 @@ define ['app'
                             newNamesCollection = App.request "get:textbook:names:by:ids", term_ids
 
                             App.execute "when:fetched", newNamesCollection, =>
+                                console.log newNamesCollection
 
                                 @view.triggerMethod "reset:textbook:names", newNamesCollection
 

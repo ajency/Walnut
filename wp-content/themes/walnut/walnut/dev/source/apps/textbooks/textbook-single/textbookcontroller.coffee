@@ -7,17 +7,17 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 		class Single.SingleTextbook extends RegionController
 
 			initialize : (opt) ->
-				#@console.log opt
+				console.log opt
 				#console.log isAdmin
 				term_id = opt.model_id
-				@textbook = App.request "get:textbook:by:id", term_id
+				@textbook = App.request "get:textbook:by:id", term_id, "textbooks"
 				#console.log textbook_name
 
 				@classes = App.request "get:all:classes"
 
-				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+				@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter', 'to_fetch':'chapters')
 
-				window.chaptersOriginalCollection = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+				window.chaptersOriginalCollection = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter', 'to_fetch':'chapters')
 
 				@chapters.parent = term_id
 				#console.log 'isAdmin'
@@ -37,11 +37,11 @@ define ['app','controllers/region-controller','apps/textbooks/textbook-single/si
 				
 
 				@listenTo Backbone, 'reload:collection', (collection) =>
-					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter', 'to_fetch':'chapters')
 					App.execute "when:fetched", @chapters, =>
 						window.chaptersOriginalCollection = @chapters
 						#console.log @chapters
-						@textbook = App.request "get:textbook:by:id", term_id
+						@textbook = App.request "get:textbook:by:id", term_id, "textbooks"
 						App.execute "when:fetched", @textbook, =>
 							#console.log 'reload textbook data'
 							#console.log @textbook

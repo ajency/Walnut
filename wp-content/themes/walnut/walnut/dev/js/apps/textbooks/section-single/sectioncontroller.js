@@ -37,7 +37,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
               window.base_chapter_name = _this.base_chapter.get('name');
               _this.chapters = App.request("get:chapters", {
                 'parent': term_id,
-                'term_type': 'subsections'
+                'term_type': 'subsections',
+                'to_fetch': 'chapters'
               });
               _this.chapters.textbook_id = textbook_id;
               _this.chapters.chapter_id = chapter_id;
@@ -49,7 +50,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/section-single/s
               _this.listenTo(Backbone, 'reload:collection', function(collection) {
                 _this.chapters = App.request("get:chapters", {
                   'parent': term_id,
-                  'term_type': 'chapter'
+                  'term_type': 'chapter',
+                  'to_fetch': 'chapters'
                 });
                 _this.textbook = App.request("get:textbook:by:id", term_id);
                 App.execute("when:fetched", _this.textbook, function() {

@@ -156,6 +156,9 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
                 'post_status': post_status ? post_status : void 0,
                 'division': division ? division : void 0
               };
+              if (window.location.hash === '#quiz-report') {
+                data.quiz_report = 'quiz_report';
+              }
               if (_this.contentSelectionType === 'quiz') {
                 data.content_type = ['student_question'];
               } else if (_this.contentSelectionType === 'teaching-module') {
@@ -195,10 +198,8 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
 
       Controller.prototype.fetchSectionOrSubsection = function(parentID, filterType, currItem) {
         var chaptersOrSections, defer, locat, location1;
-        console.log(window.location.href);
         locat = window.location.href;
         location1 = locat.split("#");
-        console.log(location1);
         defer = $.Deferred();
         if (location1[1] && location1[1] === 'content-pieces') {
           chaptersOrSections = App.request("get:chapters", {

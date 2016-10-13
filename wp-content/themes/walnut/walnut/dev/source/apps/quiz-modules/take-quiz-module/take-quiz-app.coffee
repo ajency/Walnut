@@ -21,6 +21,10 @@ define ['app'
 			class View.TakeQuizController extends RegionController
 
 				initialize : (opts)->
+					abc = opts.quizModel
+					if abc.get('status') == 'completed' && abc.get('quiz_type') == 'class_test'
+						result = abc.get 'permissions'
+						result.display_answer = true
 					{quizModel,quizResponseSummary,questionsCollection,
 					@questionResponseCollection,@textbookNames,@display_mode, studentTrainingModule} = opts
 

@@ -16,16 +16,19 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
 
       SingleTextbook.prototype.initialize = function(opt) {
         var layout, term_id;
+        console.log(opt);
         term_id = opt.model_id;
-        this.textbook = App.request("get:textbook:by:id", term_id);
+        this.textbook = App.request("get:textbook:by:id", term_id, "textbooks");
         this.classes = App.request("get:all:classes");
         this.chapters = App.request("get:chapters", {
           'parent': term_id,
-          'term_type': 'chapter'
+          'term_type': 'chapter',
+          'to_fetch': 'chapters'
         });
         window.chaptersOriginalCollection = App.request("get:chapters", {
           'parent': term_id,
-          'term_type': 'chapter'
+          'term_type': 'chapter',
+          'to_fetch': 'chapters'
         });
         this.chapters.parent = term_id;
         this.chapters.isAdmin = localStorage.getItem('isAdmin');
@@ -45,11 +48,12 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/textbook-single/
           return function(collection) {
             _this.chapters = App.request("get:chapters", {
               'parent': term_id,
-              'term_type': 'chapter'
+              'term_type': 'chapter',
+              'to_fetch': 'chapters'
             });
             return App.execute("when:fetched", _this.chapters, function() {
               window.chaptersOriginalCollection = _this.chapters;
-              _this.textbook = App.request("get:textbook:by:id", term_id);
+              _this.textbook = App.request("get:textbook:by:id", term_id, "textbooks");
               App.execute("when:fetched", _this.textbook, function() {
                 return _this._showReloadTextBookSingle(_this.textbook);
               });
