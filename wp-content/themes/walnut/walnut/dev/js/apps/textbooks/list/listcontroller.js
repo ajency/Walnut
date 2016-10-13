@@ -13,10 +13,12 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
       ListController.prototype.initialize = function() {
         var breadcrumb_items, textbooksCollection, view;
         window.textbooksCollectionOrigninal = App.request("get:textbooks", {
-          "fetch_all": true
+          "fetch_all": true,
+          "to_fetch": "textbooks"
         });
         textbooksCollection = App.request("get:textbooks", {
-          "fetch_all": true
+          "fetch_all": true,
+          "to_fetch": "textbooks"
         });
         App.execute("when:fetched", textbooksCollection, (function(_this) {
           return function() {
@@ -64,7 +66,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/list/views'], fu
         this.listenTo(Backbone, 'reload:collection', (function(_this) {
           return function(collection) {
             _this.textbooks = App.request("get:textbooks", {
-              "fetch_all": true
+              "fetch_all": true,
+              "to_fetch": "textbooks"
             });
             return App.execute("when:fetched", _this.textbooks, function() {
               var models;

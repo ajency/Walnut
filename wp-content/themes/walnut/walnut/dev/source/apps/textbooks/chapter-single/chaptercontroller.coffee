@@ -25,7 +25,7 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 
 					@textbook.textbook_id = textbook_id
 
-					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'sections')
+					@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'sections', 'to_fetch':'chapters')
 					@chapters.textbook_id = textbook_id
 					@chapters.parent = term_id
 					@chapters.isAdmin = localStorage.getItem('isAdmin');
@@ -37,7 +37,7 @@ define ['app','controllers/region-controller','apps/textbooks/chapter-single/sin
 					@listenTo layout, "show", @_showSectionsView @chapters
 
 					@listenTo Backbone, 'reload:collection', (collection) =>
-						@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+						@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter', 'to_fetch':'chapters')
 						@textbook = App.request "get:textbook:by:id", term_id
 						App.execute "when:fetched", @textbook, =>
 							@_showReloadChapterSingle @textbook

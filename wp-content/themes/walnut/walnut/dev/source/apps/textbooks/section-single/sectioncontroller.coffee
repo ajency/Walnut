@@ -30,7 +30,7 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 						console.log @base_chapter
 						window.base_chapter_name = @base_chapter.get 'name'
 
-						@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'subsections')
+						@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'subsections', 'to_fetch':'chapters')
 
 						@chapters.textbook_id = textbook_id
 						@chapters.chapter_id = chapter_id
@@ -42,7 +42,7 @@ define ['app','controllers/region-controller','apps/textbooks/section-single/sin
 						@listenTo layout, "show", @_showSubView
 
 						@listenTo Backbone, 'reload:collection', (collection) =>
-							@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter')
+							@chapters = App.request "get:chapters", ('parent': term_id, 'term_type':'chapter', 'to_fetch':'chapters')
 							@textbook = App.request "get:textbook:by:id", term_id
 							App.execute "when:fetched", @textbook, =>
 								@_showReloadSectionSingle @textbook

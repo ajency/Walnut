@@ -168,7 +168,11 @@ function get_textbooks( $args = array() , $all='0') {
         foreach ($textbooks as $book){
             if($all == '1')
                $book= get_book_filtered( $book,$division,$user_id,$term_type,$parentID);
-            else 
+            else if($all == '2')
+               $book= get_book_textbook( $book,$division,$user_id,$term_type,$parentID);
+            else if($all == '3')
+                $book= get_book_chapter( $book,$division,$user_id,$term_type,$parentID);
+            else
                 $book= get_book( $book,$division,$user_id,$term_type,$parentID);
             if($book){
                 $book->name = $book->name." ".$book->classes_applicable;//added by kapil to fetch textbook names with class name  
@@ -222,7 +226,7 @@ function get_textbooksids_for_current_blog(){
 }
 
 function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
-
+    
     global $wpdb;
     $current_blog = get_current_blog_id();
     $parentID = $parent;
@@ -380,6 +384,231 @@ function get_book( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0
     
     }
 
+
+    restore_current_blog();
+    return $book_dets;
+}
+
+
+function get_book_textbook( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
+
+    global $wpdb;
+    $current_blog = get_current_blog_id();
+    $parentID = $parent;
+    #file_put_contents("a.txt", $parentID);
+    switch_to_blog( 1 );
+
+    if (is_numeric( $book )) {
+        $book_id = $book;
+        $book_dets = get_term( $book, 'textbook' );
+
+        if(!$book_dets){
+            restore_current_blog();
+            return false;
+        }
+
+    } else if (is_numeric( $book->term_id )) {
+        $book_id = $book->term_id;
+        $book_dets = $book;
+
+    } else {
+        restore_current_blog();
+        return false;
+    }
+
+    //$book_dets = array();
+
+    $additional = get_option( 'taxonomy_' . $book_id );
+    $coverid = $additional['attachmentid'];
+    $book_dets->thumbnail = wp_get_attachment_image( $coverid, 'thumbnail' );
+    $book_dets->cover_pic = wp_get_attachment_image( $coverid, 'large' );
+    $book_dets->author = $additional['author'];
+
+    $classes = $wpdb->get_row( "select class_id, tags from wp_textbook_relationships
+                where textbook_id=" . $book_id, ARRAY_A );
+
+    $book_dets->classes = maybe_unserialize( $classes['class_id'] );
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+
+    //added by kapil to fetch textbook names with class name starts
+    $class_names_applicable="";
+    $book_dets->classes_applicable = $class_names_applicable;
+    $class_names_applicable_arr = array();
+    global $classids;
+    foreach ($book_dets->classes as $book_dets_key => $book_dets_value) {
+       $class_names_applicable_arr[]=$classids[$book_dets_value]['label'];
+    }
+    if(count($class_names_applicable_arr)!=0){
+     $class_names_applicable = implode(", ", $class_names_applicable_arr);        
+     $book_dets->classes_applicable = "(".$class_names_applicable.")";
+    }
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+    //added by kapil to fetch textbook names with class name ends
+    
+    if($term_type == 'textbook'){
+
+        $IDbook =  '%"'.$book_id.'"%';
+        $questions_count = $wpdb->get_row($wpdb->prepare("SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$IDbook ));
+
+        $book_dets->questions_count = (int) $questions_count->count;
+        #file_put_contents("a4.txt", "dcc");
+
+    }else{
+
+        $parent_id = '%"'.$parentID.'"%';
+
+        $questions_count = $wpdb->get_row($wpdb->prepare( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$parent_id ));
+
+        $book_dets->questions_count = (int) $questions_count->count;
+
+        $bookID = '%"'.$book_id.'"%';
+        $sub_questions_count = $wpdb->get_row($wpdb->prepare( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$bookID ));
+
+        $book_dets->sub_questions_count = (int) $sub_questions_count->count;
+
+       
+    }
+
+
+    $args = array( 'hide_empty' => false,
+        'parent' => $book_id,
+        'fields' => 'count' );
+
+    $subsections = get_terms( 'textbook', $args );
+
+    $book_dets->chapter_count = ($subsections) ? $subsections : 0;
+
+    restore_current_blog();
+    return $book_dets;
+}
+
+function get_book_chapter( $book, $division=0,$user_id=0,$term_type='textbook',$parent=0) {
+
+    global $wpdb;
+    $current_blog = get_current_blog_id();
+    $parentID = $parent;
+
+    switch_to_blog( 1 );
+
+    if (is_numeric( $book )) {
+        $book_id = $book;
+        $book_dets = get_term( $book, 'textbook' );
+
+        if(!$book_dets){
+            restore_current_blog();
+            return false;
+        }
+
+    } else if (is_numeric( $book->term_id )) {
+        $book_id = $book->term_id;
+        $book_dets = $book;
+
+    } else {
+        restore_current_blog();
+        return false;
+    }
+
+    //$book_dets = array();
+
+    $additional = get_option( 'taxonomy_' . $book_id );
+    $coverid = $additional['attachmentid'];
+    $book_dets->thumbnail = wp_get_attachment_image( $coverid, 'thumbnail' );
+    $book_dets->cover_pic = wp_get_attachment_image( $coverid, 'large' );
+    $book_dets->author = $additional['author'];
+
+    $classes = $wpdb->get_row( "select class_id, tags from wp_textbook_relationships
+                where textbook_id=" . $book_id, ARRAY_A );
+
+    $book_dets->classes = maybe_unserialize( $classes['class_id'] );
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+
+    //added by kapil to fetch textbook names with class name starts
+    $class_names_applicable="";
+    $book_dets->classes_applicable = $class_names_applicable;
+    $class_names_applicable_arr = array();
+    global $classids;
+    foreach ($book_dets->classes as $book_dets_key => $book_dets_value) {
+       $class_names_applicable_arr[]=$classids[$book_dets_value]['label'];
+    }
+    if(count($class_names_applicable_arr)!=0){
+     $class_names_applicable = implode(", ", $class_names_applicable_arr);        
+     $book_dets->classes_applicable = "(".$class_names_applicable.")";
+    }
+    $book_dets->subjects = maybe_unserialize( $classes['tags'] );
+    //added by kapil to fetch textbook names with class name ends
+    
+    $modules_count_query=$wpdb->prepare("
+        SELECT count(id) as count FROM `{$wpdb->base_prefix}content_collection`
+            WHERE term_ids LIKE %s AND post_status like %s AND type like %s",
+        array('%"'. $book_id . '";%', 'publish', 'teaching-module')
+    );
+    $teaching_modules = $wpdb->get_row( $modules_count_query );
+    $book_dets->teaching_modules = (int) $teaching_modules->count;
+
+    $quiz_count_query=$wpdb->prepare("SELECT
+        SUM( CASE
+                WHEN m.meta_value = 'practice' THEN 1 ELSE 0 END
+            ) as practice,
+        SUM( CASE
+                WHEN m.meta_value = 'test' 
+                THEN 1 ELSE 0  END
+            ) as test,
+        SUM( CASE
+                WHEN m.meta_value = 'class_test' 
+                THEN 1 ELSE 0  END
+            ) as class_test
+
+        FROM `{$wpdb->base_prefix}content_collection` c, {$wpdb->base_prefix}collection_meta m
+        WHERE c.term_ids LIKE %s 
+            AND c.post_status LIKE %s 
+            AND c.type LIKE %s
+            AND c.id = m.collection_id
+            AND m.meta_key LIKE %s",
+            
+        array('%"'. $book_id . '";%', 'publish', 'quiz', 'quiz_type')
+    );
+    $quizzes_count = $wpdb->get_row( $quiz_count_query );
+
+    $book_dets->class_test_count = (int) $quizzes_count->class_test;
+    $book_dets->practice_count = (int) $quizzes_count->practice;
+    $book_dets->take_at_home_count = (int) $quizzes_count->test;
+
+    if($term_type == 'textbook'){
+
+        $IDbook =  '%"'.$book_id.'"%';
+        $questions_count = $wpdb->get_row($wpdb->prepare("SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$IDbook ));
+
+        $book_dets->questions_count = (int) $questions_count->count;
+        #file_put_contents("a4.txt", "dcc");
+
+    }else{
+
+        $parent_id = '%"'.$parentID.'"%';
+
+        $questions_count = $wpdb->get_row($wpdb->prepare( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$parent_id ));
+
+        $book_dets->questions_count = (int) $questions_count->count;
+
+        $bookID = '%"'.$book_id.'"%';
+        $sub_questions_count = $wpdb->get_row($wpdb->prepare( "SELECT count(meta_id) as count FROM `{$wpdb->base_prefix}postmeta` where meta_key='term_ids' and meta_value like %s",$bookID ));
+
+        /*$myfile = fopen("a7.txt", "a");
+        fwrite($myfile, print_r($sub_questions_count, true));
+        fclose($myfile);*/
+
+        $book_dets->sub_questions_count = (int) $sub_questions_count->count;
+
+       
+    }
+
+
+    $args = array( 'hide_empty' => false,
+        'parent' => $book_id,
+        'fields' => 'count' );
+
+    $subsections = get_terms( 'textbook', $args );
+
+    $book_dets->chapter_count = ($subsections) ? $subsections : 0;
 
     restore_current_blog();
     return $book_dets;

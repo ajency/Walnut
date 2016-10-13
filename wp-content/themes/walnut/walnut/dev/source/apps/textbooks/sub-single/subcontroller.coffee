@@ -18,7 +18,7 @@ define ['app','controllers/region-controller','apps/textbooks/sub-single/single_
 				@textbook = App.request "get:textbook:by:id", term_id
 
 
-				@chapters = App.request "get:chapters", ('parent': term_id)
+				@chapters = App.request "get:chapters", ('parent': term_id, 'to_fetch':'chapters')
 
 				@layout= layout = @_getSubSingleLayout()
 				@listenTo layout, "show", @_showSubSingle

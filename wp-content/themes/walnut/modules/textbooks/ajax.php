@@ -11,6 +11,10 @@ function fetch_textbooks() {
     $args=$_GET;
     if( isset($args['page_url']) && $args['page_url'] == 'content-pieces')
       $all='1';
+    else if($args['to_fetch'] == 'textbooks')
+      $all='2';
+    else if($args['to_fetch'] == 'chapters')
+      $all='3';
     else
       $all='0';
     
@@ -24,7 +28,6 @@ function fetch_textbooks() {
 
     $args = wp_parse_args($args, $defaults);
     $textbooks=get_textbooks($args, $all);
-    #$textbooks=get_textbooks($args);
 
     if(isset($_GET['page']))
       return $textbooks;

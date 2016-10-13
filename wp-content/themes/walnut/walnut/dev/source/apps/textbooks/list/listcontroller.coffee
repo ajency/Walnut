@@ -3,9 +3,9 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
         class List.ListController extends RegionController
 
             initialize: ->
-                window.textbooksCollectionOrigninal = App.request "get:textbooks", "fetch_all":true
+                window.textbooksCollectionOrigninal = App.request "get:textbooks", "fetch_all":true, "to_fetch": "textbooks"
 
-                textbooksCollection = App.request "get:textbooks", "fetch_all":true
+                textbooksCollection = App.request "get:textbooks", "fetch_all":true, "to_fetch": "textbooks"
                 App.execute "when:fetched", textbooksCollection, =>
                     models = textbooksCollection.models
                     isAdmin = models[0].get('isAdmin')
@@ -36,7 +36,7 @@ define ['app', 'controllers/region-controller', 'apps/textbooks/list/views'], (A
 
                 @listenTo Backbone, 'reload:collection', (collection) =>
                     #console.log 'Backbone'
-                    @textbooks = App.request "get:textbooks", "fetch_all":true
+                    @textbooks = App.request "get:textbooks", "fetch_all":true, "to_fetch": "textbooks"
                     App.execute "when:fetched", @textbooks, =>
                         #console.log 'textbooks'
                         window.textbooksCollectionOrigninal = @textbooks

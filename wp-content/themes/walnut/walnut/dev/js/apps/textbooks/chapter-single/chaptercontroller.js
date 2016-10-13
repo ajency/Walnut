@@ -29,7 +29,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
             _this.textbook.textbook_id = textbook_id;
             _this.chapters = App.request("get:chapters", {
               'parent': term_id,
-              'term_type': 'sections'
+              'term_type': 'sections',
+              'to_fetch': 'chapters'
             });
             _this.chapters.textbook_id = textbook_id;
             _this.chapters.parent = term_id;
@@ -40,7 +41,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/chapter-single/s
             _this.listenTo(Backbone, 'reload:collection', function(collection) {
               _this.chapters = App.request("get:chapters", {
                 'parent': term_id,
-                'term_type': 'chapter'
+                'term_type': 'chapter',
+                'to_fetch': 'chapters'
               });
               _this.textbook = App.request("get:textbook:by:id", term_id);
               App.execute("when:fetched", _this.textbook, function() {

@@ -23,7 +23,8 @@ define(['app', 'controllers/region-controller', 'apps/textbooks/sub-single/singl
         console.log(term_id);
         this.textbook = App.request("get:textbook:by:id", term_id);
         this.chapters = App.request("get:chapters", {
-          'parent': term_id
+          'parent': term_id,
+          'to_fetch': 'chapters'
         });
         this.layout = layout = this._getSubSingleLayout();
         this.listenTo(layout, "show", this._showSubSingle);
