@@ -624,8 +624,6 @@ function get_book_student( $book, $division=0,$user_id=0,$term_type='textbook',$
         $book_id = $book;
         $book_dets = get_term( $book, 'textbook' );
 
-        file_put_contents("a1.txt", print_r($book_dets, true));
-
         if(!$book_dets){
             restore_current_blog();
             return false;
