@@ -857,8 +857,8 @@ function compute_quiz_summaries_for_user($summary_id,$qt){
     }
 
     //save the marks scored in wp_quiz_response_summary
-    $qt['marks_scored'] = $additional_details->total_marks_scored;
-    if ($qt['marks_scored'] == '' || $qt['marks_scored'] == '0.0'){
+    $qt['marks_scored'] = (float) $additional_details->total_marks_scored;
+    if ($qt['marks_scored'] == ''){
         $qt['marks_scored'] = 0;
     }        
     $quiz_meta = maybe_serialize($qt);
@@ -867,12 +867,6 @@ function compute_quiz_summaries_for_user($summary_id,$qt){
     $query = $wpdb->prepare( "UPDATE {$wpdb->prefix}quiz_response_summary SET quiz_meta =%s WHERE summary_id = %s",
     array($quiz_meta, $summary_id)
     );
-    // if($summary_id == 'Q747S1091_141016045140'){
-    //     #file_put_contents("a8.txt", print_r($data, true));
-    //     file_put_contents("a10.txt", $query);
-
-    // }
-
     $rows_affected = $wpdb->query($query);
 
     return $additional_details;

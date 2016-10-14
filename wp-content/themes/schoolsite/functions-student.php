@@ -91,9 +91,9 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 			else{
 
 				$quiz_summary       = compute_quiz_summaries_for_user($result2->summary_id, $qt);
-				if($quiz_summary->marks_scored == '' || $quiz_summary->marks_scored == '0.0')
+				if($quiz_summary->marks_scored == '' )
 					$quiz_summary->marks_scored = 0;
-				$total_marks_scored = $quiz_summary->marks_scored. ' / '.count($qt['questions_order']);
+				$total_marks_scored = (float) $quiz_summary->marks_scored. ' / '.count($qt['questions_order']);
 			}
 			 			
 			switch($qt['status']){
