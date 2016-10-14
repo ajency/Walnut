@@ -32,6 +32,7 @@ foreach ($chapters['data'] as $key => $value) {
                         <div class="icon"><a href="<?php echo get_site_url();?>/dashboard-student" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div>
                         <p class="welcome-text">You're on <a id="textbook_name_id"><?php echo $textbook->name ?></a> quiz listing</p>
                     </div>
+                     <!-- <div class="filter_div hidden"><p> Filter for chapter <span id="chapter_name"></span>  <span id="close_chapter_filters"><i class="fa">X</i></span></p></div> -->
                 </div>
             </div>
             <!-- All Lectures -->
@@ -225,13 +226,20 @@ $(document).ready(function(){
       $(".chapter_name").click(function(){
 
         var id = $(this).attr('data-id');
-        //alert(id);
+        var name = $(this).text();
+        $('.filter_div').removeClass('hidden');
+        $('#chapter_name').text(name);
         $("#filter_chapter").val("C"+id);
 
         filter_it();
    });
     $(".welcome-text").click(function(){
         $("#filter_chapter").val("");
+        filter_it();
+   });
+    $("#close_chapter_filters").click(function(){
+        $("#filter_chapter").val("");
+        $('.filter_div').addClass('hidden');
         filter_it();
    });
 });   
