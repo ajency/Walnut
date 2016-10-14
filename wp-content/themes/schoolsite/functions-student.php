@@ -86,7 +86,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 			$qt = maybe_unserialize($result2->quiz_meta);
 				
 			if($qt['marks_scored']){
-				$total_marks_scored = $qt['marks_scored']. ' / '.count($qt['questions_order']);
+				$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
 			}
 			else{
 
