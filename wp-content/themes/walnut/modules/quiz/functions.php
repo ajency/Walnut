@@ -858,7 +858,7 @@ function compute_quiz_summaries_for_user($summary_id,$qt){
 
     //save the marks scored in wp_quiz_response_summary
     $qt['marks_scored'] = $additional_details->total_marks_scored;
-    if ($qt['marks_scored'] == ''){
+    if ($qt['marks_scored'] == '' || $qt['marks_scored'] == '0.0'){
         $qt['marks_scored'] = 0;
     }        
     $quiz_meta = maybe_serialize($qt);
