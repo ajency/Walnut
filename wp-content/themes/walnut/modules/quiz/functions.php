@@ -830,6 +830,56 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
 }
 
+function compute_quiz_summaries_for_user($summary_id,$qt){
+
+    global $wpdb;
+
+    $data= array();
+
+    if($summary_id){
+            $additional_details_qry = $wpdb->prepare(
+        "SELECT
+            SUM(marks_scored) as total_marks_scored,
+
+            SUM(
+                CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as negative_scored,
+
+            SUM(
+               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as marks_scored,
+
+            SUM(time_taken) as total_time_taken
+            FROM {$wpdb->prefix}quiz_question_response
+        WHERE summary_id = %s", $summary_id
+    );
+    $additional_details= $wpdb->get_row($additional_details_qry);
+    }
+
+    //save the marks scored in wp_quiz_response_summary
+    $qt['marks_scored'] = $additional_details->total_marks_scored;
+    if ($qt['marks_scored'] == ''){
+        $qt['marks_scored'] = 0;
+    }        
+    $quiz_meta = maybe_serialize($qt);
+    
+
+    $query = $wpdb->prepare( "UPDATE {$wpdb->prefix}quiz_response_summary SET quiz_meta =%s WHERE summary_id = %s",
+    array($quiz_meta, $summary_id)
+    );
+    // if($summary_id == 'Q747S1091_141016045140'){
+    //     #file_put_contents("a8.txt", print_r($data, true));
+    //     file_put_contents("a10.txt", $query);
+
+    // }
+
+    $rows_affected = $wpdb->query($query);
+
+    return $additional_details;
+
+}
+
+
 function get_latest_quiz_response_summary($quiz_id, $user_id, $quizz_type=''){
 
     global $wpdb;
@@ -1394,6 +1444,7 @@ function write_quiz_response_summary($args){
 
     $quiz_meta['status'] = $args['status'];
     $quiz_meta['questions_order'] = array_map('intval', $args['questions_order']);
+    $quiz_meta['marks_scored'] = $args['marks_scored'] - $args['negative_scored'];
 
 
     if(!isset($args['summary_id'])){
