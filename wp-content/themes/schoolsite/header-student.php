@@ -15,6 +15,7 @@
             if ( is_user_logged_in() ) {
                 array_pop($login_header_pages);
             }
+
             define("STUDENT_ASSET_PATH", get_template_directory_uri()."/walnut_student_assets/dev/");
             define("ANIMATED_LIBRARY", get_template_directory_uri()."/walnut/dev/");
         ?>        

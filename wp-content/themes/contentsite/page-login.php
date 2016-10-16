@@ -88,36 +88,32 @@
                                         </div>                                          
                                         <div class="row text-center">
 
-                                            <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
-                                              <div class="social-signup">
-                                                 <div class="the_champ_login_container">
+                                            <div class="wp-social-login-provider-list">
+                                              <div class="col-xs-6 col-sm-6 col-lg-6 border-rl">
+                                                <div class="social-signup">
+                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
-                                                       <!-- <i id="theChampGoogleButton" class="fa fa-google-plus btn g-plus " alt="Login with Google" title="Login with Google" onclick="theChampInitiateLogin(this)" >
-                                                       Sign in with google
-                                                       </i> -->
-                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Google" class="fa fa-google-plus btn g-plus wp-social-login-provider wp-social-login-provider-google" data-provider="Google"> Sign in with google</a>
+                                                      <a rel="nofollow" href="javascript:void(0);" title="Connect with Facebook" class="fa fa-facebook btn fb wp-social-login-provider wp-social-login-provider-facebook" data-provider="Facebook">Sign in with facebook</a>
                                                     </ul>
-                                                 </div>
+                                                  </div>
+                                                </div>
                                               </div>
-                                            </div>
-                                            <div class="col-xs-6 col-sm-6 col-lg-6">
-                                              <div class="social-signup">
-                                                 <div class="the_champ_login_container">
+                                              <div class="col-xs-6 col-sm-6 col-lg-6">
+                                                <div class="social-signup">
+                                                  <div class="the_champ_login_container">
                                                     <ul class="the_champ_login_ul">
-                                                       <!-- <i id="theChampFacebookButton" class="fa fa-facebook btn fb " alt="Login with Facebook" title="Login with Facebook" onclick="theChampInitiateLogin(this)" >
-                                                       Sign in with facebook
-                                                       </i> -->
-                                                       <a rel="nofollow" href="javascript:void(0);" title="Connect with Facebook" class="fa fa-facebook btn fb wp-social-login-provider wp-social-login-provider-facebook" data-provider="Facebook"> Sign in with facebook</a>
+                                                      <a rel="nofollow" href="javascript:void(0);" title="Connect with Google" class="fa fa-google-plus btn g-plus wp-social-login-provider wp-social-login-provider-google" data-provider="Google"> Sign in with google</a>
                                                     </ul>
-                                                 </div>
+                                                  </div>
+                                                </div>
                                               </div>
                                             </div>
 
+                                            <input type="hidden" id="wsl_popup_base_url" value="http://walnutedu.org/wp-login.php?action=wordpress_social_authenticate&#038;mode=login&#038;" />
+                                            <input type="hidden" id="wsl_login_form_uri" value="http://walnutedu.org/wp-login.php" />
 
-                                            <?php //do_action( 'wordpress_social_login' ); ?>
-
-                                            <input type="hidden" id="wsl_popup_base_url" value="http://synapsedu.info/wp-login.php?action=wordpress_social_authenticate&#038;mode=login&#038;" />
-                                            <input type="hidden" id="wsl_login_form_uri" value="http://synapsedu.info/wp-login.php" />
+                                            <!-- <input type="hidden" id="wsl_popup_base_url" value="http://synapselearning.dev/wp-login.php?action=wordpress_social_authenticate&#038;mode=login&#038;" />
+                                            <input type="hidden" id="wsl_login_form_uri" value="http://synapselearning.dev/wp-login.php" /> -->
 
 
                                         </div>

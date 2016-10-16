@@ -4,10 +4,12 @@
  */
 ?>
 <?php
+    file_put_contents("a3.txt", 'page_slug');
 	get_header('student');
 ?>
 
 <?php
+file_put_contents("a2.txt", 'dedewde');
     $current_user = wp_get_current_user();
     $meta = get_user_meta($current_user->ID);
     
@@ -24,6 +26,7 @@
     }
 
     $divisions = get_all_class_divisions();
+    
 
    if(!$students){     
     $nostudent = '';
@@ -363,7 +366,7 @@ $(document).ready(function() {
         var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         var siteurl = '<?php echo get_site_url(); ?>';
         var profile_status = '<?php echo $profile_status; ?>';
-        
+
         if(profile_status === 'completed'){
             $(".student-panel").collapse('toggle');
             $(".parent-panel").collapse('hide');
