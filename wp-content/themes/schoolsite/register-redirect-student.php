@@ -4,12 +4,10 @@
  */
 ?>
 <?php
-    file_put_contents("a3.txt", 'page_slug');
 	get_header('student');
 ?>
 
 <?php
-file_put_contents("a2.txt", 'dedewde');
     $current_user = wp_get_current_user();
     $meta = get_user_meta($current_user->ID);
     
