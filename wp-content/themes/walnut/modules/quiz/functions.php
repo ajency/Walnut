@@ -378,7 +378,7 @@ function num_students_taken_quiz($quiz_id, $division){
         }
     }
 
-    return 0;
+    return $taken_by;
 
 }
 
