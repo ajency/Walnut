@@ -457,3 +457,4 @@ foreach ( $theme_sidebars as $sidebar => $registered_sidebar ) {
  */
 do_action( 'sidebar_admin_page' );
 require_once( ABSPATH . 'wp-admin/admin-footer.php' );
+

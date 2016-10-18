@@ -167,6 +167,7 @@ define ['app'
                     
                     if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
                         if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0
+
                             @model.get('permissions').display_answer = true
                             @$el.find "#take-quiz"
                             .html 'Replay'    

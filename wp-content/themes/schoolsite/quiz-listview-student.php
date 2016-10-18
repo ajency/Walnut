@@ -8,7 +8,7 @@
 ?>
 <?php
 $textbook_id = $_GET['textbook_id'];
-$textbook    = get_book($textbook_id);
+$textbook    = get_book_student($textbook_id);
 $chapters    = student_fetch_chapters($textbook_id);
 $quizzes     = student_fetch_quizzes_by_textbook_id($textbook_id);
 
@@ -30,7 +30,7 @@ foreach ($chapters['data'] as $key => $value) {
                 <div class="col-md-12 col-lg-12">
                     <div class="direction text-center">
                         <div class="icon"><a href="<?php echo get_site_url();?>/dashboard-student" class="btn fab-content"><i class="fa fa-hand-o-left"></i></a></div>
-                        <p class="welcome-text">You're on <a href="javascript:"><?php echo $textbook->name ?></a> quiz listing</p>
+                        <p class="welcome-text">You're on <a id="textbook_name_id"><?php echo $textbook->name ?></a> quiz listing</p>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@ foreach ($chapters['data'] as $key => $value) {
                             </div>
                             <div class="chapter">
                                 <span>Chapter :</span>
-                                <span><?php echo $chapter_id_to_name_map[$quiz['chapter_id']] ?></span>
+                                <span ><a class="chapter_name" href="javascript:" data-id="<?php echo $quiz['chapter_id'] ?>"><?php echo $chapter_id_to_name_map[$quiz['chapter_id']] ?></a></span>
                             </div>
                                                         <div class="last-seen">
                                                         <?php if($quiz['taken_on']!='NA'): ?>
@@ -182,7 +182,6 @@ foreach ($chapters['data'] as $key => $value) {
 var textbook_id = '<?php echo $textbook_id ?>';
 $(document).ready(function(){
     localStorage.textbook_id = textbook_id;
-    
    $(".statuses").click(function(){
         var show_class = this.id;
         var is_checked = ($("#"+show_class +" div").hasClass('is-checked'));
@@ -219,6 +218,20 @@ $(document).ready(function(){
         }else{
             $("#filter_chapter").val("");
         }
+        filter_it();
+   });
+
+
+   $(".chapter_name").click(function(){
+        var id = $(this).attr('data-id');
+        //alert(id);
+        $("#filter_chapter").val("C"+id);
+        filter_it();
+   });
+
+   
+    $(".welcome-text").click(function(){
+        $("#filter_chapter").val("");
         filter_it();
    });
 });   
