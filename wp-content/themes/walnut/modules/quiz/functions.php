@@ -853,6 +853,7 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 }
 
 function get_quiz_summaries_for_student($user_id, $quiz_id=0){
+
     global $wpdb;
     if(!$user_id)
         $user_id = get_current_user_id();
