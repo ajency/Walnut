@@ -770,6 +770,34 @@ function get_quiz_summaries_for_user($user_id, $quiz_id=0){
 
 }
 
+function get_quiz_summaries_for_student($user_id, $quiz_id=0){
+
+    global $wpdb;
+
+    if(!$user_id)
+        $user_id = get_current_user_id();
+
+    if($quiz_id)
+        $query = $wpdb->prepare("select summary_id from {$wpdb->prefix}quiz_response_summary
+            where student_id = %d and collection_id = %d", $user_id,$quiz_id);
+    else
+        $query = $wpdb->prepare("select summary_id from {$wpdb->prefix}quiz_response_summary
+            where student_id = %d", $user_id);
+
+    $results = $wpdb->get_col($query);
+
+    $data= array();
+
+    if($results){
+        foreach($results as $summary_id){
+            $data[] = read_quiz_response_summary_student($summary_id,$user_id);
+        }
+    }
+    
+    return $data;
+
+}
+
 function compute_quiz_summaries_for_user($summary_id,$qt){
     global $wpdb;
     $data= array();
@@ -1057,6 +1085,67 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
     return $quiz_response_summary;
 }
 
+// report doesnt show coz of this function
+function read_quiz_response_summary_student($summary_id,$user_id=0, $quizz_type=''){
+
+      global $wpdb;
+   # $myfile = fopen("aresponse.txt", "a");
+    $summ_id = $summary_id;
+
+
+    $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
+        where summary_id = %s", $summ_id)); 
+
+    $quiz_meta = maybe_unserialize($quiz_response_summary->quiz_meta);
+
+    unset($quiz_response_summary->quiz_meta);
+
+    $quiz_response_summary->status = $quiz_meta['status'];
+    $quiz_response_summary->questions_order = $quiz_meta['questions_order'];
+
+    $additional_details_qry = $wpdb->prepare(
+        "SELECT
+            SUM(marks_scored) as total_marks_scored,
+
+            SUM(
+                CASE WHEN status = 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as negative_scored,
+
+            SUM(
+               CASE WHEN status <> 'wrong_answer' THEN marks_scored ELSE 0 END
+            ) as marks_scored,
+
+            SUM(time_taken) as total_time_taken
+            FROM {$wpdb->prefix}quiz_question_response
+        WHERE summary_id = %s", $summ_id
+    );
+
+    #file_put_contents("arr.txt", $additional_details_qry);
+
+    $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
+
+    $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
+
+    $additional_details= $wpdb->get_row($additional_details_qry);
+
+    $quiz_response_summary->marks_scored = (float) $additional_details->marks_scored;
+
+    $quiz_response_summary->negative_scored = (float) $additional_details->negative_scored;
+
+    $quiz_response_summary->total_marks_scored = (float) $additional_details->total_marks_scored;
+
+    $quiz_response_summary->total_time_taken =  $additional_details->total_time_taken;
+
+    $questions_skipped_qry = $wpdb->prepare(
+        "SELECT count(status) from {$wpdb->prefix}quiz_question_response
+        WHERE status LIKE %s AND summary_id LIKE %s",
+        array('skipped', $quiz_response_summary->summary_id)
+    );
+    $quiz_response_summary->num_skipped = $wpdb->get_var($questions_skipped_qry);
+    #fclose($myfile);
+    return $quiz_response_summary;
+}
+
 
 function read_current_quiz_response_summary($summary_id){
     global $wpdb;
@@ -1197,7 +1286,7 @@ function get_all_quiz_question_responses($summary_id){
         );
         $data[]=$d;
     }
-
+    file_put_contents("b1.txt", print_r($data, true));
     return $data;
 }
 
