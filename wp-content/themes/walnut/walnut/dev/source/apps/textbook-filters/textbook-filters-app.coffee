@@ -5,7 +5,6 @@ define ['app'
 	App.module "TextbookFiltersApp", (TextbookFilters, App, Backbone, Marionette, $, _)->
 		class TextbookFilters.Controller extends RegionController
 			initialize: (opts) ->
-				console.log opts
 
 				{@collection,@model,@filters,@selectedFilterParamsObject, 
 				@dataType, @contentSelectionType, @divisionsCollection,@post_status}=opts

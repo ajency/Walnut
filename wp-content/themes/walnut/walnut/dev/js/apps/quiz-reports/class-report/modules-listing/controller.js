@@ -14,7 +14,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       }
 
       Controller.prototype.initialize = function(opts) {
-        console.log(opts);
         this.contentModulesCollection = opts.contentModulesCollection, this.textbooksCollection = opts.textbooksCollection;
         this.textbookNamesCollection = null;
         return App.execute("when:fetched", [this.contentModulesCollection, this.textbooksCollection], (function(_this) {
@@ -24,7 +23,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
             _this.textbookNamesCollection = App.request("get:textbook:names:by:ids", term_ids);
             return App.execute("when:fetched", _this.textbookNamesCollection, function() {
               var view;
-              console.log(_this.textbookNamesCollection);
               _this.view = view = _this._getContentModulessListingView();
               _this.show(view, {
                 loading: true,
@@ -35,7 +33,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                 term_ids = _this._getAllTermIDs();
                 newNamesCollection = App.request("get:textbook:names:by:ids", term_ids);
                 return App.execute("when:fetched", newNamesCollection, function() {
-                  console.log(newNamesCollection);
                   return _this.view.triggerMethod("reset:textbook:names", newNamesCollection);
                 });
               });

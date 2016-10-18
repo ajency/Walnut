@@ -4,7 +4,6 @@ define(['jquery', 'underscore'], function($, _) {
     if (opts == null) {
       opts = {};
     }
-    console.log('showTextbookFilters');
     divHtml = '';
     if (opts.textbooks) {
       textbookItems = '';
@@ -24,7 +23,6 @@ define(['jquery', 'underscore'], function($, _) {
   };
   $.populateTextbooks = function(items, ele) {
     var chapterElement, textbookElement;
-    console.log('populateTextbooks');
     ele.find('#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter').text('');
     textbookElement = ele.find('#textbooks-filter');
     chapterElement = ele.find('#chapters-filter');
@@ -40,11 +38,9 @@ define(['jquery', 'underscore'], function($, _) {
       if (window.division_id) {
         return textbookElement.select2().select2('val', window.textbook_ids);
       } else {
-        console.log('window else');
         return textbookElement.select2().select2('val', _.first(items).get('term_id'));
       }
     } else {
-      console.log('else');
       return textbookElement.select2('data', null);
     }
   };
@@ -184,7 +180,6 @@ define(['jquery', 'underscore'], function($, _) {
   };
   return $.filterTableByTextbooks = function(_this, dataType) {
     var content_post_status, content_status, content_type, difficulty_level, filterCollection, filter_elements, filter_ids, filtered_data, filtered_models, quiz_type, text_multi, textbk_ids;
-    console.log('filterTableByTextbooks');
     filter_elements = _this.$el.find('select.textbook-filter');
     if (dataType === 'teaching-modules') {
       filterCollection = App.request("get:content:modules:repository");

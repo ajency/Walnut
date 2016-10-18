@@ -15,7 +15,6 @@ define(['app', 'controllers/region-controller', 'apps/textbook-filters/views'], 
 
       Controller.prototype.initialize = function(opts) {
         var class_id, data;
-        console.log(opts);
         this.collection = opts.collection, this.model = opts.model, this.filters = opts.filters, this.selectedFilterParamsObject = opts.selectedFilterParamsObject, this.dataType = opts.dataType, this.contentSelectionType = opts.contentSelectionType, this.divisionsCollection = opts.divisionsCollection, this.post_status = opts.post_status;
         if (!this.filters) {
           this.filters = ['multi_textbooks', 'divisions', 'textbooks', 'chapters', 'sections', 'subsections'];

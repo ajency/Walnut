@@ -98,8 +98,7 @@ define ['app'
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
-                    
-                    data.display_marks = true if @model.hasPermission 'display_answer'
+                    data.display_marks = true if @model.hasPermission('display_answer')
                     if data.negMarksEnable
                         data.marks_scored = parseFloat responseSummary.get 'marks_scored'
                         data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
@@ -171,6 +170,7 @@ define ['app'
                     if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
                         if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0 
                             @model.get('permissions').display_answer = true
+
                             @$el.find "#take-quiz"
                             .html 'Replay'    
                         else

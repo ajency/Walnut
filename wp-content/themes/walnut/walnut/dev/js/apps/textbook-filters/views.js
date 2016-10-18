@@ -16,12 +16,10 @@ define(['app'], function(App) {
 
       TextbookFiltersView.prototype.events = {
         'change #textbooks-filter.div-filters': function(e) {
-          console.log('change #textbooks-filter.div-filters');
           window.textbook_ids = $('.multi-textbook-filter').select2("val");
           return this.trigger("fetch:new:content", $(e.target).val());
         },
         'click .multi-filters': function() {
-          console.log('click .multi-filters');
           if ($('#content-post-status-filter').val() === 'publish') {
             window.quiz_report_status = 'published';
           } else {
@@ -31,13 +29,11 @@ define(['app'], function(App) {
           return this.trigger("fetch:new:content", $('.multi-textbook-filter').select2("val"));
         },
         'change #divisions-filter': function(e) {
-          console.log('change #divisions-filter');
           this.trigger("fetch:textbooks:by:division", $(e.target).val());
           return this.trigger("fetch:new:content", $(e.target).val());
         },
         'change .filters.new-filter .div-filters': function(e) {
           var parent_id;
-          console.log('change .filters.new-filter .div-filters');
           parent_id = $(e.target).val();
           if (e.target.id !== 'divisions-filter') {
             this.$el.find('.filters .table-tools-actions').append('<span class="loading-collection small">Loading... <i class="fa fa-spinner fa-spin"> </i></span>');

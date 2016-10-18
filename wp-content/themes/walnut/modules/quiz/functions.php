@@ -165,12 +165,15 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
         $user_id = get_current_user_id();
 
     //query to get quiz report data
-    $combined_query = "SELECT collection.*, meta.meta_key AS meta_keys, meta.meta_value AS meta_values, meta1.meta_key AS meta_key1, meta1.meta_value AS meta_value1  FROM {$wpdb->base_prefix}content_collection AS collection, {$wpdb->base_prefix}collection_meta AS meta, {$wpdb->base_prefix}collection_meta AS meta1";
+    $combined_query = "SELECT collection.*, meta.meta_key AS meta_keys, meta.meta_value AS meta_values, meta1.meta_key AS meta_key1, meta1.meta_value AS meta_value1, meta2.meta_key AS meta_key2, meta2.meta_value AS meta_value2  FROM {$wpdb->base_prefix}content_collection AS collection, {$wpdb->base_prefix}collection_meta AS meta, {$wpdb->base_prefix}collection_meta AS meta1, {$wpdb->base_prefix}collection_meta AS meta2";
     $combined_query .= " WHERE collection.id = meta.collection_id";
     $combined_query .= " AND collection.id = meta1.collection_id";
+    $combined_query .= " AND collection.id = meta2.collection_id";
     $combined_query .= " AND collection.id = $selected_quiz_id";
     $combined_query .= " AND meta.meta_key like 'quiz_meta'";
     $combined_query .= " AND meta1.meta_key like 'quiz_type'";
+    $combined_query .= " AND meta2.meta_key like 'permissions'";
+
 
     $data = $wpdb->get_row($combined_query);  
 
@@ -208,6 +211,25 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
             $data->schedule  = $schedule;        
 
     }
+
+    $data->permissions = array();
+
+
+        if ($data->meta_key2 == 'permissions')
+            $permissions = maybe_unserialize($data->meta_value2);
+            if ($permissions)
+                foreach ($permissions as $k=>$v){
+                    if($k == 'displayAfterDays' || $k == 'displayAfterHours'){
+
+                        //check if replay button should be available
+
+                        $permissions['isReplay'] = '0';
+
+                    }else{
+                        $permissions[$k] = filter_var($permissions[$k], FILTER_VALIDATE_BOOLEAN);
+                    }
+                }
+    $data->permissions = $permissions;
 
     $data->taken_by = sizeof(num_students_taken_quiz_report($selected_quiz_id, $division));
     
