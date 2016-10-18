@@ -84,7 +84,12 @@ function fetch_quiz_response_summary(){
 
     $quiz_summary = array();
 
-    if(isset($_GET['summary_id']))
+    if(isset($args['collection_id']) && isset($args['student_id']) && isset($args['taken_on'])){
+        $quiz_id = $_GET['collection_id'];
+        $quiz_summary = get_quiz_summaries_for_student($_GET['student_id'],$quiz_id);
+    }
+
+    else if(isset($_GET['summary_id']))
         $quiz_summary = read_quiz_response_summary($_GET['summary_id']);
 
     else{
