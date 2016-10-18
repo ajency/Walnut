@@ -8,7 +8,6 @@ define ['jquery', 'underscore'], ($, _)->
     ##
 
     $.showTextbookFilters =(opts={}) ->
-        console.log 'showTextbookFilters'
 
         divHtml= ''
 
@@ -47,7 +46,6 @@ define ['jquery', 'underscore'], ($, _)->
     # ie. values which must be selected by default
 
     $.populateTextbooks = (items, ele)->
-        console.log 'populateTextbooks'
         ele.find '#textbooks-filter, #chapters-filter,#sections-filter,#subsections-filter'
         .text ''
         
@@ -70,10 +68,8 @@ define ['jquery', 'underscore'], ($, _)->
             if window.division_id
                 textbookElement.select2().select2 'val', window.textbook_ids
             else
-                console.log 'window else'
                 textbookElement.select2().select2 'val', _.first(items).get 'term_id'
         else
-            console.log 'else' 
             textbookElement.select2 'data', null
 
     $.populateChapters = (items, ele, curr_item='' )->
@@ -184,7 +180,6 @@ define ['jquery', 'underscore'], ($, _)->
 
 
     $.filterTableByTextbooks = (_this, dataType)->
-        console.log 'filterTableByTextbooks'
         filter_elements= _this.$el.find('select.textbook-filter')
         
         if dataType is 'teaching-modules'

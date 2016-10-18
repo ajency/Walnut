@@ -98,7 +98,7 @@ define ['app'
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
-                    data.display_marks = true if @model.hasPermission('display_answer') || App.request "current:user:can", "view_all_quizzes"
+                    data.display_marks = true if @model.hasPermission('display_answer')
                     if data.negMarksEnable
                         data.marks_scored = parseFloat responseSummary.get 'marks_scored'
                         data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
