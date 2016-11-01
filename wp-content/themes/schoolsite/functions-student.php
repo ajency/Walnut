@@ -55,26 +55,27 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 	$data        = array();
 	foreach ($result as $key => $row) {
 		$query2       = $wpdb->prepare(
-				     "SELECT *, count(summary_id) AS attempts
+				     "SELECT count(summary_id) AS attempts
 				      FROM {$wpdb->prefix}quiz_response_summary
 				      WHERE collection_id = %d and student_id=%d
 				      ORDER BY taken_on DESC LIMIT 1",
 				      array($row->id, $current_user->ID));
 
 		$result2      = $wpdb->get_row($query2);
-		// if($row->id == '747'){
-		// 	file_put_contents("a4.txt", $query2);
-		// }
+		//if($row->id == '747'){
+		//	file_put_contents("a4.txt", $query2);
+		//}
  	 
-		// $attempts_result = $wpdb->prepare(
-		// 		     "SELECT count(summary_id) AS attempts
-		// 		      FROM {$wpdb->prefix}quiz_response_summary
-		// 		      WHERE collection_id = %d and student_id=%d
-		// 		      ORDER BY taken_on DESC LIMIT 1",
-		// 		      array($row->id, $current_user->ID));
+		$summary_result = $wpdb->prepare(
+				     "SELECT * 
+				      FROM {$wpdb->prefix}quiz_response_summary
+				      WHERE collection_id = %d and student_id=%d
+				      ORDER BY taken_on DESC LIMIT 1",
+				      array($row->id, $current_user->ID));
 
-		// $attempts_result2      = $wpdb->get_row($attempts_result);
-		// $attempts = $attempts_result2->attempts;
+		$attempts_result2      = $wpdb->get_row($summary_result);
+
+		#$attempts = $attempts_result2->summary_id;
 
 		$attempts = $result2->attempts;
 
@@ -82,15 +83,15 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 		$taken_on           = "NA";
 		$status    = 1;
 		if($attempts>0){
-			$taken_on           =   date("d M Y", strtotime($result2->taken_on));
-			$qt = maybe_unserialize($result2->quiz_meta);
+			$taken_on           =   date("d M Y", strtotime($attempts_result2->taken_on));
+			$qt = maybe_unserialize($attempts_result2->quiz_meta);
 				
 			if($qt['marks_scored']){
 				$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
 			}
 			else{
 
-				$quiz_summary       = compute_quiz_summaries_for_user($result2->summary_id, $qt);
+				$quiz_summary       = compute_quiz_summaries_for_user($attempts_result2->summary_id, $qt);
 				if($quiz_summary->marks_scored == '' )
 					$quiz_summary->marks_scored = 0;
 				$total_marks_scored = (float) $quiz_summary->marks_scored. ' / '.count($qt['questions_order']);
