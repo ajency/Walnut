@@ -734,7 +734,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
     $summary_data_all[] = $wpdb->get_row($query1);
     }
 
-    
+
 
     $max =array_keys($summary_data_all, max($summary_data_all));
 
@@ -776,7 +776,6 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
                 GROUP BY question.summary_id
                 ORDER BY marks_scored desc", $start_date, $end_date,'%first_name%','%last_name%', '%completed%');
 
-
     if($num_of_quizes_selected == 1){
         $top_scorer_data = $wpdb->get_row($query14);
 
@@ -813,7 +812,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
 
         $class_top_scor = $top_scorer_data[$keys]->marks_scored;
-        $class_top_scorer_name = $top_scorer_data[$keys]->display_name;
+        $class_top_scorer_name = $top_scorer_data[$keys]->firstname.' '.$top_scorer_data[$keys]->lastname;
         $class_top_scorer_id = $top_scorer_data[$keys]->student_id;
         $term_ids = $top_scorer_data[$keys]->term_ids;
 

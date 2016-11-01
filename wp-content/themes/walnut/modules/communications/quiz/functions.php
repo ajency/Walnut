@@ -540,10 +540,14 @@ function quiz_summary_parent_mail_preview($data){
     $firstname= get_user_meta($recipient['student_id'], 'first_name', true);
     $lastname = get_user_meta($recipient['student_id'], 'last_name', true);
 
+    if($firstname == '' && $lastname == '')
+        $name_dislay = get_user_meta($recipient['student_id'], 'nickname', true);
+    else
+        $name_dislay = $firstname.' '.$lastname;
 
     $template_data['merge_vars'][]=array(
         'name'=>'STUDENT_NAME',
-        'content'=>$firstname.' '.$lastname        );
+        'content'=>$name_dislay        );
     #print_r($template_data['global_merge_vars']);exit;
     $blog_data= get_blog_details($comm_data['blog_id'], true);
     $template_data['merge_vars'][]=array(
