@@ -984,8 +984,8 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
     if (this.isShown && this.options.backdrop) {
       var doAnimate = $.support.transition && animate
 
-      // this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
-      //   .appendTo(document.body)
+      this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
+        .appendTo(document.body)
 
       this.$element.on('click.dismiss.modal', $.proxy(function (e) {
         if (e.target !== e.currentTarget) return
