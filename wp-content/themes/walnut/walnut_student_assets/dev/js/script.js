@@ -230,10 +230,10 @@ $(function() {
 
     //Modal for selcting children account if many
 
-    $('#walnut-modal,#logout-modal').modal({
-        backdrop: 'static',
-        keyboard: false
-    });
+    // $('#walnut-modal,#logout-modal').modal({
+    //     backdrop: 'static',
+    //     keyboard: false
+    // });
 
 
 
