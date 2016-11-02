@@ -194,19 +194,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         fetchResponses = this._fetchQuestionResponseCollection();
         return fetchResponses.done((function(_this) {
           return function() {
-            var i, len, m, ref, reorderQuestions;
             if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
-              questionsCollection.each(function(e) {
-                return e.unset('order');
+              questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+              App.execute("when:fetched", questionsCollection, function() {
+                return quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               });
-              quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
-              reorderQuestions = [];
-              ref = quizModel.get('content_pieces');
-              for (i = 0, len = ref.length; i < len; i++) {
-                m = ref[i];
-                reorderQuestions.push(questionsCollection.get(m));
-              }
-              questionsCollection.reset(reorderQuestions);
             }
             _this.layout.$el.find('#quiz-details-region,#content-display-region').hide();
             _this.layout.$el.find('#quiz-details-region,#content-display-region').fadeIn('slow');

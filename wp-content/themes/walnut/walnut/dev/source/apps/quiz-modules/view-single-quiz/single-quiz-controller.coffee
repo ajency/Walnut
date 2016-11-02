@@ -171,15 +171,17 @@ define ['app'
 					if not _.isEmpty quizResponseSummary.get 'questions_order'
 
 						#reorder the questions as per the order that it was taken in
-						questionsCollection.each (e)-> e.unset 'order'
+						#questionsCollection.each (e)-> e.unset 'order'
+						questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+						App.execute "when:fetched", questionsCollection, =>
 
-						quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-						reorderQuestions = []
+							# reorderQuestions = []
 
-						reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
+							# reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
 
-						questionsCollection.reset reorderQuestions
+							# questionsCollection.reset questionsCollection.models
 
 					@layout.$el.find '#quiz-details-region,#content-display-region'
 					.hide()
