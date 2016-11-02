@@ -155,61 +155,36 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._tryAgain = function() {
-        if (quizModel.get('permissions').randomize) {
-          if (!quizModelNew) {
-            quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
-          }
-          return App.execute("when:fetched", quizModelNew, (function(_this) {
-            return function() {
-              console.log(quizModel);
-              quizModel = quizModelNew;
-              if (quizModel.get('quiz_type') !== 'practice') {
-                return false;
-              }
-              _this.questionResponseCollection = null;
-              quizModel.set({
-                'attempts': parseInt(quizModel.get('attempts')) + 1
-              });
-              _this.summary_data = {
-                'collection_id': quizModel.get('id'),
-                'student_id': App.request("get:loggedin:user:id"),
-                'taken_on': moment().format("YYYY-MM-DD")
-              };
-              quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
-              quizResponseSummaryCollection.add(quizResponseSummary);
-              questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
-              return App.execute("when:fetched", questionsCollection, function() {
-                _this._setMarks();
-                display_mode = 'class_mode';
-                _this._randomizeOrder();
-                return _this.startQuiz();
-              });
-            };
-          })(this));
-        } else {
-          if (quizModel.get('quiz_type') !== 'practice') {
-            return false;
-          }
-          this.questionResponseCollection = null;
-          quizModel.set({
-            'attempts': parseInt(quizModel.get('attempts')) + 1
-          });
-          this.summary_data = {
-            'collection_id': quizModel.get('id'),
-            'student_id': App.request("get:loggedin:user:id"),
-            'taken_on': moment().format("YYYY-MM-DD")
-          };
-          quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
-          App.execute("when:fetched", quizResponseSummary, (function(_this) {
-            return function() {
-              return console.log(quizResponseSummary);
-            };
-          })(this));
-          quizResponseSummaryCollection.add(quizResponseSummary);
-          display_mode = 'class_mode';
-          this._randomizeOrder();
-          return this.startQuiz();
+        if (!quizModelNew) {
+          quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         }
+        return App.execute("when:fetched", quizModelNew, (function(_this) {
+          return function() {
+            console.log(quizModel);
+            quizModel = quizModelNew;
+            if (quizModel.get('quiz_type') !== 'practice') {
+              return false;
+            }
+            _this.questionResponseCollection = null;
+            quizModel.set({
+              'attempts': parseInt(quizModel.get('attempts')) + 1
+            });
+            _this.summary_data = {
+              'collection_id': quizModel.get('id'),
+              'student_id': App.request("get:loggedin:user:id"),
+              'taken_on': moment().format("YYYY-MM-DD")
+            };
+            quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
+            quizResponseSummaryCollection.add(quizResponseSummary);
+            questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
+            return App.execute("when:fetched", questionsCollection, function() {
+              _this._setMarks();
+              display_mode = 'class_mode';
+              _this._randomizeOrder();
+              return _this.startQuiz();
+            });
+          };
+        })(this));
       };
 
       Controller.prototype._viewSummary = function(summary_id) {

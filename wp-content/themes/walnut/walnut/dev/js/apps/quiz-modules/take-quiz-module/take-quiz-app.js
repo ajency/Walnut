@@ -140,7 +140,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
-        var data, newResponseModel, timeTaken, totalTime;
+        var data, newResponseModel, single_status, timeTaken, totalTime;
+        if (answer.get('status') === 'wrong_answer' && answer.get('answer').length === 0) {
+          single_status = 'skipped';
+        } else {
+          single_status = answer.get('status');
+        }
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
         pausedQuestionTime = 0;
@@ -149,7 +154,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           'summary_id': quizResponseSummary.id,
           'content_piece_id': questionModel.id,
           'question_response': _.omit(answer.toJSON(), ['marks', 'status']),
-          'status': answer.get('status'),
+          'status': single_status,
           'marks_scored': answer.get('marks'),
           'time_taken': timeTaken
         };
@@ -194,10 +199,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._endQuiz = function() {
         var ref, ref1, unanswered;
+        console.log(this.display_mode);
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
         if ((ref = this.display_mode) !== 'replay' && ref !== 'quiz_report') {
+          console.log(questionResponseModel);
           if ((!questionResponseModel) || ((ref1 = questionResponseModel.get('status')) === 'paused' || ref1 === 'not_attempted')) {
             this.layout.questionDisplayRegion.trigger("silent:save:question");
           }
