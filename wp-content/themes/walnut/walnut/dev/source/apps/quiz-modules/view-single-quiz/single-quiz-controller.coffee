@@ -129,39 +129,11 @@ define ['app'
 				@defer.promise()
 
 			_tryAgain:->
-				if quizModel.get('permissions').randomize
-					quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id' if not quizModelNew
-					App.execute "when:fetched", quizModelNew, =>
-						console.log quizModel
-						quizModel = quizModelNew			
+				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id' if not quizModelNew
+				App.execute "when:fetched", quizModelNew, =>
+					console.log quizModel
+					quizModel = quizModelNew			
 
-						return false if quizModel.get('quiz_type') isnt 'practice'
-
-						@questionResponseCollection = null
-
-						quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
-
-						@summary_data= 
-							'collection_id' : quizModel.get 'id'
-							'student_id'    : App.request "get:loggedin:user:id"
-							'taken_on'      : moment().format("YYYY-MM-DD")
-
-						#console.log @summary_data
-
-						quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
-						quizResponseSummaryCollection.add quizResponseSummary
-
-						questionsCollection = App.request "get:content:pieces:by:ids", quizModelNew.get 'content_pieces'
-
-						App.execute "when:fetched", questionsCollection, =>
-							@_setMarks()
-
-							display_mode = 'class_mode'
-
-							@_randomizeOrder()
-
-							@startQuiz()
-				else
 					return false if quizModel.get('quiz_type') isnt 'practice'
 
 					@questionResponseCollection = null
@@ -173,15 +145,21 @@ define ['app'
 						'student_id'    : App.request "get:loggedin:user:id"
 						'taken_on'      : moment().format("YYYY-MM-DD")
 
+					#console.log @summary_data
+
 					quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
-					App.execute "when:fetched", quizResponseSummary, => console.log quizResponseSummary
 					quizResponseSummaryCollection.add quizResponseSummary
 
-					display_mode = 'class_mode'
+					questionsCollection = App.request "get:content:pieces:by:ids", quizModelNew.get 'content_pieces'
 
-					@_randomizeOrder()
+					App.execute "when:fetched", questionsCollection, =>
+						@_setMarks()
 
-					@startQuiz()
+						display_mode = 'class_mode'
+
+						@_randomizeOrder()
+
+						@startQuiz()
 
 
 			_viewSummary:(summary_id)->
