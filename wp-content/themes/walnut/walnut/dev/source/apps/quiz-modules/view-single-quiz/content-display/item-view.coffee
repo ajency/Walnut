@@ -12,13 +12,16 @@ define ['app'
             tagName: 'li'
 
             mixinTemplateHelpers:(data)->
+
                 responseModel = Marionette.getOption @, 'responseModel'
 
                 quizModel = Marionette.getOption @, 'quizModel'
+                #console.log @.model.get 'comment'
 
                 data.dateCompleted= 'N/A'
 
                 if responseModel
+                    #console.log responseModel
 
                     data.dateCompleted= moment(responseModel.get('end_date')).format("Do MMM YYYY")
 
@@ -40,12 +43,19 @@ define ['app'
 
                     data.hint = false if not quizModel.hasPermission 'allow_hint'
 
+                    if(@.model.get('comment') != '')
+                        data.comment = @.model.get 'comment'
+                    else
+                        data.comment = false
+
+
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-success', text : 'Correct', icon : 'fa-check'
                         when 'partially_correct'  then divClass : 'text-success', text : 'Partially Correct', icon : 'fa-check-square'
                         when 'skipped'            then divClass : 'text-warning', text : 'Skipped', icon : 'fa-share-square'
                         when 'wrong_answer'       then divClass : 'text-error', text : 'Wrong', icon : 'fa-times'
 
+                #console.log data
                 data
 
             onShow:->

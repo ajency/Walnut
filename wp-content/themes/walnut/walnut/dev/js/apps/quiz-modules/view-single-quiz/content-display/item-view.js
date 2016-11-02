@@ -32,6 +32,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           if (!quizModel.hasPermission('allow_hint')) {
             data.hint = false;
           }
+          if (this.model.get('comment') !== '') {
+            data.comment = this.model.get('comment');
+          } else {
+            data.comment = false;
+          }
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':

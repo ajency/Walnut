@@ -60,6 +60,7 @@ define ['app'], (App)->
 								<h3 class="bold">{{skipped_msg}}</h3>
 								<h4 class="semi-bold">You scored: <span class="bold">0/<span class="total-marks"></span></span></h4>
 							</div>
+							<div class="text-center commentMsg">{{comment}}</div>
 						</div>'
 
 			
@@ -75,6 +76,7 @@ define ['app'], (App)->
 					data.incorrect_answer_msg            = quizModel.getMessageContent 'incorrect_answer'
 					data.partial_correct_answers_msg     = quizModel.getMessageContent 'partial_correct_answers'
 					data.skipped_msg                     = 'This question was skipped'
+					data.comment						 = @.model.get('comment')
 
 				data
 
@@ -85,6 +87,8 @@ define ['app'], (App)->
 
 				marks = parseFloat marks
 				total = parseFloat total
+
+				
 
 				quizModel = Marionette.getOption @, 'quizModel'
 
@@ -98,6 +102,9 @@ define ['app'], (App)->
 				@$el.find('#feedback-area div').hide()
 
 				answerModel = Marionette.getOption(@, 'answerModel')
+
+				if (@.model.get('comment') != '')
+					@$el.find('.commentMsg').show()
 
 				if answerModel and answerModel.get('status') is 'skipped'
 					@$el.find('#skipped').show()
