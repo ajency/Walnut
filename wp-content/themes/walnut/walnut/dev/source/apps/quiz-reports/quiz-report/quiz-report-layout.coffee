@@ -7,7 +7,7 @@ define ['app'
             template : '<button type="button" id="go-back-button" class="btn btn-white btn-cons m-t-10">
                             <h4 class="bold  text-info no-margin">
                                 <span class="fa fa-arrow-circle-left"></span>
-                                Back to List of Quizzes
+                                Back to List of Quizzesa
                             </h4>
                         </button>
                         <div class="tiles white grid simple vertical green">
