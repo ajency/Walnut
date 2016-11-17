@@ -1401,7 +1401,6 @@ function get_all_quiz_question_responses($summary_id){
         );
         $data[]=$d;
     }
-    file_put_contents("b1.txt", print_r($data, true));
     return $data;
 }
 
