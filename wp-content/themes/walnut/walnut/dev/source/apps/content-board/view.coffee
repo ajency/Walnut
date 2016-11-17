@@ -65,7 +65,7 @@ define ['app'], (App)->
 
 			
 			mixinTemplateHelpers:(data)->
-				console.log @
+				#console.log @
 				Marionette.getOption @, 'display_mode'
 
 

@@ -18,7 +18,6 @@ define(['app'], function(App) {
 
       ContentBoardView.prototype.mixinTemplateHelpers = function(data) {
         var quizModel;
-        console.log(this);
         Marionette.getOption(this, 'display_mode');
         data.correct_answer_msg = 'You are correct!';
         data.incorrect_answer_msg = 'Sorry, you did not answer correctly';
