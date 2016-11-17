@@ -60,11 +60,13 @@ define ['app'], (App)->
 								<h3 class="bold">{{skipped_msg}}</h3>
 								<h4 class="semi-bold">You scored: <span class="bold">0/<span class="total-marks"></span></span></h4>
 							</div>
-							<div class="text-center commentMsg">{{comment}}</div>
+							<p class="commentMsg"><label class="fosz14">Comment : </label> {{comment}}</p>
 						</div>'
 
 			
 			mixinTemplateHelpers:(data)->
+				Marionette.getOption @, 'display_mode'
+				console.log @
 				data.correct_answer_msg              = 'You are correct!'
 				data.incorrect_answer_msg            = 'Sorry, you did not answer correctly'
 				data.partial_correct_answers_msg     = 'You are almost correct'
@@ -103,8 +105,9 @@ define ['app'], (App)->
 
 				answerModel = Marionette.getOption(@, 'answerModel')
 
-				if (@.model.get('comment') != '')
-					@$el.find('.commentMsg').show()
+				if answerModel
+					if (@.model.get('comment') != '')
+						@$el.find('.commentMsg').show()
 
 				if answerModel and answerModel.get('status') is 'skipped'
 					@$el.find('#skipped').show()
