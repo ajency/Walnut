@@ -169,6 +169,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             quizModel.set({
               'attempts': parseInt(quizModel.get('attempts')) + 1
             });
+            quizModel.set({
+              'replay_mode': false
+            });
             _this.summary_data = {
               'collection_id': quizModel.get('id'),
               'student_id': App.request("get:loggedin:user:id"),

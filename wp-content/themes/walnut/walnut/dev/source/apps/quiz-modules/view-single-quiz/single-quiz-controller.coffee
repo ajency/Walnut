@@ -139,6 +139,7 @@ define ['app'
 					@questionResponseCollection = null
 
 					quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+					quizModel.set 'replay_mode' : false
 
 					@summary_data= 
 						'collection_id' : quizModel.get 'id'

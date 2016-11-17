@@ -47,6 +47,7 @@ define ['app'
 						@show layout,
 							loading: true
 
+						#conetent board
 						@listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject,@direction
 
 						@listenTo @region, "silent:save:question", =>
