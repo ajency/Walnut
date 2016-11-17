@@ -153,23 +153,37 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._tryAgain = function() {
-        if (quizModel.get('quiz_type') !== 'practice') {
-          return false;
+        var quizModelNew;
+        if (!quizModelNew) {
+          quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         }
-        this.questionResponseCollection = null;
-        quizModel.set({
-          'attempts': parseInt(quizModel.get('attempts')) + 1
-        });
-        this.summary_data = {
-          'collection_id': quizModel.get('id'),
-          'student_id': App.request("get:loggedin:user:id"),
-          'taken_on': moment().format("YYYY-MM-DD")
-        };
-        quizResponseSummary = App.request("create:quiz:response:summary", this.summary_data);
-        quizResponseSummaryCollection.add(quizResponseSummary);
-        display_mode = 'class_mode';
-        this._randomizeOrder();
-        return this.startQuiz();
+        return App.execute("when:fetched", quizModelNew, (function(_this) {
+          return function() {
+            console.log(quizModel);
+            quizModel = quizModelNew;
+            if (quizModel.get('quiz_type') !== 'practice') {
+              return false;
+            }
+            _this.questionResponseCollection = null;
+            quizModel.set({
+              'attempts': parseInt(quizModel.get('attempts')) + 1
+            });
+            _this.summary_data = {
+              'collection_id': quizModel.get('id'),
+              'student_id': App.request("get:loggedin:user:id"),
+              'taken_on': moment().format("YYYY-MM-DD")
+            };
+            quizResponseSummary = App.request("create:quiz:response:summary", _this.summary_data);
+            quizResponseSummaryCollection.add(quizResponseSummary);
+            questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
+            return App.execute("when:fetched", questionsCollection, function() {
+              _this._setMarks();
+              display_mode = 'class_mode';
+              _this._randomizeOrder();
+              return _this.startQuiz();
+            });
+          };
+        })(this));
       };
 
       Controller.prototype._viewSummary = function(summary_id) {
@@ -179,19 +193,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         fetchResponses = this._fetchQuestionResponseCollection();
         return fetchResponses.done((function(_this) {
           return function() {
-            var i, len, m, ref, reorderQuestions;
             if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
-              questionsCollection.each(function(e) {
-                return e.unset('order');
+              questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+              App.execute("when:fetched", questionsCollection, function() {
+                return quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               });
-              quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
-              reorderQuestions = [];
-              ref = quizModel.get('content_pieces');
-              for (i = 0, len = ref.length; i < len; i++) {
-                m = ref[i];
-                reorderQuestions.push(questionsCollection.get(m));
-              }
-              questionsCollection.reset(reorderQuestions);
             }
             _this.layout.$el.find('#quiz-details-region,#content-display-region').hide();
             _this.layout.$el.find('#quiz-details-region,#content-display-region').fadeIn('slow');

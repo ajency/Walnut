@@ -146,6 +146,118 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     return $data;
 }
 
+//quiz report for each student
+function get_single_quiz_module_report ($id,$user_id=0, $division = 0) {
+    $taken_by_stud = [];
+    $selected_quiz_id = $id;
+    global $wpdb;
+    if(!$user_id)
+        $user_id = get_current_user_id();
+    $select_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $selected_quiz_id);
+    $data = $wpdb->get_row ($select_query);
+    $terms = maybe_unserialize($data->term_ids);
+    $textbook = $terms['textbook'];
+    #fwrite($myfile, $textbook);
+    
+    if (!user_has_access_to_textbook($textbook,$user_id)){
+        return new WP_Error('No Access', __('You do not have access to this quiz') );
+    }
+    $data->id = (int)$data->id;
+    $data->name = wp_unslash($data->name);
+    $duration = (int)$data->duration;
+    $data->term_ids = $terms;
+    /*$data->duration = $duration;
+    $data->minshours = 'mins';
+    $data->total_minutes = (int)$data->duration;
+    if ($duration >= 60) {
+        $data->minshours = 'hrs';
+        $data->duration = $duration/60;
+    }*/
+    $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
+    $quiz_details = $wpdb->get_results($query_meta);
+    // $data->permissions = $data->description = array();
+    foreach ($quiz_details as $key=>$value){
+        if ($value->meta_key == 'permissions')
+            $permissions = maybe_unserialize($value->meta_value);
+            if ($permissions)
+                foreach ($permissions as $k=>$v){
+                    if($k == 'displayAfterDays' || $k == 'displayAfterHours'){
+                        //check if replay button should be available
+                        $permissions['isReplay'] = '0';
+                    }else{
+                        $permissions[$k] = filter_var($permissions[$k], FILTER_VALIDATE_BOOLEAN);
+                    }
+                }
+            $data->permissions = $permissions;
+        /*if ($value->meta_key == 'description'){
+            $description = maybe_unserialize($value->meta_value);
+            if(isset($description['instruction']))
+                $data->description['instruction'] =wp_unslash($description['instruction']);
+        }*/
+        if ($value->meta_key == 'quiz_type')
+            $data->quiz_type = $value->meta_value;
+        /*if ($value->meta_key == 'content_layout')
+            $data->content_layout = maybe_unserialize($value->meta_value);*/
+        if ($value->meta_key == 'quiz_meta'){
+            $quiz_meta = maybe_unserialize($value->meta_value);
+            $data->marks = (int)$quiz_meta['marks'];
+            $data->negMarksEnable = $quiz_meta['negMarksEnable'];
+            $data->negMarks = (int)$quiz_meta['negMarks'];
+            $data->message = $quiz_meta['message'];
+        }
+    }
+    if($user_id){
+        $quiz_status= get_quiz_status($id,$user_id);
+        $data->taken_on= $quiz_status['date'];
+        $data->status = $quiz_status['status'];
+        if($data->quiz_type == 'practice')
+            $data->attempts = (int) $quiz_status['attempts'];
+    }
+    $content_ids = array();
+    $show_questions = true;
+    $schedule       = array();
+    if($data->quiz_type == 'class_test'){
+        $schedule = get_quiz_schedule($id, $division);
+        if($schedule)
+            $data->schedule  = $schedule;        
+        if(current_user_can('view_all_quizzes') || $schedule['is_active'] || $data->status =='completed')
+            $show_questions = true;
+        else
+            $show_questions = false;
+    }
+    
+    /*if ($data->content_layout && $show_questions){
+        foreach($data->content_layout as $content){
+            if ($content['type'] == 'content-piece'){
+                $content_ids[] = $content['id'];
+            }
+            elseif ($content['type'] == 'content_set'){
+                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
+                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids);
+                foreach($set_content_ids as $id){
+                    $content_ids[] = $id;
+                }
+            }
+        }
+        $data->content_pieces = $content_ids;
+    }
+*/
+/*    if($division){        
+        $data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
+        if ($data->taken_by_stud == 0){
+            $data->taken_by = 0;
+        }else{
+        $data->taken_by = sizeof($data->taken_by_stud);
+        }
+        $data->missed_by = students_not_taken_quiz($selected_quiz_id, $division);
+        
+        $data->total_students = get_student_count_in_division($division);
+    }
+    $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";*/
+    
+    return $data;
+}
+
 //new function created for quiz list and quiz report--with less data fetched
 function get_single_quiz_module_list_report ($id,$user_id=0, $division = 0) {
 
@@ -615,7 +727,10 @@ function get_all_quiz_modules($args){
 
 
     foreach ($quiz_ids as $id){
-        $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
+        if(isset($args['quiz_ids']))
+            $quiz_data = get_single_quiz_module_report((int)$id,$user_id, $args['division']);
+        else    
+            $quiz_data = get_single_quiz_module((int)$id,$user_id, $args['division']);
         
         if(!is_wp_error($quiz_data)){
             $result[] = $quiz_data;

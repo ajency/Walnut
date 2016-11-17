@@ -60,10 +60,14 @@ define ['app'], (App)->
 								<h3 class="bold">{{skipped_msg}}</h3>
 								<h4 class="semi-bold">You scored: <span class="bold">0/<span class="total-marks"></span></span></h4>
 							</div>
+							<div class="commentMsg"><label class="fosz14">Comment : </label> {{comment}}</div>
 						</div>'
 
 			
 			mixinTemplateHelpers:(data)->
+				Marionette.getOption @, 'display_mode'
+
+
 				data.correct_answer_msg              = 'You are correct!'
 				data.incorrect_answer_msg            = 'Sorry, you did not answer correctly'
 				data.partial_correct_answers_msg     = 'You are almost correct'
@@ -75,6 +79,7 @@ define ['app'], (App)->
 					data.incorrect_answer_msg            = quizModel.getMessageContent 'incorrect_answer'
 					data.partial_correct_answers_msg     = quizModel.getMessageContent 'partial_correct_answers'
 					data.skipped_msg                     = 'This question was skipped'
+					data.comment						 = @.model.get('comment')
 
 				data
 
@@ -85,6 +90,8 @@ define ['app'], (App)->
 
 				marks = parseFloat marks
 				total = parseFloat total
+
+				
 
 				quizModel = Marionette.getOption @, 'quizModel'
 
@@ -98,6 +105,12 @@ define ['app'], (App)->
 				@$el.find('#feedback-area div').hide()
 
 				answerModel = Marionette.getOption(@, 'answerModel')
+
+				answer_model = Marionette.getOption @, 'answerModel'
+				replay_true = answer_model.get('status')
+				if replay_true != 'not_attempted'
+					if (@.model.get('comment') != '')
+						@$el.find('.commentMsg').show()
 
 				if answerModel and answerModel.get('status') is 'skipped'
 					@$el.find('#skipped').show()
@@ -113,6 +126,4 @@ define ['app'], (App)->
 					if marks > 0 and marks < total
 						@$el.find('#partially-correct').show()
 
-
 			
-

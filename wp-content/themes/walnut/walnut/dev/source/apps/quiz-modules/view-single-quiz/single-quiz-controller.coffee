@@ -130,25 +130,37 @@ define ['app'
 
 			_tryAgain:->
 
-				return false if quizModel.get('quiz_type') isnt 'practice'
+				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id' if not quizModelNew
+				App.execute "when:fetched", quizModelNew, =>
+					console.log quizModel
+					quizModel = quizModelNew			
 
-				@questionResponseCollection = null
+					return false if quizModel.get('quiz_type') isnt 'practice'
 
-				quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+					@questionResponseCollection = null
 
-				@summary_data= 
-					'collection_id' : quizModel.get 'id'
-					'student_id'    : App.request "get:loggedin:user:id"
-					'taken_on'      : moment().format("YYYY-MM-DD")
+					quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
 
-				quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
-				quizResponseSummaryCollection.add quizResponseSummary
+					@summary_data= 
+						'collection_id' : quizModel.get 'id'
+						'student_id'    : App.request "get:loggedin:user:id"
+						'taken_on'      : moment().format("YYYY-MM-DD")
 
-				display_mode = 'class_mode'
+					#console.log @summary_data
 
-				@_randomizeOrder()
+					quizResponseSummary = App.request "create:quiz:response:summary", @summary_data
+					quizResponseSummaryCollection.add quizResponseSummary
 
-				@startQuiz()
+					questionsCollection = App.request "get:content:pieces:by:ids", quizModelNew.get 'content_pieces'
+
+					App.execute "when:fetched", questionsCollection, =>
+						@_setMarks()
+
+						display_mode = 'class_mode'
+
+						@_randomizeOrder()
+
+						@startQuiz()
 
 			_viewSummary:(summary_id)->
 				quizResponseSummary = quizResponseSummaryCollection.get summary_id
@@ -159,15 +171,17 @@ define ['app'
 					if not _.isEmpty quizResponseSummary.get 'questions_order'
 
 						#reorder the questions as per the order that it was taken in
-						questionsCollection.each (e)-> e.unset 'order'
+						#questionsCollection.each (e)-> e.unset 'order'
+						questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+						App.execute "when:fetched", questionsCollection, =>
 
-						quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
-						reorderQuestions = []
+							# reorderQuestions = []
 
-						reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
+							# reorderQuestions.push(questionsCollection.get(m)) for m in quizModel.get('content_pieces')
 
-						questionsCollection.reset reorderQuestions
+							# questionsCollection.reset questionsCollection.models
 
 					@layout.$el.find '#quiz-details-region,#content-display-region'
 					.hide()

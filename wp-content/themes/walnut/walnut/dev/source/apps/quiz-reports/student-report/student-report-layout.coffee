@@ -14,7 +14,7 @@ define ['app'
                             </div>
                         {{/ownReport}}
                         {{^ownReport}}
-                            <button type="button" class="btn btn-white btn-cons m-t-10 goto-prev-page">
+                            <button type="button" class="btn btn-white btn-cons m-t-10 "  id="go-back-button">
                                 <h4 class="bold  text-info no-margin">
                                     <span class="fa fa-arrow-circle-left"></span>
                                     Back to List of Quizzes
@@ -40,6 +40,12 @@ define ['app'
             regions:
                 studentFilterRegion : '#students-filter-region'
                 quizListRegion    : '#quiz-list-region'
+
+            events:
+                'click #go-back-button': 'navigateToQuizReport'
+
+            navigateToQuizReport:->
+                App.navigate "quiz-report", true
 
 
             mixinTemplateHelpers:(data)->

@@ -40,6 +40,11 @@ define ['app'
 
                     data.hint = false if not quizModel.hasPermission 'allow_hint'
 
+                    if(@.model.get('comment') != '')
+                        data.comment = @.model.get 'comment'
+                    else
+                        data.comment = false
+
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-success', text : 'Correct', icon : 'fa-check'
                         when 'partially_correct'  then divClass : 'text-success', text : 'Partially Correct', icon : 'fa-check-square'

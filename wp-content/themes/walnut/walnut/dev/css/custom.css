@@ -491,6 +491,7 @@
   border: 2px solid #f3f3f3;
   padding: 7px;
   margin: 4px 0 11px;
+  font-family: "Qarmic Sans Free";
   -webkit-transition: all 0.3s ease-out;
   /* Chrome 1-25, Safari 3.2+ */
   -moz-transition: all 0.3s ease-out;
@@ -499,7 +500,6 @@
   /* Opera 10.50–12.00 */
   transition: all 0.3s ease-out;
   /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
-  font-family: "Qarmic Sans Free";
 }
 .element-wrapper .element-controls {
   position: relative;
@@ -3111,14 +3111,18 @@ select:before {
 .media_times > input[type="text"] {
   width: 100%;
 }
-
-.filters > .table-tools-actions > #s2id_divisions-filter{
-    width: 12%;
-  }
-
-a.browse-content-pieces-item{height:160px;}
-
-#textbooks.list.myClass .txtbook.noCursor {
-  cursor: auto;
+a.browse-content-pieces-item {
+  height: 160px;
 }
-/*# sourceMappingURL=custom.css.map */
+.db {
+  display: block;
+}
+.fosz14 {
+  font-size: 14px;
+}
+.quizActions #submit-question {
+  background: #fe7e65 !important;
+}
+.quizActions #submit-question:hover {
+  background: #FF8685 !important;
+}

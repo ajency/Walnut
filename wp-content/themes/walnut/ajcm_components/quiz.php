@@ -815,7 +815,7 @@ function get_quiz_summary_report_data($comm_data, $quiz_id, $student_id, $divisi
 
 
         $class_top_scor = $top_scorer_data[$keys]->marks_scored;
-        $class_top_scorer_name = $top_scorer_data[$keys]->display_name;
+        $class_top_scorer_name = $top_scorer_data[$keys]->firstname.' '.$top_scorer_data[$keys]->lastname;
         $class_top_scorer_id = $top_scorer_data[$keys]->student_id;
         $term_ids = $top_scorer_data[$keys]->term_ids;
 

@@ -26,6 +26,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       }
 
       TakeQuizController.prototype.initialize = function(opts) {
+        var abc, result;
+        abc = opts.quizModel;
+        if (abc.get('status') === 'completed' && abc.get('quiz_type') === 'class_test') {
+          result = abc.get('permissions');
+          result.display_answer = true;
+        }
         quizModel = opts.quizModel, quizResponseSummary = opts.quizResponseSummary, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, this.textbookNames = opts.textbookNames, this.display_mode = opts.display_mode, studentTrainingModule = opts.studentTrainingModule;
         this._startTakeQuiz();
         return App.vent.bind("closed:quiz", this._autosaveQuestionTime);
@@ -134,7 +140,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
-        var data, newResponseModel, timeTaken, totalTime;
+        var data, newResponseModel, single_status, timeTaken, totalTime;
+        if (answer.get('status') === 'wrong_answer' && answer.get('answer').length === 0) {
+          single_status = 'skipped';
+        } else {
+          single_status = answer.get('status');
+        }
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
         pausedQuestionTime = 0;
@@ -143,7 +154,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           'summary_id': quizResponseSummary.id,
           'content_piece_id': questionModel.id,
           'question_response': _.omit(answer.toJSON(), ['marks', 'status']),
-          'status': answer.get('status'),
+          'status': single_status,
           'marks_scored': answer.get('marks'),
           'time_taken': timeTaken
         };

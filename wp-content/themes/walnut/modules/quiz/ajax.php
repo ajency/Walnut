@@ -97,10 +97,10 @@ function fetch_quiz_response_summary(){
 
         if(isset($_GET['student_ids']))
             foreach($_GET['student_ids'] as $student)
-                $quiz_summary = array_merge($quiz_summary, get_quiz_summaries_for_user($student,$quiz_id));
+                $quiz_summary = array_merge($quiz_summary, get_quiz_summaries_for_student($student,$quiz_id));
         
         else
-            $quiz_summary = get_quiz_summaries_for_user($_GET['student_id'],$quiz_id);
+            $quiz_summary = get_quiz_summaries_for_student($_GET['student_id'],$quiz_id);
     }
 
     wp_send_json(array('code' => 'OK','data' => $quiz_summary));

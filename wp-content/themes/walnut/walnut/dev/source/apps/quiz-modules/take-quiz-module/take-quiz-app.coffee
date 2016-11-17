@@ -135,6 +135,11 @@ define ['app'
 				_submitQuestion:(answer)->
 					#save results here
 
+					if(answer.get('status') == 'wrong_answer' && answer.get('answer').length == 0)
+						single_status = 'skipped'
+					else
+						single_status = answer.get 'status'
+
 					totalTime =@timerObject.request "get:elapsed:time"
 					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
 					pausedQuestionTime =0 #reset to 0 once used
@@ -144,7 +149,7 @@ define ['app'
 						'summary_id'     : quizResponseSummary.id
 						'content_piece_id'  : questionModel.id
 						'question_response' : _.omit answer.toJSON(), ['marks','status']
-						'status'            : answer.get 'status'
+						'status'            : single_status
 						'marks_scored'      : answer.get 'marks'
 						'time_taken'        : timeTaken
 
