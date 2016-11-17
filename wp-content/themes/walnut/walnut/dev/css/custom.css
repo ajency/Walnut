@@ -2583,6 +2583,164 @@ ul.classes .classesWrap {
 #textbooks.list.myClass .chapStatus {
   width: 49%;
 }
+/* ---------------------------
+   ADMIN TABLE FIX FOR CONTENT PIECE -----------
+ ---------------------------
+*/
+#content-pieces-table {
+  table-layout: fixed;
+}
+#content-pieces-table tr th {
+  vertical-align: middle;
+  text-align: center;
+}
+#content-pieces-table .tablesorter-header-inner {
+  font-size: inherit;
+}
+#content-pieces-table td {
+  font-size: 0.6em;
+  word-wrap: break-word;
+  text-align: center;
+}
+#content-pieces-table td > span.label {
+  font-size: 0.9em;
+  padding: 7px;
+  min-width: inherit;
+}
+/* ---------------------------
+   ADMIN CONTENT PIECE AND QUIZ/LECTURE FIXES -----------
+ ---------------------------
+*/
+.admin-side {
+  display: block;
+}
+#question-display-region > div .container-grey,
+.quiz-info {
+  text-align: center;
+}
+#question-display-region > div #skip-question {
+  padding: 10px 18px;
+}
+/* ---------------------------
+   QUIZ SEARCH ALLIGNED  -----------
+ ---------------------------
+*/
+/*Date-Time picker fix */
+.contentSelect {
+  overflow: inherit !important;
+}
+.contentSelect .tab-content {
+  overflow: inherit;
+}
+.flexContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.flexContainer .flexChild {
+  margin: 0 5px;
+}
+.flexContainer .flexChild .input-append {
+  /*display: flex;*/
+}
+.flexContainer .flexChild .input-append > input[type="text"] {
+  width: 80%;
+}
+.flexContainer .flexChild .input-append .dropdown-menu {
+  top: 40px !important;
+  height: 260px;
+  text-align: center;
+}
+/* ---------------------------
+   QUIZ LIST TEXTBOOK SELECT  -----------
+ ---------------------------
+*/
+.table-tools-actions .select2-container.textbook-filter {
+  min-width: 160px;
+  width: inherit;
+}
+.table-tools-actions .select2-container.textbook-filter .select2-choices {
+  max-width: 520px;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.table-tools-actions .select2-container.textbook-filter .select2-search-choice {
+  display: inline-block;
+  float: none;
+  /*width: 123px;*/
+}
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field {
+  display: inline-block;
+  float: none;
+}
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field input[type="text"] {
+  width: 153px;
+  color: #000 !important;
+  font-weight: 400;
+  text-transform: capitalize;
+  margin-top: -3px;
+  padding-top: 10px !important;
+}
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field .select2-focused {
+  margin-top: -10px;
+}
+/* ---------------------------
+   BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
+ ---------------------------
+*/
+#dialog-region .bootstrap-datetimepicker-widget .table-condensed {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+#dialog-region .bootstrap-datetimepicker-widget {
+  cursor: pointer;
+}
+#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary {
+  color: #ffffff;
+  background-color: #259b24;
+  border-color: #259b24;
+}
+/*no result found*/
+.visible-msg {
+  opacity: 1;
+}
+.table-div {
+  display: table;
+}
+.table-cell-div,
+.table-cell-div2 {
+  display: table-cell;
+  vertical-align: middle;
+}
+.page-content {
+  min-height: auto;
+  overflow: initial;
+}
+.btn.view-report,
+.btn.schedule-quiz {
+  padding: 6px 8px;
+  display: block;
+  margin: auto;
+}
+.table .checkbox {
+  margin-left: 0;
+}
+.elem-50 input[type="text"],
+.elem-50 textarea {
+  max-width: 50%;
+  width: 50%;
+}
+.input-append.success .add-on {
+  background-color: #D1DADE;
+}
+.input-append.success .add-on .arrow {
+  color: #D1DADE;
+}
 body {
   background-color: #e5e9ec;
   overflow-y: scroll;
