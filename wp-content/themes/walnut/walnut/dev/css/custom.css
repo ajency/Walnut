@@ -3110,5 +3110,8 @@ a.browse-content-pieces-item {
   font-size: 14px;
 }
 .quizActions #submit-question {
-  background: #fe7e65;
+  background: #fe7e65 !important;
+}
+.quizActions #submit-question:hover {
+  background: #FF8685 !important;
 }
