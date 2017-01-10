@@ -69,7 +69,6 @@ define(['app', 'controllers/region-controller', 'apps/content-modules/modules-li
         } else if (this.groupType === 'student-training') {
           this.contentModulesCollection = App.request("get:student:training:modules", data);
         } else {
-          console.log(data);
           this.contentModulesCollection = App.request("get:quizes", data);
         }
         this.selectedFilterParamsObject = new Backbone.Wreqr.RequestResponse();

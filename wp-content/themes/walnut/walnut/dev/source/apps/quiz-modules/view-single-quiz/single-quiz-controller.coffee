@@ -48,7 +48,7 @@ define ['app'
 								error_header    : 'Unauthorized Quiz'
 								error_msg       : quizModel.get 'error_msg'
 
-							return false
+							#return false
 
 						if display_mode isnt 'quiz_report'
 							display_mode = if quizResponseSummary.get('status') is 'completed' 
