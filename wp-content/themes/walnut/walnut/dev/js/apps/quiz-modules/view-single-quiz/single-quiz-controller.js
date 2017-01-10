@@ -58,6 +58,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                   error_header: 'Unauthorized Quiz',
                   error_msg: quizModel.get('error_msg')
                 });
+                return false;
               }
               if (display_mode !== 'quiz_report') {
                 display_mode = quizResponseSummary.get('status') === 'completed' ? 'replay' : 'class_mode';
