@@ -52,7 +52,7 @@ define ['app'
 
 						if display_mode isnt 'quiz_report'
 							display_mode = if quizResponseSummary.get('status') is 'completed' 
-												'replay' 
+												'replay'
 											else 'class_mode'
 
 						textbook_termIDs = _.flatten quizModel.get 'term_ids'
