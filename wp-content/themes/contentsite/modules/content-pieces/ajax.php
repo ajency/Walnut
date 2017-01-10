@@ -103,25 +103,17 @@ function ajax_update_content_piece_status(){
         return new WP_Error('invalid_request_data', __('Invalid ID or status') );
 
 
-    foreach ($ids as $id){
-        if(!$id) continue;
-        $data= array('ID'=>$id,'post_status'=>$_POST['status']);
-        $content_id = wp_update_post($data);
-    }
+    // foreach ($ids as $id){
+    //     if(!$id) continue;
+    //     $data= array('ID'=>$id,'post_status'=>$_POST['status']);
+    //     $content_id = wp_update_post($data);
+    // }
 
     $in = implode(",", $ids);
 
     global $wpdb;
     $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['status']."' WHERE ID in(".$in.")");
-    /*foreach ($ids as $id){
-        if(!$id) continue;
-        if($_POST['status']=='archive' || $_POST['status']=='publish'){
-            $data= array('ID'=>$id,'post_status'=>$_POST['status']);
-            $content_id = wp_update_post($data);
-        }else if($_POST['status']=='delete'){
-            wp_delete_post($id);
-        }
-    }*/
+
 
 
     return wp_send_json(array('code' => 'OK'));

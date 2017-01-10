@@ -368,6 +368,7 @@ define ['app'
 						.html html					                		          
 
 			changeStatus:(e)=>
+				console.log 'change status'
 				if $(e.target).closest('.change-status').find('select').val() is 'move'
 					@moveContent()
 					return false

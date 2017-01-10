@@ -45,7 +45,8 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 			     "SELECT collection.id, collection.name as quiz_name, collection.term_ids, collection.duration, meta.meta_value as quiz_type 
 			      FROM wp_content_collection collection
 			      INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta.meta_key=%s
-			      WHERE term_ids like %s and type=%s and post_status=%s",
+			      WHERE term_ids like %s and type=%s and post_status=%s
+			      ORDER BY collection.last_modified_on desc",
 			      array('quiz_type','%"'.$texbook_id.'";%', 'quiz', 'publish'));
 
 	$result      = $wpdb->get_results($query);	
