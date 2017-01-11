@@ -52,6 +52,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           return function() {
             return App.execute("when:fetched", quizModel, function() {
               var textbook_termIDs;
+              console.log(quizModel);
               if (quizModel.get('code') === 'ERROR') {
                 App.execute("show:no:permissions:app", {
                   region: App.mainContentRegion,
@@ -69,7 +70,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               }
               if (!questionsCollection) {
-                questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+                if (quizModel.get('quiz_type') === 'practice') {
+                  questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
+                } else {
+                  questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+                }
                 App.execute("when:fetched", questionsCollection, function() {
                   _this._setMarks();
                   return _this._randomizeOrder();
@@ -198,7 +203,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         return fetchResponses.done((function(_this) {
           return function() {
             if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
-              questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+              questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
               App.execute("when:fetched", questionsCollection, function() {
                 return quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               });

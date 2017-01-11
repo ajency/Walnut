@@ -10,10 +10,9 @@ require_once 'functions.php';
 
 function ajax_fetch_single_quiz ()
 {
-    
+
     $id = $_GET['id'];
     $quiz_module = get_single_quiz_module ($id);
-
     if(!is_wp_error($quiz_module))
         wp_send_json (array('code' => 'OK', 'data' => $quiz_module));
     else
@@ -148,6 +147,7 @@ add_action('wp_ajax_read-quiz-question-response','fetch_quiz_question_response')
 function ajax_get_all_quiz_question_responses(){
     $summary_id = $_GET['summary_id'];
     $quiz_question_response = get_all_quiz_question_responses($summary_id);
+
     wp_send_json(array('code' => 'OK','data' => $quiz_question_response));
 }
 

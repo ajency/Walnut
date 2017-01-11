@@ -21,6 +21,7 @@ define ['app'
 			class View.TakeQuizController extends RegionController
 
 				initialize : (opts)->
+					console.log opts
 					abc = opts.quizModel
 					if abc.get('status') == 'completed' && abc.get('quiz_type') == 'class_test'
 						result = abc.get 'permissions'

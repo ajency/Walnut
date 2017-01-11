@@ -63,7 +63,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 				      array($row->id, $current_user->ID));
 
 		$result2      = $wpdb->get_row($query2);
-		//if($row->id == '747'){
+		//if($row->id == '747'){get-all-quiz-question-responses
 		//	file_put_contents("a4.txt", $query2);
 		//}
  	 
@@ -86,9 +86,21 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 		if($attempts>0){
 			$taken_on           =   date("d M Y", strtotime($attempts_result2->taken_on));
 			$qt = maybe_unserialize($attempts_result2->quiz_meta);
+
+			
 				
 			if($qt['marks_scored']){
-				$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
+				if(!isset($qt['questions_order']) || $qt['questions_order'] == 'N'){
+					$sql_question = $wpdb->prepare(
+									"SELECT meta_value
+									FROM wp_collection_meta
+									WHERE meta_key = 'quiz_meta' AND collection_id = ".$row->id
+									);
+					$quiz_meta      = $wpdb->get_row($sql_question);
+					$quiz_data = maybe_unserialize($quiz_meta->meta_value);
+					$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($quiz_data['marks']);
+				}else
+					$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
 			}
 			else{
 

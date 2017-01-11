@@ -20,7 +20,8 @@ define ['app'
 			#display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
 			display_mode = null
 
-			initialize: (opts) ->	
+			initialize: (opts) ->
+				#console.log opts	
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -41,6 +42,7 @@ define ['app'
 
 				fetchQuestionResponseCollection.done =>
 					App.execute "when:fetched", quizModel, =>
+						console.log quizModel
 
 						if quizModel.get('code') is 'ERROR'
 							App.execute "show:no:permissions:app",
@@ -66,7 +68,10 @@ define ['app'
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
 						if not questionsCollection
-							questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+							if quizModel.get('quiz_type') == 'practice'
+								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
+							else
+								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
 								@_setMarks()
@@ -173,7 +178,7 @@ define ['app'
 
 						#reorder the questions as per the order that it was taken in
 						#questionsCollection.each (e)-> e.unset 'order'
-						questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+						questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 						App.execute "when:fetched", questionsCollection, =>
 
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
