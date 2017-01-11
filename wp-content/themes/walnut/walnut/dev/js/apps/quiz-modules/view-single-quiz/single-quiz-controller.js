@@ -52,7 +52,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           return function() {
             return App.execute("when:fetched", quizModel, function() {
               var textbook_termIDs;
-              console.log(quizModel);
               if (quizModel.get('code') === 'ERROR') {
                 App.execute("show:no:permissions:app", {
                   region: App.mainContentRegion,
@@ -70,7 +69,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               }
               if (!questionsCollection) {
-                if (quizModel.get('quiz_type') === 'practice') {
+                if (quizModel.get('quiz_type') === 'practice' && quizResponseSummary.get('questions_order') !== void 0) {
                   questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
                 } else {
                   questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));

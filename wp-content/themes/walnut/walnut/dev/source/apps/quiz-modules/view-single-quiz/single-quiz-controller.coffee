@@ -42,7 +42,7 @@ define ['app'
 
 				fetchQuestionResponseCollection.done =>
 					App.execute "when:fetched", quizModel, =>
-						console.log quizModel
+						#console.log quizModel
 
 						if quizModel.get('code') is 'ERROR'
 							App.execute "show:no:permissions:app",
@@ -64,11 +64,12 @@ define ['app'
 						#the questions must be displayed in the previously taken order
 						#this order is saved on first time taking of quiz
 						#questions wont be randomized again
-						if not _.isEmpty quizResponseSummary.get 'questions_order'
+						
+						if not _.isEmpty quizResponseSummary.get('questions_order')
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
 						if not questionsCollection
-							if quizModel.get('quiz_type') == 'practice'
+							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
 								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 							else
 								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
