@@ -671,7 +671,6 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
             $term_id = $val;
         }
     }
-
 //    get id for all student type question
     $query = "select ID from {$wpdb->base_prefix}posts
             where ID in (select table2.post_id
@@ -681,9 +680,6 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
                         and table2.meta_key = 'textbook'
                         and table2.meta_value = ".$term_ids['textbook'].")
              and post_status = 'publish'";
-
-    //file_put_contents("a.txt", $query);
-
     $stud_quest_ids = $wpdb->get_col($query);
 
     $stud_quest_ids = __u::reject($stud_quest_ids,function($num){
@@ -702,8 +698,8 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
 
     $complete_ids = array();
     get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids);
+    //get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids);
+    //get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids);
     shuffle($complete_ids);
 
     return $complete_ids;
@@ -723,18 +719,13 @@ function get_id_from_level($ids, $count , $level,&$complete){
 
     $level_ids = $wpdb->get_col($wpdb->prepare($query,$level));
 
-    //$ids_flat = __u::flatten($level_ids, true);
-
     $data_ids = array_rand($level_ids,(int)$count);
 
     foreach ($data_ids as $key => $value) {
 
         $complete[]= $level_ids[$value];
     }
-
-    // foreach(array_rand($level_ids,(int)$count) as $val){
-    //     $complete[]=$val;
-    // }
+    file_put_contents("a1.txt", print_r($complete, true));
 }
 
 
