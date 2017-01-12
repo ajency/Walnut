@@ -725,7 +725,6 @@ function get_id_from_level($ids, $count , $level,&$complete){
 
         $complete[]= $level_ids[$value];
     }
-    file_put_contents("a1.txt", print_r($complete, true));
 }
 
 
