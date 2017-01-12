@@ -664,12 +664,26 @@ function get_quiz_status($quiz_id,$user_id){
 
 function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
     global $wpdb;
+
+    $term_id = '';
+    foreach($term_ids as $val){
+        if ($val){
+            $term_id = $val;
+        }
+    }
+
 //    get id for all student type question
     $query = "select ID from {$wpdb->base_prefix}posts
-            where ID in (select post_id from {$wpdb->base_prefix}postmeta
-                        where meta_key = 'content_type'
-                        and meta_value = 'student_question')
+            where ID in (select table2.post_id
+                        from {$wpdb->base_prefix}postmeta as table1, {$wpdb->base_prefix}postmeta as table2 
+                        where table1.meta_key = 'content_type'
+                        and table1.meta_value = 'student_question'
+                        and table2.meta_key = 'textbook'
+                        and table2.meta_value = ".$term_ids['textbook'].")
              and post_status = 'publish'";
+
+    //file_put_contents("a.txt", $query);
+
     $stud_quest_ids = $wpdb->get_col($query);
 
     $stud_quest_ids = __u::reject($stud_quest_ids,function($num){
@@ -677,12 +691,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
     });
 
     $stud_quest_ids_string = implode(',',$stud_quest_ids);
-    $term_id = '';
-    foreach($term_ids as $val){
-        if ($val){
-            $term_id = $val;
-        }
-    }
+    
     $term_id_query = '%"'.$term_id.'"%';
     //    get id for all student type question with term id
     $query = "select post_id from {$wpdb->base_prefix}postmeta
@@ -705,17 +714,27 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
 //return it in $complete
 function get_id_from_level($ids, $count , $level,&$complete){
     global $wpdb;
+    $data_ids = array();
     $ids_string = implode(',',$ids);
     $query = "select post_id from {$wpdb->base_prefix}postmeta
               where post_id in ({$ids_string})
               and meta_key = 'difficulty_level'
-              and meta_value = %s
-              order by RAND()
-              limit %d";
-    $level_ids = $wpdb->get_col($wpdb->prepare($query,$level,(int)$count));
-    foreach($level_ids as $val){
-        $complete[]=$val;
+              and meta_value = %s";
+
+    $level_ids = $wpdb->get_col($wpdb->prepare($query,$level));
+
+    //$ids_flat = __u::flatten($level_ids, true);
+
+    $data_ids = array_rand($level_ids,(int)$count);
+
+    foreach ($data_ids as $key => $value) {
+
+        $complete[]= $level_ids[$value];
     }
+
+    // foreach(array_rand($level_ids,(int)$count) as $val){
+    //     $complete[]=$val;
+    // }
 }
 
 
