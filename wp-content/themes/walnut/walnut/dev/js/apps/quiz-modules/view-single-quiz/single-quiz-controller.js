@@ -36,6 +36,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype.initialize = function(opts) {
         var d_mode, fetchQuestionResponseCollection, quiz_id;
+        console.log(opts);
         $(window).off('beforeunload');
         quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, studentTrainingModule = opts.studentTrainingModule;
         quizResponseSummary = opts.quizResponseSummary, this.quizResponseSummaryCollection = opts.quizResponseSummaryCollection, display_mode = opts.display_mode, this.student = opts.student, d_mode = opts.d_mode;
@@ -309,13 +310,21 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._showAttemptsRegion = function() {
-        if (quizModel.get('quiz_type') === 'practice' && quizModel.get('attempts') > 0) {
-          return App.execute("show:quiz:attempts:app", {
-            region: this.layout.attemptsRegion,
-            model: quizModel,
-            quizResponseSummaryCollection: quizResponseSummaryCollection
-          });
-        }
+        var loggedInUserData;
+        loggedInUserData = App.request("get:user:model");
+        return App.execute("when:fetched", loggedInUserData, (function(_this) {
+          return function() {
+            var role;
+            role = loggedInUserData.get('roles');
+            if (quizModel.get('quiz_type') === 'practice' && (quizModel.get('attempts') > 0 || role[0] === 'school-admin')) {
+              return App.execute("show:quiz:attempts:app", {
+                region: _this.layout.attemptsRegion,
+                model: quizModel,
+                quizResponseSummaryCollection: quizResponseSummaryCollection
+              });
+            }
+          };
+        })(this));
       };
 
       Controller.prototype._getQuizViewLayout = function() {

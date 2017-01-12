@@ -21,7 +21,7 @@ define ['app'
 			display_mode = null
 
 			initialize: (opts) ->
-				#console.log opts	
+				console.log opts	
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -288,12 +288,15 @@ define ['app'
 
 
 			_showAttemptsRegion: =>
-				if quizModel.get('quiz_type') is 'practice' and quizModel.get('attempts') >0
+				loggedInUserData = App.request "get:user:model"
+				App.execute "when:fetched", loggedInUserData, =>
+					role = loggedInUserData.get 'roles'
+					if quizModel.get('quiz_type') is 'practice' and (quizModel.get('attempts') > 0 || role[0] == 'school-admin')
 
-					App.execute "show:quiz:attempts:app",
-						region                  : @layout.attemptsRegion
-						model                   : quizModel
-						quizResponseSummaryCollection  : quizResponseSummaryCollection
+						App.execute "show:quiz:attempts:app",
+							region                  : @layout.attemptsRegion
+							model                   : quizModel
+							quizResponseSummaryCollection  : quizResponseSummaryCollection
 
 			_getQuizViewLayout: ->
 				new ViewQuiz.LayoutView.QuizViewLayout
