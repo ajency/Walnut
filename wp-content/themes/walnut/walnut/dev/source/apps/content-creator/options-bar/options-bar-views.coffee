@@ -8,10 +8,16 @@ define ['app',
 
 			events:
 				'change #subs' : (e)->
-					@trigger "fetch:chapters", $(e.target).val()
+					if localStorage.textbook_id != $(e.target).val()
+						@trigger "fetch:chapters", $(e.target).val()
+					else
+						localStorage.textbook_id = ''
 
 				'change #chaps' : (e)->
-					@trigger "fetch:sections", $(e.target).val()
+					if localStorage.chapter_id != $(e.target).val()
+						@trigger "fetch:sections", $(e.target).val()
+					else
+						localStorage.chapter_id = ''
 
 				'change #secs' : (e)->
 					@trigger "fetch:subsections", $(e.target).val()
