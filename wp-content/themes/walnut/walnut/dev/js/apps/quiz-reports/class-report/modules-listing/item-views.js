@@ -58,7 +58,8 @@ define(['app', 'bootbox'], function(App, bootbox) {
         'click .schedule-quiz': function() {
           return this.trigger('schedule:quiz', this.model.id);
         },
-        'click .clear-schedule': 'clearSchedule'
+        'click .clear-schedule': 'clearSchedule',
+        'click .xl-report': 'generateXlReport'
       };
 
       ListItemView.prototype.modelEvents = {
@@ -70,6 +71,26 @@ define(['app', 'bootbox'], function(App, bootbox) {
           this.$el.find('.schedule_dates').show();
           return this.$el.find('#schedule-button').hide();
         }
+      };
+
+      ListItemView.prototype.generateXlReport = function() {
+        var data, options;
+        console.log(this.model.id);
+        data = [];
+        data.action = 'generate-xl-report';
+        data.json = this.model.id;
+        console.log(AJAXURL);
+        options = {
+          type: 'POST',
+          url: AJAXURL,
+          data: data
+        };
+        console.log(options);
+        return $.ajax(options).done(function(response) {
+          return console.log(response);
+        }).fail(function(resp) {
+          return console.log('error');
+        });
       };
 
       ListItemView.prototype.changeScheduleDates = function() {

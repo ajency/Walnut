@@ -14,7 +14,7 @@
         <i class="fa fa-backward"></i> Previous 
     </button>
     {{#allow_submit_answer}}
-   <button type="button" id="submit-question" class="btn btn-success pull-right">
+   <button type="button" id="submit-question" class="btn btn-success pull-right submit-single">
         Submit <i class="fa fa-forward"></i> 
     </button>
     {{/allow_submit_answer}}
@@ -45,7 +45,7 @@
 <!--New design code-->
 
 
-<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions new-design"> 
+<div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions new-design text-right"> 
     <!-- <span class="pull-left small" id="first_question"></span> -->
   
         {{#show_skip}}
@@ -67,13 +67,13 @@
     
 
     {{#allow_submit_answer}}   
-   <button type="button" id="submit-question" class="btn btn-success">
+   <button type="button" id="submit-question" class="btn btn-success submit-single">
         Submit <i class="fa fa-forward"></i> 
     </button>
     {{/allow_submit_answer}}
         <div class="submit2">
         {{#allow_submit_answer}}   
-           <button type="button" id="submit-question" class="btn btn-success">
+            <button type="button" id="submit-question" class="btn btn-success submit-single">
                 Submit <i class="fa fa-forward"></i> 
             </button>
         {{/allow_submit_answer}}        

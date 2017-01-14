@@ -52,7 +52,7 @@ define ['app'
 
 						@contentModulesCollection = App.request "get:student:training:modules", data
 					else
-						console.log data
+						#console.log data
 						@contentModulesCollection = App.request "get:quizes", data
 
 					#wreqr object to get the selected filter parameters so that search can be done using them

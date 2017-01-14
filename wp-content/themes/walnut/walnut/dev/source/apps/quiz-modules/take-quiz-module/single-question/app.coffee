@@ -66,6 +66,7 @@ define ['app'
 							@region.trigger "submit:question", answer
 
 						@listenTo layout, "validate:answer",->
+                        	
 							answerData= @answerWreqrObject.request "get:question:answer"
 
 							answer = answerData.answerModel
@@ -78,7 +79,9 @@ define ['app'
 										@_triggerSubmit() if result
 
 								else
+
 									@_triggerSubmit()
+
 
 							else 
 								@_triggerSubmit()

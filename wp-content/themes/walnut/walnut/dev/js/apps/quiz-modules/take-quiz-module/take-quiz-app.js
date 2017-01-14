@@ -27,6 +27,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         var abc, result;
+        console.log(opts);
         abc = opts.quizModel;
         if (abc.get('status') === 'completed' && abc.get('quiz_type') === 'class_test') {
           result = abc.get('permissions');

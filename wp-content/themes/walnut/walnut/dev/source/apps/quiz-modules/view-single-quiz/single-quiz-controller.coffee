@@ -20,7 +20,8 @@ define ['app'
 			#display_mode possible values are: 'class_mode', 'replay', 'quiz_report'
 			display_mode = null
 
-			initialize: (opts) ->	
+			initialize: (opts) ->
+				console.log opts	
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -41,6 +42,7 @@ define ['app'
 
 				fetchQuestionResponseCollection.done =>
 					App.execute "when:fetched", quizModel, =>
+						#console.log quizModel
 
 						if quizModel.get('code') is 'ERROR'
 							App.execute "show:no:permissions:app",
@@ -52,7 +54,7 @@ define ['app'
 
 						if display_mode isnt 'quiz_report'
 							display_mode = if quizResponseSummary.get('status') is 'completed' 
-												'replay' 
+												'replay'
 											else 'class_mode'
 
 						textbook_termIDs = _.flatten quizModel.get 'term_ids'
@@ -62,11 +64,15 @@ define ['app'
 						#the questions must be displayed in the previously taken order
 						#this order is saved on first time taking of quiz
 						#questions wont be randomized again
-						if not _.isEmpty quizResponseSummary.get 'questions_order'
+						
+						if not _.isEmpty quizResponseSummary.get('questions_order')
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
 						if not questionsCollection
-							questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
+								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
+							else
+								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
 								@_setMarks()
@@ -173,7 +179,7 @@ define ['app'
 
 						#reorder the questions as per the order that it was taken in
 						#questionsCollection.each (e)-> e.unset 'order'
-						questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+						questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 						App.execute "when:fetched", questionsCollection, =>
 
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
@@ -282,12 +288,15 @@ define ['app'
 
 
 			_showAttemptsRegion: =>
-				if quizModel.get('quiz_type') is 'practice' and quizModel.get('attempts') >0
+				loggedInUserData = App.request "get:user:model"
+				App.execute "when:fetched", loggedInUserData, =>
+					role = loggedInUserData.get 'roles'
+					if quizModel.get('quiz_type') is 'practice' and (quizModel.get('attempts') > 0 || role[0] == 'school-admin')
 
-					App.execute "show:quiz:attempts:app",
-						region                  : @layout.attemptsRegion
-						model                   : quizModel
-						quizResponseSummaryCollection  : quizResponseSummaryCollection
+						App.execute "show:quiz:attempts:app",
+							region                  : @layout.attemptsRegion
+							model                   : quizModel
+							quizResponseSummaryCollection  : quizResponseSummaryCollection
 
 			_getQuizViewLayout: ->
 				new ViewQuiz.LayoutView.QuizViewLayout

@@ -51,8 +51,10 @@ define ['app'
 
                 if term_ids
                     textbook_id = term_ids['textbook']
+                    localStorage.textbook_id = textbook_id
 
                     chapter_id = term_ids['chapter'] if term_ids['chapter']?
+                    localStorage.chapter_id = chapter_id
 
                     #fetch chapters based on the current content piece's textbook
                     @_fetchChapters(textbook_id, chapter_id) if textbook_id?
@@ -64,6 +66,7 @@ define ['app'
 
                 ## listening to change in textbook to fetch new list of chapters
                 # and sections
+
                 @listenTo @view, "fetch:chapters", @_fetchChapters
 
                 @listenTo @view, "fetch:sections", @_fetchSections

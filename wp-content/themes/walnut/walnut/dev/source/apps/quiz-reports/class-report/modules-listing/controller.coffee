@@ -48,6 +48,8 @@ define ['app'
 
                         @listenTo @view, "summary:communication", (data)=> @region.trigger "summary:communication", data
 
+                        #@listenTo @view, 'itemview:generate:xl:report', (id)=>@region.trigger "generate:xl", id
+
 
             _getAllTermIDs:=>
                 _.chain @contentModulesCollection.pluck 'term_ids'

@@ -433,6 +433,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.changeStatus = function(e) {
         var data, msg;
+        console.log('change status');
         if ($(e.target).closest('.change-status').find('select').val() === 'move') {
           this.moveContent();
           return false;

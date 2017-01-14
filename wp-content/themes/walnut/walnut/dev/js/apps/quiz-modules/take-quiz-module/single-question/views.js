@@ -9,6 +9,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
 
       function SingleQuestionLayout() {
         this.mixinTemplateHelpers = bind(this.mixinTemplateHelpers, this);
+        this.submitQuest = bind(this.submitQuest, this);
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
@@ -19,9 +20,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.events = {
-        'click #submit-question': function() {
-          return this.trigger("validate:answer");
-        },
+        'click #submit-question': 'submitQuest',
         'click #previous-question': function() {
           return this.trigger("goto:previous:question");
         },
@@ -35,6 +34,11 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         'click #next-question': function() {
           return this.trigger("goto:next:question");
         }
+      };
+
+      SingleQuestionLayout.prototype.submitQuest = function() {
+        this.$el.find('.submit-single').attr('disabled', 'disabled');
+        return this.trigger("validate:answer");
       };
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
