@@ -169,7 +169,6 @@ define ['app'
                     quizModel   : quizModel
 
             _showSelectRecipientsApp:(communicationModel)->
-                console.log communicationModel
                 App.execute "show:quiz:select:recipients:popup",
                     region               : App.dialogRegion
                     communicationModel   : communicationModel
