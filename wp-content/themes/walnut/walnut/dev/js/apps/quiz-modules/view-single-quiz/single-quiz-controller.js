@@ -67,7 +67,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               }
               if (!questionsCollection) {
-                questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+                if (quizModel.get('quiz_type') === 'practice' && quizResponseSummary.get('questions_order') !== void 0) {
+                  questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
+                } else {
+                  questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+                }
                 App.execute("when:fetched", questionsCollection, function() {
                   _this._setMarks();
                   return _this._randomizeOrder();
@@ -194,7 +198,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         return fetchResponses.done((function(_this) {
           return function() {
             if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
-              questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
+              questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
               App.execute("when:fetched", questionsCollection, function() {
                 return quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               });
@@ -301,13 +305,21 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._showAttemptsRegion = function() {
-        if (quizModel.get('quiz_type') === 'practice' && quizModel.get('attempts') > 0) {
-          return App.execute("show:quiz:attempts:app", {
-            region: this.layout.attemptsRegion,
-            model: quizModel,
-            quizResponseSummaryCollection: quizResponseSummaryCollection
-          });
-        }
+        var loggedInUserData;
+        loggedInUserData = App.request("get:user:model");
+        return App.execute("when:fetched", loggedInUserData, (function(_this) {
+          return function() {
+            var role;
+            role = loggedInUserData.get('roles');
+            if (quizModel.get('quiz_type') === 'practice' && (quizModel.get('attempts') > 0 || role[0] === 'school-admin')) {
+              return App.execute("show:quiz:attempts:app", {
+                region: _this.layout.attemptsRegion,
+                model: quizModel,
+                quizResponseSummaryCollection: quizResponseSummaryCollection
+              });
+            }
+          };
+        })(this));
       };
 
       Controller.prototype._getQuizViewLayout = function() {

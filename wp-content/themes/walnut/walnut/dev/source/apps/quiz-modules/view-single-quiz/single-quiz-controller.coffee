@@ -66,7 +66,10 @@ define ['app'
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
 						if not questionsCollection
-							questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
+								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
+							else
+								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
 								@_setMarks()
@@ -172,7 +175,7 @@ define ['app'
 
 						#reorder the questions as per the order that it was taken in
 						#questionsCollection.each (e)-> e.unset 'order'
-						questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+						questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 						App.execute "when:fetched", questionsCollection, =>
 
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
@@ -281,12 +284,15 @@ define ['app'
 
 
 			_showAttemptsRegion: =>
-				if quizModel.get('quiz_type') is 'practice' and quizModel.get('attempts') >0
+				loggedInUserData = App.request "get:user:model"
+				App.execute "when:fetched", loggedInUserData, =>
+					role = loggedInUserData.get 'roles'
+					if quizModel.get('quiz_type') is 'practice' and (quizModel.get('attempts') > 0 || role[0] == 'school-admin')
 
-					App.execute "show:quiz:attempts:app",
-						region                  : @layout.attemptsRegion
-						model                   : quizModel
-						quizResponseSummaryCollection  : quizResponseSummaryCollection
+						App.execute "show:quiz:attempts:app",
+							region                  : @layout.attemptsRegion
+							model                   : quizModel
+							quizResponseSummaryCollection  : quizResponseSummaryCollection
 
 			_getQuizViewLayout: ->
 				new ViewQuiz.LayoutView.QuizViewLayout
