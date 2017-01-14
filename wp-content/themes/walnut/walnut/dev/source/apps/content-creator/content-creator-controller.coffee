@@ -193,3 +193,4 @@ define ['app'
 							App.navigate "edit-content/#{model.id}", true
 						error :(resp)->
 							console.log resp
+							console.log resp

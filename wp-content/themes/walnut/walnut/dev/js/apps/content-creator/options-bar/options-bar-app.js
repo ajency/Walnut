@@ -67,9 +67,11 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator
         term_ids = this.contentPieceModel.get('term_ids');
         if (term_ids) {
           textbook_id = term_ids['textbook'];
+          localStorage.textbook_id = textbook_id;
           if (term_ids['chapter'] != null) {
             chapter_id = term_ids['chapter'];
           }
+          localStorage.chapter_id = chapter_id;
           if (textbook_id != null) {
             this._fetchChapters(textbook_id, chapter_id);
           }

@@ -205,6 +205,7 @@ define(['app', 'controllers/region-controller', 'apps/content-creator/element-bo
                 return App.navigate("edit-content/" + model.id, true);
               },
               error: function(resp) {
+                console.log(resp);
                 return console.log(resp);
               }
             });

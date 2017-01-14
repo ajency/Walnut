@@ -169,7 +169,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
       };
 
       Controller.prototype._showSelectRecipientsApp = function(communicationModel) {
-        console.log(communicationModel);
         return App.execute("show:quiz:select:recipients:popup", {
           region: App.dialogRegion,
           communicationModel: communicationModel
