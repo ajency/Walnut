@@ -75,6 +75,7 @@ define ['app','bootbox'], (App,bootbox)->
                 'click .view-report'    :-> @trigger 'view:quiz:report', @model.id
                 'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model.id
                 'click .clear-schedule' : 'clearSchedule'
+                'click .xl-report'      : 'generateXlReport'
 
             modelEvents:
                 'change:schedule'  : 'changeScheduleDates'
@@ -85,6 +86,36 @@ define ['app','bootbox'], (App,bootbox)->
                     .show()
                     @$el.find '#schedule-button'
                     .hide()
+
+            generateXlReport:->
+                console.log @model.id
+                data = [];
+                data.action = 'generate-xl-report'
+                data.json = @model.id
+
+                console.log AJAXURL
+
+                options =
+                    type : 'POST'
+                    url : AJAXURL
+                    data : data
+                    
+                console.log options
+
+                $.ajax(options).done (response)->
+                        console.log response
+                        # contentPieceModel.set 'ID' : response.ID
+
+                        # $ ".page-title"
+                        # .before '<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>'
+                        
+                        # setTimeout -> 
+                        #     $('#saved-successfully').remove()
+                        # , 3000
+
+                    .fail (resp)->
+                            console.log 'error'
+
 
             changeScheduleDates:->
 
