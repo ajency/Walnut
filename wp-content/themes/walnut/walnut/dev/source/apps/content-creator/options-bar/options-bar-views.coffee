@@ -12,6 +12,7 @@ define ['app',
 						@trigger "fetch:chapters", $(e.target).val()
 					else
 						localStorage.textbook_id = ''
+						
 
 				'change #chaps' : (e)->
 					if localStorage.chapter_id != $(e.target).val()
