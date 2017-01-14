@@ -8,6 +8,10 @@
 
 require_once 'functions.php';
 
+require_once get_theme_root().'/contentsite/modules/content-pieces/classes/PHPExcel.php';
+
+//file_put_contents("c.txt", get_theme_root().'/contentsite/modules/content-pieces/classes/PHPExcel.php');
+
 function ajax_fetch_single_quiz ()
 {
 
@@ -213,8 +217,31 @@ add_action('wp_ajax_add-textbook', 'wp_ajax_add_textbook');
 
 function generate_xls(){
     $data = $_GET['data'];
-
-    wp_send_json(array('code' => 'OK','data' => $data['id']));
+    if(isset($_GET['data'])){
+        date_default_timezone_set('Asia/Kolkata');
+        require_once 'ExcelGenerate.php';
+        //create object of class ExcelGenerate
+        $id = $data['id'];
+        $xclObj = new ExportExcel();
+        $excel = $xclObj->excel($id);
+    }
+        
 }
 
-add_action('wp_ajax_generate-xl-report', 'generate_xls');
+add_action('init','generate_xls');
+
+function ajax_generate_excel(){
+    file_put_contents('g.txt', 'data');
+    date_default_timezone_set('Asia/Kolkata');
+    require_once 'ExcelGenerate.php';
+    //create object of class ExcelGenerate
+    $data = $_POST['data'];
+    $xclObj = new ExportExcel();
+    $excel = $xclObj->excel($data);
+    //wp_send_json(array('name'=>$excel));
+
+    wp_send_json(array('code' => 'OK','data' => $data['id']));
+
+}
+
+add_action('wp_ajax_generate-xl-report', 'ajax_generate_excel');

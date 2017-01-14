@@ -1774,3 +1774,8 @@ function write_quiz_response_summary($args){
     return $summary_id;
 
 }
+
+function get_excel_quiz_report_data($quiz_id){
+
+    
+}
