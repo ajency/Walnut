@@ -37,7 +37,7 @@ define ['app','bootbox'], (App,bootbox)->
                                 {{/class_test}}
                             </td>
                         {{/can_schedule}}
-                        <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button></td>'
+                        <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report">xl</button></td>'
 
             mixinTemplateHelpers :(data) ->
                 textbooks = Marionette.getOption @, 'textbookNamesCollection'
@@ -88,19 +88,9 @@ define ['app','bootbox'], (App,bootbox)->
                     .hide()
 
             generateXlReport:->
-                console.log @model.id
-                data = [];
-                data.action = 'generate-xl-report'
-                data.json = @model.id
-
-                console.log AJAXURL
-
                 options =
-                    type : 'POST'
-                    url : AJAXURL
-                    data : data
-                    
-                console.log options
+                    type : 'GET'
+                    url : AJAXURL+ '?action=generate-xl-report&data='+@model.id
 
                 $.ajax(options).done (response)->
                         console.log response

@@ -14,7 +14,7 @@ define(['app', 'bootbox'], function(App, bootbox) {
 
       ListItemView.prototype.className = 'gradeX odd';
 
-      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> {{#can_schedule}} <td style="padding: 0 !important; vertical-align: middle;"> {{#class_test}} <div class="schedule_dates none"> From: <span id="schedule-from-date"> {{scheduleFrom}} </span> <br> To: <span id="schedule-to-date"> {{scheduleTo}} </span><br> <span class="schedule-quiz">change</a></span> | <span class="clear-schedule">clear</a> </div> <button id="schedule-button" type="button" class="btn btn-white btn-small schedule-quiz"> <i class="fa fa-calendar"></i> Schedule </button> {{/class_test}} </td> {{/can_schedule}} <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button></td>';
+      ListItemView.prototype.template = '<td class="v-align-middle"><div class="checkbox check-default"> <input class="tab_checkbox" type="checkbox" value="{{id}}" id="checkbox{{id}}"> <label for="checkbox{{id}}"></label> </div> </td> <td>{{name}}</td> <td>{{&textbookName}}</td> <td>{{&chapterName}}</td> <td>{{duration}} mins</td> <td>{{quiz_type}}</td> <td>{{taken_by}}</td> {{#can_schedule}} <td style="padding: 0 !important; vertical-align: middle;"> {{#class_test}} <div class="schedule_dates none"> From: <span id="schedule-from-date"> {{scheduleFrom}} </span> <br> To: <span id="schedule-to-date"> {{scheduleTo}} </span><br> <span class="schedule-quiz">change</a></span> | <span class="clear-schedule">clear</a> </div> <button id="schedule-button" type="button" class="btn btn-white btn-small schedule-quiz"> <i class="fa fa-calendar"></i> Schedule </button> {{/class_test}} </td> {{/can_schedule}} <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report">xl</button></td>';
 
       ListItemView.prototype.mixinTemplateHelpers = function(data) {
         var schedule, term_ids, textbooks;
@@ -74,18 +74,11 @@ define(['app', 'bootbox'], function(App, bootbox) {
       };
 
       ListItemView.prototype.generateXlReport = function() {
-        var data, options;
-        console.log(this.model.id);
-        data = [];
-        data.action = 'generate-xl-report';
-        data.json = this.model.id;
-        console.log(AJAXURL);
+        var options;
         options = {
-          type: 'POST',
-          url: AJAXURL,
-          data: data
+          type: 'GET',
+          url: AJAXURL + '?action=generate-xl-report&data=' + this.model.id
         };
-        console.log(options);
         return $.ajax(options).done(function(response) {
           return console.log(response);
         }).fail(function(resp) {

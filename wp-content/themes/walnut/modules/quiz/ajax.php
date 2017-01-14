@@ -209,3 +209,12 @@ function wp_ajax_add_textbook(){
 }
 
 add_action('wp_ajax_add-textbook', 'wp_ajax_add_textbook');
+
+
+function generate_xls(){
+    $data = $_GET['data'];
+
+    wp_send_json(array('code' => 'OK','data' => $data['id']));
+}
+
+add_action('wp_ajax_generate-xl-report', 'generate_xls');
