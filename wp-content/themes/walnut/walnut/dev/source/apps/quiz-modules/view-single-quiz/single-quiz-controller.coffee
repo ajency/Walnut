@@ -69,10 +69,10 @@ define ['app'
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
 
 						if not questionsCollection
-							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
-								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
-							else
-								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
+							# if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
+							# 	questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
+							# else
+							questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
 								@_setMarks()
