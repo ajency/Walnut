@@ -683,7 +683,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
                     array($quiz_id)
     );
 
-    file_put_contents("b0.txt", $prev_summary_query);
+    #file_put_contents("b0.txt", $prev_summary_query);
     $prev_summary_ids = $wpdb->get_col($prev_summary_query);
 
     //file_put_contents("b.txt", print_r($prev_summary_ids, true));
