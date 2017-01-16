@@ -122,7 +122,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
             elseif ($content['type'] == 'content_set'){
                 $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id);
+                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id,$user_id);
                 foreach($set_content_ids as $id){
                     $content_ids[] = $id;
                 }
