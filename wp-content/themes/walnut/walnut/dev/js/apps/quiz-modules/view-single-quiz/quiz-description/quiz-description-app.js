@@ -127,7 +127,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         } else {
           if (!data.status === 'completed' || App.request("current:user:can", "view_all_quizzes")) {
             if (data.quiz_type === 'class_test' && !IS_STANDALONE_SITE) {
-              console.log('abc');
+              console.log('');
             }
           }
         }
