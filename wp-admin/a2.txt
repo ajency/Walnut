@@ -1,0 +1,8 @@
+select ID from wp_posts
+            where ID in (select table2.post_id
+                        from wp_postmeta as table1, wp_postmeta as table2 
+                        where table1.meta_key = 'content_type'
+                        and table1.meta_value = 'student_question'
+                        and table2.meta_key = 'textbook'
+                        and table2.meta_value = 543)
+             and post_status = 'publish'
