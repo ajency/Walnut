@@ -771,6 +771,7 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
 
 }
 
+
 function get_random_values($level_ids, $count, $prev_id_array){
     $data_ids = array();
 
@@ -791,7 +792,7 @@ function get_random_values($level_ids, $count, $prev_id_array){
     file_put_contents("a4.txt", print_r($new_ids, true));
     file_put_contents("a5.txt", print_r(__u::flatten($new), true));
 
-
+    $file = fopen("aa.txt", "w");
     foreach ($data_ids as $key => $value) {   
 
     $new_ids = array_diff($level_ids, __u::flatten($new_prev));
@@ -814,11 +815,13 @@ function get_random_values($level_ids, $count, $prev_id_array){
         $complete[]= $level_ids[$value];
     }
     }
+    fclose($file);
     
             
 
     return $complete;
 }
+
 
 function update_quiz_content_layout($data= array()){
     global $wpdb;
