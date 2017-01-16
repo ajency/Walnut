@@ -122,7 +122,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
 
             elseif ($content['type'] == 'content_set'){
                 $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id);
+                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids);
                 foreach($set_content_ids as $id){
                     $content_ids[] = $id;
                 }
@@ -672,21 +672,21 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
         }
     }
 
-    //fetch previous quiz ids with level
-    $prev_summary_query = $wpdb->prepare("
-                    SELECT content_piece_id
-                    FROM {$wpdb->prefix}quiz_question_response
-                    WHERE summary_id = (SELECT summary_id
-                    FROM {$wpdb->prefix}quiz_response_summary
-                    WHERE collection_id =%d
-                    ORDER BY taken_on desc LIMIT 1)",
-                    array($quiz_id)
-    );
+    // //fetch previous quiz ids with level
+    // $prev_summary_query = $wpdb->prepare("
+    //                 SELECT content_piece_id
+    //                 FROM {$wpdb->prefix}quiz_question_response
+    //                 WHERE summary_id = (SELECT summary_id
+    //                 FROM {$wpdb->prefix}quiz_response_summary
+    //                 WHERE collection_id =%d
+    //                 ORDER BY taken_on desc LIMIT 1)",
+    //                 array($quiz_id)
+    // );
 
-    #file_put_contents("a.txt", $prev_summary_query);
-    $prev_summary_ids = $wpdb->get_col($prev_summary_query);
+    // #file_put_contents("a.txt", $prev_summary_query);
+    // $prev_summary_ids = $wpdb->get_col($prev_summary_query);
 
-    #file_put_contents("a1.txt", print_r($prev_summary_ids, true));
+    // #file_put_contents("a1.txt", print_r($prev_summary_ids, true));
 
 //    get id for all student type question
     $query1 = "select ID from {$wpdb->base_prefix}posts
@@ -698,7 +698,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
                         and table2.meta_value = ".$term_ids['textbook'].")
              and post_status = 'publish'";
 
-    #file_put_contents("a2.txt", $query1);
+    file_put_contents("a2.txt", $query1);
 
     $stud_quest_ids = $wpdb->get_col($query1);
 
@@ -716,15 +716,15 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
               and meta_value like %s";
     $quest_ids_for_terms_id =  $wpdb->get_col($wpdb->prepare($query,$term_id_query));
 
-    #file_put_contents("a3.txt", print_r($quest_ids_for_terms_id, true));
+    file_put_contents("a3.txt", print_r($quest_ids_for_terms_id, true));
 
     $complete_ids = array();
-    get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summary_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summary_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summary_ids);
+    get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids);
+    //get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summary_ids);
+    //get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summary_ids);
     shuffle($complete_ids);
 
-    #file_put_contents("a9.txt", print_r($complete_ids, true));
+    file_put_contents("a9.txt", print_r($complete_ids, true));
 
     return $complete_ids;
 
@@ -732,7 +732,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
 
 //get ids for each level accoring to the number specified for that level
 //return it in $complete
-function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
+function get_id_from_level($ids, $count , $level,&$complete,){
     global $wpdb;
     $data_idss = array();
     $ids_string = implode(',',$ids);
@@ -747,13 +747,9 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
 
     #file_put_contents("a5.txt", print_r($level_ids, true));
 
-    if(count($level_ids) > (2*(int)$count))
-        $complete = get_random_values($level_ids, $count, $prev_ids);
-    else{
-        $data_idss = array_rand($level_ids,(int)$count);
-        foreach ($data_idss as $key => $value) {
-            $complete[]= $level_ids[$value];
-        }
+    $data_ids = array_rand($level_ids,(int)$count);
+    foreach ($data_ids as $key => $value) {
+        $complete[]= $level_ids[$value];
     }
 
 
