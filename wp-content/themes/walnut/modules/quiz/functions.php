@@ -662,7 +662,7 @@ function get_quiz_status($quiz_id,$user_id){
 
 }
 
-function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$quiz_id){
+function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids){
     global $wpdb;
 
     $term_id = '';
@@ -724,7 +724,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     //get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summary_ids);
     shuffle($complete_ids);
 
-    file_put_contents("a9.txt", print_r($complete_ids, true));
+    #file_put_contents("a9.txt", print_r($complete_ids, true));
 
     return $complete_ids;
 
@@ -732,7 +732,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
 
 //get ids for each level accoring to the number specified for that level
 //return it in $complete
-function get_id_from_level($ids, $count , $level,&$complete,){
+function get_id_from_level($ids, $count , $level,&$complete){
     global $wpdb;
     $data_idss = array();
     $ids_string = implode(',',$ids);
