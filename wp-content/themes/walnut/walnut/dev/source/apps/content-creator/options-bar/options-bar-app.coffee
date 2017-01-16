@@ -42,6 +42,7 @@ define ['app'
 
 
             showView: =>
+                console.log ''
                 @show @view, (loading: true, entities: [@textbooksCollection])
 
                 ## for edit content piece
