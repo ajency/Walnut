@@ -121,8 +121,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
             }
 
             elseif ($content['type'] == 'content_set'){
-                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id,$user_id);
+                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],$content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id,$user_id);
                 foreach($set_content_ids as $id){
                     $content_ids[] = $id;
                 }
@@ -726,12 +725,10 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     file_put_contents("a2.txt", print_r($quest_ids_for_terms_id, true));    
 
     $complete_ids = array();
-    if((int)$level1 > 0)
-        get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
-    if((int)$level2 > 0)
-        get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
-    if((int)$level3 > 0)
-        get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
+
+    get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
+    get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
+    get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
     shuffle($complete_ids);
 
     file_put_contents("a6.txt", print_r($complete_ids, true));
@@ -739,6 +736,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     return $complete_ids;
 
 }
+
 
 //get ids for each level accoring to the number specified for that level
 //return it in $complete

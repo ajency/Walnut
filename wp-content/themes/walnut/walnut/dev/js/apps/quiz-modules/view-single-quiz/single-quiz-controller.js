@@ -70,6 +70,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 quizModel.set('content_pieces', quizResponseSummary.get('questions_order'));
               }
               if (!questionsCollection) {
+                console.log(quizModel);
                 questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
                 App.execute("when:fetched", questionsCollection, function() {
                   _this._setMarks();

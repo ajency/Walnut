@@ -72,6 +72,7 @@ define ['app'
 							# if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
 							# 	questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 							# else
+							console.log quizModel
 							questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
