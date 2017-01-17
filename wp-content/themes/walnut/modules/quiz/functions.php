@@ -661,7 +661,7 @@ function get_quiz_status($quiz_id,$user_id){
 
 }
 
-function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$quiz_id,$user_id){
+function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_id,$user_id){
     global $wpdb;
     $prev_summ_ids = array();
     $term_id = '';
@@ -680,7 +680,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
                     AND student_id = %d
                     AND quiz_meta like %s
                     ORDER BY taken_on desc LIMIT 1",
-                    array($quiz_id, $user_id, '%"completed";%' )
+                    array($q_id, $user_id, '%"completed";%' )
     );
 
 
@@ -725,10 +725,16 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     file_put_contents("a2.txt", print_r($quest_ids_for_terms_id, true));    
 
     $complete_ids = array();
+    
+    if((int)$level1 > 0)
+        get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
+    if((int)$level2 > 0)
+        get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
+    if((int)$level3 > 0)
+        get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
 
-    get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
+    $complete_ids = __u::flatten($complete_ids);
+    //$complete_ids = array_values($complete_ids);
     shuffle($complete_ids);
 
     file_put_contents("a6.txt", print_r($complete_ids, true));
@@ -736,6 +742,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     return $complete_ids;
 
 }
+
 
 
 //get ids for each level accoring to the number specified for that level
@@ -763,11 +770,14 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
     //         $complete[]= $level_ids[$value];
     //     }
     //}
+    
 
-    $complete = __u::flatten($complete);
+    //$complete = __u::flatten($completes);
 
 
 }
+
+
 
 
 function get_random_values($level_ids, $count, $prev_id_array){
@@ -798,26 +808,27 @@ function get_random_values($level_ids, $count, $prev_id_array){
     if(array_search($new[$key], $prev_id_array)){
         if(count($new_ids) == 0){
             $new_data_ids = array_rand($prev_id_array,1);
-            $complete[] = $prev_id_array[$new_data_ids];
+            $completed[] = $prev_id_array[$new_data_ids];
             $new_prev[] = $prev_id_array[$new_data_ids];
 
         }
         else{
             fwrite($file, $new[$key]);
             $new_data_ids = array_rand($new_ids,1);
-            $complete[] = $new_ids[$new_data_ids];
+            $completed[] = $new_ids[$new_data_ids];
             $new_prev[] = $new_ids[$new_data_ids];
         }
         
     }else{
-        $complete[]= $level_ids[$value];
+        $completed[]= $level_ids[$value];
     }
     }
+    //fwrite($file, print_r($completed,true));
     fclose($file);
     
             
 
-    return $complete;
+    return $completed;
 }
 
 
