@@ -730,7 +730,6 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_i
         get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
     if((int)$level2 > 0)
         get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
-
     
     if((int)$level3 > 0)
         get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
