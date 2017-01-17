@@ -133,7 +133,7 @@ define ['app'
 
 			_tryAgain:->
 
-				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id' if not quizModelNew
+				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id'
 				App.execute "when:fetched", quizModelNew, =>
 					console.log quizModel
 					quizModel = quizModelNew			

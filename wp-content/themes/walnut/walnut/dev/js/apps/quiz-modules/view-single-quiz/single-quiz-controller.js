@@ -158,9 +158,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype._tryAgain = function() {
         var quizModelNew;
-        if (!quizModelNew) {
-          quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
-        }
+        quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         return App.execute("when:fetched", quizModelNew, (function(_this) {
           return function() {
             console.log(quizModel);
