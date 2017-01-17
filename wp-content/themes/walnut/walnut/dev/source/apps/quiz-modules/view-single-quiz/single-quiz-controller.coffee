@@ -67,11 +67,13 @@ define ['app'
 						
 						if not _.isEmpty quizResponseSummary.get('questions_order')
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+							#console.log 'quizModel'
 
 						if not questionsCollection
 							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
 								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 							else
+								console.log quizModel
 								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
@@ -135,9 +137,11 @@ define ['app'
 				@defer.promise()
 
 			_tryAgain:->
-				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id' if not quizModelNew
+				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id'
 				App.execute "when:fetched", quizModelNew, =>
-					console.log quizModel
+
+					console.log quizModelNew
+					
 					quizModel = quizModelNew			
 
 					return false if quizModel.get('quiz_type') isnt 'practice'
@@ -160,6 +164,7 @@ define ['app'
 					questionsCollection = App.request "get:content:pieces:by:ids", quizModelNew.get 'content_pieces'
 
 					App.execute "when:fetched", questionsCollection, =>
+						console.log questionsCollection
 						@_setMarks()
 
 						display_mode = 'class_mode'
@@ -264,7 +269,7 @@ define ['app'
 					quizResponseSummary     : quizResponseSummary
 					questionsCollection     : questionsCollection
 					display_mode            : display_mode
-					questionResponseCollection: @questionResponseCollection
+					questionResponseCollection: @questionsCollection
 					textbookNames           : @textbookNames
 					studentTrainingModule	: studentTrainingModule
 

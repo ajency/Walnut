@@ -73,6 +73,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 if (quizModel.get('quiz_type') === 'practice' && quizResponseSummary.get('questions_order') !== void 0) {
                   questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
                 } else {
+                  console.log(quizModel);
                   questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
                 }
                 App.execute("when:fetched", questionsCollection, function() {
@@ -160,12 +161,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._tryAgain = function() {
-        if (!quizModelNew) {
-          quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
-        }
+        quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         return App.execute("when:fetched", quizModelNew, (function(_this) {
           return function() {
-            console.log(quizModel);
+            console.log(quizModelNew);
             quizModel = quizModelNew;
             if (quizModel.get('quiz_type') !== 'practice') {
               return false;
@@ -186,6 +185,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             quizResponseSummaryCollection.add(quizResponseSummary);
             questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
             return App.execute("when:fetched", questionsCollection, function() {
+              console.log(questionsCollection);
               _this._setMarks();
               display_mode = 'class_mode';
               _this._randomizeOrder();
@@ -284,7 +284,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           quizResponseSummary: quizResponseSummary,
           questionsCollection: questionsCollection,
           display_mode: display_mode,
-          questionResponseCollection: this.questionResponseCollection,
+          questionResponseCollection: this.questionsCollection,
           textbookNames: this.textbookNames,
           studentTrainingModule: studentTrainingModule
         });

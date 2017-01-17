@@ -98,7 +98,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 									);
 					$quiz_meta      = $wpdb->get_row($sql_question);
 					$quiz_data = maybe_unserialize($quiz_meta->meta_value);
-					$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($quiz_data['marks']);
+					$total_marks_scored = (float) $qt['marks_scored']. ' / '.$quiz_data['marks'];
 				}else
 					$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
 			}

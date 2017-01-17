@@ -121,8 +121,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
             }
 
             elseif ($content['type'] == 'content_set'){
-                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id);
+                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],$content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id,$user_id);
                 foreach($set_content_ids as $id){
                     $content_ids[] = $id;
                 }
@@ -662,10 +661,11 @@ function get_quiz_status($quiz_id,$user_id){
 
 }
 
-function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$quiz_id){
+function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_id,$user_id){
     global $wpdb;
-
+    $prev_summ_ids = array();
     $term_id = '';
+
     foreach($term_ids as $val){
         if ($val){
             $term_id = $val;
@@ -673,20 +673,28 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     }
 
     //fetch previous quiz ids with level
-    $prev_summary_query = $wpdb->prepare("
-                    SELECT content_piece_id
-                    FROM {$wpdb->prefix}quiz_question_response
-                    WHERE summary_id = (SELECT summary_id
+    $prev_summary_query = $wpdb->prepare("SELECT quiz_meta
                     FROM {$wpdb->prefix}quiz_response_summary
                     WHERE collection_id =%d
-                    ORDER BY taken_on desc LIMIT 1)",
-                    array($quiz_id)
+                    AND student_id = %d
+                    AND quiz_meta like %s
+                    ORDER BY taken_on desc LIMIT 1",
+                    array($q_id, $user_id, '%"completed";%' )
     );
 
-    file_put_contents("b0.txt", $prev_summary_query);
-    $prev_summary_ids = $wpdb->get_col($prev_summary_query);
 
-    //file_put_contents("b.txt", print_r($prev_summary_ids, true));
+    #file_put_contents("a.txt", $prev_summary_query);
+    $prev_summary_ids = $wpdb->get_row($prev_summary_query);
+    if($prev_summary_ids){
+        $quiz_meta_data = maybe_unserialize($prev_summary_ids->quiz_meta);
+        $prev_summ_ids = $quiz_meta_data['questions_order'];
+    }
+
+
+
+
+    #file_put_contents("a1.txt", print_r($prev_summ_ids, true));
+   
 
 //    get id for all student type question
     $query1 = "select ID from {$wpdb->base_prefix}posts
@@ -713,13 +721,24 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
               and meta_value like %s";
     $quest_ids_for_terms_id =  $wpdb->get_col($wpdb->prepare($query,$term_id_query));
 
+    #file_put_contents("a2.txt", print_r($quest_ids_for_terms_id, true));    
+
     $complete_ids = array();
-    get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summary_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summary_ids);
-    get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summary_ids);
+
+    
+    if((int)$level1 > 0)
+        get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
+    if((int)$level2 > 0)
+        get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
+    
+    if((int)$level3 > 0)
+        get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
+
+    $complete_ids = __u::flatten($complete_ids);
+    //$complete_ids = array_values($complete_ids);
     shuffle($complete_ids);
 
-    //file_put_contents("a3.txt", print_r($complete_ids, true));
+    #file_put_contents("a6.txt", print_r($complete_ids, true));
 
     return $complete_ids;
 
@@ -738,49 +757,85 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
               and meta_key = 'difficulty_level'
               and meta_value = %s";
 
+    #file_put_contents("b.txt", $wpdb->prepare($query,$level));
+
     $level_ids = $wpdb->get_col($wpdb->prepare($query,$level));
 
-    //file_put_contents("a.txt", print_r($level_ids, true));
+    
 
-    if(count($level_ids) > (2*(int)$count))
-        $complete = get_random_values($level_ids, $count, $prev_ids);
-    else{
-        $data_idss = array_rand($level_ids,(int)$count);
-        foreach ($data_idss as $key => $value) {
-            $complete[]= $level_ids[$value];
-        }
-    }
+    //if(count($level_ids) > (2*(int)$count))
+    $complete[] = get_random_values($level_ids, $count, $prev_ids);
+    // else{
+    //     $data_idss = array_rand($level_ids,(int)$count);
+    //     foreach ($data_idss as $key => $value) {
+    //         $complete[]= $level_ids[$value];
+    //     }
+    //}
+    
+
+    //$complete = __u::flatten($completes);
 
 
 }
 
 
-function get_random_values($level_ids, $count, $prev_ids){
+function get_random_values($level_ids, $count, $prev_id_array){
     $data_ids = array();
+
+    $new = array();
 
     $data_ids = array_rand($level_ids,(int)$count);
 
-    foreach ($data_ids as $key => $value) {
-        $new[]= $level_ids[$value];
+    if((int)$count == '1')
+        $new[] = $level_ids[$data_ids];
+    else{
+        foreach ($data_ids as $key => $value) {
+            $new[] = $level_ids[$value];
+        }
     }
+    #file_put_contents("a5.txt", print_r($new, true));
 
-    $new_ids = array_diff($level_ids, $new);
+    //new set should not have picked and prev ids
+    $new_prev[] = $prev_id_array;
+    $new_prev[] = $new;
 
-    // file_put_contents("a1.txt", print_r($new_ids, true));
-    // file_put_contents("a2.txt", print_r($new, true));
+    $new_ids = array_diff($level_ids, __u::flatten($new_prev));
+    $new_ids = array_values($new_ids);
 
-    foreach ($data_ids as $key => $value) {
 
-        if(array_search($level_ids[$value], $prev_ids)){
+    #file_put_contents("a4.txt", print_r($new_ids, true));
+   
+
+    #$file = fopen("aa.txt", "w");
+    foreach ($new as $key => $value) {   
+
+    $new_ids = array_diff($level_ids, __u::flatten($new_prev));
+
+    if(array_search($new[$key], $prev_id_array)){
+        if(count($new_ids) == 0){
+            $new_data_ids = array_rand($prev_id_array,1);
+            $completed[] = $prev_id_array[$new_data_ids];
+            $new_prev[] = $prev_id_array[$new_data_ids];
+
+        }
+        else{
+            #fwrite($file, $new[$key]);
             $new_data_ids = array_rand($new_ids,1);
-            $complete[] = $new_ids[$new_data_ids];
-        }else
-            $complete[]= $level_ids[$value];
+            $completed[] = $new_ids[$new_data_ids];
+            $new_prev[] = $new_ids[$new_data_ids];
+        }
+        
+    }else{
+        $completed[]= $value;
     }
+    }
+    //fwrite($file, print_r($completed,true));
+    #fclose($file);
+    
+            
 
-    return $complete;
+    return $completed;
 }
-
 
 
 function update_quiz_content_layout($data= array()){
