@@ -21,7 +21,6 @@ define ['app'
 			display_mode = null
 
 			initialize: (opts) ->
-				console.log opts	
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -73,7 +72,6 @@ define ['app'
 							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
 								questionsCollection = App.request "get:content:pieces:by:ids", quizResponseSummary.get 'questions_order'
 							else
-								console.log quizModel
 								questionsCollection = App.request "get:content:pieces:by:ids", quizModel.get 'content_pieces'
 
 							App.execute "when:fetched", questionsCollection, =>
@@ -139,8 +137,6 @@ define ['app'
 			_tryAgain:->
 				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id'
 				App.execute "when:fetched", quizModelNew, =>
-
-					console.log quizModelNew
 					
 					quizModel = quizModelNew			
 
