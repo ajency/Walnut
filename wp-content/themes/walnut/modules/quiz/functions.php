@@ -745,8 +745,6 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_i
 
 }
 
-
-
 //get ids for each level accoring to the number specified for that level
 //return it in $complete
 function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
