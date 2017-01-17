@@ -121,8 +121,7 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
             }
 
             elseif ($content['type'] == 'content_set'){
-                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],
-                    $content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id,$user_id);
+                $set_content_ids = generate_set_items($content['data']['terms_id'],$content['data']['lvl1'],$content['data']['lvl2'],$content['data']['lvl3'],$content_ids,$selected_quiz_id,$user_id);
                 foreach($set_content_ids as $id){
                     $content_ids[] = $id;
                 }
@@ -662,7 +661,7 @@ function get_quiz_status($quiz_id,$user_id){
 
 }
 
-function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$quiz_id,$user_id){
+function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_id,$user_id){
     global $wpdb;
     $prev_summ_ids = array();
     $term_id = '';
@@ -673,7 +672,6 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
         }
     }
 
-
     //fetch previous quiz ids with level
     $prev_summary_query = $wpdb->prepare("SELECT quiz_meta
                     FROM {$wpdb->prefix}quiz_response_summary
@@ -681,7 +679,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
                     AND student_id = %d
                     AND quiz_meta like %s
                     ORDER BY taken_on desc LIMIT 1",
-                    array($quiz_id, $user_id, '%"completed";%' )
+                    array($q_id, $user_id, '%"completed";%' )
     );
 
 
@@ -726,12 +724,19 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$qui
     file_put_contents("a2.txt", print_r($quest_ids_for_terms_id, true));    
 
     $complete_ids = array();
+
+    
     if((int)$level1 > 0)
         get_id_from_level($quest_ids_for_terms_id,$level1,'1',$complete_ids,$prev_summ_ids);
     if((int)$level2 > 0)
         get_id_from_level($quest_ids_for_terms_id,$level2,'2',$complete_ids,$prev_summ_ids);
+
+    
     if((int)$level3 > 0)
         get_id_from_level($quest_ids_for_terms_id,$level3,'3',$complete_ids,$prev_summ_ids);
+
+    $complete_ids = __u::flatten($complete_ids);
+    //$complete_ids = array_values($complete_ids);
     shuffle($complete_ids);
 
     file_put_contents("a6.txt", print_r($complete_ids, true));
@@ -753,9 +758,11 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
               and meta_key = 'difficulty_level'
               and meta_value = %s";
 
+    file_put_contents("b.txt", $wpdb->prepare($query,$level));
+
     $level_ids = $wpdb->get_col($wpdb->prepare($query,$level));
 
-    file_put_contents("a3.txt", print_r($level_ids, true));
+    
 
     //if(count($level_ids) > (2*(int)$count))
     $complete[] = get_random_values($level_ids, $count, $prev_ids);
@@ -765,21 +772,31 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
     //         $complete[]= $level_ids[$value];
     //     }
     //}
+    
 
-    $complete = __u::flatten($complete);
+    //$complete = __u::flatten($completes);
 
 
 }
 
 
+
+
 function get_random_values($level_ids, $count, $prev_id_array){
     $data_ids = array();
 
+    $new = array();
+
     $data_ids = array_rand($level_ids,(int)$count);
 
-    foreach ($data_ids as $key => $value) {
-        $new[]= $level_ids[$value];
+    if((int)$count == '1')
+        $new[] = $level_ids[$data_ids];
+    else{
+        foreach ($data_ids as $key => $value) {
+            $new[] = $level_ids[$value];
+        }
     }
+    file_put_contents("a5.txt", print_r($new, true));
 
     //new set should not have picked and prev ids
     $new_prev[] = $prev_id_array;
@@ -790,36 +807,37 @@ function get_random_values($level_ids, $count, $prev_id_array){
 
 
     file_put_contents("a4.txt", print_r($new_ids, true));
-    file_put_contents("a5.txt", print_r(__u::flatten($new), true));
+   
 
     $file = fopen("aa.txt", "w");
-    foreach ($data_ids as $key => $value) {   
+    foreach ($new as $key => $value) {   
 
     $new_ids = array_diff($level_ids, __u::flatten($new_prev));
 
     if(array_search($new[$key], $prev_id_array)){
         if(count($new_ids) == 0){
             $new_data_ids = array_rand($prev_id_array,1);
-            $complete[] = $prev_id_array[$new_data_ids];
+            $completed[] = $prev_id_array[$new_data_ids];
             $new_prev[] = $prev_id_array[$new_data_ids];
 
         }
         else{
             fwrite($file, $new[$key]);
             $new_data_ids = array_rand($new_ids,1);
-            $complete[] = $new_ids[$new_data_ids];
+            $completed[] = $new_ids[$new_data_ids];
             $new_prev[] = $new_ids[$new_data_ids];
         }
         
     }else{
-        $complete[]= $level_ids[$value];
+        $completed[]= $value;
     }
     }
+    //fwrite($file, print_r($completed,true));
     fclose($file);
     
             
 
-    return $complete;
+    return $completed;
 }
 
 
