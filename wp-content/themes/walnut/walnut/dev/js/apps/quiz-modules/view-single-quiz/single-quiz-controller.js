@@ -182,7 +182,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             quizResponseSummaryCollection.add(quizResponseSummary);
             questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
             return App.execute("when:fetched", questionsCollection, function() {
-              console.log(questionsCollection);
               _this._setMarks();
               display_mode = 'class_mode';
               _this._randomizeOrder();

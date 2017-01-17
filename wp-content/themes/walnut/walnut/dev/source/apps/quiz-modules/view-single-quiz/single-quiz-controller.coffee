@@ -160,7 +160,6 @@ define ['app'
 					questionsCollection = App.request "get:content:pieces:by:ids", quizModelNew.get 'content_pieces'
 
 					App.execute "when:fetched", questionsCollection, =>
-						console.log questionsCollection
 						@_setMarks()
 
 						display_mode = 'class_mode'
