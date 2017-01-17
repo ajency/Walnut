@@ -278,10 +278,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype.startQuiz = function() {
-        console.log(quizModelNew);
-        console.log(quizResponseSummary);
-        console.log(questionsCollection);
-        console.log(this.questionsCollection);
         return App.execute("start:take:quiz:app", {
           region: App.mainContentRegion,
           quizModel: quizModel,

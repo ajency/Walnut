@@ -262,10 +262,6 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
-				console.log quizModelNew
-				console.log quizResponseSummary
-				console.log questionsCollection
-				console.log @questionsCollection
 
 				App.execute "start:take:quiz:app",
 					region: App.mainContentRegion
