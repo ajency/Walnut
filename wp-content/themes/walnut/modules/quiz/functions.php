@@ -756,7 +756,7 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
     file_put_contents("a3.txt", print_r($level_ids, true));
 
     //if(count($level_ids) > (2*(int)$count))
-    #$complete[] = get_random_values($level_ids, $count, $prev_ids);
+    $complete[] = get_random_values($level_ids, $count, $prev_ids);
     // else{
     //     $data_idss = array_rand($level_ids,(int)$count);
     //     foreach ($data_idss as $key => $value) {
@@ -764,13 +764,7 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
     //     }
     //}
 
-    $data_ids = array_rand($level_ids,(int)$count);
-
-    foreach ($data_ids as $key => $value) {   
-        $complete[]= $level_ids[$value];
-    }
-
-    //$complete = __u::flatten($complete);
+    $complete = __u::flatten($complete);
 
 
 }
