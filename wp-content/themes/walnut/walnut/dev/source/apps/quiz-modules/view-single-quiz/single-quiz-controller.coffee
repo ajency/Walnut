@@ -10,6 +10,7 @@ define ['app'
 		class ViewQuiz.Controller extends RegionController
 
 			quizModel = null
+			quizModelNew = null
 			questionsCollection = null
 			quizResponseSummary = null
 			quizResponseSummaryCollection = null
@@ -20,7 +21,7 @@ define ['app'
 			display_mode = null
 
 			initialize: (opts) ->
-				
+
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -41,6 +42,7 @@ define ['app'
 
 				fetchQuestionResponseCollection.done =>
 					App.execute "when:fetched", quizModel, =>
+						#console.log quizModel
 
 						if quizModel.get('code') is 'ERROR'
 							App.execute "show:no:permissions:app",
@@ -52,7 +54,7 @@ define ['app'
 
 						if display_mode isnt 'quiz_report'
 							display_mode = if quizResponseSummary.get('status') is 'completed' 
-												'replay' 
+												'replay'
 											else 'class_mode'
 
 						textbook_termIDs = _.flatten quizModel.get 'term_ids'
@@ -62,8 +64,10 @@ define ['app'
 						#the questions must be displayed in the previously taken order
 						#this order is saved on first time taking of quiz
 						#questions wont be randomized again
-						if not _.isEmpty quizResponseSummary.get 'questions_order'
+						
+						if not _.isEmpty quizResponseSummary.get('questions_order')
 							quizModel.set 'content_pieces', quizResponseSummary.get 'questions_order'
+							#console.log 'quizModel'
 
 						if not questionsCollection
 							if quizModel.get('quiz_type') == 'practice' && quizResponseSummary.get('questions_order') != undefined
@@ -132,10 +136,11 @@ define ['app'
 				@defer.promise()
 
 			_tryAgain:->
-
 				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id'
 				App.execute "when:fetched", quizModelNew, =>
-					console.log quizModel
+
+					console.log quizModelNew
+					
 					quizModel = quizModelNew			
 
 					return false if quizModel.get('quiz_type') isnt 'practice'
@@ -253,7 +258,6 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
-
 				App.execute "start:take:quiz:app",
 					region: App.mainContentRegion
 					quizModel               : quizModel

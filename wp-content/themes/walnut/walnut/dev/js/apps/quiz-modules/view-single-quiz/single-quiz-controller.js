@@ -5,7 +5,7 @@ var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); 
 define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-quiz/layout', 'apps/quiz-modules/view-single-quiz/quiz-description/quiz-description-app', 'apps/quiz-modules/view-single-quiz/content-display/content-display-app', 'apps/quiz-modules/view-single-quiz/attempts/app', 'apps/quiz-modules/take-quiz-module/take-quiz-app'], function(App, RegionController) {
   return App.module("QuizModuleApp.ViewQuiz", function(ViewQuiz, App) {
     ViewQuiz.Controller = (function(superClass) {
-      var display_mode, questionsCollection, quizModel, quizResponseSummary, quizResponseSummaryCollection, studentModel, studentTrainingModule;
+      var display_mode, questionsCollection, quizModel, quizModelNew, quizResponseSummary, quizResponseSummaryCollection, studentModel, studentTrainingModule;
 
       extend(Controller, superClass);
 
@@ -19,6 +19,8 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       }
 
       quizModel = null;
+
+      quizModelNew = null;
 
       questionsCollection = null;
 
@@ -157,11 +159,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
       };
 
       Controller.prototype._tryAgain = function() {
-        var quizModelNew;
         quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         return App.execute("when:fetched", quizModelNew, (function(_this) {
           return function() {
-            console.log(quizModel);
+            console.log(quizModelNew);
             quizModel = quizModelNew;
             if (quizModel.get('quiz_type') !== 'practice') {
               return false;
