@@ -683,7 +683,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_i
     );
 
 
-    file_put_contents("a.txt", $prev_summary_query);
+    #file_put_contents("a.txt", $prev_summary_query);
     $prev_summary_ids = $wpdb->get_row($prev_summary_query);
     if($prev_summary_ids){
         $quiz_meta_data = maybe_unserialize($prev_summary_ids->quiz_meta);
@@ -693,7 +693,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_i
 
 
 
-    file_put_contents("a1.txt", print_r($prev_summ_ids, true));
+    #file_put_contents("a1.txt", print_r($prev_summ_ids, true));
    
 
 //    get id for all student type question
@@ -721,7 +721,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_i
               and meta_value like %s";
     $quest_ids_for_terms_id =  $wpdb->get_col($wpdb->prepare($query,$term_id_query));
 
-    file_put_contents("a2.txt", print_r($quest_ids_for_terms_id, true));    
+    #file_put_contents("a2.txt", print_r($quest_ids_for_terms_id, true));    
 
     $complete_ids = array();
 
@@ -739,7 +739,7 @@ function generate_set_items($term_ids, $level1,$level2,$level3,$content_ids,$q_i
     //$complete_ids = array_values($complete_ids);
     shuffle($complete_ids);
 
-    file_put_contents("a6.txt", print_r($complete_ids, true));
+    #file_put_contents("a6.txt", print_r($complete_ids, true));
 
     return $complete_ids;
 
@@ -758,7 +758,7 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
               and meta_key = 'difficulty_level'
               and meta_value = %s";
 
-    file_put_contents("b.txt", $wpdb->prepare($query,$level));
+    #file_put_contents("b.txt", $wpdb->prepare($query,$level));
 
     $level_ids = $wpdb->get_col($wpdb->prepare($query,$level));
 
@@ -780,8 +780,6 @@ function get_id_from_level($ids, $count , $level,&$complete, $prev_ids){
 }
 
 
-
-
 function get_random_values($level_ids, $count, $prev_id_array){
     $data_ids = array();
 
@@ -796,7 +794,7 @@ function get_random_values($level_ids, $count, $prev_id_array){
             $new[] = $level_ids[$value];
         }
     }
-    file_put_contents("a5.txt", print_r($new, true));
+    #file_put_contents("a5.txt", print_r($new, true));
 
     //new set should not have picked and prev ids
     $new_prev[] = $prev_id_array;
@@ -806,10 +804,10 @@ function get_random_values($level_ids, $count, $prev_id_array){
     $new_ids = array_values($new_ids);
 
 
-    file_put_contents("a4.txt", print_r($new_ids, true));
+    #file_put_contents("a4.txt", print_r($new_ids, true));
    
 
-    $file = fopen("aa.txt", "w");
+    #$file = fopen("aa.txt", "w");
     foreach ($new as $key => $value) {   
 
     $new_ids = array_diff($level_ids, __u::flatten($new_prev));
@@ -822,7 +820,7 @@ function get_random_values($level_ids, $count, $prev_id_array){
 
         }
         else{
-            fwrite($file, $new[$key]);
+            #fwrite($file, $new[$key]);
             $new_data_ids = array_rand($new_ids,1);
             $completed[] = $new_ids[$new_data_ids];
             $new_prev[] = $new_ids[$new_data_ids];
@@ -833,7 +831,7 @@ function get_random_values($level_ids, $count, $prev_id_array){
     }
     }
     //fwrite($file, print_r($completed,true));
-    fclose($file);
+    #fclose($file);
     
             
 
