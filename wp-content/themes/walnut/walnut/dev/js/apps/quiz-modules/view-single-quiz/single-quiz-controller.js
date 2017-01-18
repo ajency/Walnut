@@ -284,7 +284,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
           quizResponseSummary: quizResponseSummary,
           questionsCollection: questionsCollection,
           display_mode: display_mode,
-          questionResponseCollection: this.questionsCollection,
+          questionResponseCollection: this.questionResponseCollection,
           textbookNames: this.textbookNames,
           studentTrainingModule: studentTrainingModule
         });
