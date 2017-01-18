@@ -2690,6 +2690,12 @@ lesshat-selector {
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {
   font-size: 1.5em;
   color: #602f1a;
+  padding: 5px 0 0 0;
+}
+@media screen and (max-width: 1400px) {
+  #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {
+    padding: 8px 0 0 0;
+  }
 }
 @media (max-width: 1370px) {
   #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text {

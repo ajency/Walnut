@@ -264,7 +264,7 @@ define ['app'
 					quizResponseSummary     : quizResponseSummary
 					questionsCollection     : questionsCollection
 					display_mode            : display_mode
-					questionResponseCollection: @questionsCollection
+					questionResponseCollection: @questionResponseCollection
 					textbookNames           : @textbookNames
 					studentTrainingModule	: studentTrainingModule
 
