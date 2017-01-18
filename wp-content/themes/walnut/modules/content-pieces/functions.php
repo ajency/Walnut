@@ -111,7 +111,7 @@ function get_content_pieces($args = array(), $filtered='0') {
      
     $content_items = get_posts($args);
 
-    #file_put_contents("a3.txt", print_r($content_items, true));
+    #file_put_contents("c.txt", print_r($content_items, true));
     
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
@@ -298,6 +298,8 @@ function get_single_content_piece($id){
     $content_piece->post_excerpt =$excerpt;
     
     switch_to_blog($current_blog_id);
+
+    file_put_contents("c1.txt", print_r($content_piece, true));
 
     return $content_piece;
 }

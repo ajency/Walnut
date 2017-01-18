@@ -1830,7 +1830,99 @@ function write_quiz_response_summary($args){
 
 }
 
-function get_excel_quiz_report_data($quiz_id){
+function get_excel_quiz_report_data($quiz_id, $division){
+    global $wpdb;
+    $data = array();
 
+$quiz_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $quiz_id);
+
+$quiz_data = $wpdb->get_row($quiz_query);
+
+
+
+$query_meta = $wpdb->prepare("SELECT *
+    FROM {$wpdb->base_prefix}collection_meta
+    WHERE collection_id = %d", $quiz_id);
+
+
+$meta_data = $wpdb->get_results($query_meta);
+
+foreach ($meta_data as $key => $value) {
+    if($value->meta_key == 'quiz_meta'){
+        $quiz_meta = maybe_unserialize($value->meta_value);
+        $data['marks'] = $quiz_meta['marks'];
+    }
+
+    if($value->meta_key == 'content_layout'){
+        $content_layout = maybe_unserialize($value->meta_value);
+        foreach($content_layout as $content){
+            if ($content['type'] == 'content-piece'){
+                $content_ids[] = $content['id'];
+            }else //content set quiz-response table
+                file_put_contents("a2.txt", 'data');
+            foreach ($content_ids as $key => $value) {
+                //find the correct value
+
+                //get question options
+                $options = $wpdb->prepare("SELECT meta_value FROM wp_postmeta WHERE meta_key = 'layout_json' and post_id = %d", $value);
+                $options_meta = $wpdb->get_row($options);
+                $option_data = maybe_unserialize($options_meta->meta_value);
+                foreach ($option_data as $value) {
+                    foreach ($value['elements'] as $key => $value) {
+                        foreach ($value['elements'] as $key => $value) {
+                            if($value['element'] == 'Mcq')
+                                file_put_contents("a4.txt", print_r($value, true));
+                        }
+                    }
+                    
+                }
+                file_put_contents("a3.txt", print_r($option_data, true));
+                //correct option
+                $correct_option = $wpdb->prepare("SELECT post_id FROM wp_postmeta WHERE meta_key = 'content_element' and meta_value like '%correct_answer%'");
+
+
+            }
+
+        
+    }
+
+}
+
+}
+file_put_contents("a1.txt", print_r($content_ids, true));
+
+
+
+
+//$quiz_meta = maybe_unserialize($meta_data->meta_value);
+
+
+$data['title'] = $quiz_data->name;
+$data['duration'] = $quiz_data->duration;
+$term_ids = maybe_unserialize($quiz_data->term_ids);
+
+
+
+$term_text_data = $wpdb->prepare("SELECT name FROM {$wpdb->base_prefix}terms WHERE term_id = %d", $term_ids['textbook'] );
+$text = $wpdb->get_row($term_text_data);
+
+$term_chap_data = $wpdb->prepare("SELECT name FROM wp_terms WHERE term_id = %d", $term_ids['chapter']);
+$chap = $wpdb->get_row($term_chap_data);
+
+$data['textbook_name'] = $text->name;
+$data['chapter_name'] = $chap->name;
+
+
+$div_data = $wpdb->prepare("SELECT division FROM {$wpdb->prefix}class_divisions WHERE id = %d", $division);
+$div = $wpdb->get_row($div_data);
+
+$data['class'] = $div->division;
+
+file_put_contents("a.txt", print_r($data, true));
+
+//quiz content pieces
+
+
+return $data;
     
 }

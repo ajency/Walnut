@@ -37,6 +37,9 @@ define ['app'
                                 @view.triggerMethod "reset:textbook:names", newNamesCollection
 
                         @listenTo @view, 'itemview:view:quiz:report', @_showQuizReportApp
+
+                        @listenTo @view, "itemview:view:excel:report", (data)=>
+                            @region.trigger "excel:generation", data
                         
                         @listenTo @view, 'itemview:clear:schedule', (itemview,quiz_id)->
                             @region.trigger 'clear:schedule', @contentModulesCollection.get quiz_id

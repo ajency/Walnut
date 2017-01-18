@@ -216,32 +216,35 @@ add_action('wp_ajax_add-textbook', 'wp_ajax_add_textbook');
 
 
 function generate_xls(){
-    $data = $_GET['data'];
+    
     if(isset($_GET['data'])){
         date_default_timezone_set('Asia/Kolkata');
         require_once 'ExcelGenerate.php';
         //create object of class ExcelGenerate
-        $id = $data['id'];
+        $data = $_GET['data'];
+        $division = $_GET['division'];
+
         $xclObj = new ExportExcel();
-        $excel = $xclObj->excel($id);
+        $excel = $xclObj->excel($data,$division);
+
     }
         
 }
 
 add_action('init','generate_xls');
 
-function ajax_generate_excel(){
-    file_put_contents('g.txt', 'data');
+function ajax_generate_excel_report(){
     date_default_timezone_set('Asia/Kolkata');
     require_once 'ExcelGenerate.php';
     //create object of class ExcelGenerate
-    $data = $_POST['data'];
-    $xclObj = new ExportExcel();
-    $excel = $xclObj->excel($data);
-    //wp_send_json(array('name'=>$excel));
+    $data = $_GET['data'];
+    $division = $_GET['division'];
 
-    wp_send_json(array('code' => 'OK','data' => $data['id']));
+    $xclObj = new ExportExcel();
+    $excel = $xclObj->excel($data,$division);
+
+    //wp_send_json(array('code' => 'OK','data' => $excel));
 
 }
 
-add_action('wp_ajax_generate-xl-report', 'ajax_generate_excel');
+add_action('wp_ajax_generate-xl-report', 'ajax_generate_excel_report');

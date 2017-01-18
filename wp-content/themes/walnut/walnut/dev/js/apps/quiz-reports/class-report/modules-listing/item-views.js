@@ -56,10 +56,12 @@ define(['app', 'bootbox'], function(App, bootbox) {
           return this.trigger('view:quiz:report', this.model.id);
         },
         'click .schedule-quiz': function() {
-          return this.trigger('schedule:quiz', this.model.id);
+          return this.trigger('schedule:quiz', this.model);
         },
         'click .clear-schedule': 'clearSchedule',
-        'click .xl-report': 'generateXlReport'
+        'click .xl-report': function() {
+          return this.trigger('view:excel:report', this.model.id);
+        }
       };
 
       ListItemView.prototype.modelEvents = {

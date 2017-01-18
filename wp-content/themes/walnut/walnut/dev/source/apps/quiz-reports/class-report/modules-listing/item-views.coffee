@@ -73,9 +73,9 @@ define ['app','bootbox'], (App,bootbox)->
 
             events:
                 'click .view-report'    :-> @trigger 'view:quiz:report', @model.id
-                'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model.id
+                'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model
                 'click .clear-schedule' : 'clearSchedule'
-                'click .xl-report'      : 'generateXlReport'
+                'click .xl-report'      : -> @trigger 'view:excel:report', @model.id
 
             modelEvents:
                 'change:schedule'  : 'changeScheduleDates'
@@ -88,6 +88,7 @@ define ['app','bootbox'], (App,bootbox)->
                     .hide()
 
             generateXlReport:->
+                #console.log @model
                 options =
                     type : 'GET'
                     url : AJAXURL+ '?action=generate-xl-report&data='+@model.id
