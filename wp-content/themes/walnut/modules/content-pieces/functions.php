@@ -270,6 +270,7 @@ function get_single_content_piece($id){
     $excerpt = '';
 
     if($content_layout){
+        
         $content_elements = get_json_to_clone($content_layout);
         $content_piece->marks = 0; 
         
@@ -290,6 +291,7 @@ function get_single_content_piece($id){
 
     $excerpt = prettify_content_piece_excerpt($excerpt_array);
 
+
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
     else
@@ -298,8 +300,6 @@ function get_single_content_piece($id){
     $content_piece->post_excerpt =$excerpt;
     
     switch_to_blog($current_blog_id);
-
-    file_put_contents("c1.txt", print_r($content_piece, true));
 
     return $content_piece;
 }
