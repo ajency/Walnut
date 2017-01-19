@@ -1838,9 +1838,6 @@ function get_excel_quiz_report_data($quiz_id, $division){
     $excerpt_array = array();
     $excerpt = array();
 
-    #$quiz_id = '1053';
-
-
 //students from division
 
     $query2 = $wpdb->prepare("SELECT DISTINCT um1.user_id
@@ -1957,8 +1954,6 @@ foreach ($meta_data as $key => $value) {
             $content_ids = array_unique($content_ids);
             foreach ($content_ids as $key_content => $content_id) {
 
-
-                //find the correct value
                     //get question options
                     $options = $wpdb->prepare("SELECT meta_value FROM {$wpdb->base_prefix}postmeta WHERE meta_key = 'layout_json' and post_id = %d", $content_id);
 
@@ -2007,8 +2002,6 @@ foreach ($meta_data as $key => $value) {
 
                                     }
                                     
-
-
                         }
                         }
 
@@ -2017,13 +2010,12 @@ foreach ($meta_data as $key => $value) {
                     }
 
                     $data['content_ids'][] = array('id' => $content_id,
+                                                'link'  => 'http://synapselearning.dev/#dummy-quiz/'.$content_id,
                                                 'name' => $excerpt[$key_content],
                                                 'correct_answer' => $correct_option_order[$key_content]
                                                 );
             }
             
-//$quiz_meta = maybe_unserialize($meta_data->meta_value);
-
 
 $data['title'] = $quiz_data->name;
 $data['duration'] = $quiz_data->duration;
@@ -2046,10 +2038,7 @@ $div = $wpdb->get_row($div_data);
 
 $data['class'] = $div->division;
 
-file_put_contents("a.txt", print_r($data, true));
-
-//quiz content pieces
-
+#file_put_contents("a.txt", print_r($data, true));
 
 return $data;
     

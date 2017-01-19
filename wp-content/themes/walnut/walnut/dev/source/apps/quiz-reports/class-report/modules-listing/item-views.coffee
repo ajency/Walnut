@@ -37,6 +37,7 @@ define ['app','bootbox'], (App,bootbox)->
                                 {{/class_test}}
                             </td>
                         {{/can_schedule}}
+
                         <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report">xl</button></td>'
 
             mixinTemplateHelpers :(data) ->
@@ -81,10 +82,14 @@ define ['app','bootbox'], (App,bootbox)->
                 'change:schedule'  : 'changeScheduleDates'
 
             onShow:->
+                #console.log @model.get('quiz_type')
                 if @model.get('quiz_type') is 'class_test' and @model.get 'schedule'
                     @$el.find '.schedule_dates'
                     .show()
                     @$el.find '#schedule-button'
+                    .hide()
+                else
+                    @$el.find '.xl-report'
                     .hide()
 
             generateXlReport:->

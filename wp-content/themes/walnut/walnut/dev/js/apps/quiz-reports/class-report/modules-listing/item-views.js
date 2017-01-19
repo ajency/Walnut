@@ -72,6 +72,8 @@ define(['app', 'bootbox'], function(App, bootbox) {
         if (this.model.get('quiz_type') === 'class_test' && this.model.get('schedule')) {
           this.$el.find('.schedule_dates').show();
           return this.$el.find('#schedule-button').hide();
+        } else {
+          return this.$el.find('.xl-report').hide();
         }
       };
 
