@@ -3416,7 +3416,7 @@ lesshat-selector {
   }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
-  right: -64px;
+  right: -80px;
   text-align: center;
   line-height: 40px;
 }
@@ -3434,6 +3434,61 @@ lesshat-selector {
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label > span {
   color: #69b8b5;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
+  position: absolute;
+  top: 11em;
+  z-index: 1;
+  background: #69b8b5;
+  color: #fff;
+  padding: 8px;
+  right: 0;
+  left: 0;
+  font-size: 0.85em;
+  border-radius: 5px;
+  opacity: 0;
+  -webkit-transition: all 0.8s ease;
+          transition: all 0.8s ease;
+  -webkit-transform: translate(0, 15px);
+      -ms-transform: translate(0, 15px);
+          transform: translate(0, 15px);
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:after,
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:after {
+  border-color: rgba(105, 184, 181, 0);
+  border-bottom-color: #69b8b5;
+  border-width: 6px;
+  margin-left: -6px;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:before {
+  border-color: rgba(105, 184, 181, 0);
+  border-bottom-color: #69b8b5;
+  border-width: 8px;
+  margin-left: -8px;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label {
+  display: -webkit-box;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active:hover .full-comment {
+  opacity: 1;
+  -webkit-transform: translate(0, 0);
+      -ms-transform: translate(0, 0);
+          transform: translate(0, 0);
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";
