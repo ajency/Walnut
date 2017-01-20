@@ -89,9 +89,9 @@ function ajax_update_content_piece(){
     #currently this is used only to update the status.
     #for the actual create/update functions refer to function ajax_save_content_piece()
 
-    $data= array('ID'=>$_POST['ID'],'post_status'=>$_POST['post_status']);
+    //$data= array('ID'=>$_POST['ID'],'post_status'=>$_POST['post_status']);
 
-    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['status']."' WHERE ID = '".$_POST['ID']."'");
+    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['post_status']."' WHERE ID = '".$_POST['ID']."'");
 
     wp_send_json(array('ID'=>$_POST['ID']));
 
