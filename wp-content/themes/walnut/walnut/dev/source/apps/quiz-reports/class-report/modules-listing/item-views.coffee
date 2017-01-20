@@ -38,7 +38,7 @@ define ['app','bootbox'], (App,bootbox)->
                             </td>
                         {{/can_schedule}}
 
-                        <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report">xl</button></td>'
+                        <td style="padding: 0 !important; vertical-align: middle;"><div class="report-container"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report"><i class="fa fa-download" aria-hidden="true"></i></button></div></td>'
 
             mixinTemplateHelpers :(data) ->
                 textbooks = Marionette.getOption @, 'textbookNamesCollection'
