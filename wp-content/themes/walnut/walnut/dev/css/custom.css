@@ -2158,8 +2158,7 @@ input#duration {
   position: absolute;
   right: -165px;
   top: 0;
-  // width: 150px;
-  width: 200px;
+  width: 150px;
 }
 .modTimes > div {
   width: 25%;

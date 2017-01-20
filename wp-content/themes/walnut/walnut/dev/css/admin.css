@@ -237,11 +237,12 @@
     margin: 0;
 }
 
-@media screen and (max-width: 1400) {
+@media screen and (max-width: 1400px) {
   .report-container .view-report{
       padding: 6px 5px;
   }
 }
+
 
 .report-container .xl-report{
     border: 0;
@@ -261,6 +262,17 @@
     font-size: 0.9em;
 }
 
-
+@media screen and (min-width: 1250px) and (max-width: 1366px) {
+  .report-container .view-report{
+      padding: 6px 5px;
+      font-size: 0.85em;
+  }
+  .report-container .xl-report{
+      padding: 0 8px; 
+  }
+  .report-container .xl-report i{
+    font-size: 0.8em;
+  }
+}
 
 
