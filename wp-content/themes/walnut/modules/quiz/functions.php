@@ -1839,9 +1839,10 @@ function get_excel_quiz_report_data($quiz_id, $division){
     $excerpt = array();
 
     //siteurl 
-    $site_query = $wpdb->prepare("SELECT option_value FROM {$wpdb->base_prefix}options WHERE option_name = 'siteurl' LIMIT 1");
-    $site_data = $wpdb->get_row($site_query);
-    $site_url = $site_data->option_value;
+    $site_url = get_site_url();
+
+
+    #file_put_contents("ablog.txt", get_site_url());
 
 //students from division
 
