@@ -31,7 +31,6 @@ define ['app'
                         .attr 'disabled', 'disabled'
                         @trigger "validate:answer"
 
-
                     mixinTemplateHelpers:(data)=>
 
                         responseModel = Marionette.getOption @, 'questionResponseModel'
@@ -120,3 +119,8 @@ define ['app'
 
                         @$el.find "#skip-question"
                         .hide()
+
+                    onEnableSubmit:=>
+                        @$el.find '.submit-single'
+                        .attr 'disabled', false
+

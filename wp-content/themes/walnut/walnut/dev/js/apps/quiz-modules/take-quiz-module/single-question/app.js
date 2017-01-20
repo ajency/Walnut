@@ -71,6 +71,8 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
                 return function(result) {
                   if (result) {
                     return _this._triggerSubmit();
+                  } else {
+                    return _this.layout.triggerMethod("enable:submit");
                   }
                 };
               })(this));

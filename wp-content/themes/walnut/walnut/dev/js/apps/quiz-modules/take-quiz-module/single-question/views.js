@@ -8,6 +8,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       extend(SingleQuestionLayout, superClass);
 
       function SingleQuestionLayout() {
+        this.onEnableSubmit = bind(this.onEnableSubmit, this);
         this.mixinTemplateHelpers = bind(this.mixinTemplateHelpers, this);
         this.submitQuest = bind(this.submitQuest, this);
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
@@ -116,6 +117,10 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
           })(this), 3000);
         }
         return this.$el.find("#skip-question").hide();
+      };
+
+      SingleQuestionLayout.prototype.onEnableSubmit = function() {
+        return this.$el.find('.submit-single').attr('disabled', false);
       };
 
       return SingleQuestionLayout;
