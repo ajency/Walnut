@@ -131,7 +131,7 @@ class ExportExcel {
         // Redirect output to a client’s web browser (Excel5)
 
         header('Content-Type: application/vnd.ms-excel;charset=utf-8');
-        header('Content-Disposition: attachment;filename="quiz_report'.time().'.xls"');
+        header('Content-Disposition: attachment;filename="quiz_report'.$quiz_id.'.xls"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
