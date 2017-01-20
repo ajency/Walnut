@@ -37,7 +37,8 @@ define ['app','bootbox'], (App,bootbox)->
                                 {{/class_test}}
                             </td>
                         {{/can_schedule}}
-                        <td style="padding: 0 !important; vertical-align: middle;"><button class="btn btn-small btn-success view-report">view report</button></td>'
+
+                        <td style="padding: 0 !important; vertical-align: middle;"><div class="report-container"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report"><i class="fa fa-download" aria-hidden="true"></i></button></div></td>'
 
             mixinTemplateHelpers :(data) ->
                 textbooks = Marionette.getOption @, 'textbookNamesCollection'
@@ -73,34 +74,29 @@ define ['app','bootbox'], (App,bootbox)->
 
             events:
                 'click .view-report'    :-> @trigger 'view:quiz:report', @model.id
-                'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model.id
+                'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model
                 'click .clear-schedule' : 'clearSchedule'
-                'click .xl-report'      : 'generateXlReport'
+                'click .xl-report'      : -> @trigger 'view:excel:report', @model.id
 
             modelEvents:
                 'change:schedule'  : 'changeScheduleDates'
 
             onShow:->
+                #console.log @model.get('quiz_type')
                 if @model.get('quiz_type') is 'class_test' and @model.get 'schedule'
                     @$el.find '.schedule_dates'
                     .show()
                     @$el.find '#schedule-button'
                     .hide()
+                else
+                    @$el.find '.xl-report'
+                    .hide()
 
             generateXlReport:->
-                console.log @model.id
-                data = [];
-                data.action = 'generate-xl-report'
-                data.json = @model.id
-
-                console.log AJAXURL
-
+                #console.log @model
                 options =
-                    type : 'POST'
-                    url : AJAXURL
-                    data : data
-                    
-                console.log options
+                    type : 'GET'
+                    url : AJAXURL+ '?action=generate-xl-report&data='+@model.id
 
                 $.ajax(options).done (response)->
                         console.log response

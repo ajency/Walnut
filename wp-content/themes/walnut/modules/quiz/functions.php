@@ -1829,3 +1829,262 @@ function write_quiz_response_summary($args){
     return $summary_id;
 
 }
+
+function get_excel_quiz_report_data($quiz_id, $division){
+    global $wpdb;
+    $data = array();
+    $content_ids = array();
+    $correct_option_order = array();
+    $excerpt_array = array();
+    $excerpt = array();
+
+    //siteurl 
+    $site_url = get_site_url();
+
+
+    #file_put_contents("ablog.txt", get_site_url());
+
+//students from division
+
+    $query2 = $wpdb->prepare("SELECT DISTINCT um1.user_id
+        FROM {$wpdb->base_prefix}usermeta AS um1
+        LEFT JOIN {$wpdb->base_prefix}usermeta AS um2
+        ON um1.user_id = um2.user_id
+        WHERE um1.meta_key LIKE %s
+        AND um1.meta_value LIKE %s
+        AND um2.meta_key LIKE %s
+        AND um2.meta_value = %d",
+        array('%capabilities','%student%','student_division', $division)
+        );
+
+    $student_ids = $wpdb->get_col($query2);
+    #$data['lis_student'] = $student_ids;
+    foreach ($student_ids as $key_student => $student) {
+
+        //get student_data
+        $student_query = $wpdb->prepare("SELECT DISTINCT users.ID, users.user_login, usermeta1.meta_value as first_name, usermeta2.meta_value as last_name
+                                        FROM {$wpdb->base_prefix}users as users
+                                        JOIN {$wpdb->base_prefix}usermeta as usermeta1
+                                        ON users.ID = usermeta1.user_id
+                                        JOIN {$wpdb->base_prefix}usermeta as usermeta2
+                                        ON users.ID = usermeta2.user_id
+                                        WHERE usermeta1.meta_key = 'first_name'
+                                        AND usermeta2.meta_key = 'last_name'
+                                        AND users.ID = %d", $student);
+
+        $student_add_data = $wpdb->get_row($student_query);
+
+
+        //get quiz summary
+        $summary_query = $wpdb->prepare("SELECT question_response, content_piece_id
+                                        FROM {$wpdb->prefix}quiz_question_response
+                                        WHERE summary_id = (SELECT summary_id
+                                            FROM {$wpdb->prefix}quiz_response_summary
+                                            WHERE collection_id = %d
+                                            AND student_id = %d
+                                            ORDER BY taken_on desc LIMIT 1)",
+                                            array($quiz_id, $student));
+        
+        $summary_data = $wpdb->get_results($summary_query);
+        #file_put_contents("d.txt", print_r($summary_data, true));
+
+        if($summary_data){
+
+            foreach ($summary_data as $key => $value) {
+
+                $answer = maybe_unserialize($value->question_response);
+                #file_put_contents("d1.txt", print_r($answer, true));
+
+                if($answer)
+                    $answer_d = $answer['answer'][0];
+                else
+                    $answer_d = 'skipped';
+
+                $response[$key] = array('content_id' => $value->content_piece_id,
+                                  'answer_id' => $answer_d);
+                //if(count($content_ids) <  count($value))
+                $content_ids[$key] = $value->content_piece_id;
+
+            }
+
+        }else
+            $response = '';
+
+        if($student_add_data->first_name != '' || $student_add_data->last_name != '')
+            $full_name = " (".$student_add_data->first_name." ".$student_add_data->last_name.")";
+        else
+            $full_name = "";
+        $data['student_ids'][] = array(//'student_id' => $student,
+                                            'student_name' => $student_add_data->user_login.$full_name,
+                                            //'roll_num' => ,
+                                             'content_ids' => $response
+                                             );
+
+    }
+
+
+
+    
+
+$quiz_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $quiz_id);
+
+$quiz_data = $wpdb->get_row($quiz_query);
+
+
+
+$query_meta = $wpdb->prepare("SELECT *
+    FROM {$wpdb->base_prefix}collection_meta
+    WHERE collection_id = %d", $quiz_id);
+
+
+$meta_data = $wpdb->get_results($query_meta);
+
+foreach ($meta_data as $key => $value) {
+    if($value->meta_key == 'quiz_meta'){
+        $quiz_meta = maybe_unserialize($value->meta_value);
+        $data['marks'] = $quiz_meta['marks'];
+    }
+
+    if($value->meta_key == 'content_layout'){
+        $content_layout = maybe_unserialize($value->meta_value);
+        
+        foreach($content_layout as $ge => $content){
+            
+
+            if ($content['type'] == 'content-piece'){
+                $content_ids[] = $content['id'];
+
+            }
+
+        }
+
+        
+    }
+}
+            $content_ids = array_unique($content_ids);
+            foreach ($content_ids as $key_content => $content_id) {
+
+                    //get question options
+                    $options = $wpdb->prepare("SELECT meta_value FROM {$wpdb->base_prefix}postmeta WHERE meta_key = 'layout_json' and post_id = %d", $content_id);
+
+                    $options_meta = $wpdb->get_row($options);
+
+
+
+                    $option_data = maybe_unserialize($options_meta->meta_value);
+
+                    foreach ($option_data as $o_key => $option_d) {
+
+                        if($option_d['element'] == 'Text'){
+                            $excerpt[$key_content] .= get_excerpt($option_d['meta_id'], $content_id);
+                        }
+
+                        if($option_d['element'] == 'Mcq'){
+                            
+                            $meta_id = $option_d['meta_id'];
+                            $correct_option_order[$key_content] = get_correct_option($meta_id);
+                        }else{
+
+                        foreach ($option_d['elements'] as $e_key => $elements) {
+                            
+                             if($elements['element'] == 'Text'){
+                                $excerpt[$key_content] .= get_excerpt($elements['meta_id']);
+                            }                                
+
+                            if($elements['element'] == 'Mcq'){
+                                #file_put_contents("b1.txt", print_r($elements, true));
+                                    $meta_id = $elements['meta_id'];
+                                    $correct_option_order[$key_content] = get_correct_option($meta_id);
+                                }else{
+                                    
+                                    foreach ($elements['elements'] as $k => $value) {
+
+                                         if($value['element'] == 'Text'){
+                                            $excerpt[$key_content] .= get_excerpt($value['meta_id']);
+                                        }
+
+                                        if($value['element'] == 'Mcq'){
+                                            
+                                            $meta_id = $value['meta_id'];
+                                            $correct_option_order[$key_content] = get_correct_option($meta_id);
+                                        }
+
+
+                                    }
+                                    
+                        }
+                        }
+
+                    }
+                        
+                    }
+
+                    $data['content_ids'][] = array('id' => $content_id,
+                                                'link'  => $site_url.'/#dummy-quiz/'.$content_id,
+                                                'name' => $excerpt[$key_content],
+                                                'correct_answer' => $correct_option_order[$key_content]
+                                                );
+            }
+            
+
+$data['title'] = $quiz_data->name;
+$data['duration'] = $quiz_data->duration;
+$term_ids = maybe_unserialize($quiz_data->term_ids);
+
+
+
+$term_text_data = $wpdb->prepare("SELECT name FROM {$wpdb->base_prefix}terms WHERE term_id = %d", $term_ids['textbook'] );
+$text = $wpdb->get_row($term_text_data);
+
+$term_chap_data = $wpdb->prepare("SELECT name FROM wp_terms WHERE term_id = %d", $term_ids['chapter']);
+$chap = $wpdb->get_row($term_chap_data);
+
+$data['textbook_name'] = $text->name;
+$data['chapter_name'] = $chap->name;
+
+
+$div_data = $wpdb->prepare("SELECT division FROM {$wpdb->prefix}class_divisions WHERE id = %d", $division);
+$div = $wpdb->get_row($div_data);
+
+$data['class'] = $div->division;
+
+#file_put_contents("a.txt", print_r($data, true));
+
+return $data;
+    
+}
+
+function get_correct_option($meta){
+
+    global $wpdb;
+    $correct_option_order = '';
+
+    $correct_ans_query = $wpdb->prepare("SELECT meta_value FROM {$wpdb->base_prefix}postmeta WHERE meta_id = %d AND meta_key= 'content_element'", $meta);
+
+    $correct_data = $wpdb->get_row($correct_ans_query);
+    $correct_meta = maybe_unserialize($correct_data->meta_value);
+    $correct_option_order = $correct_meta['correct_answer'][0];
+    return $correct_option_order;
+
+}
+
+function get_excerpt($ex_id,$id){
+
+    global $wpdb;
+    $excerpt_array = array();
+    $excerpt = '';
+
+    $grading_details= get_grading_parameters($id);
+    
+
+    $options1 = $wpdb->prepare("SELECT meta_value FROM {$wpdb->base_prefix}postmeta WHERE meta_key = 'content_element' and meta_id = %d", $ex_id);
+
+    $options_meta1 = $wpdb->get_row($options1);
+    $option_data1 = maybe_unserialize($options_meta1->meta_value);
+    $excerpt_array[] = $option_data1['content'];
+
+    $excerpt_array= array_merge($excerpt_array, $grading_details['excerpts']);
+    $excerpt = prettify_content_piece_excerpt($excerpt_array);
+
+    return $excerpt;
+}

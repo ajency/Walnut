@@ -6,7 +6,7 @@ define ['app'
 		class ModulesListing.Controller extends RegionController
 
 			initialize :(opts) ->
-
+				console.log opts
 				{ @contentModulesCollection,@textbooksCollection,@groupType } = opts
 				
 				@allChaptersCollection = null

@@ -37,8 +37,11 @@
                 <label class="small-text text-grey db">Viewed Hint: <span class="bold">{{hint_viewed}}<span></label>
             {{/hint}}
             {{#comment}}
-                <label class="small-text text-grey db">Comment: <span class="bold">{{comment}}<span></label>
+            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}}</span>
+                <div class="full-comment">{{comment}}</div>
+            </label>
             {{/comment}}
+         
         </div>
     {{/responseStatus}}
 </div>

@@ -111,7 +111,7 @@ function get_content_pieces($args = array(), $filtered='0') {
      
     $content_items = get_posts($args);
 
-    #file_put_contents("a3.txt", print_r($content_items, true));
+    #file_put_contents("c.txt", print_r($content_items, true));
     
     if(isset($args['search_str']) && trim($args['search_str']) !='')
         $content_items = get_content_pieces_by_search_string($args['search_str'], $content_items);
@@ -270,6 +270,7 @@ function get_single_content_piece($id){
     $excerpt = '';
 
     if($content_layout){
+        
         $content_elements = get_json_to_clone($content_layout);
         $content_piece->marks = 0; 
         
@@ -289,6 +290,7 @@ function get_single_content_piece($id){
     $excerpt_array= array_merge($excerpt_array, $grading_details['excerpts']);
 
     $excerpt = prettify_content_piece_excerpt($excerpt_array);
+
 
     if(strlen(trim($excerpt))==0)
         $excerpt='No excerpt';
