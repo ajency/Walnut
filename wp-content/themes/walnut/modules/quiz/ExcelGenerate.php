@@ -93,7 +93,6 @@ class ExportExcel {
                     }
                 }
             }
-            file_put_contents("25t.txt", print_r($data_id, true));
 
             foreach ($data_id as $y => $row_entry) {
                 foreach ($row_entry as $ky => $entry) {
