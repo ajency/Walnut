@@ -1838,6 +1838,11 @@ function get_excel_quiz_report_data($quiz_id, $division){
     $excerpt_array = array();
     $excerpt = array();
 
+    //siteurl 
+    $site_query = $wpdb->prepare("SELECT option_value FROM {$wpdb->base_prefix}options WHERE option_name = 'siteurl' LIMIT 1");
+    $site_data = $wpdb->get_row($site_query);
+    $site_url = $site_data->option_value;
+
 //students from division
 
     $query2 = $wpdb->prepare("SELECT DISTINCT um1.user_id
@@ -1856,7 +1861,7 @@ function get_excel_quiz_report_data($quiz_id, $division){
     foreach ($student_ids as $key_student => $student) {
 
         //get student_data
-        $student_query = $wpdb->prepare("SELECT DISTINCT users.ID, users.display_name, usermeta1.meta_value as first_name, usermeta2.meta_value as last_name
+        $student_query = $wpdb->prepare("SELECT DISTINCT users.ID, users.user_login, usermeta1.meta_value as first_name, usermeta2.meta_value as last_name
                                         FROM {$wpdb->base_prefix}users as users
                                         JOIN {$wpdb->base_prefix}usermeta as usermeta1
                                         ON users.ID = usermeta1.user_id
@@ -1904,8 +1909,12 @@ function get_excel_quiz_report_data($quiz_id, $division){
         }else
             $response = '';
 
+        if($student_add_data->first_name != '' || $student_add_data->last_name != '')
+            $full_name = " (".$student_add_data->first_name." ".$student_add_data->last_name.")";
+        else
+            $full_name = "";
         $data['student_ids'][] = array(//'student_id' => $student,
-                                            'student_name' => $student_add_data->first_name." ".$student_add_data->last_name." (".$student_add_data->display_name.")",
+                                            'student_name' => $student_add_data->user_login.$full_name,
                                             //'roll_num' => ,
                                              'content_ids' => $response
                                              );
@@ -2010,7 +2019,7 @@ foreach ($meta_data as $key => $value) {
                     }
 
                     $data['content_ids'][] = array('id' => $content_id,
-                                                'link'  => 'http://synapselearning.dev/#dummy-quiz/'.$content_id,
+                                                'link'  => $site_url.'/#dummy-quiz/'.$content_id,
                                                 'name' => $excerpt[$key_content],
                                                 'correct_answer' => $correct_option_order[$key_content]
                                                 );
