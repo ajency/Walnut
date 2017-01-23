@@ -39,6 +39,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
 
       SingleQuestionLayout.prototype.submitQuest = function() {
         this.$el.find('.submit-single').attr('disabled', 'disabled');
+        this.$el.find('.skip-button').attr('disabled', 'disabled');
         return this.trigger("validate:answer");
       };
 
@@ -120,7 +121,8 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.onEnableSubmit = function() {
-        return this.$el.find('.submit-single').attr('disabled', false);
+        this.$el.find('.submit-single').attr('disabled', false);
+        return this.$el.find('.skip-button').attr('disabled', false);
       };
 
       return SingleQuestionLayout;
