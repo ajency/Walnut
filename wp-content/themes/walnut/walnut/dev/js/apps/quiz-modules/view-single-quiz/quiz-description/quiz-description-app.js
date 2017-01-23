@@ -194,18 +194,17 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
         if ((ref = Marionette.getOption(this, 'display_mode')) === 'replay' || ref === 'quiz_report') {
           if (this.model.get('status') === 'completed' && Marionette.getOption(this, 'display_mode') === 'replay') {
             if (moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0) {
-              this.model.set('permissions').display_answer = true;
+              this.model.get('permissions').display_answer = true;
               return this.$el.find("#take-quiz").html('Replay');
             } else {
               return this.$el.find("#take-quiz").remove();
             }
           } else if (Marionette.getOption(this, 'display_mode') === 'quiz_report') {
-            this.model.set('permissions').display_answer = true;
+            this.model.get('permissions').display_answer = true;
             return this.$el.find("#take-quiz").html('Replay');
           } else if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {
-            this.model.set('permissions').display_answer = true;
             return this.$el.find("#take-quiz").html('Replay');
           }
         }

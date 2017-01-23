@@ -44,9 +44,14 @@ define ['app'
                     data.hint = false if not quizModel.hasPermission 'allow_hint'
 
                     if(@.model.get('comment') != '')
-                        data.comment = @.model.get 'comment'
+                        comment = @.model.get 'comment'
+                        if comment.length > 20
+                            data.comment_modal = true
+                            data.comment = comment
                     else
                         data.comment = false
+
+                    console.log data
 
 
                     data.statusUI= switch data.responseStatus
