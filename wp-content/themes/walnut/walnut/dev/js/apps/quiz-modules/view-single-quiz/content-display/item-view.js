@@ -41,7 +41,6 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           } else {
             data.comment = false;
           }
-          console.log(data);
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':

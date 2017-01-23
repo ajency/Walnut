@@ -51,9 +51,6 @@ define ['app'
                     else
                         data.comment = false
 
-                    console.log data
-
-
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-success', text : 'Correct', icon : 'fa-check'
                         when 'partially_correct'  then divClass : 'text-success', text : 'Partially Correct', icon : 'fa-check-square'
