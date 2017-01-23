@@ -92,28 +92,49 @@ Template Name: question analysis
                                         <div id="filters-region" class="m-b-10">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <div class="filters new-filter">
+                                                    <div class="filters new-filter question-filter">
 
-                                                        <div class="select2-container div-filters" id="s2id_divisions-filter"><a href="javascript:void(0)" class="select2-choice" tabindex="-1">   <span class="select2-chosen" id="select2-chosen-1">Jr. KG - 1</span><abbr class="select2-search-choice-close"></abbr>   <span class="select2-arrow" role="presentation"><b role="presentation"></b></span></a><label for="s2id_autogen1" class="select2-offscreen"></label><input class="select2-focusser select2-offscreen" type="text" aria-haspopup="true" role="button" aria-labelledby="select2-chosen-1" id="s2id_autogen1"></div>
-
-                                                        <div class="select2-container">
-                                                            <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input select2-default" id="s2id_autogen2" style="width: 153px;" placeholder="Select Textbook">
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Class">
                                                         </div>
 
-                                                        <div class="select2-container">
-                                                            <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input select2-default" id="s2id_autogen2" style="width: 153px;" placeholder="Chapter">
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Textbook">
                                                         </div>
 
-                                                        <div class="select2-container">
-                                                            <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input select2-default" id="s2id_autogen2" style="width: 153px;" placeholder="Section">
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Chapter">
                                                         </div>
 
-                                                        <div class="select2-container">
-                                                            <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input select2-default" id="s2id_autogen2" style="width: 153px;" placeholder="Subsection">
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Section">
                                                         </div>
 
-                                                        <div class="select2-container">
-                                                            <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input select2-default" id="s2id_autogen2" style="width: 153px;" placeholder="Questions Answered">
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Subsection">
+                                                        </div>
+
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Question Ans">
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="filters new-filter question-filter more-filter">
+
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Class">
+                                                        </div>
+
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Textbook">
+                                                        </div>
+
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Chapter">
+                                                        </div>
+
+                                                        <div class="">
+                                                            <input class="" type="text" placeholder="Section">
                                                         </div>
 
                                                     </div>
@@ -122,7 +143,7 @@ Template Name: question analysis
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <table class="table table-bordered m-t-10" id="question-data" >
+                                                <table class="table table-bordered m-t-10 question-data tablesorter" id="content-pieces-table">
                                                     <thead>
                                                         <tr>
                                                             <th style="width:4%"><div id="check_all_div" class="checkbox check-default" style="margin-right:auto;margin-left:auto;">
@@ -206,11 +227,16 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
  <script type="text/javascript"  src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/production/content-creator-main.js?ver=<?php echo VERSION?>"></script>
 <?php } ?>
 
+
+ <script type="text/javascript"  src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.js?ver=<?php echo VERSION?>"></script>
+
+ <script type="text/javascript"  src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.tablesorter.js?ver=<?php echo VERSION?>"></script>
+
 <script>
 
-    // $(function(){
-    //      $("#question-data").tablesorter(); 
-    //  });
+    $(function(){
+         $(".question-data").tablesorter(); 
+     });
 
 </script>
 
