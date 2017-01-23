@@ -209,6 +209,9 @@
         width:260px;
         z-index: 1;
         .transition-duration(0.3s);
+        @media @desktop-xl {
+            width: 300px;
+        }
         @media @desktop-def {
             top: 35px;
         }
@@ -217,6 +220,9 @@
         }
         &.progress-expand{
             left: -260px;
+            @media @desktop-xl {
+                left: -300px;
+            }
             @media (max-width: 1230px) {
                 left: 0;
             }
@@ -240,6 +246,9 @@
             background: #868686;
             cursor: pointer;
             .transition-duration(0.3s);
+            @media @desktop-xl {
+                left: 300px;
+            }
             @media @desktop-def {
                 top: 35px;
             }            
