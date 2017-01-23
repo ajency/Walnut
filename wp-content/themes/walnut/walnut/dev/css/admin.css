@@ -1,278 +1,228 @@
-
-
 /* ---------------------------
    ADMIN TABLE FIX FOR CONTENT PIECE -----------
  ---------------------------
 */
-
-
-#content-pieces-table{
-	table-layout: fixed;
+#content-pieces-table {
+  table-layout: fixed;
 }
-
-#content-pieces-table  tr  th{
-	vertical-align: middle;
-	text-align: center;
+#content-pieces-table tr th {
+  vertical-align: middle;
+  text-align: center;
 }
-
-#content-pieces-table .tablesorter-header-inner{
-	font-size: inherit;
+#content-pieces-table .tablesorter-header-inner {
+  font-size: inherit;
 }
-
-
-#content-pieces-table  td{
-	font-size: 0.6em;
-	word-wrap: break-word;
-	text-align: center;
+#content-pieces-table td {
+  font-size: 0.6em;
+  word-wrap: break-word;
+  text-align: center;
 }
-
-
-#content-pieces-table  td > span.label{
-	font-size: 0.9em;
-    padding: 7px;
-    min-width: inherit;
+#content-pieces-table td > span.label {
+  font-size: 0.9em;
+  padding: 7px;
+  min-width: inherit;
 }
-
-
-
-
 /* ---------------------------
    ADMIN CONTENT PIECE AND QUIZ/LECTURE FIXES -----------
  ---------------------------
 */
-
-
-.all-d-best,.direction,.submit2,.quiz-stats,.new-design{
-	display: none;
+.all-d-best,
+.direction,
+.submit2,
+.quiz-stats,
+.new-design {
+  display: none;
 }
-
-.admin-side{
-	display: block;
+.admin-side {
+  display: block;
 }
-
-#question-display-region > div .container-grey,.quiz-info{
-	text-align: center;
+#question-display-region > div .container-grey,
+.quiz-info {
+  text-align: center;
 }
-
-
-#question-display-region > div #skip-question{
-	padding: 10px 18px;
+#question-display-region > div #skip-question {
+  padding: 10px 18px;
 }
-
-
 /* ---------------------------
    QUIZ SEARCH ALLIGNED  -----------
  ---------------------------
 */
- 
- 
 /*Date-Time picker fix */
-
-.contentSelect{
-	overflow: inherit !important;
+.contentSelect {
+  overflow: inherit !important;
 }
-
-.contentSelect .tab-content{
-	overflow: inherit;
-}    
-
-.flexContainer{
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+.contentSelect .tab-content {
+  overflow: inherit;
 }
-.flexContainer .flexChild{
-    margin: 0 5px;
+.flexContainer {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
 }
-
-.flexContainer .flexChild .input-append{
-	/*display: flex;*/
+.flexContainer .flexChild {
+  margin: 0 5px;
 }
-
-.flexContainer .flexChild .input-append > input[type="text"]{
-	width: 80%;
+.flexContainer .flexChild .input-append {
+  /*display: flex;*/
 }
-
-.flexContainer .flexChild .input-append .dropdown-menu{
-	top: 40px !important;
-    height: 260px;
-    text-align: center;
+.flexContainer .flexChild .input-append > input[type="text"] {
+  width: 80%;
 }
-
-
-
+.flexContainer .flexChild .input-append .dropdown-menu {
+  top: 40px !important;
+  height: 260px;
+  text-align: center;
+}
 /* ---------------------------
    QUIZ LIST TEXTBOOK SELECT  -----------
  ---------------------------
 */
-
-
-.table-tools-actions .select2-container.textbook-filter{
-	min-width: 160px;
-    width: inherit;
+.table-tools-actions .select2-container.textbook-filter {
+  min-width: 160px;
+  width: inherit;
 }
-
-
-.table-tools-actions .select2-container.textbook-filter .select2-choices{
-	max-width: 520px;
-    overflow-x: auto;
-    white-space: nowrap;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;
-	display: flex;
+.table-tools-actions .select2-container.textbook-filter .select2-choices {
+  max-width: 520px;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
-
-
-.table-tools-actions .select2-container.textbook-filter .select2-search-choice{
-	display: inline-block;
-    float: none;
-    /*width: 123px;*/
+.table-tools-actions .select2-container.textbook-filter .select2-search-choice {
+  display: inline-block;
+  float: none
+  /*width: 123px;*/
 }
-
-.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field{
-	display: inline-block;
-    float: none;
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field {
+  display: inline-block;
+  float: none;
 }
-
-.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field input[type="text"]{
-	width: 153px;
-    color: #000 !important;
-    font-weight: 400;
-    text-transform: capitalize;
-    margin-top: -3px;
-    padding-top: 10px !important;
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field input[type="text"] {
+  width: 153px;
+  color: #000 !important;
+  font-weight: 400;
+  text-transform: capitalize;
+  margin-top: -3px;
+  padding-top: 10px !important;
 }
-
-.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field .select2-focused{
-    margin-top: -10px;
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field .select2-focused {
+  margin-top: -10px;
 }
-
 /* ---------------------------
    BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
  ---------------------------
 */
-
-#dialog-region .bootstrap-datetimepicker-widget .table-condensed{
-	width: 100%;
-	text-align: center;
-	cursor: pointer;
+#dialog-region .bootstrap-datetimepicker-widget .table-condensed {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
 }
-
-#dialog-region .bootstrap-datetimepicker-widget{
-	cursor: pointer;
+#dialog-region .bootstrap-datetimepicker-widget {
+  cursor: pointer;
 }
-
-#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
-	color: #ffffff;
-    background-color: #259b24; 
-    border-color: #259b24;
+#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary {
+  color: #ffffff;
+  background-color: #259b24;
+  border-color: #259b24;
 }
-
 /*no result found*/
-.visible-msg{
+.visible-msg {
   opacity: 1;
 }
-
-.table-div{
+.table-div {
   display: table;
 }
-
 .table-cell-div,
-.table-cell-div2{
+.table-cell-div2 {
   display: table-cell;
   vertical-align: middle;
 }
-
-.page-content{
+.page-content {
   min-height: auto;
   overflow: initial;
 }
-
 .btn.view-report,
-.btn.schedule-quiz{
+.btn.schedule-quiz {
   padding: 6px 8px;
   display: block;
-  margin: auto; 
+  margin: auto;
 }
-
-.table .checkbox{
+.table .checkbox {
   margin-left: 0;
 }
-
 .elem-50 input[type="text"],
-.elem-50 textarea{
+.elem-50 textarea {
   max-width: 50%;
   width: 50%;
 }
-
-.input-append.success .add-on{
+.input-append.success .add-on {
   background-color: #D1DADE;
 }
-
-.input-append.success .add-on .arrow{
+.input-append.success .add-on .arrow {
   color: #D1DADE;
 }
-
-
 /* ---------------------------
    DOWNLOAD EXCEL REPORT STYLING  -----------
  ---------------------------
 */
-
-
-.report-container{
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: -ms-flex;
-    display: -webkit-box;
-    display: flex;
-    -webkit-justify-content: center;
-    -ms-justify-content: center;
-    justify-content: center;
+.report-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-justify-content: center;
+  -ms-justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
-
-.report-container .view-report{
-    font-size: 1em;
-    margin: 0;
+.report-container .view-report {
+  font-size: 1em;
+  margin: 0;
 }
-
 @media screen and (max-width: 1400px) {
-  .report-container .view-report{
-      padding: 6px 5px;
+  .report-container .view-report {
+    padding: 6px 5px;
   }
 }
-
-
-.report-container .xl-report{
-    border: 0;
-    background-color: rgba(37, 155, 36, 0.75);
-    padding: 0 10px;
-    box-shadow: -1px 0px 6px 1px rgba(0, 0, 0, 0.23);
-    color: #fff;
-    outline: 0;
-    transition: all 0.5s ease;
+.report-container .xl-report {
+  border: 0;
+  background-color: rgba(37, 155, 36, 0.75);
+  padding: 0 10px;
+  box-shadow: -1px 0px 6px 1px rgba(0, 0, 0, 0.23);
+  color: #fff;
+  outline: 0;
+  -webkit-transition: all 0.5s ease;
+          transition: all 0.5s ease;
 }
-
-.report-container .xl-report:hover{
-    background-color: rgba(37, 155, 36, 0.93);
+.report-container .xl-report:hover {
+  background-color: rgba(37, 155, 36, 0.93);
 }
-
-.report-container .xl-report i{
-    font-size: 0.9em;
+.report-container .xl-report i {
+  font-size: 0.9em;
 }
-
 @media screen and (min-width: 1250px) and (max-width: 1366px) {
-  .report-container .view-report{
-      padding: 6px 5px;
-      font-size: 0.85em;
+  .report-container .view-report {
+    padding: 6px 5px;
+    font-size: 0.85em;
   }
-  .report-container .xl-report{
-      padding: 0 8px; 
+  .report-container .xl-report {
+    padding: 0 8px;
   }
-  .report-container .xl-report i{
+  .report-container .xl-report i {
     font-size: 0.8em;
   }
 }
-
-
+/*# sourceMappingURL=admin.css.map */
