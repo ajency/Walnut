@@ -3493,15 +3493,24 @@ lesshat-selector {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active:hover .full-comment {
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label .more {
+  display: none;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .full-comment.is-shown {
   opacity: 1;
   -webkit-transform: translate(0, 0);
       -ms-transform: translate(0, 0);
           transform: translate(0, 0);
 }
-#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active:after {
-  content: '';
-  display: inline-block;
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more {
+  display: block;
+  position: absolute;
+  bottom: 4px;
+  right: 0;
+  color: #f2593a;
+  box-shadow: 1px 18px 2px 16px rgba(255, 255, 255, 0.77);
+  background-color: #fff;
+  cursor: pointer;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";
