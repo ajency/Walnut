@@ -87,27 +87,25 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 			$taken_on           =   date("d M Y", strtotime($attempts_result2->taken_on));
 			$qt = maybe_unserialize($attempts_result2->quiz_meta);
 
-			
-				
-			if($qt['marks_scored']){
-				if(!isset($qt['questions_order']) || $qt['questions_order'] == 'N'){
-					$sql_question = $wpdb->prepare(
+		$sql_question = $wpdb->prepare(
 									"SELECT meta_value
 									FROM wp_collection_meta
 									WHERE meta_key = 'quiz_meta' AND collection_id = ".$row->id
 									);
-					$quiz_meta      = $wpdb->get_row($sql_question);
-					$quiz_data = maybe_unserialize($quiz_meta->meta_value);
+		$quiz_meta      = $wpdb->get_row($sql_question);
+		$quiz_data = maybe_unserialize($quiz_meta->meta_value);
+			
+				
+			if($qt['marks_scored']){
+					
 					$total_marks_scored = (float) $qt['marks_scored']. ' / '.$quiz_data['marks'];
-				}else
-					$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
 			}
 			else{
 
 				$quiz_summary       = compute_quiz_summaries_for_user($attempts_result2->summary_id, $qt);
 				if($quiz_summary->marks_scored == '' )
 					$quiz_summary->marks_scored = 0;
-				$total_marks_scored = (float) $quiz_summary->marks_scored. ' / '.count($qt['questions_order']);
+				$total_marks_scored = (float) $quiz_summary->marks_scored. ' / '.$quiz_data['marks'];
 			}
 			 			
 			switch($qt['status']){

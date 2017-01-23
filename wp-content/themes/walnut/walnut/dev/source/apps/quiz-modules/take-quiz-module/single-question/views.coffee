@@ -29,6 +29,9 @@ define ['app'
                     submitQuest:=>
                         @$el.find '.submit-single'
                         .attr 'disabled', 'disabled'
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
+                        
                         @trigger "validate:answer"
 
                     mixinTemplateHelpers:(data)=>
@@ -122,5 +125,8 @@ define ['app'
 
                     onEnableSubmit:=>
                         @$el.find '.submit-single'
+                        .attr 'disabled', false
+
+                        @$el.find '.skip-button'
                         .attr 'disabled', false
 

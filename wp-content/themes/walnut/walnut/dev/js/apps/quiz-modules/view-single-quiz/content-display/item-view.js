@@ -15,7 +15,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.tagName = 'li';
 
       View.prototype.mixinTemplateHelpers = function(data) {
-        var marks_obtained, quizModel, responseModel, total_marks;
+        var comment, marks_obtained, quizModel, responseModel, total_marks;
         responseModel = Marionette.getOption(this, 'responseModel');
         quizModel = Marionette.getOption(this, 'quizModel');
         data.dateCompleted = 'N/A';
@@ -33,10 +33,15 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             data.hint = false;
           }
           if (this.model.get('comment') !== '') {
-            data.comment = this.model.get('comment');
+            comment = this.model.get('comment');
+            if (comment.length > 20) {
+              data.comment_modal = true;
+              data.comment = comment;
+            }
           } else {
             data.comment = false;
           }
+          console.log(data);
           data.statusUI = (function() {
             switch (data.responseStatus) {
               case 'correct_answer':
