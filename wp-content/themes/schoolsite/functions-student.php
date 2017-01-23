@@ -206,6 +206,8 @@ function student_my_upcoming_quizes($texbook_ids){
 	global $wpdb;
 	$current_user = wp_get_current_user();
 	$term_ids = [];
+
+	file_put_contents("a2.txt", print_r($term_ids, true));
 	foreach ($texbook_ids as $key => $value) {
 		$term_ids[] = "collection.term_ids like '%\"$value\";%'";
 	}
@@ -220,6 +222,8 @@ function student_my_upcoming_quizes($texbook_ids){
 		and (schedule_from >= '".$today."' OR schedule_to >= '".$today."')
 		GROUP BY collection.id ORDER BY schedules.schedule_from DESC";	
 
+		file_put_contents("a1.txt", print_r($query, true));
+
 		$result = $wpdb->get_results($query);
 		$data = [];
 		foreach ($result as $key => $value) {
@@ -231,7 +235,7 @@ function student_my_upcoming_quizes($texbook_ids){
 			 $day      = date("d", strtotime($value->schedule_from));
 			 $month    = date("M", strtotime($value->schedule_from));
 			 $year     = date("Y", strtotime($value->schedule_from));
-			 $data[]   = array('quiz_name'=>$value->quiz_name,'quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
+			 $data[]   = array('quiz_name'=>$value->quiz_name,'quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, 'month'=>$month, 'year' =>$year);
 		}
 		return $data;
 }

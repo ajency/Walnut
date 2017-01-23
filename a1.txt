@@ -1,0 +1,7 @@
+SELECT collection.name as quiz_name,quiz_id, term_ids, schedule_from, meta.meta_value,summary.taken_on FROM wp_content_collection collection  
+		LEFT OUTER JOIN wp_13_quiz_response_summary summary on collection.id = summary.collection_id  and student_id='1091'
+		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
+		INNER JOIN wp_13_quiz_schedules schedules on collection.id = schedules.quiz_id 
+		WHERE collection.type='quiz' and post_status='publish'  and (collection.term_ids like '%"543";%'OR collection.term_ids like '%"566";%'OR collection.term_ids like '%"574";%'OR collection.term_ids like '%"1629";%'OR collection.term_ids like '%"1630";%'OR collection.term_ids like '%"1635";%'OR collection.term_ids like '%"1637";%'OR collection.term_ids like '%"1640";%'OR collection.term_ids like '%"1682";%'OR collection.term_ids like '%"1687";%') 
+		and (schedule_from >= '2017-01-23 11:37:44' OR schedule_to >= '2017-01-23 11:37:44')
+		GROUP BY collection.id ORDER BY schedules.schedule_from DESC
