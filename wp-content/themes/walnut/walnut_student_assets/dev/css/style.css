@@ -2713,6 +2713,22 @@ lesshat-selector {
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text > p > span {
   font-size: inherit !important;
 }
+#question-display-region > div #content-board .ansFalse,
+#question-display-region > div #content-board .ansRight,
+#question-display-region > div #content-board .ansWrong {
+  opacity: 0.5;
+  pointer-events: none;
+}
+#question-display-region > div #content-board .ansFalse .mcq-option-select,
+#question-display-region > div #content-board .ansRight .mcq-option-select,
+#question-display-region > div #content-board .ansWrong .mcq-option-select {
+  opacity: 0.4;
+}
+#question-display-region > div #content-board .ansFalse.ansRight,
+#question-display-region > div #content-board .ansRight.ansRight,
+#question-display-region > div #content-board .ansWrong.ansRight {
+  opacity: 0.8;
+}
 #main-content-region .content {
   position: absolute;
   width: 100%;
