@@ -169,7 +169,7 @@ define ['app'
                     
                     if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
                         if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0 
-                            @model.get('permissions').display_answer = true
+                            @model.set('permissions').display_answer = true
 
                             @$el.find "#take-quiz"
                             .html 'Replay'    
@@ -178,7 +178,7 @@ define ['app'
                             .remove()  
 
                     else if Marionette.getOption(@, 'display_mode') == 'quiz_report'
-                        @model.get('permissions').display_answer = true 
+                        @model.set('permissions').display_answer = true 
                         @$el.find "#take-quiz"
                         .html 'Replay'         
                     
@@ -187,6 +187,7 @@ define ['app'
                         @$el.find "#take-quiz"
                         .remove()
                     else
+                        @model.set('permissions').display_answer = true 
                         @$el.find "#take-quiz"
                         .html 'Replay'
                     
