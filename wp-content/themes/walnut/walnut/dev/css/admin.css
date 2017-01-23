@@ -280,4 +280,20 @@ table .tablesorter-header.tablesorter-headerDesc {
   font-size: 0.75em;
   color: #000;
 }
+.more-filter {
+  display: none;
+}
+.more-filter .extra {
+  -webkit-flex-wrap: inherit;
+      -ms-flex-wrap: inherit;
+          flex-wrap: inherit;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  margin-top: 10px;
+}
+.more-filter .extra > div:nth-child(-n+2) {
+  visibility: hidden;
+}
 /*# sourceMappingURL=admin.css.map */

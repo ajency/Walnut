@@ -319,13 +319,26 @@ table{
   align-items: center;
   flex-wrap: wrap;
   & > div{
-    flex: 1;
-    padding-right: 10px;
-    input[type='text']{
+      flex: 1;
+      padding-right: 10px;
+      input[type='text']{
       width: 100%;
       font-weight: 400;
       font-size: 0.75em;
       color: #000;
+    }
+  }
+}
+.more-filter{
+  display: none;
+    .extra{
+      flex-wrap: inherit;
+      justify-content: flex-end;
+      margin-top: 10px;
+      & > div{
+        &:nth-child(-n+2){
+          visibility: hidden;
+      }
     }
   }
 }

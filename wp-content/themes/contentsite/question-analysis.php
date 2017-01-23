@@ -115,28 +115,42 @@ Template Name: question analysis
                                                         </div>
 
                                                         <div class="">
-                                                            <input class="" type="text" placeholder="Question Ans">
+                                                            <input class="enter-ques" type="text" placeholder="Question Ans">
                                                         </div>
 
                                                     </div>
-                                                    <div class="filters new-filter question-filter more-filter">
+                                                    <div class="filters new-filter more-filter">
+                                                        <div class="question-filter extra">
 
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Class">
+                                                            <!-- Hidden for UI purpose -->
+                                                            <div class="">
+                                                                <input class="" type="text">
+                                                            </div>
+                                                            <!-- Hidden for UI purpose -->
+                                                            <div class="">
+                                                                <input class="" type="text">
+                                                            </div>
+                                                            
+
+                                                            
+                                                            <!-- Filters -->
+                                                            <div class="">
+                                                                <input class="" type="text" placeholder="This week">
+                                                            </div>
+
+                                                            <div class="">
+                                                                <input class="" type="text" placeholder="This month">
+                                                            </div>
+
+                                                            <div class="">
+                                                                <input class="" type="text" placeholder="This year">
+                                                            </div>
+
+                                                            <div class="">
+                                                                <input class="" type="text" placeholder="All time">
+                                                            </div>
+
                                                         </div>
-
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Textbook">
-                                                        </div>
-
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Chapter">
-                                                        </div>
-
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Section">
-                                                        </div>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,6 +250,20 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
 
     $(function(){
          $(".question-data").tablesorter(); 
+
+        //  $('.question-filter .enter-ques').focus(function () {
+        //     $('.more-filter').slideDown();
+        // }).blur(function () {
+        //     $('.more-filter').slideUp();
+        // });
+        $('.question-filter .enter-ques').on('keyup', function() {
+            $('.more-filter').slideDown();
+         });
+        $('.question-filter .enter-ques').blur(function () {
+            if($('.question-filter .enter-ques').val() == ''){
+                $('.more-filter').slideUp();
+            }
+        });
      });
 
 </script>
