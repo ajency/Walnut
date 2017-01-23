@@ -2713,6 +2713,22 @@ lesshat-selector {
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text > p > span {
   font-size: inherit !important;
 }
+#question-display-region > div #content-board .ansFalse,
+#question-display-region > div #content-board .ansRight,
+#question-display-region > div #content-board .ansWrong {
+  opacity: 0.5;
+  pointer-events: none;
+}
+#question-display-region > div #content-board .ansFalse .mcq-option-select,
+#question-display-region > div #content-board .ansRight .mcq-option-select,
+#question-display-region > div #content-board .ansWrong .mcq-option-select {
+  opacity: 0.4;
+}
+#question-display-region > div #content-board .ansFalse.ansRight,
+#question-display-region > div #content-board .ansRight.ansRight,
+#question-display-region > div #content-board .ansWrong.ansRight {
+  opacity: 0.8;
+}
 #main-content-region .content {
   position: absolute;
   width: 100%;
@@ -2731,6 +2747,11 @@ lesshat-selector {
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
+@media only screen and (min-width: 1601px) and (max-width: 1920px) {
+  #quiz-progress-region .quizProgress {
+    width: 300px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress {
     top: 35px;
@@ -2743,6 +2764,11 @@ lesshat-selector {
 }
 #quiz-progress-region .quizProgress.progress-expand {
   left: -260px;
+}
+@media only screen and (min-width: 1601px) and (max-width: 1920px) {
+  #quiz-progress-region .quizProgress.progress-expand {
+    left: -300px;
+  }
 }
 @media (max-width: 1230px) {
   #quiz-progress-region .quizProgress.progress-expand {
@@ -2771,6 +2797,11 @@ lesshat-selector {
   cursor: pointer;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
+}
+@media only screen and (min-width: 1601px) and (max-width: 1920px) {
+  #quiz-progress-region .quizProgress .progressStrip {
+    left: 300px;
+  }
 }
 @media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress .progressStrip {
