@@ -12,6 +12,7 @@ define ['app'],(App)->
 
 
 			onShow:->
+				console.log 'sortable'
 				@$el.find('.droppable-column').sortable
 										revert 		: 'invalid'
 										items 		: '> .element-wrapper'
