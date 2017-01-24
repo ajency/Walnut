@@ -717,6 +717,35 @@
 	    	}
 	    }
     }
+    &__cont{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .quiz-btn{
+            &:first-child{
+                flex: 0 0 26%;
+            }
+            .hint{
+                width: 100%;
+                background-color: @dashboard-color;
+                color: #fff;
+                i{
+                    color: #ffff28;
+                }
+            }
+            &:last-child{
+                display: flex;
+                flex: 0 0 54%;
+            }
+            button{
+                width: 100%;
+                margin-right: 10px;
+            }
+            .bottom-submit{
+                margin-right: 0;
+            }
+        }
+    }
     #submit-question{
     	background: #FF8685;
         @media @desktop-def {

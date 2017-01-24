@@ -47,48 +47,56 @@
 
 <div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions new-design text-right"> 
     <!-- <span class="pull-left small" id="first_question"></span> -->
-  
-        {{#show_skip}}
-            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button ">
-                Skip <i class="fa fa-step-forward"></i>
-            </button>
-        {{/show_skip}}
 
-        {{^replay}}
-        {{^allow_submit_answer}} 
-        <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
-                Next <i class="fa fa-step-forward"></i>
-            </button>
-        {{/allow_submit_answer}} 
-        {{/replay}}
+        <div class="quizActions__cont">
+            <div class="quiz-btn">
+                {{#show_hint}} 
+                <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small hint">
+                    <i class="fa fa-lightbulb-o"></i> Hint
+                </button>
+                {{/show_hint}}
+            </div>
+        
+            {{^replay}}
+            {{^allow_submit_answer}} 
+            <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
+                    Next <i class="fa fa-step-forward"></i>
+                </button>
+            {{/allow_submit_answer}} 
+            {{/replay}}
 
 
- 
-    
+            <div class="quiz-btn">
 
-    {{#allow_submit_answer}}   
-   <button type="button" id="submit-question" class="btn btn-success submit-single bottom-submit">
-        Submit <i class="fa fa-forward"></i> 
-    </button>
-    {{/allow_submit_answer}}
-        <div class="submit2">
-        {{#allow_submit_answer}}   
-            <button type="button" id="submit-question" class="btn btn-success submit-single">
-                Submit <i class="fa fa-forward"></i> 
-            </button>
-        {{/allow_submit_answer}}        
+               {{#show_skip}}
+                    <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button ">
+                        Skip <i class="fa fa-step-forward"></i>
+                    </button>
+                {{/show_skip}}
+
+                {{#allow_submit_answer}}   
+                    <button type="button" id="submit-question" class="btn btn-success submit-single bottom-submit">
+                        Submit <i class="fa fa-forward"></i> 
+                    </button>
+
+                {{/allow_submit_answer}}
+                <div class="submit2">
+                {{#allow_submit_answer}}   
+                    <button type="button" id="submit-question" class="btn btn-success submit-single">
+                        Submit <i class="fa fa-forward"></i> 
+                    </button>
+                {{/allow_submit_answer}}        
+
+                </div>
+            </div>
+        
         </div>
-
 
     <!-- <span class="pull-right small" id="last_question"></span> -->
 
 
     <!-- <div class="text-center"> -->
-        {{#show_hint}}
-        <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
-            <i class="fa fa-lightbulb-o"></i> Hint
-        </button>
-        {{/show_hint}}
+       
 
             <!-- <div><i class="small">(questions once skipped cannot be answered later)</i></div> -->
  
@@ -113,6 +121,9 @@
 
     <!-- </div> -->
     <div class="clearfix"></div>
+
+   
+
 </div>
 
 
