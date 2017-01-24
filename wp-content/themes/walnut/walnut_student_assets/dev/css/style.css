@@ -2100,7 +2100,7 @@ lesshat-selector {
   padding: 25px;
   width: 70%;
 }
-@media screen and (min-width: 1350px) and (max-width: 1400px) {
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
   .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
     width: 75%;
   }
@@ -3552,7 +3552,7 @@ lesshat-selector {
   border-top: 0;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
 }
-@media screen and (min-width: 1350px) and (max-width: 1400px) {
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child {
     width: 75%;
   }
@@ -3576,10 +3576,10 @@ lesshat-selector {
   line-height: 40px;
   width: 350px;
 }
-@media screen and (min-width: 1350px) and (max-width: 1400px) {
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
-    right: -115px;
-    width: 300px;
+    right: -90px;
+    width: 275px;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
