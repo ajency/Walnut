@@ -142,6 +142,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
         var data, newResponseModel, single_status, timeTaken, totalTime;
+        this.layout.quizProgressRegion.trigger("check:current");
         if (answer.get('status') === 'wrong_answer' && answer.get('answer').length === 0) {
           single_status = 'skipped';
         } else {
@@ -181,6 +182,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._skipQuestion = function(answer) {
+        this.layout.quizProgressRegion.trigger("check:current");
         this._submitQuestion(answer);
         return this._gotoNextQuestion();
       };

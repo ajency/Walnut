@@ -26,8 +26,13 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.listenTo(this.region, "question:changed", function(selectedQID) {
           return this.view.triggerMethod("question:change", selectedQID);
         });
-        return this.listenTo(this.region, "question:submitted", function(responseModel) {
+        this.listenTo(this.region, "question:submitted", function(responseModel) {
           return this.view.triggerMethod("question:submitted", responseModel);
+        });
+        return this.listenTo(this.region, {
+          "check:current": function() {
+            return this.view.triggerMethod("check:current");
+          }
         });
       };
 
@@ -153,6 +158,17 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         } else if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
           return this.changeClassName(responseModel);
         }
+      };
+
+      QuizProgressView.prototype.onCheckCurrent = function() {
+        var current, page;
+        current = parseInt($('ul#quiz-items li.current').text()) + 1;
+        if (current > 9) {
+          page = Math.ceil(current / 9);
+        } else {
+          page = 1;
+        }
+        return $('.holder a:nth-of-type(' + page + ')').trigger("click");
       };
 
       QuizProgressView.prototype.changeClassName = function(responseModel) {

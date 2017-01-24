@@ -21,6 +21,7 @@ define ['app'
                         'click #skip-question'      :-> @trigger "skip:question"
 
                         'click #show-hint'          :-> 
+                            console.log @model.get 'hint'
                             bootbox.alert @model.get 'hint'
                             @trigger 'show:hint:dialog'
 
@@ -81,7 +82,6 @@ define ['app'
 
                     initialize:->
                         @quizModel = Marionette.getOption @, 'quizModel'
-
 
                     onShow:->
                         if @$el.find('#submit-question').length is 0
