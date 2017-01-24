@@ -183,12 +183,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           }
         }
         if (responseSummary.get('status') === 'completed') {
-          console.log('completed');
           data.responseSummary = true;
           data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get('num_skipped');
           permissions = this.model.get('permissions');
-          console.log(permissions);
-          console.log(this.model.hasPermission('display_answer'));
           if (this.model.hasPermission('display_answer' || App.request("current:user:can", "view_all_quizzes"))) {
             data.display_marks = true;
           }

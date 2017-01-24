@@ -158,12 +158,9 @@ define ['app'
                             #data.takeQuizError = 'Class tests can be taken from school site only'
 
                 if responseSummary.get('status') is 'completed'
-                    console.log 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
                     permissions = @model.get('permissions')
-                    console.log permissions
-                    console.log @model.hasPermission 'display_answer'
                     data.display_marks = true if (@model.hasPermission 'display_answer'  || App.request "current:user:can", "view_all_quizzes")
                     if data.negMarksEnable
                         data.marks_scored = parseFloat responseSummary.get 'marks_scored'
