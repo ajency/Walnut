@@ -2092,13 +2092,18 @@ lesshat-selector {
   color: #F15839;
 }
 .cbp_tmtimeline > li .contentPiece .cbp_tmlabel {
-  margin: 0 0 55px 25%;
+  margin: 0 0 55px 27%;
 }
 .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
   border: 1px solid #ccc;
   padding: 25px;
-  width: 80%;
+  width: 70%;
+}
+@media screen and (min-width: 1350px) and (max-width: 1400px) {
+  .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
+    width: 75%;
+  }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
@@ -3543,9 +3548,14 @@ lesshat-selector {
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child {
   background: #F0F0F0;
   border: 1px solid #ccc;
-  width: 80%;
+  width: 70%;
   border-top: 0;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
+}
+@media screen and (min-width: 1350px) and (max-width: 1400px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child {
+    width: 75%;
+  }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child .muted {
   font-size: 0.8em;
@@ -3561,10 +3571,16 @@ lesshat-selector {
   }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
-  right: -80px;
+  right: -90px;
   text-align: center;
   line-height: 40px;
-  width: 200px;
+  width: 350px;
+}
+@media screen and (min-width: 1350px) and (max-width: 1400px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
+    right: -115px;
+    width: 300px;
+  }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
