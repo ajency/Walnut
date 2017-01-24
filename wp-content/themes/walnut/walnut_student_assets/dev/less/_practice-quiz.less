@@ -717,6 +717,35 @@
 	    	}
 	    }
     }
+    &__cont{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .quiz-btn{
+            &:first-child{
+                flex: 0 0 26%;
+            }
+            .hint{
+                width: 100%;
+                background-color: @dashboard-color;
+                color: #fff;
+                i{
+                    color: #ffff28;
+                }
+            }
+            &:last-child{
+                display: flex;
+                flex: 0 0 54%;
+            }
+            button{
+                width: 100%;
+                margin-right: 10px;
+            }
+            .bottom-submit{
+                margin-right: 0;
+            }
+        }
+    }
     #submit-question{
     	background: #FF8685;
         @media @desktop-def {
@@ -769,6 +798,46 @@
     }
 
  }
+
+.quiz-info{
+    margin: 20px 0;
+    text-align: left;
+    .cards{
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #f2f2f2;
+        border-radius: 5px;
+        box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.15);
+        h2{
+            margin: 0 0 5px 0;
+            font-size: 1.15em;
+            display: inline-block;
+            i{
+                font-size: 1.4em;
+                vertical-align: middle;
+                margin-right: 5px;
+            }
+        }
+        .data{
+            line-height: 1.5;
+            margin-left: 15px;
+        }
+    }
+    &__hint{
+        border-left: 3px solid @dashboard-color;
+        i{
+            color: @dashboard-color;
+        }
+    }
+    &__comment{
+        border-left: 3px solid #a2a7a2;
+        i{
+            font-size: 1.1em;
+            color: #a2a7a2;
+            vertical-align: inherit;
+        }
+    }
+}
 
 
 

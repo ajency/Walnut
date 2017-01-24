@@ -91,8 +91,12 @@
 	                 & > div:last-child {
 	                    background: #F0F0F0;
 					    border: 1px solid #ccc;
-					    width: 80%;
+					    // width: 80%;
+					    width: 70%;
 					    border-top: 0;
+					    @media screen and (min-width: 1350px) and (max-width: 1400px) {
+	             			width: 75%;
+	             		}
 					    .box-shadow(0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12));
 					    .muted{
 					    	font-size: 0.8em;
@@ -111,10 +115,16 @@
 	             }
 	             .qstnStatus{
 	             	// right: -64px;
-	             	right: -80px;
+	             	// right: -80px;
+	             	right: -90px;
 	             	text-align: center;
 	             	line-height: 40px;
-	             	width: 200px;
+	             	// width: 200px;
+	             	width: 350px;
+	             	@media screen and (min-width: 1350px) and (max-width: 1400px) {
+	             		right: -115px;
+	             		width: 300px;
+	             	}
 	             	@media @i-tab-landscape{
 						right: -100px;
 	             	}
@@ -133,6 +143,8 @@
 						    z-index: 1;
 						    background: #69b8b5;
 						    color: #fff;
+						    width: 85%;
+    						margin: 0 auto;
 						    padding: 8px;
 						    right: 0;
 						    left: 0;
