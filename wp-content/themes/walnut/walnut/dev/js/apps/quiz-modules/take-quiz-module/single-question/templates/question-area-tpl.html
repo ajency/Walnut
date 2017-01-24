@@ -49,6 +49,7 @@
     <!-- <span class="pull-left small" id="first_question"></span> -->
 
         <div class="quizActions__cont">
+            {{^replay}}
             <div class="quiz-btn">
                 {{#show_hint}} 
                 <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small hint">
@@ -56,6 +57,7 @@
                 </button>
                 {{/show_hint}}
             </div>
+            {{/replay}}
         
             {{^replay}}
             {{^allow_submit_answer}} 
@@ -128,17 +130,24 @@
 
 
 <!-- quiz details -->
+{{#replay}}
 
     <div class="quiz-info">
+    {{#show_hint}}
         <div class="cards quiz-info__hint">
             <h2><i class="fa fa-lightbulb-o"></i>Hint</h2>
-            <div class="data">Hint please</div>
+            <div class="data">{{hint}}</div>
         </div>
+    {{/show_hint}}
+    {{#comment}}
         <div class="cards quiz-info__comment">
             <h2><i class="fa fa-comment"></i>Comment</h2>
-            <div class="data">Comment please</div>
+            <div class="data">{{&comment}}</div>
         </div>
+    {{/comment}}
     </div>
+
+{{/replay}}
 
 
 
