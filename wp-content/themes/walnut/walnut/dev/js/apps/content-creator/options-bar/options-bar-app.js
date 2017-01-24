@@ -81,7 +81,8 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator
       OptionsBarController.prototype._fetchChapters = function(term_id, current_chapter) {
         var chaptersCollection;
         chaptersCollection = App.request("get:chapters", {
-          'parent': term_id
+          'parent': term_id,
+          'type': 'edit-content'
         });
         return App.execute("when:fetched", chaptersCollection, (function(_this) {
           return function() {

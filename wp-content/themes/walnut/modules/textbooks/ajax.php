@@ -6,10 +6,12 @@ require_once 'additional-textbook-fields.php';
 add_action( 'wp_ajax_get-textbooks', 'fetch_textbooks' );
 add_action( 'wp_ajax_get-chapters', 'fetch_textbooks' );
 
+
 function fetch_textbooks() {
     
     $args=$_GET;
-    if( isset($args['page_url']) && $args['page_url'] == 'content-pieces')
+
+    if( (isset($args['page_url']) && $args['page_url'] == 'content-pieces') || (isset($args['type']) && $args['type'] == 'edit-content'))
       $all='1';
     else if($args['to_fetch'] == 'textbooks')
       $all='2';
@@ -33,6 +35,7 @@ function fetch_textbooks() {
       return $textbooks;
    wp_send_json($textbooks);
 }
+
 
 add_action( 'wp_ajax_read-textbook', 'read_textbook' );
 
