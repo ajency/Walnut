@@ -1145,6 +1145,8 @@ function get_quiz_summaries_for_student($user_id, $quiz_id=0){
 
 function compute_quiz_summaries_for_user($summary_id,$qt){
 
+    file_put_contents("a7.txt", 'compute_quiz_summaries_for_user');
+
     global $wpdb;
 
     $data= array();
@@ -1208,6 +1210,7 @@ function get_latest_quiz_response_summary($quiz_id, $user_id, $quizz_type=''){
 
 function read_quiz_response_summary_student($summary_id,$user_id=0, $quizz_type=''){
       global $wpdb;
+      file_put_contents("a8.txt", 'read_quiz_response_summary_student');
    # $myfile = fopen("aresponse.txt", "a");
     $summ_id = $summary_id;
     $quiz_response_summary = $wpdb->get_row($wpdb->prepare("select * from {$wpdb->prefix}quiz_response_summary
@@ -1229,6 +1232,8 @@ function read_quiz_response_summary_student($summary_id,$user_id=0, $quizz_type=
             FROM {$wpdb->prefix}quiz_question_response
         WHERE summary_id = %s", $summ_id
     );
+
+    file_put_contents("b.txt", $additional_details_qry);
     $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
     $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
     $additional_details= $wpdb->get_row($additional_details_qry);
@@ -1480,6 +1485,7 @@ function read_quiz_response_summary($summary_id,$user_id=0, $quizz_type=''){
 }
 
 function read_current_quiz_response_summary($summary_id){
+    file_put_contents("a6.txt", 'read_current_quiz_response_summary');
     global $wpdb;
     if(!$summary_id)
         return false;

@@ -29,6 +29,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
           return this.trigger("skip:question");
         },
         'click #show-hint': function() {
+          console.log(this.model.get('hint'));
           bootbox.alert(this.model.get('hint'));
           return this.trigger('show:hint:dialog');
         },

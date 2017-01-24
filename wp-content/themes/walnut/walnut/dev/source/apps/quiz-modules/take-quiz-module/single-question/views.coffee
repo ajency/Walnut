@@ -21,6 +21,7 @@ define ['app'
                         'click #skip-question'      :-> @trigger "skip:question"
 
                         'click #show-hint'          :-> 
+                            console.log @model.get 'hint'
                             bootbox.alert @model.get 'hint'
                             @trigger 'show:hint:dialog'
 
