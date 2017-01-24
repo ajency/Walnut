@@ -22,7 +22,7 @@
 #content-pieces-table .tablesorter-header-inner {
   font-size: inherit;
 }
-.checkbox label:after {
+.table .checkbox label:after {
   left: 1px;
 }
 #check_all_div {
