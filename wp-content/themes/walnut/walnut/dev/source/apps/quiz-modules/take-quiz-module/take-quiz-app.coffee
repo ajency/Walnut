@@ -136,6 +136,8 @@ define ['app'
 				_submitQuestion:(answer)->
 					#save results here
 
+					@layout.quizProgressRegion.trigger "check:current"
+
 					if(answer.get('status') == 'wrong_answer' && answer.get('answer').length == 0)
 						single_status = 'skipped'
 					else
@@ -177,6 +179,7 @@ define ['app'
 						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
 				_skipQuestion:(answer)->
+					@layout.quizProgressRegion.trigger "check:current"
 					#save skipped status
 					@_submitQuestion answer
 					@_gotoNextQuestion()
