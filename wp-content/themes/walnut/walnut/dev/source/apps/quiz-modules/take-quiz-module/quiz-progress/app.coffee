@@ -22,6 +22,9 @@ define ['app'
                         @listenTo @region, "question:submitted", (responseModel)->
                             @view.triggerMethod "question:submitted", responseModel
 
+                        @listenTo @region, "check:current":->
+                            @view.triggerMethod "check:current"
+
 
                     _showQuizProgressView: (collection,currentQuestion) =>
                         
@@ -124,6 +127,15 @@ define ['app'
 
                         else if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
                             @changeClassName responseModel
+
+                    onCheckCurrent:->
+                        current = parseInt($('ul#quiz-items li.current').text()) + 1
+                        if(current > 9)
+                            page = Math.ceil(current/9)
+                        else
+                            page = 1
+                        $('.holder a:nth-of-type('+page+')').trigger "click"
+
 
                     changeClassName:(responseModel)->
                         
