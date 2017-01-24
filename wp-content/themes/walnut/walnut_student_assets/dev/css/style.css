@@ -3409,6 +3409,44 @@ lesshat-selector {
   display: none;
   top: -209px;
 }
+.quiz-info {
+  margin: 20px 0;
+}
+.quiz-info .cards {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.15);
+}
+.quiz-info .cards h2 {
+  margin: 0 0 5px 0;
+  font-size: 1.15em;
+  display: inline-block;
+}
+.quiz-info .cards h2 i {
+  font-size: 1.4em;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.quiz-info .cards .data {
+  line-height: 1.5;
+  margin-left: 15px;
+}
+.quiz-info__hint {
+  border-left: 3px solid #69b8b5;
+}
+.quiz-info__hint i {
+  color: #69b8b5;
+}
+.quiz-info__comment {
+  border-left: 3px solid #a2a7a2;
+}
+.quiz-info__comment i {
+  font-size: 1.1em;
+  color: #a2a7a2;
+  vertical-align: inherit;
+}
 .replay-actions {
   position: fixed;
   width: 100%;
