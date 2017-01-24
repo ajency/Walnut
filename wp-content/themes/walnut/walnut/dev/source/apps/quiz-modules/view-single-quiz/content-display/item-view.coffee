@@ -13,6 +13,8 @@ define ['app'
 
             mixinTemplateHelpers:(data)->
 
+                data.commentId = _.uniqueId()
+
                 responseModel = Marionette.getOption @, 'responseModel'
 
                 quizModel = Marionette.getOption @, 'quizModel'

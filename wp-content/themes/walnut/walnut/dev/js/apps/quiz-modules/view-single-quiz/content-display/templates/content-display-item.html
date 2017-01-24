@@ -39,11 +39,11 @@
 
             {{#comment}}
             
-            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}} {{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal">More</span>{{/comment_modal}}</span>
+            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}} {{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">More</span>{{/comment_modal}}</span>
                 <div class="full-comment">{{comment}}</div>
 
                 <!-- Modal -->
-                <div class="modal fade comment-modal" id="comment-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal fade comment-modal" id="comment-modal{{commentId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
