@@ -55,14 +55,14 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
  
 	$data        = array();
 	foreach ($result as $key => $row) {
-		$query2       = $wpdb->prepare(
-				     "SELECT count(summary_id) AS attempts
-				      FROM {$wpdb->prefix}quiz_response_summary
-				      WHERE collection_id = %d and student_id=%d
-				      ORDER BY taken_on DESC LIMIT 1",
-				      array($row->id, $current_user->ID));
+		// $query2       = $wpdb->prepare(
+		// 		     "SELECT count(summary_id) AS attempts
+		// 		      FROM {$wpdb->prefix}quiz_response_summary
+		// 		      WHERE collection_id = %d and student_id=%d
+		// 		      ORDER BY taken_on DESC LIMIT 1",
+		// 		      array($row->id, $current_user->ID));
 
-		$result2      = $wpdb->get_row($query2);
+		// $result2      = $wpdb->get_row($query2);
 		//if($row->id == '747'){get-all-quiz-question-responses
 		//	file_put_contents("a4.txt", $query2);
 		//}
@@ -71,14 +71,21 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 				     "SELECT * 
 				      FROM {$wpdb->prefix}quiz_response_summary
 				      WHERE collection_id = %d and student_id=%d
-				      ORDER BY taken_on DESC LIMIT 1",
+				      ORDER BY taken_on DESC",
 				      array($row->id, $current_user->ID));
 
-		$attempts_result2      = $wpdb->get_row($summary_result);
+		
 
-		#$attempts = $attempts_result2->summary_id;
+		$attempts_res      = $wpdb->get_results($summary_result);
 
-		$attempts = $result2->attempts;
+		foreach ($attempts_res as $key => $value) {
+			if($key == 0)
+				$attempts_result2 = $value;
+		}
+
+		$attempts = count($attempts_res);
+
+		#$attempts = $result2->attempts;
 
 		$total_marks_scored = "NA";
 		$taken_on           = "NA";
@@ -133,7 +140,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 		$args       = array('status'=>$status ,'quiz_type'=>$quiz_type ,'taken_on'=>$taken_on, 'total_marks_scored' => $total_marks_scored, 'attempts' => $attempts, 'quiz_id'=> $row->id, 'quiz_name'=>$row->quiz_name, 'duration' => $row->duration, 'chapter_id'=>$chapter_id); 
 		array_push($data, $args);
 	}
-	#file_put_contents("a1.txt", print_r($data, true));
+
 	return $data;
 } 
 
