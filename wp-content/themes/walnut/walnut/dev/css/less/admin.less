@@ -345,6 +345,19 @@
   }
 }
 
-
+#mcq-container{
+   &.mcq{
+        .ansFalse,.ansRight,.ansWrong{
+            opacity: 0.5;
+            pointer-events: none;
+            .mcq-option-select{
+                opacity: 0.4;
+            }
+            &.ansRight{
+                opacity: 0.8;
+            }
+        }
+    } 
+}
 
 

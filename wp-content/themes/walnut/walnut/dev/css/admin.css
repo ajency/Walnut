@@ -278,4 +278,20 @@
 .more-filter .extra > div:nth-child(-n+2) {
   visibility: hidden;
 }
+#mcq-container.mcq .ansFalse,
+#mcq-container.mcq .ansRight,
+#mcq-container.mcq .ansWrong {
+  opacity: 0.5;
+  pointer-events: none;
+}
+#mcq-container.mcq .ansFalse .mcq-option-select,
+#mcq-container.mcq .ansRight .mcq-option-select,
+#mcq-container.mcq .ansWrong .mcq-option-select {
+  opacity: 0.4;
+}
+#mcq-container.mcq .ansFalse.ansRight,
+#mcq-container.mcq .ansRight.ansRight,
+#mcq-container.mcq .ansWrong.ansRight {
+  opacity: 0.8;
+}
 /*# sourceMappingURL=admin.css.map */
