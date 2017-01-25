@@ -36,10 +36,14 @@ define ['app'
                         @trigger "validate:answer"
 
                     mixinTemplateHelpers:(data)=>
+                        console.log @quizModel
 
                         responseModel = Marionette.getOption @, 'questionResponseModel'
 
                         display_mode = Marionette.getOption @, 'display_mode'
+
+                        if @quizModel.hasPermission('allow_hint') and _.trim data.hint
+                            data.show_hint =true
 
                         if display_mode is 'replay'
                             data.showComment = true
@@ -50,9 +54,6 @@ define ['app'
                             data.show_skip = true
 
                             data.allow_submit_answer = true
-
-                            if @quizModel.hasPermission('allow_hint') and _.trim data.hint
-                                data.show_hint =true
 
                             if @quizModel.hasPermission('single_attempt') and not @quizModel.hasPermission 'allow_resubmit'
                                 data.show_skip_helper_text=true
@@ -77,6 +78,7 @@ define ['app'
 
 
                             data.allow_skip = false if not data.allow_submit_answer
+                        console.log data
 
                         data
 
