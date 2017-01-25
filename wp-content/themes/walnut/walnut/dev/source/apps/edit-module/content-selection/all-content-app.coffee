@@ -167,12 +167,12 @@ define ['app'
 					#@fullCollection.remove(id) for id in content_pieces
 					#console.log @fullCollection
 
-				@onUpdatePager()
+				#@onUpdatePager()
 
 			onContentPieceRemoved: (model)=>
 				#console.log model
 				@fullCollection.add model
-				@onUpdatePager()
+				#@onUpdatePager()
 
 			onUpdatePager:->
 

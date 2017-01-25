@@ -184,14 +184,12 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         var content_pieces;
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         if (content_pieces) {
-          this.trigger("add:content:pieces", content_pieces);
+          return this.trigger("add:content:pieces", content_pieces);
         }
-        return this.onUpdatePager();
       };
 
       DataContentTableView.prototype.onContentPieceRemoved = function(model) {
-        this.fullCollection.add(model);
-        return this.onUpdatePager();
+        return this.fullCollection.add(model);
       };
 
       DataContentTableView.prototype.onUpdatePager = function() {
