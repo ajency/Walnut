@@ -60,6 +60,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
                 })).pluck('name').compact().value();
               }
             }
+            console.log(chapter);
             return chapter;
           };
         })(this);
