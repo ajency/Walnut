@@ -301,20 +301,18 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
 }
 .comment-label .more {
   display: block;
   position: absolute;
-  bottom: 5px;
-  right: -17px;
+  bottom: 0;
+  right: 0;
   color: #f2593a;
   cursor: pointer;
   font-size: 0.85em;
-}
-@media screen and (max-width: 1400px) {
-  .comment-label .more {
-    right: -20px;
-  }
+  box-shadow: -13px 8px 5px 6px rgba(229, 233, 236, 0.61);
+  background-color: #e5e9ec;
 }
 .quiz-info {
   margin: 20px auto;
