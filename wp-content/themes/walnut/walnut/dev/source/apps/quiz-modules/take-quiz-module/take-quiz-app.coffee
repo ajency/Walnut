@@ -186,6 +186,8 @@ define ['app'
 
 				_gotoNextQuestion:->
 
+					@layout.quizProgressRegion.trigger "check:current"
+
 					nextQuestionID = @_getNextItemID() if questionModel?
 
 					if nextQuestionID
@@ -268,6 +270,8 @@ define ['app'
 					unanswered= _.difference allIDs, answeredIDs
 
 				_gotoPreviousQuestion:->
+
+					@layout.quizProgressRegion.trigger "check:current"
 
 					prevQuestionID = @_getPrevItemID() if questionModel?
 

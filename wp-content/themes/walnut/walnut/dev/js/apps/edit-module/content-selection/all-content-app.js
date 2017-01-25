@@ -38,6 +38,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       Controller.prototype.contentPieceRemoved = function(model) {
+        console.log(model);
         if (model.get('post_type') === 'content-piece') {
           this.contentPiecesCollection.add(model);
           return this.view.triggerMethod("content:piece:removed", model);
@@ -180,21 +181,15 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.addContentPieces = function() {
-        var content_pieces, i, id, len;
+        var content_pieces;
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         if (content_pieces) {
-          this.trigger("add:content:pieces", content_pieces);
-          for (i = 0, len = content_pieces.length; i < len; i++) {
-            id = content_pieces[i];
-            this.fullCollection.remove(id);
-          }
+          return this.trigger("add:content:pieces", content_pieces);
         }
-        return this.onUpdatePager();
       };
 
       DataContentTableView.prototype.onContentPieceRemoved = function(model) {
-        this.fullCollection.add(model);
-        return this.onUpdatePager();
+        return this.fullCollection.add(model);
       };
 
       DataContentTableView.prototype.onUpdatePager = function() {

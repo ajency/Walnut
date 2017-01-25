@@ -15,7 +15,7 @@ define ['jquery', 'underscore'], ($, _)->
     
     $( document ).on "click", '.goto-prev-page', ->
         abc = (window.location.hash).split('/')
-        if abc[0] == '#students'
+        if abc[0] == '#students' && abc[1] == 'dashboard'
             window.location.href = "/quiz-listview-student/?textbook_id="+localStorage.textbook_id+""
         else
             window.history.back()

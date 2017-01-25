@@ -189,6 +189,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._gotoNextQuestion = function() {
         var nextQuestionID;
+        this.layout.quizProgressRegion.trigger("check:current");
         if (questionModel != null) {
           nextQuestionID = this._getNextItemID();
         }
@@ -282,6 +283,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._gotoPreviousQuestion = function() {
         var prevQuestionID;
+        this.layout.quizProgressRegion.trigger("check:current");
         if (questionModel != null) {
           prevQuestionID = this._getPrevItemID();
         }
