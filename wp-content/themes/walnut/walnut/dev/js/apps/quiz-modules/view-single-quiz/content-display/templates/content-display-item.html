@@ -106,9 +106,11 @@
             {{#hint}}
                 <label class="small-text text-grey db">Viewed Hint: <span class="bold">{{hint_viewed}}<span></label>
             {{/hint}}
-           
+            {{#comment}}
             
+
             <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}} {{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentIdAdmin}}">More</span>{{/comment_modal}}</span>
+
                 <!-- <div class="full-comment">{{comment}}</div> -->
 
                 <!-- Modal -->
@@ -131,7 +133,7 @@
 
 
             </label>
-            
+            {{/comment}}
         </div>
     {{/responseStatus}}
 
