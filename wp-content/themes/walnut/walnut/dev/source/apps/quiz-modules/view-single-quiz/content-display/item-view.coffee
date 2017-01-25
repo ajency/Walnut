@@ -15,6 +15,8 @@ define ['app'
 
                 data.commentId = _.uniqueId()
 
+                data.commentIdAdmin = _.uniqueId()
+
                 responseModel = Marionette.getOption @, 'responseModel'
 
                 quizModel = Marionette.getOption @, 'quizModel'

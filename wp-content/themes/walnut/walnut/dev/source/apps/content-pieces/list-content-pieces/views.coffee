@@ -76,6 +76,7 @@ define ['app'
 							.pluck 'name'
 							.compact()
 							.value()
+					console.log chapter
 
 					chapter
 
