@@ -59,8 +59,8 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
                   "id": data.term_ids.chapter
                 })).pluck('name').compact().value();
               }
-              return chapter;
             }
+            return chapter;
           };
         })(this);
         data.statusMessage = function() {
