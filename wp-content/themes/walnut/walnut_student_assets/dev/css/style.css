@@ -3379,6 +3379,9 @@ lesshat-selector {
 .quizActions #submit-question.bottom-submit {
   background: #f96649 !important;
 }
+.quizActions #submit-question.bottom-submit:hover {
+  background: #fd7574 !important;
+}
 .quizActions #skip-question {
   background: transparent;
   color: #AFABAB;
@@ -3589,7 +3592,7 @@ lesshat-selector {
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > i {
   display: block;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label {
   color: #602f1a !important;
@@ -3599,11 +3602,10 @@ lesshat-selector {
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
   position: absolute;
-  top: 11em;
+  top: 11.5em;
   z-index: 1;
   background: #69b8b5;
   color: #fff;
-  width: 85%;
   margin: 0 auto;
   padding: 8px;
   right: 0;
@@ -3640,6 +3642,11 @@ lesshat-selector {
   border-width: 8px;
   margin-left: -8px;
 }
+@media screen and (min-width: 1550px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
+    width: 85%;
+  }
+}
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label {
   display: -webkit-box;
   line-height: 1.4;
@@ -3661,11 +3668,16 @@ lesshat-selector {
   display: block;
   position: absolute;
   bottom: 5px;
-  right: -28px;
+  right: -4px;
   color: #f2593a;
   background-color: #fff;
   cursor: pointer;
   font-size: 0.85em;
+}
+@media screen and (max-width: 1400px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more {
+    right: -18px;
+  }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";

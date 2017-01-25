@@ -130,7 +130,8 @@
 	             	}
 	             	& > i{
 	             		display: block;
-	             		font-size: 1.2em;
+	             		// font-size: 1.2em;
+	             		font-size: 1em;
 	             	}
 	             	& > label{
 	             		color: @quiz-link-color3 !important;
@@ -139,11 +140,10 @@
 	             		}
 	             		.full-comment{
 	             			position: absolute;
-						    top: 11em;
+						    top: 11.5em;
 						    z-index: 1;
 						    background: #69b8b5;
 						    color: #fff;
-						    width: 85%;
     						margin: 0 auto;
 						    padding: 8px;
 						    right: 0;
@@ -175,6 +175,9 @@
 								border-width: 8px;
 								margin-left: -8px;
 						    }
+						    @media screen and (min-width: 1550px) {
+						    	width: 85%;
+						    }
 	             		}
 	             	}
 	             	.comment-label{
@@ -198,12 +201,15 @@
 						    	display: block;
 						    	position: absolute;
 							    bottom: 5px;
-							    right: -28px;
+							    right: -4px;
 							    color: #f2593a;
 							    // box-shadow: 1px 18px 2px 16px rgba(255, 255, 255, 0.77);
 							    background-color: #fff;
 							    cursor: pointer;
 							    font-size: 0.85em;
+							    @media screen and (max-width: 1400px) {
+							    	right: -18px;
+							    }
 						    }					    	
 					    }
 	             	}	             	
