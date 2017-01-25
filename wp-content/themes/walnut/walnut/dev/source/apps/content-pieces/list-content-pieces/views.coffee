@@ -77,7 +77,7 @@ define ['app'
 							.compact()
 							.value()
 
-						chapter
+					chapter
 
 				data.statusMessage = ->
 					if data.post_status is 'pending'
