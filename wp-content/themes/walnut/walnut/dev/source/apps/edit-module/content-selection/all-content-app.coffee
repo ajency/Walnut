@@ -30,6 +30,7 @@ define ['app'
 	#                    @contentPiecesCollection.reset collection.models
 
 			contentPieceRemoved: (model)=>
+				console.log model
 				if model.get('post_type') is 'content-piece'
 					@contentPiecesCollection.add model
 					@view.triggerMethod "content:piece:removed", model
@@ -160,13 +161,16 @@ define ['app'
 
 			addContentPieces: =>
 				content_pieces = _.pluck(@$el.find('#dataContentTable .tab_checkbox:checked'), 'value')
+				#console.log content_pieces
 				if content_pieces
 					@trigger "add:content:pieces", content_pieces
-					@fullCollection.remove(id) for id in content_pieces
+					#@fullCollection.remove(id) for id in content_pieces
+					#console.log @fullCollection
 
 				@onUpdatePager()
 
 			onContentPieceRemoved: (model)=>
+				#console.log model
 				@fullCollection.add model
 				@onUpdatePager()
 
