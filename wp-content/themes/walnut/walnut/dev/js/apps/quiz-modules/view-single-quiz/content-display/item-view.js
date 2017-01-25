@@ -17,6 +17,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.mixinTemplateHelpers = function(data) {
         var comment, marks_obtained, quizModel, responseModel, total_marks;
         data.commentId = _.uniqueId();
+        data.commentIdAdmin = _.uniqueId();
         responseModel = Marionette.getOption(this, 'responseModel');
         quizModel = Marionette.getOption(this, 'quizModel');
         data.dateCompleted = 'N/A';
