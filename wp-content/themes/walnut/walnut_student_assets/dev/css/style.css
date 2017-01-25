@@ -3672,6 +3672,7 @@ lesshat-selector {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label .more {
   display: none;
@@ -3685,17 +3686,13 @@ lesshat-selector {
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more {
   display: block;
   position: absolute;
-  bottom: 5px;
-  right: -4px;
+  bottom: 0;
+  right: 0;
+  box-shadow: -13px 8px 5px 6px rgba(255, 255, 255, 0.71);
   color: #f2593a;
   background-color: #fff;
   cursor: pointer;
   font-size: 0.85em;
-}
-@media screen and (max-width: 1400px) {
-  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more {
-    right: -18px;
-  }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";
