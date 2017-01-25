@@ -25,11 +25,7 @@
     </button>
 
     <div class="text-center">
-        {{#show_hint}}
-        <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
-            <i class="fa fa-lightbulb-o"></i> Hint
-        </button>
-        {{/show_hint}}
+      
         {{#show_skip}}
             <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button">
                 Skip <i class="fa fa-step-forward"></i>
@@ -148,16 +144,3 @@
     </div>
 
 {{/replay}}
-
-
-
-
-
-
-
-{{#showComment}}
-    <div class="container-grey m-b-5 quizComment">
-        <label class="form-label bold small-text muted no-margin inline">Comment: </label>
-        <p class="inline text-grey small">{{&comment}}</p>
-    </div>
-{{/showComment}}
