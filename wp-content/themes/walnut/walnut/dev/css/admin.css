@@ -294,4 +294,26 @@
 #mcq-container.mcq .ansWrong.ansRight {
   opacity: 0.8;
 }
+.comment-label {
+  display: -webkit-box;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.comment-label .more {
+  display: block;
+  position: absolute;
+  bottom: 5px;
+  right: -17px;
+  color: #f2593a;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+@media screen and (max-width: 1400px) {
+  .comment-label .more {
+    right: -31px;
+  }
+}
 /*# sourceMappingURL=admin.css.map */
