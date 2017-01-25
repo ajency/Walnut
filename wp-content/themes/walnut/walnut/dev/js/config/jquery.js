@@ -16,7 +16,8 @@ define(['jquery', 'underscore'], function($, _) {
   $(document).on("click", '.goto-prev-page', function() {
     var abc;
     abc = window.location.hash.split('/');
-    if (abc[0] === '#students') {
+    console.log(abc);
+    if (abc[0] === '#students' && abc[1] === 'dashboard') {
       return window.location.href = "/quiz-listview-student/?textbook_id=" + localStorage.textbook_id + "";
     } else {
       return window.history.back();
