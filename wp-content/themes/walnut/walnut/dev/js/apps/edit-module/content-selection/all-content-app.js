@@ -18,7 +18,6 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         var view;
         this.contentPiecesCollection = opts.contentPiecesCollection, this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType;
         this.view = view = this._getContentSelectionView(this.contentPiecesCollection);
-        console.log(this.contentPiecesCollection);
         this.show(this.view, {
           loading: true
         });
@@ -38,7 +37,6 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       Controller.prototype.contentPieceRemoved = function(model) {
-        console.log(model);
         if (model.get('post_type') === 'content-piece') {
           this.contentPiecesCollection.add(model);
           return this.view.triggerMethod("content:piece:removed", model);

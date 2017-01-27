@@ -10,8 +10,6 @@ define ['app'
 
 				@view = view = @_getContentSelectionView @contentPiecesCollection
 
-				console.log @contentPiecesCollection
-
 				@show @view,
 					loading: true
 
@@ -32,7 +30,6 @@ define ['app'
 	#                    @contentPiecesCollection.reset collection.models
 
 			contentPieceRemoved: (model)=>
-				console.log model
 				if model.get('post_type') is 'content-piece'
 					@contentPiecesCollection.add model
 					@view.triggerMethod "content:piece:removed", model
