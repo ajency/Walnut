@@ -59,7 +59,9 @@ define ['marionette'], (Marionette)->
     App.vent.on "show:dashboard", (user_role) =>
 
         if App.request('current:user:can','administrator') or App.request('current:user:can','school-admin') or App.request('current:user:can','content-creator')
-            App.navigate('textbooks', trigger: true)
+            window.location.replace(SITEURL+"#textbooks")
+            window.location.reload()
+            #App.navigate('textbooks', trigger: true)
 
         if App.request 'current:user:can','teacher'
             App.navigate('teachers/dashboard', trigger: true)     

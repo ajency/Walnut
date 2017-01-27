@@ -11,7 +11,7 @@
           <h4 class="m-t-5 m-b-5"><a class="text-grey semi-bold question_link">{{&post_excerpt}}</a> </h4>
         </div>
         <div class="clearfix"></div>
-        <div class="tiles grey show p-t-10 p-b-10 p-l-20">
+        <div class="tiles grey show p-t-15 p-b-15 p-l-20">
             <div class="muted">
                 <span class="bold question-type-div">Difficulty Level:</span> <span class="question-type-div"> {{difficulty_level}}</span>
             </div>
@@ -19,7 +19,7 @@
         </div>
     </div>
     {{#responseStatus}}
-        <div class="qstnStatus {{statusUI.divClass}} p-t-10">
+        <div class="qstnStatus {{statusUI.divClass}}">
             {{#display_answer}}
                 <i class="fa"></i>
                 <!-- <label>
@@ -37,10 +37,11 @@
                 <label class="small-text text-grey db">Viewed Hint: <span class="bold">{{hint_viewed}}<span></label>
             {{/hint}}
 
-            {{#comment}}
+
             
-            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}} {{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">More</span>{{/comment_modal}}</span>
-                <div class="full-comment">{{comment}}</div>
+            {{#comment}}
+            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">...More</span>{{/comment_modal}}
+                <!-- <div class="full-comment">{{comment}}</div> -->
 
                 <!-- Modal -->
                 <div class="modal fade comment-modal" id="comment-modal{{commentId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -51,7 +52,7 @@
                         <h4 class="modal-title" id="myModalLabel">Comments</h4>
                       </div>
                       <div class="modal-body">
-                        {{comment}}
+                        {{&comment}}
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default cancel" data-dismiss="modal">Cancel</button>
@@ -62,8 +63,9 @@
 
 
             </label>
-            {{/comment}}
-           
+          
+           {{/comment}}
+
          
         </div>
     {{/responseStatus}}
@@ -90,7 +92,7 @@
         </div>
     </div>
     {{#responseStatus}}
-        <div class="qstnStatus {{statusUI.divClass}} p-t-10">
+        <div class="qstnStatus {{statusUI.divClass}}">
             {{#display_answer}}
                 <label>
                     {{&statusUI.text}} <span class="fa  {{statusUI.icon}}"></span>  
@@ -107,7 +109,32 @@
                 <label class="small-text text-grey db">Viewed Hint: <span class="bold">{{hint_viewed}}<span></label>
             {{/hint}}
             {{#comment}}
-                <label class="small-text text-grey db">Comment: <span class="bold">{{comment}}<span></label>
+            
+
+            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentIdAdmin}}">...More</span>{{/comment_modal}}
+
+                <!-- <div class="full-comment">{{comment}}</div> -->
+
+                <!-- Modal -->
+                <div class="modal fade comment-modal" id="comment-modal{{commentIdAdmin}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Comments</h4>
+                      </div>
+                      <div class="modal-body">
+                        {{&comment}}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default cancel" data-dismiss="modal">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+            </label>
             {{/comment}}
         </div>
     {{/responseStatus}}

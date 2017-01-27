@@ -46,8 +46,12 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
         var display_mode, ref, responseModel;
+        console.log(this.quizModel);
         responseModel = Marionette.getOption(this, 'questionResponseModel');
         display_mode = Marionette.getOption(this, 'display_mode');
+        if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
+          data.show_hint = true;
+        }
         if (display_mode === 'replay') {
           data.showComment = true;
           data.replay = true;
@@ -55,9 +59,6 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
           data.replay = false;
           data.show_skip = true;
           data.allow_submit_answer = true;
-          if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
-            data.show_hint = true;
-          }
           if (this.quizModel.hasPermission('single_attempt') && !this.quizModel.hasPermission('allow_resubmit')) {
             data.show_skip_helper_text = true;
           }
@@ -83,6 +84,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
             data.allow_skip = false;
           }
         }
+        console.log(data);
         return data;
       };
 
