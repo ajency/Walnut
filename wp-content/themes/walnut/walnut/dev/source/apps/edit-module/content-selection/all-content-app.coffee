@@ -10,6 +10,8 @@ define ['app'
 
 				@view = view = @_getContentSelectionView @contentPiecesCollection
 
+				console.log @contentPiecesCollection
+
 				@show @view,
 					loading: true
 
@@ -20,7 +22,7 @@ define ['app'
 
 					_.each contentIDs, (ele, index)=>
 						@contentGroupCollection.add @contentPiecesCollection.get ele
-						@contentPiecesCollection.remove ele
+						#@contentPiecesCollection.remove ele
 
 				@listenTo @contentGroupCollection, 'remove', @contentPieceRemoved
 
@@ -170,8 +172,16 @@ define ['app'
 				#@onUpdatePager()
 
 			onContentPieceRemoved: (model)=>
-				#console.log model
+				id = parseInt(model.get('ID'))
+
 				@fullCollection.add model
+				# @$el.find '#dataContentTable .tab_checkbox'
+				# 	.trigger 'click'
+				# 		.prop 'checked', false
+
+				@$el.find 'input[type=checkbox][value='+id+']'
+					.trigger 'click'
+						.prop 'checked', false
 				#@onUpdatePager()
 
 			onUpdatePager:->

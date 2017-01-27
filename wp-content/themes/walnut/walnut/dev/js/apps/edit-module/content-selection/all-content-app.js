@@ -18,6 +18,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         var view;
         this.contentPiecesCollection = opts.contentPiecesCollection, this.contentGroupCollection = opts.contentGroupCollection, this.groupType = opts.groupType;
         this.view = view = this._getContentSelectionView(this.contentPiecesCollection);
+        console.log(this.contentPiecesCollection);
         this.show(this.view, {
           loading: true
         });
@@ -29,8 +30,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         this.listenTo(this.view, "add:content:pieces", (function(_this) {
           return function(contentIDs) {
             return _.each(contentIDs, function(ele, index) {
-              _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
-              return _this.contentPiecesCollection.remove(ele);
+              return _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
             });
           };
         })(this));
@@ -189,7 +189,10 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.onContentPieceRemoved = function(model) {
-        return this.fullCollection.add(model);
+        var id;
+        id = parseInt(model.get('ID'));
+        this.fullCollection.add(model);
+        return this.$el.find('input[type=checkbox][value=' + id + ']').trigger('click').prop('checked', false);
       };
 
       DataContentTableView.prototype.onUpdatePager = function() {
