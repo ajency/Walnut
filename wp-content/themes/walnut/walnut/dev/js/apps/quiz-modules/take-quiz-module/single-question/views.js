@@ -89,7 +89,14 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.initialize = function() {
-        return this.quizModel = Marionette.getOption(this, 'quizModel');
+        var result;
+        this.quizModel = Marionette.getOption(this, 'quizModel');
+        if ((this.quizModel.get('quiz_type') === 'practice') && this.quizModel.hasPermission('display_answer')) {
+          result = this.quizModel.get('permissions');
+          result.single_attempt = true;
+          console.log(result);
+        }
+        return console.log(this.quizModel);
       };
 
       SingleQuestionLayout.prototype.onShow = function() {
