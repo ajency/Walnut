@@ -27,8 +27,11 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype.initialize = function(opts) {
         var abc, result;
-        console.log(opts);
         abc = opts.quizModel;
+        if (abc.get('quiz_type' === 'practice' && abc.hasPermission('display_answer'))) {
+          result = abc.get('permissions');
+          result.single_attempt = true;
+        }
         if (abc.get('status') === 'completed' && abc.get('quiz_type') === 'class_test') {
           result = abc.get('permissions');
           result.display_answer = true;
@@ -115,9 +118,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
         if ((!questionResponseModel) || ((ref = questionResponseModel.get('status')) === 'not_started' || ref === 'paused')) {
-          if (questionResponseModel) {
-            console.log(questionResponseModel.get('status'));
-          }
           data = {
             'summary_id': quizResponseSummary.id,
             'content_piece_id': questionModel.id,
@@ -203,12 +203,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._endQuiz = function() {
         var ref, ref1, unanswered;
-        console.log(this.display_mode);
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
         if ((ref = this.display_mode) !== 'replay' && ref !== 'quiz_report') {
-          console.log(questionResponseModel);
           if ((!questionResponseModel) || ((ref1 = questionResponseModel.get('status')) === 'paused' || ref1 === 'not_attempted')) {
             this.layout.questionDisplayRegion.trigger("silent:save:question");
           }

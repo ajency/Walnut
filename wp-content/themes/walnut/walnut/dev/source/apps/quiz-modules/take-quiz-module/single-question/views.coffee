@@ -84,6 +84,11 @@ define ['app'
 
                     initialize:->
                         @quizModel = Marionette.getOption @, 'quizModel'
+                        if ((@quizModel.get('quiz_type') == 'practice') && @quizModel.hasPermission 'display_answer')
+                            result = @quizModel.get 'permissions'
+                            result.single_attempt = true
+                            console.log result
+                        console.log @quizModel
 
                     onShow:->
                         if @$el.find('#submit-question').length is 0
