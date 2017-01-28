@@ -50,6 +50,8 @@ define ['app',
 
 				'change #comment_enable' : '_commentEnable'
 
+				'blur #question-comment' : '_saveComment' 
+
 			modelEvents:
 				'change:ID' :-> @$el.find('#preview-question, #clone-question').show()
 
@@ -84,11 +86,16 @@ define ['app',
 				if @model.get 'comment_enable'
 					@$el.find('#comment_enable').trigger 'click'
 
+
 				if @model.get('content_type') isnt 'teacher_question'
 					@$el.find '#question_type_column'
 					.remove()
 
 				@$el.find('#preview-question, #clone-question').show() if not @model.isNew()
+
+			_saveComment:->
+				console.log '_saveComment'
+				#console.log @$el.html()
 
 			_changeTabs : (e)->
 				e.preventDefault()
@@ -104,11 +111,28 @@ define ['app',
 
 			_commentEnable : (e)=>
 				if $(e.target).prop 'checked'
+					ele = @$el.find "#question-comment"
+					console.log ele
+					CKEDITOR.replace('comment')
+					CKEDITOR.dtd.$removeEmpty['span'] = false;
+					#ele.attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
+					#CKEDITOR.on 'instanceCreated', @configureEditor
+					#@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
+					#@editor.setData _.stripslashes @model.get 'content'
+
 					@$el.find('#question-comment').prop 'disabled',false
 					@$el.find('#question-comment').show()
 				else
 					@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
+
+			configureEditor : (event) =>
+				console.log 'ss'
+				editor = event.editor
+				#element = editor.element
+				#if element.getAttribute('id') is @$el.attr 'id'
+				#editor.on 'configLoaded', ->
+				editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
 
 			onFetchChaptersComplete : (chapters)->
 
@@ -165,9 +189,11 @@ define ['app',
 				else
 					@trigger 'close:grading:parameter'
 
-			onSaveQuestionSettings:->
+			onSaveQuestionSettings: (e)->
+				console.log @$el.find('.cke_editable.cke_editable_themed.cke_contents_ltr.cke_show_borders').html()
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
+					#console.log CKEDITOR.instances.editor.getData()
 					@trigger "save:data:to:model", data
 				else
 					firstErr = _.first @$el.find '.form-control.error'

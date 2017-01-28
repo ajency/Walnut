@@ -20,7 +20,7 @@ define ['app'], (App)->
                 'click a' : (e)->
                     e.preventDefault()
                 'blur' : ->
-                    @trigger 'text:element:blur', @$el.html()
+                    @trigger 'text:element:blur', @$el.html() 
 
 
             # initialize the CKEditor for the text element on show
