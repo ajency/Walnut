@@ -35,6 +35,9 @@ define ['app'
                         
                         @trigger "validate:answer"
 
+                        if $('#collapseView').hasClass('in')
+                            $('.submit2').addClass 'submit-pushed'
+
                     mixinTemplateHelpers:(data)=>
                         console.log @quizModel
 
@@ -114,6 +117,9 @@ define ['app'
                         @$el.find "#submit-question"
                         .hide()
 
+                        if $('#collapseView').hasClass('in')
+                            $('.submit2').addClass 'submit-pushed'    
+                            
                         if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                             @$el.find '#last_question'
                             .html 'This is the last question'

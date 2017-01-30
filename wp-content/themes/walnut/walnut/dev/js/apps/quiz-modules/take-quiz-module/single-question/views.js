@@ -41,7 +41,10 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       SingleQuestionLayout.prototype.submitQuest = function() {
         this.$el.find('.submit-single').attr('disabled', 'disabled');
         this.$el.find('.skip-button').attr('disabled', 'disabled');
-        return this.trigger("validate:answer");
+        this.trigger("validate:answer");
+        if ($('#collapseView').hasClass('in')) {
+          return $('.submit2').addClass('submit-pushed');
+        }
       };
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
@@ -116,6 +119,9 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
 
       SingleQuestionLayout.prototype.onSubmitQuestion = function() {
         this.$el.find("#submit-question").hide();
+        if ($('#collapseView').hasClass('in')) {
+          $('.submit2').addClass('submit-pushed');
+        }
         if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
           this.$el.find('#last_question').html('This is the last question');
           bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
