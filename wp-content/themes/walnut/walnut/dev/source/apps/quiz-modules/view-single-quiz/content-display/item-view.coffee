@@ -20,7 +20,7 @@ define ['app'
                 responseModel = Marionette.getOption @, 'responseModel'
 
                 quizModel = Marionette.getOption @, 'quizModel'
-                #console.log @.model.get 'comment'
+                #console.log quizModel
 
                 data.dateCompleted= 'N/A'
 
@@ -33,6 +33,9 @@ define ['app'
 
                     data.responseStatus = responseModel.get 'status'
 
+                    # if quizModel.hasPermission 'allow_resubmit'
+                    #     data.display_answer = false
+                    # else
                     data.display_answer = quizModel.hasPermission 'display_answer'
 
                     marks_obtained = responseModel.get 'marks_scored'

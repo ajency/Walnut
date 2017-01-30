@@ -117,12 +117,18 @@ define ['app'
                         .addClass 'current'
 
                     onQuestionSubmitted:(responseModel)->
+                        # console.log 'onQuestionSubmitted'
+                        # console.log responseModel
+                        # console.log @quizModel
 
                         @updateProgressBar()
 
                         @updateSkippedCount()
 
                         if responseModel.get('status') is 'skipped' and not @quizModel.hasPermission('single_attempt')
+                            return false
+                            
+                        else if @quizModel.hasPermission('allow_resubmit')
                             return false
 
                         else if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
@@ -140,6 +146,7 @@ define ['app'
                     changeClassName:(responseModel)->
                         
                         status = responseModel.get 'status'
+                        console.log status
                         
                         className = switch status
                             when 'correct_answer'       then 'right'
