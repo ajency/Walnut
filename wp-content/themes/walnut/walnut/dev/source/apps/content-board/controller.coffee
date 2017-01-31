@@ -123,6 +123,13 @@ define ['app'
 			API =
 			# add a new element to the builder region
 				addNewElement : (container, type, modelData)=>
+					console.log container
+					console.log type
+					console.log modelData
+					if(type == undefined)
+						type = 'Text'
+
+					console.log type
 
 					new ContentBoard.Element[type].Controller
 						container            : container
@@ -136,4 +143,5 @@ define ['app'
 
 			#Request handler for new element
 			App.reqres.setHandler "add:new:element", (container, type, modelData = {})->
+				console.log type
 				API.addNewElement container, type, modelData

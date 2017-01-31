@@ -129,6 +129,13 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
 
       API = {
         addNewElement: function(container, type, modelData) {
+          console.log(container);
+          console.log(type);
+          console.log(modelData);
+          if (type === void 0) {
+            type = 'Text';
+          }
+          console.log(type);
           return new ContentBoard.Element[type].Controller({
             container: container,
             modelData: modelData,
@@ -146,6 +153,7 @@ define(['app', 'controllers/region-controller', 'apps/content-board/element/cont
         if (modelData == null) {
           modelData = {};
         }
+        console.log(type);
         return API.addNewElement(container, type, modelData);
       });
 

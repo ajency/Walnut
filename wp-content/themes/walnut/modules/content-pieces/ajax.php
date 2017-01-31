@@ -14,6 +14,8 @@ function ajax_get_content_pieces() {
 
     $content_pieces = get_content_pieces($args);
 
+    file_put_contents("a.txt", print_r($content_pieces, true));
+
     wp_send_json($content_pieces);
 }
 

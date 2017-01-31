@@ -6,6 +6,7 @@ define ['app'
         class Mcq.Controller extends Element.Controller
 
             initialize : (options)->
+                console.log options
 
                 {answerWreqrObject,@answerModel} = options
                 
@@ -159,6 +160,7 @@ define ['app'
 
             # creates Row structure for mcq
             createRowStructure : (options)=>
+                console.log 'createRowStructure'
                 columnCount = parseInt(@layout.model.get('columncount') ) + 1
                 columnElements = while columnCount -= 1
                     # for each column create a column object
@@ -206,6 +208,7 @@ define ['app'
 
             #for each option in current row
             _iterateThruOptions : (controller, rowNumber, index)->
+                console.log '_iterateThruOptions'
                 columnCount = @layout.model.get 'columncount'
                 optionNumber = (rowNumber - 1) * @layout.model.get('columncount') + index
                 idx = index - 1
@@ -236,6 +239,7 @@ define ['app'
 
             # add the option checkbox and pre add the elements
             _fillOptionRowWithElements: (optionRowContainer,optionNumber)->
+                console.log '_fillOptionRowWithElements'
                 @_addMcqOption(optionRowContainer, @layout.model.get('options').at(optionNumber-1))
 
 #                console.log JSON.stringify @layout.model.get('options').at(optionNumber-1)

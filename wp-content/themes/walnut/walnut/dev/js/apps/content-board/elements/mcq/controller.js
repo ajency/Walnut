@@ -19,6 +19,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       Controller.prototype.initialize = function(options) {
         var answer, answerWreqrObject;
+        console.log(options);
         answerWreqrObject = options.answerWreqrObject, this.answerModel = options.answerModel;
         this.multiplicationFactor = 0;
         if (!this.answerModel) {
@@ -165,6 +166,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       Controller.prototype.createRowStructure = function(options) {
         var columnCount, columnElement, columnElements, controller, i, num, optionsInCurrentRow, ref, results, rowElements, rowNumber, totalOptionsinMcq;
+        console.log('createRowStructure');
         columnCount = parseInt(this.layout.model.get('columncount')) + 1;
         columnElements = (function() {
           var results;
@@ -228,6 +230,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       Controller.prototype._iterateThruOptions = function(controller, rowNumber, index) {
         var columnCount, container, idx, optionElements, optionNumber, optionRowContainer, optionRowController;
+        console.log('_iterateThruOptions');
         columnCount = this.layout.model.get('columncount');
         optionNumber = (rowNumber - 1) * this.layout.model.get('columncount') + index;
         idx = index - 1;
@@ -252,6 +255,7 @@ define(['app', 'apps/content-board/element/controller', 'apps/content-board/elem
 
       Controller.prototype._fillOptionRowWithElements = function(optionRowContainer, optionNumber) {
         var thisOptionElementsArray;
+        console.log('_fillOptionRowWithElements');
         this._addMcqOption(optionRowContainer, this.layout.model.get('options').at(optionNumber - 1));
         optionNumber = this.layout.model.get('options').at(optionNumber - 1).get('optionNo');
         thisOptionElementsArray = this.layout.model.get('elements')[optionNumber - 1];

@@ -47,6 +47,7 @@ define ['app'
 
             # start filling elements
             startFillingElements: ()->
+                console.log 'startFillingElements'
                 section = @view.model.get 'layout'
 
                 container = @_getContainer()
@@ -58,6 +59,7 @@ define ['app'
 
 
             addNestedElements:(container,element)->
+                console.log 'addNestedElements'
                 controller = App.request "add:new:element",container,element.element,null, element
                 _.each element.elements, (column, index)=>
                     return if not column.elements
