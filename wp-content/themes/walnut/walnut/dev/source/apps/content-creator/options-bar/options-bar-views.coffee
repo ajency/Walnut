@@ -50,7 +50,9 @@ define ['app',
 
 				'change #comment_enable' : '_commentEnable'
 
-				'blur #question-comment' : '_saveComment' 
+				'blur .comment-area' : '_saveComment' 
+
+				'click .cke_button__image' : 'imageClicked'
 
 			modelEvents:
 				'change:ID' :-> @$el.find('#preview-question, #clone-question').show()
@@ -93,6 +95,11 @@ define ['app',
 
 				@$el.find('#preview-question, #clone-question').show() if not @model.isNew()
 
+
+			imageClicked:(evt)->
+				evt.preventDefault()
+				console.log 'imageClicked'
+
 			_saveComment:->
 				console.log '_saveComment'
 				#console.log @$el.html()
@@ -112,27 +119,30 @@ define ['app',
 			_commentEnable : (e)=>
 				if $(e.target).prop 'checked'
 					ele = @$el.find "#question-comment"
-					console.log ele
-					CKEDITOR.replace('comment')
+					# console.log 'ele'
+					# CKEDITOR.disableAutoInline = true;
+					#CKEDITOR.inline('comment')
 					CKEDITOR.dtd.$removeEmpty['span'] = false;
-					#ele.attr('contenteditable', 'true').attr 'id', _.uniqueId 'text-'
-					#CKEDITOR.on 'instanceCreated', @configureEditor
-					#@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
-					#@editor.setData _.stripslashes @model.get 'content'
+					ele.attr('commenteditable', 'true').attr 'id', _.uniqueId 'text-'
+					CKEDITOR.on 'instanceCreated', @configureEditor
+					@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
+					#console.log @editor
+					@editor.setData _.stripslashes @model.get 'content'
 
 					@$el.find('#question-comment').prop 'disabled',false
-					@$el.find('#question-comment').show()
+					@$el.find('#question-comment').hide()
 				else
 					@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
 
 			configureEditor : (event) =>
 				console.log 'ss'
+				ele = @$el.find "#question-comment"
 				editor = event.editor
-				#element = editor.element
-				#if element.getAttribute('id') is @$el.attr 'id'
-				#editor.on 'configLoaded', ->
-				editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
+				element = editor.element
+				if element.getAttribute('id') is ele.attr 'id'
+					editor.on 'configLoaded', ->
+						editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
 
 			onFetchChaptersComplete : (chapters)->
 
@@ -190,7 +200,7 @@ define ['app',
 					@trigger 'close:grading:parameter'
 
 			onSaveQuestionSettings: (e)->
-				console.log @$el.find('.cke_editable.cke_editable_themed.cke_contents_ltr.cke_show_borders').html()
+				console.log @$el.find('body .cke_contents_ltr').html()
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
 					#console.log CKEDITOR.instances.editor.getData()

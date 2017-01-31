@@ -45,7 +45,8 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         'click a.tabs': '_changeTabs',
         'change #hint_enable': '_hintEnable',
         'change #comment_enable': '_commentEnable',
-        'blur #question-comment': '_saveComment'
+        'blur .comment-area': '_saveComment',
+        'click .cke_button__image': 'imageClicked'
       };
 
       OptionsBarView.prototype.modelEvents = {
@@ -87,6 +88,11 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         }
       };
 
+      OptionsBarView.prototype.imageClicked = function(evt) {
+        evt.preventDefault();
+        return console.log('imageClicked');
+      };
+
       OptionsBarView.prototype._saveComment = function() {
         return console.log('_saveComment');
       };
@@ -110,11 +116,13 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         var ele;
         if ($(e.target).prop('checked')) {
           ele = this.$el.find("#question-comment");
-          console.log(ele);
-          CKEDITOR.replace('comment');
           CKEDITOR.dtd.$removeEmpty['span'] = false;
+          ele.attr('commenteditable', 'true').attr('id', _.uniqueId('text-'));
+          CKEDITOR.on('instanceCreated', this.configureEditor);
+          this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
+          this.editor.setData(_.stripslashes(this.model.get('content')));
           this.$el.find('#question-comment').prop('disabled', false);
-          return this.$el.find('#question-comment').show();
+          return this.$el.find('#question-comment').hide();
         } else {
           this.$el.find('#question-comment').prop('disabled', true);
           return this.$el.find('#question-comment').hide();
@@ -122,10 +130,16 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.configureEditor = function(event) {
-        var editor;
+        var editor, ele, element;
         console.log('ss');
+        ele = this.$el.find("#question-comment");
         editor = event.editor;
-        return editor.config.placeholder = 'This is a Text Block. Use this to provide text…';
+        element = editor.element;
+        if (element.getAttribute('id') === ele.attr('id')) {
+          return editor.on('configLoaded', function() {
+            return editor.config.placeholder = 'This is a Text Block. Use this to provide text…';
+          });
+        }
       };
 
       OptionsBarView.prototype.onFetchChaptersComplete = function(chapters) {
@@ -174,7 +188,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype.onSaveQuestionSettings = function(e) {
         var data, eleID, firstErr;
-        console.log(this.$el.find('.cke_editable.cke_editable_themed.cke_contents_ltr.cke_show_borders').html());
+        console.log(this.$el.find('body .cke_contents_ltr').html());
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);
           return this.trigger("save:data:to:model", data);

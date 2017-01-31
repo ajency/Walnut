@@ -47,7 +47,7 @@ CKEDITOR.editorConfig = function( config ) {
                     ,
             // # 			# { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
                         {name: 'insert',
-                        items: [ 'SpecialChar', 'EqnEditor' ]}
+                        items: ['Image', 'SpecialChar', 'EqnEditor' ]}
                     ,
                         '/'
                     ,
