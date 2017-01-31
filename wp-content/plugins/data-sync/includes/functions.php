@@ -589,7 +589,7 @@ return $wpdb->query($sql);*/
 
 $csv_file_path = esc_url( home_url( '/' ) ).str_replace(get_home_path(), "", $file);
 $sql = "LOAD DATA LOCAL INFILE '".$file."' INTO TABLE ".$table." CHARACTER SET UTF8
-        FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'";
+        FIELDS TERMINATED BY ',' ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\n'";
 $con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD,false,128);
 $selected = mysql_select_db(DB_NAME,$con);
 $result = mysql_query($sql, $con);
