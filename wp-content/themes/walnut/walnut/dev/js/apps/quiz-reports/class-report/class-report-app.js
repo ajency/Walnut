@@ -144,6 +144,12 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
               communicationModel = App.request("create:communication", data);
               return _this._showSelectRecipientsApp(communicationModel);
             });
+            _this.listenTo(_this.layout.allContentRegion, "excel:generation", function(data) {
+              var optn, quiz_model;
+              optn = data.options;
+              quiz_model = optn.model;
+              return window.open(AJAXURL + '?action=generate-xl-report&data=' + quiz_model.id + '&division=' + _this.division);
+            });
             _this.listenTo(_this.layout.allContentRegion, "schedule:quiz", _this._showScheduleQuizApp);
             return _this.listenTo(_this.layout.allContentRegion, "clear:schedule", function(quizModel) {
               var clearSchedule;

@@ -14,7 +14,7 @@ define ['app'
                         contentBoardRegion: '#content-board'
 
                     events:
-                        'click #submit-question'    :-> @trigger "validate:answer"
+                        'click #submit-question'    : 'submitQuest' 
 
                         'click #previous-question'  :-> @trigger "goto:previous:question"
 
@@ -26,6 +26,10 @@ define ['app'
 
                         'click #next-question'      :-> @trigger "goto:next:question"
 
+                    submitQuest:=>
+                        @$el.find '.submit-single'
+                        .attr 'disabled', 'disabled'
+                        @trigger "validate:answer"
 
                     mixinTemplateHelpers:(data)=>
 
@@ -97,7 +101,6 @@ define ['app'
                             .hide()
 
                     onSubmitQuestion:->
-
                         @$el.find "#submit-question"
                         .hide()
 
@@ -116,3 +119,8 @@ define ['app'
 
                         @$el.find "#skip-question"
                         .hide()
+
+                    onEnableSubmit:=>
+                        @$el.find '.submit-single'
+                        .attr 'disabled', false
+

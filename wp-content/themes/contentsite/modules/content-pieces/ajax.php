@@ -44,13 +44,17 @@ add_action('wp_ajax_create-content-piece', 'ajax_save_content_piece');
 
 function ajax_update_content_piece(){
 
+    global $wpdb;
+
     #currently this is used only to update the status.
     #for the actual create/update functions refer to function ajax_save_content_piece()
 
-    $data= array('ID'=>$_POST['ID'],'post_status'=>$_POST['post_status']);
-    $content_id = wp_update_post($data);
+    //$data= array('ID'=>$_POST['ID'],'post_status'=>$_POST['post_status']);
 
-    wp_send_json(array('ID'=>$content_id));
+    $wpdb->get_results("UPDATE wp_posts set post_status = '".$_POST['post_status']."' WHERE ID = '".$_POST['ID']."'");
+
+
+    wp_send_json(array('code' => 'OK'));
 
 }
 add_action('wp_ajax_update-content-piece', 'ajax_update_content_piece');

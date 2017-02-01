@@ -60,6 +60,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator
 
       OptionsBarController.prototype.showView = function() {
         var chapter_id, term_ids, textbook_id;
+        console.log('');
         this.show(this.view, {
           loading: true,
           entities: [this.textbooksCollection]
@@ -72,12 +73,6 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator
             chapter_id = term_ids['chapter'];
           }
           localStorage.chapter_id = chapter_id;
-          if (textbook_id != null) {
-            this._fetchChapters(textbook_id, chapter_id);
-          }
-          if (chapter_id != null) {
-            this._fetchSections(chapter_id);
-          }
         }
         this.listenTo(this.view, "fetch:chapters", this._fetchChapters);
         this.listenTo(this.view, "fetch:sections", this._fetchSections);

@@ -74,7 +74,10 @@ define ['app'
 								if answerData.emptyOrIncomplete is 'empty'
 
 									bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
-										@_triggerSubmit() if result
+										if result
+											@_triggerSubmit()
+										else
+											@layout.triggerMethod "enable:submit"
 
 								else
 									@_triggerSubmit()

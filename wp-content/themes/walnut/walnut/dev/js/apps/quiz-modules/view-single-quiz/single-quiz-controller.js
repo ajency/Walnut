@@ -42,6 +42,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         if (!quizModel) {
           quizModel = App.request("get:quiz:by:id", quiz_id);
         }
+        console.log(quizModel);
         if (d_mode) {
           display_mode = d_mode;
         }
@@ -188,12 +189,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype._viewSummary = function(summary_id) {
         var fetchResponses;
+        console.log(summary_id);
         quizResponseSummary = quizResponseSummaryCollection.get(summary_id);
         this.questionResponseCollection = null;
         fetchResponses = this._fetchQuestionResponseCollection();
         return fetchResponses.done((function(_this) {
           return function() {
             var i, len, m, ref, reorderQuestions;
+            console.log(quizResponseSummary);
+            console.log(fetchResponses);
             if (!_.isEmpty(quizResponseSummary.get('questions_order'))) {
               questionsCollection.each(function(e) {
                 return e.unset('order');

@@ -17,18 +17,10 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype.events = {
         'change #subs': function(e) {
-          if (localStorage.textbook_id !== $(e.target).val()) {
-            return this.trigger("fetch:chapters", $(e.target).val());
-          } else {
-            return localStorage.textbook_id = '';
-          }
+          return this.trigger("fetch:chapters", $(e.target).val());
         },
         'change #chaps': function(e) {
-          if (localStorage.chapter_id !== $(e.target).val()) {
-            return this.trigger("fetch:sections", $(e.target).val());
-          } else {
-            return localStorage.chapter_id = '';
-          }
+          return this.trigger("fetch:sections", $(e.target).val());
         },
         'change #secs': function(e) {
           return this.trigger("fetch:subsections", $(e.target).val());

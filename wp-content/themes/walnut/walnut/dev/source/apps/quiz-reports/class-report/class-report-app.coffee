@@ -128,6 +128,30 @@ define ['app'
                             console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
+
+                    @listenTo @layout.allContentRegion, "excel:generation", (data)=>
+                        optn = data.options
+                        quiz_model = optn.model
+
+                        window.open(AJAXURL+ '?action=generate-xl-report&data='+quiz_model.id+'&division='+@division)
+                        # options =
+                        #     type : 'GET'
+                        #     url : AJAXURL+ '?action=generate-xl-report&data='+quiz_model.id+'&division='+@division
+
+                        # $.ajax(options).done (response)->
+                        #         console.log response
+                        #         #window.open(response);
+                        #         # contentPieceModel.set 'ID' : response.ID
+
+                        #         # $ ".page-title"
+                        #         # .before '<div id="saved-successfully" style="text-align:center;" class="alert alert-success">Content Piece Saved Successfully</div>'
+                                
+                        #         # setTimeout -> 
+                        #         #     $('#saved-successfully').remove()
+                        #         # , 3000
+
+                        #     .fail (resp)->
+                        #             console.log 'error'
                             
 
                     @listenTo @layout.allContentRegion, "schedule:quiz", @_showScheduleQuizApp

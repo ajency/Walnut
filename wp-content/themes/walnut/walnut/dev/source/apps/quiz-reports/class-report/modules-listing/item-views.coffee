@@ -17,7 +17,7 @@ define ['app','bootbox'], (App,bootbox)->
                         <td>{{quiz_type}}</td>
                         <td>{{taken_by}}</td>
                         {{#can_schedule}}
-                            <td>
+                            <td style="padding: 0 !important; vertical-align: middle;">
                                 {{#class_test}}
                                     <div class="schedule_dates none">
                                         From: 
@@ -31,13 +31,14 @@ define ['app','bootbox'], (App,bootbox)->
                                         <span class="schedule-quiz">change</a></span> | 
                                         <span class="clear-schedule">clear</a>
                                     </div>
-                                    <button id="schedule-button" type="button" class="btn btn-white btn-small pull-left m-r-10 schedule-quiz">
+                                    <button id="schedule-button" type="button" class="btn btn-white btn-small schedule-quiz">
                                         <i class="fa fa-calendar"></i> Schedule
                                     </button>
                                 {{/class_test}}
                             </td>
                         {{/can_schedule}}
-                        <td><button class="btn btn-small btn-success view-report">view report</button></td>'
+
+                        <td style="padding: 0 !important; vertical-align: middle;"><div class="report-container"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report"><i class="fa fa-download" aria-hidden="true"></i></button></div></td>'
 
             mixinTemplateHelpers :(data) ->
                 textbooks = Marionette.getOption @, 'textbookNamesCollection'
@@ -73,34 +74,29 @@ define ['app','bootbox'], (App,bootbox)->
 
             events:
                 'click .view-report'    :-> @trigger 'view:quiz:report', @model.id
-                'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model.id
+                'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model
                 'click .clear-schedule' : 'clearSchedule'
-                'click .xl-report'      : 'generateXlReport'
+                'click .xl-report'      : -> @trigger 'view:excel:report', @model.id
 
             modelEvents:
                 'change:schedule'  : 'changeScheduleDates'
 
             onShow:->
+                #console.log @model.get('quiz_type')
                 if @model.get('quiz_type') is 'class_test' and @model.get 'schedule'
                     @$el.find '.schedule_dates'
                     .show()
                     @$el.find '#schedule-button'
                     .hide()
+                else
+                    @$el.find '.xl-report'
+                    .hide()
 
             generateXlReport:->
-                console.log @model.id
-                data = [];
-                data.action = 'generate-xl-report'
-                data.json = @model.id
-
-                console.log AJAXURL
-
+                #console.log @model
                 options =
-                    type : 'POST'
-                    url : AJAXURL
-                    data : data
-                    
-                console.log options
+                    type : 'GET'
+                    url : AJAXURL+ '?action=generate-xl-report&data='+@model.id
 
                 $.ajax(options).done (response)->
                         console.log response
@@ -122,9 +118,6 @@ define ['app','bootbox'], (App,bootbox)->
                 schedule = @model.get 'schedule'
                 from = schedule['from']
                 to   = schedule['to']
-                console.log from
-                console.log to
-                console.log schedule
 
                 #fromDate= moment(from).format("Do MMM YYYY")
                 #toDate= moment(to).format("Do MMM YYYY")

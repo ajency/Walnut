@@ -29,6 +29,8 @@ define ['app'
 
 				quizModel = App.request "get:quiz:by:id", quiz_id if not quizModel
 
+				console.log quizModel
+
 				#incase the display mode is sent from router on page refresh
 				display_mode = d_mode if d_mode
 
@@ -161,10 +163,13 @@ define ['app'
 						@startQuiz()
 
 			_viewSummary:(summary_id)->
+				console.log summary_id
 				quizResponseSummary = quizResponseSummaryCollection.get summary_id
 				@questionResponseCollection = null
 				fetchResponses = @_fetchQuestionResponseCollection()
 				fetchResponses.done => 
+					console.log quizResponseSummary
+					console.log fetchResponses
 
 					if not _.isEmpty quizResponseSummary.get 'questions_order'
 

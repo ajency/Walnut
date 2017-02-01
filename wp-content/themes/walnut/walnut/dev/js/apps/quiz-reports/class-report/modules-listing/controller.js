@@ -37,6 +37,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-reports/class-report/
                 });
               });
               _this.listenTo(_this.view, 'itemview:view:quiz:report', _this._showQuizReportApp);
+              _this.listenTo(_this.view, "itemview:view:excel:report", function(data) {
+                return _this.region.trigger("excel:generation", data);
+              });
               _this.listenTo(_this.view, 'itemview:clear:schedule', function(itemview, quiz_id) {
                 return this.region.trigger('clear:schedule', this.contentModulesCollection.get(quiz_id));
               });

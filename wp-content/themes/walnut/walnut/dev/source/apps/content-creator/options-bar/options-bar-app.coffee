@@ -42,6 +42,7 @@ define ['app'
 
 
             showView: =>
+                console.log ''
                 @show @view, (loading: true, entities: [@textbooksCollection])
 
                 ## for edit content piece
@@ -57,10 +58,10 @@ define ['app'
                     localStorage.chapter_id = chapter_id
 
                     #fetch chapters based on the current content piece's textbook
-                    @_fetchChapters(textbook_id, chapter_id) if textbook_id?
+                    #@_fetchChapters(textbook_id, chapter_id) if textbook_id?
 
                     #fetch sections based on chapter id
-                    @_fetchSections(chapter_id) if chapter_id?
+                    #@_fetchSections(chapter_id) if chapter_id?
 
                 ## end of fetching of edit content piece
 
