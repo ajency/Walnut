@@ -322,7 +322,15 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
 <script>
 
     $(function(){
-         $(".question-data").tablesorter(); 
+         $(".question-data").tablesorter({
+            headers: { 
+                // assign the secound column (we start counting zero) 
+                8: { 
+                    // disable it by setting the property sorter to false 
+                    sorter: false 
+                }
+            } 
+         }); 
 
 
         // $('.question-filter .enter-ques').on('keyup', function() {

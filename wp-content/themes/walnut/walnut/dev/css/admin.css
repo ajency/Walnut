@@ -38,6 +38,9 @@
 .question-data .tablesorter-header.tablesorter-headerDesc {
   background-image: url(../../img/desc.gif);
 }
+.question-data .tablesorter-header.sorter-false {
+  background-image: none;
+}
 .table .checkbox label:after {
   left: 1px;
 }
