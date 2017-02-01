@@ -94,59 +94,130 @@ Template Name: question analysis
                                                 <div class="col-sm-12">
                                                     <div class="filters new-filter question-filter">
 
-                                                        <div class="">
+                                                        <!-- <div class="">
                                                             <input class="" type="text" placeholder="Class">
-                                                        </div>
+                                                        </div> -->
+                                                        <!-- <select class="js-select">
+                                                              <optgroup label="Alaskan/Hawaiian Time Zone">
+                                                                <option value="AK">Alaska</option>
+                                                                <option value="HI">Hawaii</option>
+                                                              </optgroup>
+                                                              <optgroup label="Pacific Time Zone">
+                                                                <option value="CA">California</option>
+                                                                <option value="NV">Nevada</option>
+                                                                <option value="OR">Oregon</option>
+                                                                <option value="WA">Washington</option>
+                                                              </optgroup>
+                                                        </select> -->
+                                                        <select class="js-select">
+                                                            <option>Class</option>
+                                                            <option value="3">Jr. KG - 1</option>
+                                                            <option value="4">Sr. KG - 1</option>
+                                                            <option value="5">Nur - 1</option>
+                                                            <option value="6">1 - A</option>
+                                                            <option value="7">2 - A</option>
+                                                            <option value="8">3 - A</option>
+                                                            <option value="9">4 - A</option>
+                                                            <option value="10">5 - A</option>
+                                                            <option value="18">Nur - 2</option>
+                                                            <option value="19">Nur - 3</option>
+                                                            <option value="20">Nur - 4</option>
+                                                            <option value="21">Nur - 5</option>
+                                                        </select>
 
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Textbook">
-                                                        </div>
+                                                        <select class="js-select">
+                                                            <option>Textbook</option>
+                                                            <option value="638" id="638">English - KG (Nursery, Junior KG, Senior KG)</option>
+                                                            <option value="637" id="637">Math - KG (Nursery, Junior KG, Senior KG)</option>
+                                                            <option value="635" id="635">My World - KG (Nursery, Junior KG, Senior KG)</option>
+                                                            <option value="636" id="636">Concepts - KG (Nursery, Junior KG, Senior KG)</option>
+                                                        </select>
 
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Chapter">
-                                                        </div>
+                                                        <select class="js-select">
+                                                            <option>Chapter</option>
+                                                            <option value="638" id="638">English - KG (Nursery, Junior KG, Senior KG)</option>
+                                                            <option value="637" id="637">Math - KG (Nursery, Junior KG, Senior KG)</option>
+                                                            <option value="635" id="635">My World - KG (Nursery, Junior KG, Senior KG)</option>
+                                                            <option value="636" id="636">Concepts - KG (Nursery, Junior KG, Senior KG)</option>
+                                                        </select>
 
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Section">
-                                                        </div>
+                                                        <select class="js-select">
+                                                            <option>Section</option>
+                                                            <option value="3">Jr. KG - 1</option>
+                                                            <option value="4">Sr. KG - 1</option>
+                                                            <option value="5">Nur - 1</option>
+                                                            <option value="6">1 - A</option>
+                                                            <option value="7">2 - A</option>
+                                                            <option value="8">3 - A</option>
+                                                            <option value="9">4 - A</option>
+                                                            <option value="10">5 - A</option>
+                                                            <option value="18">Nur - 2</option>
+                                                            <option value="19">Nur - 3</option>
+                                                            <option value="20">Nur - 4</option>
+                                                            <option value="21">Nur - 5</option>
+                                                        </select>
 
-                                                        <div class="">
-                                                            <input class="" type="text" placeholder="Subsection">
-                                                        </div>
+                                                        <select class="js-select">
+                                                            <option>Subsection</option>
+                                                            <option value="3">Jr. KG - 1</option>
+                                                            <option value="4">Sr. KG - 1</option>
+                                                            <option value="5">Nur - 1</option>
+                                                            <option value="6">1 - A</option>
+                                                            <option value="7">2 - A</option>
+                                                            <option value="8">3 - A</option>
+                                                            <option value="9">4 - A</option>
+                                                            <option value="10">5 - A</option>
+                                                            <option value="18">Nur - 2</option>
+                                                            <option value="19">Nur - 3</option>
+                                                            <option value="20">Nur - 4</option>
+                                                            <option value="21">Nur - 5</option>
+                                                        </select>
 
-                                                        <div class="">
-                                                            <input class="enter-ques" type="text" placeholder="Question Ans">
-                                                        </div>
+                                                        <select class="js-select enter-ques">
+                                                            <option value="0">Question</option>
+                                                            <option value="3">Jr. KG - 1</option>
+                                                            <option value="4">Sr. KG - 1</option>
+                                                            <option value="5">Nur - 1</option>
+                                                            <option value="6">1 - A</option>
+                                                            <option value="7">2 - A</option>
+                                                            <option value="8">3 - A</option>
+                                                            <option value="9">4 - A</option>
+                                                            <option value="10">5 - A</option>
+                                                            <option value="18">Nur - 2</option>
+                                                            <option value="19">Nur - 3</option>
+                                                            <option value="20">Nur - 4</option>
+                                                            <option value="21">Nur - 5</option>
+                                                        </select>
 
                                                     </div>
                                                     <div class="filters new-filter more-filter">
                                                         <div class="question-filter extra">
 
                                                             <!-- Hidden for UI purpose -->
-                                                            <div class="">
+                                                            <div class="js-select">
                                                                 <input class="" type="text">
                                                             </div>
                                                             <!-- Hidden for UI purpose -->
-                                                            <div class="">
+                                                            <div class="js-select">
                                                                 <input class="" type="text">
                                                             </div>
                                                             
 
                                                             
                                                             <!-- Filters -->
-                                                            <div class="">
+                                                            <div class="js-select">
                                                                 <input class="" type="text" placeholder="This week">
                                                             </div>
 
-                                                            <div class="">
+                                                            <div class="js-select">
                                                                 <input class="" type="text" placeholder="This month">
                                                             </div>
 
-                                                            <div class="">
+                                                            <div class="js-select">
                                                                 <input class="" type="text" placeholder="This year">
                                                             </div>
 
-                                                            <div class="">
+                                                            <div class="js-select">
                                                                 <input class="" type="text" placeholder="All time">
                                                             </div>
 
@@ -246,24 +317,35 @@ CHORUS_OPTIONS['<?php echo $key?>'] = '<?php echo $value?>';
 
  <script type="text/javascript"  src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/jquery.tablesorter.js?ver=<?php echo VERSION?>"></script>
 
+  <script type="text/javascript"  src="<?php get_site_url()?>/wp-content/themes/walnut/walnut/dev/js/plugins/select2.js?ver=<?php echo VERSION?>"></script>
+
 <script>
 
     $(function(){
          $(".question-data").tablesorter(); 
 
-        //  $('.question-filter .enter-ques').focus(function () {
+
+        // $('.question-filter .enter-ques').on('keyup', function() {
         //     $('.more-filter').slideDown();
-        // }).blur(function () {
-        //     $('.more-filter').slideUp();
+        //  });
+        // $('.question-filter .enter-ques').blur(function () {
+        //     if($('.question-filter .enter-ques').val() == ''){
+        //         $('.more-filter').slideUp();
+        //     }
         // });
-        $('.question-filter .enter-ques').on('keyup', function() {
-            $('.more-filter').slideDown();
-         });
-        $('.question-filter .enter-ques').blur(function () {
-            if($('.question-filter .enter-ques').val() == ''){
-                $('.more-filter').slideUp();
+
+
+        $(".enter-ques").change(function(){
+            if($(this).val() != "0") {
+              $('.more-filter').slideDown();
+            }
+            else {
+               $('.more-filter').slideUp();
             }
         });
+
+
+        $(".js-select").select2();
      });
 
 </script>
