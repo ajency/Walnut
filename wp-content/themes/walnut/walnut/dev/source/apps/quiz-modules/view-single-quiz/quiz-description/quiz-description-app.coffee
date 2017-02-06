@@ -13,7 +13,7 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') not in ['replay','quiz_report']
                     if @model._fetch.responseJSON.data.content_pieces != undefined
                         r = @model._fetch.responseJSON.data.content_layout
-                        console.log(@model._fetch.responseJSON.data)
+                        #console.log(@model._fetch.responseJSON.data)
                         c = @model._fetch.responseJSON.data.content_pieces.length
                         total = 0
                         i = 0
@@ -70,8 +70,70 @@ define ['app'
                 'click #try-again' :-> @trigger "try:again"
                 'click #go-back-button' : ->@trigger "goto:previous:route"
 
+            initialize:->
+                if @model.get('permissions') && @model.get('quiz_type') == 'class_test' && @model.get('status') == 'completed'
+                    permission = @model.get 'permissions'
+                    if(permission.displayAfterDays != '' && permission.displayAfterDays != undefined)
+                        replay_after_day_min = (permission.displayAfterDays * 24 * 60)
+
+                    else
+                        replay_after_day_min = 0
+
+                    if(permission.displayAfterHours != '' && permission.displayAfterHours != undefined)
+                        after_hours_time_result = (permission.displayAfterHours).split(':')
+
+                        after_hours_time = after_hours_time_result[0] * 60
+                        after_hours_time_min = parseInt(after_hours_time_result[1]) + parseInt(after_hours_time)
+                    else
+                        after_hours_time_min = 0
+
+                    if (permission.displayAfterDays == '' && permission.displayAfterHours == '')
+                        replay_after_day_min = 24 * 60
+                        after_hours_time_min = 0
+
+
+                    total_replay_mins = parseInt(replay_after_day_min) + parseInt(after_hours_time_min)
+
+                    taken_on_date = moment(@model.get 'taken_on').format('YYYY-MM-DD HH:mm:ss')
+
+                    replay_take = moment(taken_on_date).add(total_replay_mins, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+
+                    today = moment().format('YYYY-MM-DD HH:mm:ss')
+
+                    schedule = @model.get 'schedule'
+                    to = schedule.to
+
+                responseSummary = Marionette.getOption @, 'quizResponseSummary'
+                if responseSummary.get('status') is 'started'    
+                    @$el.find "#take-quiz"
+                    .html 'Continue'
+
+                if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
+                    
+                    if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
+                        if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0 
+                            @model.get('permissions').display_answer = true
+                            @$el.find "#take-quiz"
+                            .html 'Replay'    
+                        else
+                            @$el.find "#take-quiz"
+                            .remove()  
+
+                    else if Marionette.getOption(@, 'display_mode') == 'quiz_report'
+                        @model.get('permissions').display_answer = true 
+                        @$el.find "#take-quiz"
+                        .html 'Replay'         
+                    
+                    else if @model.hasPermission 'disable_quiz_replay'
+                        @$el.find "#take-quiz"
+                        .remove()
+                    else
+                        @$el.find "#take-quiz"
+                        .html 'Replay'
+
 
             serializeData:->
+                console.log 'serializeData'
                 data = super data
                 display_mode =  Marionette.getOption @, 'display_mode'
 
@@ -89,15 +151,17 @@ define ['app'
                     data.takeQuizError = 'Sorry this quiz has no questions in it.'
 
                 else 
+                    #console.log App.request "current:user:can", "view_all_quizzes"
                     if not data.status is 'completed' or App.request "current:user:can", "view_all_quizzes"
                         if data.quiz_type is 'class_test' and not IS_STANDALONE_SITE
-                            data.takeQuizError = 'Class tests can be taken from school site only'
+                            console.log ''
+                            #data.takeQuizError = 'Class tests can be taken from school site only'
 
                 if responseSummary.get('status') is 'completed'
                     data.responseSummary    = true
                     data.num_questions_answered = _.size(data.content_pieces) - responseSummary.get 'num_skipped'
-                    
-                    data.display_marks = true if @model.hasPermission 'display_answer'
+                    permissions = @model.get('permissions')
+                    data.display_marks = true if (@model.hasPermission 'display_answer'  || App.request "current:user:can", "view_all_quizzes")
                     if data.negMarksEnable
                         data.marks_scored = parseFloat responseSummary.get 'marks_scored'
                         data.negative_scored = parseFloat  responseSummary.get 'negative_scored'
@@ -106,6 +170,7 @@ define ['app'
                     
                     if responseSummary.get('taken_on')
                         data.taken_on_date = moment(responseSummary.get('taken_on')).format("Do MMM YYYY")
+
                     else 
                         data.taken_on_date = moment().format("Do MMM YYYY")
 
@@ -121,10 +186,10 @@ define ['app'
                 data  
 
             onShow:->
-
+                console.log 'onShow'
                 if @model.get('permissions') && @model.get('quiz_type') == 'class_test' && @model.get('status') == 'completed'
                     permission = @model.get 'permissions'
-                    if(permission.displayAfterDays != '' &&  permission.displayAfterDays != undefined)
+                    if(permission.displayAfterDays != '' && permission.displayAfterDays != undefined)
                         replay_after_day_min = (permission.displayAfterDays * 24 * 60)
 
                     else
@@ -138,7 +203,7 @@ define ['app'
                     else
                         after_hours_time_min = 0
 
-                    if (permission.displayAfterDays == '' && permission.displayAfterHours == '') || (permission.displayAfterDays == undefined && permission.displayAfterHours == undefined)
+                    if (permission.displayAfterDays == '' && permission.displayAfterHours == '')
                         replay_after_day_min = 24 * 60
                         after_hours_time_min = 0
 
@@ -155,6 +220,7 @@ define ['app'
 
                     #console.log today
 
+                    #quiz schedule
                     schedule = @model.get 'schedule'
                     to = schedule.to
 
@@ -166,8 +232,7 @@ define ['app'
                 if Marionette.getOption(@, 'display_mode') in ['replay','quiz_report']
                     
                     if @model.get('status') == 'completed' && Marionette.getOption(@, 'display_mode') == 'replay'
-                        if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0
-
+                        if moment(replay_take).diff(today, 'minutes') <= 0 && moment(to).diff(today, 'minutes') <= 0 
                             @model.get('permissions').display_answer = true
                             @$el.find "#take-quiz"
                             .html 'Replay'    

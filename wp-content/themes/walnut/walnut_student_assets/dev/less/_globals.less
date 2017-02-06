@@ -752,6 +752,11 @@ nav {
                 color: lighten(@quiz-link-color1, 10%);
             }
         }
+        &.fullWidth{
+            flex: 1;
+            padding-left: 0;
+            padding-right: 8em;
+        }
     }
     .duration {
         .flex(1);
@@ -830,3 +835,32 @@ nav {
         }
     }
 }
+
+
+.comment-modal{
+    &.modal{
+        .modal-header{
+            background: @dashboard-color;
+        }
+        .modal-body{
+            background-color: transparent;
+        }
+        .modal-footer{
+            button{
+                color: @color-white;
+                border: 0;
+                color: #fff;
+                padding: 8px;
+                width: 20%;
+                text-transform: uppercase;
+                .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.2));
+                &.cancel{
+                    background: @button-1-danger;
+                }
+            }
+        }
+    }    
+}
+
+
+

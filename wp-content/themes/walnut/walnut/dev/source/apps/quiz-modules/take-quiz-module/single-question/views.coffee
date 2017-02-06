@@ -21,6 +21,7 @@ define ['app'
                         'click #skip-question'      :-> @trigger "skip:question"
 
                         'click #show-hint'          :-> 
+                            console.log @model.get 'hint'
                             bootbox.alert @model.get 'hint'
                             @trigger 'show:hint:dialog'
 
@@ -29,13 +30,22 @@ define ['app'
                     submitQuest:=>
                         @$el.find '.submit-single'
                         .attr 'disabled', 'disabled'
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
+                        
                         @trigger "validate:answer"
 
+                        
+
                     mixinTemplateHelpers:(data)=>
+                        console.log @quizModel
 
                         responseModel = Marionette.getOption @, 'questionResponseModel'
 
                         display_mode = Marionette.getOption @, 'display_mode'
+
+                        if @quizModel.hasPermission('allow_hint') and _.trim data.hint
+                            data.show_hint =true
 
                         if display_mode is 'replay'
                             data.showComment = true
@@ -46,9 +56,6 @@ define ['app'
                             data.show_skip = true
 
                             data.allow_submit_answer = true
-
-                            if @quizModel.hasPermission('allow_hint') and _.trim data.hint
-                                data.show_hint =true
 
                             if @quizModel.hasPermission('single_attempt') and not @quizModel.hasPermission 'allow_resubmit'
                                 data.show_skip_helper_text=true
@@ -73,12 +80,15 @@ define ['app'
 
 
                             data.allow_skip = false if not data.allow_submit_answer
+                        console.log data
 
                         data
 
                     initialize:->
                         @quizModel = Marionette.getOption @, 'quizModel'
-
+                        if ((@quizModel.get('quiz_type') == 'practice') && @quizModel.hasPermission 'display_answer')
+                            result = @quizModel.get 'permissions'
+                            result.single_attempt = true
 
                     onShow:->
                         if @$el.find('#submit-question').length is 0
@@ -87,11 +97,12 @@ define ['app'
                                 .html 'This is the last question'
                                 @$el.find '#next-question'
                                 .hide()
-                                
-
                             else
                                 @$el.find '#next-question'
                                 .show()
+                                
+                        if $('#collapseView').hasClass('in')
+                            $('.submit2').addClass 'submit-pushed'
 
                         if parseInt(@model.id) is parseInt _.first @quizModel.get 'content_pieces'
                             @$el.find '#first_question'
@@ -104,6 +115,9 @@ define ['app'
                         @$el.find "#submit-question"
                         .hide()
 
+                        # if $('#collapseView').hasClass('in')
+                        #     $('.submit2').addClass 'submit-pushed'    
+                            
                         if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                             @$el.find '#last_question'
                             .html 'This is the last question'
@@ -122,5 +136,8 @@ define ['app'
 
                     onEnableSubmit:=>
                         @$el.find '.submit-single'
+                        .attr 'disabled', false
+
+                        @$el.find '.skip-button'
                         .attr 'disabled', false
 

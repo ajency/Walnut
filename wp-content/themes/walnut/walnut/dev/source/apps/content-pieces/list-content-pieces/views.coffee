@@ -79,8 +79,9 @@ define ['app'
 							.pluck 'name'
 							.compact()
 							.value()
+					console.log chapter
 
-						chapter
+					chapter
 
 				data.statusMessage = ->
 					if data.post_status is 'pending'

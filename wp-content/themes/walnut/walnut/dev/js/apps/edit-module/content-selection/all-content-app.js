@@ -29,8 +29,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         this.listenTo(this.view, "add:content:pieces", (function(_this) {
           return function(contentIDs) {
             return _.each(contentIDs, function(ele, index) {
-              _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
-              return _this.contentPiecesCollection.remove(ele);
+              return _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
             });
           };
         })(this));
@@ -180,21 +179,18 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.addContentPieces = function() {
-        var content_pieces, i, id, len;
+        var content_pieces;
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         if (content_pieces) {
-          this.trigger("add:content:pieces", content_pieces);
-          for (i = 0, len = content_pieces.length; i < len; i++) {
-            id = content_pieces[i];
-            this.fullCollection.remove(id);
-          }
+          return this.trigger("add:content:pieces", content_pieces);
         }
-        return this.onUpdatePager();
       };
 
       DataContentTableView.prototype.onContentPieceRemoved = function(model) {
+        var id;
+        id = parseInt(model.get('ID'));
         this.fullCollection.add(model);
-        return this.onUpdatePager();
+        return this.$el.find('input[type=checkbox][value=' + id + ']').trigger('click').prop('checked', false);
       };
 
       DataContentTableView.prototype.onUpdatePager = function() {

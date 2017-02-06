@@ -1,0 +1,525 @@
+
+
+/* ---------------------------
+   ADMIN TABLE FIX FOR CONTENT PIECE -----------
+ ---------------------------
+*/
+
+
+#content-pieces-table{
+	table-layout: fixed;
+  tr{
+    th{
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+  td{
+    font-size: 0.6em;
+    word-wrap: break-word;
+    text-align: center;
+    & > span.label{
+      font-size: 0.9em;
+      padding: 7px;
+      min-width: inherit;
+    }
+  }
+  .tablesorter-header-inner{
+    font-size: inherit;
+  }
+}
+
+
+// Sort
+
+// table{
+//     .tablesorter-header{
+//     background-image: url(../../img/bg.gif); 
+//     cursor: pointer; 
+//     font-weight: bold; 
+//     background-repeat: no-repeat; 
+//     background-position: center right; 
+//     padding-left: 20px; 
+//     border-right: 1px solid #dad9c7; 
+//     margin-left: -1px;
+//     &.tablesorter-headerAsc{
+//       background-image: url(../../img/asc.gif); 
+//       background-color: #3399FF;
+//     }
+//     &.tablesorter-headerDesc{
+//       background-image: url(../../img/desc.gif); 
+//       background-color: #3399FF;
+//     }
+//   }
+// }
+
+
+.question-data{
+    .tablesorter-header{
+    background-image: url(../../img/bg.gif); 
+    cursor: pointer; 
+    font-weight: bold; 
+    background-repeat: no-repeat; 
+    background-position: center right; 
+    padding-left: 20px; 
+    border-right: 1px solid #dad9c7; 
+    margin-left: -1px;
+    &.tablesorter-headerAsc{
+      background-image: url(../../img/asc.gif); 
+      // background-color: #3399FF;
+    }
+    &.tablesorter-headerDesc{
+      background-image: url(../../img/desc.gif); 
+      // background-color: #3399FF;
+    }
+    &.sorter-false{
+      background-image: none;
+    }
+  }
+}
+
+
+.table{
+  .checkbox{
+    label{
+      &:after{
+        left: 1px;
+      }
+    }
+  }
+}
+
+
+#check_all_div{
+  box-shadow: 6px 0px 15px 6px #8b91a0;
+  background-color: #8b91a0;
+}
+
+
+/* ---------------------------
+   ADMIN CONTENT PIECE AND QUIZ/LECTURE FIXES -----------
+ ---------------------------
+*/
+
+
+.all-d-best,.direction,.submit2,.quiz-stats,.new-design{
+	display: none;
+}
+
+.admin-side{
+	display: block;
+}
+
+#question-display-region > div .container-grey,.quiz-info{
+	text-align: center;
+}
+
+
+#question-display-region > div #skip-question{
+	padding: 10px 18px;
+}
+
+
+/* ---------------------------
+   QUIZ SEARCH ALLIGNED  -----------
+ ---------------------------
+*/
+ 
+ 
+/*Date-Time picker fix */
+
+.contentSelect{
+	overflow: inherit !important;
+}
+
+.contentSelect .tab-content{
+	overflow: inherit;
+}    
+
+.flexContainer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.flexContainer .flexChild{
+    margin: 0 5px;
+}
+
+.flexContainer .flexChild .input-append{
+	/*display: flex;*/
+}
+
+.flexContainer .flexChild .input-append > input[type="text"]{
+	width: 80%;
+}
+
+.flexContainer .flexChild .input-append .dropdown-menu{
+	top: 40px !important;
+    height: 260px;
+    text-align: center;
+}
+
+
+
+/* ---------------------------
+   QUIZ LIST TEXTBOOK SELECT  -----------
+ ---------------------------
+*/
+
+
+.table-tools-actions .select2-container.textbook-filter{
+	min-width: 160px;
+    width: inherit;
+}
+
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices{
+	max-width: 520px;
+    overflow-x: auto;
+    white-space: nowrap;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+
+.table-tools-actions .select2-container.textbook-filter .select2-search-choice{
+	display: inline-block;
+    float: none;
+    /*width: 123px;*/
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field{
+	display: inline-block;
+    float: none;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field input[type="text"]{
+	width: 153px;
+    color: #000 !important;
+    font-weight: 400;
+    text-transform: capitalize;
+    margin-top: -3px;
+    padding-top: 10px !important;
+}
+
+.table-tools-actions .select2-container.textbook-filter .select2-choices .select2-search-field .select2-focused{
+    margin-top: -10px;
+}
+
+/* ---------------------------
+   BOOTSTRAP DATETIME-PICKER BASIC FIXES AS PER THE VERSION  -----------
+ ---------------------------
+*/
+
+#dialog-region .bootstrap-datetimepicker-widget .table-condensed{
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
+#dialog-region .bootstrap-datetimepicker-widget{
+	cursor: pointer;
+}
+
+#dialog-region .bootstrap-datetimepicker-widget .timepicker .btn-primary{
+	color: #ffffff;
+    background-color: #259b24; 
+    border-color: #259b24;
+}
+
+/*no result found*/
+.visible-msg{
+  opacity: 1;
+}
+
+.table-div{
+  display: table;
+}
+
+.table-cell-div,
+.table-cell-div2{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.page-content{
+  min-height: auto;
+  overflow: initial;
+}
+
+.btn.view-report,
+.btn.schedule-quiz{
+  padding: 6px 8px;
+  display: block;
+  margin: auto; 
+}
+
+.table .checkbox{
+  margin-left: 0;
+}
+
+.elem-50 input[type="text"],
+.elem-50 textarea{
+  max-width: 50%;
+  width: 50%;
+}
+
+.input-append.success .add-on{
+  background-color: #D1DADE;
+}
+
+.input-append.success .add-on .arrow{
+  color: #D1DADE;
+}
+
+
+/* ---------------------------
+   DOWNLOAD EXCEL REPORT STYLING  -----------
+ ---------------------------
+*/
+
+
+.report-container{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: -ms-flex;
+    display: -webkit-box;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    justify-content: center;
+}
+
+.report-container .view-report{
+    font-size: 1em;
+    margin: 0;
+}
+
+@media screen and (max-width: 1400px) {
+  .report-container .view-report{
+      padding: 6px 5px;
+  }
+}
+
+
+.report-container .xl-report{
+    border: 0;
+    background-color: rgba(37, 155, 36, 0.75);
+    padding: 0 10px;
+    box-shadow: -1px 0px 6px 1px rgba(0, 0, 0, 0.23);
+    color: #fff;
+    outline: 0;
+    transition: all 0.5s ease;
+}
+
+.report-container .xl-report:hover{
+    background-color: rgba(37, 155, 36, 0.93);
+}
+
+.report-container .xl-report i{
+    font-size: 0.9em;
+}
+
+@media screen and (min-width: 1250px) and (max-width: 1366px) {
+  .report-container .view-report{
+      padding: 6px 5px;
+      font-size: 0.85em;
+  }
+  .report-container .xl-report{
+      padding: 0 8px; 
+  }
+  .report-container .xl-report i{
+    font-size: 0.8em;
+  }
+}
+
+
+/* ---------------------------
+   QUESTION ANALYSIS  -----------
+ ---------------------------
+*/
+
+
+.question-filter{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .js-select{
+      flex: 1;
+      padding-right: 10px;
+      input[type='text']{
+      width: 100%;
+      font-weight: 400;
+      font-size: 0.75em;
+      color: #000;
+    }
+  }
+}
+.more-filter{
+  display: none;
+    .extra{
+      flex-wrap: inherit;
+      justify-content: flex-end;
+      margin-top: 10px;
+      & > div{
+        &:nth-child(-n+2){
+          visibility: hidden;
+      }
+    }
+  }
+}
+
+// Questions Checkbox fix
+
+#mcq-container{
+   &.mcq{
+        .ansFalse,.ansRight,.ansWrong{
+            opacity: 0.5;
+            pointer-events: none;
+            .mcq-option-select{
+                opacity: 0.4;
+            }
+            &.ansRight{
+                opacity: 0.8;
+            }
+        }
+    } 
+}
+
+
+
+// Comment more
+
+.comment-label{
+    display: -webkit-box;
+    line-height: 1.4;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    .more{
+        display: block;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #f2593a;
+        cursor: pointer;
+        font-size: 0.85em;
+        box-shadow: -13px 8px 5px 6px rgba(229, 233, 236, 0.61);
+        background-color: #e5e9ec;
+    }
+}
+
+
+// Quiz info
+
+.quiz-info{
+    margin: 20px auto;
+    text-align: left;
+    max-width: 760px;
+    .cards{
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        background: #f2f2f2;
+        border-radius: 5px;
+        box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.15);
+        h2{
+            margin: 0 0 5px 0;
+            font-size: 0.95em;
+            display: inline-block;
+            i{
+                font-size: 1.2em;
+                // vertical-align: middle;
+                margin-right: 5px;
+            }
+        }
+        .data{
+            line-height: 1.5;
+            margin-left: 15px;
+            font-size: 0.9em;
+            font-weight: 300;
+        }
+    }
+    &__hint{
+        border-left: 3px solid #69b8b5;
+        i{
+            color: #69b8b5;
+        }
+    }
+    &__comment&__comment{
+        border-left: 3px solid #a2a7a2;
+        h2{
+            i{
+                font-size: 1em;
+                color: #a2a7a2;
+                vertical-align: inherit;
+            }
+        }
+    }
+}
+
+
+
+// content piece data
+
+
+// .content-piece__details{
+//     background-color: #e5e9ec;
+//     padding: 15px 0;
+//     margin-bottom: 20px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     flex-wrap: wrap;
+//     width: 100%;
+//     .info{
+//         flex: 1 0 calc(~'25% - 10px');
+//         max-width: calc(~'25% - 10px');
+//         background-color: #fff;
+//         margin: 5px 10px 10px 0;
+//         label{
+//             margin-bottom: 0;
+//             padding: 10px 8px;
+//             font-weight: 300;
+//             border-left: 3px solid #0090d9;
+//         }
+//         &:last-child{
+//           max-width: 28%;
+//           margin-bottom: 0;
+//         }
+//     }
+// }
+
+  .content-piece__details{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+      .info{
+        margin-right: 15px;
+        label{
+        background-color: #fff;
+        padding: 8px 0 8px 8px;
+        margin-bottom: 20px;
+        box-shadow: 1px 1px 5px 0px rgba(8, 8, 8, 0.27);
+        b{
+        	background-color: #0090d9;
+    			color: #fff;
+    			padding: 8px;
+    			font-size: 0.95em;
+    			font-weight: 400;
+    			text-shadow: 0px 1px 2px #000;
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+
+

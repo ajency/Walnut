@@ -17,6 +17,7 @@ define(['app'], function(App) {
       };
 
       ContentBuilderView.prototype.onShow = function() {
+        console.log('sortable');
         return this.$el.find('.droppable-column').sortable({
           revert: 'invalid',
           items: '> .element-wrapper',

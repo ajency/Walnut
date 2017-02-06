@@ -22,9 +22,15 @@ define ['app'
 
 				initialize : (opts)->
 					abc = opts.quizModel
+
+					if abc.hasPermission 'display_answer' 
+						result = abc.get 'permissions'
+						result.single_attempt = true
+
 					if abc.get('status') == 'completed' && abc.get('quiz_type') == 'class_test'
 						result = abc.get 'permissions'
 						result.display_answer = true
+
 					{quizModel,quizResponseSummary,questionsCollection,
 					@questionResponseCollection,@textbookNames,@display_mode, studentTrainingModule} = opts
 
@@ -108,9 +114,6 @@ define ['app'
 					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
 
 					if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
-
-						console.log(questionResponseModel.get('status')) if questionResponseModel
-
 						data =
 							'summary_id'     : quizResponseSummary.id
 							'content_piece_id'  : questionModel.id
@@ -135,6 +138,13 @@ define ['app'
 				_submitQuestion:(answer)->
 					#save results here
 
+					@layout.quizProgressRegion.trigger "check:current"
+
+					if(answer.get('status') == 'wrong_answer' && answer.get('answer').length == 0)
+						single_status = 'skipped'
+					else
+						single_status = answer.get 'status'
+
 					totalTime =@timerObject.request "get:elapsed:time"
 					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
 					pausedQuestionTime =0 #reset to 0 once used
@@ -144,7 +154,7 @@ define ['app'
 						'summary_id'     : quizResponseSummary.id
 						'content_piece_id'  : questionModel.id
 						'question_response' : _.omit answer.toJSON(), ['marks','status']
-						'status'            : answer.get 'status'
+						'status'            : single_status
 						'marks_scored'      : answer.get 'marks'
 						'time_taken'        : timeTaken
 
@@ -171,11 +181,14 @@ define ['app'
 						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
 
 				_skipQuestion:(answer)->
+					@layout.quizProgressRegion.trigger "check:current"
 					#save skipped status
 					@_submitQuestion answer
 					@_gotoNextQuestion()
 
 				_gotoNextQuestion:->
+
+					@layout.quizProgressRegion.trigger "check:current"
 
 					nextQuestionID = @_getNextItemID() if questionModel?
 
@@ -187,7 +200,6 @@ define ['app'
 						@_showSingleQuizApp()
 
 				_endQuiz:->
-
 					questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
 					if @display_mode not in ['replay', 'quiz_report']
@@ -257,6 +269,8 @@ define ['app'
 					unanswered= _.difference allIDs, answeredIDs
 
 				_gotoPreviousQuestion:->
+
+					@layout.quizProgressRegion.trigger "check:current"
 
 					prevQuestionID = @_getPrevItemID() if questionModel?
 
