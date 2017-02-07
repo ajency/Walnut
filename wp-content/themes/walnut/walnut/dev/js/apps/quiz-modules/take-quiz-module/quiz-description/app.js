@@ -100,16 +100,22 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
           $('#accordionToggle').text('Expand');
           return $('.submit2').removeClass('submit-pushed');
         });
-        return $('#collapseView').on('shown.bs.collapse', function() {
+        $('#collapseView').on('shown.bs.collapse', function() {
           $('#accordionToggle').addClass('updown');
           $('#accordionToggle').text('Collapse');
           return $('.submit2').addClass('submit-pushed');
         });
+        if ($('#collapseView').hasClass('in')) {
+          return $('.submit2').addClass('submit-pushed');
+        }
       };
 
       ModuleDescriptionView.prototype.onQuestionChange = function(model) {
         this.$el.find("#time-on-question").html(model.get('duration'));
-        return this.$el.find("#marks-for-question").html(parseFloat(model.get('marks')).toFixed(1));
+        this.$el.find("#marks-for-question").html(parseFloat(model.get('marks')).toFixed(1));
+        if ($('#collapseView').hasClass('in')) {
+          return $('.submit2').addClass('submit-pushed');
+        }
       };
 
       return ModuleDescriptionView;

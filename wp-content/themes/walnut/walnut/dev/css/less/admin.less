@@ -53,6 +53,32 @@
 //   }
 // }
 
+
+.question-data{
+    .tablesorter-header{
+    background-image: url(../../img/bg.gif); 
+    cursor: pointer; 
+    font-weight: bold; 
+    background-repeat: no-repeat; 
+    background-position: center right; 
+    padding-left: 20px; 
+    border-right: 1px solid #dad9c7; 
+    margin-left: -1px;
+    &.tablesorter-headerAsc{
+      background-image: url(../../img/asc.gif); 
+      // background-color: #3399FF;
+    }
+    &.tablesorter-headerDesc{
+      background-image: url(../../img/desc.gif); 
+      // background-color: #3399FF;
+    }
+    &.sorter-false{
+      background-image: none;
+    }
+  }
+}
+
+
 .table{
   .checkbox{
     label{
@@ -320,7 +346,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  & > div{
+  .js-select{
       flex: 1;
       padding-right: 10px;
       input[type='text']{
@@ -434,6 +460,66 @@
         }
     }
 }
+
+
+
+// content piece data
+
+
+// .content-piece__details{
+//     background-color: #e5e9ec;
+//     padding: 15px 0;
+//     margin-bottom: 20px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     flex-wrap: wrap;
+//     width: 100%;
+//     .info{
+//         flex: 1 0 calc(~'25% - 10px');
+//         max-width: calc(~'25% - 10px');
+//         background-color: #fff;
+//         margin: 5px 10px 10px 0;
+//         label{
+//             margin-bottom: 0;
+//             padding: 10px 8px;
+//             font-weight: 300;
+//             border-left: 3px solid #0090d9;
+//         }
+//         &:last-child{
+//           max-width: 28%;
+//           margin-bottom: 0;
+//         }
+//     }
+// }
+
+  .content-piece__details{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+      .info{
+        margin-right: 15px;
+        label{
+        background-color: #fff;
+        padding: 8px 0 8px 8px;
+        margin-bottom: 20px;
+        box-shadow: 1px 1px 5px 0px rgba(8, 8, 8, 0.27);
+        b{
+        	background-color: #0090d9;
+    			color: #fff;
+    			padding: 8px;
+    			font-size: 0.95em;
+    			font-weight: 400;
+    			text-shadow: 0px 1px 2px #000;
+        }
+      }
+    }
+  }
+
+
+
+
+
 
 
 

@@ -45,23 +45,28 @@
     <!-- <span class="pull-left small" id="first_question"></span> -->
 
         <div class="quizActions__cont">
+
             {{^replay}}
+            {{#show_hint}} 
             <div class="quiz-btn">
-                {{#show_hint}} 
                 <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small hint">
                     <i class="fa fa-lightbulb-o"></i> Hint
                 </button>
-                {{/show_hint}}
             </div>
+            {{/show_hint}}
             {{/replay}}
         
+                
             {{^replay}}
-            {{^allow_submit_answer}} 
-            <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
-                    Next <i class="fa fa-step-forward"></i>
-                </button>
+            {{^allow_submit_answer}}
+                <div class="quiz-btn">   
+                    <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
+                        Next <i class="fa fa-step-forward"></i>
+                    </button>
+                </div>
             {{/allow_submit_answer}} 
             {{/replay}}
+            
 
 
             <div class="quiz-btn">

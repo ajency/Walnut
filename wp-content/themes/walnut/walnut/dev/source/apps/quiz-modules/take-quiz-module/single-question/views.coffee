@@ -35,6 +35,8 @@ define ['app'
                         
                         @trigger "validate:answer"
 
+                        
+
                     mixinTemplateHelpers:(data)=>
                         console.log @quizModel
 
@@ -87,8 +89,6 @@ define ['app'
                         if ((@quizModel.get('quiz_type') == 'practice') && @quizModel.hasPermission 'display_answer')
                             result = @quizModel.get 'permissions'
                             result.single_attempt = true
-                            console.log result
-                        console.log @quizModel
 
                     onShow:->
                         if @$el.find('#submit-question').length is 0
@@ -97,11 +97,12 @@ define ['app'
                                 .html 'This is the last question'
                                 @$el.find '#next-question'
                                 .hide()
-                                
-
                             else
                                 @$el.find '#next-question'
                                 .show()
+                                
+                        if $('#collapseView').hasClass('in')
+                            $('.submit2').addClass 'submit-pushed'
 
                         if parseInt(@model.id) is parseInt _.first @quizModel.get 'content_pieces'
                             @$el.find '#first_question'
@@ -114,6 +115,9 @@ define ['app'
                         @$el.find "#submit-question"
                         .hide()
 
+                        # if $('#collapseView').hasClass('in')
+                        #     $('.submit2').addClass 'submit-pushed'    
+                            
                         if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                             @$el.find '#last_question'
                             .html 'This is the last question'

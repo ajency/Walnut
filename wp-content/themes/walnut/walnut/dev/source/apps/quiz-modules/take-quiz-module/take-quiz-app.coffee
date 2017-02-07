@@ -23,7 +23,7 @@ define ['app'
 				initialize : (opts)->
 					abc = opts.quizModel
 
-					if abc.get 'quiz_type' == 'practice' && abc.hasPermission 'display_answer' 
+					if abc.hasPermission 'display_answer' 
 						result = abc.get 'permissions'
 						result.single_attempt = true
 

@@ -28,7 +28,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizController.prototype.initialize = function(opts) {
         var abc, result;
         abc = opts.quizModel;
-        if (abc.get('quiz_type' === 'practice' && abc.hasPermission('display_answer'))) {
+        if (abc.hasPermission('display_answer')) {
           result = abc.get('permissions');
           result.single_attempt = true;
         }

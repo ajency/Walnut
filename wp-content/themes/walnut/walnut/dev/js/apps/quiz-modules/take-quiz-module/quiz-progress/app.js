@@ -155,6 +155,8 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
         this.updateSkippedCount();
         if (responseModel.get('status') === 'skipped' && !this.quizModel.hasPermission('single_attempt')) {
           return false;
+        } else if (this.quizModel.hasPermission('allow_resubmit')) {
+          return false;
         } else if (this.quizModel.hasPermission('display_answer') || responseModel.get('status') === 'skipped') {
           return this.changeClassName(responseModel);
         }
@@ -174,6 +176,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/take-qui
       QuizProgressView.prototype.changeClassName = function(responseModel) {
         var className, status;
         status = responseModel.get('status');
+        console.log(status);
         className = (function() {
           switch (status) {
             case 'correct_answer':
