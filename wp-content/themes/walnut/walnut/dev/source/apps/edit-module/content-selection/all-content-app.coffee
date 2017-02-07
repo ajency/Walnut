@@ -20,7 +20,7 @@ define ['app'
 
 					_.each contentIDs, (ele, index)=>
 						@contentGroupCollection.add @contentPiecesCollection.get ele
-						@contentPiecesCollection.remove ele
+						#@contentPiecesCollection.remove ele
 
 				@listenTo @contentGroupCollection, 'remove', @contentPieceRemoved
 
@@ -30,7 +30,6 @@ define ['app'
 	#                    @contentPiecesCollection.reset collection.models
 
 			contentPieceRemoved: (model)=>
-				console.log model
 				if model.get('post_type') is 'content-piece'
 					@contentPiecesCollection.add model
 					@view.triggerMethod "content:piece:removed", model
@@ -170,8 +169,16 @@ define ['app'
 				#@onUpdatePager()
 
 			onContentPieceRemoved: (model)=>
-				#console.log model
+				id = parseInt(model.get('ID'))
+
 				@fullCollection.add model
+				# @$el.find '#dataContentTable .tab_checkbox'
+				# 	.trigger 'click'
+				# 		.prop 'checked', false
+
+				@$el.find 'input[type=checkbox][value='+id+']'
+					.trigger 'click'
+						.prop 'checked', false
 				#@onUpdatePager()
 
 			onUpdatePager:->

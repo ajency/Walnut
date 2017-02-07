@@ -166,10 +166,11 @@ function generate_sync_data(){
     foreach ($data as $line) {
 
       if($line['meta_key'] == 'content_element' && strpos($line['meta_value'],$network_url) !== false){
-        $raw_element = maybe_unserialize($line['meta_value']);
-        $newelement = str_replace($network_url, $_REQUEST['school'], $raw_element);
-        $line['meta_value'] = maybe_serialize($newelement);
-      }else if($line['meta_key'] == 'layout_json' && strpos($line['meta_value'],$network_url) !== false && strpos($line['meta_value'],'WP_Post') == false){
+          $raw_element = maybe_unserialize($line['meta_value']);
+          $newelement = str_replace($network_url, $_REQUEST['school'], $raw_element);
+          $line['meta_value'] = maybe_serialize($newelement);
+      }
+      else if($line['meta_key'] == 'layout_json' && strpos($line['meta_value'],$network_url) !== false && strpos($line['meta_value'],'WP_Post') == false){
         $raw_element = maybe_unserialize($line['meta_value']);
         $newelement = str_replace_deep($network_url, $_REQUEST['school'], $raw_element);
         $line['meta_value'] = maybe_serialize($newelement);

@@ -25,7 +25,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
           data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
-          data.display_answer = quizModel.hasPermission('display_answer');
+          if (quizModel.hasPermission('allow_resubmit')) {
+            data.display_answer = false;
+          } else {
+            data.display_answer = quizModel.hasPermission('display_answer');
+          }
           marks_obtained = responseModel.get('marks_scored');
           data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(1));
           total_marks = this.model.get('marks');

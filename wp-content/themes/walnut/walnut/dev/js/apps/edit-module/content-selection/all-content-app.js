@@ -29,8 +29,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         this.listenTo(this.view, "add:content:pieces", (function(_this) {
           return function(contentIDs) {
             return _.each(contentIDs, function(ele, index) {
-              _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
-              return _this.contentPiecesCollection.remove(ele);
+              return _this.contentGroupCollection.add(_this.contentPiecesCollection.get(ele));
             });
           };
         })(this));
@@ -38,7 +37,6 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       Controller.prototype.contentPieceRemoved = function(model) {
-        console.log(model);
         if (model.get('post_type') === 'content-piece') {
           this.contentPiecesCollection.add(model);
           return this.view.triggerMethod("content:piece:removed", model);
@@ -189,7 +187,10 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       };
 
       DataContentTableView.prototype.onContentPieceRemoved = function(model) {
-        return this.fullCollection.add(model);
+        var id;
+        id = parseInt(model.get('ID'));
+        this.fullCollection.add(model);
+        return this.$el.find('input[type=checkbox][value=' + id + ']').trigger('click').prop('checked', false);
       };
 
       DataContentTableView.prototype.onUpdatePager = function() {

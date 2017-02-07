@@ -57,7 +57,7 @@
                                     <div class="col-sm-6 col-sm-offset-3 col-lg-6 col-lg-offset-3 wrapped">
                                         <div class="row text-center">
                                             <div class="col-md-12 reg-login">
-                                                <h4>Welcome to Walnut Learning System</h4>
+                                                <h4>Welcome to the Walnut Learning System</h4>
                                                 <h5>Choose your school</h5>
                                             </div>
                                         </div>                                    

@@ -89,7 +89,12 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.initialize = function() {
-        return this.quizModel = Marionette.getOption(this, 'quizModel');
+        var result;
+        this.quizModel = Marionette.getOption(this, 'quizModel');
+        if ((this.quizModel.get('quiz_type') === 'practice') && this.quizModel.hasPermission('display_answer')) {
+          result = this.quizModel.get('permissions');
+          return result.single_attempt = true;
+        }
       };
 
       SingleQuestionLayout.prototype.onShow = function() {
@@ -100,6 +105,9 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
           } else {
             this.$el.find('#next-question').show();
           }
+        }
+        if ($('#collapseView').hasClass('in')) {
+          $('.submit2').addClass('submit-pushed');
         }
         if (parseInt(this.model.id) === parseInt(_.first(this.quizModel.get('content_pieces')))) {
           this.$el.find('#first_question').html('This is the first question');
