@@ -40,12 +40,17 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           }
           if (this.model.get('comment') !== '') {
             comment = this.model.get('comment');
-            if (comment.length > 20) {
-              data.comment_modal = true;
-              data.comment = comment;
+            if ($(window).width() < 1400) {
+              if (comment.length > 61) {
+                data.comment_modal = true;
+                data.comment = comment;
+              }
+            } else if ($(window).width() > 1401) {
+              if (comment.length > 74) {
+                data.comment_modal = true;
+                data.comment = comment;
+              }
             }
-          } else {
-            data.comment = false;
           }
           data.statusUI = (function() {
             switch (data.responseStatus) {
