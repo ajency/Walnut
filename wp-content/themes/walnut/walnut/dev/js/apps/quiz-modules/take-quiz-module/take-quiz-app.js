@@ -150,12 +150,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             'time_taken': timeTaken
           };
           questionResponseModel = App.request("create:quiz:question:response:model", data);
+          return App.execute("when:fetched", questionResponseModel, (function(_this) {
+            return function() {
+              return _this._saveQuizResponseModel(questionResponseModel);
+            };
+          })(this));
         } else {
           questionResponseModel.set({
             'time_taken': timeTaken
           });
-        }
-        if (questionResponseModel) {
           return this._saveQuizResponseModel(questionResponseModel);
         }
       };

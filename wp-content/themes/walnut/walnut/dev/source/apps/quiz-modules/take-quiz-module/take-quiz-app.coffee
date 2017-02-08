@@ -137,10 +137,11 @@ define ['app'
 
 						questionResponseModel = App.request "create:quiz:question:response:model", data
 
+						App.execute "when:fetched", questionResponseModel, =>
+							@_saveQuizResponseModel questionResponseModel
+
 					else
 						questionResponseModel.set 'time_taken' : timeTaken
-
-					if(questionResponseModel)
 						@_saveQuizResponseModel questionResponseModel
 
 				_changeQuestion:(changeToQuestion)=>
