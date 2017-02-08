@@ -48,6 +48,9 @@
   box-shadow: 6px 0px 15px 6px #8b91a0;
   background-color: #8b91a0;
 }
+.teacher-app {
+  max-width: 100%;
+}
 /* ---------------------------
    ADMIN LABEL DESIGN FIX -----------
  ---------------------------
