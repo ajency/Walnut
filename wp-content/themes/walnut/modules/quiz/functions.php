@@ -1574,7 +1574,7 @@ function write_quiz_question_response($args){
             if (!is_multisite())
                 $paused_data['sync']=0;
 
-            $paused_data = array('status'=>$args['status'],'time_taken' => $args['time_taken']);
+            $paused_data = array('status'=>$args['status'],'time_taken' => $args['time_taken'],'marks_scored' =>$args['marks_scored'], 'question_response' => maybe_serialize($args['question_response']));
             $result = $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
             if(!$result)
                 return false;
