@@ -1587,7 +1587,7 @@ function write_quiz_question_response($args){
             if($question_response->status != 'paused'){
                 //check for single attempt permission
                 if (!$quiz_module->permissions['allow_resubmit']){
-                    return false;
+                    return $args['qr_id'];
                 }
 
                 if(!$quiz_module->permissions['allow_resubmit'] && $question_response->status !== 'skipped')
