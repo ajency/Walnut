@@ -1568,13 +1568,13 @@ function write_quiz_question_response($args){
 
         $question_response = $wpdb->get_row($check_qry);
 
-        if($question_response->status == 'paused' && $args['status'] == 'paused'){
+        if($question_response->status == 'paused'){
 
             //handling sync status for standalone sites.
             if (!is_multisite())
                 $paused_data['sync']=0;
 
-            $paused_data = array('status'=>'paused','time_taken' => $args['time_taken']);
+            $paused_data = array('status'=>$args['status'],'time_taken' => $args['time_taken']);
             $result = $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
             if(!$result)
                 return false;
