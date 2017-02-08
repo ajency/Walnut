@@ -113,15 +113,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             }
           }
         });
-        setInterval((function(_this) {
-          return function() {
-            var time;
-            time = _this.timerObject.request("get:elapsed:time");
-            if (time && quizResponseSummary.get('status') !== 'completed') {
-              return _this._autosaveQuestionTime();
-            }
-          };
-        })(this), 30000);
         return $(window).on('beforeunload', (function(_this) {
           return function() {
             _this._autosaveQuestionTime();

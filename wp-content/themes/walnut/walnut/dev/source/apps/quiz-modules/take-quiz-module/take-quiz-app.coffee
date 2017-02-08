@@ -107,10 +107,10 @@ define ['app'
 						else
 	                    	@_gotoNextQuestion()
 
-					setInterval =>
-						time = @timerObject.request "get:elapsed:time"
-						@_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
-					,30000
+					# setInterval =>
+					# 	time = @timerObject.request "get:elapsed:time"
+					# 	@_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
+					# ,30000
 					
 					$(window).on 'beforeunload', =>
 						@_autosaveQuestionTime()
