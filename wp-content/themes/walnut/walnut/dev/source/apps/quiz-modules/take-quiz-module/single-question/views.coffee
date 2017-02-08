@@ -113,9 +113,9 @@ define ['app'
                             @$el.find "#next-question"
                             .show()
 
-                            setTimeout =>
-                                @trigger "goto:next:question"                        
-                            ,3000
+                            # setTimeout =>
+                            #     @trigger "goto:next:question"                        
+                            # ,3000
 
                         @$el.find "#skip-question"
                         .hide()
@@ -123,4 +123,9 @@ define ['app'
                     onEnableSubmit:=>
                         @$el.find '.submit-single'
                         .attr 'disabled', false
+
+
+                    onDisplayError:->
+                        @$el.find '.errorSubmitMsg'
+                        .removeClass 'hide'
 

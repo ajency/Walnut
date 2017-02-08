@@ -1526,6 +1526,8 @@ function read_current_quiz_response_summary($summary_id){
 function write_quiz_question_response($args){
     global $wpdb;
 
+    //return false;
+
     $quiz_details = read_current_quiz_response_summary(array('summary_id'=>$args['summary_id']));
 
     $quiz_module = get_single_quiz_module($quiz_details->collection_id);
@@ -1544,11 +1546,16 @@ function write_quiz_question_response($args){
         $data['sync']=0;
 
     // save
-    if(!isset($args['qr_id'])){
+    if(!isset($args['qr_id']) || (isset($args['qr_id']) && $args['qr_id'] == 'false')){
+
         $qr_id = 'CP'.$args['content_piece_id'].$args['summary_id'];
         $data['qr_id'] = $qr_id;
 
-        $wpdb->insert(($wpdb->prefix).'quiz_question_response', $data );
+        $res = $wpdb->insert(($wpdb->prefix).'quiz_question_response', $data );
+        
+        if(!$res){
+            return false;
+        }
     }
     // update
     else{
@@ -1568,14 +1575,18 @@ function write_quiz_question_response($args){
                 $paused_data['sync']=0;
 
             $paused_data = array('status'=>'paused','time_taken' => $args['time_taken']);
-            $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
+            $result = $wpdb->update(($wpdb->prefix).'quiz_question_response', $paused_data ,$where_array);
+            if(!$result)
+                return false;
+            else
+                $data['qr_id'] = $args['qr_id'];
 
         }
 
         else{
             if($question_response->status != 'paused'){
                 //check for single attempt permission
-                if ($quiz_module->permissions['single_attempt']){
+                if (!$quiz_module->permissions['allow_resubmit']){
                     return false;
                 }
 
@@ -1583,9 +1594,13 @@ function write_quiz_question_response($args){
                     return false;
             }
 
-            $wpdb->update(($wpdb->prefix).'quiz_question_response', $data ,$where_array);
+            $result1 = $wpdb->update(($wpdb->prefix).'quiz_question_response', $data ,$where_array);
+            if(!$result1)
+                return false;
+            else
+                $data['qr_id'] = $args['qr_id'];
         }
-        $data['qr_id'] = $args['qr_id'];
+        //$data['qr_id'] = $args['qr_id'];
     }
 
     return $data['qr_id'];

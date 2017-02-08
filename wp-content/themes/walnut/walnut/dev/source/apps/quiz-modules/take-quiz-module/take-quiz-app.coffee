@@ -21,7 +21,6 @@ define ['app'
 			class View.TakeQuizController extends RegionController
 
 				initialize : (opts)->
-					console.log opts
 					abc = opts.quizModel
 					if abc.get('status') == 'completed' && abc.get('quiz_type') == 'class_test'
 						result = abc.get 'permissions'
@@ -92,6 +91,22 @@ define ['app'
 
 					@listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
+					@listenTo Backbone, "display:network:error:message" :->
+						@layout.questionDisplayRegion.trigger "display:error:message"
+
+					@listenTo Backbone, "submit:enable:ajax" :->
+						@layout.questionDisplayRegion.trigger "enable:submit:ajax"
+
+					@listenTo Backbone, "submit:next:question:ajax":(quizResponseModel)->
+						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+						#@layout.questionDisplayRegion.trigger "req:object:submit:amwer"
+						if localStorage.button == 'submit'
+							setTimeout =>
+	                            @_gotoNextQuestion()
+							,3000
+						else
+	                    	@_gotoNextQuestion()
+
 					setInterval =>
 						time = @timerObject.request "get:elapsed:time"
 						@_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
@@ -125,7 +140,8 @@ define ['app'
 					else
 						questionResponseModel.set 'time_taken' : timeTaken
 
-					@_saveQuizResponseModel questionResponseModel
+					if(questionResponseModel)
+						@_saveQuizResponseModel questionResponseModel
 
 				_changeQuestion:(changeToQuestion)=>
 					#save results here of previous question / skip the question
@@ -156,7 +172,8 @@ define ['app'
 
 					newResponseModel = App.request "create:quiz:question:response:model", data
 
-					@_saveQuizResponseModel newResponseModel
+					App.execute "when:fetched", newResponseModel, =>
+						@_saveQuizResponseModel newResponseModel
 
 				_saveQuizResponseModel:(newResponseModel)=>
 
@@ -171,15 +188,30 @@ define ['app'
 						quizResponseModel = newResponseModel
 						@questionResponseCollection.add newResponseModel
 
-					quizResponseModel.save()
+					console.log quizResponseModel
 
-					if quizResponseModel.get('status') isnt 'paused'
-						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+					quiz_save = quizResponseModel.save()
+					if !quiz_save
+						console.log 'error'
+					else
+						quiz_save.complete (response) ->
+							if !response.responseJSON['qr_id'] && (response.responseJSON['qr_id'] == false || response.responseJSON['qr_id'] == undefined)
+								Backbone.trigger "display:network:error:message"
+								Backbone.trigger "submit:enable:ajax"
+							else
+								console.log response.responseJSON['qr_id']
+								console.log quizResponseModel
+								if quizResponseModel.get('status') isnt 'paused'
+									Backbone.trigger "submit:next:question:ajax", quizResponseModel
+
+
+
+					
 
 				_skipQuestion:(answer)->
 					#save skipped status
 					@_submitQuestion answer
-					@_gotoNextQuestion()
+					#@_gotoNextQuestion()
 
 				_gotoNextQuestion:->
 
