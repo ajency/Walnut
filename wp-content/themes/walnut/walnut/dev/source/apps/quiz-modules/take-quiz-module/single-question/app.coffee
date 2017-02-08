@@ -7,7 +7,7 @@ define ['app'
 			App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
 				answer=null
-				answerData= null
+				answerData= null 
 
 				class SingleQuestion.Controller extends RegionController
 
@@ -47,6 +47,13 @@ define ['app'
 						@show layout,
 							loading: true
 
+						@listenTo @region, "display:error:message", =>
+							@layout.triggerMethod "display:error"
+
+						@listenTo @region, "enable:submit:ajax", =>
+							@layout.triggerMethod "enable:submit"
+
+						#conetent board
 						@listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject,@direction
 
 						@listenTo @region, "silent:save:question", =>
@@ -65,6 +72,7 @@ define ['app'
 							@region.trigger "submit:question", answer
 
 						@listenTo layout, "validate:answer",->
+                        	
 							answerData= @answerWreqrObject.request "get:question:answer"
 
 							answer = answerData.answerModel
@@ -74,10 +82,14 @@ define ['app'
 								if answerData.emptyOrIncomplete is 'empty'
 
 									bootbox.confirm @quizModel.getMessageContent('submit_without_attempting'),(result)=>
-										@_triggerSubmit() if result
+										if result
+											@_triggerSubmit()
+										else
+											@layout.triggerMethod "enable:submit"
 
 								else
 									@_triggerSubmit()
+
 
 							else 
 								@_triggerSubmit()

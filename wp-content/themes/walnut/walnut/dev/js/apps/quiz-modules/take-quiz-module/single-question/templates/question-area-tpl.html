@@ -6,10 +6,11 @@
 <div id="content-board" class="quizContent"></div>
 
 <div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
+<span class="hide errorSubmitMsg alert-error">We're sorry! The server encountered some error and your answer was not submitted. Please submit again.</span>
     <!-- <span class="pull-left small" id="first_question"></span> -->
   
         {{#show_skip}}
-            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
+            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button">
                 Skip <i class="fa fa-step-forward"></i>
             </button>
         {{/show_skip}}

@@ -9,7 +9,7 @@ define ['app'
 
 			#Single Question description and answers
 			quizModel = null
-			quizResponseSummary = null
+			quizResponseSummary = null 
 			questionsCollection = null
 			questionResponseModel = null
 			questionModel = null
@@ -33,6 +33,7 @@ define ['app'
 					App.vent.bind "closed:quiz", @_autosaveQuestionTime
 
 				_startTakeQuiz:=>
+					localStorage.autosave = 'false'
 
 					if not @questionResponseCollection
 						@questionResponseCollection= App.request "create:empty:question:response:collection"
@@ -91,6 +92,22 @@ define ['app'
 
 					@listenTo @layout.quizProgressRegion, "change:question", @_changeQuestion
 
+					@listenTo Backbone, "display:network:error:message" :->
+						@layout.questionDisplayRegion.trigger "display:error:message"
+
+					@listenTo Backbone, "submit:enable:ajax" :->
+						@layout.questionDisplayRegion.trigger "enable:submit:ajax"
+
+					@listenTo Backbone, "submit:next:question:ajax":(quizResponseModel)->
+						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+						#@layout.questionDisplayRegion.trigger "req:object:submit:amwer"
+						if localStorage.button == 'submit'
+							setTimeout =>
+	                            @_gotoNextQuestion()
+							,3000
+						else
+	                    	@_gotoNextQuestion()
+
 					setInterval =>
 						time = @timerObject.request "get:elapsed:time"
 						@_autosaveQuestionTime() if time and quizResponseSummary.get('status') isnt 'completed'                            
@@ -101,6 +118,7 @@ define ['app'
 						return 'Quiz in progress'
 						
 				_autosaveQuestionTime:=>
+					localStorage.autosave = 'true'
 
 					questionResponseModel = @questionResponseCollection.findWhere 'content_piece_id': questionModel.id
 
@@ -108,8 +126,6 @@ define ['app'
 					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
 
 					if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
-
-						console.log(questionResponseModel.get('status')) if questionResponseModel
 
 						data =
 							'summary_id'     : quizResponseSummary.id
@@ -121,10 +137,12 @@ define ['app'
 
 						questionResponseModel = App.request "create:quiz:question:response:model", data
 
+						App.execute "when:fetched", questionResponseModel, =>
+							@_saveQuizResponseModel questionResponseModel
+
 					else
 						questionResponseModel.set 'time_taken' : timeTaken
-
-					@_saveQuizResponseModel questionResponseModel
+						@_saveQuizResponseModel questionResponseModel
 
 				_changeQuestion:(changeToQuestion)=>
 					#save results here of previous question / skip the question
@@ -155,7 +173,8 @@ define ['app'
 
 					newResponseModel = App.request "create:quiz:question:response:model", data
 
-					@_saveQuizResponseModel newResponseModel
+					App.execute "when:fetched", newResponseModel, =>
+						@_saveQuizResponseModel newResponseModel
 
 				_saveQuizResponseModel:(newResponseModel)=>
 
@@ -170,15 +189,34 @@ define ['app'
 						quizResponseModel = newResponseModel
 						@questionResponseCollection.add newResponseModel
 
-					quizResponseModel.save()
-
-					if quizResponseModel.get('status') isnt 'paused'
-						@layout.quizProgressRegion.trigger "question:submitted", quizResponseModel
+					quiz_save = quizResponseModel.save()
+					if !quiz_save
+						console.log 'error'
+						if quizResponseModel.get('status') isnt 'paused' && localStorage.autosave == 'false'
+							Backbone.trigger "display:network:error:message"
+						localStorage.autosave = 'false'
+						Backbone.trigger "submit:enable:ajax"
+					else
+						quiz_save.complete (response) ->
+							if !response.responseJSON['qr_id']
+								if quizResponseModel.get('status') isnt 'paused' && localStorage.autosave == 'false'
+									Backbone.trigger "display:network:error:message"
+								localStorage.autosave = 'false'
+								Backbone.trigger "submit:enable:ajax"
+							else
+								if quizResponseModel.get('status') isnt 'paused' && localStorage.autosave == 'false'
+									console.log questionModel
+									localStorage.autosave = 'false'
+									Backbone.trigger "submit:next:question:ajax", quizResponseModel
+								else
+									localStorage.autosave = 'false'
+									Backbone.trigger "submit:enable:ajax"
+		
 
 				_skipQuestion:(answer)->
 					#save skipped status
 					@_submitQuestion answer
-					@_gotoNextQuestion()
+					#@_gotoNextQuestion()
 
 				_gotoNextQuestion:->
 
@@ -192,10 +230,12 @@ define ['app'
 						@_showSingleQuizApp()
 
 				_endQuiz:->
+					console.log @display_mode
 
 					questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
 					if @display_mode not in ['replay', 'quiz_report']
+						console.log questionResponseModel
 
 						if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
 							@layout.questionDisplayRegion.trigger "silent:save:question"

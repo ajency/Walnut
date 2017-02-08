@@ -8,8 +8,10 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       extend(SingleQuestionLayout, superClass);
 
       function SingleQuestionLayout() {
+        this.onEnableSubmit = bind(this.onEnableSubmit, this);
         this.mixinTemplateHelpers = bind(this.mixinTemplateHelpers, this);
         this.submitQuest = bind(this.submitQuest, this);
+        this.skipQuest = bind(this.skipQuest, this);
         return SingleQuestionLayout.__super__.constructor.apply(this, arguments);
       }
 
@@ -24,9 +26,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         'click #previous-question': function() {
           return this.trigger("goto:previous:question");
         },
-        'click #skip-question': function() {
-          return this.trigger("skip:question");
-        },
+        'click #skip-question': 'skipQuest',
         'click #show-hint': function() {
           bootbox.alert(this.model.get('hint'));
           return this.trigger('show:hint:dialog');
@@ -36,8 +36,19 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         }
       };
 
-      SingleQuestionLayout.prototype.submitQuest = function() {
+      SingleQuestionLayout.prototype.skipQuest = function() {
+        localStorage.button = 'skip';
         this.$el.find('.submit-single').attr('disabled', 'disabled');
+        this.$el.find('.skip-button').attr('disabled', 'disabled');
+        this.$el.find('.errorSubmitMsg').addClass('hide');
+        return this.trigger("skip:question");
+      };
+
+      SingleQuestionLayout.prototype.submitQuest = function() {
+        localStorage.button = 'submit';
+        this.$el.find('.submit-single').attr('disabled', 'disabled');
+        this.$el.find('.skip-button').attr('disabled', 'disabled');
+        this.$el.find('.errorSubmitMsg').addClass('hide');
         return this.trigger("validate:answer");
       };
 
@@ -109,13 +120,17 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
           bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
         } else {
           this.$el.find("#next-question").show();
-          setTimeout((function(_this) {
-            return function() {
-              return _this.trigger("goto:next:question");
-            };
-          })(this), 3000);
         }
         return this.$el.find("#skip-question").hide();
+      };
+
+      SingleQuestionLayout.prototype.onEnableSubmit = function() {
+        this.$el.find('.submit-single').attr('disabled', false);
+        return this.$el.find('.skip-button').attr('disabled', false);
+      };
+
+      SingleQuestionLayout.prototype.onDisplayError = function() {
+        return this.$el.find('.errorSubmitMsg').removeClass('hide');
       };
 
       return SingleQuestionLayout;

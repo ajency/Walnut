@@ -7,18 +7,18 @@ define ['app'
             App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
                 class SingleQuestion.SingleQuestionLayout extends Marionette.Layout
-
+ 
                     template:  questionAreaTemplate
 
                     regions:
                         contentBoardRegion: '#content-board'
 
                     events:
-                        'click #submit-question'    : 'submitQuest'
+                        'click #submit-question'    : 'submitQuest' 
 
                         'click #previous-question'  :-> @trigger "goto:previous:question"
 
-                        'click #skip-question'      :-> @trigger "skip:question"
+                        'click #skip-question'      : 'skipQuest'
 
                         'click #show-hint'          :-> 
                             bootbox.alert @model.get 'hint'
@@ -26,11 +26,31 @@ define ['app'
 
                         'click #next-question'      :-> @trigger "goto:next:question"
 
-                    submitQuest:=>
+                    skipQuest:=>
+                        localStorage.button = 'skip'
+
                         @$el.find '.submit-single'
                         .attr 'disabled', 'disabled'
-                        @trigger "validate:answer"
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
 
+                        @$el.find '.errorSubmitMsg'
+                        .addClass 'hide'
+
+                        @trigger "skip:question"
+
+                    submitQuest:=>
+                        localStorage.button = 'submit'
+
+                        @$el.find '.submit-single'
+                        .attr 'disabled', 'disabled'
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
+
+                        @$el.find '.errorSubmitMsg'
+                        .addClass 'hide'
+                        
+                        @trigger "validate:answer"
 
                     mixinTemplateHelpers:(data)=>
 
@@ -102,7 +122,6 @@ define ['app'
                             .hide()
 
                     onSubmitQuestion:->
-
                         @$el.find "#submit-question"
                         .hide()
 
@@ -115,9 +134,21 @@ define ['app'
                             @$el.find "#next-question"
                             .show()
 
-                            setTimeout =>
-                                @trigger "goto:next:question"                        
-                            ,3000
+                            # setTimeout =>
+                            #     @trigger "goto:next:question"                        
+                            # ,3000
 
                         @$el.find "#skip-question"
                         .hide()
+
+                    onEnableSubmit:=>
+                        @$el.find '.submit-single'
+                        .attr 'disabled', false
+                        @$el.find '.skip-button'
+                        .attr 'disabled', false
+
+
+                    onDisplayError:->
+                        @$el.find '.errorSubmitMsg'
+                        .removeClass 'hide'
+
