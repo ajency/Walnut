@@ -115,14 +115,14 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype._commentEnable = function(e) {
         var ele;
         if ($(e.target).prop('checked')) {
+          this.$el.find('#question-comment').prop('disabled', false);
+          this.$el.find('#question-comment').hide();
           ele = this.$el.find("#question-comment");
           CKEDITOR.dtd.$removeEmpty['span'] = false;
           ele.attr('commenteditable', 'true').attr('id', _.uniqueId('text-'));
           CKEDITOR.on('instanceCreated', this.configureEditor);
           this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
-          this.editor.setData(_.stripslashes(this.model.get('content')));
-          this.$el.find('#question-comment').prop('disabled', false);
-          return this.$el.find('#question-comment').hide();
+          return this.editor.setData(_.stripslashes(this.model.get('content')));
         } else {
           this.$el.find('#question-comment').prop('disabled', true);
           return this.$el.find('#question-comment').hide();

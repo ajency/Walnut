@@ -118,6 +118,9 @@ define ['app',
 
 			_commentEnable : (e)=>
 				if $(e.target).prop 'checked'
+					@$el.find('#question-comment').prop 'disabled',false
+					@$el.find('#question-comment').hide()
+					
 					ele = @$el.find "#question-comment"
 					# console.log 'ele'
 					# CKEDITOR.disableAutoInline = true;
@@ -126,11 +129,9 @@ define ['app',
 					ele.attr('commenteditable', 'true').attr 'id', _.uniqueId 'text-'
 					CKEDITOR.on 'instanceCreated', @configureEditor
 					@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
-					#console.log @editor
 					@editor.setData _.stripslashes @model.get 'content'
 
-					@$el.find('#question-comment').prop 'disabled',false
-					@$el.find('#question-comment').hide()
+					
 				else
 					@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
