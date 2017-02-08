@@ -39,6 +39,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._startTakeQuiz = function() {
         var data, layout, pausedQuestion, questionID, unanswered;
+        localStorage.autosave = 'false';
         if (!this.questionResponseCollection) {
           this.questionResponseCollection = App.request("create:empty:question:response:collection");
           timeBeforeCurrentQuestion = 0;
@@ -113,6 +114,15 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
             }
           }
         });
+        setInterval((function(_this) {
+          return function() {
+            var time;
+            time = _this.timerObject.request("get:elapsed:time");
+            if (time && quizResponseSummary.get('status') !== 'completed') {
+              return _this._autosaveQuestionTime();
+            }
+          };
+        })(this), 30000);
         return $(window).on('beforeunload', (function(_this) {
           return function() {
             _this._autosaveQuestionTime();
@@ -123,15 +133,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._autosaveQuestionTime = function() {
         var data, ref, timeTaken, totalTime;
+        localStorage.autosave = 'true';
         questionResponseModel = this.questionResponseCollection.findWhere({
           'content_piece_id': questionModel.id
         });
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
         if ((!questionResponseModel) || ((ref = questionResponseModel.get('status')) === 'not_started' || ref === 'paused')) {
-          if (questionResponseModel) {
-            console.log(questionResponseModel.get('status'));
-          }
           data = {
             'summary_id': quizResponseSummary.id,
             'content_piece_id': questionModel.id,
@@ -197,20 +205,30 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           quizResponseModel = newResponseModel;
           this.questionResponseCollection.add(newResponseModel);
         }
-        console.log(quizResponseModel);
         quiz_save = quizResponseModel.save();
         if (!quiz_save) {
-          return console.log('error');
+          console.log('error');
+          if (quizResponseModel.get('status') !== 'paused' && localStorage.autosave === 'false') {
+            Backbone.trigger("display:network:error:message");
+          }
+          localStorage.autosave = 'false';
+          return Backbone.trigger("submit:enable:ajax");
         } else {
           return quiz_save.complete(function(response) {
-            if (!response.responseJSON['qr_id'] && (response.responseJSON['qr_id'] === false || response.responseJSON['qr_id'] === void 0)) {
-              Backbone.trigger("display:network:error:message");
+            if (!response.responseJSON['qr_id']) {
+              if (quizResponseModel.get('status') !== 'paused' && localStorage.autosave === 'false') {
+                Backbone.trigger("display:network:error:message");
+              }
+              localStorage.autosave = 'false';
               return Backbone.trigger("submit:enable:ajax");
             } else {
-              console.log(response.responseJSON['qr_id']);
-              console.log(quizResponseModel);
-              if (quizResponseModel.get('status') !== 'paused') {
+              if (quizResponseModel.get('status') !== 'paused' && localStorage.autosave === 'false') {
+                console.log(questionModel);
+                localStorage.autosave = 'false';
                 return Backbone.trigger("submit:next:question:ajax", quizResponseModel);
+              } else {
+                localStorage.autosave = 'false';
+                return Backbone.trigger("submit:enable:ajax");
               }
             }
           });

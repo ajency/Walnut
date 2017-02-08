@@ -18,7 +18,7 @@ define ['app'
 
                         'click #previous-question'  :-> @trigger "goto:previous:question"
 
-                        'click #skip-question'      :-> @trigger "skip:question"
+                        'click #skip-question'      : 'skipQuest'
 
                         'click #show-hint'          :-> 
                             bootbox.alert @model.get 'hint'
@@ -26,9 +26,30 @@ define ['app'
 
                         'click #next-question'      :-> @trigger "goto:next:question"
 
-                    submitQuest:=>
+                    skipQuest:=>
+                        localStorage.button = 'skip'
+
                         @$el.find '.submit-single'
                         .attr 'disabled', 'disabled'
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
+
+                        @$el.find '.errorSubmitMsg'
+                        .addClass 'hide'
+
+                        @trigger "skip:question"
+
+                    submitQuest:=>
+                        localStorage.button = 'submit'
+
+                        @$el.find '.submit-single'
+                        .attr 'disabled', 'disabled'
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
+
+                        @$el.find '.errorSubmitMsg'
+                        .addClass 'hide'
+                        
                         @trigger "validate:answer"
 
                     mixinTemplateHelpers:(data)=>
@@ -122,6 +143,8 @@ define ['app'
 
                     onEnableSubmit:=>
                         @$el.find '.submit-single'
+                        .attr 'disabled', false
+                        @$el.find '.skip-button'
                         .attr 'disabled', false
 
 
