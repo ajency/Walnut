@@ -47,20 +47,6 @@
 
     <span class="hide errorSubmitMsg alert-error">We're sorry! The server encountered some error and your answer was not submitted. Please submit again.</span>
   
-        {{#show_skip}}
-            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button">
-                Skip <i class="fa fa-step-forward"></i>
-            </button>
-        {{/show_skip}}
-
-        {{^replay}}
-        {{^allow_submit_answer}} 
-        <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
-                Next <i class="fa fa-step-forward"></i>
-            </button>
-        {{/allow_submit_answer}} 
-        {{/replay}}
-
         <div class="quizActions__cont">
 
             {{^replay}}
