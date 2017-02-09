@@ -28,6 +28,10 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       TakeQuizController.prototype.initialize = function(opts) {
         var abc, result;
         abc = opts.quizModel;
+        if (abc.hasPermission('display_answer')) {
+          result = abc.get('permissions');
+          result.single_attempt = true;
+        }
         if (abc.get('status') === 'completed' && abc.get('quiz_type') === 'class_test') {
           result = abc.get('permissions');
           result.display_answer = true;
@@ -114,9 +118,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
         if ((!questionResponseModel) || ((ref = questionResponseModel.get('status')) === 'not_started' || ref === 'paused')) {
-          if (questionResponseModel) {
-            console.log(questionResponseModel.get('status'));
-          }
           data = {
             'summary_id': quizResponseSummary.id,
             'content_piece_id': questionModel.id,
@@ -140,7 +141,13 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._submitQuestion = function(answer) {
-        var data, newResponseModel, timeTaken, totalTime;
+        var data, newResponseModel, single_status, timeTaken, totalTime;
+        this.layout.quizProgressRegion.trigger("check:current");
+        if (answer.get('status') === 'wrong_answer' && answer.get('answer').length === 0) {
+          single_status = 'skipped';
+        } else {
+          single_status = answer.get('status');
+        }
         totalTime = this.timerObject.request("get:elapsed:time");
         timeTaken = totalTime + pausedQuestionTime - timeBeforeCurrentQuestion;
         pausedQuestionTime = 0;
@@ -149,7 +156,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
           'summary_id': quizResponseSummary.id,
           'content_piece_id': questionModel.id,
           'question_response': _.omit(answer.toJSON(), ['marks', 'status']),
-          'status': answer.get('status'),
+          'status': single_status,
           'marks_scored': answer.get('marks'),
           'time_taken': timeTaken
         };
@@ -175,12 +182,14 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
       };
 
       TakeQuizController.prototype._skipQuestion = function(answer) {
+        this.layout.quizProgressRegion.trigger("check:current");
         this._submitQuestion(answer);
         return this._gotoNextQuestion();
       };
 
       TakeQuizController.prototype._gotoNextQuestion = function() {
         var nextQuestionID;
+        this.layout.quizProgressRegion.trigger("check:current");
         if (questionModel != null) {
           nextQuestionID = this._getNextItemID();
         }
@@ -272,6 +281,7 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/take-quiz-mod
 
       TakeQuizController.prototype._gotoPreviousQuestion = function() {
         var prevQuestionID;
+        this.layout.quizProgressRegion.trigger("check:current");
         if (questionModel != null) {
           prevQuestionID = this._getPrevItemID();
         }
