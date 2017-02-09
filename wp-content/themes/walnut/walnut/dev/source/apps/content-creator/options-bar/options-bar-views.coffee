@@ -7,7 +7,7 @@ define ['app',
 			template: optionsBarTpl
 
 			events:
-				'change #subs' : (e)->
+				'change #subs' : (e)-> 
 					# console.log 'change #subs'
 					# if localStorage.textbook_id != $(e.target).val()
 					# 	console.log 'if'
@@ -97,7 +97,7 @@ define ['app',
 
 
 			imageClicked:(evt)->
-				evt.preventDefault()
+				#evt.preventDefault()
 				console.log 'imageClicked'
 
 			_saveComment:->
@@ -127,23 +127,47 @@ define ['app',
 					#CKEDITOR.inline('comment')
 					CKEDITOR.dtd.$removeEmpty['span'] = false;
 					ele.attr('commenteditable', 'true').attr 'id', _.uniqueId 'text-'
-					CKEDITOR.on 'instanceCreated', @configureEditor
+					CKEDITOR.on 'instanceCreated', @configureEdit
 					@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
-					@editor.setData _.stripslashes @model.get 'content'
+					#@editor.setData _.stripslashes @model.get 'content'
+					#CKEDITOR.on 'dialogDefinition', @imageInstanceChange
+					@editor.on 'dialogShow', (evt) ->
+						console.log evt.data.getName()
+						if evt.data.getName() == 'image'
+					    	listener = evt.data.on('ok', ->
+					      		console.log 'ok!'
+					    	)
+					    # We need to remove that listener, to avoid duplicating it on
+					    # next dialogShow.
+					    evt.data.on 'hide', ->
+					      listener.removeListener()
 
 					
 				else
 					@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
 
-			configureEditor : (event) =>
-				console.log 'ss'
+
+			imageInstanceChange:(ev)->
+				dialogName = ev.data.name
+				dialogDefinition = ev.data.definition
+				editor = ev.editor
+				if dialogName == 'image'
+					console.log 'image'
+					dialogDefinition.onOk = (e) ->
+				    	console.log 'check'
+				    	imageSrcUrl = e.sender.originalElement.$.src
+				    	imgHtml = CKEDITOR.dom.element.createFromHtml('<img src=' + imageSrcUrl + ' alt=\'\' align=\'right\'/>')
+				    	editor.insertElement imgHtml
+
+			configureEdit : (event) =>
 				ele = @$el.find "#question-comment"
 				editor = event.editor
-				element = editor.element
-				if element.getAttribute('id') is ele.attr 'id'
-					editor.on 'configLoaded', ->
-						editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
+				#element = editor.element
+
+				#if element.getAttribute('id') is ele.attr 'id'
+				editor.on 'configLoaded', ->
+                	editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
 
 			onFetchChaptersComplete : (chapters)->
 

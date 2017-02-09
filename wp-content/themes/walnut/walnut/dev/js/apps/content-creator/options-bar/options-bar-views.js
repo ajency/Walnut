@@ -8,7 +8,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       extend(OptionsBarView, superClass);
 
       function OptionsBarView() {
-        this.configureEditor = bind(this.configureEditor, this);
+        this.configureEdit = bind(this.configureEdit, this);
         this._commentEnable = bind(this._commentEnable, this);
         this._hintEnable = bind(this._hintEnable, this);
         return OptionsBarView.__super__.constructor.apply(this, arguments);
@@ -89,7 +89,6 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.imageClicked = function(evt) {
-        evt.preventDefault();
         return console.log('imageClicked');
       };
 
@@ -120,26 +119,50 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           ele = this.$el.find("#question-comment");
           CKEDITOR.dtd.$removeEmpty['span'] = false;
           ele.attr('commenteditable', 'true').attr('id', _.uniqueId('text-'));
-          CKEDITOR.on('instanceCreated', this.configureEditor);
+          CKEDITOR.on('instanceCreated', this.configureEdit);
           this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
-          return this.editor.setData(_.stripslashes(this.model.get('content')));
+          return this.editor.on('dialogShow', function(evt) {
+            var listener;
+            console.log(evt.data.getName());
+            if (evt.data.getName() === 'image') {
+              listener = evt.data.on('ok', function() {
+                return console.log('ok!');
+              });
+            }
+            return evt.data.on('hide', function() {
+              return listener.removeListener();
+            });
+          });
         } else {
           this.$el.find('#question-comment').prop('disabled', true);
           return this.$el.find('#question-comment').hide();
         }
       };
 
-      OptionsBarView.prototype.configureEditor = function(event) {
-        var editor, ele, element;
-        console.log('ss');
+      OptionsBarView.prototype.imageInstanceChange = function(ev) {
+        var dialogDefinition, dialogName, editor;
+        dialogName = ev.data.name;
+        dialogDefinition = ev.data.definition;
+        editor = ev.editor;
+        if (dialogName === 'image') {
+          console.log('image');
+          return dialogDefinition.onOk = function(e) {
+            var imageSrcUrl, imgHtml;
+            console.log('check');
+            imageSrcUrl = e.sender.originalElement.$.src;
+            imgHtml = CKEDITOR.dom.element.createFromHtml('<img src=' + imageSrcUrl + ' alt=\'\' align=\'right\'/>');
+            return editor.insertElement(imgHtml);
+          };
+        }
+      };
+
+      OptionsBarView.prototype.configureEdit = function(event) {
+        var editor, ele;
         ele = this.$el.find("#question-comment");
         editor = event.editor;
-        element = editor.element;
-        if (element.getAttribute('id') === ele.attr('id')) {
-          return editor.on('configLoaded', function() {
-            return editor.config.placeholder = 'This is a Text Block. Use this to provide text…';
-          });
-        }
+        return editor.on('configLoaded', function() {
+          return editor.config.placeholder = 'This is a Text Block. Use this to provide text…';
+        });
       };
 
       OptionsBarView.prototype.onFetchChaptersComplete = function(chapters) {
