@@ -71,6 +71,7 @@ define ['app'
                 'click #go-back-button' : ->@trigger "goto:previous:route"
 
             initialize:->
+                console.log 'initialize'
                 if @model.get('permissions') && @model.get('quiz_type') == 'class_test' && @model.get('status') == 'completed'
                     permission = @model.get 'permissions'
                     if(permission.displayAfterDays != '' && permission.displayAfterDays != undefined)
@@ -251,7 +252,7 @@ define ['app'
                         .remove()
                     else
                         @$el.find "#take-quiz"
-                        .html 'Replay'
+                        .remove()  
                     
 
         # set handlers

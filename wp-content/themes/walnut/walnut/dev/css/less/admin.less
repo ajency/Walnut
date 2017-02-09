@@ -20,7 +20,7 @@
     text-align: center;
     & > span.label{
       font-size: 0.9em;
-      padding: 7px;
+      padding: 6px;
       min-width: inherit;
     }
   }
@@ -93,6 +93,94 @@
 #check_all_div{
   box-shadow: 6px 0px 15px 6px #8b91a0;
   background-color: #8b91a0;
+}
+
+
+
+
+.teacher-app{
+  max-width: 100%;
+}
+
+
+
+
+/* ---------------------------
+   ADMIN LABEL DESIGN FIX -----------
+ ---------------------------
+*/
+
+
+// Make content in center
+
+.table-bordered{
+  td,th{
+    text-align: center;
+    font-size: 13px;
+  }
+}
+
+
+// Label design only for specific sections
+
+.table-bordered,.table-condensed{
+  [class*="label-"]{
+    font-size: 13px;
+    position: relative;
+    padding: 5px 9px;
+    color: #fff;
+    font-weight: 400;
+    &:before{
+      content: "";
+      position: absolute;
+      left: -13px;
+      top: -1px;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      border-right: 12px solid;
+    }
+    &:after{
+      content: '';
+      display: block;
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: #fff;
+      border-radius: 50%;
+      top: 9px;
+      left: 0;
+    }
+  }
+
+  .status_label{
+    .label{
+      min-width: 90px;
+    }
+  }
+  .label.post-status{
+      min-width: 85px !important;
+      cursor: auto;
+  }
+  .label{
+    &-important{
+      background-color: #f35958;
+      &:before{
+        border-right-color: #f35958;
+      }
+    }
+    &-success{
+      background-color: #259b24;
+      &:before{
+        border-right-color: #259b24;
+      }
+    }
+    &-info{
+      background-color: #0090d9;
+      &:before{
+        border-right-color: #0090d9;
+      }
+    }
+  }
 }
 
 

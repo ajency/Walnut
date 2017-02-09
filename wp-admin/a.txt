@@ -1,7 +1,0 @@
-
-                    SELECT content_piece_id
-                    FROM wp_13_quiz_question_response
-                    WHERE summary_id = (SELECT summary_id
-                    FROM wp_13_quiz_response_summary
-                    WHERE collection_id =753
-                    ORDER BY taken_on desc LIMIT 1)

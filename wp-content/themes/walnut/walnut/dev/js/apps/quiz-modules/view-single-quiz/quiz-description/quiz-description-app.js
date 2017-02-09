@@ -111,6 +111,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
 
       QuizDetailsView.prototype.initialize = function() {
         var after_hours_time, after_hours_time_min, after_hours_time_result, permission, ref, replay_after_day_min, replay_take, responseSummary, schedule, taken_on_date, to, today, total_replay_mins;
+        console.log('initialize');
         if (this.model.get('permissions') && this.model.get('quiz_type') === 'class_test' && this.model.get('status') === 'completed') {
           permission = this.model.get('permissions');
           if (permission.displayAfterDays !== '' && permission.displayAfterDays !== void 0) {
@@ -258,7 +259,7 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           } else if (this.model.hasPermission('disable_quiz_replay')) {
             return this.$el.find("#take-quiz").remove();
           } else {
-            return this.$el.find("#take-quiz").html('Replay');
+            return this.$el.find("#take-quiz").remove();
           }
         }
       };

@@ -7,48 +7,74 @@
 
 <div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
     <!-- <span class="pull-left small" id="first_question"></span> -->
-  
-        {{#show_skip}}
-            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small">
-                Skip <i class="fa fa-step-forward"></i>
-            </button>
-        {{/show_skip}}
-        
-    
-    {{#allow_submit_answer}}   
-   <button type="button" id="submit-question" class="btn btn-success">
-        Submit <i class="fa fa-forward"></i> 
-    </button>
-    {{/allow_submit_answer}}
-        <div class="submit2">
-        {{#allow_submit_answer}}   
-           <button type="button" id="submit-question" class="btn btn-success">
-                Submit <i class="fa fa-forward"></i> 
-            </button>
-        {{/allow_submit_answer}}        
-        </div>
 
+    <div class="hide errorSubmitMsg alert-error">We're sorry! The server encountered some error and your answer was not submitted. Please submit again.</div>
+  
+    <div class="quizActions__cont">
+
+            {{^replay}}
+            {{#show_hint}} 
+            <div class="quiz-btn">
+                <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small hint">
+                    <i class="fa fa-lightbulb-o"></i> Hint
+                </button>
+            </div>
+            {{/show_hint}}
+            {{/replay}}
+        
+                
+            {{^replay}}
+            {{^allow_submit_answer}}
+                <div class="quiz-btn">   
+                    <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
+                        Next <i class="fa fa-step-forward"></i>
+                    </button>
+                </div>
+            {{/allow_submit_answer}} 
+            {{/replay}}
+            
+
+
+            <div class="quiz-btn">
+
+               {{#show_skip}}
+                    <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button ">
+                        Skip <i class="fa fa-step-forward"></i>
+                    </button>
+                {{/show_skip}}
+
+                {{#allow_submit_answer}}   
+                    <button type="button" id="submit-question" class="btn btn-success submit-single bottom-submit">
+                        Submit <i class="fa fa-forward"></i> 
+                    </button>
+
+                {{/allow_submit_answer}}
+                <div class="submit2">
+                {{#allow_submit_answer}}   
+                    <button type="button" id="submit-question" class="btn btn-success submit-single">
+                        Submit <i class="fa fa-forward"></i> 
+                    </button>
+                {{/allow_submit_answer}}        
+
+                </div>
+            </div>
+        
+        </div>
 
     <!-- <span class="pull-right small" id="last_question"></span> -->
 
 
     <!-- <div class="text-center"> -->
-        {{#show_hint}}
-        <button type="button" id="show-hint" class="btn btn-default btn-sm btn-small m-r-10">
-            <i class="fa fa-lightbulb-o"></i> Hint
-        </button>
-        {{/show_hint}}
-
-        {{#show_skip_helper_text}} 
+       
 
             <!-- <div><i class="small">(questions once skipped cannot be answered later)</i></div> -->
-        {{/show_skip_helper_text}}
+ 
 
         {{#replay}}
         <div class="replay-actions">
  
         <div>
-        <button type="button" id="previous-question" class="btn btn-info"> 
+        <button type="button" id="previous-question" class="none btn btn-info"> 
              <h4>Previous</h4>
         </button>
         </div>
@@ -64,11 +90,28 @@
 
     <!-- </div> -->
     <div class="clearfix"></div>
+
+   
+
 </div>
 
-{{#showComment}}
-    <div class="container-grey m-b-5 quizComment">
-        <label class="form-label bold small-text muted no-margin inline">Comment: </label>
-        <p class="inline text-grey small">{{&comment}}</p>
+
+<!-- quiz details -->
+{{#replay}}
+
+    <div class="quiz-info">
+    {{#show_hint}}
+        <div class="cards quiz-info__hint">
+            <h2><i class="fa fa-lightbulb-o"></i>Hint</h2>
+            <div class="data">{{hint}}</div>
+        </div>
+    {{/show_hint}}
+    {{#comment}}
+        <div class="cards quiz-info__comment">
+            <h2><i class="fa fa-comment"></i>Comment</h2>
+            <div class="data">{{&comment}}</div>
+        </div>
+    {{/comment}}
     </div>
-{{/showComment}}
+
+{{/replay}}

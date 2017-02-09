@@ -47,6 +47,13 @@ define ['app'
 						@show layout,
 							loading: true
 
+						@listenTo @region, "display:error:message", =>
+							@layout.triggerMethod "display:error"
+
+						@listenTo @region, "enable:submit:ajax", =>
+							@layout.triggerMethod "enable:submit"
+
+						#conetent board
 						@listenTo layout, "show", @_showContentBoard @model,@answerWreqrObject,@direction
 
 						@listenTo @region, "silent:save:question", =>
@@ -65,6 +72,7 @@ define ['app'
 							@region.trigger "submit:question", answer
 
 						@listenTo layout, "validate:answer",->
+                        	
 							answerData= @answerWreqrObject.request "get:question:answer"
 
 							answer = answerData.answerModel
@@ -81,6 +89,7 @@ define ['app'
 
 								else
 									@_triggerSubmit()
+
 
 							else 
 								@_triggerSubmit()

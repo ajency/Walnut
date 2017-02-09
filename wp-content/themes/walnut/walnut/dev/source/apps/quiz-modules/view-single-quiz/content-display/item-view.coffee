@@ -32,7 +32,9 @@ define ['app'
 
                     data.responseStatus = responseModel.get 'status'
 
-                    if quizModel.hasPermission 'allow_resubmit'
+                    if App.request "current:user:can", "view_all_quizzes"
+                        data.display_answer = true
+                    else if quizModel.hasPermission 'allow_resubmit'
                         data.display_answer = false
                     else
                         data.display_answer = quizModel.hasPermission 'display_answer'
@@ -51,11 +53,16 @@ define ['app'
 
                     if(@.model.get('comment') != '')
                         comment = @.model.get 'comment'
-                        if comment.length > 20
-                            data.comment_modal = true
-                            data.comment = comment
-                    else
-                        data.comment = false
+                        if $(window).width() < 1400
+                            if comment.length > 61
+                                data.comment_modal = true
+                                data.comment = comment
+                        else if $(window).width() > 1401
+                            if comment.length > 74
+                                data.comment_modal = true
+                                data.comment = comment
+
+
 
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-success', text : 'Correct', icon : 'fa-check'
@@ -74,6 +81,7 @@ define ['app'
 
                 @$el.find '.cbp_tmicon .fa'
                 .addClass content_icon
+
 
                 if @model.get('content_type') is 'content_piece'
                     @$el.find '#correct-answer-div, .question-type-div'

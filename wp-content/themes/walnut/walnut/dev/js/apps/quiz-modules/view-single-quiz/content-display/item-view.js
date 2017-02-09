@@ -25,7 +25,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
           data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
-          if (quizModel.hasPermission('allow_resubmit')) {
+          if (App.request("current:user:can", "view_all_quizzes")) {
+            data.display_answer = true;
+          } else if (quizModel.hasPermission('allow_resubmit')) {
             data.display_answer = false;
           } else {
             data.display_answer = quizModel.hasPermission('display_answer');
@@ -40,12 +42,17 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           }
           if (this.model.get('comment') !== '') {
             comment = this.model.get('comment');
-            if (comment.length > 20) {
-              data.comment_modal = true;
-              data.comment = comment;
+            if ($(window).width() < 1400) {
+              if (comment.length > 61) {
+                data.comment_modal = true;
+                data.comment = comment;
+              }
+            } else if ($(window).width() > 1401) {
+              if (comment.length > 74) {
+                data.comment_modal = true;
+                data.comment = comment;
+              }
             }
-          } else {
-            data.comment = false;
           }
           data.statusUI = (function() {
             switch (data.responseStatus) {
