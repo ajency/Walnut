@@ -37,10 +37,10 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
     $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;
-    if ($duration >= 60) {
-        $data->minshours = 'hrs';
-        $data->duration = $duration/60;
-    }
+    // if ($duration >= 60) {
+    //     $data->minshours = 'hrs';
+    //     $data->duration = $duration/60;
+    // }
 
     $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
     $quiz_details = $wpdb->get_results($query_meta);
@@ -180,10 +180,10 @@ function get_single_quiz_module_report ($id,$user_id=0, $division = 0) {
     $duration = (int)$data->duration;
     $data->term_ids = $terms;
 
-    /*$data->duration = $duration;
+    $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;
-    if ($duration >= 60) {
+    /*if ($duration >= 60) {
         $data->minshours = 'hrs';
         $data->duration = $duration/60;
     }*/
@@ -339,10 +339,10 @@ function get_report_quiz_module_list_report($id,$user_id=0, $division = 0) {
     $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;
-    if ($duration >= 60) {
-        $data->minshours = 'hrs';
-        $data->duration = $duration/60;
-    }
+    // if ($duration >= 60) {
+    //     $data->minshours = 'hrs';
+    //     $data->duration = $duration/60;
+    // }
 
     if ($data->meta_key1 == 'quiz_type')
         $data->quiz_type = $data->meta_value1;
@@ -416,10 +416,10 @@ function get_single_quiz_module_list_report ($id,$user_id=0, $division = 0) {
     $data->duration = $duration;
     $data->minshours = 'mins';
     $data->total_minutes = (int)$data->duration;
-    if ($duration >= 60) {
-        $data->minshours = 'hrs';
-        $data->duration = $duration/60;
-    }
+    // if ($duration >= 60) {
+    //     $data->minshours = 'hrs';
+    //     $data->duration = $duration/60;
+    // }
 
     $query_meta = $wpdb->prepare("SELECT * FROM {$wpdb->base_prefix}collection_meta WHERE collection_id = %d",$selected_quiz_id);
     $quiz_details = $wpdb->get_results($query_meta);
