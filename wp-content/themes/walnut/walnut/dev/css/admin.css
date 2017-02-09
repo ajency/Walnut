@@ -16,7 +16,7 @@
 }
 #content-pieces-table td > span.label {
   font-size: 0.9em;
-  padding: 7px;
+  padding: 6px;
   min-width: inherit;
 }
 #content-pieces-table .tablesorter-header-inner {
@@ -47,6 +47,81 @@
 #check_all_div {
   box-shadow: 6px 0px 15px 6px #8b91a0;
   background-color: #8b91a0;
+}
+.teacher-app {
+  max-width: 100%;
+}
+/* ---------------------------
+   ADMIN LABEL DESIGN FIX -----------
+ ---------------------------
+*/
+.table-bordered td,
+.table-bordered th {
+  text-align: center;
+  font-size: 13px;
+}
+.table-bordered [class*="label-"],
+.table-condensed [class*="label-"] {
+  font-size: 13px;
+  position: relative;
+  padding: 5px 9px;
+  color: #fff;
+  font-weight: 400;
+}
+.table-bordered [class*="label-"]:before,
+.table-condensed [class*="label-"]:before {
+  content: "";
+  position: absolute;
+  left: -13px;
+  top: -1px;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid;
+}
+.table-bordered [class*="label-"]:after,
+.table-condensed [class*="label-"]:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: #fff;
+  border-radius: 50%;
+  top: 9px;
+  left: 0;
+}
+.table-bordered .status_label .label,
+.table-condensed .status_label .label {
+  min-width: 90px;
+}
+.table-bordered .label.post-status,
+.table-condensed .label.post-status {
+  min-width: 85px !important;
+  cursor: auto;
+}
+.table-bordered .label-important,
+.table-condensed .label-important {
+  background-color: #f35958;
+}
+.table-bordered .label-important:before,
+.table-condensed .label-important:before {
+  border-right-color: #f35958;
+}
+.table-bordered .label-success,
+.table-condensed .label-success {
+  background-color: #259b24;
+}
+.table-bordered .label-success:before,
+.table-condensed .label-success:before {
+  border-right-color: #259b24;
+}
+.table-bordered .label-info,
+.table-condensed .label-info {
+  background-color: #0090d9;
+}
+.table-bordered .label-info:before,
+.table-condensed .label-info:before {
+  border-right-color: #0090d9;
 }
 /* ---------------------------
    ADMIN CONTENT PIECE AND QUIZ/LECTURE FIXES -----------

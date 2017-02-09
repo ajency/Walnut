@@ -119,7 +119,10 @@ function save_quiz_question_response(){
 
     $qr_id = write_quiz_question_response($args);
 
-    wp_send_json(array('qr_id' => $qr_id));
+    if($qr_id)
+        wp_send_json(array('qr_id' => $qr_id));
+    else
+        wp_send_json(array('code' => 'error'));
 }
 
 add_action('wp_ajax_create-quiz-question-response','save_quiz_question_response');

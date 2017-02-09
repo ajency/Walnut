@@ -60,6 +60,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator
 
       OptionsBarController.prototype.showView = function() {
         var chapter_id, term_ids, textbook_id;
+        console.log('');
         this.show(this.view, {
           loading: true,
           entities: [this.textbooksCollection]
