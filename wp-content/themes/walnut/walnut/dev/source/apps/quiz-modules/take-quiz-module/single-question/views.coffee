@@ -18,7 +18,7 @@ define ['app'
 
                         'click #previous-question'  :-> @trigger "goto:previous:question"
 
-                        'click #skip-question'      :-> @trigger "skip:question"
+                        'click #skip-question'      : 'skipQuest'
 
                         'click #show-hint'          :-> 
                             console.log @model.get 'hint'
@@ -27,11 +27,29 @@ define ['app'
 
                         'click #next-question'      :-> @trigger "goto:next:question"
 
-                    submitQuest:=>
+                    skipQuest:=>
+                        localStorage.button = 'skip'
+
                         @$el.find '.submit-single'
                         .attr 'disabled', 'disabled'
                         @$el.find '.skip-button'
                         .attr 'disabled', 'disabled'
+
+                        @$el.find '.errorSubmitMsg'
+                        .addClass 'hide'
+
+                        @trigger "skip:question"
+
+                    submitQuest:=>
+                        localStorage.button = 'submit'
+
+                        @$el.find '.submit-single'
+                        .attr 'disabled', 'disabled'
+                        @$el.find '.skip-button'
+                        .attr 'disabled', 'disabled'
+
+                        @$el.find '.errorSubmitMsg'
+                        .addClass 'hide'
                         
                         @trigger "validate:answer"
 
@@ -127,9 +145,9 @@ define ['app'
                             @$el.find "#next-question"
                             .show()
 
-                            setTimeout =>
-                                @trigger "goto:next:question"                        
-                            ,3000
+                            # setTimeout =>
+                            #     @trigger "goto:next:question"                        
+                            # ,3000
 
                         @$el.find "#skip-question"
                         .hide()
@@ -137,6 +155,13 @@ define ['app'
                     onEnableSubmit:=>
                         @$el.find '.submit-single'
                         .attr 'disabled', false
+                        @$el.find '.skip-button'
+                        .attr 'disabled', false
+
+
+                    onDisplayError:->
+                        @$el.find '.errorSubmitMsg'
+                        .removeClass 'hide'
 
                         @$el.find '.skip-button'
                         .attr 'disabled', false

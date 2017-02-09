@@ -43,6 +43,16 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/quiz-modules/ta
         this.show(layout, {
           loading: true
         });
+        this.listenTo(this.region, "display:error:message", (function(_this) {
+          return function() {
+            return _this.layout.triggerMethod("display:error");
+          };
+        })(this));
+        this.listenTo(this.region, "enable:submit:ajax", (function(_this) {
+          return function() {
+            return _this.layout.triggerMethod("enable:submit");
+          };
+        })(this));
         this.listenTo(layout, "show", this._showContentBoard(this.model, this.answerWreqrObject, this.direction));
         this.listenTo(this.region, "silent:save:question", (function(_this) {
           return function() {
