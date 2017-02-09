@@ -9,6 +9,7 @@
 <!--Admin side code reverted-->
 
 <div class="admin-side container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions"> 
+    <span class="hide errorSubmitMsg alert-error">We're sorry! The server encountered some error and your answer was not submitted. Please submit again.</span>
     <span class="pull-left small" id="first_question"></span>
     <button type="button" id="previous-question" class="btn btn-info pull-left"> 
         <i class="fa fa-backward"></i> Previous 
@@ -43,6 +44,22 @@
 
 <div class="container-grey m-b-10 p-l-10 p-r-10 p-t-10 p-b-10 h-center quizActions new-design text-right"> 
     <!-- <span class="pull-left small" id="first_question"></span> -->
+
+    <span class="hide errorSubmitMsg alert-error">We're sorry! The server encountered some error and your answer was not submitted. Please submit again.</span>
+  
+        {{#show_skip}}
+            <button type="button" id="skip-question" class="btn btn-default btn-sm btn-small skip-button">
+                Skip <i class="fa fa-step-forward"></i>
+            </button>
+        {{/show_skip}}
+
+        {{^replay}}
+        {{^allow_submit_answer}} 
+        <button type="button" id="next-question" class="btn btn-default btn-sm btn-small" style="color:#AFABAB;border: 2px solid #AFABAB;">
+                Next <i class="fa fa-step-forward"></i>
+            </button>
+        {{/allow_submit_answer}} 
+        {{/replay}}
 
         <div class="quizActions__cont">
 

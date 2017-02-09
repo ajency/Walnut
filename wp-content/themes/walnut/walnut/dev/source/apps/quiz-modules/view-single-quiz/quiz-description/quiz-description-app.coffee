@@ -154,7 +154,7 @@ define ['app'
                     #console.log App.request "current:user:can", "view_all_quizzes"
                     if not data.status is 'completed' or App.request "current:user:can", "view_all_quizzes"
                         if data.quiz_type is 'class_test' and not IS_STANDALONE_SITE
-                            console.log ''
+                            console.log 'abc'
                             #data.takeQuizError = 'Class tests can be taken from school site only'
 
                 if responseSummary.get('status') is 'completed'

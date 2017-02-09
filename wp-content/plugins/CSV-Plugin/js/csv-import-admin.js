@@ -46,7 +46,6 @@
             if(id_text == '-1'){
               jQuery("#invalidText").html('Please select a textbook to export');     
             }else{
-              console.log(jQuery(location).attr('href')+'&import_id='+id_text);
               window.open(jQuery(location).attr('href')+'&import_id='+id_text);
             }
           });

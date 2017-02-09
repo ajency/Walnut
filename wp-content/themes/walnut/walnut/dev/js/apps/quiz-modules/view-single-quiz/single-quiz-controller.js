@@ -36,7 +36,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
 
       Controller.prototype.initialize = function(opts) {
         var d_mode, fetchQuestionResponseCollection, quiz_id;
-        console.log(opts);
         $(window).off('beforeunload');
         quiz_id = opts.quiz_id, quizModel = opts.quizModel, questionsCollection = opts.questionsCollection, this.questionResponseCollection = opts.questionResponseCollection, studentTrainingModule = opts.studentTrainingModule;
         quizResponseSummary = opts.quizResponseSummary, this.quizResponseSummaryCollection = opts.quizResponseSummaryCollection, display_mode = opts.display_mode, this.student = opts.student, d_mode = opts.d_mode;
@@ -73,7 +72,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
                 if (quizModel.get('quiz_type') === 'practice' && quizResponseSummary.get('questions_order') !== void 0) {
                   questionsCollection = App.request("get:content:pieces:by:ids", quizResponseSummary.get('questions_order'));
                 } else {
-                  console.log(quizModel);
                   questionsCollection = App.request("get:content:pieces:by:ids", quizModel.get('content_pieces'));
                 }
                 App.execute("when:fetched", questionsCollection, function() {
@@ -164,7 +162,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         return App.execute("when:fetched", quizModelNew, (function(_this) {
           return function() {
-            console.log(quizModelNew);
             quizModel = quizModelNew;
             if (quizModel.get('quiz_type') !== 'practice') {
               return false;
@@ -185,7 +182,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             quizResponseSummaryCollection.add(quizResponseSummary);
             questionsCollection = App.request("get:content:pieces:by:ids", quizModelNew.get('content_pieces'));
             return App.execute("when:fetched", questionsCollection, function() {
-              console.log(questionsCollection);
               _this._setMarks();
               display_mode = 'class_mode';
               _this._randomizeOrder();
