@@ -7,7 +7,7 @@ define ['app'
     App.module "ContentCreator.OptionsBar", (OptionsBar, App, Backbone, Marionette, $, _)->
         class OptionsBarController extends RegionController
 
-            initialize: (options)->
+            initialize: (options)-> 
                 {@contentPieceModel}= options
 
                 @view = @_getOptionsBarView()
@@ -97,7 +97,7 @@ define ['app'
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
             _fetchChapters: (term_id, current_chapter)=>
-                chaptersCollection = App.request "get:chapters", ('parent': term_id)
+                chaptersCollection = App.request "get:chapters", ('parent': term_id, 'type': 'edit-content')
 
                 App.execute "when:fetched", chaptersCollection, =>
                     @view.triggerMethod 'fetch:chapters:complete',

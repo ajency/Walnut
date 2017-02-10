@@ -285,7 +285,7 @@ function get_single_content_piece($id){
 
     $content_piece->grading_params = $grading_details['parameters']; //$grading_params;
 
-    $content_piece->present_in_modules = get_modules_containing_content_piece($id);
+    //$content_piece->present_in_modules = get_modules_containing_content_piece($id);
 
     $excerpt_array= array_merge($excerpt_array, $grading_details['excerpts']);
 
@@ -388,6 +388,8 @@ function get_modules_containing_content_piece($content_id){
         array('%"'.$content_id.'";%')
     );
 
+
+
     $result= $wpdb->get_results($present_in_query);
 
     $valid = true;
@@ -419,6 +421,7 @@ function get_modules_containing_content_piece($content_id){
         }
 
     }
+
 
     return $modules;
 

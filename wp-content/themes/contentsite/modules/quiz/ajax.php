@@ -54,11 +54,17 @@ function ajax_update_quiz ()
         $id = save_quiz_module ($data);
     }
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
-        $data = array(
-            'id' => $_POST['id'],
-            'content_layout' => $_POST['content_layout']
-        );
-        update_quiz_content_layout($data);
+        // $data_new = array(
+        //     'id' => $_POST['id'],
+        //     'content_layout' => $_POST['content_layout']
+        // );
+
+        $data_new = array();
+
+        $data_new['id'] = $_POST['id'];
+        $data_new['content_layout'] = $_POST['content_layout'];
+
+        update_quiz_content_layout($data_new);
     }
 
     wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'])));

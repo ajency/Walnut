@@ -1229,6 +1229,7 @@ function read_quiz_response_summary_student($summary_id,$user_id=0, $quizz_type=
             FROM {$wpdb->prefix}quiz_question_response
         WHERE summary_id = %s", $summ_id
     );
+
     $quiz_response_summary->collection_id = (int) $quiz_response_summary->collection_id;
     $quiz_response_summary->student_id = (int) $quiz_response_summary->student_id;
     $additional_details= $wpdb->get_row($additional_details_qry);
