@@ -55,14 +55,14 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
  
 	$data        = array();
 	foreach ($result as $key => $row) {
-		// $query2       = $wpdb->prepare(
-		// 		     "SELECT count(summary_id) AS attempts
-		// 		      FROM {$wpdb->prefix}quiz_response_summary
-		// 		      WHERE collection_id = %d and student_id=%d
-		// 		      ORDER BY taken_on DESC LIMIT 1",
-		// 		      array($row->id, $current_user->ID));
+		$query2       = $wpdb->prepare(
+				     "SELECT count(summary_id) AS attempts
+				      FROM {$wpdb->prefix}quiz_response_summary
+				      WHERE collection_id = %d and student_id=%d
+				      ORDER BY taken_on DESC LIMIT 1",
+				      array($row->id, $current_user->ID));
 
-		// $result2      = $wpdb->get_row($query2);
+		$result2      = $wpdb->get_row($query2);
 		//if($row->id == '747'){get-all-quiz-question-responses
 		//	file_put_contents("a4.txt", $query2);
 		//}
@@ -71,21 +71,14 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 				     "SELECT * 
 				      FROM {$wpdb->prefix}quiz_response_summary
 				      WHERE collection_id = %d and student_id=%d
-				      ORDER BY taken_on DESC",
+				      ORDER BY taken_on DESC LIMIT 1",
 				      array($row->id, $current_user->ID));
 
-		
+		$attempts_result2      = $wpdb->get_row($summary_result);
 
-		$attempts_res      = $wpdb->get_results($summary_result);
+		#$attempts = $attempts_result2->summary_id;
 
-		foreach ($attempts_res as $key => $value) {
-			if($key == 0)
-				$attempts_result2 = $value;
-		}
-
-		$attempts = count($attempts_res);
-
-		#$attempts = $result2->attempts;
+		$attempts = $result2->attempts;
 
 		$total_marks_scored = "NA";
 		$taken_on           = "NA";
@@ -140,7 +133,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 		$args       = array('status'=>$status ,'quiz_type'=>$quiz_type ,'taken_on'=>$taken_on, 'total_marks_scored' => $total_marks_scored, 'attempts' => $attempts, 'quiz_id'=> $row->id, 'quiz_name'=>$row->quiz_name, 'duration' => $row->duration, 'chapter_id'=>$chapter_id); 
 		array_push($data, $args);
 	}
-
+	#file_put_contents("a1.txt", print_r($data, true));
 	return $data;
 } 
 
@@ -213,16 +206,16 @@ function student_my_upcoming_quizes($texbook_ids){
 	global $wpdb;
 	$current_user = wp_get_current_user();
 	$term_ids = [];
-
 	foreach ($texbook_ids as $key => $value) {
 		$term_ids[] = "collection.term_ids like '%\"$value\";%'";
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
 	//$today = date("Y-m-d 00:00:00");
 	$today = date("Y-m-d H:i:s");
-	   $query = "SELECT collection.name as quiz_name, collection.id as quiz_id, term_ids, schedule_from,summary.taken_on FROM wp_content_collection collection  
+	   $query = "SELECT collection.name as quiz_name,quiz_id, term_ids, schedule_from, meta.meta_value,summary.taken_on FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
-		JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
+		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
+		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
 		WHERE collection.type='quiz' and post_status='publish' ".$term_ids."
 		and (schedule_from >= '".$today."' OR schedule_to >= '".$today."')
 		GROUP BY collection.id ORDER BY schedules.schedule_from DESC";	
@@ -238,7 +231,7 @@ function student_my_upcoming_quizes($texbook_ids){
 			 $day      = date("d", strtotime($value->schedule_from));
 			 $month    = date("M", strtotime($value->schedule_from));
 			 $year     = date("Y", strtotime($value->schedule_from));
-			 $data[]   = array('quiz_name'=>$value->quiz_name,'quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, 'month'=>$month, 'year' =>$year);
+			 $data[]   = array('quiz_name'=>$value->quiz_name,'quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
 		}
 		return $data;
 }
