@@ -29,6 +29,27 @@ define ['app'
                 @listenTo @view, 'close:grading:parameter',()=>
                     @region.trigger 'close:grading:parameter'
 
+                @listenTo Backbone, "show:media:manager", =>
+                        App.execute "show:media:manager:app",
+                            region: App.dialogRegion
+                            mediaType: 'image'
+
+                        @listenTo App.vent, "media:manager:choosed:media", (media, size)=>
+
+                            # @layout.model.set 'image_id', media.get 'id'
+                            # @layout.model.set 'size', size
+                            # @layout.model.save()
+
+                            #local storage
+
+                            #localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+
+                            #stop listening to event
+                            @stopListening App.vent, "media:manager:choosed:media"
+
+                        @listenTo App.vent, "stop:listening:to:media:manager", =>
+                            @stopListening App.vent, "media:manager:choosed:media"
+
             _beforeChangeContentPiece:(nextID)=>
                 if @contentPieceModel.isNew()
                     message = 'You are in the middle of creating a new content piece.

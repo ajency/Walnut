@@ -37,9 +37,23 @@ define(['app', 'controllers/region-controller', 'bootbox', 'apps/content-creator
             return _this.region.trigger('show:grading:parameter');
           };
         })(this));
-        return this.listenTo(this.view, 'close:grading:parameter', (function(_this) {
+        this.listenTo(this.view, 'close:grading:parameter', (function(_this) {
           return function() {
             return _this.region.trigger('close:grading:parameter');
+          };
+        })(this));
+        return this.listenTo(Backbone, "show:media:manager", (function(_this) {
+          return function() {
+            App.execute("show:media:manager:app", {
+              region: App.dialogRegion,
+              mediaType: 'image'
+            });
+            _this.listenTo(App.vent, "media:manager:choosed:media", function(media, size) {
+              return _this.stopListening(App.vent, "media:manager:choosed:media");
+            });
+            return _this.listenTo(App.vent, "stop:listening:to:media:manager", function() {
+              return _this.stopListening(App.vent, "media:manager:choosed:media");
+            });
           };
         })(this));
       };

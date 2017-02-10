@@ -52,7 +52,7 @@ define ['app',
 
 				'blur .comment-area' : '_saveComment' 
 
-				'click .cke_button__image' : 'imageClicked'
+				#'click a.cke_button__image' : 'imageClicked'
 
 			modelEvents:
 				'change:ID' :-> @$el.find('#preview-question, #clone-question').show()
@@ -96,9 +96,8 @@ define ['app',
 				@$el.find('#preview-question, #clone-question').show() if not @model.isNew()
 
 
-			imageClicked:(evt)->
-				#evt.preventDefault()
-				console.log 'imageClicked'
+				CKEDITOR.on 'instanceCreated', @configureEdit
+				
 
 			_saveComment:->
 				console.log '_saveComment'
@@ -117,10 +116,10 @@ define ['app',
 					@$el.find('#question-hint').hide()
 
 			_commentEnable : (e)=>
+				console.log @model
 				if $(e.target).prop 'checked'
 					@$el.find('#question-comment').prop 'disabled',false
-					@$el.find('#question-comment').hide()
-					
+					@$el.find('#question-comment').show()
 					ele = @$el.find "#question-comment"
 					# console.log 'ele'
 					# CKEDITOR.disableAutoInline = true;
@@ -129,36 +128,33 @@ define ['app',
 					ele.attr('commenteditable', 'true').attr 'id', _.uniqueId 'text-'
 					CKEDITOR.on 'instanceCreated', @configureEdit
 					@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
-					#@editor.setData _.stripslashes @model.get 'content'
-					#CKEDITOR.on 'dialogDefinition', @imageInstanceChange
-					@editor.on 'dialogShow', (evt) ->
-						console.log evt.data.getName()
-						if evt.data.getName() == 'image'
-					    	listener = evt.data.on('ok', ->
-					      		console.log 'ok!'
-					    	)
-					    # We need to remove that listener, to avoid duplicating it on
-					    # next dialogShow.
-					    evt.data.on 'hide', ->
-					      listener.removeListener()
 
-					
+					#CKEDITOR.on 'dialogDefinition', @imageInstanceChange
+						
 				else
-					@$el.find('#question-comment').prop 'disabled',true
+					#@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
 
 
 			imageInstanceChange:(ev)->
+				#@trigger "show:media:manager"
+				#Backbone.trigger "show:media:manager"
+				console.log ev
 				dialogName = ev.data.name
 				dialogDefinition = ev.data.definition
+				console.log dialogDefinition
 				editor = ev.editor
+				#Backbone.trigger "show:media:manager"
 				if dialogName == 'image'
 					console.log 'image'
-					dialogDefinition.onOk = (e) ->
-				    	console.log 'check'
-				    	imageSrcUrl = e.sender.originalElement.$.src
-				    	imgHtml = CKEDITOR.dom.element.createFromHtml('<img src=' + imageSrcUrl + ' alt=\'\' align=\'right\'/>')
-				    	editor.insertElement imgHtml
+					#ev.stopPropagation()
+					#dialogDefinition.hide()
+
+					#dialogDefinition.onShow = (e) ->
+						#Backbone.trigger "show:media:manager"
+				    	# imageSrcUrl = e.sender.originalElement.$.src
+				    	# imgHtml = CKEDITOR.dom.element.createFromHtml('<img src=' + imageSrcUrl + ' alt=\'\' align=\'right\'/>')
+				    	# editor.insertElement imgHtml
 
 			configureEdit : (event) =>
 				ele = @$el.find "#question-comment"
@@ -225,10 +221,11 @@ define ['app',
 					@trigger 'close:grading:parameter'
 
 			onSaveQuestionSettings: (e)->
-				console.log @$el.find('body .cke_contents_ltr').html()
+				ele = @$el.find "#question-comment"
+				comment_data = $('.comment-rte div:nth-of-type(2)').html()
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
-					#console.log CKEDITOR.instances.editor.getData()
+					data.comment = comment_data
 					@trigger "save:data:to:model", data
 				else
 					firstErr = _.first @$el.find '.form-control.error'

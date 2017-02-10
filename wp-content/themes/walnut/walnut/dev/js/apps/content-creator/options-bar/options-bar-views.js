@@ -45,8 +45,7 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
         'click a.tabs': '_changeTabs',
         'change #hint_enable': '_hintEnable',
         'change #comment_enable': '_commentEnable',
-        'blur .comment-area': '_saveComment',
-        'click .cke_button__image': 'imageClicked'
+        'blur .comment-area': '_saveComment'
       };
 
       OptionsBarView.prototype.modelEvents = {
@@ -84,12 +83,9 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#question_type_column').remove();
         }
         if (!this.model.isNew()) {
-          return this.$el.find('#preview-question, #clone-question').show();
+          this.$el.find('#preview-question, #clone-question').show();
         }
-      };
-
-      OptionsBarView.prototype.imageClicked = function(evt) {
-        return console.log('imageClicked');
+        return CKEDITOR.on('instanceCreated', this.configureEdit);
       };
 
       OptionsBarView.prototype._saveComment = function() {
@@ -113,46 +109,29 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype._commentEnable = function(e) {
         var ele;
+        console.log(this.model);
         if ($(e.target).prop('checked')) {
           this.$el.find('#question-comment').prop('disabled', false);
-          this.$el.find('#question-comment').hide();
+          this.$el.find('#question-comment').show();
           ele = this.$el.find("#question-comment");
           CKEDITOR.dtd.$removeEmpty['span'] = false;
           ele.attr('commenteditable', 'true').attr('id', _.uniqueId('text-'));
           CKEDITOR.on('instanceCreated', this.configureEdit);
-          this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
-          return this.editor.on('dialogShow', function(evt) {
-            var listener;
-            console.log(evt.data.getName());
-            if (evt.data.getName() === 'image') {
-              listener = evt.data.on('ok', function() {
-                return console.log('ok!');
-              });
-            }
-            return evt.data.on('hide', function() {
-              return listener.removeListener();
-            });
-          });
+          return this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
         } else {
-          this.$el.find('#question-comment').prop('disabled', true);
           return this.$el.find('#question-comment').hide();
         }
       };
 
       OptionsBarView.prototype.imageInstanceChange = function(ev) {
         var dialogDefinition, dialogName, editor;
+        console.log(ev);
         dialogName = ev.data.name;
         dialogDefinition = ev.data.definition;
+        console.log(dialogDefinition);
         editor = ev.editor;
         if (dialogName === 'image') {
-          console.log('image');
-          return dialogDefinition.onOk = function(e) {
-            var imageSrcUrl, imgHtml;
-            console.log('check');
-            imageSrcUrl = e.sender.originalElement.$.src;
-            imgHtml = CKEDITOR.dom.element.createFromHtml('<img src=' + imageSrcUrl + ' alt=\'\' align=\'right\'/>');
-            return editor.insertElement(imgHtml);
-          };
+          return console.log('image');
         }
       };
 
@@ -210,10 +189,12 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       };
 
       OptionsBarView.prototype.onSaveQuestionSettings = function(e) {
-        var data, eleID, firstErr;
-        console.log(this.$el.find('body .cke_contents_ltr').html());
+        var comment_data, data, ele, eleID, firstErr;
+        ele = this.$el.find("#question-comment");
+        comment_data = $('.comment-rte div:nth-of-type(2)').html();
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);
+          data.comment = comment_data;
           return this.trigger("save:data:to:model", data);
         } else {
           firstErr = _.first(this.$el.find('.form-control.error'));

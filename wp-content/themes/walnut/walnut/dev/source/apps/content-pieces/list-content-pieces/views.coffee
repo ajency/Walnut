@@ -76,7 +76,6 @@ define ['app'
 							.pluck 'name'
 							.compact()
 							.value()
-					console.log chapter
 
 					chapter
 
@@ -306,7 +305,6 @@ define ['app'
 							bootbox.alert 'Moved Successfully.'
 						.fail (resp)->
 							console.log 'some error occurred'
-							console.log resp
 						.done ->
 							$("#destination_textbook").hide()
 							$(e.target).find '.fa'
@@ -331,7 +329,6 @@ define ['app'
 
 
 			show_destination_chapters:(e)=>
-					console.log $("#textbooks-filter option:selected").val()
 					term_id = $("#textbooks-filter option:selected").val()
 					chaptersCollection = App.request "get:chapters", ('parent': term_id)
 					App.execute "when:fetched", chaptersCollection, =>
@@ -400,7 +397,6 @@ define ['app'
 							@updateStatusValues data.IDs, data.status
 						.fail (resp)->
 							console.log 'some error occurred'
-							console.log resp
 						.done ->
 							$(e.target).find '.fa'
 							.removeClass 'fa-spin fa-spinner'

@@ -60,7 +60,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
                 })).pluck('name').compact().value();
               }
             }
-            console.log(chapter);
             return chapter;
           };
         })(this);
@@ -342,8 +341,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
               }
               return bootbox.alert('Moved Successfully.');
             }).fail(function(resp) {
-              console.log('some error occurred');
-              return console.log(resp);
+              return console.log('some error occurred');
             }).done(function() {
               $("#destination_textbook").hide();
               return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
@@ -370,7 +368,6 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
 
       ListView.prototype.show_destination_chapters = function(e) {
         var chaptersCollection, term_id;
-        console.log($("#textbooks-filter option:selected").val());
         term_id = $("#textbooks-filter option:selected").val();
         chaptersCollection = App.request("get:chapters", {
           'parent': term_id
@@ -465,8 +462,7 @@ define(['app', 'text!apps/content-pieces/list-content-pieces/templates/content-p
               return $.post(AJAXURL, data).success(function(resp) {
                 return _this.updateStatusValues(data.IDs, data.status);
               }).fail(function(resp) {
-                console.log('some error occurred');
-                return console.log(resp);
+                return console.log('some error occurred');
               }).done(function() {
                 return $(e.target).find('.fa').removeClass('fa-spin fa-spinner').addClass('fa-check');
               });
