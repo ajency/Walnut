@@ -110,6 +110,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
         if ((ref = this.model.get('type')) === 'quiz' || ref === 'student-training') {
           this.model.set('content_layout', content);
         }
+        console.log(JSON.stringify(this.model.attributes));
         return this.model.save({
           'changed': 'content_pieces'
         }, {

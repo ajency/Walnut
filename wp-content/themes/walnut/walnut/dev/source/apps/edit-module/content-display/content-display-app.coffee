@@ -67,6 +67,7 @@ define ['app'
 			saveContentPieces : (content)=>
 				@model.set('content_pieces', content) if @model.get('type') is 'teaching-module'
 				@model.set('content_layout', content) if @model.get('type') in ['quiz','student-training']
+				console.log JSON.stringify @model.attributes
 				@model.save({ 'changed' : 'content_pieces' }, { wait : true })
 
 			_getCollectionContentDisplayView : ->

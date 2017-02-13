@@ -181,6 +181,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
       DataContentTableView.prototype.addContentPieces = function() {
         var content_pieces;
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
+        console.log(content_pieces);
         if (content_pieces) {
           return this.trigger("add:content:pieces", content_pieces);
         }

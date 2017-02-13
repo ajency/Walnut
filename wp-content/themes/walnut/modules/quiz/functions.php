@@ -842,6 +842,8 @@ function update_quiz_content_layout($data= array()){
     global $wpdb;
     $content_layout = maybe_serialize($data['content_layout']);
 
+    file_put_contents("d.txt", print_r($content_layout, true));
+
     $exists_qry = $wpdb->prepare("SELECT id FROM {$wpdb->prefix}collection_meta WHERE
         collection_id=%d AND meta_key=%s", $data['id'], 'content_layout');
 

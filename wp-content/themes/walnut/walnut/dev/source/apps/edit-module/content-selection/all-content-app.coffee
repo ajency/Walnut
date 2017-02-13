@@ -160,7 +160,7 @@ define ['app'
 
 			addContentPieces: =>
 				content_pieces = _.pluck(@$el.find('#dataContentTable .tab_checkbox:checked'), 'value')
-				#console.log content_pieces
+				console.log content_pieces
 				if content_pieces
 					@trigger "add:content:pieces", content_pieces
 					#@fullCollection.remove(id) for id in content_pieces
