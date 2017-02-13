@@ -31,8 +31,6 @@ add_action ('wp_ajax_create-quiz', 'ajax_create_quiz');
 
 function ajax_update_quiz ()
 {
-    echo json_encode($_POST);
-    exit();
 
     if (isset($_POST['changed']) && $_POST['changed'] == 'module_details') {
 
@@ -56,21 +54,14 @@ function ajax_update_quiz ()
         $id = save_quiz_module ($data);
     }
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
-        // $data_new = array(
-        //     'id' => $_POST['id'],
-        //     'content_layout' => $_POST['content_layout']
-        // );
-
-        $data_new = array();
-
-        $data_new['id'] = $_POST['id'];
-        $data_new['content_layout'] = $_POST['content_layout'];
-
-        update_quiz_content_layout($data_new);
+        $data = array(
+            'id' => $_POST['id'],
+            'content_layout' => $_POST['content_layout']
+        );
+        update_quiz_content_layout($data);
     }
 
     wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'])));
 }
 
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');
-add_action('wp_ajax_nopriv_update-quiz', 'ajax_update_quiz');
