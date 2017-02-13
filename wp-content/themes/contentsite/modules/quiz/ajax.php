@@ -2,6 +2,8 @@
 
 require_once 'functions.php';
 
+ini_set('memory_limit', '1024M');
+
 function ajax_create_quiz ()
 {
     $data = array(
@@ -30,7 +32,12 @@ function ajax_create_quiz ()
 add_action ('wp_ajax_create-quiz', 'ajax_create_quiz');
 
 function ajax_update_quiz ()
-{
+{   
+    $content_pieces = $_POST['content_layout'];
+    $count = count($_POST['content_layout']);
+
+    file_put_contents("b.txt", print_r($content_pieces, true));
+    file_put_contents("b1.txt", $count);
 
     if (isset($_POST['changed']) && $_POST['changed'] == 'module_details') {
 
@@ -54,10 +61,12 @@ function ajax_update_quiz ()
         $id = save_quiz_module ($data);
     }
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
-        $data = array(
-            'id' => $_POST['id'],
-            'content_layout' => $_POST['content_layout']
-        );
+        $data = array();
+        $data['id'] = $_POST['id'];
+        $data['content_layout'] = check_array_length($content_pieces, $count);
+        
+
+        file_put_contents("a1.txt", print_r($data, true));
         update_quiz_content_layout($data);
     }
 
@@ -65,3 +74,14 @@ function ajax_update_quiz ()
 }
 
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');
+
+
+function check_array_length($content_pieces, $count){
+    if(count($content_pieces) == $count){
+        file_put_contents("a2.txt", 'true');
+       return $content_pieces;
+    }
+    else{
+        check_array_length($content_pieces, $count);
+    }
+}
