@@ -65,3 +65,4 @@ function ajax_update_quiz ()
 }
 
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');
+add_action('wp_ajax_nopriv_update-quiz', 'ajax_update_quiz');
