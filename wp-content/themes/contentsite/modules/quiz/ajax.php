@@ -33,11 +33,9 @@ add_action ('wp_ajax_create-quiz', 'ajax_create_quiz');
 
 function ajax_update_quiz ()
 {   
-    $content_pieces = $_POST['content_layout'];
-    $count = count($_POST['content_layout']);
 
-    file_put_contents("b.txt", print_r($content_pieces, true));
-    file_put_contents("b1.txt", $count);
+
+    //file_put_contents("b.txt", print_r(maybe_serialize($_POST['content_layout']), true));
 
     if (isset($_POST['changed']) && $_POST['changed'] == 'module_details') {
 
@@ -61,13 +59,7 @@ function ajax_update_quiz ()
         $id = save_quiz_module ($data);
     }
     if (isset($_POST['changed']) && ($_POST['changed']=='content_pieces')) {
-        $data = array();
-        $data['id'] = $_POST['id'];
-        $data['content_layout'] = check_array_length($content_pieces, $count);
-        
-
-        file_put_contents("a1.txt", print_r($data, true));
-        update_quiz_content_layout($data);
+        check_array_length();
     }
 
     wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'])));
@@ -76,12 +68,20 @@ function ajax_update_quiz ()
 add_action ('wp_ajax_update-quiz', 'ajax_update_quiz');
 
 
-function check_array_length($content_pieces, $count){
-    if(count($content_pieces) == $count){
+function check_array_length(){
+    $data = array();
+    $data['id'] = $_REQUEST['id'];
+    // //$data['content_layout'] = maybe_serialize($_POST['content_layout']);
+    $data['content_layout'] = $_REQUEST['content_layout'];
+ 
+    file_put_contents("a1.txt", print_r($_REQUEST['content_layout'], true));
+
+    if(count($data['content_layout']) == count($_REQUEST['content_layout']) ){
         file_put_contents("a2.txt", 'true');
-       return $content_pieces;
+        return update_quiz_content_layout($data);
     }
     else{
-        check_array_length($content_pieces, $count);
+        file_put_contents("a3.txt", 'false');
+        check_array_length();
     }
 }
