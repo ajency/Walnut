@@ -31,6 +31,8 @@ add_action ('wp_ajax_create-quiz', 'ajax_create_quiz');
 
 function ajax_update_quiz ()
 {
+    echo json_encode($_POST);
+    exit();
 
     if (isset($_POST['changed']) && $_POST['changed'] == 'module_details') {
 
