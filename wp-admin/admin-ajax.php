@@ -13,6 +13,10 @@
  *
  * @since 2.1.0
  */
+if(isset($_POST['content_layout'])){
+	file_put_contents("admin.txt", print_r($_POST, true));
+	file_put_contents("admin_ajax.txt", print_r($_POST['content_layout'], true));
+}
 define( 'DOING_AJAX', true );
 if ( ! defined( 'WP_ADMIN' ) ) {
 	define( 'WP_ADMIN', true );

@@ -34,11 +34,8 @@ add_action ('wp_ajax_create-quiz', 'ajax_create_quiz');
 function ajax_update_quiz ()
 {   
 
-    // file_put_contents("a.txt", print_r($_POST, true));
-
-    // file_put_contents("b.txt", $_REQUEST['content_new_pieces']);
-
-    // file_put_contents("c.txt", print_r(json_decode(stripslashes($_REQUEST['content_new_pieces'])), true));
+    $json = file_get_contents('php://input');
+   file_put_contents("a.txt", print_r($json, true));
 
     if (isset($_POST['changed']) && $_POST['changed'] == 'module_details') {
 
