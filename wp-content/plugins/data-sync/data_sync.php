@@ -15,7 +15,7 @@
 
 //define('NETWORK_SERVER_URL','http://walnutedu.org');
 
-define('NETWORK_SERVER_URL','http://walnutedu.org');
+define('NETWORK_SERVER_URL','http://synapsedu.info');
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 

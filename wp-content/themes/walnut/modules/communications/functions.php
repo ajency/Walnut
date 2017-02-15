@@ -117,7 +117,7 @@ function get_parent_recipients($division){
 
 function get_mail_header($blog_id){
 
-    $header_img = 'http://walnutedu.org/wp-content/themes/walnut/images/synapse-logo-main.png';
+    $header_img = 'http://synapsedu.info/wp-content/themes/walnut/images/synapse-logo-main.png';
 
     $blog= get_blog_details($blog_id, true);
 

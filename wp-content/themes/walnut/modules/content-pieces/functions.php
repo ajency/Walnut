@@ -660,7 +660,7 @@ function get_adjacent_textbook_term_id($term, $direction='next'){
     return $adjTermID;
 }
 
-//Added By Kapil start to add column ID in http://walnutedu.org/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
+//Added By Kapil start to add column ID in http://synapsedu.info/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
 add_filter('manage_edit-textbook_columns', 'change_columns_header', 10, 3);
 function change_columns_header($columns) {
     $columns['id'] = 'ID';
@@ -681,4 +681,4 @@ function manage_textbook_custom_fields($deprecated,$column_name,$term_id)
 }
 add_filter ('manage_textbook_custom_column', 'manage_textbook_custom_fields', 10,3);
 
-//Added By Kapil ends to add column ID in http://walnutedu.org/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
+//Added By Kapil ends to add column ID in http://synapsedu.info/wp-admin/edit-tags.php?taxonomy=textbook&post_type=content-piece page
