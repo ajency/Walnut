@@ -47,7 +47,7 @@ CKEDITOR.editorConfig = function( config ) {
                     ,
             // # 			# { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
                         {name: 'insert',
-                        items: [ 'SpecialChar', 'EqnEditor' ]}
+                        items: ['Image', 'SpecialChar', 'EqnEditor' ]}
                     ,
                         '/'
                     ,
@@ -93,6 +93,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.extraPlugins = 'fontawesome';
 	config.contentsCss = 'fontawesome/css/font-awesome.min.css';
 	config.allowedContent = true;
+    config.filebrowserUploadUrl = '../ckupload.php'; 
 };
 
 

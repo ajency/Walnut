@@ -7,7 +7,7 @@ define ['app',
 			template: optionsBarTpl
 
 			events:
-				'change #subs' : (e)->
+				'change #subs' : (e)-> 
 					# console.log 'change #subs'
 					# if localStorage.textbook_id != $(e.target).val()
 					# 	console.log 'if'
@@ -50,6 +50,10 @@ define ['app',
 
 				'change #comment_enable' : '_commentEnable'
 
+				'blur .comment-area' : '_saveComment' 
+
+				#'click a.cke_button__image' : 'imageClicked'
+
 			modelEvents:
 				'change:ID' :-> @$el.find('#preview-question, #clone-question').show()
 
@@ -84,11 +88,20 @@ define ['app',
 				if @model.get 'comment_enable'
 					@$el.find('#comment_enable').trigger 'click'
 
+
 				if @model.get('content_type') isnt 'teacher_question'
 					@$el.find '#question_type_column'
 					.remove()
 
 				@$el.find('#preview-question, #clone-question').show() if not @model.isNew()
+
+
+				CKEDITOR.on 'instanceCreated', @configureEdit
+				
+
+			_saveComment:->
+				console.log '_saveComment'
+				#console.log @$el.html()
 
 			_changeTabs : (e)->
 				e.preventDefault()
@@ -103,12 +116,54 @@ define ['app',
 					@$el.find('#question-hint').hide()
 
 			_commentEnable : (e)=>
+				console.log @model
 				if $(e.target).prop 'checked'
 					@$el.find('#question-comment').prop 'disabled',false
 					@$el.find('#question-comment').show()
+					ele = @$el.find "#question-comment"
+					# console.log 'ele'
+					# CKEDITOR.disableAutoInline = true;
+					#CKEDITOR.inline('comment')
+					CKEDITOR.dtd.$removeEmpty['span'] = false;
+					ele.attr('commenteditable', 'true').attr 'id', _.uniqueId 'text-'
+					CKEDITOR.on 'instanceCreated', @configureEdit
+					@editor = CKEDITOR.inline document.getElementById ele.attr 'id'
+
+					#CKEDITOR.on 'dialogDefinition', @imageInstanceChange
+						
 				else
-					@$el.find('#question-comment').prop 'disabled',true
+					#@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
+
+
+			imageInstanceChange:(ev)->
+				#@trigger "show:media:manager"
+				#Backbone.trigger "show:media:manager"
+				console.log ev
+				dialogName = ev.data.name
+				dialogDefinition = ev.data.definition
+				console.log dialogDefinition
+				editor = ev.editor
+				#Backbone.trigger "show:media:manager"
+				if dialogName == 'image'
+					console.log 'image'
+					#ev.stopPropagation()
+					#dialogDefinition.hide()
+
+					#dialogDefinition.onShow = (e) ->
+						#Backbone.trigger "show:media:manager"
+				    	# imageSrcUrl = e.sender.originalElement.$.src
+				    	# imgHtml = CKEDITOR.dom.element.createFromHtml('<img src=' + imageSrcUrl + ' alt=\'\' align=\'right\'/>')
+				    	# editor.insertElement imgHtml
+
+			configureEdit : (event) =>
+				ele = @$el.find "#question-comment"
+				editor = event.editor
+				#element = editor.element
+
+				#if element.getAttribute('id') is ele.attr 'id'
+				editor.on 'configLoaded', ->
+                	editor.config.placeholder = 'This is a Text Block. Use this to provide text…'
 
 			onFetchChaptersComplete : (chapters)->
 
@@ -165,9 +220,12 @@ define ['app',
 				else
 					@trigger 'close:grading:parameter'
 
-			onSaveQuestionSettings:->
+			onSaveQuestionSettings: (e)->
+				ele = @$el.find "#question-comment"
+				comment_data = $('.comment-rte div:nth-of-type(2)').html()
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
+					data.comment = comment_data
 					@trigger "save:data:to:model", data
 				else
 					firstErr = _.first @$el.find '.form-control.error'

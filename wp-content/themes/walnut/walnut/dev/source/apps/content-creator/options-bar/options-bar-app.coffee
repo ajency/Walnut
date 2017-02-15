@@ -7,7 +7,7 @@ define ['app'
     App.module "ContentCreator.OptionsBar", (OptionsBar, App, Backbone, Marionette, $, _)->
         class OptionsBarController extends RegionController
 
-            initialize: (options)->
+            initialize: (options)-> 
                 {@contentPieceModel}= options
 
                 @view = @_getOptionsBarView()
@@ -28,6 +28,27 @@ define ['app'
 
                 @listenTo @view, 'close:grading:parameter',()=>
                     @region.trigger 'close:grading:parameter'
+
+                @listenTo Backbone, "show:media:manager", =>
+                        App.execute "show:media:manager:app",
+                            region: App.dialogRegion
+                            mediaType: 'image'
+
+                        @listenTo App.vent, "media:manager:choosed:media", (media, size)=>
+
+                            # @layout.model.set 'image_id', media.get 'id'
+                            # @layout.model.set 'size', size
+                            # @layout.model.save()
+
+                            #local storage
+
+                            #localStorage.setItem 'ele' + @layout.model.get('meta_id'), JSON.stringify(@layout.model.toJSON())
+
+                            #stop listening to event
+                            @stopListening App.vent, "media:manager:choosed:media"
+
+                        @listenTo App.vent, "stop:listening:to:media:manager", =>
+                            @stopListening App.vent, "media:manager:choosed:media"
 
             _beforeChangeContentPiece:(nextID)=>
                 if @contentPieceModel.isNew()
@@ -76,7 +97,7 @@ define ['app'
 
             ##fetch chapters based on textbook id, current_chapter refers to the chapter to be selected by default
             _fetchChapters: (term_id, current_chapter)=>
-                chaptersCollection = App.request "get:chapters", ('parent': term_id)
+                chaptersCollection = App.request "get:chapters", ('parent': term_id, 'type': 'edit-content')
 
                 App.execute "when:fetched", chaptersCollection, =>
                     @view.triggerMethod 'fetch:chapters:complete',
