@@ -275,20 +275,24 @@ define ['app'
                 time = 0
 
                 contentGroupCollection.each (m)->
+                    console.log m
                     if m.get('post_type') is 'content_set'
 
                         if m.get 'avg_marks'
-                            marks+= parseInt m.get 'avg_marks'
+                            marks += parseInt m.get 'avg_marks'
 
                         if m.get 'avg_duration'
                             time += parseInt m.get 'avg_duration'
 
                     else
+                        console.log m.get 'marks'
+                        console.log m.attributes.marks
                         if m.get 'marks'
-                            marks+= parseInt m.get 'marks'
+                            marks += parseInt m.get 'marks'
 
                         if m.get 'duration'
                             time += parseInt m.get 'duration'
+                console.log marks
 
                 @$el.find('#total-marks').val marks   
                 @$el.find('#total-time').val time
@@ -314,14 +318,14 @@ define ['app'
                     if m.get('post_type') is 'content_set'
 
                         if m.get 'avg_marks'
-                            marks+= parseInt m.get 'avg_marks'
+                            marks += parseInt m.get 'avg_marks'
 
                         if m.get 'avg_duration'
                             time += parseInt m.get 'avg_duration'
 
                     else
                         if m.get 'marks'
-                            marks+= parseInt m.get 'marks'
+                            marks += parseInt m.get 'marks'
 
                         if m.get 'duration'
                             time += parseInt m.get 'duration'

@@ -250,6 +250,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         marks = 0;
         time = 0;
         contentGroupCollection.each(function(m) {
+          console.log(m);
           if (m.get('post_type') === 'content_set') {
             if (m.get('avg_marks')) {
               marks += parseInt(m.get('avg_marks'));
@@ -258,6 +259,8 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
               return time += parseInt(m.get('avg_duration'));
             }
           } else {
+            console.log(m.get('marks'));
+            console.log(m.attributes.marks);
             if (m.get('marks')) {
               marks += parseInt(m.get('marks'));
             }
@@ -266,6 +269,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
             }
           }
         });
+        console.log(marks);
         this.$el.find('#total-marks').val(marks);
         return this.$el.find('#total-time').val(time);
       };
