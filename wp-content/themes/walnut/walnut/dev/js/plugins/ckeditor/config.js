@@ -93,7 +93,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.extraPlugins = 'fontawesome';
 	config.contentsCss = 'fontawesome/css/font-awesome.min.css';
 	config.allowedContent = true;
-    config.filebrowserUploadUrl = '../ckupload.php'; 
+ 
 };
 
 
