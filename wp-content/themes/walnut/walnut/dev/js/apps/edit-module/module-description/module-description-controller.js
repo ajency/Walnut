@@ -88,6 +88,11 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/module-descrip
             }
           };
         })(this));
+        this.listenTo(Backbone, "all:content:piece:saved:success", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod('change:layout');
+          };
+        })(this));
         return this.show(view, {
           loading: true,
           entities: [this.textbooksCollection]

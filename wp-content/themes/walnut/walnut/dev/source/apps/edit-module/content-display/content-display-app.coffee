@@ -9,11 +9,13 @@ define ['app'
 
 				@view = view = @_getCollectionContentDisplayView()
 
-				@listenTo @contentGroupCollection, 'add remove', @contentPiecesChanged
+				@listenTo @contentGroupCollection, 'remove', @contentPiecesChanged
 
 	#                @listenTo @contentGroupCollection, 'content:pieces:of:group:removed', @contentPiecesChanged
 
 				@listenTo view, 'changed:order', @contentOrderChanged
+
+				@listenTo Backbone, 'save:all:content:pieces' , @contentPiecesChanged
 
 				@listenTo @view, 'remove:model:from:quiz', @removeModelFromQuiz
 
@@ -65,12 +67,29 @@ define ['app'
 				@saveContentPieces content
 
 			saveContentPieces : (content)=>
+				Backbone.trigger "all:content:saved:remove:message"
 				@model.set('content_pieces', content) if @model.get('type') is 'teaching-module'
 				@model.set('content_layout', content) if @model.get('type') in ['quiz','student-training']
-				@model.set('content_pieces', '') if @model.get('type') is 'quiz'
+				@model.set('content_pieces_length', content.length) if @model.get('type') is 'quiz'
 				#console.log JSON.stringify @model.attributes
-				@model.save({ 'changed' : 'content_pieces' }, { wait : true })
+				model_data = @model.save({ 'changed' : 'content_pieces' })
 
+				if !model_data
+					console.log 'error'
+					localStorage.addContent = 'false'
+				else
+					model_data.complete (response) ->
+						if response.responseJSON
+							Backbone.trigger "all:content:piece:saved:success"
+							if localStorage.addContent == 'true'
+								Backbone.trigger "all:content:saved:success:message"
+							localStorage.addContent = 'false'
+						else
+							if localStorage.addContent == 'true'
+								Backbone.trigger "all:content:saved:error:message"
+							localStorage.addContent = 'false'
+				
+							
 			_getCollectionContentDisplayView : ->
 				new ContentDisplayView
 					model : @model

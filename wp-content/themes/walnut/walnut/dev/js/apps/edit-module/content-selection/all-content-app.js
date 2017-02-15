@@ -33,7 +33,22 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
             });
           };
         })(this));
-        return this.listenTo(this.contentGroupCollection, 'remove', this.contentPieceRemoved);
+        this.listenTo(this.contentGroupCollection, 'remove', this.contentPieceRemoved);
+        this.listenTo(Backbone, "all:content:saved:success:message", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("success:message");
+          };
+        })(this));
+        this.listenTo(Backbone, "all:content:saved:error:message", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("error:message");
+          };
+        })(this));
+        return this.listenTo(Backbone, "all:content:saved:remove:message", (function(_this) {
+          return function() {
+            return _this.view.triggerMethod("remove:message");
+          };
+        })(this));
       };
 
       Controller.prototype.contentPieceRemoved = function(model) {
@@ -183,7 +198,9 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
         content_pieces = _.pluck(this.$el.find('#dataContentTable .tab_checkbox:checked'), 'value');
         console.log(content_pieces);
         if (content_pieces) {
-          return this.trigger("add:content:pieces", content_pieces);
+          this.trigger("add:content:pieces", content_pieces);
+          localStorage.addContent = 'true';
+          return Backbone.trigger("save:all:content:pieces");
         }
       };
 
@@ -202,6 +219,18 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-s
           output: '{startRow} to {endRow} of {totalRows}'
         };
         return this.$el.find("#dataContentTable").tablesorterPager(pagerOptions);
+      };
+
+      DataContentTableView.prototype.onSuccessMessage = function() {
+        return this.$el.find('#add_content_help_text').text('Questions added successfully to the quiz.').addClass('text-success');
+      };
+
+      DataContentTableView.prototype.onErrorMessage = function() {
+        return this.$el.find('#add_content_help_text').text('An error occurred while saving the questions , please click on "Add" again.').addClass('text-error');
+      };
+
+      DataContentTableView.prototype.onRemoveMessage = function() {
+        return this.$el.find('#add_content_help_text').text('').removeClass('text-error').removeClass('text-success');
       };
 
       return DataContentTableView;

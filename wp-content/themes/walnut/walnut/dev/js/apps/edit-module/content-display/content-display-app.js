@@ -19,8 +19,9 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
         var view;
         this.model = opts.model, this.contentGroupCollection = opts.contentGroupCollection;
         this.view = view = this._getCollectionContentDisplayView();
-        this.listenTo(this.contentGroupCollection, 'add remove', this.contentPiecesChanged);
+        this.listenTo(this.contentGroupCollection, 'remove', this.contentPiecesChanged);
         this.listenTo(view, 'changed:order', this.contentOrderChanged);
+        this.listenTo(Backbone, 'save:all:content:pieces', this.contentPiecesChanged);
         this.listenTo(this.view, 'remove:model:from:quiz', this.removeModelFromQuiz);
         if (this.contentGroupCollection.length > 0) {
           return App.execute("when:fetched", this.contentGroupCollection.models, (function(_this) {
@@ -103,7 +104,8 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
       };
 
       CollectionEditContentDisplayController.prototype.saveContentPieces = function(content) {
-        var ref;
+        var model_data, ref;
+        Backbone.trigger("all:content:saved:remove:message");
         if (this.model.get('type') === 'teaching-module') {
           this.model.set('content_pieces', content);
         }
@@ -111,13 +113,30 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
           this.model.set('content_layout', content);
         }
         if (this.model.get('type') === 'quiz') {
-          this.model.set('content_pieces', '');
+          this.model.set('content_pieces_length', content.length);
         }
-        return this.model.save({
+        model_data = this.model.save({
           'changed': 'content_pieces'
-        }, {
-          wait: true
         });
+        if (!model_data) {
+          console.log('error');
+          return localStorage.addContent = 'false';
+        } else {
+          return model_data.complete(function(response) {
+            if (response.responseJSON) {
+              Backbone.trigger("all:content:piece:saved:success");
+              if (localStorage.addContent === 'true') {
+                Backbone.trigger("all:content:saved:success:message");
+              }
+              return localStorage.addContent = 'false';
+            } else {
+              if (localStorage.addContent === 'true') {
+                Backbone.trigger("all:content:saved:error:message");
+              }
+              return localStorage.addContent = 'false';
+            }
+          });
+        }
       };
 
       CollectionEditContentDisplayController.prototype._getCollectionContentDisplayView = function() {

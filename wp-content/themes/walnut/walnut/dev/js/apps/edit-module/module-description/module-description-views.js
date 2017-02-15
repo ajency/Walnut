@@ -39,8 +39,7 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype.modelEvents = {
-        'change:post_status': 'statusChanged',
-        'change:content_layout': '_changeLayout'
+        'change:post_status': 'statusChanged'
       };
 
       CollectionDetailsView.prototype.mixinTemplateHelpers = function(data) {
@@ -271,8 +270,9 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         return this.$el.find('#total-time').val(time);
       };
 
-      CollectionDetailsView.prototype._changeLayout = function() {
+      CollectionDetailsView.prototype.onChangeLayout = function() {
         var contentGroupCollection, marks, time, totalQuestions;
+        console.log('onChangeLayout');
         contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
         totalQuestions = 0;
         _.each(this.model.get('content_layout'), (function(_this) {

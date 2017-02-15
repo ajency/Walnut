@@ -16,6 +16,8 @@ define ['app'
 				@listenTo @region, "update:pager",=>
 					@view.triggerMethod "update:pager"
 
+
+
 				@listenTo @view, "add:content:pieces", (contentIDs) =>
 
 					_.each contentIDs, (ele, index)=>
@@ -24,6 +26,15 @@ define ['app'
 
 				@listenTo @contentGroupCollection, 'remove', @contentPieceRemoved
 
+
+				@listenTo Backbone, "all:content:saved:success:message", =>
+					@view.triggerMethod "success:message"
+
+				@listenTo Backbone, "all:content:saved:error:message", =>
+					@view.triggerMethod "error:message"
+
+				@listenTo Backbone, "all:content:saved:remove:message", =>
+					@view.triggerMethod "remove:message"
 
 
 	#                @listenTo @region, "new:search:collection", (collection)=>
@@ -163,6 +174,9 @@ define ['app'
 				console.log content_pieces
 				if content_pieces
 					@trigger "add:content:pieces", content_pieces
+					#trigger added to save all content pieces added on click of add button
+					localStorage.addContent = 'true'
+					Backbone.trigger "save:all:content:pieces"
 					#@fullCollection.remove(id) for id in content_pieces
 					#console.log @fullCollection
 
@@ -191,6 +205,23 @@ define ['app'
 
 				@$el.find "#dataContentTable"
 				.tablesorterPager pagerOptions
+
+			onSuccessMessage:->
+				@$el.find '#add_content_help_text'
+				.text 'Questions added successfully to the quiz.'
+				.addClass 'text-success'
+
+			onErrorMessage:->
+				@$el.find '#add_content_help_text'
+				.text 'An error occurred while saving the questions , please click on "Add" again.'
+				.addClass 'text-error'
+
+			onRemoveMessage:->
+				@$el.find '#add_content_help_text'
+				.text ''
+				.removeClass 'text-error'
+				.removeClass 'text-success'
+
 
 
 

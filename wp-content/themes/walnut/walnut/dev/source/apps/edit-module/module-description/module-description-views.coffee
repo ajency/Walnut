@@ -33,7 +33,7 @@ define ['app'
 
             modelEvents :
                 'change:post_status' : 'statusChanged'
-                'change:content_layout' : '_changeLayout'
+                #'change:content_layout' : '_changeLayout'
 
             mixinTemplateHelpers : (data)->
                 data = super data
@@ -293,8 +293,8 @@ define ['app'
                 @$el.find('#total-marks').val marks   
                 @$el.find('#total-time').val time
 
-            _changeLayout : ->
-
+            onChangeLayout : ->
+                console.log 'onChangeLayout'
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
                 totalQuestions = 0

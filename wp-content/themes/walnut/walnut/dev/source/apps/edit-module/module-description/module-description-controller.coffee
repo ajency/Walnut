@@ -69,6 +69,10 @@ define ['app'
                     @model.save(data, { wait : true, success : @successFn, error : @errorFn })
                     @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
 
+
+                @listenTo Backbone, "all:content:piece:saved:success",=>
+                    @view.triggerMethod 'change:layout'
+
                 @show view, (loading : true, entities : [@textbooksCollection])
 
             successFn : (model)=>
