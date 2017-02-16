@@ -2107,7 +2107,7 @@ lesshat-selector {
   padding: 25px;
   width: 70%;
 }
-@media screen and (min-width: 1350px) and (max-width: 1400px) {
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
   .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
     width: 75%;
   }
