@@ -3396,7 +3396,6 @@ lesshat-selector {
   }
 }
 .quizActions .submit2.submit-pushed {
-  display: none;
   top: -209px;
 }
 .quiz-info {
