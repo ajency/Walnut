@@ -1,4 +1,3 @@
-
 <?php
 class ExportExcel {
 
@@ -6,6 +5,7 @@ class ExportExcel {
         //ob_start();
 
         // ob_clean();
+        ob_end_clean();
 
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
@@ -145,7 +145,7 @@ class ExportExcel {
         //$objWriter->setPreCalculateFormulas(TRUE);
         /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
         return get_home_path().'wp-content/uploads/q_upload.xls';*/
-        ob_end_clean();
+        
          $objWriter->save('php://output');
          exit;
         
