@@ -19,21 +19,16 @@ function student_fetch_name(){
 	$result       = $wpdb->get_results("select meta_value from wp_usermeta
 	   	       						   WHERE user_id = '". $current_user->ID ."' 
 	   	       						   and meta_key = 'last_name'");
-	$ln = $result[0]->meta_value;
+	$ln = $result[0]->meta_value;	
 
-	if(strlen($fn)<=0){
-		$name = $current_user->display_name;
-	}else{
-		$name = $fn.' '.$ln;
-	}
-	return $name;
+	return $fn.' '.$ln;
 }
 
 
 
 
 
-function student_fetch_textbooks() {
+function student_fetch_textbooks() { 
     $args=$_GET;
     $defaults['parent']= 0;
     if(isset($_GET['parent']))
@@ -53,7 +48,10 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 			      WHERE term_ids like %s and type=%s and post_status=%s
 			      ORDER BY collection.last_modified_on desc",
 			      array('quiz_type','%"'.$texbook_id.'";%', 'quiz', 'publish'));
+
 	$result      = $wpdb->get_results($query);	
+
+
  
 	$data        = array();
 	foreach ($result as $key => $row) {
@@ -63,8 +61,9 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 				      WHERE collection_id = %d and student_id=%d
 				      ORDER BY taken_on DESC LIMIT 1",
 				      array($row->id, $current_user->ID));
+
 		$result2      = $wpdb->get_row($query2);
-		//if($row->id == '747'){
+		//if($row->id == '747'){get-all-quiz-question-responses
 		//	file_put_contents("a4.txt", $query2);
 		//}
  	 
@@ -74,34 +73,39 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 				      WHERE collection_id = %d and student_id=%d
 				      ORDER BY taken_on DESC LIMIT 1",
 				      array($row->id, $current_user->ID));
+
 		$attempts_result2      = $wpdb->get_row($summary_result);
+
 		#$attempts = $attempts_result2->summary_id;
+
 		$attempts = $result2->attempts;
+
 		$total_marks_scored = "NA";
 		$taken_on           = "NA";
 		$status    = 1;
 		if($attempts>0){
 			$taken_on           =   date("d M Y", strtotime($attempts_result2->taken_on));
 			$qt = maybe_unserialize($attempts_result2->quiz_meta);
-				
-			if($qt['marks_scored']){
-				if(!isset($qt['questions_order']) || $qt['questions_order'] == 'N'){
-					$sql_question = $wpdb->prepare(
+
+		$sql_question = $wpdb->prepare(
 									"SELECT meta_value
 									FROM wp_collection_meta
 									WHERE meta_key = 'quiz_meta' AND collection_id = ".$row->id
 									);
-					$quiz_meta      = $wpdb->get_row($sql_question);
-					$quiz_data = maybe_unserialize($quiz_meta->meta_value);
+		$quiz_meta      = $wpdb->get_row($sql_question);
+		$quiz_data = maybe_unserialize($quiz_meta->meta_value);
+			
+				
+			if($qt['marks_scored']){
+					
 					$total_marks_scored = (float) $qt['marks_scored']. ' / '.$quiz_data['marks'];
-				}else
-					$total_marks_scored = (float) $qt['marks_scored']. ' / '.count($qt['questions_order']);
 			}
 			else{
+
 				$quiz_summary       = compute_quiz_summaries_for_user($attempts_result2->summary_id, $qt);
 				if($quiz_summary->marks_scored == '' )
 					$quiz_summary->marks_scored = 0;
-				$total_marks_scored = (float) $quiz_summary->marks_scored. ' / '.count($qt['questions_order']);
+				$total_marks_scored = (float) $quiz_summary->marks_scored. ' / '.$quiz_data['marks'];
 			}
 			 			
 			switch($qt['status']){
@@ -114,6 +118,7 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 		$terms      = maybe_unserialize($row->term_ids);
 		$chapter_id = $terms['chapter'];
 		$quiz_type = 0;
+
 		switch($row->quiz_type){
 			case 'practice' : $quiz_type = 0; 
 			break;
@@ -122,6 +127,9 @@ function student_fetch_quizzes_by_textbook_id($texbook_id) {
 			case 'class_test' : $quiz_type = 2; 
 			break;						
 		}
+
+
+
 		$args       = array('status'=>$status ,'quiz_type'=>$quiz_type ,'taken_on'=>$taken_on, 'total_marks_scored' => $total_marks_scored, 'attempts' => $attempts, 'quiz_id'=> $row->id, 'quiz_name'=>$row->quiz_name, 'duration' => $row->duration, 'chapter_id'=>$chapter_id); 
 		array_push($data, $args);
 	}
@@ -175,9 +183,11 @@ function student_fetch_chapters($term_id){
     return $chapters;
 }
 
-add_action('wp_logout','student_go_home');
-function student_go_home(){
-	wp_redirect( home_url() );
+add_action('wp_logout','student_go_login');
+function student_go_login(){
+	$actual_link = "http://$_SERVER[HTTP_HOST]";
+	#return ($actual_link."/#login");
+	wp_redirect($actual_link."/#login");
 	exit();
 }
 
@@ -194,33 +204,34 @@ function student_fetch_division(){
 
 function student_my_upcoming_quizes($texbook_ids){
 	global $wpdb;
-
 	$current_user = wp_get_current_user();
 	$term_ids = [];
 	foreach ($texbook_ids as $key => $value) {
 		$term_ids[] = "collection.term_ids like '%\"$value\";%'";
 	}
 	$term_ids = " and (".implode("OR ", $term_ids).") ";
-	#$today = date("Y-m-d 00:00:00");
+	//$today = date("Y-m-d 00:00:00");
 	$today = date("Y-m-d H:i:s");
-	
-	   $query = "SELECT quiz_id, term_ids, schedule_from, meta.meta_value FROM wp_content_collection collection  
+	   $query = "SELECT collection.name as quiz_name,quiz_id, term_ids, schedule_from, meta.meta_value,summary.taken_on FROM wp_content_collection collection  
 		LEFT OUTER JOIN {$wpdb->prefix}quiz_response_summary summary on collection.id = summary.collection_id  and student_id='".$current_user->ID."'
 		INNER JOIN wp_collection_meta meta on collection.id = meta.collection_id and meta_key='content_layout'
 		INNER JOIN {$wpdb->prefix}quiz_schedules schedules on collection.id = schedules.quiz_id 
 		WHERE collection.type='quiz' and post_status='publish' ".$term_ids."
 		and (schedule_from >= '".$today."' OR schedule_to >= '".$today."')
 		GROUP BY collection.id ORDER BY schedules.schedule_from DESC";	
-		$result = $wpdb->get_results($query);
 
+		$result = $wpdb->get_results($query);
 		$data = [];
 		foreach ($result as $key => $value) {
+			if(isset($value->taken_on)){
+				continue;
+			}
 			 $quiz_id  = $value->quiz_id;
 			 $terms    = maybe_unserialize($value->term_ids);
 			 $day      = date("d", strtotime($value->schedule_from));
 			 $month    = date("M", strtotime($value->schedule_from));
 			 $year     = date("Y", strtotime($value->schedule_from));
-			 $data[]   = array('quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
+			 $data[]   = array('quiz_name'=>$value->quiz_name,'quiz_id'=>$quiz_id, 'textbook_id'=>$terms['textbook'], 'duration' =>'10AM - 11AM', 'day'=>$day, month=>$month, 'year' =>$year);
 		}
 		return $data;
 }
@@ -254,4 +265,15 @@ function student_last_quiz_taken_on($book_id){
 function student_get_lectures(){
 
 }
+
+
+
+
+
+
+
+
+
+
+
 ?>
