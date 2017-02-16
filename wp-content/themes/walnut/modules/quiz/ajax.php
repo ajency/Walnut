@@ -8,11 +8,15 @@
 
 require_once 'functions.php';
 
+require_once get_theme_root().'/contentsite/modules/content-pieces/classes/PHPExcel.php';
+
+//file_put_contents("c.txt", get_theme_root().'/contentsite/modules/content-pieces/classes/PHPExcel.php');
+
 function ajax_fetch_single_quiz ()
 {
+
     $id = $_GET['id'];
     $quiz_module = get_single_quiz_module ($id);
-
     if(!is_wp_error($quiz_module))
         wp_send_json (array('code' => 'OK', 'data' => $quiz_module));
     else
@@ -25,13 +29,13 @@ add_action ('wp_ajax_read-quiz', 'ajax_fetch_single_quiz');
 function ajax_fetch_all_quizes(){
 
     $args = $_GET;
-
     $defaults = array(
         'textbook' => '',
         'post_status' => 'published', // published
         'quiz_type' => ''
     );
     $args = wp_parse_args($args,$defaults);
+
     if (is_array($args['textbook']))
         $quiz_modules = get_required_quiz_modules($args);
     else
@@ -76,12 +80,11 @@ add_action('wp_ajax_update-quiz-response-summary','save_quiz_response_summary');
 
 function fetch_quiz_response_summary(){
 
-
     unset($_GET['action']);
     $args = $_GET;
+       # file_put_contents("quiz.txt", $_GET);
 
     $quiz_summary = array();
-
 
     if(isset($args['collection_id']) && isset($args['student_id']) && isset($args['taken_on'])){
         $quiz_id = $_GET['collection_id'];
@@ -90,7 +93,6 @@ function fetch_quiz_response_summary(){
 
     else if(isset($_GET['summary_id']))
         $quiz_summary = read_quiz_response_summary($_GET['summary_id']);
-
 
     else{
         $quiz_id = $_GET['collection_id'];
@@ -152,6 +154,7 @@ add_action('wp_ajax_read-quiz-question-response','fetch_quiz_question_response')
 function ajax_get_all_quiz_question_responses(){
     $summary_id = $_GET['summary_id'];
     $quiz_question_response = get_all_quiz_question_responses($summary_id);
+
     wp_send_json(array('code' => 'OK','data' => $quiz_question_response));
 }
 
@@ -213,3 +216,38 @@ function wp_ajax_add_textbook(){
 }
 
 add_action('wp_ajax_add-textbook', 'wp_ajax_add_textbook');
+
+
+function generate_xls(){
+    
+    if(isset($_GET['data'])){
+        date_default_timezone_set('Asia/Kolkata');
+        require_once 'ExcelGenerate.php';
+        //create object of class ExcelGenerate
+        $data = $_GET['data'];
+        $division = $_GET['division'];
+
+        $xclObj = new ExportExcel();
+        $excel = $xclObj->excel($data,$division);
+
+    }
+        
+}
+
+add_action('init','generate_xls');
+
+function ajax_generate_excel_report(){
+    date_default_timezone_set('Asia/Kolkata');
+    require_once 'ExcelGenerate.php';
+    //create object of class ExcelGenerate
+    $data = $_GET['data'];
+    $division = $_GET['division'];
+
+    $xclObj = new ExportExcel();
+    $excel = $xclObj->excel($data,$division);
+
+    //wp_send_json(array('code' => 'OK','data' => $excel));
+
+}
+
+add_action('wp_ajax_generate-xl-report', 'ajax_generate_excel_report');

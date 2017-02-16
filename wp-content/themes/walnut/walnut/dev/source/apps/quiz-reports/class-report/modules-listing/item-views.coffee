@@ -37,7 +37,7 @@ define ['app','bootbox'], (App,bootbox)->
                                 {{/class_test}}
                             </td>
                         {{/can_schedule}}
-                        <td><button class="btn btn-small btn-success view-report">view report</button></td>'
+                        <td style="padding: 0 !important; vertical-align: middle;"><div class="report-container"><button class="btn btn-small btn-success view-report">view report</button><button class="xl-report"><i class="fa fa-download" aria-hidden="true"></i></button></div></td>'
 
             mixinTemplateHelpers :(data) ->
                 textbooks = Marionette.getOption @, 'textbookNamesCollection'
@@ -75,6 +75,7 @@ define ['app','bootbox'], (App,bootbox)->
                 'click .view-report'    :-> @trigger 'view:quiz:report', @model.id
                 'click .schedule-quiz'  :-> @trigger 'schedule:quiz', @model.id
                 'click .clear-schedule' : 'clearSchedule'
+                'click .xl-report'      : -> @trigger 'view:excel:report', @model.id
 
             modelEvents:
                 'change:schedule'  : 'changeScheduleDates'
@@ -84,6 +85,10 @@ define ['app','bootbox'], (App,bootbox)->
                     @$el.find '.schedule_dates'
                     .show()
                     @$el.find '#schedule-button'
+                    .hide()
+
+                else
+                    @$el.find '.xl-report'
                     .hide()
 
             changeScheduleDates:->

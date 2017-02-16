@@ -128,6 +128,12 @@ define ['app'
                             console.log data
                             communicationModel = App.request "create:communication",data
                             @_showSelectRecipientsApp communicationModel
+
+                    @listenTo @layout.allContentRegion, "excel:generation", (data)=>
+                        optn = data.options
+                        quiz_model = optn.model
+
+                        window.open(AJAXURL+ '?action=generate-xl-report&data='+quiz_model.id+'&division='+@division)
                             
 
                     @listenTo @layout.allContentRegion, "schedule:quiz", @_showScheduleQuizApp
