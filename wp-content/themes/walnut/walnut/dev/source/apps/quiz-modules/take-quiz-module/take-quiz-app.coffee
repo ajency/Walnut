@@ -9,7 +9,7 @@ define ['app'
 
 			#Single Question description and answers
 			quizModel = null
-			quizResponseSummary = null 
+			quizResponseSummary = null
 			questionsCollection = null
 			questionResponseModel = null
 			questionModel = null
@@ -22,9 +22,15 @@ define ['app'
 
 				initialize : (opts)->
 					abc = opts.quizModel
+
+					if abc.hasPermission 'display_answer' 
+						result = abc.get 'permissions'
+						result.single_attempt = true
+
 					if abc.get('status') == 'completed' && abc.get('quiz_type') == 'class_test'
 						result = abc.get 'permissions'
 						result.display_answer = true
+
 					{quizModel,quizResponseSummary,questionsCollection,
 					@questionResponseCollection,@textbookNames,@display_mode, studentTrainingModule} = opts
 
@@ -126,7 +132,7 @@ define ['app'
 					timeTaken= totalTime + pausedQuestionTime - timeBeforeCurrentQuestion
 
 					if (not questionResponseModel) or questionResponseModel.get('status') in ['not_started','paused']
-
+						
 						data =
 							'summary_id'     : quizResponseSummary.id
 							'content_piece_id'  : questionModel.id
@@ -152,6 +158,8 @@ define ['app'
 
 				_submitQuestion:(answer)->
 					#save results here
+
+					@layout.quizProgressRegion.trigger "check:current"
 
 					if(answer.get('status') == 'wrong_answer' && answer.get('answer').length == 0)
 						single_status = 'skipped'
@@ -214,11 +222,14 @@ define ['app'
 		
 
 				_skipQuestion:(answer)->
+					@layout.quizProgressRegion.trigger "check:current"
 					#save skipped status
 					@_submitQuestion answer
 					#@_gotoNextQuestion()
 
 				_gotoNextQuestion:->
+
+					@layout.quizProgressRegion.trigger "check:current"
 
 					nextQuestionID = @_getNextItemID() if questionModel?
 
@@ -230,12 +241,9 @@ define ['app'
 						@_showSingleQuizApp()
 
 				_endQuiz:->
-					console.log @display_mode
-
 					questionResponseModel = this.questionResponseCollection.findWhere 'content_piece_id' : questionModel.id
 
 					if @display_mode not in ['replay', 'quiz_report']
-						console.log questionResponseModel
 
 						if (not questionResponseModel) or questionResponseModel.get('status') in ['paused','not_attempted']
 							@layout.questionDisplayRegion.trigger "silent:save:question"
@@ -302,6 +310,8 @@ define ['app'
 					unanswered= _.difference allIDs, answeredIDs
 
 				_gotoPreviousQuestion:->
+
+					@layout.quizProgressRegion.trigger "check:current"
 
 					prevQuestionID = @_getPrevItemID() if questionModel?
 
@@ -392,6 +402,5 @@ define ['app'
 			# set handlers
 			App.commands.setHandler "start:take:quiz:app", (opt = {})->
 				new View.TakeQuizController opt
-
 
 

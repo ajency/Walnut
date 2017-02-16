@@ -162,7 +162,6 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
         quizModelNew = App.request("get:quiz:by:id", quizModel.get('id'));
         return App.execute("when:fetched", quizModelNew, (function(_this) {
           return function() {
-            console.log(quizModelNew);
             quizModel = quizModelNew;
             if (quizModel.get('quiz_type') !== 'practice') {
               return false;
@@ -170,6 +169,9 @@ define(['app', 'controllers/region-controller', 'apps/quiz-modules/view-single-q
             _this.questionResponseCollection = null;
             quizModel.set({
               'attempts': parseInt(quizModel.get('attempts')) + 1
+            });
+            quizModel.set({
+              'replay_mode': false
             });
             _this.summary_data = {
               'collection_id': quizModel.get('id'),
