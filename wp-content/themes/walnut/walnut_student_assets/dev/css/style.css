@@ -542,6 +542,14 @@ lesshat-selector {
 .direction .welcome-text a:hover {
   color: #8cc8c6;
 }
+.direction .welcome-text.fullWidth {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding-left: 0;
+  padding-right: 80px;
+}
 .direction .duration {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
@@ -646,49 +654,74 @@ lesshat-selector {
   text-transform: capitalize;
 }
 .school-login .wrapper {
-  width: 65%;
-  margin: 0 auto;
-}
-.school-login .wrapper > div {
-  margin: 15px 0;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
 }
-.school-login .wrapper > div h5 {
+.school-login .wrapper .login-logo {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 30%;
+      -ms-flex: 1 0 30%;
+          flex: 1 0 30%;
+  margin-top: 16px;
+}
+.school-login .wrapper .login-logo .profile-pic {
+  height: 130px;
+  width: 130px;
+  padding-top: 18px;
+  margin: 0 30px auto auto;
+}
+.school-login .wrapper .login-details {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 55%;
+      -ms-flex: 1 0 55%;
+          flex: 1 0 55%;
+  margin-right: 40px;
+}
+.school-login .wrapper .login-details .credential {
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.school-login .wrapper .login-details .credential h5 {
   text-transform: capitalize;
-  margin: 15px 0 0 0;
+  margin: 16px 25px 0 0;
   font-size: 1.2em;
   color: #69b8b5;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 50%;
-      -ms-flex: 1 50%;
-          flex: 1 50%;
 }
-.school-login .wrapper > div .mat-holder {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 50%;
-      -ms-flex: 1 50%;
-          flex: 1 50%;
+.school-login .wrapper .login-details .credential .mat-holder {
+  -webkit-flex-basis: 65%;
+      -ms-flex-preferred-size: 65%;
+          flex-basis: 65%;
 }
-.school-login .wrapper > div .mat-holder .mat-label,
-.school-login .wrapper > div .mat-holder .mat-input,
-.school-login .wrapper > div .mat-holder:before,
-.school-login .wrapper > div .mat-holder:after {
+.school-login .wrapper .login-details .credential .mat-holder .mat-label,
+.school-login .wrapper .login-details .credential .mat-holder .mat-input,
+.school-login .wrapper .login-details .credential .mat-holder:before,
+.school-login .wrapper .login-details .credential .mat-holder:after {
   width: 100%;
 }
 .school-login .update {
   background: #f3f3f3;
   padding: 12px 10px;
+  margin-top: 40px;
 }
 .school-login .update .reset-password {
   display: block;
@@ -2066,13 +2099,18 @@ lesshat-selector {
   color: #F15839;
 }
 .cbp_tmtimeline > li .contentPiece .cbp_tmlabel {
-  margin: 0 0 55px 25%;
+  margin: 0 0 55px 27%;
 }
 .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
   border: 1px solid #ccc;
   padding: 25px;
-  width: 80%;
+  width: 70%;
+}
+@media screen and (min-width: 1350px) and (max-width: 1400px) {
+  .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
+    width: 75%;
+  }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:first-child {
@@ -2287,7 +2325,7 @@ lesshat-selector {
 }
 .video-sidebar {
   position: absolute;
-  left: -265px;
+  left: -247px;
   z-index: 1;
   top: 150px;
   -webkit-transition-duration: 0.3s;
@@ -2705,6 +2743,22 @@ lesshat-selector {
 #question-display-region > div #content-board.quizContent #myCanvas #question-area .element-wrapper .text > p > span {
   font-size: inherit !important;
 }
+#question-display-region > div #content-board .ansFalse,
+#question-display-region > div #content-board .ansRight,
+#question-display-region > div #content-board .ansWrong {
+  opacity: 0.5;
+  pointer-events: none;
+}
+#question-display-region > div #content-board .ansFalse .mcq-option-select,
+#question-display-region > div #content-board .ansRight .mcq-option-select,
+#question-display-region > div #content-board .ansWrong .mcq-option-select {
+  opacity: 0.4;
+}
+#question-display-region > div #content-board .ansFalse.ansRight,
+#question-display-region > div #content-board .ansRight.ansRight,
+#question-display-region > div #content-board .ansWrong.ansRight {
+  opacity: 0.8;
+}
 #main-content-region .content {
   position: absolute;
   width: 100%;
@@ -2723,6 +2777,11 @@ lesshat-selector {
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
 }
+@media only screen and (min-width: 1601px) and (max-width: 1920px) {
+  #quiz-progress-region .quizProgress {
+    width: 300px;
+  }
+}
 @media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress {
     top: 35px;
@@ -2735,6 +2794,11 @@ lesshat-selector {
 }
 #quiz-progress-region .quizProgress.progress-expand {
   left: -260px;
+}
+@media only screen and (min-width: 1601px) and (max-width: 1920px) {
+  #quiz-progress-region .quizProgress.progress-expand {
+    left: -300px;
+  }
 }
 @media (max-width: 1230px) {
   #quiz-progress-region .quizProgress.progress-expand {
@@ -2763,6 +2827,11 @@ lesshat-selector {
   cursor: pointer;
   -webkit-transition-duration: 0.3s;
   transition-duration: 0.3s;
+}
+@media only screen and (min-width: 1601px) and (max-width: 1920px) {
+  #quiz-progress-region .quizProgress .progressStrip {
+    left: 300px;
+  }
 }
 @media only screen and (max-width: 1024px) {
   #quiz-progress-region .quizProgress .progressStrip {
@@ -3231,10 +3300,11 @@ lesshat-selector {
   }
 }
 .quizActions {
-  background: none;
+  background-color: #fff;
   box-shadow: none;
   text-align: right;
   max-width: 100%;
+  margin-top: 8px;
 }
 .quizActions button {
   border: 0;
@@ -3254,6 +3324,58 @@ lesshat-selector {
 .quizActions button i:before {
   padding-left: 5px;
 }
+.quizActions__cont {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.quizActions__cont .quiz-btn:first-child {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 26%;
+      -ms-flex: 1 0 26%;
+          flex: 1 0 26%;
+  text-align: left;
+}
+.quizActions__cont .quiz-btn:first-child button {
+  width: 60%;
+}
+.quizActions__cont .quiz-btn .hint {
+  background-color: #69b8b5;
+  color: #fff;
+}
+.quizActions__cont .quiz-btn .hint i {
+  color: #ffff28;
+}
+.quizActions__cont .quiz-btn:last-child {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 54%;
+      -ms-flex: 0 0 54%;
+          flex: 0 0 54%;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.quizActions__cont .quiz-btn:last-child button {
+  width: 50%;
+  margin-right: 10px;
+}
+.quizActions__cont .quiz-btn .bottom-submit {
+  margin-right: 0;
+}
 .quizActions #submit-question {
   background: #FF8685;
 }
@@ -3267,6 +3389,12 @@ lesshat-selector {
 }
 .quizActions #submit-question i:before {
   content: "\f00c";
+}
+.quizActions #submit-question.bottom-submit {
+  background: #f96649 !important;
+}
+.quizActions #submit-question.bottom-submit:hover {
+  background: #fd7574 !important;
 }
 .quizActions #skip-question {
   background: transparent;
@@ -3300,8 +3428,46 @@ lesshat-selector {
   }
 }
 .quizActions .submit2.submit-pushed {
-  display: none;
   top: -209px;
+}
+.quiz-info {
+  margin: 20px 0;
+  text-align: left;
+}
+.quiz-info .cards {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.15);
+}
+.quiz-info .cards h2 {
+  margin: 0 0 5px 0;
+  font-size: 1.15em;
+  display: inline-block;
+}
+.quiz-info .cards h2 i {
+  font-size: 1.4em;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.quiz-info .cards .data {
+  line-height: 1.5;
+  margin-left: 15px;
+}
+.quiz-info__hint {
+  border-left: 3px solid #69b8b5;
+}
+.quiz-info__hint i {
+  color: #69b8b5;
+}
+.quiz-info__comment {
+  border-left: 3px solid #a2a7a2;
+}
+.quiz-info__comment i {
+  font-size: 1.1em;
+  color: #a2a7a2;
+  vertical-align: inherit;
 }
 .replay-actions {
   position: fixed;
@@ -3351,6 +3517,12 @@ lesshat-selector {
 .replay-actions > div:last-child button {
   background: transparent url('../images/forward.png') no-repeat !important;
 }
+.errorSubmitMsg {
+  margin-bottom: 15px;
+  text-align: left;
+  padding: 5px;
+  font-size: 1.3em;
+}
 .teacher-app #quiz-details-region > div:last-child #try-again {
   margin: 18px 0px 18px 30px;
   background: #69b8b5;
@@ -3398,9 +3570,14 @@ lesshat-selector {
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child {
   background: #F0F0F0;
   border: 1px solid #ccc;
-  width: 80%;
+  width: 70%;
   border-top: 0;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
+}
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child {
+    width: 75%;
+  }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child .muted {
   font-size: 0.8em;
@@ -3416,9 +3593,34 @@ lesshat-selector {
   }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
-  right: -64px;
+  right: -90px;
   text-align: center;
   line-height: 40px;
+  width: 350px;
+  height: 107%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+@media screen and (min-width: 1150px) and (max-width: 1400px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
+    right: -90px;
+    width: 275px;
+  }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
@@ -3427,13 +3629,89 @@ lesshat-selector {
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > i {
   display: block;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label {
   color: #602f1a !important;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label > span {
   color: #69b8b5;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
+  position: absolute;
+  top: 11.5em;
+  z-index: 1;
+  background: #69b8b5;
+  color: #fff;
+  margin: 0 auto;
+  padding: 8px;
+  right: 0;
+  left: 0;
+  font-size: 0.85em;
+  border-radius: 5px;
+  opacity: 0;
+  -webkit-transition: all 0.8s ease;
+          transition: all 0.8s ease;
+  -webkit-transform: translate(0, 15px);
+      -ms-transform: translate(0, 15px);
+          transform: translate(0, 15px);
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:after,
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:after {
+  border-color: rgba(105, 184, 181, 0);
+  border-bottom-color: #69b8b5;
+  border-width: 6px;
+  margin-left: -6px;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment:before {
+  border-color: rgba(105, 184, 181, 0);
+  border-bottom-color: #69b8b5;
+  border-width: 8px;
+  margin-left: -8px;
+}
+@media screen and (min-width: 1550px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
+    width: 85%;
+  }
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label {
+  display: -webkit-box;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label .more {
+  display: none;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .full-comment.is-shown {
+  opacity: 1;
+  -webkit-transform: translate(0, 0);
+      -ms-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  box-shadow: -13px 8px 5px 6px rgba(255, 255, 255, 0.71);
+  color: #f2593a;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 0.85em;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";

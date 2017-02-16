@@ -50,7 +50,10 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         this.$el.find('.submit-single').attr('disabled', 'disabled');
         this.$el.find('.skip-button').attr('disabled', 'disabled');
         this.$el.find('.errorSubmitMsg').addClass('hide');
-        return this.trigger("validate:answer");
+        this.trigger("validate:answer");
+        if ($('#collapseView').hasClass('in')) {
+          return $('.submit2').addClass('submit-pushed');
+        }
       };
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
