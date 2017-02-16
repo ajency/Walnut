@@ -129,7 +129,7 @@ class ExportExcel {
             
 
         // Redirect output to a client’s web browser (Excel5)
-        
+        ob_start();
         header('Content-Type: application/vnd.ms-excel;charset=utf-8');
         header('Content-Disposition: attachment;filename="quiz_report'.$quiz_id.'.xls"');
         header('Cache-Control: max-age=0');
