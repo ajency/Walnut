@@ -129,7 +129,7 @@ class ExportExcel {
             
 
         // Redirect output to a client’s web browser (Excel5)
-
+        
         header('Content-Type: application/vnd.ms-excel;charset=utf-8');
         header('Content-Disposition: attachment;filename="quiz_report'.$quiz_id.'.xls"');
         header('Cache-Control: max-age=0');
@@ -145,7 +145,8 @@ class ExportExcel {
         /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
         return get_home_path().'wp-content/uploads/q_upload.xls';*/
 
-        ob_clean();
+        //ob_clean();
+        ob_end_clean();
          $objWriter->save('php://output');
          exit;
         
