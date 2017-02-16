@@ -54,9 +54,8 @@ define(['marionette'], function(Marionette) {
   App.vent.on("show:dashboard", (function(_this) {
     return function(user_role) {
       if (App.request('current:user:can', 'administrator') || App.request('current:user:can', 'school-admin') || App.request('current:user:can', 'content-creator')) {
-        App.navigate('textbooks', {
-          trigger: true
-        });
+        window.location.replace(SITEURL + "#textbooks");
+        window.location.reload();
       }
       if (App.request('current:user:can', 'teacher')) {
         App.navigate('teachers/dashboard', {

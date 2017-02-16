@@ -7,7 +7,7 @@ define ['app'
 			App.module "TakeQuizApp.SingleQuestion", (SingleQuestion, App)->
 
 				answer=null
-				answerData= null 
+				answerData= null
 
 				class SingleQuestion.Controller extends RegionController
 

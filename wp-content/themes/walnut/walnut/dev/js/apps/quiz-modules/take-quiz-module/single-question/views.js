@@ -28,6 +28,7 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
         },
         'click #skip-question': 'skipQuest',
         'click #show-hint': function() {
+          console.log(this.model.get('hint'));
           bootbox.alert(this.model.get('hint'));
           return this.trigger('show:hint:dialog');
         },
@@ -54,8 +55,12 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
 
       SingleQuestionLayout.prototype.mixinTemplateHelpers = function(data) {
         var display_mode, ref, responseModel;
+        console.log(this.quizModel);
         responseModel = Marionette.getOption(this, 'questionResponseModel');
         display_mode = Marionette.getOption(this, 'display_mode');
+        if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
+          data.show_hint = true;
+        }
         if (display_mode === 'replay') {
           data.showComment = true;
           data.replay = true;
@@ -63,9 +68,6 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
           data.replay = false;
           data.show_skip = true;
           data.allow_submit_answer = true;
-          if (this.quizModel.hasPermission('allow_hint') && _.trim(data.hint)) {
-            data.show_hint = true;
-          }
           if (this.quizModel.hasPermission('single_attempt') && !this.quizModel.hasPermission('allow_resubmit')) {
             data.show_skip_helper_text = true;
           }
@@ -91,11 +93,17 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
             data.allow_skip = false;
           }
         }
+        console.log(data);
         return data;
       };
 
       SingleQuestionLayout.prototype.initialize = function() {
-        return this.quizModel = Marionette.getOption(this, 'quizModel');
+        var result;
+        this.quizModel = Marionette.getOption(this, 'quizModel');
+        if ((this.quizModel.get('quiz_type') === 'practice') && this.quizModel.hasPermission('display_answer')) {
+          result = this.quizModel.get('permissions');
+          return result.single_attempt = true;
+        }
       };
 
       SingleQuestionLayout.prototype.onShow = function() {
@@ -107,6 +115,9 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
             this.$el.find('#next-question').show();
           }
         }
+        if ($('#collapseView').hasClass('in')) {
+          $('.submit2').addClass('submit-pushed');
+        }
         if (parseInt(this.model.id) === parseInt(_.first(this.quizModel.get('content_pieces')))) {
           this.$el.find('#first_question').html('This is the first question');
           return this.$el.find('#previous-question').hide();
@@ -114,14 +125,12 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.onSubmitQuestion = function() {
-        this.$el.find("#submit-question").hide();
         if (this.model.id === parseInt(_.last(this.quizModel.get('content_pieces')))) {
           this.$el.find('#last_question').html('This is the last question');
-          bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
+          return bootbox.alert('You have completed the quiz. Now click on end quiz to view your quiz summary');
         } else {
-          this.$el.find("#next-question").show();
+          return this.$el.find("#next-question").show();
         }
-        return this.$el.find("#skip-question").hide();
       };
 
       SingleQuestionLayout.prototype.onEnableSubmit = function() {
@@ -130,7 +139,8 @@ define(['app', 'controllers/region-controller', 'bootbox', 'text!apps/quiz-modul
       };
 
       SingleQuestionLayout.prototype.onDisplayError = function() {
-        return this.$el.find('.errorSubmitMsg').removeClass('hide');
+        this.$el.find('.errorSubmitMsg').removeClass('hide');
+        return this.$el.find('.skip-button').attr('disabled', false);
       };
 
       return SingleQuestionLayout;

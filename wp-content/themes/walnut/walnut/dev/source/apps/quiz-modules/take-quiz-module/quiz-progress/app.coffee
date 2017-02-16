@@ -22,6 +22,9 @@ define ['app'
                         @listenTo @region, "question:submitted", (responseModel)->
                             @view.triggerMethod "question:submitted", responseModel
 
+                        @listenTo @region, "check:current":->
+                            @view.triggerMethod "check:current"
+
 
                     _showQuizProgressView: (collection,currentQuestion) =>
                         
@@ -114,6 +117,9 @@ define ['app'
                         .addClass 'current'
 
                     onQuestionSubmitted:(responseModel)->
+                        # console.log 'onQuestionSubmitted'
+                        # console.log responseModel
+                        # console.log @quizModel
 
                         @updateProgressBar()
 
@@ -121,13 +127,26 @@ define ['app'
 
                         if responseModel.get('status') is 'skipped' and not @quizModel.hasPermission('single_attempt')
                             return false
+                            
+                        else if @quizModel.hasPermission('allow_resubmit')
+                            return false
 
                         else if @quizModel.hasPermission('display_answer') or responseModel.get('status') is 'skipped'
                             @changeClassName responseModel
 
+                    onCheckCurrent:->
+                        current = parseInt($('ul#quiz-items li.current').text()) + 1
+                        if(current > 9)
+                            page = Math.ceil(current/9)
+                        else
+                            page = 1
+                        $('.holder a:nth-of-type('+page+')').trigger "click"
+
+
                     changeClassName:(responseModel)->
                         
                         status = responseModel.get 'status'
+                        console.log status
                         
                         className = switch status
                             when 'correct_answer'       then 'right'
@@ -164,4 +183,3 @@ define ['app'
 
 
                     
-

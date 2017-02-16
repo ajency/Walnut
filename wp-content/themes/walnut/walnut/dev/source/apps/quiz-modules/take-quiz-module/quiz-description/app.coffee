@@ -65,11 +65,17 @@ define ['app'
 							$('#accordionToggle').addClass 'updown'
 							$('#accordionToggle').text 'Collapse'
 							$('.submit2').addClass 'submit-pushed'
-
+							
+						if $('#collapseView').hasClass('in')
+  							$('.submit2').addClass 'submit-pushed'
+  			
 					onQuestionChange:(model)->
 						@$el.find "#time-on-question"
 						.html model.get 'duration'
 
 						@$el.find "#marks-for-question"
 						.html parseFloat(model.get('marks')).toFixed(1)
+
+						if $('#collapseView').hasClass('in')
+  							$('.submit2').addClass 'submit-pushed'
 					

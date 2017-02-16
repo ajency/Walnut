@@ -21,7 +21,6 @@ define ['app'
 			display_mode = null
 
 			initialize: (opts) ->
-
 				$(window).off 'beforeunload'
 				
 				{quiz_id,quizModel,questionsCollection,@questionResponseCollection, studentTrainingModule} =opts
@@ -138,8 +137,6 @@ define ['app'
 			_tryAgain:->
 				quizModelNew = App.request "get:quiz:by:id", quizModel.get 'id'
 				App.execute "when:fetched", quizModelNew, =>
-
-					console.log quizModelNew
 					
 					quizModel = quizModelNew			
 
@@ -148,6 +145,7 @@ define ['app'
 					@questionResponseCollection = null
 
 					quizModel.set 'attempts' : parseInt(quizModel.get('attempts'))+1
+					quizModel.set 'replay_mode' : false
 
 					@summary_data= 
 						'collection_id' : quizModel.get 'id'
@@ -169,6 +167,7 @@ define ['app'
 						@_randomizeOrder()
 
 						@startQuiz()
+
 
 			_viewSummary:(summary_id)->
 				quizResponseSummary = quizResponseSummaryCollection.get summary_id
@@ -258,6 +257,7 @@ define ['app'
 				defer.promise()
 
 			startQuiz: =>
+
 				App.execute "start:take:quiz:app",
 					region: App.mainContentRegion
 					quizModel               : quizModel

@@ -15,7 +15,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
       View.prototype.tagName = 'li';
 
       View.prototype.mixinTemplateHelpers = function(data) {
-        var marks_obtained, quizModel, responseModel, total_marks;
+        var comment, marks_obtained, quizModel, responseModel, total_marks;
+        data.commentId = _.uniqueId();
+        data.commentIdAdmin = _.uniqueId();
         responseModel = Marionette.getOption(this, 'responseModel');
         quizModel = Marionette.getOption(this, 'quizModel');
         data.dateCompleted = 'N/A';
@@ -23,7 +25,11 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           data.dateCompleted = moment(responseModel.get('end_date')).format("Do MMM YYYY");
           data.timeTaken = $.timeMinSecs(responseModel.get('time_taken'));
           data.responseStatus = responseModel.get('status');
-          data.display_answer = quizModel.hasPermission('display_answer');
+          if (quizModel.hasPermission('allow_resubmit')) {
+            data.display_answer = false;
+          } else {
+            data.display_answer = quizModel.hasPermission('display_answer');
+          }
           marks_obtained = responseModel.get('marks_scored');
           data.marks_obtained = parseFloat(parseFloat(marks_obtained).toFixed(1));
           total_marks = this.model.get('marks');
@@ -33,9 +39,18 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
             data.hint = false;
           }
           if (this.model.get('comment') !== '') {
-            data.comment = this.model.get('comment');
-          } else {
-            data.comment = false;
+            comment = this.model.get('comment');
+            if ($(window).width() < 1400) {
+              if (comment.length > 61) {
+                data.comment_modal = true;
+                data.comment = comment;
+              }
+            } else if ($(window).width() > 1401) {
+              if (comment.length > 74) {
+                data.comment_modal = true;
+                data.comment = comment;
+              }
+            }
           }
           data.statusUI = (function() {
             switch (data.responseStatus) {
