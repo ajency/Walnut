@@ -3585,6 +3585,8 @@ lesshat-selector {
   z-index: 1;
   background: #69b8b5;
   color: #fff;
+  width: 85%;
+  margin: 0 auto;
   padding: 8px;
   right: 0;
   left: 0;
