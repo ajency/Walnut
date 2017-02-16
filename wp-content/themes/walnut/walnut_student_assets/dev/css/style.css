@@ -3308,6 +3308,9 @@ lesshat-selector {
 .quizActions #submit-question i:before {
   content: "\f00c";
 }
+.quizActions #submit-question.bottom-submit {
+  background: #f96649 !important;
+}
 .quizActions #skip-question {
   background: transparent;
   color: #AFABAB;
