@@ -52,6 +52,8 @@ define ['app'
                         
                         @trigger "validate:answer"
 
+                        if $('#collapseView').hasClass('in')
+                            $('.submit2').addClass 'submit-pushed'
                     mixinTemplateHelpers:(data)=>
 
                         responseModel = Marionette.getOption @, 'questionResponseModel'
@@ -124,6 +126,9 @@ define ['app'
                     onSubmitQuestion:->
                         @$el.find "#submit-question"
                         .hide()
+
+                        if $('#collapseView').hasClass('in')
+                            $('.submit2').addClass 'submit-pushed'
 
                         if @model.id is parseInt _.last @quizModel.get 'content_pieces'
                             @$el.find '#last_question'
