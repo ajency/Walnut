@@ -3393,6 +3393,7 @@ lesshat-selector {
 }
 .quiz-info {
   margin: 20px 0;
+  text-align: left;
 }
 .quiz-info .cards {
   margin-bottom: 15px;
