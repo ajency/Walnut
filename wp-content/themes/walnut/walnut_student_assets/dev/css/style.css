@@ -3534,7 +3534,7 @@ lesshat-selector {
   border-top: 0;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.12), 0 4px 2px 0 rgba(0, 0, 0, 0.12);
 }
-@media screen and (min-width: 1350px) and (max-width: 1400px) {
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .cbp_tmlabel > div:last-child {
     width: 75%;
   }
@@ -3558,10 +3558,10 @@ lesshat-selector {
   line-height: 40px;
   width: 350px;
 }
-@media screen and (min-width: 1350px) and (max-width: 1400px) {
+@media screen and (min-width: 1305px) and (max-width: 1400px) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
-    right: -115px;
-    width: 300px;
+    right: -90px;
+    width: 275px;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
@@ -3571,7 +3571,7 @@ lesshat-selector {
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > i {
   display: block;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label {
   color: #602f1a !important;
@@ -3581,11 +3581,10 @@ lesshat-selector {
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
   position: absolute;
-  top: 11em;
+  top: 11.5em;
   z-index: 1;
   background: #69b8b5;
   color: #fff;
-  width: 85%;
   margin: 0 auto;
   padding: 8px;
   right: 0;
@@ -3622,6 +3621,11 @@ lesshat-selector {
   border-width: 8px;
   margin-left: -8px;
 }
+@media screen and (min-width: 1550px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus > label .full-comment {
+    width: 85%;
+  }
+}
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label {
   display: -webkit-box;
   line-height: 1.4;
@@ -3643,11 +3647,16 @@ lesshat-selector {
   display: block;
   position: absolute;
   bottom: 5px;
-  right: -28px;
+  right: -4px;
   color: #f2593a;
   background-color: #fff;
   cursor: pointer;
   font-size: 0.85em;
+}
+@media screen and (max-width: 1400px) {
+  #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more {
+    right: -18px;
+  }
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";
