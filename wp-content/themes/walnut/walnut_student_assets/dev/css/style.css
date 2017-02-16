@@ -654,49 +654,74 @@ lesshat-selector {
   text-transform: capitalize;
 }
 .school-login .wrapper {
-  width: 65%;
-  margin: 0 auto;
-}
-.school-login .wrapper > div {
-  margin: 15px 0;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
 }
-.school-login .wrapper > div h5 {
+.school-login .wrapper .login-logo {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 30%;
+      -ms-flex: 1 0 30%;
+          flex: 1 0 30%;
+  margin-top: 16px;
+}
+.school-login .wrapper .login-logo .profile-pic {
+  height: 130px;
+  width: 130px;
+  padding-top: 18px;
+  margin: 0 30px auto auto;
+}
+.school-login .wrapper .login-details {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 55%;
+      -ms-flex: 1 0 55%;
+          flex: 1 0 55%;
+  margin-right: 40px;
+}
+.school-login .wrapper .login-details .credential {
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.school-login .wrapper .login-details .credential h5 {
   text-transform: capitalize;
-  margin: 15px 0 0 0;
+  margin: 16px 25px 0 0;
   font-size: 1.2em;
   color: #69b8b5;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 50%;
-      -ms-flex: 1 50%;
-          flex: 1 50%;
 }
-.school-login .wrapper > div .mat-holder {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 50%;
-      -ms-flex: 1 50%;
-          flex: 1 50%;
+.school-login .wrapper .login-details .credential .mat-holder {
+  -webkit-flex-basis: 65%;
+      -ms-flex-preferred-size: 65%;
+          flex-basis: 65%;
 }
-.school-login .wrapper > div .mat-holder .mat-label,
-.school-login .wrapper > div .mat-holder .mat-input,
-.school-login .wrapper > div .mat-holder:before,
-.school-login .wrapper > div .mat-holder:after {
+.school-login .wrapper .login-details .credential .mat-holder .mat-label,
+.school-login .wrapper .login-details .credential .mat-holder .mat-input,
+.school-login .wrapper .login-details .credential .mat-holder:before,
+.school-login .wrapper .login-details .credential .mat-holder:after {
   width: 100%;
 }
 .school-login .update {
   background: #f3f3f3;
   padding: 12px 10px;
+  margin-top: 40px;
 }
 .school-login .update .reset-password {
   display: block;
