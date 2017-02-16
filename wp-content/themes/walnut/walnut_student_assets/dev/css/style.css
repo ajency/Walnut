@@ -3270,10 +3270,11 @@ lesshat-selector {
   }
 }
 .quizActions {
-  background: none;
+  background-color: #fff;
   box-shadow: none;
   text-align: right;
   max-width: 100%;
+  margin-top: 8px;
 }
 .quizActions button {
   border: 0;
