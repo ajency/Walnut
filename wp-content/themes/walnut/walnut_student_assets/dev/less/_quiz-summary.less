@@ -1,4 +1,4 @@
- //   ____        _        _____                                            
+//   ____        _        _____                                            
  //  / __ \      (_)      / ____|                                           
  // | |  | |_   _ _ ____ | (___  _   _ _ __ ___  _ __ ___   __ _ _ __ _   _ 
  // | |  | | | | | |_  /  \___ \| | | | '_ ` _ \| '_ ` _ \ / _` | '__| | | |
@@ -192,6 +192,7 @@
 					    -webkit-box-orient: vertical;
 					    overflow: hidden;
 					    text-overflow: ellipsis;
+					    position: relative;
 					    .more{
 					    	display: none;
 					    }
@@ -205,16 +206,17 @@
 						    .more{
 						    	display: block;
 						    	position: absolute;
-							    bottom: 5px;
-							    right: -4px;
+							    bottom: 0;
+							    right: 0;
+							    box-shadow: -13px 8px 5px 6px rgba(255, 255, 255, 0.71);
 							    color: #f2593a;
 							    // box-shadow: 1px 18px 2px 16px rgba(255, 255, 255, 0.77);
 							    background-color: #fff;
 							    cursor: pointer;
 							    font-size: 0.85em;
-							    @media screen and (max-width: 1400px) {
-							    	right: -18px;
-							    }
+							    // @media screen and (max-width: 1400px) {
+							    // 	right: -18px;
+							    // }
 						    }					    	
 					    }
 	             	}	             	
