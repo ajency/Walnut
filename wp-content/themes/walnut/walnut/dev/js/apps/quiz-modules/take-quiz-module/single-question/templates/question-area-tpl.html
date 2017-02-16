@@ -67,9 +67,21 @@
     <div class="clearfix"></div>
 </div>
 
-{{#showComment}}
-    <div class="container-grey m-b-5 quizComment">
-        <label class="form-label bold small-text muted no-margin inline">Comment: </label>
-        <p class="inline text-grey small">{{&comment}}</p>
+{{#replay}}
+
+    <div class="quiz-info">
+    {{#show_hint}}
+        <div class="cards quiz-info__hint">
+            <h2><i class="fa fa-lightbulb-o"></i>Hint</h2>
+            <div class="data">{{hint}}</div>
+        </div>
+    {{/show_hint}}
+    {{#comment}}
+        <div class="cards quiz-info__comment">
+            <h2><i class="fa fa-comment"></i>Comment</h2>
+            <div class="data">{{&comment}}</div>
+        </div>
+    {{/comment}}
     </div>
-{{/showComment}}
+
+{{/replay}}

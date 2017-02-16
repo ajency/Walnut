@@ -1,35 +1,72 @@
 
-<div class="contentPiece" data-id="{{ID}}">
-	<time class="cbp_tmtime" datetime="">
-	    <span class="time">{{duration}} <span class="semi-bold">mins</span></span>
-	</time>
-	<div class="cbp_tmicon info animated bounceIn"> <span class="fa"></span> </div>
-	<div class="cbp_tmlabel view" style="cursor:auto">
-		<div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
-		  <h4 class="m-t-5 m-b-5"><a class="text-grey semi-bold question_link">{{&post_excerpt}}</a> </h4>
-		</div>
-		<div class="clearfix"></div>
-        <div class="tiles grey p-t-10 p-b-10 p-l-20">
-            <div class="muted">
-                <span class="bold question-type-div">Question Type:</span> <span class="question-type-div"> {{question_type}},</span>
-                <span class="bold">Date Completed:</span> {{dateCompleted}}
+<div class="contentPiece new-design" data-id="{{ID}}">
 
-                {{#responseStatus}}
-                <div id="correct-answer-div">
-                    <span class="bold">Correct Answer:</span> {{correctAnswer}}
-                </div>
-                <div>
-                    <span class="bold">Taken By:</span> {{teacherName}}
-                </div>
-                {{/responseStatus}}
+    <div class="cbp_tmicon info animated bounceIn">
+        <time class="cbp_tmtime" datetime="">
+            <span class="time">{{duration}} <span class="semi-bold">mins</span></span>
+        </time>
+     </div>
+    <div class="cbp_tmlabel view" style="cursor:auto">
+        <div class="p-t-15 p-l-30 p-r-15 p-b-20 xs-p-r-10 xs-p-l-10 xs-p-t-5">
+          <h4 class="m-t-5 m-b-5"><a class="text-grey semi-bold question_link">{{&post_excerpt}}</a> </h4>
+        </div>
+        <div class="clearfix"></div>
+        <div class="tiles grey show p-t-15 p-b-15 p-l-20">
+            <div class="muted">
+                <span class="bold question-type-div">Difficulty Level:</span> <span class="question-type-div"> {{difficulty_level}}</span>
             </div>
             <div class="clearfix"></div>
         </div>
-	</div>
-    {{#responseStatus}}
-    <div class="qstnStatus p-t-10"><i class="fa fa-check-circle"></i> Completed
-        <div>
-            <label class="form-label small-text text-grey inline">Time Taken: <span class="bold">{{timeTaken}}</span></label></div>
     </div>
+    {{#responseStatus}}
+        <div class="qstnStatus {{statusUI.divClass}}">
+            {{#display_answer}}
+                <i class="fa"></i>
+                <!-- <label>
+                    {{&statusUI.text}} 
+                </label> -->
+            {{/display_answer}}
+
+            {{#display_answer}}
+                <label class="text-info db">
+                    Marks: <span class="bold">{{marks_obtained}}/{{total_marks}}</span>
+                </label>
+            {{/display_answer}}
+            <label class="small-text text-grey db">Time Taken: <span class="bold">{{timeTaken}}</span></label>
+            {{#hint}}
+                <label class="small-text text-grey db">Viewed Hint: <span class="bold">{{hint_viewed}}<span></label>
+            {{/hint}}
+
+
+            
+            {{#comment}}
+            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{&comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">...More</span>{{/comment_modal}}
+                <!-- <div class="full-comment">{{comment}}</div> -->
+
+                <!-- Modal -->
+                <div class="modal fade comment-modal" id="comment-modal{{commentId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Comments</h4>
+                      </div>
+                      <div class="modal-body">
+                        {{&comment}}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default cancel" data-dismiss="modal">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+            </label>
+          
+           {{/comment}}
+
+         
+        </div>
     {{/responseStatus}}
 </div>
