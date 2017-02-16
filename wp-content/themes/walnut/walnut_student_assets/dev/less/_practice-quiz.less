@@ -1,4 +1,4 @@
-//  _____                _   _             ____        _     
+ //  _____                _   _             ____        _     
  // |  __ \              | | (_)           / __ \      (_)    
  // | |__) | __ __ _  ___| |_ _  ___ ___  | |  | |_   _ _ ____
  // |  ___/ '__/ _` |/ __| __| |/ __/ _ \ | |  | | | | | |_  /
@@ -720,13 +720,17 @@
     &__cont{
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         .quiz-btn{
             &:first-child{
-                flex: 0 0 26%;
+                flex: 1 0 26%;
+                text-align: left;
+                button{
+                    width: 60%;
+                }
             }
             .hint{
-                width: 100%;
+                // width: 100%;
                 background-color: @dashboard-color;
                 color: #fff;
                 i{
@@ -736,10 +740,11 @@
             &:last-child{
                 display: flex;
                 flex: 0 0 54%;
-            }
-            button{
-                width: 100%;
-                margin-right: 10px;
+                justify-content: flex-end;
+                button{
+                    width: 50%;
+                    margin-right: 10px;
+                }
             }
             .bottom-submit{
                 margin-right: 0;
