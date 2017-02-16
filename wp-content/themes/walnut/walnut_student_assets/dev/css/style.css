@@ -3610,7 +3610,7 @@ lesshat-selector {
       -ms-flex-pack: center;
           justify-content: center;
 }
-@media screen and (min-width: 1200px) and (max-width: 1400px) {
+@media screen and (min-width: 1150px) and (max-width: 1400px) {
   #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus {
     right: -90px;
     width: 275px;
