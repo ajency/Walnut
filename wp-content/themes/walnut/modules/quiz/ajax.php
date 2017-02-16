@@ -8,7 +8,7 @@
 
 require_once 'functions.php';
 
-require_once get_theme_root().'/contentsite/modules/content-pieces/classes/PHPExcel.php';
+require_once 'classes/PHPExcel.php';
 
 //file_put_contents("c.txt", get_theme_root().'/contentsite/modules/content-pieces/classes/PHPExcel.php');
 

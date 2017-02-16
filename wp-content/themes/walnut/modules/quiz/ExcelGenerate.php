@@ -130,15 +130,11 @@ class ExportExcel {
 
         // Redirect output to a client’s web browser (Excel5)
 
-        header("Content-type: application/octet-stream");
-        header("Pragma: no-cache");
-        header ("Expires: 0");
-        
-        //header('Content-Type: application/vnd.ms-excel;charset=utf-8');
+        header('Content-Type: application/vnd.ms-excel;charset=utf-8');
         header('Content-Disposition: attachment;filename="quiz_report'.$quiz_id.'.xls"');
-        //header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
-        //header('Cache-Control: max-age=1');
+        header('Cache-Control: max-age=1');
         // If you're serving to IE over SSL, then the following may be needed
         header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
         header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
@@ -149,8 +145,7 @@ class ExportExcel {
         /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
         return get_home_path().'wp-content/uploads/q_upload.xls';*/
 
-        //ob_clean();
-        ob_end_clean();
+        ob_clean();
          $objWriter->save('php://output');
          exit;
         
