@@ -39,96 +39,97 @@ class ExportExcel {
                     ->setCellValue('C8', 'Correct Answer');
       
 
-        // $quiz_data = array();
-        // $quiz_data = get_excel_quiz_report_data($quiz_id, $division);
+        $quiz_data = array();
+        $quiz_data = get_excel_quiz_report_data($quiz_id, $division);
 
-        // //$objPHPExcel->getActiveSheet()->fromArray($quiz_data['student_ids'], NULL, 'D8');
-        // $start = 9;
-        // foreach ($quiz_data['content_ids'] as $key => $content_ids) {
+        //$objPHPExcel->getActiveSheet()->fromArray($quiz_data['student_ids'], NULL, 'D8');
+        $start = 9;
+        foreach ($quiz_data['content_ids'] as $key => $content_ids) {
 
-        //     $objPHPExcel->getActiveSheet()->setCellValue('A'.$start, $content_ids['name']);
-        //     $objPHPExcel->getActiveSheet()->setCellValue('B'.$start, $content_ids['link'])->getCellByColumnAndRow(1,$start)->getHyperlink()->setUrl($content_ids['link']);
-        //     $content_ids_order[] = $content_ids['id'];
-        //     $objPHPExcel->getActiveSheet()->setCellValue('C'.$start, $content_ids['correct_answer']);
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$start, $content_ids['name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$start, $content_ids['link'])->getCellByColumnAndRow(1,$start)->getHyperlink()->setUrl($content_ids['link']);
+            $content_ids_order[] = $content_ids['id'];
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$start, $content_ids['correct_answer']);
             
-        //     $start++;
-        // }
+            $start++;
+        }
 
 
 
-        // foreach ($quiz_data['student_ids'] as $key => $student_data) {
-        //     $student_names[] =$student_data['student_name'];
-        //     $content_id_taken[] = $student_data['content_ids'];
-        // }
+        foreach ($quiz_data['student_ids'] as $key => $student_data) {
+            $student_names[] =$student_data['student_name'];
+            $content_id_taken[] = $student_data['content_ids'];
+        }
 
-        // foreach ($content_id_taken as $key_ta => $taken) {
-        //     if(count($taken) > 0){
-        //             usort($taken, function ($a, $b) use ($content_ids_order) {
-        //                 $pos_a = array_search($a['content_id'], $content_ids_order);
-        //                 $pos_b = array_search($b['content_id'], $content_ids_order);
-        //                 return $pos_a - $pos_b;
-        //             });
+        foreach ($content_id_taken as $key_ta => $taken) {
+            if(count($taken) > 0){
+                    usort($taken, function ($a, $b) use ($content_ids_order) {
+                        $pos_a = array_search($a['content_id'], $content_ids_order);
+                        $pos_b = array_search($b['content_id'], $content_ids_order);
+                        return $pos_a - $pos_b;
+                    });
 
-        //         foreach ($taken as $k_indi => $indi) {
-        //            $taken[$k_indi] = $indi['answer_id'];
-        //         }
+                foreach ($taken as $k_indi => $indi) {
+                   $taken[$k_indi] = $indi['answer_id'];
+                }
 
-        //         $data_id[$key_ta] =$taken;
-        //     }else{
-        //         $data_id[$key_ta] =$taken;
-        //     }
+                $data_id[$key_ta] =$taken;
+            }else{
+                $data_id[$key_ta] =$taken;
+            }
 
-        // }
+        }
 
-        //     $total = count($content_ids_order);
+            $total = count($content_ids_order);
 
-        //     $array_data = array();
+            $array_data = array();
 
-        //     foreach ($data_id as $key => $value) {
-        //         if(empty($value))
-        //             for($i=0;$i<$total;$i++){
-        //             $data_id[$key][$i] = '-';
-        //         }
-        //         else{
-        //             foreach ($value as $k1 => $value1) {
-        //                 if(empty($value1))
-        //                     $data_id[$key][$k1] = '-';
-        //             }
-        //         }
-        //     }
+            foreach ($data_id as $key => $value) {
+                if(empty($value))
+                    for($i=0;$i<$total;$i++){
+                    $data_id[$key][$i] = '-';
+                }
+                else{
+                    foreach ($value as $k1 => $value1) {
+                        if(empty($value1))
+                            $data_id[$key][$k1] = '-';
+                    }
+                }
+            }
 
-        //     foreach ($data_id as $y => $row_entry) {
-        //         foreach ($row_entry as $ky => $entry) {
-        //             //if($entry == null)
-        //                 //$array[$ky][$y] = '';
-        //             //else
-        //                 $array[$ky][$y] =  $entry;
-        //                // $start ++;
-        //         }
-        //         $array_data = $array;
+            foreach ($data_id as $y => $row_entry) {
+                foreach ($row_entry as $ky => $entry) {
+                    //if($entry == null)
+                        //$array[$ky][$y] = '';
+                    //else
+                        $array[$ky][$y] =  $entry;
+                       // $start ++;
+                }
+                $array_data = $array;
                 
-        //     }
+            }
 
 
 
 
-        // $objPHPExcel->getActiveSheet()->fromArray($student_names, NULL, 'D8');
+        $objPHPExcel->getActiveSheet()->fromArray($student_names, NULL, 'D8');
 
-        $objPHPExcel->getActiveSheet()->setCellValue('B1', 'title');
-        $objPHPExcel->getActiveSheet()->setCellValue('B2', 'class');
-        $objPHPExcel->getActiveSheet()->setCellValue('B3', 'textbook_name');
-        $objPHPExcel->getActiveSheet()->setCellValue('B4', 'chapter_name');
-        $objPHPExcel->getActiveSheet()->setCellValue('B5', 'duration'.' mins');
-        $objPHPExcel->getActiveSheet()->setCellValue('B6', 'marks');
+        $objPHPExcel->getActiveSheet()->setCellValue('B1', $quiz_data['title']);
+        $objPHPExcel->getActiveSheet()->setCellValue('B2', $quiz_data['class']);
+        $objPHPExcel->getActiveSheet()->setCellValue('B3', $quiz_data['textbook_name']);
+        $objPHPExcel->getActiveSheet()->setCellValue('B4', $quiz_data['chapter_name']);
+        $objPHPExcel->getActiveSheet()->setCellValue('B5', $quiz_data['duration'].' mins');
+        $objPHPExcel->getActiveSheet()->setCellValue('B6', $quiz_data['marks']);
 
-        // $total_questions = count($array_data);
 
-        // $start = 9;
-        // $end_total = (int)$total_questions + $start;
-        //     foreach ($array_data as $key => $ans_data) {
-        //         $objPHPExcel->getActiveSheet()->fromArray($ans_data, NULL, 'D'.$start);
-        //         $start ++;
-        //     }
+        $total_questions = count($array_data);
+
+        $start = 9;
+        $end_total = (int)$total_questions + $start;
+            foreach ($array_data as $key => $ans_data) {
+                $objPHPExcel->getActiveSheet()->fromArray($ans_data, NULL, 'D'.$start);
+                $start ++;
+            }
             
 
         // Redirect output to a client’s web browser (Excel5)
