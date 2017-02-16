@@ -3517,6 +3517,12 @@ lesshat-selector {
 .replay-actions > div:last-child button {
   background: transparent url('../images/forward.png') no-repeat !important;
 }
+.errorSubmitMsg {
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 5px;
+  font-size: 1.3em;
+}
 .teacher-app #quiz-details-region > div:last-child #try-again {
   margin: 18px 0px 18px 30px;
   background: #69b8b5;
