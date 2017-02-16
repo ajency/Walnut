@@ -78,4 +78,4 @@ define ['app'
 
 						if $('#collapseView').hasClass('in')
   							$('.submit2').addClass 'submit-pushed'
-					
+

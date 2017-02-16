@@ -1,4 +1,4 @@
- //  _                 _          _____ _         _           
+//  _                 _          _____ _         _           
  // | |               (_)        / ____| |       | |          
  // | |     ___   __ _ _ _ __   | (___ | |_ _   _| | ___  ___ 
  // | |    / _ \ / _` | | '_ \   \___ \| __| | | | |/ _ \/ __|
@@ -61,29 +61,50 @@
          text-transform: capitalize;
      }
      .wrapper {
-         width: 65%;
-         margin: 0 auto;
-         >div {
-             margin: 15px 0;
-             .flex-family();
-             h5 {
-                 text-transform: capitalize;
-                 margin: 15px 0 0 0;
-                 font-size: 1.2em;
-                 color: @quiz-link-color1;
-                 flex: 1 50%;
-             }
-             .mat-holder {
-                 flex: 1 50%;
-                 .mat-label, .mat-input, &:before, &:after {
-                     width: 100%;
+         // width: 65%;
+         // margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .login-logo{
+            flex: 1 0 30%;
+            margin-top: 16px;
+            .profile-pic{
+                height: 130px;
+                width: 130px;
+                padding-top: 18px;
+                margin: 0 30px auto auto;
+            }
+        }
+        .login-details{
+            flex: 1 0 55%;
+            margin-right: 40px;
+            .credential{
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                 h5 {
+                     text-transform: capitalize;
+                     margin: 16px 25px 0 0;
+                     font-size: 1.2em;
+                     color: @quiz-link-color1;
+                     // flex: 1 50%;
                  }
-             }
-         }
+                 .mat-holder {
+                     // flex: 1 50%;
+                     flex-basis: 65%;
+                     .mat-label, .mat-input, &:before, &:after {
+                         width: 100%;
+                    }
+                }
+            }
+        }
      }
      .update {
          background: #f3f3f3;
          padding: 12px 10px;
+         margin-top: 40px;
          .reset-password {
              display: block;
              margin: 15px 0;
