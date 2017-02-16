@@ -1,3 +1,4 @@
+
  //   ____        _        _____                                            
  //  / __ \      (_)      / ____|                                           
  // | |  | |_   _ _ ____ | (___  _   _ _ __ ___  _ __ ___   __ _ _ __ _   _ 
@@ -110,6 +111,7 @@
 		            }
 	             }
 	             .qstnStatus{
+	             	// right: -64px;
 	             	right: -80px;
 	             	text-align: center;
 	             	line-height: 40px;
@@ -126,6 +128,63 @@
 	             		& > span{
 							color: @quiz-link-color1;
 	             		}
+	             		.full-comment{
+	             			position: absolute;
+						    top: 11em;
+						    z-index: 1;
+						    background: #69b8b5;
+						    color: #fff;
+						    padding: 8px;
+						    right: 0;
+						    left: 0;
+						    font-size: 0.85em;
+						    border-radius: 5px;
+						    opacity: 0;
+						    transition: all 0.8s ease;
+						    transform: translate(0,15px);
+						    &:after,&:before{
+						    	bottom: 100%;
+								left: 50%;
+								border: solid transparent;
+								content: " ";
+								height: 0;
+								width: 0;
+								position: absolute;
+								pointer-events: none;
+						    }
+						    &:after{
+						    	border-color: rgba(105, 184, 181, 0);
+								border-bottom-color: #69b8b5;
+								border-width: 6px;
+								margin-left: -6px;
+						    }
+						    &:before{
+						    	border-color: rgba(105, 184, 181, 0);
+								border-bottom-color: #69b8b5;
+								border-width: 8px;
+								margin-left: -8px;
+						    }
+	             		}
+	             	}
+	             	.comment-label{
+	             		display: -webkit-box;
+						line-height: 1.4;
+					    -webkit-line-clamp: 2;
+					    -webkit-box-orient: vertical;
+					    overflow: hidden;
+					    text-overflow: ellipsis;
+					    &.comment-active{
+						    &:hover{
+						    	.full-comment{
+						    		opacity: 1;
+						    		transform: translate(0,0);
+						    	}
+						    }
+						    &:after{
+						    	content: '';
+						    	display: inline-block;						    	
+						    }					    	
+					    }
 	             	}	             	
 	             }
 	             .text-warning{
