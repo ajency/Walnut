@@ -2300,7 +2300,7 @@ lesshat-selector {
 }
 .video-sidebar {
   position: absolute;
-  left: -265px;
+  left: -247px;
   z-index: 1;
   top: 150px;
   -webkit-transition-duration: 0.3s;
