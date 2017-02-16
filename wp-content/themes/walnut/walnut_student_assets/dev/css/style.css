@@ -3361,6 +3361,9 @@ lesshat-selector {
 .quizActions #submit-question.bottom-submit {
   background: #f96649 !important;
 }
+.quizActions #submit-question.bottom-submit:hover {
+  background: #fd7574 !important;
+}
 .quizActions #skip-question {
   background: transparent;
   color: #AFABAB;
