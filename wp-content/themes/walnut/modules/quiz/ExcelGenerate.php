@@ -145,7 +145,7 @@ class ExportExcel {
         //$objWriter->setPreCalculateFormulas(TRUE);
         /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
         return get_home_path().'wp-content/uploads/q_upload.xls';*/
-        ob_clean();
+        //ob_clean();
          $objWriter->save('php://output');
          exit;
         
