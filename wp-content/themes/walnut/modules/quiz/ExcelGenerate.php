@@ -3,6 +3,9 @@
 class ExportExcel {
 
     public function excel($quiz_id, $division){
+        // ob_start();
+
+        // ob_clean();
 
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
@@ -130,7 +133,7 @@ class ExportExcel {
 
         // Redirect output to a client’s web browser (Excel5)
 
-        
+
         header('Content-Type: application/vnd.ms-excel;charset=utf-8');
         header('Content-Disposition: attachment;filename="quiz_report'.$quiz_id.'.xls"');
         header('Cache-Control: max-age=0');
@@ -141,11 +144,11 @@ class ExportExcel {
         header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
         //header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
         //header ('Pragma: public'); // HTTP/1.0
+
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         //$objWriter->setPreCalculateFormulas(TRUE);
         /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
         return get_home_path().'wp-content/uploads/q_upload.xls';*/
-
         ob_end_clean();
          $objWriter->save('php://output');
          exit;
