@@ -134,7 +134,6 @@
   src: local('CinzelDecorative'), local('CinzelDecorative-Regular'), url(../fonts/CinzelDecorative-Regular.ttf) format('True Type');
   src: local('CinzelDecorative'), local('CinzelDecorative-Regular'), url(../fonts/CinzelDecorative-Regular.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Aksharyogini';
   font-style: normal;
@@ -143,7 +142,6 @@
   src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.ttf) format('True Type');
   src: local('Aksharyogini'), local('Aksharyogini-Normal'), url(../fonts/Aksharyogini2Normal.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Garamond';
   font-style: normal;
@@ -152,7 +150,6 @@
   src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.ttf) format('True Type');
   src: local('Garamond'), local('Garamond-Normal'), url(../fonts/Garamond.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Calibri';
   font-style: normal;
@@ -169,7 +166,6 @@
   src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.ttf) format('True Type');
   src: local('Days Later'), local('28-Days-Later-Normal'), url(../fonts/28DaysLater.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Days Ago';
   font-style: normal;
@@ -178,7 +174,6 @@
   src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.ttf) format('True Type');
   src: local('Days Ago'), local('36daysago-Normal'), url(../fonts/36daysagoThickBRK.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Bedizen';
   font-style: normal;
@@ -187,7 +182,6 @@
   src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.ttf) format('True Type');
   src: local('Bedizen'), local('Bedizen-Normal'), url(../fonts/Bedizen.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Braveheart DNA';
   font-style: normal;
@@ -196,7 +190,6 @@
   src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.ttf) format('True Type');
   src: local('BraveheartDNA'), local('BraveheartDNA-Normal'), url(../fonts/BraveheartDNA.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Cardo';
   font-style: normal;
@@ -205,7 +198,6 @@
   src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.ttf) format('True Type');
   src: local('Cardo'), local('Cardo-Normal'), url(../fonts/Cardo.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Corporate Rounded';
   font-style: normal;
@@ -222,7 +214,6 @@
   src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.ttf) format('True Type');
   src: local('Lane Humouresque'), local('LaneHumouresque-Normal'), url(../fonts/LaneHumouresque.woff) format('woff');
 }
-
 @font-face {
   font-family: 'KG Corner of the Sky';
   font-style: normal;
@@ -231,7 +222,6 @@
   src: local('KG Corner of the Sky'), local('KGCorneroftheSky-Normal'), url(../fonts/KGCorneroftheSky.ttf) format('True Type');
   src: local('KG Corner of the Sky'), local('KGCorneroftheSky-Normal'), url(../fonts/KGCorneroftheSky.woff) format('woff');
 }
-
 @font-face {
   font-family: 'Qarmic Sans Free';
   font-style: normal;
@@ -240,7 +230,6 @@
   src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.ttf) format('True Type');
   src: local('Qarmic Sans Free'), local('QarmicSansFree-Normal'), url(../fonts/QarmicSansFree.woff) format('woff');
 }
-
 .creator {
   position: relative;
 }
@@ -1122,42 +1111,39 @@ input[type="text"].rowColInput {
   margin-right: 15px;
 }
 /*input[type=checkbox].mcq-option-select {
-	display:none;
+  display:none;
 }
-
 input[type=checkbox].mcq-option-select + p.mcq-option-text {
-	padding-left:55px;
-	height:41px; 
-	display:inline-block;
-	//line-height:41px;
-	background-repeat:no-repeat;
-	background-position: 0 0;
-	//font-size:41px;
-	vertical-align:middle;
-	cursor:pointer;
+  padding-left:55px;
+  height:41px; 
+  display:inline-block;
+  //line-height:41px;
+  background-repeat:no-repeat;
+  background-position: 0 0;
+  //font-size:41px;
+  vertical-align:middle;
+  cursor:pointer;
 }
-
 input[type=checkbox].mcq-option-select:checked + p.mcq-option-text {
-	background-position: 0 -41px;
+  background-position: 0 -41px;
 }
-
 p.mcq-option-text {
-	background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_37dcefa588101cc5918ea69e918d56b9.png);
-	-webkit-touch-callout: none;
-	  -webkit-user-select: none;
-	   -khtml-user-select: none;
-	     -moz-user-select: none;
-	      -ms-user-select: none;
-	          user-select: none;
+  background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_37dcefa588101cc5918ea69e918d56b9.png);
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }*/
 /*.checkbox {
-	width: 50px;
-	height: 41px;
-	padding: 0 5px 0 0;
-	background: url(../../../images/csscheckbox.png) no-repeat;
-	display: block;
-	//clear: left;
-	float: left;
+  width: 50px;
+  height: 41px;
+  padding: 0 5px 0 0;
+  background: url(../../../images/csscheckbox.png) no-repeat;
+  display: block;
+  //clear: left;
+  float: left;
 }*/
 .style .select2-container {
   width: 60%;
@@ -1520,6 +1506,7 @@ p.mcq-option-text {
   margin-top: 15px;
   margin-left: 220px;
   margin-right: 220px;
+  margin-bottom: 50px;
   overflow-x: auto;
 }
 #content-board .element-wrapper {
@@ -1651,23 +1638,22 @@ p.mcq-option-text {
   word-break: break-word;
 }
 /*.answrRight{
-	background: url(../../../images/answer.png) no-repeat;
-	width: 45px;
-	height: 34px;
-	background-position: 0 0;
-	float: left;
-	background-size: 78px 34px;
-	margin-left: 8px;
+  background: url(../../../images/answer.png) no-repeat;
+  width: 45px;
+  height: 34px;
+  background-position: 0 0;
+  float: left;
+  background-size: 78px 34px;
+  margin-left: 8px;
 }
-
 .answrWrong{
-	background: url(../../../images/answer.png) no-repeat;
-	width: 38px;
-	height: 34px;
-	background-position: -48px 0;
-	float: left;
-	background-size: 82px 34px;
-	margin-left: 8px;
+  background: url(../../../images/answer.png) no-repeat;
+  width: 38px;
+  height: 34px;
+  background-position: -48px 0;
+  float: left;
+  background-size: 82px 34px;
+  margin-left: 8px;
 }*/
 #textbooks {
   position: relative;
@@ -2895,7 +2881,7 @@ ol > li {
   font-size: 16px;
 }
 .table td {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 400;
   padding: 14px 12px !important;
 }
@@ -3107,7 +3093,6 @@ select:before {
   width: 100%;
   height: 100%;
 }
-
 .media_times > input[type="text"] {
   width: 100%;
 }
@@ -3125,4 +3110,30 @@ a.browse-content-pieces-item {
 }
 .quizActions #submit-question:hover {
   background: #FF8685 !important;
+}
+
+
+/* ---------------------------
+   CONTENT CREATOR COMMENT HINT FIXES  -----------
+ ---------------------------
+*/
+
+.hintComment .hint-area{
+  font-weight: 400;
+  border-radius: 0;
+}
+
+.hintComment .comment-element .cke_textarea_inline{
+  display: none;
+  height: 106px;
+  width: 100%;
+  border: 1px solid #e5e9ec;
+  padding: 10px;
+  font-family: roboto;
+  font-size: 0.8em;
+  font-weight: 400;
+}
+
+.hintComment .comment-element .checked ~ .cke_textarea_inline{
+  display: block;
 }

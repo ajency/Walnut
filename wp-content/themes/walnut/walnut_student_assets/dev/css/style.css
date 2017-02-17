@@ -3696,6 +3696,11 @@ lesshat-selector {
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label .more {
   display: none;
 }
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label .comment-modal .modal-body {
+  margin: 15px 0;
+  height: 150px;
+  overflow: auto;
+}
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .full-comment.is-shown {
   opacity: 1;
   -webkit-transform: translate(0, 0);
