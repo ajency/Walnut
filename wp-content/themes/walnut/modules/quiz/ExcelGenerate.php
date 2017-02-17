@@ -33,20 +33,22 @@ class ExportExcel {
 
                     ->setCellValue('A8', 'Question title')
                     ->setCellValue('B8', 'Link')
-                    ->setCellValue('C8', 'Correct Answer');
+                    ->setCellValue('C8', 'Percentage Correct')
+                    ->setCellValue('D8', 'Correct Answer');
       
 
         $quiz_data = array();
         $quiz_data = get_excel_quiz_report_data($quiz_id, $division);
 
         //$objPHPExcel->getActiveSheet()->fromArray($quiz_data['student_ids'], NULL, 'D8');
-        $start = 9;
+        $start = 11;
         foreach ($quiz_data['content_ids'] as $key => $content_ids) {
 
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$start, $content_ids['name']);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.$start, $content_ids['link'])->getCellByColumnAndRow(1,$start)->getHyperlink()->setUrl($content_ids['link']);
             $content_ids_order[] = $content_ids['id'];
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$start, $content_ids['correct_answer']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$start, $content_ids['percent_correct'].'%');
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$start, $content_ids['correct_answer']);
             
             $start++;
         }
@@ -56,6 +58,8 @@ class ExportExcel {
         foreach ($quiz_data['student_ids'] as $key => $student_data) {
             $student_names[] =$student_data['student_name'];
             $content_id_taken[] = $student_data['content_ids'];
+            $total_marks[] =$student_data['total_marks'];
+            $percentage[] =$student_data['percentage'];
         }
 
         foreach ($content_id_taken as $key_ta => $taken) {
@@ -109,7 +113,9 @@ class ExportExcel {
 
 
 
-        $objPHPExcel->getActiveSheet()->fromArray($student_names, NULL, 'D8');
+        $objPHPExcel->getActiveSheet()->fromArray($student_names, NULL, 'E8');
+        $objPHPExcel->getActiveSheet()->fromArray($total_marks, NULL, 'E9');
+        $objPHPExcel->getActiveSheet()->fromArray($percentage, NULL, 'E10');
 
         $objPHPExcel->getActiveSheet()->setCellValue('B1', $quiz_data['title']);
         $objPHPExcel->getActiveSheet()->setCellValue('B2', $quiz_data['class']);
@@ -120,10 +126,10 @@ class ExportExcel {
 
         $total_questions = count($array_data);
 
-        $start = 9;
+        $start = 11;
         $end_total = (int)$total_questions + $start;
             foreach ($array_data as $key => $ans_data) {
-                $objPHPExcel->getActiveSheet()->fromArray($ans_data, NULL, 'D'.$start);
+                $objPHPExcel->getActiveSheet()->fromArray($ans_data, NULL, 'E'.$start);
                 $start ++;
             }
             
