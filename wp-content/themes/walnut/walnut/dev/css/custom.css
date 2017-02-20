@@ -3136,6 +3136,7 @@ a.browse-content-pieces-item {
   font-family: roboto;
   font-size: 0.8em;
   font-weight: 400;
+  overflow: auto;
 }
 
 .hintComment .comment-element .checked ~ .cke_textarea_inline{
