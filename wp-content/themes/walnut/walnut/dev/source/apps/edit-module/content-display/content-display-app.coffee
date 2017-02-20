@@ -74,6 +74,8 @@ define ['app'
 				#console.log JSON.stringify @model.attributes
 				model_data = @model.save({ 'changed' : 'content_pieces' })
 
+				console.log @model
+
 				if !model_data
 					console.log 'error'
 					localStorage.addContent = 'false'

@@ -301,6 +301,9 @@ define ['app'
                 console.log 'onChangeLayout'
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
+                console.log contentGroupCollection
+                console.log @model
+
                 totalQuestions = 0
                 _.each @model.get('content_layout'),(content)=>
                     if content.type is 'content-piece'

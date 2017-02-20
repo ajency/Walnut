@@ -118,6 +118,7 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
         model_data = this.model.save({
           'changed': 'content_pieces'
         });
+        console.log(this.model);
         if (!model_data) {
           console.log('error');
           return localStorage.addContent = 'false';

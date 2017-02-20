@@ -863,6 +863,9 @@ function update_quiz_content_layout($data= array()){
 }
 
 
+
+
+
 function get_all_quiz_modules($args){
 
     global $wpdb;
@@ -2129,4 +2132,31 @@ function get_excerpt($ex_id,$id){
     $excerpt = prettify_content_piece_excerpt($excerpt_array);
 
     return $excerpt;
+}
+
+
+function content_marks_duration($content_ids){
+
+    $marks = 0;
+    foreach ($content_ids as $key => $id) {
+        $content_piece= get_post($id);
+        $duration += (isset($duration)) ? $duration : '';
+        $content_layout= get_post_meta($id, 'layout_json', true);
+
+            $content_layout = maybe_unserialize($content_layout);
+
+            if($content_layout){
+                
+                $content_elements = get_json_to_clone($content_layout);
+                 
+                
+                if($content_elements['marks'] > 0)
+                   $marks += $content_elements['marks'];
+            }
+    }
+
+    $data['total_sent_marks'] = $marks;
+    $data['total_sent_duration'] = $duration;
+
+    return $data;
 }

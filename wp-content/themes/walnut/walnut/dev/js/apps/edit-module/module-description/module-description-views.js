@@ -278,6 +278,8 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
         var contentGroupCollection, marks, time, totalQuestions;
         console.log('onChangeLayout');
         contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
+        console.log(contentGroupCollection);
+        console.log(this.model);
         totalQuestions = 0;
         _.each(this.model.get('content_layout'), (function(_this) {
           return function(content) {
