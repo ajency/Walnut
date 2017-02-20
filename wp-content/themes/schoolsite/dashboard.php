@@ -62,7 +62,6 @@
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom-icon-set.css" rel="stylesheet" type="text/css">
 
     <link href="./wp-content/themes/walnut/walnut/dev/css/custom.css" rel="stylesheet" type="text/css"/>
-    <link href="./wp-content/themes/walnut/walnut/dev/css/admin.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <?php 
@@ -72,6 +71,9 @@ if( isset($current_user->roles)){
         if($value=='student'){
             require_once('header-student.php');               
             break;
+        }else if ($value=='school-admin') {
+           echo '<link href="'.get_template_directory_uri().'/walnut/dev/css/admin.css" rel="stylesheet" type="text/css"/>';
+           break;
         }
     }
  
