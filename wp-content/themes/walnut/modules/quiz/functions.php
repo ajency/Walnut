@@ -1974,13 +1974,19 @@ function get_excel_quiz_report_data($quiz_id, $division){
             // if($student == 1091)
             //     file_put_contents("d2.txt", $total_marks);
 
-            $percentage = ($total_marks/$data['marks'])*100;
+            if($total_marks)
+                $percentage = ($total_marks/$data['marks'])*100;
+            else{
+                $total_marks = '0';
+                $percentage = '0';
+
+            }
 
 
         }else{
             $response = '';
             $total_marks = '0';
-            $percentage = '0%';
+            $percentage = '0';
         }
 
         if($student_add_data->first_name != '' || $student_add_data->last_name != '')
@@ -1993,7 +1999,7 @@ function get_excel_quiz_report_data($quiz_id, $division){
                                             //'roll_num' => ,
                                              'content_ids' => $response,
                                              'total_marks' => $total_marks,
-                                             'percentage' => $percentage
+                                             'percentage' => $percentage.'%'
                                              );
 
     }
