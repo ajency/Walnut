@@ -52,6 +52,8 @@ define ['app'
                     if(@.model.get('comment') != '')
 
                         comment = @.model.get 'comment'
+
+                        console.log comment
                         
                         if $(window).width() < 1400
                             if comment.length > 61
