@@ -1852,12 +1852,50 @@ function get_excel_quiz_report_data($quiz_id, $division){
     $correct_option_order = array();
     $excerpt_array = array();
     $excerpt = array();
+    $correct_ans = 0;
 
     //siteurl 
     $site_url = get_site_url();
 
 
-    #file_put_contents("ablog.txt", get_site_url());
+    //get quiz details
+
+    $quiz_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $quiz_id);
+
+    $quiz_data = $wpdb->get_row($quiz_query);
+
+
+
+    $query_meta = $wpdb->prepare("SELECT *
+        FROM {$wpdb->base_prefix}collection_meta
+        WHERE collection_id = %d", $quiz_id);
+
+
+    $meta_data = $wpdb->get_results($query_meta);
+
+    foreach ($meta_data as $key => $value) {
+        if($value->meta_key == 'quiz_meta'){
+            $quiz_meta = maybe_unserialize($value->meta_value);
+            $data['marks'] = $quiz_meta['marks'];
+        }
+
+        if($value->meta_key == 'content_layout'){
+            $content_layout = maybe_unserialize($value->meta_value);
+            
+            foreach($content_layout as $ge => $content){
+                
+
+                if ($content['type'] == 'content-piece'){
+                    $content_ids[] = $content['id'];
+
+                }
+
+            }
+
+            
+        }
+    }
+  
 
 //students from division
 
@@ -1873,6 +1911,7 @@ function get_excel_quiz_report_data($quiz_id, $division){
         );
 
     $student_ids = $wpdb->get_col($query2);
+    $total_students = count($student_ids);
     #$data['lis_student'] = $student_ids;
     foreach ($student_ids as $key_student => $student) {
 
@@ -1891,7 +1930,7 @@ function get_excel_quiz_report_data($quiz_id, $division){
 
 
         //get quiz summary
-        $summary_query = $wpdb->prepare("SELECT question_response, content_piece_id
+        $summary_query = $wpdb->prepare("SELECT question_response, content_piece_id, marks_scored, status 
                                         FROM {$wpdb->prefix}quiz_question_response
                                         WHERE summary_id = (SELECT summary_id
                                             FROM {$wpdb->prefix}quiz_response_summary
@@ -1901,17 +1940,23 @@ function get_excel_quiz_report_data($quiz_id, $division){
                                             array($quiz_id, $student));
         
         $summary_data = $wpdb->get_results($summary_query);
-        #file_put_contents("d.txt", print_r($summary_data, true));
+        // if($student == 1091)
+        //     file_put_contents("d.txt", print_r($summary_data, true));
 
         if($summary_data){
+
+            $total_marks = 0;
+            
 
             foreach ($summary_data as $key => $value) {
 
                 $answer = maybe_unserialize($value->question_response);
-                #file_put_contents("d1.txt", print_r($answer, true));
+                // if($student == 1091)
+                //     file_put_contents("d1.txt", print_r($value, true));
 
-                if($answer)
+                if($answer){
                     $answer_d = $answer['answer'][0];
+                }
                 else
                     $answer_d = 'skipped';
 
@@ -1919,20 +1964,36 @@ function get_excel_quiz_report_data($quiz_id, $division){
                                   'answer_id' => $answer_d);
                 //if(count($content_ids) <  count($value))
                 $content_ids[$key] = $value->content_piece_id;
+                $total_marks += $value->marks_scored;
+
+                if($value->status == 'correct_answer')
+                    $percent_correct[$value->content_piece_id]++;
 
             }
+            
+            // if($student == 1091)
+            //     file_put_contents("d2.txt", $total_marks);
 
-        }else
+            $percentage = ($total_marks/$data['marks'])*100;
+
+
+        }else{
             $response = '';
+            $total_marks = '0';
+            $percentage = '0%';
+        }
 
         if($student_add_data->first_name != '' || $student_add_data->last_name != '')
             $full_name = " (".$student_add_data->first_name." ".$student_add_data->last_name.")";
         else
             $full_name = "";
+
         $data['student_ids'][] = array(//'student_id' => $student,
                                             'student_name' => $student_add_data->user_login.$full_name,
                                             //'roll_num' => ,
-                                             'content_ids' => $response
+                                             'content_ids' => $response,
+                                             'total_marks' => $total_marks,
+                                             'percentage' => $percentage
                                              );
 
     }
@@ -1941,42 +2002,7 @@ function get_excel_quiz_report_data($quiz_id, $division){
 
     
 
-$quiz_query = $wpdb->prepare ("SELECT * FROM {$wpdb->base_prefix}content_collection WHERE id = %d", $quiz_id);
-
-$quiz_data = $wpdb->get_row($quiz_query);
-
-
-
-$query_meta = $wpdb->prepare("SELECT *
-    FROM {$wpdb->base_prefix}collection_meta
-    WHERE collection_id = %d", $quiz_id);
-
-
-$meta_data = $wpdb->get_results($query_meta);
-
-foreach ($meta_data as $key => $value) {
-    if($value->meta_key == 'quiz_meta'){
-        $quiz_meta = maybe_unserialize($value->meta_value);
-        $data['marks'] = $quiz_meta['marks'];
-    }
-
-    if($value->meta_key == 'content_layout'){
-        $content_layout = maybe_unserialize($value->meta_value);
-        
-        foreach($content_layout as $ge => $content){
-            
-
-            if ($content['type'] == 'content-piece'){
-                $content_ids[] = $content['id'];
-
-            }
-
-        }
-
-        
-    }
-}
-            $content_ids = array_unique($content_ids);
+          $content_ids = array_unique($content_ids);
             foreach ($content_ids as $key_content => $content_id) {
 
                     //get question options
@@ -2037,7 +2063,8 @@ foreach ($meta_data as $key => $value) {
                     $data['content_ids'][] = array('id' => $content_id,
                                                 'link'  => $site_url.'/#dummy-quiz/'.$content_id,
                                                 'name' => $excerpt[$key_content],
-                                                'correct_answer' => $correct_option_order[$key_content]
+                                                'correct_answer' => $correct_option_order[$key_content],
+                                                'percent_correct' => round(($percent_correct[$content_id]/$total_students)*100, 2)
                                                 );
             }
             
@@ -2063,7 +2090,7 @@ $div = $wpdb->get_row($div_data);
 
 $data['class'] = $div->division;
 
-#file_put_contents("a.txt", print_r($data, true));
+file_put_contents("a2.txt", print_r($data, true));
 
 return $data;
     

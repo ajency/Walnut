@@ -101,16 +101,16 @@
             </div>
         </div>
         {{#isStudentQuestion}} 
-        <div class="tab-pane" id="more-tab-pane">
+        <div class="tab-pane hintComment" id="more-tab-pane">
             <div class="row m-b-15">
                 <div class="col-sm-6">
-                    <div class="checkbox check-info">
+                    <div class="checkbox check-info inline">
                         <input type="checkbox" name="hint_enable" id="hint_enable">
                         <label class="form-label" for="hint_enable">Enable Hint</label>
                     </div>
-                    <textarea name="hint" id="question-hint" class="form-control" rows="4" placeholder="Enter Hint" style="display: none" disabled></textarea>
+                    <textarea name="hint" id="question-hint" class="form-control hint-area" rows="4" placeholder="Enter Hint" style="display: none" disabled></textarea>
                 </div>
-                <div class="col-sm-6 comment-rte">
+                <div class="col-sm-6 comment-rte comment-element">
                     <div class="checkbox check-info">
                         <input type="checkbox" name="comment_enable" id="comment_enable">
                         <label class="form-label" for="comment_enable">Enable Comment</label>

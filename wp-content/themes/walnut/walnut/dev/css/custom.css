@@ -3115,3 +3115,31 @@ a.browse-content-pieces-item {
 .quizActions #submit-question:hover {
   background: #FF8685 !important;
 }
+
+
+/* ---------------------------
+   CONTENT CREATOR COMMENT HINT FIXES  -----------
+ ---------------------------
+*/
+
+.hintComment .hint-area{
+  font-weight: 400;
+  border-radius: 0;
+}
+
+.hintComment .comment-element .cke_textarea_inline{
+  display: none;
+  height: 106px;
+  width: 100%;
+  border: 1px solid #e5e9ec;
+  padding: 10px;
+  font-family: roboto;
+  font-size: 0.8em;
+  font-weight: 400;
+  overflow: auto;
+}
+
+.hintComment .comment-element .checked ~ .cke_textarea_inline{
+  display: block;
+}
+
