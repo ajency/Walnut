@@ -116,7 +116,6 @@ define ['app',
 					@$el.find('#question-hint').hide()
 
 			_commentEnable : (e)=>
-				console.log @model
 				if $(e.target).prop 'checked'
 					@$el.find('#question-comment').prop 'disabled',false
 					@$el.find('#question-comment').show()
@@ -225,10 +224,12 @@ define ['app',
 
 			onSaveQuestionSettings: (e)->
 				ele = @$el.find "#question-comment"
-				comment_data = $('.comment-rte div:nth-of-type(2)').html()
+				if $('#comment_enable').prop('checked')
+					comment_data = $('.comment-rte div:nth-of-type(2)').html()
 				if @$el.find('form').valid()
 					data = Backbone.Syphon.serialize (@)
-					data.comment = comment_data
+					if $('#comment_enable').prop('checked')
+						data.comment = comment_data
 					@trigger "save:data:to:model", data
 				else
 					firstErr = _.first @$el.find '.form-control.error'
