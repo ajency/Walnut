@@ -60,7 +60,6 @@ define ['app'], (App)->
 								<h3 class="bold">{{skipped_msg}}</h3>
 								<h4 class="semi-bold">You scored: <span class="bold">0/<span class="total-marks"></span></span></h4>
 							</div>
-							<div class="commentMsg"><label class="fosz14">Comment : </label> {{comment}}</div>
 						</div>'
 
 			
