@@ -2090,8 +2090,6 @@ $div = $wpdb->get_row($div_data);
 
 $data['class'] = $div->division;
 
-file_put_contents("a2.txt", print_r($data, true));
-
 return $data;
     
 }
