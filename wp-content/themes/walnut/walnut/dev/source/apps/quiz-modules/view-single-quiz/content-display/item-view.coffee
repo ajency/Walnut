@@ -50,17 +50,22 @@ define ['app'
                     data.hint = false if not quizModel.hasPermission 'allow_hint'
 
                     if(@.model.get('comment') != '')
+
                         comment = @.model.get 'comment'
+
+                        console.log comment
+
+                        if comment.search("<img") > 0
+                            data.view_modal = true
+                        
                         if $(window).width() < 1400
                             if comment.length > 61
                                 data.comment_modal = true
                                 data.comment = comment
                         else if $(window).width() > 1401
-                            if comment.length > 74
-                                data.comment_modal = true
-                                data.comment = comment
-
-
+                                if comment.length > 74
+                                    data.comment_modal = true
+                                    data.comment = comment
 
                     data.statusUI= switch data.responseStatus
                         when 'correct_answer'     then divClass : 'text-success', text : 'Correct', icon : 'fa-check'
