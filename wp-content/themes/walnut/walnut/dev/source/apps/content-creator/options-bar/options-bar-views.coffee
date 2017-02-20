@@ -121,6 +121,7 @@ define ['app',
 					@$el.find('#question-comment').prop 'disabled',false
 					@$el.find('#question-comment').show()
 					ele = @$el.find "#question-comment"
+					$('.comment-rte div:nth-of-type(2)').show()
 					# console.log 'ele'
 					# CKEDITOR.disableAutoInline = true;
 					#CKEDITOR.inline('comment')
@@ -134,6 +135,8 @@ define ['app',
 				else
 					#@$el.find('#question-comment').prop 'disabled',true
 					@$el.find('#question-comment').hide()
+					ele = @$el.find "#question-comment"
+					$('.comment-rte div:nth-of-type(2)').hide()
 
 
 			imageInstanceChange:(ev)->

@@ -114,12 +114,15 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
           this.$el.find('#question-comment').prop('disabled', false);
           this.$el.find('#question-comment').show();
           ele = this.$el.find("#question-comment");
+          $('.comment-rte div:nth-of-type(2)').show();
           CKEDITOR.dtd.$removeEmpty['span'] = false;
           ele.attr('commenteditable', 'true').attr('id', _.uniqueId('text-'));
           CKEDITOR.on('instanceCreated', this.configureEdit);
           return this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
         } else {
-          return this.$el.find('#question-comment').hide();
+          this.$el.find('#question-comment').hide();
+          ele = this.$el.find("#question-comment");
+          return $('.comment-rte div:nth-of-type(2)').hide();
         }
       };
 
