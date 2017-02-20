@@ -61,6 +61,8 @@ class ExportExcel {
         foreach ($quiz_data['student_ids'] as $key => $student_data) {
             $student_names[] =$student_data['student_name'];
             $content_id_taken[] = $student_data['content_ids'];
+            $total_marks[] =$student_data['total_marks'];
+            $percentage[] =$student_data['percentage'];
         }
 
         foreach ($content_id_taken as $key_ta => $taken) {
