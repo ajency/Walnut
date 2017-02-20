@@ -133,7 +133,7 @@ class ExportExcel {
         $start = 11;
         $end_total = (int)$total_questions + $start;
             foreach ($array_data as $key => $ans_data) {
-                $objPHPExcel->getActiveSheet()->fromArray($ans_data, NULL, 'D'.$start);
+                $objPHPExcel->getActiveSheet()->fromArray($ans_data, NULL, 'E'.$start);
                 $start ++;
             }
             
@@ -145,9 +145,9 @@ class ExportExcel {
        header('Content-Disposition: attachment;filename="quiz_report'.$quiz_id.'.xls"');
        header('Cache-Control: max-age=0');
 
-       //$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+       $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 
-        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+       // $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
        //$objWriter->save('php://output');
         //$objWriter->setPreCalculateFormulas(TRUE);
         /*$objWriter->save(get_home_path().'wp-content/uploads/q_upload.xls');
