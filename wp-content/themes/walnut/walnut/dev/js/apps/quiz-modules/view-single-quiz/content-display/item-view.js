@@ -41,6 +41,9 @@ define(['app', 'controllers/region-controller', 'text!apps/quiz-modules/view-sin
           if (this.model.get('comment') !== '') {
             comment = this.model.get('comment');
             console.log(comment);
+            if (comment.search("<img") > 0) {
+              data.view_modal = true;
+            }
             if ($(window).width() < 1400) {
               if (comment.length > 61) {
                 data.comment_modal = true;

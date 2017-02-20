@@ -54,6 +54,9 @@ define ['app'
                         comment = @.model.get 'comment'
 
                         console.log comment
+
+                        if comment.search("<img") > 0
+                            data.view_modal = true
                         
                         if $(window).width() < 1400
                             if comment.length > 61

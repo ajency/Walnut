@@ -40,8 +40,9 @@
 
             
             {{#comment}}
-            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{&comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">...More</span>{{/comment_modal}}
-                <!-- <div class="full-comment">{{comment}}</div> -->
+            <label class="small-text text-grey db comment-label comment-active">Comment: {{^view_modal}}<span class="bold">{{&comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">...More</span>{{/comment_modal}}{{/view_modal}}
+
+            {{#view_modal}}<span class="bold">&nbsp;</span><span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">View Comment</span>{{/view_modal}}
 
                 <!-- Modal -->
                 <div class="modal fade comment-modal" id="comment-modal{{commentId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -111,7 +112,7 @@
             {{#comment}}
             
 
-            <label class="small-text text-grey db comment-label comment-active">Comment: <span class="bold">{{&comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentIdAdmin}}">...More</span>{{/comment_modal}}
+            <label class="small-text text-grey db comment-label comment-active">Comment: {{^view_modal}}<span class="bold">{{&comment}}</span>{{/view_modal}}{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentIdAdmin}}">...More</span>{{/comment_modal}}
 
                 <!-- <div class="full-comment">{{comment}}</div> -->
 
