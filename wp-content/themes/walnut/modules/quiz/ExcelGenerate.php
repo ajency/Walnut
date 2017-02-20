@@ -117,6 +117,8 @@ class ExportExcel {
 
 
         $objPHPExcel->getActiveSheet()->fromArray($student_names, NULL, 'E8');
+        $objPHPExcel->getActiveSheet()->fromArray($total_marks, NULL, 'E9');
+        $objPHPExcel->getActiveSheet()->fromArray($percentage, NULL, 'E10');
 
         $objPHPExcel->getActiveSheet()->setCellValue('B1', $quiz_data['title']);
         $objPHPExcel->getActiveSheet()->setCellValue('B2', $quiz_data['class']);
