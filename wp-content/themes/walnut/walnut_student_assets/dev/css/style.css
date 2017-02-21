@@ -616,6 +616,24 @@ lesshat-selector {
 #logout-modal.modal .modal-footer button.confirm {
   background: #69b8b5;
 }
+.comment-modal.modal .modal-header {
+  background: #69b8b5;
+}
+.comment-modal.modal .modal-body {
+  background-color: transparent;
+}
+.comment-modal.modal .modal-footer button {
+  color: #ffffff;
+  border: 0;
+  color: #fff;
+  padding: 8px;
+  width: 20%;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.comment-modal.modal .modal-footer button.cancel {
+  background: #f2593a;
+}
 .signin-header {
   padding: 15px 0 35px 0;
   text-align: center;
@@ -3717,6 +3735,13 @@ lesshat-selector {
   background-color: #fff;
   cursor: pointer;
   font-size: 0.85em;
+}
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more.img-more {
+  position: relative;
+  text-align: right;
+  display: inline-block;
+  background-color: transparent;
+  box-shadow: none;
 }
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";

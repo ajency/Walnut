@@ -42,7 +42,7 @@
             {{#comment}}
             <label class="small-text text-grey db comment-label comment-active">Comment: {{^view_modal}}<span class="bold">{{&comment}}</span>{{#comment_modal}}<span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">...More</span>{{/comment_modal}}{{/view_modal}}
 
-            {{#view_modal}}<span class="bold">The comment has image</span><span class="more" data-toggle="modal" data-target="#comment-modal{{commentId}}">Click here</span>{{/view_modal}}
+            {{#view_modal}}<span class="bold">This comment has image </span><span class="more img-more" data-toggle="modal" data-target="#comment-modal{{commentId}}">Click here</span>{{/view_modal}}
 
                 <!-- Modal -->
                 <div class="modal fade comment-modal" id="comment-modal{{commentId}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
