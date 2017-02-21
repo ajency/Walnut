@@ -3736,6 +3736,13 @@ lesshat-selector {
   cursor: pointer;
   font-size: 0.85em;
 }
+#myCanvas-miki .cbp_tmtimeline > li .contentPiece .qstnStatus .comment-label.comment-active .more.img-more {
+  position: relative;
+  text-align: right;
+  display: inline-block;
+  background-color: transparent;
+  box-shadow: none;
+}
 #myCanvas-miki .cbp_tmtimeline > li .contentPiece .text-warning i:before {
   content: "\f0a9";
 }
