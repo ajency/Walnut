@@ -118,14 +118,13 @@ define(['app', 'controllers/region-controller', 'text!apps/edit-module/content-d
         model_data = this.model.save({
           'changed': 'content_pieces'
         });
-        console.log(this.model);
         if (!model_data) {
-          console.log('error');
           return localStorage.addContent = 'false';
         } else {
           return model_data.complete(function(response) {
+            console.log(response.responseJSON.data);
             if (response.responseJSON) {
-              Backbone.trigger("all:content:piece:saved:success");
+              Backbone.trigger("all:content:piece:saved:success", response.responseJSON.data);
               if (localStorage.addContent === 'true') {
                 Backbone.trigger("all:content:saved:success:message");
               }
