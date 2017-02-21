@@ -70,8 +70,8 @@ define ['app'
                     @region.trigger "close:content:selection:app" if data.post_status isnt 'underreview'
 
 
-                @listenTo Backbone, "all:content:piece:saved:success",=>
-                    @view.triggerMethod 'change:layout'
+                @listenTo Backbone, "all:content:piece:saved:success", (data)=>
+                    @view.triggerMethod 'change:layout', data
 
                 @show view, (loading : true, entities : [@textbooksCollection])
 

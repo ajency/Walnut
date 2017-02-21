@@ -232,88 +232,33 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype._getAdditionaLayout = function() {
-        var contentGroupCollection, marks, time, totalQuestions;
+        var additional_data, contentGroupCollection, marks, time, totalQuestions;
+        additional_data = this.model.get('new_data');
+        console.log(additional_data.total_sent_duration);
         contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
         totalQuestions = 0;
-        _.each(this.model.get('content_layout'), (function(_this) {
-          return function(content) {
-            if (content.type === 'content-piece') {
-              return totalQuestions += 1;
-            } else {
-              totalQuestions += parseInt(content.data.lvl1);
-              totalQuestions += parseInt(content.data.lvl2);
-              return totalQuestions += parseInt(content.data.lvl3);
-            }
-          };
-        })(this));
-        this.$el.find('#total-question-number').val(totalQuestions);
+        this.$el.find('#total-question-number').val(additional_data.total_sent_questions_count);
         marks = 0;
         time = 0;
-        contentGroupCollection.each(function(m) {
-          if (m.get('post_type') === 'content_set') {
-            if (m.get('avg_marks')) {
-              marks += parseInt(m.get('avg_marks'));
-            }
-            if (m.get('avg_duration')) {
-              return time += parseInt(m.get('avg_duration'));
-            }
-          } else {
-            if (m.get('marks')) {
-              marks += parseInt(m.get('marks'));
-            }
-            if (m.get('duration')) {
-              return time += parseInt(m.get('duration'));
-            }
-          }
-        });
-        this.$el.find('#total-marks').val(marks);
-        return this.$el.find('#total-time').val(time);
+        this.$el.find('#total-marks').val(additional_data.total_sent_marks);
+        return this.$el.find('#total-time').val(additional_data.total_sent_duration);
       };
 
-      CollectionDetailsView.prototype.onChangeLayout = function() {
+      CollectionDetailsView.prototype.onChangeLayout = function(data) {
         var contentGroupCollection, marks, time, totalQuestions;
-        console.log('onChangeLayout');
         contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
         totalQuestions = 0;
-        _.each(this.model.get('content_layout'), (function(_this) {
-          return function(content) {
-            if (content.type === 'content-piece') {
-              return totalQuestions += 1;
-            } else {
-              totalQuestions += parseInt(content.data.lvl1);
-              totalQuestions += parseInt(content.data.lvl2);
-              return totalQuestions += parseInt(content.data.lvl3);
-            }
-          };
-        })(this));
-        this.$el.find('#total-question-number').val(totalQuestions);
+        this.$el.find('#total-question-number').val(data.total_sent_questions);
         marks = 0;
         time = 0;
-        contentGroupCollection.each(function(m) {
-          if (m.get('post_type') === 'content_set') {
-            if (m.get('avg_marks')) {
-              marks += parseInt(m.get('avg_marks'));
-            }
-            if (m.get('avg_duration')) {
-              return time += parseInt(m.get('avg_duration'));
-            }
-          } else {
-            if (m.get('marks')) {
-              marks += parseInt(m.get('marks'));
-            }
-            if (m.get('duration')) {
-              return time += parseInt(m.get('duration'));
-            }
-          }
-        });
-        this.$el.find('#total-marks').val(marks);
+        this.$el.find('#total-marks').val(data.total_sent_marks);
         if ($("#total-time-marks-set").val() === 0) {
           $("#total-time-marks-set").val(1);
         } else {
-          this.$el.find('#total-marks-final').val(marks);
-          this.$el.find('#total-time-final').val(time);
+          this.$el.find('#total-marks-final').val(data.total_sent_marks);
+          this.$el.find('#total-time-final').val(data.total_sent_duration);
         }
-        return this.$el.find('#total-time').val(time);
+        return this.$el.find('#total-time').val(data.total_sent_duration);
       };
 
       CollectionDetailsView.prototype.onSavedContentGroup = function(model) {

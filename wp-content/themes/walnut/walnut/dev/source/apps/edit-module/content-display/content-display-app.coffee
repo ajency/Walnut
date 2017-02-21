@@ -75,12 +75,12 @@ define ['app'
 				model_data = @model.save({ 'changed' : 'content_pieces' })
 
 				if !model_data
-					console.log 'error'
 					localStorage.addContent = 'false'
 				else
 					model_data.complete (response) ->
+						console.log response.responseJSON.data
 						if response.responseJSON
-							Backbone.trigger "all:content:piece:saved:success"
+							Backbone.trigger "all:content:piece:saved:success", response.responseJSON.data
 							if localStorage.addContent == 'true'
 								Backbone.trigger "all:content:saved:success:message"
 							localStorage.addContent = 'false'

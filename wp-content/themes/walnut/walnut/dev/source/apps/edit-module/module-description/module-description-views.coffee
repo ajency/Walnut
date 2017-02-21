@@ -258,82 +258,84 @@ define ['app'
 
             # added to auto calculate the time marks and total questions
             _getAdditionaLayout:->
+                additional_data = @model.get 'new_data'
+                console.log additional_data.total_sent_duration
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
                 totalQuestions = 0
-                _.each @model.get('content_layout'), (content)=>
-                    #console.log content
-                    if content.type is 'content-piece'
-                        totalQuestions += 1
-                    else
-                        totalQuestions += parseInt content.data.lvl1
-                        totalQuestions += parseInt content.data.lvl2
-                        totalQuestions += parseInt content.data.lvl3
-                @$el.find('#total-question-number').val totalQuestions
+                # _.each @model.get('content_layout'), (content)=>
+                #     #console.log content
+                #     if content.type is 'content-piece'
+                #         totalQuestions += 1
+                #     else
+                #         totalQuestions += parseInt content.data.lvl1
+                #         totalQuestions += parseInt content.data.lvl2
+                #         totalQuestions += parseInt content.data.lvl3
+                @$el.find('#total-question-number').val additional_data.total_sent_questions_count
 
                 marks = 0
                 time = 0
 
-                contentGroupCollection.each (m)->
-                    if m.get('post_type') is 'content_set'
+                # contentGroupCollection.each (m)->
+                #     if m.get('post_type') is 'content_set'
 
-                        if m.get 'avg_marks'
-                            marks+= parseInt m.get 'avg_marks'
+                #         if m.get 'avg_marks'
+                #             marks += parseInt m.get 'avg_marks'
 
-                        if m.get 'avg_duration'
-                            time += parseInt m.get 'avg_duration'
+                #         if m.get 'avg_duration'
+                #             time += parseInt m.get 'avg_duration'
 
-                    else
-                        if m.get 'marks'
-                            marks+= parseInt m.get 'marks'
+                #     else
+                #         if m.get 'marks'
+                #             marks += parseInt m.get 'marks'
 
-                        if m.get 'duration'
-                            time += parseInt m.get 'duration'
+                #         if m.get 'duration'
+                #             time += parseInt m.get 'duration'
 
-                @$el.find('#total-marks').val marks   
-                @$el.find('#total-time').val time
+                @$el.find('#total-marks').val additional_data.total_sent_marks   
+                @$el.find('#total-time').val additional_data.total_sent_duration
 
-            onChangeLayout : ->
-                console.log 'onChangeLayout'
+            onChangeLayout : (data)->
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
+
                 totalQuestions = 0
-                _.each @model.get('content_layout'),(content)=>
-                    if content.type is 'content-piece'
-                        totalQuestions += 1
-                    else
-                        totalQuestions += parseInt content.data.lvl1
-                        totalQuestions += parseInt content.data.lvl2
-                        totalQuestions += parseInt content.data.lvl3
-                @$el.find('#total-question-number').val totalQuestions
+                # _.each @model.get('content_layout'),(content)=>
+                #     if content.type is 'content-piece'
+                #         totalQuestions += 1
+                #     else
+                #         totalQuestions += parseInt content.data.lvl1
+                #         totalQuestions += parseInt content.data.lvl2
+                #         totalQuestions += parseInt content.data.lvl3
+                @$el.find('#total-question-number').val data.total_sent_questions
 
                 marks=0
                 time=0
 
-                contentGroupCollection.each (m)->
-                    if m.get('post_type') is 'content_set'
+                # contentGroupCollection.each (m)->
+                #     if m.get('post_type') is 'content_set'
 
-                        if m.get 'avg_marks'
-                            marks+= parseInt m.get 'avg_marks'
+                #         if m.get 'avg_marks'
+                #             marks += parseInt m.get 'avg_marks'
 
-                        if m.get 'avg_duration'
-                            time += parseInt m.get 'avg_duration'
+                #         if m.get 'avg_duration'
+                #             time += parseInt m.get 'avg_duration'
 
-                    else
-                        if m.get 'marks'
-                            marks+= parseInt m.get 'marks'
+                #     else
+                #         if m.get 'marks'
+                #             marks += parseInt m.get 'marks'
 
-                        if m.get 'duration'
-                            time += parseInt m.get 'duration'
+                #         if m.get 'duration'
+                #             time += parseInt m.get 'duration'
 
-                @$el.find('#total-marks').val marks
+                @$el.find('#total-marks').val data.total_sent_marks
                 if $("#total-time-marks-set").val()==0
                     $("#total-time-marks-set").val(1);
                 else
-                    @.$el.find('#total-marks-final').val(marks);#added by kapil for auto calculation of total marks(Editable) 
-                    @.$el.find('#total-time-final').val(time);#added by kapil for auto calculation of total time(Editable)   
+                    @.$el.find('#total-marks-final').val(data.total_sent_marks);#added by kapil for auto calculation of total marks(Editable) 
+                    @.$el.find('#total-time-final').val(data.total_sent_duration);#added by kapil for auto calculation of total time(Editable)   
                         
-                @$el.find('#total-time').val time
+                @$el.find('#total-time').val data.total_sent_duration
 
 
             onSavedContentGroup : (model) ->

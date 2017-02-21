@@ -109,17 +109,19 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
 
       OptionsBarView.prototype._commentEnable = function(e) {
         var ele;
-        console.log(this.model);
         if ($(e.target).prop('checked')) {
           this.$el.find('#question-comment').prop('disabled', false);
           this.$el.find('#question-comment').show();
           ele = this.$el.find("#question-comment");
+          $('.comment-rte div:nth-of-type(2)').show();
           CKEDITOR.dtd.$removeEmpty['span'] = false;
           ele.attr('commenteditable', 'true').attr('id', _.uniqueId('text-'));
           CKEDITOR.on('instanceCreated', this.configureEdit);
           return this.editor = CKEDITOR.inline(document.getElementById(ele.attr('id')));
         } else {
-          return this.$el.find('#question-comment').hide();
+          this.$el.find('#question-comment').hide();
+          ele = this.$el.find("#question-comment");
+          return $('.comment-rte div:nth-of-type(2)').hide();
         }
       };
 
@@ -191,10 +193,14 @@ define(['app', 'text!apps/content-creator/options-bar/templates/options-bar.html
       OptionsBarView.prototype.onSaveQuestionSettings = function(e) {
         var comment_data, data, ele, eleID, firstErr;
         ele = this.$el.find("#question-comment");
-        comment_data = $('.comment-rte div:nth-of-type(2)').html();
+        if ($('#comment_enable').prop('checked')) {
+          comment_data = $('.comment-rte div:nth-of-type(2)').html();
+        }
         if (this.$el.find('form').valid()) {
           data = Backbone.Syphon.serialize(this);
-          data.comment = comment_data;
+          if ($('#comment_enable').prop('checked')) {
+            data.comment = comment_data;
+          }
           return this.trigger("save:data:to:model", data);
         } else {
           firstErr = _.first(this.$el.find('.form-control.error'));

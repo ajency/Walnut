@@ -63,6 +63,10 @@ function ajax_update_quiz ()
             $data['id'] = $_POST['id'];
             $data['content_layout'] = $_POST['content_layout'];
             update_quiz_content_layout($data);
+
+            $content_data = content_marks_duration($_POST['content_layout']);
+
+            wp_send_json (array('code' => 'OK', 'data' => array('id' => (int)$_POST['id'], 'total_sent_marks'=>$content_data['total_sent_marks'], 'total_sent_duration'=>$content_data['total_sent_duration'], 'total_sent_questions' => count($_POST['content_layout']))));
         }
         else 
             return false;

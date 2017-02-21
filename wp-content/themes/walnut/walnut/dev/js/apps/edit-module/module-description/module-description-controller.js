@@ -89,8 +89,8 @@ define(['app', 'controllers/region-controller', 'apps/edit-module/module-descrip
           };
         })(this));
         this.listenTo(Backbone, "all:content:piece:saved:success", (function(_this) {
-          return function() {
-            return _this.view.triggerMethod('change:layout');
+          return function(data) {
+            return _this.view.triggerMethod('change:layout', data);
           };
         })(this));
         return this.show(view, {

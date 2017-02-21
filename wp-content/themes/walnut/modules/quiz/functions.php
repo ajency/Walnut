@@ -130,6 +130,11 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
         $data->content_pieces = $content_ids;
     }
 
+    if($data->content_pieces)
+        $data->new_data = content_marks_duration_questions($data->content_pieces);
+
+
+
     if($division){        
 
         $data->taken_by_stud = num_students_taken_quiz($selected_quiz_id, $division);
@@ -145,6 +150,8 @@ function get_single_quiz_module ($id,$user_id=0, $division = 0) {
         $data->total_students = get_student_count_in_division($division);
 
     }
+
+
 
     $data->quiz_url = "<a target='_blank' href='$siteurl/#view-quiz/$selected_quiz_id'>Click here</a>";
     
@@ -861,6 +868,9 @@ function update_quiz_content_layout($data= array()){
 
     $wpdb->query($content_layout_qry);
 }
+
+
+
 
 
 function get_all_quiz_modules($args){
@@ -2129,4 +2139,75 @@ function get_excerpt($ex_id,$id){
     $excerpt = prettify_content_piece_excerpt($excerpt_array);
 
     return $excerpt;
+}
+
+
+function content_marks_duration($content_ids){
+
+    $marks = 0;
+    $duration = 0;
+    foreach ($content_ids as $key => $id) {
+        //if($key == 'id'){
+            $content_piece= get_post($id['id']);
+            
+
+            $content_piece_meta_serialized=get_post_meta($id['id'], 'content_piece_meta', true);
+            $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
+            $duration += $content_piece_meta['duration'];
+
+            $content_layout= get_post_meta($id['id'], 'layout_json', true);
+
+                $content_layout = maybe_unserialize($content_layout);
+
+                if($content_layout){
+                    
+                    $content_elements = get_json_to_clone($content_layout);
+                     
+                    
+                    //if($content_elements['marks'] > 0)
+                    $marks += $content_elements['marks'];
+                }
+       // }
+    }
+
+    $data['total_sent_marks'] = $marks;
+    $data['total_sent_duration'] = $duration;
+
+    return $data;
+}
+
+
+function content_marks_duration_questions($content_ids){
+
+    $marks = 0;
+    $duration = 0;
+    foreach ($content_ids as $key => $id) {
+        //if($key == 'id'){
+            $content_piece= get_post($id);
+            
+
+            $content_piece_meta_serialized=get_post_meta($id, 'content_piece_meta', true);
+            $content_piece_meta= maybe_unserialize($content_piece_meta_serialized);
+            $duration += $content_piece_meta['duration'];
+
+            $content_layout= get_post_meta($id, 'layout_json', true);
+
+                $content_layout = maybe_unserialize($content_layout);
+
+                if($content_layout){
+                    
+                    $content_elements = get_json_to_clone($content_layout);
+                     
+                    
+                    //if($content_elements['marks'] > 0)
+                    $marks += $content_elements['marks'];
+                }
+       // }
+    }
+
+    $data['total_sent_marks'] = $marks;
+    $data['total_sent_questions_count'] = count($content_ids);
+    $data['total_sent_duration'] = $duration;
+
+    return $data;
 }
