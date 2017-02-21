@@ -39,7 +39,7 @@
                                         <div class="row">
                                         <?php foreach($textbooks as $textbook): ?>
                                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                                <div class="quiz-cards animated bounceIn">
+                                                <div class="quiz-cards animated bounceIn no-img">
                                                     <?php $notifications =  $textbook_id_to_name_map[$textbook->term_id] ?>
                                                     <?php $textbook_id_vs_name[$textbook->term_id]= $textbook->name; ?>
                                                    <?php if($notifications>0): ?>
