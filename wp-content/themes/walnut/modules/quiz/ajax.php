@@ -138,7 +138,12 @@ function update_quiz_question_response(){
 
     unset($args['action']);
 
-    $qr_id = write_quiz_question_response($args);
+    $logged_in_user_data = wp_get_current_user();
+
+    if($logged_in_user_data->roles[0] == 'administrator' || $logged_in_user_data->roles[0] == 'school-admin')
+        wp_send_json(array('qr_id' => '1'));
+    else
+        $qr_id = write_quiz_question_response($args);
 
     if($qr_id)
         wp_send_json(array('qr_id' => $qr_id));
