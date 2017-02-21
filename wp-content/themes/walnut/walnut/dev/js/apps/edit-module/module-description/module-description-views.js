@@ -232,16 +232,21 @@ define(['app', 'text!apps/edit-module/module-description/templates/collection-de
       };
 
       CollectionDetailsView.prototype._getAdditionaLayout = function() {
-        var additional_data, contentGroupCollection, marks, time, totalQuestions;
+        var additional_data, contentGroupCollection, total_sent_duration, total_sent_marks, total_sent_questions_count;
         additional_data = this.model.get('new_data');
-        console.log(additional_data.total_sent_duration);
+        if (additional_data) {
+          total_sent_questions_count = additional_data.total_sent_questions_count;
+          total_sent_marks = additional_data.total_sent_marks;
+          total_sent_duration = additional_data.total_sent_duration;
+        } else {
+          total_sent_questions_count = 0;
+          total_sent_marks = 0;
+          total_sent_duration = 0;
+        }
         contentGroupCollection = Marionette.getOption(this, 'contentGroupCollection');
-        totalQuestions = 0;
-        this.$el.find('#total-question-number').val(additional_data.total_sent_questions_count);
-        marks = 0;
-        time = 0;
-        this.$el.find('#total-marks').val(additional_data.total_sent_marks);
-        return this.$el.find('#total-time').val(additional_data.total_sent_duration);
+        this.$el.find('#total-question-number').val(total_sent_questions_count);
+        this.$el.find('#total-marks').val(total_sent_marks);
+        return this.$el.find('#total-time').val(total_sent_duration);
       };
 
       CollectionDetailsView.prototype.onChangeLayout = function(data) {

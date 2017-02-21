@@ -259,10 +259,18 @@ define ['app'
             # added to auto calculate the time marks and total questions
             _getAdditionaLayout:->
                 additional_data = @model.get 'new_data'
-                console.log additional_data.total_sent_duration
+                if additional_data
+                    total_sent_questions_count = additional_data.total_sent_questions_count
+                    total_sent_marks = additional_data.total_sent_marks
+                    total_sent_duration = additional_data.total_sent_duration
+                else
+                    total_sent_questions_count = 0
+                    total_sent_marks = 0
+                    total_sent_duration = 0
+
+
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
 
-                totalQuestions = 0
                 # _.each @model.get('content_layout'), (content)=>
                 #     #console.log content
                 #     if content.type is 'content-piece'
@@ -271,10 +279,7 @@ define ['app'
                 #         totalQuestions += parseInt content.data.lvl1
                 #         totalQuestions += parseInt content.data.lvl2
                 #         totalQuestions += parseInt content.data.lvl3
-                @$el.find('#total-question-number').val additional_data.total_sent_questions_count
-
-                marks = 0
-                time = 0
+                @$el.find('#total-question-number').val total_sent_questions_count
 
                 # contentGroupCollection.each (m)->
                 #     if m.get('post_type') is 'content_set'
@@ -292,8 +297,8 @@ define ['app'
                 #         if m.get 'duration'
                 #             time += parseInt m.get 'duration'
 
-                @$el.find('#total-marks').val additional_data.total_sent_marks   
-                @$el.find('#total-time').val additional_data.total_sent_duration
+                @$el.find('#total-marks').val total_sent_marks   
+                @$el.find('#total-time').val total_sent_duration
 
             onChangeLayout : (data)->
                 contentGroupCollection = Marionette.getOption @, 'contentGroupCollection'
