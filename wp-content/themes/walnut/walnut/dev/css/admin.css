@@ -408,6 +408,18 @@
   box-shadow: -13px 8px 5px 6px rgba(229, 233, 236, 0.61);
   background-color: #e5e9ec;
 }
+.comment-label .img-more {
+  position: relative;
+}
+.comment-label .comment-modal .modal-body {
+  height: 150px;
+  overflow: auto;
+}
+.comment-label .comment-modal .modal-body:after {
+  content: '';
+  display: table;
+  clear: both;
+}
 .quiz-info {
   margin: 20px auto;
   text-align: left;

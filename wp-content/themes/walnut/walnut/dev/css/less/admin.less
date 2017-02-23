@@ -499,6 +499,20 @@
         box-shadow: -13px 8px 5px 6px rgba(229, 233, 236, 0.61);
         background-color: #e5e9ec;
     }
+    .img-more{
+      position: relative;
+    }
+    .comment-modal{
+        .modal-body{
+          height: 150px;
+          overflow: auto;
+          &:after{
+            content: '';
+            display: table;
+            clear: both;
+          }
+        }
+    }
 }
 
 
