@@ -3473,6 +3473,11 @@ lesshat-selector {
   line-height: 1.5;
   margin-left: 15px;
 }
+.quiz-info .cards .data:after {
+  content: '';
+  clear: both;
+  display: table;
+}
 .quiz-info__hint {
   border-left: 3px solid #69b8b5;
 }
